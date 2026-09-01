@@ -439,6 +439,7 @@ document.getElementById("saveSettings").addEventListener("click", () => {
 document.getElementById("loginForm").addEventListener("submit", (event) => {
   event.preventDefault();
   const role = document.getElementById("loginRole").value;
+  document.body.classList.add("is-authenticated");
   document.getElementById("frontpage").classList.add("front-hidden");
   document.getElementById("appShell").classList.remove("app-hidden");
   document.getElementById("userChip").textContent = `${role} · Al Barsha`;
@@ -446,6 +447,7 @@ document.getElementById("loginForm").addEventListener("submit", (event) => {
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
+  document.body.classList.remove("is-authenticated");
   document.getElementById("appShell").classList.add("app-hidden");
   document.getElementById("frontpage").classList.remove("front-hidden");
 });

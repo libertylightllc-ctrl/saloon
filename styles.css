@@ -42,17 +42,17 @@ button {
 .frontpage {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 410px;
-  gap: 34px;
+  grid-template-columns: minmax(0, 1.15fr) minmax(340px, 430px);
+  gap: 28px;
   align-items: center;
-  padding: 48px;
+  padding: 42px;
   background:
-    linear-gradient(135deg, rgba(24, 114, 90, 0.12), rgba(50, 111, 178, 0.08)),
+    linear-gradient(135deg, #f6f9f8 0%, #eef3f1 48%, #e9f1ef 100%),
     var(--bg);
 }
 
 .front-copy {
-  max-width: 760px;
+  max-width: 820px;
 }
 
 .brand-block.light h1 {
@@ -63,64 +63,104 @@ button {
   color: var(--muted);
 }
 
+.front-title {
+  margin-top: 54px;
+}
+
+.front-title > span {
+  display: inline-flex;
+  margin-bottom: 14px;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
 .front-copy h2 {
-  margin: 42px 0 18px;
-  max-width: 720px;
-  font-size: clamp(42px, 6vw, 78px);
-  line-height: 0.98;
+  margin: 0 0 14px;
+  max-width: 620px;
+  font-size: 46px;
+  line-height: 1.04;
   letter-spacing: 0;
 }
 
 .front-lead {
-  max-width: 650px;
+  max-width: 600px;
   margin: 0;
   color: var(--muted);
-  font-size: 18px;
-  line-height: 1.55;
+  font-size: 17px;
+  line-height: 1.5;
 }
 
-.front-stats {
-  margin-top: 34px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+.front-modules {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 690px;
 }
 
-.front-stats div,
-.login-card {
-  background: rgba(255, 255, 255, 0.78);
+.front-modules span {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  padding: 0 14px;
+  color: var(--deep);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.front-board {
+  margin-top: 26px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 760px;
+}
+
+.front-board div,
+.login-card {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid var(--line);
+  border-radius: 10px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
 }
 
-.front-stats div {
-  min-height: 96px;
-  padding: 18px;
+.front-board div {
+  min-height: 92px;
+  padding: 16px;
 }
 
-.front-stats strong {
+.front-board strong {
   display: block;
-  font-size: 26px;
+  margin-top: 8px;
+  font-size: 24px;
   line-height: 1;
 }
 
-.front-stats span {
+.front-board span {
   display: block;
-  margin-top: 9px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 800;
   line-height: 1.35;
+  text-transform: uppercase;
 }
 
 .login-card {
-  padding: 26px;
+  padding: 28px;
+  align-self: center;
 }
 
 .login-card h3 {
   margin: 20px 0 8px;
-  font-size: 28px;
+  font-size: 30px;
+  line-height: 1.1;
 }
 
 .login-card p,
@@ -137,7 +177,19 @@ button {
 
 .app-hidden,
 .front-hidden {
-  display: none;
+  display: none !important;
+}
+
+body.is-authenticated .frontpage {
+  display: none !important;
+}
+
+body:not(.is-authenticated) .app-shell {
+  display: none !important;
+}
+
+body.is-authenticated .app-shell {
+  display: grid;
 }
 
 .app-shell {
@@ -313,6 +365,8 @@ button {
 .top-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -380,6 +434,7 @@ button {
   padding: 0 15px;
   font-size: 13px;
   font-weight: 850;
+  white-space: nowrap;
 }
 
 .primary-button {
@@ -1186,7 +1241,7 @@ tr:last-child td {
     font-size: 42px;
   }
 
-  .front-stats {
+  .front-board {
     grid-template-columns: 1fr;
   }
 
