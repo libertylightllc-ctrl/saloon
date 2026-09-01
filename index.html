@@ -11,7 +11,7 @@
     <title>Salon Control MVP</title>
     <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="stylesheet" href="./styles.css?v=20260901-3" />
+    <link rel="stylesheet" href="./styles.css?v=20260901-4" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -67,12 +67,12 @@
           </article>
           <article class="metric-card">
             <span>Purchases</span>
-            <strong>AED 640</strong>
+            <strong id="loginPurchasesTotal">AED 640</strong>
             <small>Blades, foam, oil, tools</small>
           </article>
           <article class="metric-card">
             <span>Expenses</span>
-            <strong>AED 310</strong>
+            <strong id="loginExpensesTotal">AED 310</strong>
             <small>Tea, food, laundry, repair</small>
           </article>
         </div>
@@ -92,8 +92,9 @@
             <label>PIN
               <input id="loginPin" value="1234" inputmode="numeric" />
             </label>
+            <p class="system-note danger-note" id="loginError" hidden>Wrong PIN for this role.</p>
             <button class="primary-button full" type="submit">Enter Salon Control</button>
-            <small>Demo PIN: 1234</small>
+            <small>Owner PIN: 1234 · Cashier: 2222 · Staff: 1111</small>
           </form>
 
           <article class="panel login-flow">
@@ -220,12 +221,12 @@
             </article>
             <article class="metric-card">
               <span>Purchases</span>
-              <strong>AED 640</strong>
+              <strong id="dashboardPurchasesTotal">AED 640</strong>
               <small>Supplier bills entered today</small>
             </article>
             <article class="metric-card">
               <span>Expenses</span>
-              <strong>AED 310</strong>
+              <strong id="dashboardExpensesTotal">AED 310</strong>
               <small>Tea, laundry, transport, repair</small>
             </article>
           </div>
@@ -296,12 +297,12 @@
               <p>Everything needed before the barber shop starts using the app live.</p>
             </div>
             <div class="checklist-grid">
-              <label><input type="checkbox" checked /> Services and prices approved</label>
-              <label><input type="checkbox" checked /> Staff PINs created</label>
-              <label><input type="checkbox" checked /> VAT off confirmed</label>
-              <label><input type="checkbox" /> Opening stock counted</label>
-              <label><input type="checkbox" /> Suppliers added</label>
-              <label><input type="checkbox" /> Cash drawer opening balance set</label>
+              <label><input data-checklist="servicesApproved" type="checkbox" /> Services and prices approved</label>
+              <label><input data-checklist="staffPins" type="checkbox" /> Staff PINs created</label>
+              <label><input data-checklist="vatConfirmed" type="checkbox" /> VAT off confirmed</label>
+              <label><input data-checklist="openingStock" type="checkbox" /> Opening stock counted</label>
+              <label><input data-checklist="suppliersAdded" type="checkbox" /> Suppliers added</label>
+              <label><input data-checklist="openingCash" type="checkbox" /> Cash drawer opening balance set</label>
             </div>
           </article>
         </section>
@@ -317,10 +318,11 @@
                 <span class="status-pill">PIN staff mode</span>
               </div>
               <div class="segmented" role="tablist" aria-label="Service category">
-                <button class="active" type="button">Hair</button>
-                <button type="button">Beard</button>
-                <button type="button">Color</button>
-                <button type="button">Face</button>
+                <button class="active" data-category="All" type="button">All</button>
+                <button data-category="Hair" type="button">Hair</button>
+                <button data-category="Beard" type="button">Beard</button>
+                <button data-category="Color" type="button">Color</button>
+                <button data-category="Face" type="button">Face</button>
               </div>
               <div class="service-tile-grid" id="saleServices"></div>
             </article>
@@ -421,7 +423,7 @@
                   <option>Custom</option>
                 </select>
               </label>
-              <label>Price <input id="servicePrice" type="number" value="45" /></label>
+              <label>Price <input id="servicePrice" type="number" min="0" step="0.01" value="45" /></label>
               <label>Recipe / stock use <input id="serviceRecipe" value="Beard color 20ml, developer 20ml, gloves 1 pair" /></label>
               <button class="primary-button full" id="saveService" type="button">Save Service</button>
             </article>
@@ -547,7 +549,7 @@
                   <option>Staff Advance</option>
                 </select>
               </label>
-              <label>Amount <input id="expenseAmount" type="number" value="35" /></label>
+              <label>Amount <input id="expenseAmount" type="number" min="0" step="0.01" value="35" /></label>
               <label>Payment method
                 <select id="expensePayment">
                   <option>Cash</option>
@@ -605,13 +607,17 @@
                   <p>Owner enters counted cash and approves shortage</p>
                 </div>
               </div>
-              <label>Opening cash <input type="number" value="200" /></label>
-              <label>Cash sales <input type="number" value="1390" /></label>
-              <label>Cash expenses <input type="number" value="225" /></label>
-              <label>Cash purchases <input type="number" value="120" /></label>
-              <label>Actual cash counted <input type="number" value="1195" /></label>
-              <label>Shortage reason <input value="Pending owner review" /></label>
-              <button class="primary-button full" type="button">Approve Closing</button>
+              <label>Opening cash <input id="closingOpeningCash" type="number" min="0" step="0.01" value="200" /></label>
+              <label>Cash sales <input id="closingCashSales" type="number" min="0" step="0.01" value="1390" /></label>
+              <label>Cash expenses <input id="closingCashExpenses" type="number" min="0" step="0.01" value="225" /></label>
+              <label>Cash purchases <input id="closingCashPurchases" type="number" min="0" step="0.01" value="120" /></label>
+              <label>Actual cash counted <input id="closingActualCash" type="number" min="0" step="0.01" value="1195" /></label>
+              <label>Shortage reason <input id="closingReason" value="Pending owner review" /></label>
+              <div class="calculation-box">
+                <div><span>Expected cash</span><strong id="closingExpectedCash">AED 0.00</strong></div>
+                <div><span>Cash difference</span><strong id="closingDifference">AED 0.00</strong></div>
+              </div>
+              <button class="primary-button full" id="approveClosing" type="button">Approve Closing</button>
             </article>
 
             <article class="panel">
@@ -621,7 +627,7 @@
                   <p>No silent changes after sale, purchase, expense or stock adjustment</p>
                 </div>
               </div>
-              <div class="audit-list">
+              <div class="audit-list" id="auditList">
                 <div><strong>Sale created</strong><span>Rafiq · Haircut · Cash · AED 25</span></div>
                 <div><strong>Purchase entered</strong><span>Owner · Blades · 100 pcs · AED 120</span></div>
                 <div><strong>Expense entered</strong><span>Owner · Tea & Food · AED 35 · Cash</span></div>
@@ -645,8 +651,8 @@
               <div class="statement-grid">
                 <div><span>Total sales</span><strong id="reportSales">AED 1,870</strong></div>
                 <div><span>Cash expected</span><strong id="reportCash">AED 1,245</strong></div>
-                <div><span>Purchases</span><strong>AED 640</strong></div>
-                <div><span>Expenses</span><strong>AED 310</strong></div>
+                <div><span>Purchases</span><strong id="reportPurchases">AED 640</strong></div>
+                <div><span>Expenses</span><strong id="reportExpenses">AED 310</strong></div>
                 <div><span>Staff commission</span><strong>AED 224</strong></div>
                 <div><span>Cash difference</span><strong class="negative">AED -50</strong></div>
               </div>
@@ -672,10 +678,10 @@
                   <p>Owner or accountant output</p>
                 </div>
               </div>
-              <button class="ghost-button full" type="button">Daily PDF</button>
-              <button class="ghost-button full" type="button">Excel / CSV</button>
-              <button class="ghost-button full" type="button">Cash shortage report</button>
-              <button class="ghost-button full" type="button">Stock movement report</button>
+              <button class="ghost-button full" data-export="daily" type="button">Daily PDF</button>
+              <button class="ghost-button full" data-export="csv" type="button">Excel / CSV</button>
+              <button class="ghost-button full" data-export="shortage" type="button">Cash shortage report</button>
+              <button class="ghost-button full" data-export="stock" type="button">Stock movement report</button>
               <div class="ai-summary">
                 <strong>AI owner summary</strong>
                 <span>Cash is short by AED 50. Blade usage is higher than recorded shave services. Developer stock should be reordered within 2 days.</span>
@@ -746,6 +752,6 @@
       </main>
     </div>
 
-    <script src="./app.js?v=20260901-3"></script>
+    <script src="./app.js?v=20260901-4"></script>
   </body>
 </html>

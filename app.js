@@ -13,6 +13,17 @@ const icons = {
 };
 
 const storageKey = "salon-control-mvp";
+const rolePins = {
+  Owner: "1234",
+  Cashier: "2222",
+  Staff: "1111"
+};
+
+const roleAccess = {
+  Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "cash", "reports", "settings"],
+  Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "cash", "reports"],
+  Staff: ["quick-sale", "services"]
+};
 
 const serviceTranslations = {
   Haircut: { ar: "قص شعر", hi: "हेयरकट", ur: "بال کٹوانا" },
@@ -38,6 +49,7 @@ const uiTranslations = {
   Dashboard: { ar: "لوحة التحكم", hi: "डैशबोर्ड", ur: "ڈیش بورڈ" },
   Setup: { ar: "الإعداد", hi: "सेटअप", ur: "سیٹ اپ" },
   "Quick Sale": { ar: "بيع سريع", hi: "त्वरित बिक्री", ur: "فوری فروخت" },
+  All: { ar: "الكل", hi: "सभी", ur: "سب" },
   Services: { ar: "الخدمات", hi: "सेवाएं", ur: "خدمات" },
   Purchases: { ar: "المشتريات", hi: "खरीदारी", ur: "خریداری" },
   Expenses: { ar: "المصروفات", hi: "खर्चे", ur: "اخراجات" },
@@ -78,7 +90,8 @@ const uiTranslations = {
   Cashier: { ar: "أمين الصندوق", hi: "कैशियर", ur: "کیشئر" },
   PIN: { ar: "الرمز السري", hi: "PIN", ur: "پن" },
   "Enter Salon Control": { ar: "دخول نظام الصالون", hi: "सैलून कंट्रोल खोलें", ur: "سیلون کنٹرول کھولیں" },
-  "Demo PIN: 1234": { ar: "رمز التجربة: 1234", hi: "डेमो PIN: 1234", ur: "ڈیمو پن: 1234" },
+  "Owner PIN: 1234 · Cashier: 2222 · Staff: 1111": { ar: "رمز المالك: 1234 · الكاشير: 2222 · الموظف: 1111", hi: "मालिक PIN: 1234 · कैशियर: 2222 · स्टाफ: 1111", ur: "مالک پن: 1234 · کیشئر: 2222 · اسٹاف: 1111" },
+  "Wrong PIN for this role.": { ar: "الرمز غير صحيح لهذا الدور.", hi: "इस भूमिका के लिए PIN गलत है।", ur: "اس کردار کے لئے پن غلط ہے۔" },
   "Today’s Flow": { ar: "مسار اليوم", hi: "आज का फ्लो", ur: "آج کا بہاؤ" },
   "The same workflow opens after login": { ar: "نفس سير العمل يفتح بعد تسجيل الدخول", hi: "लॉगिन के बाद यही वर्कफ्लो खुलता है", ur: "لاگ اِن کے بعد یہی ورک فلو کھلتا ہے" },
   "Everything connects to cash, stock and profit": { ar: "كل شيء مرتبط بالنقد والمخزون والربح", hi: "सब कुछ नकद, स्टॉक और लाभ से जुड़ता है", ur: "ہر چیز کیش، اسٹاک اور منافع سے جڑی ہے" },
@@ -368,7 +381,24 @@ const defaultState = {
   receiptEnabled: false,
   vatEnabled: false,
   salesTotal: 1870,
-  expectedCash: 1245
+  expectedCash: 1245,
+  sales: [
+    { service: "Haircut", staff: "Rafiq", payment: "Cash", amount: 25, discountReason: "", createdAt: new Date().toISOString() }
+  ],
+  auditLog: [
+    { action: "Sale created", detail: "Rafiq · Haircut · Cash · AED 25", createdAt: new Date().toISOString() },
+    { action: "Purchase entered", detail: "Owner · Blades · 100 pcs · AED 120", createdAt: new Date().toISOString() },
+    { action: "Expense entered", detail: "Owner · Tea & Food · AED 35 · Cash", createdAt: new Date().toISOString() },
+    { action: "Stock adjusted", detail: "Owner · Blades · -6 · reason required", createdAt: new Date().toISOString() }
+  ],
+  checklist: {
+    servicesApproved: true,
+    staffPins: true,
+    vatConfirmed: true,
+    openingStock: false,
+    suppliersAdded: false,
+    openingCash: false
+  }
 };
 
 function loadState() {
@@ -389,6 +419,11 @@ let vatEnabled = state.vatEnabled;
 let salesTotal = state.salesTotal;
 let expectedCash = state.expectedCash;
 let activeLanguage = state.activeLanguage || "en";
+let sales = state.sales || [];
+let auditLog = state.auditLog || [];
+let checklist = { ...defaultState.checklist, ...(state.checklist || {}) };
+let activeSaleCategory = "All";
+let currentRole = "Owner";
 
 function migrateServices() {
   services = services.map((service) => ({
@@ -406,6 +441,9 @@ function saveState() {
     services,
     purchases,
     expenses,
+    sales,
+    auditLog,
+    checklist,
     receiptEnabled,
     vatEnabled,
     salesTotal,
@@ -479,6 +517,10 @@ function applyTranslations() {
 }
 
 function showView(viewId) {
+  const allowed = roleAccess[currentRole] || roleAccess.Owner;
+  if (!allowed.includes(viewId)) {
+    viewId = allowed[0] || "quick-sale";
+  }
   activeViewId = viewId;
   document.querySelectorAll(".view").forEach((view) => view.classList.remove("active"));
   document.querySelectorAll(".nav-item").forEach((item) => item.classList.remove("active"));
@@ -489,7 +531,9 @@ function showView(viewId) {
 }
 
 document.querySelectorAll(".nav-item").forEach((button) => {
-  button.addEventListener("click", () => showView(button.dataset.view));
+  if (button.dataset.view) {
+    button.addEventListener("click", () => showView(button.dataset.view));
+  }
 });
 
 document.querySelectorAll("[data-jump]").forEach((button) => {
@@ -498,6 +542,35 @@ document.querySelectorAll("[data-jump]").forEach((button) => {
 
 function money(amount) {
   return `AED ${amount.toLocaleString("en-AE")}`;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
+
+function numberValue(id) {
+  return Math.max(Number(document.getElementById(id)?.value || 0), 0);
+}
+
+function todayLabel() {
+  return new Intl.DateTimeFormat("en-AE", {
+    weekday: "long",
+    day: "2-digit",
+    month: "short"
+  }).format(new Date());
+}
+
+function addAudit(action, detail) {
+  auditLog.unshift({ action, detail, createdAt: new Date().toISOString(), role: currentRole });
+  auditLog = auditLog.slice(0, 50);
+  saveState();
+  renderAuditLog();
 }
 
 function serviceName(service, language = activeLanguage) {
@@ -555,12 +628,17 @@ function cashOutTotal(records) {
 }
 
 function syncSummaryTotals() {
-  document.querySelector(".metric-card:nth-child(3) strong").textContent = money(Math.round(totalPurchases()));
-  document.querySelector(".metric-card:nth-child(4) strong").textContent = money(Math.round(totalExpenses()));
-  document.querySelector(".statement-grid div:nth-child(3) strong").textContent = money(Math.round(totalPurchases()));
-  document.querySelector(".statement-grid div:nth-child(4) strong").textContent = money(Math.round(totalExpenses()));
+  const purchaseText = money(Math.round(totalPurchases()));
+  const expenseText = money(Math.round(totalExpenses()));
+  document.getElementById("loginPurchasesTotal").textContent = purchaseText;
+  document.getElementById("loginExpensesTotal").textContent = expenseText;
+  document.getElementById("dashboardPurchasesTotal").textContent = purchaseText;
+  document.getElementById("dashboardExpensesTotal").textContent = expenseText;
+  document.getElementById("reportPurchases").textContent = purchaseText;
+  document.getElementById("reportExpenses").textContent = expenseText;
   syncDashboardTotals();
   syncReportTotals();
+  updateClosingCalculation();
 }
 
 function moneyFixed(amount) {
@@ -568,6 +646,46 @@ function moneyFixed(amount) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })}`;
+}
+
+function updateClosingCalculation() {
+  const expected = numberValue("closingOpeningCash") + numberValue("closingCashSales") - numberValue("closingCashExpenses") - numberValue("closingCashPurchases");
+  const difference = numberValue("closingActualCash") - expected;
+  document.getElementById("closingExpectedCash").textContent = moneyFixed(expected);
+  document.getElementById("closingDifference").textContent = moneyFixed(difference);
+  document.getElementById("closingDifference").classList.toggle("negative", difference < 0);
+}
+
+function renderAuditLog() {
+  const container = document.getElementById("auditList");
+  if (!container) return;
+  container.innerHTML = "";
+  auditLog.slice(0, 8).forEach((entry) => {
+    const row = document.createElement("div");
+    const stamp = new Intl.DateTimeFormat("en-AE", { hour: "2-digit", minute: "2-digit" }).format(new Date(entry.createdAt));
+    const action = document.createElement("strong");
+    const detail = document.createElement("span");
+    action.textContent = translate(entry.action);
+    detail.textContent = `${entry.detail} · ${stamp}`;
+    row.append(action, detail);
+    container.appendChild(row);
+  });
+  applyTranslations();
+}
+
+function syncChecklist() {
+  document.querySelectorAll("[data-checklist]").forEach((input) => {
+    input.checked = !!checklist[input.dataset.checklist];
+  });
+}
+
+function applyRoleAccess() {
+  const allowed = roleAccess[currentRole] || roleAccess.Owner;
+  document.querySelectorAll("#appShell .nav-item[data-view]").forEach((item) => {
+    const enabled = allowed.includes(item.dataset.view);
+    item.hidden = !enabled;
+    item.disabled = !enabled;
+  });
 }
 
 function updatePurchaseCalculation() {
@@ -587,15 +705,22 @@ function updatePurchaseCalculation() {
 function renderSaleServices() {
   const container = document.getElementById("saleServices");
   container.innerHTML = "";
-  services
+  const visibleServices = services
     .filter((service) => service.active)
-    .forEach((service) => {
+    .filter((service) => activeSaleCategory === "All" || service.category === activeSaleCategory);
+
+  if (!visibleServices.some((service) => service.name === selectedService.name)) {
+    selectedService = visibleServices[0] || { name: "No service", price: 0, active: false };
+    syncSelectedServiceLabel();
+  }
+
+  visibleServices.forEach((service) => {
       const button = document.createElement("button");
       button.className = `service-tile ${service.name === selectedService.name ? "active" : ""}`;
       button.type = "button";
       button.innerHTML = `
-        <strong class="${isRtlLanguage() ? "rtl-preview" : ""}">${serviceName(service)}</strong>
-        <small>${translate(service.recipe)}</small>
+        <strong class="${isRtlLanguage() ? "rtl-preview" : ""}">${escapeHtml(serviceName(service))}</strong>
+        <small>${escapeHtml(translate(service.recipe))}</small>
         <span>${money(service.price)}</span>
       `;
       button.addEventListener("click", () => {
@@ -613,11 +738,11 @@ function renderServiceTable() {
   services.forEach((service, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td><strong>${serviceName(service)}</strong></td>
-      <td class="${isRtlLanguage() ? "rtl-preview" : ""}">${serviceName(service)}</td>
-      <td>${translate(service.category)}</td>
+      <td><strong>${escapeHtml(serviceName(service))}</strong></td>
+      <td class="${isRtlLanguage() ? "rtl-preview" : ""}">${escapeHtml(serviceName(service))}</td>
+      <td>${escapeHtml(translate(service.category))}</td>
       <td>${money(service.price)}</td>
-      <td>${translate(service.recipe)}</td>
+      <td>${escapeHtml(translate(service.recipe))}</td>
       <td>${translate(service.active ? "Active" : "Inactive")}</td>
       <td><button class="danger-button" data-delete-service="${index}" type="button">${translate("Delete")}</button></td>
     `;
@@ -638,6 +763,8 @@ function renderServiceTable() {
     button.addEventListener("click", (event) => {
       event.stopPropagation();
       const index = Number(button.dataset.deleteService);
+      if (!window.confirm("Delete this service? This action will be recorded in the audit trail.")) return;
+      addAudit("Stock adjusted", `${currentRole} · service deleted · ${services[index]?.name || "service"}`);
       services.splice(index, 1);
       selectedService = services[0] || { name: "No service", price: 0, active: false };
       saveState();
@@ -654,8 +781,8 @@ function renderPurchaseTable() {
   purchases.forEach((purchase, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${purchase.supplier}</td>
-      <td>${translate(purchase.item)}<br><small>${purchase.qty} ${translate(purchase.unit)} × ${moneyFixed(purchase.unitCost)}</small></td>
+      <td>${escapeHtml(purchase.supplier)}</td>
+      <td>${escapeHtml(translate(purchase.item))}<br><small>${escapeHtml(purchase.qty)} ${escapeHtml(translate(purchase.unit))} × ${moneyFixed(purchase.unitCost)}</small></td>
       <td>${translate(purchase.payment || "Cash")}</td>
       <td>${moneyFixed(purchaseTotal(purchase))}</td>
       <td><button class="danger-button" data-delete-purchase="${index}" type="button">${translate("Delete")}</button></td>
@@ -667,10 +794,12 @@ function renderPurchaseTable() {
     button.addEventListener("click", () => {
       const index = Number(button.dataset.deletePurchase);
       const purchase = purchases[index];
+      if (!window.confirm("Delete this purchase? Expected cash will be recalculated.")) return;
       if (purchase?.payment === "Cash") {
         expectedCash += purchaseTotal(purchase);
       }
       purchases.splice(index, 1);
+      addAudit("Purchase entered", `${currentRole} · purchase deleted · ${purchase?.item || "purchase"} · ${moneyFixed(purchaseTotal(purchase || {}))}`);
       saveState();
       renderPurchaseTable();
       syncSummaryTotals();
@@ -687,7 +816,7 @@ function renderExpenseTable() {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${translate(expense.category)}</td>
-      <td>${translate(expense.note || "-")}</td>
+      <td>${escapeHtml(translate(expense.note || "-"))}</td>
       <td>${translate(expense.payment)}</td>
       <td>${moneyFixed(Number(expense.amount) || 0)}</td>
       <td><button class="danger-button" data-delete-expense="${index}" type="button">${translate("Delete")}</button></td>
@@ -699,10 +828,12 @@ function renderExpenseTable() {
     button.addEventListener("click", () => {
       const index = Number(button.dataset.deleteExpense);
       const expense = expenses[index];
+      if (!window.confirm("Delete this expense? Expected cash will be recalculated.")) return;
       if (expense?.payment === "Cash") {
         expectedCash += Number(expense.amount) || 0;
       }
       expenses.splice(index, 1);
+      addAudit("Expense entered", `${currentRole} · expense deleted · ${expense?.category || "expense"} · ${moneyFixed(Number(expense?.amount) || 0)}`);
       saveState();
       renderExpenseTable();
       syncSummaryTotals();
@@ -713,12 +844,25 @@ function renderExpenseTable() {
 }
 
 document.getElementById("saveSale").addEventListener("click", () => {
-  salesTotal += selectedService.price;
-  if (document.getElementById("paymentMethod").value === "Cash") {
-    expectedCash += selectedService.price;
+  const amount = Math.max(Number(selectedService.price) || 0, 0);
+  const payment = document.getElementById("paymentMethod").value;
+  const staff = document.getElementById("saleStaff").value;
+  const sale = {
+    service: selectedService.name,
+    staff,
+    payment,
+    amount,
+    discountReason: document.getElementById("discountReason").value.trim(),
+    createdAt: new Date().toISOString()
+  };
+  sales.push(sale);
+  salesTotal += amount;
+  if (payment === "Cash") {
+    expectedCash += amount;
   }
   document.getElementById("todaySales").textContent = money(salesTotal);
   document.getElementById("expectedCash").textContent = money(expectedCash);
+  addAudit("Sale created", `${staff} · ${selectedService.name} · ${payment} · ${moneyFixed(amount)}`);
   saveState();
   syncReportTotals();
   const taxText = vatEnabled ? "VAT invoice fields are active." : "No VAT was added.";
@@ -738,6 +882,10 @@ document.getElementById("saveService").addEventListener("click", () => {
   const category = document.getElementById("serviceCategory").value;
   const price = Number(document.getElementById("servicePrice").value || 0);
   const recipe = document.getElementById("serviceRecipe").value.trim();
+  if (!name || price < 0) {
+    document.getElementById("serviceFormTitle").textContent = translate("Add / Edit Service");
+    return;
+  }
   const existing = services.find((service) => service.name.toLowerCase() === name.toLowerCase());
 
   if (existing) {
@@ -750,6 +898,7 @@ document.getElementById("saveService").addEventListener("click", () => {
   }
 
   selectedService = services.find((service) => service.name === name) || selectedService;
+  addAudit("Stock adjusted", `${currentRole} · service saved · ${name} · ${moneyFixed(price)}`);
   renderServiceTable();
   renderSaleServices();
   saveState();
@@ -776,7 +925,26 @@ document.querySelectorAll(".language-switch button").forEach((button) => {
     renderServiceTable();
     syncSelectedServiceLabel();
     syncTaxSettings();
+    updatePurchaseCalculation();
     syncLanguageButtons();
+    saveState();
+  });
+});
+
+document.querySelectorAll("[data-category]").forEach((button) => {
+  button.addEventListener("click", () => {
+    activeSaleCategory = button.dataset.category;
+    document.querySelectorAll("[data-category]").forEach((categoryButton) => {
+      categoryButton.classList.toggle("active", categoryButton === button);
+    });
+    renderSaleServices();
+  });
+});
+
+document.querySelectorAll("[data-checklist]").forEach((input) => {
+  input.addEventListener("change", () => {
+    checklist[input.dataset.checklist] = input.checked;
+    addAudit("Stock adjusted", `${currentRole} · checklist updated · ${input.dataset.checklist}`);
     saveState();
   });
 });
@@ -811,10 +979,19 @@ document.getElementById("saveSettings").addEventListener("click", () => {
 document.getElementById("loginForm").addEventListener("submit", (event) => {
   event.preventDefault();
   const role = document.getElementById("loginRole").value;
+  const pin = document.getElementById("loginPin").value.trim();
+  const loginError = document.getElementById("loginError");
+  if (pin !== rolePins[role]) {
+    loginError.hidden = false;
+    return;
+  }
+  loginError.hidden = true;
+  currentRole = role;
   window.scrollTo({ top: 0, left: 0 });
   document.body.classList.add("is-authenticated");
   document.getElementById("frontpage").classList.add("front-hidden");
   document.getElementById("appShell").classList.remove("app-hidden");
+  applyRoleAccess();
   document.getElementById("userChip").textContent = `${translate(role)} · Al Barsha`;
   showView(role === "Staff" ? "quick-sale" : "dashboard");
 });
@@ -842,6 +1019,10 @@ document.getElementById("savePurchase").addEventListener("click", () => {
     discount: Number(document.getElementById("purchaseDiscount").value || 0),
     payment: document.getElementById("purchasePayment").value
   };
+  if (!purchase.item || purchase.qty < 0 || purchase.unitCost < 0 || purchase.discount < 0) {
+    document.getElementById("purchaseNote").textContent = "Enter a valid item, quantity, unit cost and discount.";
+    return;
+  }
 
   purchases.push(purchase);
   if (purchase.payment === "Cash") {
@@ -849,6 +1030,7 @@ document.getElementById("savePurchase").addEventListener("click", () => {
     document.getElementById("expectedCash").textContent = money(Math.round(expectedCash));
   }
   saveState();
+  addAudit("Purchase entered", `${currentRole} · ${purchase.item} · ${purchase.qty} ${purchase.unit} · ${moneyFixed(purchaseTotal(purchase))}`);
   renderPurchaseTable();
   syncSummaryTotals();
   document.getElementById("purchaseNote").textContent = activeLanguage === "en"
@@ -864,6 +1046,10 @@ document.getElementById("saveExpense").addEventListener("click", () => {
     payment: document.getElementById("expensePayment").value,
     note: document.getElementById("expenseNoteInput").value.trim()
   };
+  if (expense.amount < 0) {
+    document.getElementById("expenseNote").textContent = "Enter a valid expense amount.";
+    return;
+  }
 
   expenses.push(expense);
   if (expense.payment === "Cash") {
@@ -871,6 +1057,7 @@ document.getElementById("saveExpense").addEventListener("click", () => {
     document.getElementById("expectedCash").textContent = money(Math.round(expectedCash));
   }
   saveState();
+  addAudit("Expense entered", `${currentRole} · ${expense.category} · ${expense.payment} · ${moneyFixed(expense.amount)}`);
   renderExpenseTable();
   syncSummaryTotals();
   document.getElementById("expenseNote").textContent = activeLanguage === "en"
@@ -883,16 +1070,34 @@ document.getElementById("saveExpense").addEventListener("click", () => {
   document.getElementById(id).addEventListener("input", updatePurchaseCalculation);
 });
 
+["closingOpeningCash", "closingCashSales", "closingCashExpenses", "closingCashPurchases", "closingActualCash"].forEach((id) => {
+  document.getElementById(id).addEventListener("input", updateClosingCalculation);
+});
+
+document.getElementById("approveClosing").addEventListener("click", () => {
+  updateClosingCalculation();
+  addAudit("Stock adjusted", `${currentRole} · day closed · ${document.getElementById("closingDifference").textContent}`);
+});
+
+document.querySelectorAll("[data-export]").forEach((button) => {
+  button.addEventListener("click", () => {
+    addAudit("Stock adjusted", `${currentRole} · export requested · ${button.dataset.export}`);
+    document.querySelector(".ai-summary span").textContent = `${button.textContent.trim()} is ready through Print / Save PDF in this static build.`;
+    applyTranslations();
+  });
+});
+
 function syncTaxSettings() {
   const taxMode = vatEnabled ? "VAT On" : "VAT Off";
   const branchLabel = vatEnabled ? "VAT enabled · tax invoice mode" : "VAT optional · currently off";
   const checkoutNote = vatEnabled ? "VAT on: tax invoice mode" : "VAT off: internal sale record only";
   const receiptText = receiptEnabled ? "Receipt on" : "Receipt off";
+  const headerLabel = `${todayLabel()} · AED · ${taxMode}`;
 
   document.body.classList.toggle("vat-enabled", vatEnabled);
   document.getElementById("taxModeLabel").textContent = translate(taxMode);
   document.getElementById("branchTaxLabel").textContent = translate(branchLabel);
-  document.getElementById("topTaxLabel").textContent = translate(`Monday, 31 Aug · AED · ${taxMode}`);
+  document.getElementById("topTaxLabel").textContent = headerLabel;
   document.getElementById("toggleVat").textContent = translate(vatEnabled ? "Turn VAT off" : "Turn VAT on");
   document.getElementById("toggleReceipt").textContent = translate(receiptText);
   document.getElementById("checkoutTaxNote").textContent = translate(checkoutNote);
@@ -915,6 +1120,8 @@ renderSaleServices();
 renderServiceTable();
 renderPurchaseTable();
 renderExpenseTable();
+renderAuditLog();
+syncChecklist();
 syncLanguageButtons();
 syncSelectedServiceLabel();
 syncTaxSettings();

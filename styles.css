@@ -486,6 +486,11 @@ body.is-authenticated .app-shell {
   line-height: 1.35;
 }
 
+.danger-note {
+  color: var(--red);
+  font-weight: 800;
+}
+
 .check-list,
 .flow-steps,
 .stock-list,

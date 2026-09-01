@@ -22,18 +22,35 @@ const js = await readFile(join(root, "dist/app.js"), "utf8");
 
 const requiredHtml = [
   "id=\"loginForm\"",
+  "id=\"loginPin\"",
+  "id=\"loginError\"",
   "id=\"purchaseTable\"",
+  "id=\"dashboardPurchasesTotal\"",
+  "id=\"dashboardExpensesTotal\"",
   "id=\"expenseTable\"",
   "id=\"serviceNameAr\"",
+  "data-category=\"All\"",
+  "data-checklist=\"servicesApproved\"",
+  "id=\"approveClosing\"",
+  "id=\"auditList\"",
   "id=\"vatModeSelect\"",
-  "id=\"printReport\""
+  "id=\"printReport\"",
+  "data-export=\"csv\""
 ];
 
 const requiredJs = [
   "localStorage",
+  "rolePins",
+  "roleAccess",
+  "sales",
+  "auditLog",
+  "createdAt",
+  "escapeHtml",
   "updatePurchaseCalculation",
+  "updateClosingCalculation",
   "renderPurchaseTable",
   "renderExpenseTable",
+  "renderAuditLog",
   "syncLanguageButtons",
   "saveState"
 ];
