@@ -1,0 +1,13 @@
+{
+  "name": "salon-control-mvp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Publishable barber shop control web app for sales, purchases, expenses, inventory, tools, cash closing and reports.",
+  "scripts": {
+    "dev": "python3 -m http.server 5182 --bind 127.0.0.1",
+    "build": "node scripts/build.mjs",
+    "preview": "python3 -m http.server 5183 --bind 127.0.0.1 --directory dist",
+    "validate": "node scripts/validate.mjs"
+  }
+}
