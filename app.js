@@ -923,7 +923,11 @@ document.querySelectorAll(".language-switch button").forEach((button) => {
     activeLanguage = button.textContent.trim().toLowerCase();
     renderSaleServices();
     renderServiceTable();
+    renderPurchaseTable();
+    renderExpenseTable();
+    renderAuditLog();
     syncSelectedServiceLabel();
+    syncSummaryTotals();
     syncTaxSettings();
     updatePurchaseCalculation();
     syncLanguageButtons();
