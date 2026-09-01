@@ -16,54 +16,102 @@
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
     <section class="frontpage" id="frontpage">
-      <div class="front-copy">
-        <div class="brand-block light">
+      <aside class="sidebar login-sidebar" aria-label="Preview navigation">
+        <div class="brand-block">
           <div class="brand-mark">SC</div>
           <div>
             <h1>Salon Control</h1>
-            <p>Barber shop operating system</p>
+            <p>Barber shop mode</p>
           </div>
         </div>
-        <div class="front-title">
-          <span>Al Barsha Gents · AED · VAT optional</span>
-          <h2>Daily control, ready before opening.</h2>
-          <p class="front-lead">Sales, purchases, expenses, reusable tools, stock movement, staff commission, cash closing and owner reports in one working flow.</p>
-        </div>
-        <div class="front-modules" aria-label="Included modules">
-          <span>Quick Sale</span>
-          <span>Services</span>
-          <span>Purchases</span>
-          <span>Expenses</span>
-          <span>Inventory</span>
-          <span>Cash Closing</span>
-          <span>Reports</span>
-          <span>Settings</span>
-        </div>
-        <div class="front-board" aria-label="Today preview">
-          <div><span>Expected cash</span><strong>AED 1,245</strong></div>
-          <div><span>Purchases</span><strong>AED 640</strong></div>
-          <div><span>Expenses</span><strong>AED 310</strong></div>
-          <div><span>Audit status</span><strong>Ready</strong></div>
-        </div>
-      </div>
 
-      <form class="login-card" id="loginForm">
-        <span class="status-pill">Secure demo access</span>
-        <h3>Enter workspace</h3>
-        <p>Owner opens the full control room. Staff opens fast sale entry.</p>
-        <label>Role
-          <select id="loginRole">
-            <option value="Owner">Owner</option>
-            <option value="Staff">Staff</option>
-            <option value="Cashier">Cashier</option>
-          </select>
-        </label>
-        <label>PIN
-          <input id="loginPin" value="1234" inputmode="numeric" />
-        </label>
-        <button class="primary-button full" type="submit">Enter Salon Control</button>
-        <small>Demo PIN: 1234</small>
-      </form>
+        <div class="branch-card">
+          <span>Active branch</span>
+          <strong>Al Barsha Gents</strong>
+          <small>VAT optional · currently off</small>
+        </div>
+
+        <nav class="nav-list" aria-label="App modules preview">
+          <span class="nav-item active"><span class="nav-icon" data-icon="dashboard"></span>Dashboard</span>
+          <span class="nav-item"><span class="nav-icon" data-icon="sale"></span>Quick Sale</span>
+          <span class="nav-item"><span class="nav-icon" data-icon="purchase"></span>Purchases</span>
+          <span class="nav-item"><span class="nav-icon" data-icon="expense"></span>Expenses</span>
+          <span class="nav-item"><span class="nav-icon" data-icon="stock"></span>Inventory & Tools</span>
+          <span class="nav-item"><span class="nav-icon" data-icon="cash"></span>Cash Closing</span>
+          <span class="nav-item"><span class="nav-icon" data-icon="report"></span>Reports</span>
+        </nav>
+      </aside>
+
+      <main class="main login-main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Monday, 31 Aug · AED · VAT Off</p>
+            <h2>Salon Control Dashboard</h2>
+          </div>
+          <div class="top-actions">
+            <span class="user-chip">Login required</span>
+            <span class="language-status">Language: English</span>
+          </div>
+        </header>
+
+        <div class="metric-grid login-preview">
+          <article class="metric-card highlight">
+            <span>Expected cash today</span>
+            <strong>AED 1,245</strong>
+            <small>Sales minus purchases and expenses</small>
+          </article>
+          <article class="metric-card">
+            <span>Sales</span>
+            <strong>AED 1,870</strong>
+            <small>Haircut, beard, color, facial</small>
+          </article>
+          <article class="metric-card">
+            <span>Purchases</span>
+            <strong>AED 640</strong>
+            <small>Blades, foam, oil, tools</small>
+          </article>
+          <article class="metric-card">
+            <span>Expenses</span>
+            <strong>AED 310</strong>
+            <small>Tea, food, laundry, repair</small>
+          </article>
+        </div>
+
+        <div class="login-stage">
+          <form class="login-card" id="loginForm">
+            <span class="status-pill">Secure demo access</span>
+            <h3>Enter workspace</h3>
+            <p>Owner opens the full control room. Staff opens fast sale entry.</p>
+            <label>Role
+              <select id="loginRole">
+                <option value="Owner">Owner</option>
+                <option value="Staff">Staff</option>
+                <option value="Cashier">Cashier</option>
+              </select>
+            </label>
+            <label>PIN
+              <input id="loginPin" value="1234" inputmode="numeric" />
+            </label>
+            <button class="primary-button full" type="submit">Enter Salon Control</button>
+            <small>Demo PIN: 1234</small>
+          </form>
+
+          <article class="panel login-flow">
+            <div class="panel-head">
+              <div>
+                <h3>Today’s Flow</h3>
+                <p>The same workflow opens after login</p>
+              </div>
+            </div>
+            <div class="flow-steps">
+              <div><span>1</span><strong>Sale recorded</strong><small>Services and custom items</small></div>
+              <div><span>2</span><strong>Stock consumed</strong><small>Blades, foam, oil, towels</small></div>
+              <div><span>3</span><strong>Money out entered</strong><small>Purchases and expenses separated</small></div>
+              <div><span>4</span><strong>Cash closed</strong><small>Owner report is ready</small></div>
+            </div>
+          </article>
+        </div>
+      </main>
     </section>
 
     <div class="app-shell app-hidden" id="appShell">
