@@ -319,6 +319,7 @@ body.is-authenticated .app-shell {
 
 .language-switch {
   display: flex;
+  direction: ltr;
   gap: 4px;
   padding: 4px;
   background: var(--panel);

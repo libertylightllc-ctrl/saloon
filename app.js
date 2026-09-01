@@ -31,6 +31,320 @@ const languageLabels = {
   ur: "Urdu"
 };
 
+const uiTranslations = {
+  "Barber shop mode": { ar: "وضع صالون الحلاقة", hi: "बारबर शॉप मोड", ur: "حجام کی دکان موڈ" },
+  "Active branch": { ar: "الفرع النشط", hi: "सक्रिय शाखा", ur: "فعال برانچ" },
+  "VAT optional · currently off": { ar: "ضريبة القيمة المضافة اختيارية · متوقفة حالياً", hi: "VAT वैकल्पिक · अभी बंद", ur: "VAT اختیاری · فی الحال بند" },
+  Dashboard: { ar: "لوحة التحكم", hi: "डैशबोर्ड", ur: "ڈیش بورڈ" },
+  Setup: { ar: "الإعداد", hi: "सेटअप", ur: "سیٹ اپ" },
+  "Quick Sale": { ar: "بيع سريع", hi: "त्वरित बिक्री", ur: "فوری فروخت" },
+  Services: { ar: "الخدمات", hi: "सेवाएं", ur: "خدمات" },
+  Purchases: { ar: "المشتريات", hi: "खरीदारी", ur: "خریداری" },
+  Expenses: { ar: "المصروفات", hi: "खर्चे", ur: "اخراجات" },
+  "Inventory & Tools": { ar: "المخزون والأدوات", hi: "इन्वेंटरी और टूल्स", ur: "اسٹاک اور اوزار" },
+  Inventory: { ar: "المخزون", hi: "इन्वेंटरी", ur: "اسٹاک" },
+  Audit: { ar: "التدقيق", hi: "ऑडिट", ur: "آڈٹ" },
+  "Cash Closing": { ar: "إغلاق النقدية", hi: "कैश क्लोजिंग", ur: "کیش کلوزنگ" },
+  Reports: { ar: "التقارير", hi: "रिपोर्ट्स", ur: "رپورٹس" },
+  Settings: { ar: "الإعدادات", hi: "सेटिंग्स", ur: "ترتیبات" },
+  "Monday, 31 Aug · AED · VAT Off": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة متوقفة", hi: "सोमवार, 31 अगस्त · AED · VAT बंद", ur: "پیر، 31 اگست · AED · VAT بند" },
+  "Monday, 31 Aug · AED · VAT On": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة مفعلة", hi: "सोमवार, 31 अगस्त · AED · VAT चालू", ur: "پیر، 31 اگست · AED · VAT آن" },
+  "Monday, 31 Aug · AED · VAT optional": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة اختيارية", hi: "सोमवार, 31 अगस्त · AED · VAT वैकल्पिक", ur: "پیر، 31 اگست · AED · VAT اختیاری" },
+  "Salon Control Dashboard": { ar: "لوحة تحكم الصالون", hi: "सैलून कंट्रोल डैशबोर्ड", ur: "سیلون کنٹرول ڈیش بورڈ" },
+  "Daily Control Dashboard": { ar: "لوحة التحكم اليومية", hi: "दैनिक कंट्रोल डैशबोर्ड", ur: "روزانہ کنٹرول ڈیش بورڈ" },
+  "Login required": { ar: "تسجيل الدخول مطلوب", hi: "लॉगिन आवश्यक", ur: "لاگ اِن ضروری" },
+  "Language: English": { ar: "اللغة: الإنجليزية", hi: "भाषा: अंग्रेज़ी", ur: "زبان: انگریزی" },
+  "Language: Arabic": { ar: "اللغة: العربية", hi: "भाषा: अरबी", ur: "زبان: عربی" },
+  "Language: Hindi": { ar: "اللغة: الهندية", hi: "भाषा: हिंदी", ur: "زبان: ہندی" },
+  "Language: Urdu": { ar: "اللغة: الأردية", hi: "भाषा: उर्दू", ur: "زبان: اردو" },
+  "Expected cash today": { ar: "النقد المتوقع اليوم", hi: "आज अपेक्षित नकद", ur: "آج متوقع کیش" },
+  "Cash sales minus cash expenses and purchases": { ar: "مبيعات النقد ناقص مصروفات ومشتريات النقد", hi: "नकद बिक्री में से नकद खर्च और खरीदारी घटाकर", ur: "کیش سیلز میں سے کیش اخراجات اور خریداری کم" },
+  "Sales minus purchases and expenses": { ar: "المبيعات ناقص المشتريات والمصروفات", hi: "बिक्री में से खरीदारी और खर्चे घटाकर", ur: "سیلز میں سے خریداری اور اخراجات کم" },
+  Sales: { ar: "المبيعات", hi: "बिक्री", ur: "سیلز" },
+  "Sales incl. VAT": { ar: "المبيعات شاملة الضريبة", hi: "VAT सहित बिक्री", ur: "VAT سمیت سیلز" },
+  "64 services · 7 retail items · no VAT added": { ar: "64 خدمة · 7 منتجات بيع · بدون ضريبة", hi: "64 सेवाएं · 7 रिटेल आइटम · VAT नहीं जोड़ा", ur: "64 خدمات · 7 ریٹیل آئٹمز · VAT شامل نہیں" },
+  "64 services · VAT calculated separately": { ar: "64 خدمة · الضريبة محسوبة منفصلة", hi: "64 सेवाएं · VAT अलग से गणना", ur: "64 خدمات · VAT الگ حساب ہوا" },
+  "Haircut, beard, color, facial": { ar: "قص شعر، لحية، صبغ، تنظيف بشرة", hi: "हेयरकट, दाढ़ी, कलर, फेशियल", ur: "بال کٹوانا، داڑھی، رنگ، فیشل" },
+  "Supplier bills entered today": { ar: "فواتير الموردين المدخلة اليوم", hi: "आज दर्ज सप्लायर बिल", ur: "آج درج سپلائر بل" },
+  "Blades, foam, oil, tools": { ar: "شفرات، رغوة، زيت، أدوات", hi: "ब्लेड, फोम, तेल, टूल्स", ur: "بلیڈ، فوم، تیل، اوزار" },
+  "Tea, laundry, transport, repair": { ar: "شاي، مغسلة، نقل، صيانة", hi: "चाय, लॉन्ड्री, परिवहन, मरम्मत", ur: "چائے، لانڈری، ٹرانسپورٹ، مرمت" },
+  "Tea, food, laundry, repair": { ar: "شاي، طعام، مغسلة، صيانة", hi: "चाय, खाना, लॉन्ड्री, मरम्मत", ur: "چائے، کھانا، لانڈری، مرمت" },
+  "Secure demo access": { ar: "دخول تجريبي آمن", hi: "सुरक्षित डेमो एक्सेस", ur: "محفوظ ڈیمو رسائی" },
+  "Enter workspace": { ar: "دخول مساحة العمل", hi: "वर्कस्पेस खोलें", ur: "ورک اسپیس کھولیں" },
+  "Owner opens the full control room. Staff opens fast sale entry.": { ar: "المالك يفتح التحكم الكامل. الموظف يفتح البيع السريع.", hi: "मालिक पूरा कंट्रोल खोलता है। स्टाफ तेज बिक्री एंट्री खोलता है।", ur: "مالک مکمل کنٹرول کھولتا ہے۔ اسٹاف فوری سیل انٹری کھولتا ہے۔" },
+  Role: { ar: "الدور", hi: "भूमिका", ur: "کردار" },
+  Owner: { ar: "المالك", hi: "मालिक", ur: "مالک" },
+  Staff: { ar: "الموظف", hi: "स्टाफ", ur: "اسٹاف" },
+  Cashier: { ar: "أمين الصندوق", hi: "कैशियर", ur: "کیشئر" },
+  PIN: { ar: "الرمز السري", hi: "PIN", ur: "پن" },
+  "Enter Salon Control": { ar: "دخول نظام الصالون", hi: "सैलून कंट्रोल खोलें", ur: "سیلون کنٹرول کھولیں" },
+  "Demo PIN: 1234": { ar: "رمز التجربة: 1234", hi: "डेमो PIN: 1234", ur: "ڈیمو پن: 1234" },
+  "Today’s Flow": { ar: "مسار اليوم", hi: "आज का फ्लो", ur: "آج کا بہاؤ" },
+  "The same workflow opens after login": { ar: "نفس سير العمل يفتح بعد تسجيل الدخول", hi: "लॉगिन के बाद यही वर्कफ्लो खुलता है", ur: "لاگ اِن کے بعد یہی ورک فلو کھلتا ہے" },
+  "Everything connects to cash, stock and profit": { ar: "كل شيء مرتبط بالنقد والمخزون والربح", hi: "सब कुछ नकद, स्टॉक और लाभ से जुड़ता है", ur: "ہر چیز کیش، اسٹاک اور منافع سے جڑی ہے" },
+  "Sale recorded": { ar: "تم تسجيل البيع", hi: "बिक्री दर्ज", ur: "سیل درج ہوئی" },
+  "Services and custom items": { ar: "الخدمات والعناصر المخصصة", hi: "सेवाएं और कस्टम आइटम", ur: "خدمات اور کسٹم آئٹمز" },
+  "Haircut, beard, facial or custom service": { ar: "قص شعر أو لحية أو تنظيف بشرة أو خدمة مخصصة", hi: "हेयरकट, दाढ़ी, फेशियल या कस्टम सेवा", ur: "بال، داڑھی، فیشل یا کسٹم سروس" },
+  "Stock consumed": { ar: "تم استهلاك المخزون", hi: "स्टॉक उपयोग हुआ", ur: "اسٹاک استعمال ہوا" },
+  "Blades, foam, oil, towels": { ar: "شفرات، رغوة، زيت، مناشف", hi: "ब्लेड, फोम, तेल, तौलिए", ur: "بلیڈ، فوم، تیل، تولیے" },
+  "Blades, foam, oil, color, towels where relevant": { ar: "شفرات، رغوة، زيت، صبغ، مناشف حسب الخدمة", hi: "ब्लेड, फोम, तेल, कलर, जरूरत पर तौलिए", ur: "بلیڈ، فوم، تیل، رنگ، ضرورت پر تولیے" },
+  "Money out entered": { ar: "تم إدخال المصروف", hi: "पैसा बाहर दर्ज", ur: "رقم باہر درج ہوئی" },
+  "Purchases and expenses separated": { ar: "المشتريات والمصروفات مفصولة", hi: "खरीदारी और खर्चे अलग", ur: "خریداری اور اخراجات الگ" },
+  "Purchases and expenses separated properly": { ar: "المشتريات والمصروفات مفصولة بشكل صحيح", hi: "खरीदारी और खर्चे सही तरह अलग", ur: "خریداری اور اخراجات صحیح الگ" },
+  "Cash closed": { ar: "تم إغلاق النقدية", hi: "कैश बंद", ur: "کیش بند ہوا" },
+  "Owner report is ready": { ar: "تقرير المالك جاهز", hi: "मालिक रिपोर्ट तैयार", ur: "مالک رپورٹ تیار ہے" },
+  "Owner closes cash": { ar: "المالك يغلق النقدية", hi: "मालिक कैश बंद करता है", ur: "مالک کیش بند کرتا ہے" },
+  "Shortage, reason and approval are logged": { ar: "يتم تسجيل النقص والسبب والموافقة", hi: "शॉर्टेज, कारण और मंजूरी लॉग होती है", ur: "کمی، وجہ اور منظوری لاگ ہوتی ہے" },
+  "Owner Checks": { ar: "فحوصات المالك", hi: "मालिक जांच", ur: "مالک چیک" },
+  "Items that need review before closing the day": { ar: "العناصر التي تحتاج مراجعة قبل إغلاق اليوم", hi: "दिन बंद करने से पहले समीक्षा वाले आइटम", ur: "دن بند کرنے سے پہلے جائزہ والے آئٹمز" },
+  "Close day": { ar: "إغلاق اليوم", hi: "दिन बंद करें", ur: "دن بند کریں" },
+  "Cash shortage pending": { ar: "نقص نقدي قيد المراجعة", hi: "कैश शॉर्टेज लंबित", ur: "کیش کمی زیر التوا" },
+  "Expected AED 1,245 · counted AED 1,195": { ar: "المتوقع 1,245 درهم · المعدود 1,195 درهم", hi: "अपेक्षित AED 1,245 · गिना AED 1,195", ur: "متوقع AED 1,245 · گنا AED 1,195" },
+  "Blade usage higher than shave count": { ar: "استهلاك الشفرات أعلى من عدد الحلاقة", hi: "शेव गिनती से ब्लेड उपयोग ज्यादा", ur: "شیو گنتی سے بلیڈ استعمال زیادہ" },
+  Review: { ar: "مراجعة", hi: "समीक्षा", ur: "جائزہ" },
+  "Dry cleaning expense added": { ar: "تمت إضافة مصروف التنظيف الجاف", hi: "ड्राई क्लीनिंग खर्च जोड़ा गया", ur: "ڈرائی کلیننگ خرچ شامل" },
+  "AED 85 · cash paid · receipt missing": { ar: "85 درهم · دفع نقداً · الإيصال مفقود", hi: "AED 85 · नकद भुगतान · रसीद गायब", ur: "AED 85 · نقد ادا · رسید غائب" },
+  Attach: { ar: "إرفاق", hi: "संलग्न करें", ur: "منسلک کریں" },
+  "Business tax mode": { ar: "وضع ضريبة العمل", hi: "बिजनेस टैक्स मोड", ur: "کاروباری ٹیکس موڈ" },
+  "VAT optional": { ar: "الضريبة اختيارية", hi: "VAT वैकल्पिक", ur: "VAT اختیاری" },
+  "VAT Off": { ar: "الضريبة متوقفة", hi: "VAT बंद", ur: "VAT بند" },
+  "VAT On": { ar: "الضريبة مفعلة", hi: "VAT चालू", ur: "VAT آن" },
+  "VAT enabled · tax invoice mode": { ar: "الضريبة مفعلة · وضع الفاتورة الضريبية", hi: "VAT चालू · टैक्स इनवॉइस मोड", ur: "VAT فعال · ٹیکس انوائس موڈ" },
+  "VAT on: tax invoice mode": { ar: "الضريبة مفعلة: وضع الفاتورة الضريبية", hi: "VAT चालू: टैक्स इनवॉइस मोड", ur: "VAT فعال: ٹیکس انوائس موڈ" },
+  "VAT off: internal sale record only": { ar: "الضريبة متوقفة: سجل بيع داخلي فقط", hi: "VAT बंद: केवल आंतरिक बिक्री रिकॉर्ड", ur: "VAT بند: صرف اندرونی سیل ریکارڈ" },
+  "Optional On": { ar: "اختياري مفعل", hi: "वैकल्पिक चालू", ur: "اختیاری آن" },
+  "Optional Off": { ar: "اختياري متوقف", hi: "वैकल्पिक बंद", ur: "اختیاری بند" },
+  "Turn VAT on": { ar: "تشغيل الضريبة", hi: "VAT चालू करें", ur: "VAT آن کریں" },
+  "Turn VAT off": { ar: "إيقاف الضريبة", hi: "VAT बंद करें", ur: "VAT بند کریں" },
+  "Receipt off": { ar: "الإيصال متوقف", hi: "रसीद बंद", ur: "رسید بند" },
+  "Receipt on": { ar: "الإيصال مفعل", hi: "रसीद चालू", ur: "رسید آن" },
+  Logout: { ar: "خروج", hi: "लॉगआउट", ur: "لاگ آؤٹ" },
+  "New Sale": { ar: "بيع جديد", hi: "नई बिक्री", ur: "نئی سیل" },
+  "Launch Setup": { ar: "إعداد التشغيل", hi: "लॉन्च सेटअप", ur: "لانچ سیٹ اپ" },
+  "Editable Service Catalog": { ar: "كتالوج الخدمات القابل للتعديل", hi: "संपादन योग्य सेवा कैटलॉग", ur: "قابل تدوین سروس کیٹلاگ" },
+  "Tax & Receipt Settings": { ar: "إعدادات الضريبة والإيصال", hi: "टैक्स और रसीद सेटिंग्स", ur: "ٹیکس اور رسید ترتیبات" },
+  "Final data output": { ar: "مخرجات البيانات النهائية", hi: "अंतिम डेटा आउटपुट", ur: "حتمی ڈیٹا آؤٹ پٹ" },
+  "Save Sale": { ar: "حفظ البيع", hi: "बिक्री सेव करें", ur: "سیل محفوظ کریں" },
+  "Save Service": { ar: "حفظ الخدمة", hi: "सेवा सेव करें", ur: "سروس محفوظ کریں" },
+  "Save Purchase": { ar: "حفظ المشتريات", hi: "खरीदारी सेव करें", ur: "خریداری محفوظ کریں" },
+  "Save Expense": { ar: "حفظ المصروف", hi: "खर्च सेव करें", ur: "خرچ محفوظ کریں" },
+  "Save Settings": { ar: "حفظ الإعدادات", hi: "सेटिंग्स सेव करें", ur: "ترتیبات محفوظ کریں" },
+  Delete: { ar: "حذف", hi: "हटाएं", ur: "حذف کریں" },
+  "Purchase deleted. Totals were recalculated.": { ar: "تم حذف المشتريات. تمت إعادة حساب الإجماليات.", hi: "खरीदारी हटाई गई। कुल फिर से गणना हुए।", ur: "خریداری حذف ہو گئی۔ کل دوبارہ حساب ہوا۔" },
+  "Expense deleted. Totals were recalculated.": { ar: "تم حذف المصروف. تمت إعادة حساب الإجماليات.", hi: "खर्च हटाया गया। कुल फिर से गणना हुए।", ur: "خرچ حذف ہو گیا۔ کل دوبارہ حساب ہوا۔" },
+  Supplier: { ar: "المورد", hi: "सप्लायर", ur: "سپلائر" },
+  Items: { ar: "العناصر", hi: "आइटम", ur: "آئٹمز" },
+  Payment: { ar: "الدفع", hi: "भुगतान", ur: "ادائیگی" },
+  Total: { ar: "الإجمالي", hi: "कुल", ur: "کل" },
+  Action: { ar: "إجراء", hi: "कार्रवाई", ur: "عمل" },
+  Category: { ar: "الفئة", hi: "श्रेणी", ur: "زمرہ" },
+  Amount: { ar: "المبلغ", hi: "राशि", ur: "رقم" },
+  Note: { ar: "ملاحظة", hi: "नोट", ur: "نوٹ" },
+  "Add Purchase": { ar: "إضافة مشتريات", hi: "खरीदारी जोड़ें", ur: "خریداری شامل کریں" },
+  "Add Expense": { ar: "إضافة مصروف", hi: "खर्च जोड़ें", ur: "خرچ شامل کریں" },
+  Qty: { ar: "الكمية", hi: "मात्रा", ur: "تعداد" },
+  "Unit cost": { ar: "تكلفة الوحدة", hi: "यूनिट लागत", ur: "یونٹ لاگت" },
+  Subtotal: { ar: "المجموع الفرعي", hi: "उप-योग", ur: "ذیلی کل" },
+  "Print / Save PDF": { ar: "طباعة / حفظ PDF", hi: "PDF प्रिंट / सेव", ur: "PDF پرنٹ / محفوظ" },
+  Service: { ar: "الخدمة", hi: "सेवा", ur: "سروس" },
+  "Selected language": { ar: "اللغة المختارة", hi: "चुनी हुई भाषा", ur: "منتخب زبان" },
+  Price: { ar: "السعر", hi: "कीमत", ur: "قیمت" },
+  Recipe: { ar: "وصفة المخزون", hi: "स्टॉक रेसिपी", ur: "اسٹاک ترکیب" },
+  Status: { ar: "الحالة", hi: "स्थिति", ur: "حالت" },
+  Active: { ar: "نشط", hi: "सक्रिय", ur: "فعال" },
+  Inactive: { ar: "غير نشط", hi: "निष्क्रिय", ur: "غیر فعال" },
+  Hair: { ar: "الشعر", hi: "बाल", ur: "بال" },
+  Beard: { ar: "اللحية", hi: "दाढ़ी", ur: "داڑھی" },
+  Color: { ar: "الصبغ", hi: "कलर", ur: "رنگ" },
+  Face: { ar: "الوجه", hi: "चेहरा", ur: "چہرہ" },
+  Massage: { ar: "مساج", hi: "मसाज", ur: "مساج" },
+  Custom: { ar: "مخصص", hi: "कस्टम", ur: "کسٹم" },
+  Cash: { ar: "نقد", hi: "नकद", ur: "نقد" },
+  Card: { ar: "بطاقة", hi: "कार्ड", ur: "کارڈ" },
+  Bank: { ar: "بنك", hi: "बैंक", ur: "بینک" },
+  Wallet: { ar: "محفظة", hi: "वॉलेट", ur: "والٹ" },
+  Split: { ar: "تقسيم", hi: "स्प्लिट", ur: "تقسیم" },
+  "Neck strip 1, shampoo optional": { ar: "شريط رقبة 1، شامبو اختياري", hi: "नेक स्ट्रिप 1, शैम्पू वैकल्पिक", ur: "نیک اسٹرپ 1، شیمپو اختیاری" },
+  "Blade 1, foam 8ml, tissue 2": { ar: "شفرة 1، رغوة 8 مل، مناديل 2", hi: "ब्लेड 1, फोम 8ml, टिश्यू 2", ur: "بلیڈ 1، فوم 8ml، ٹشو 2" },
+  "Machine use, tissue 1": { ar: "استخدام ماكينة، منديل 1", hi: "मशीन उपयोग, टिश्यू 1", ur: "مشین استعمال، ٹشو 1" },
+  "Beard color 20ml, developer 20ml, gloves 1 pair": { ar: "صبغ لحية 20 مل، مطور 20 مل، قفازات زوج 1", hi: "दाढ़ी कलर 20ml, डेवलपर 20ml, दस्ताने 1 जोड़ी", ur: "داڑھی رنگ 20ml، ڈویلپر 20ml، دستانے 1 جوڑا" },
+  "Color 60ml, developer 60ml, gloves 1 pair": { ar: "صبغ 60 مل، مطور 60 مل، قفازات زوج 1", hi: "कलर 60ml, डेवलपर 60ml, दस्ताने 1 जोड़ी", ur: "رنگ 60ml، ڈویلپر 60ml، دستانے 1 جوڑا" },
+  "Cream 10ml, mask 1, towel laundry": { ar: "كريم 10 مل، ماسك 1، غسيل منشفة", hi: "क्रीम 10ml, मास्क 1, तौलिया लॉन्ड्री", ur: "کریم 10ml، ماسک 1، تولیہ لانڈری" },
+  "Oil 15ml, towel laundry": { ar: "زيت 15 مل، غسيل منشفة", hi: "तेल 15ml, तौलिया लॉन्ड्री", ur: "تیل 15ml، تولیہ لانڈری" },
+  Business: { ar: "النشاط", hi: "व्यवसाय", ur: "کاروبار" },
+  Branch: { ar: "الفرع", hi: "शाखा", ur: "برانچ" },
+  Products: { ar: "المنتجات", hi: "उत्पाद", ur: "مصنوعات" },
+  "Opening Stock": { ar: "المخزون الافتتاحي", hi: "ओपनिंग स्टॉक", ur: "اوپننگ اسٹاک" },
+  "Al Barsha Gents Barber": { ar: "حلاق رجال البرشاء", hi: "अल बरशा जेंट्स बारबर", ur: "البرشا جینٹس باربر" },
+  "AED currency · non-VAT default": { ar: "عملة الدرهم · الضريبة متوقفة افتراضياً", hi: "AED मुद्रा · डिफ़ॉल्ट बिना VAT", ur: "AED کرنسی · ڈیفالٹ غیر VAT" },
+  "Owner, cashier, barber roles": { ar: "أدوار المالك وأمين الصندوق والحلاق", hi: "मालिक, कैशियर, बारबर भूमिकाएं", ur: "مالک، کیشئر، حجام کردار" },
+  "Haircut, shave, color, facial, custom": { ar: "قص شعر، حلاقة، صبغ، تنظيف بشرة، مخصص", hi: "हेयरकट, शेव, कलर, फेशियल, कस्टम", ur: "بال، شیو، رنگ، فیشل، کسٹم" },
+  "Consumables, retail and tools": { ar: "مستهلكات وبيع تجزئة وأدوات", hi: "कंज्यूमेबल, रिटेल और टूल्स", ur: "استعمالی سامان، ریٹیل اور اوزار" },
+  "Count stock before launch": { ar: "عد المخزون قبل التشغيل", hi: "लॉन्च से पहले स्टॉक गिनें", ur: "لانچ سے پہلے اسٹاک گنیں" },
+  "Launch Checklist": { ar: "قائمة التشغيل", hi: "लॉन्च चेकलिस्ट", ur: "لانچ چیک لسٹ" },
+  "Everything needed before the barber shop starts using the app live.": { ar: "كل ما يلزم قبل أن يبدأ الصالون استخدام التطبيق فعلياً.", hi: "बारबर शॉप के लाइव उपयोग से पहले सब जरूरी चीजें।", ur: "حجام دکان کے لائیو استعمال سے پہلے تمام ضروری چیزیں۔" },
+  "Services and prices approved": { ar: "تم اعتماد الخدمات والأسعار", hi: "सेवाएं और कीमतें मंजूर", ur: "خدمات اور قیمتیں منظور" },
+  "Staff PINs created": { ar: "تم إنشاء رموز الموظفين", hi: "स्टाफ PIN बनाए गए", ur: "اسٹاف پن بن گئے" },
+  "VAT off confirmed": { ar: "تم تأكيد إيقاف الضريبة", hi: "VAT बंद पुष्टि", ur: "VAT بند تصدیق" },
+  "Opening stock counted": { ar: "تم عد المخزون الافتتاحي", hi: "ओपनिंग स्टॉक गिना गया", ur: "اوپننگ اسٹاک گنا گیا" },
+  "Suppliers added": { ar: "تمت إضافة الموردين", hi: "सप्लायर जोड़े गए", ur: "سپلائر شامل" },
+  "Cash drawer opening balance set": { ar: "تم ضبط رصيد درج النقدية الافتتاحي", hi: "कैश ड्रॉअर ओपनिंग बैलेंस सेट", ur: "کیش دراز اوپننگ بیلنس سیٹ" },
+  Checkout: { ar: "الدفع", hi: "चेकआउट", ur: "چیک آؤٹ" },
+  "Staff records common services in a few taps": { ar: "الموظف يسجل الخدمات الشائعة بلمسات قليلة", hi: "स्टाफ आम सेवाएं कुछ टैप में दर्ज करता है", ur: "اسٹاف عام خدمات چند ٹیپس میں درج کرتا ہے" },
+  "PIN staff mode": { ar: "وضع الموظف بالرمز", hi: "PIN स्टाफ मोड", ur: "پن اسٹاف موڈ" },
+  "Discount reason": { ar: "سبب الخصم", hi: "छूट का कारण", ur: "ڈسکاؤنٹ وجہ" },
+  "Selected service": { ar: "الخدمة المختارة", hi: "चुनी हुई सेवा", ur: "منتخب سروس" },
+  "Tax mode": { ar: "وضع الضريبة", hi: "टैक्स मोड", ur: "ٹیکس موڈ" },
+  Receipt: { ar: "الإيصال", hi: "रसीद", ur: "رسید" },
+  "This will update cash expected, staff performance and stock consumption.": { ar: "سيتم تحديث النقد المتوقع وأداء الموظفين واستهلاك المخزون.", hi: "इससे अपेक्षित नकद, स्टाफ प्रदर्शन और स्टॉक उपयोग अपडेट होगा।", ur: "اس سے متوقع کیش، اسٹاف کارکردگی اور اسٹاک استعمال اپ ڈیٹ ہوگا۔" },
+  "Add haircut, beard color, hair color, facial, massage or any custom service": { ar: "أضف قص شعر أو لون لحية أو لون شعر أو تنظيف بشرة أو مساج أو أي خدمة مخصصة", hi: "हेयरकट, दाढ़ी कलर, हेयर कलर, फेशियल, मसाज या कोई कस्टम सेवा जोड़ें", ur: "بال، داڑھی رنگ، بالوں کا رنگ، فیشل، مساج یا کوئی کسٹم سروس شامل کریں" },
+  "Add Service": { ar: "إضافة خدمة", hi: "सेवा जोड़ें", ur: "سروس شامل کریں" },
+  "Add / Edit Service": { ar: "إضافة / تعديل خدمة", hi: "सेवा जोड़ें / संपादित करें", ur: "سروس شامل / ترمیم کریں" },
+  "Owner controls price, recipe and availability": { ar: "المالك يتحكم بالسعر والوصفة والتوفر", hi: "मालिक कीमत, रेसिपी और उपलब्धता नियंत्रित करता है", ur: "مالک قیمت، ترکیب اور دستیابی کنٹرول کرتا ہے" },
+  "Service name": { ar: "اسم الخدمة", hi: "सेवा नाम", ur: "سروس نام" },
+  Arabic: { ar: "العربية", hi: "अरबी", ur: "عربی" },
+  Hindi: { ar: "الهندية", hi: "हिंदी", ur: "ہندی" },
+  Urdu: { ar: "الأردية", hi: "उर्दू", ur: "اردو" },
+  "Recipe / stock use": { ar: "الوصفة / استخدام المخزون", hi: "रेसिपी / स्टॉक उपयोग", ur: "ترکیب / اسٹاک استعمال" },
+  "Supplier bills increase stock and affect cash/profit": { ar: "فواتير الموردين تزيد المخزون وتؤثر على النقد والربح", hi: "सप्लायर बिल स्टॉक बढ़ाते हैं और नकद/लाभ पर असर करते हैं", ur: "سپلائر بل اسٹاک بڑھاتے اور کیش/منافع پر اثر کرتے ہیں" },
+  "Stock-in": { ar: "إدخال مخزون", hi: "स्टॉक-इन", ur: "اسٹاک اِن" },
+  "Consumable, retail product or reusable tool": { ar: "مستهلك أو منتج بيع أو أداة قابلة لإعادة الاستخدام", hi: "कंज्यूमेबल, रिटेल उत्पाद या reusable tool", ur: "استعمالی سامان، ریٹیل پروڈکٹ یا دوبارہ استعمال ہونے والا اوزار" },
+  "Item type": { ar: "نوع العنصر", hi: "आइटम प्रकार", ur: "آئٹم قسم" },
+  Item: { ar: "العنصر", hi: "आइटम", ur: "آئٹم" },
+  Unit: { ar: "الوحدة", hi: "यूनिट", ur: "یونٹ" },
+  Discount: { ar: "الخصم", hi: "छूट", ur: "ڈسکاؤنٹ" },
+  "Payment method": { ar: "طريقة الدفع", hi: "भुगतान विधि", ur: "ادائیگی طریقہ" },
+  "Consumable stock": { ar: "مخزون مستهلك", hi: "कंज्यूमेबल स्टॉक", ur: "استعمالی اسٹاک" },
+  "Retail product": { ar: "منتج بيع", hi: "रिटेल उत्पाद", ur: "ریٹیل پروڈکٹ" },
+  "Reusable tool / asset": { ar: "أداة / أصل قابل لإعادة الاستخدام", hi: "रीयूजेबल टूल / एसेट", ur: "دوبارہ استعمال اوزار / اثاثہ" },
+  "Operational supply": { ar: "مستلزمات تشغيل", hi: "ऑपरेशनल सप्लाई", ur: "آپریشنل سپلائی" },
+  "Purchase will be saved, stock-in will be recorded, and cash/bank outflow will update.": { ar: "سيتم حفظ المشتريات وتسجيل دخول المخزون وتحديث خروج النقد/البنك.", hi: "खरीदारी सेव होगी, स्टॉक-इन दर्ज होगा, और नकद/बैंक आउटफ्लो अपडेट होगा।", ur: "خریداری محفوظ ہوگی، اسٹاک اِن درج ہوگا، اور کیش/بینک آؤٹ فلو اپ ڈیٹ ہوگا۔" },
+  "Money spent that does not become stock": { ar: "أموال مصروفة لا تصبح مخزوناً", hi: "ऐसा पैसा जो स्टॉक नहीं बनता", ur: "ایسی رقم جو اسٹاک نہیں بنتی" },
+  "Money-out": { ar: "خروج نقد", hi: "मनी-आउट", ur: "رقم باہر" },
+  "Tea & Food": { ar: "شاي وطعام", hi: "चाय और खाना", ur: "چائے اور کھانا" },
+  "Tea, coffee, water, staff meals": { ar: "شاي، قهوة، ماء، وجبات الموظفين", hi: "चाय, कॉफी, पानी, स्टाफ भोजन", ur: "چائے، کافی، پانی، اسٹاف کھانا" },
+  "Dry Cleaning": { ar: "تنظيف جاف", hi: "ड्राई क्लीनिंग", ur: "ڈرائی کلیننگ" },
+  "Towels, capes, laundry service": { ar: "مناشف، أغطية، خدمة مغسلة", hi: "तौलिए, केप, लॉन्ड्री सेवा", ur: "تولیے، کیپس، لانڈری سروس" },
+  "Rent & Utilities": { ar: "الإيجار والخدمات", hi: "किराया और यूटिलिटीज", ur: "کرایہ اور یوٹیلیٹیز" },
+  "Rent, electricity, water, internet": { ar: "إيجار، كهرباء، ماء، إنترنت", hi: "किराया, बिजली, पानी, इंटरनेट", ur: "کرایہ، بجلی، پانی، انٹرنیٹ" },
+  Repairs: { ar: "الصيانة", hi: "मरम्मत", ur: "مرمت" },
+  "Machine repair, chair repair, maintenance": { ar: "إصلاح ماكينة، إصلاح كرسي، صيانة", hi: "मशीन मरम्मत, कुर्सी मरम्मत, रखरखाव", ur: "مشین مرمت، کرسی مرمت، دیکھ بھال" },
+  "Salary, advance, allowance": { ar: "راتب، سلفة، بدل", hi: "सैलरी, एडवांस, अलाउंस", ur: "تنخواہ، ایڈوانس، الاؤنس" },
+  Other: { ar: "أخرى", hi: "अन्य", ur: "دیگر" },
+  "Transport, cleaning, misc.": { ar: "نقل، تنظيف، متفرقات", hi: "परिवहन, सफाई, विविध", ur: "ٹرانسپورٹ، صفائی، متفرق" },
+  "Cash expenses reduce expected cash": { ar: "المصروفات النقدية تخفض النقد المتوقع", hi: "नकद खर्च अपेक्षित नकद कम करते हैं", ur: "کیش اخراجات متوقع کیش کم کرتے ہیں" },
+  Rent: { ar: "إيجار", hi: "किराया", ur: "کرایہ" },
+  Utilities: { ar: "خدمات", hi: "यूटिलिटीज", ur: "یوٹیلیٹیز" },
+  Repair: { ar: "إصلاح", hi: "मरम्मत", ur: "مرمت" },
+  "Staff Advance": { ar: "سلفة موظف", hi: "स्टाफ एडवांस", ur: "اسٹاف ایڈوانس" },
+  "Expense will be saved and cash closing will update if paid by cash.": { ar: "سيتم حفظ المصروف وتحديث إغلاق النقد إذا تم الدفع نقداً.", hi: "खर्च सेव होगा और नकद भुगतान पर कैश क्लोजिंग अपडेट होगी।", ur: "خرچ محفوظ ہوگا اور نقد ادائیگی پر کیش کلوزنگ اپ ڈیٹ ہوگی۔" },
+  "Consumable Inventory": { ar: "مخزون المستهلكات", hi: "कंज्यूमेबल इन्वेंटरी", ur: "استعمالی اسٹاک" },
+  "Used during services and deducted by recipes": { ar: "يستخدم أثناء الخدمات ويخصم حسب الوصفات", hi: "सेवाओं में उपयोग और रेसिपी से कटौती", ur: "خدمات میں استعمال اور ترکیب سے کٹوتی" },
+  Blades: { ar: "الشفرات", hi: "ब्लेड", ur: "بلیڈ" },
+  "Blades, foam, tissues": { ar: "شفرات، رغوة، مناديل", hi: "ब्लेड, फोम, टिश्यू", ur: "بلیڈ، فوم، ٹشو" },
+  "Hair color, developer": { ar: "صبغ شعر، مطور", hi: "हेयर कलर, डेवलपर", ur: "بالوں کا رنگ، ڈویلپر" },
+  "Clipper machine": { ar: "ماكينة حلاقة", hi: "क्लिपर मशीन", ur: "کلپر مشین" },
+  "Shaving Foam": { ar: "رغوة الحلاقة", hi: "शेविंग फोम", ur: "شیونگ فوم" },
+  "Hair Oil": { ar: "زيت الشعر", hi: "हेयर ऑयल", ur: "ہیئر آئل" },
+  "Reusable Tools / Assets": { ar: "الأدوات / الأصول القابلة لإعادة الاستخدام", hi: "रीयूजेबल टूल्स / एसेट्स", ur: "دوبارہ استعمال اوزار / اثاثے" },
+  "Tracked separately from consumable stock": { ar: "يتم تتبعها منفصلة عن المخزون المستهلك", hi: "कंज्यूमेबल स्टॉक से अलग ट्रैक", ur: "استعمالی اسٹاک سے الگ ٹریک" },
+  "Trimming Machine": { ar: "ماكينة تشذيب", hi: "ट्रिमिंग मशीन", ur: "ٹرمنگ مشین" },
+  Scissors: { ar: "مقصات", hi: "कैंची", ur: "قینچی" },
+  "Hair Dryer": { ar: "مجفف شعر", hi: "हेयर ड्रायर", ur: "ہیئر ڈرائر" },
+  Sterilizer: { ar: "معقم", hi: "स्टरलाइज़र", ur: "اسٹرلائزر" },
+  "Close Day": { ar: "إغلاق اليوم", hi: "दिन बंद करें", ur: "دن بند کریں" },
+  "Owner enters counted cash and approves shortage": { ar: "المالك يدخل النقد المعدود ويوافق على النقص", hi: "मालिक गिना हुआ नकद दर्ज कर शॉर्टेज मंजूर करता है", ur: "مالک گنا ہوا کیش درج کر کے کمی منظور کرتا ہے" },
+  "Opening cash": { ar: "النقد الافتتاحي", hi: "ओपनिंग कैश", ur: "اوپننگ کیش" },
+  "Cash sales": { ar: "مبيعات نقدية", hi: "नकद बिक्री", ur: "کیش سیلز" },
+  "Cash expenses": { ar: "مصروفات نقدية", hi: "नकद खर्चे", ur: "کیش اخراجات" },
+  "Cash purchases": { ar: "مشتريات نقدية", hi: "नकद खरीदारी", ur: "کیش خریداری" },
+  "Actual cash counted": { ar: "النقد الفعلي المعدود", hi: "वास्तविक गिना नकद", ur: "اصل گنا ہوا کیش" },
+  "Shortage reason": { ar: "سبب النقص", hi: "शॉर्टेज कारण", ur: "کمی وجہ" },
+  "Approve Closing": { ar: "اعتماد الإغلاق", hi: "क्लोजिंग मंजूर करें", ur: "کلوزنگ منظور کریں" },
+  "Audit Trail": { ar: "سجل التدقيق", hi: "ऑडिट ट्रेल", ur: "آڈٹ ٹریل" },
+  "No silent changes after sale, purchase, expense or stock adjustment": { ar: "لا تغييرات صامتة بعد البيع أو الشراء أو المصروف أو تعديل المخزون", hi: "बिक्री, खरीदारी, खर्च या स्टॉक समायोजन के बाद कोई चुप बदलाव नहीं", ur: "سیل، خریداری، خرچ یا اسٹاک ایڈجسٹمنٹ کے بعد کوئی خاموش تبدیلی نہیں" },
+  "Sale created": { ar: "تم إنشاء البيع", hi: "बिक्री बनी", ur: "سیل بنی" },
+  "Purchase entered": { ar: "تم إدخال الشراء", hi: "खरीदारी दर्ज", ur: "خریداری درج" },
+  "Expense entered": { ar: "تم إدخال المصروف", hi: "खर्च दर्ज", ur: "خرچ درج" },
+  "Stock adjusted": { ar: "تم تعديل المخزون", hi: "स्टॉक समायोजित", ur: "اسٹاک ایڈجسٹ" },
+  "Daily Closing Report": { ar: "تقرير الإغلاق اليومي", hi: "दैनिक क्लोजिंग रिपोर्ट", ur: "روزانہ کلوزنگ رپورٹ" },
+  "Al Barsha Gents · Monday, 31 Aug · non-VAT internal records": { ar: "رجال البرشاء · الاثنين 31 أغسطس · سجلات داخلية بدون ضريبة", hi: "अल बरशा जेंट्स · सोमवार, 31 अगस्त · बिना VAT आंतरिक रिकॉर्ड", ur: "البرشا جینٹس · پیر، 31 اگست · غیر VAT اندرونی ریکارڈ" },
+  "Total sales": { ar: "إجمالي المبيعات", hi: "कुल बिक्री", ur: "کل سیلز" },
+  "Cash expected": { ar: "النقد المتوقع", hi: "अपेक्षित नकद", ur: "متوقع کیش" },
+  "Staff commission": { ar: "عمولة الموظفين", hi: "स्टाफ कमीशन", ur: "اسٹاف کمیشن" },
+  "Cash difference": { ar: "فرق النقد", hi: "कैश अंतर", ur: "کیش فرق" },
+  Section: { ar: "القسم", hi: "सेक्शन", ur: "سیکشن" },
+  Result: { ar: "النتيجة", hi: "परिणाम", ur: "نتیجہ" },
+  "Owner action": { ar: "إجراء المالك", hi: "मालिक कार्रवाई", ur: "مالک عمل" },
+  Approved: { ar: "معتمد", hi: "मंजूर", ur: "منظور" },
+  "Stock updated": { ar: "تم تحديث المخزون", hi: "स्टॉक अपडेट", ur: "اسٹاک اپ ڈیٹ" },
+  "Reorder suggested": { ar: "اقتراح إعادة طلب", hi: "रीऑर्डर सुझाव", ur: "ری آرڈر تجویز" },
+  "Reason required": { ar: "السبب مطلوب", hi: "कारण आवश्यक", ur: "وجہ ضروری" },
+  "No silent edits": { ar: "لا تعديلات صامتة", hi: "कोई चुप एडिट नहीं", ur: "کوئی خاموش ترمیم نہیں" },
+  Exports: { ar: "التصديرات", hi: "एक्सपोर्ट", ur: "ایکسپورٹس" },
+  "Owner or accountant output": { ar: "مخرجات المالك أو المحاسب", hi: "मालिक या अकाउंटेंट आउटपुट", ur: "مالک یا اکاؤنٹنٹ آؤٹ پٹ" },
+  "Daily PDF": { ar: "PDF يومي", hi: "दैनिक PDF", ur: "روزانہ PDF" },
+  "Excel / CSV": { ar: "Excel / CSV", hi: "Excel / CSV", ur: "Excel / CSV" },
+  "Cash shortage report": { ar: "تقرير نقص النقد", hi: "कैश शॉर्टेज रिपोर्ट", ur: "کیش کمی رپورٹ" },
+  "Stock movement report": { ar: "تقرير حركة المخزون", hi: "स्टॉक मूवमेंट रिपोर्ट", ur: "اسٹاک موومنٹ رپورٹ" },
+  "AI owner summary": { ar: "ملخص ذكي للمالك", hi: "AI मालिक सारांश", ur: "AI مالک خلاصہ" },
+  "How It Works": { ar: "طريقة العمل", hi: "यह कैसे काम करता है", ur: "یہ کیسے کام کرتا ہے" },
+  "The app never forces VAT or invoices on a non-VAT barber shop": { ar: "التطبيق لا يفرض الضريبة أو الفواتير على صالون غير مسجل للضريبة", hi: "ऐप बिना VAT बारबर शॉप पर VAT या इनवॉइस मजबूर नहीं करता", ur: "ایپ غیر VAT حجام دکان پر VAT یا انوائس مجبور نہیں کرتی" },
+  "Simple Receipt": { ar: "إيصال بسيط", hi: "सरल रसीद", ur: "سادہ رسید" },
+  "VAT Off - internal records only": { ar: "الضريبة متوقفة - سجلات داخلية فقط", hi: "VAT बंद - केवल आंतरिक रिकॉर्ड", ur: "VAT بند - صرف اندرونی ریکارڈ" },
+  "VAT On - tax invoice mode": { ar: "الضريبة مفعلة - وضع الفاتورة الضريبية", hi: "VAT चालू - टैक्स इनवॉइस मोड", ur: "VAT آن - ٹیکس انوائس موڈ" },
+  "Customer receipt mode": { ar: "وضع إيصال العميل", hi: "ग्राहक रसीद मोड", ur: "کسٹمر رسید موڈ" },
+  "Receipt disabled by default": { ar: "الإيصال متوقف افتراضياً", hi: "रसीद डिफ़ॉल्ट बंद", ur: "رسید ڈیفالٹ بند" },
+  "Simple receipt optional": { ar: "إيصال بسيط اختياري", hi: "सरल रसीद वैकल्पिक", ur: "سادہ رسید اختیاری" },
+  "WhatsApp receipt optional": { ar: "إيصال واتساب اختياري", hi: "WhatsApp रसीद वैकल्पिक", ur: "WhatsApp رسید اختیاری" },
+  "Sale is saved as an internal business record. No VAT, no TRN and no tax invoice fields are required.": { ar: "يتم حفظ البيع كسجل داخلي. لا توجد ضريبة أو رقم ضريبي أو حقول فاتورة ضريبية مطلوبة.", hi: "बिक्री आंतरिक रिकॉर्ड के रूप में सेव होती है। VAT, TRN या टैक्स इनवॉइस फ़ील्ड जरूरी नहीं।", ur: "سیل اندرونی ریکارڈ کے طور پر محفوظ ہوتی ہے۔ VAT، TRN یا ٹیکس انوائس فیلڈز ضروری نہیں۔" },
+  "Optional customer receipt with salon name, service, amount, staff and payment method.": { ar: "إيصال عميل اختياري باسم الصالون والخدمة والمبلغ والموظف وطريقة الدفع.", hi: "सैलून नाम, सेवा, राशि, स्टाफ और भुगतान विधि के साथ वैकल्पिक ग्राहक रसीद।", ur: "سیلون نام، سروس، رقم، اسٹاف اور ادائیگی طریقہ کے ساتھ اختیاری کسٹمر رسید۔" },
+  "For registered salons only. TRN, VAT amount, invoice numbering and tax reports become active.": { ar: "للصالونات المسجلة فقط. يتم تفعيل الرقم الضريبي ومبلغ الضريبة وترقيم الفواتير وتقارير الضريبة.", hi: "केवल पंजीकृत सैलून के लिए। TRN, VAT राशि, इनवॉइस नंबरिंग और टैक्स रिपोर्ट सक्रिय होते हैं।", ur: "صرف رجسٹرڈ سیلون کے لئے۔ TRN، VAT رقم، انوائس نمبرنگ اور ٹیکس رپورٹس فعال ہوتی ہیں۔" }
+  ,
+  bill: { ar: "فاتورة", hi: "बिल", ur: "بل" },
+  piece: { ar: "قطعة", hi: "पीस", ur: "پیس" },
+  pcs: { ar: "قطعة", hi: "पीस", ur: "پیس" },
+  "Tea and water for staff": { ar: "شاي وماء للموظفين", hi: "स्टाफ के लिए चाय और पानी", ur: "اسٹاف کے لئے چائے اور پانی" },
+  "Towels and capes": { ar: "مناشف وأغطية", hi: "तौलिए और केप", ur: "تولیے اور کیپس" },
+  "Supplier pickup": { ar: "استلام من المورد", hi: "सप्लायर पिकअप", ur: "سپلائر پک اپ" },
+  "44 blades consumed · 38 shave services": { ar: "44 شفرة مستهلكة · 38 خدمة حلاقة", hi: "44 ब्लेड उपयोग · 38 शेव सेवाएं", ur: "44 بلیڈ استعمال · 38 شیو خدمات" },
+  "156 pcs · minimum 80": { ar: "156 قطعة · الحد الأدنى 80", hi: "156 पीस · न्यूनतम 80", ur: "156 پیس · کم از کم 80" },
+  "8 bottles · minimum 5": { ar: "8 عبوات · الحد الأدنى 5", hi: "8 बोतल · न्यूनतम 5", ur: "8 بوتل · کم از کم 5" },
+  "1.5 L · minimum 1 L": { ar: "1.5 لتر · الحد الأدنى 1 لتر", hi: "1.5 L · न्यूनतम 1 L", ur: "1.5 L · کم از کم 1 L" },
+  "900 ml · minimum 1 L": { ar: "900 مل · الحد الأدنى 1 لتر", hi: "900 ml · न्यूनतम 1 L", ur: "900 ml · کم از کم 1 L" },
+  Good: { ar: "جيد", hi: "अच्छा", ur: "اچھا" },
+  Low: { ar: "منخفض", hi: "कम", ur: "کم" },
+  Asset: { ar: "أصل", hi: "एसेट", ur: "اثاثہ" },
+  Tool: { ar: "أداة", hi: "टूल", ur: "اوزار" },
+  Check: { ar: "فحص", hi: "जांच", ur: "چیک" },
+  "Chair 2 · good condition": { ar: "كرسي 2 · حالة جيدة", hi: "कुर्सी 2 · अच्छी स्थिति", ur: "کرسی 2 · اچھی حالت" },
+  "Rafiq · last sharpened 20 Aug": { ar: "رفيق · آخر سن 20 أغسطس", hi: "रफीक · आखिरी धार 20 अगस्त", ur: "رفیق · آخری تیز 20 اگست" },
+  "Ladies section · repair due": { ar: "قسم السيدات · صيانة مستحقة", hi: "लेडीज सेक्शन · मरम्मत बाकी", ur: "لیڈیز سیکشن · مرمت باقی" },
+  "Branch asset · warranty active": { ar: "أصل الفرع · الضمان فعال", hi: "शाखा एसेट · वारंटी सक्रिय", ur: "برانچ اثاثہ · وارنٹی فعال" },
+  "Pending owner review": { ar: "بانتظار مراجعة المالك", hi: "मालिक समीक्षा लंबित", ur: "مالک جائزہ زیر التوا" },
+  "Rafiq · Haircut · Cash · AED 25": { ar: "رفيق · قص شعر · نقد · 25 درهم", hi: "रफीक · हेयरकट · नकद · AED 25", ur: "رفیق · بال کٹوانا · نقد · AED 25" },
+  "Owner · Blades · 100 pcs · AED 120": { ar: "المالك · شفرات · 100 قطعة · 120 درهم", hi: "मालिक · ब्लेड · 100 पीस · AED 120", ur: "مالک · بلیڈ · 100 پیس · AED 120" },
+  "Owner · Tea & Food · AED 35 · Cash": { ar: "المالك · شاي وطعام · 35 درهم · نقد", hi: "मालिक · चाय और खाना · AED 35 · नकद", ur: "مالک · چائے اور کھانا · AED 35 · نقد" },
+  "Owner · Blades · -6 · reason required": { ar: "المالك · شفرات · -6 · السبب مطلوب", hi: "मालिक · ब्लेड · -6 · कारण आवश्यक", ur: "مالک · بلیڈ · -6 · وجہ ضروری" },
+  "64 services recorded; top service Haircut": { ar: "تم تسجيل 64 خدمة؛ أعلى خدمة قص شعر", hi: "64 सेवाएं दर्ज; शीर्ष सेवा हेयरकट", ur: "64 خدمات درج؛ ٹاپ سروس بال کٹوانا" },
+  "Blades, foam, tissues, hair color and clipper machine entered": { ar: "تم إدخال الشفرات والرغوة والمناديل وصبغ الشعر وماكينة الحلاقة", hi: "ब्लेड, फोम, टिश्यू, हेयर कलर और क्लिपर मशीन दर्ज", ur: "بلیڈ، فوم، ٹشو، بالوں کا رنگ اور کلپر مشین درج" },
+  "Tea, dry cleaning, repair and transport captured": { ar: "تم تسجيل الشاي والتنظيف الجاف والصيانة والنقل", hi: "चाय, ड्राई क्लीनिंग, मरम्मत और परिवहन दर्ज", ur: "چائے، ڈرائی کلیننگ، مرمت اور ٹرانسپورٹ درج" },
+  "Receipts pending for 1 item": { ar: "إيصال معلق لعنصر واحد", hi: "1 आइटम की रसीद लंबित", ur: "1 آئٹم کی رسید زیر التوا" },
+  "Developer 20 Vol below minimum level": { ar: "Developer 20 Vol أقل من الحد الأدنى", hi: "Developer 20 Vol न्यूनतम स्तर से नीचे", ur: "Developer 20 Vol کم از کم سطح سے نیچے" },
+  "AED 50 shortage after counted cash": { ar: "نقص 50 درهم بعد عد النقد", hi: "गिने नकद के बाद AED 50 शॉर्टेज", ur: "گنے کیش کے بعد AED 50 کمی" },
+  "7 sensitive actions logged today": { ar: "تم تسجيل 7 إجراءات حساسة اليوم", hi: "आज 7 संवेदनशील कार्रवाइयां लॉग", ur: "آج 7 حساس اعمال لاگ ہوئے" },
+  "Cash is short by AED 50. Blade usage is higher than recorded shave services. Developer stock should be reordered within 2 days.": { ar: "يوجد نقص نقدي 50 درهماً. استخدام الشفرات أعلى من خدمات الحلاقة المسجلة. يجب إعادة طلب المخزون خلال يومين.", hi: "कैश AED 50 कम है। ब्लेड उपयोग दर्ज शेव सेवाओं से ज्यादा है। डेवलपर स्टॉक 2 दिनों में फिर मंगाना चाहिए।", ur: "کیش AED 50 کم ہے۔ بلیڈ استعمال درج شیو خدمات سے زیادہ ہے۔ ڈویلپر اسٹاک 2 دن میں دوبارہ منگوانا چاہیے۔" }
+};
+
+const textNodeOriginals = new WeakMap();
+const reverseTranslations = {};
+
+Object.entries(uiTranslations).forEach(([english, translations]) => {
+  Object.values(translations).forEach((translated) => {
+    reverseTranslations[translated] = english;
+  });
+});
+
 const defaultState = {
   services: [
     { name: "Haircut", names: { ar: "قص شعر", hi: "हेयरकट", ur: "بال کٹوانا" }, category: "Hair", price: 25, recipe: "Neck strip 1, shampoo optional", active: true },
@@ -118,12 +432,60 @@ const titles = {
   settings: "Settings"
 };
 
+let activeViewId = "dashboard";
+
+function translate(english) {
+  if (activeLanguage === "en") return english;
+  return uiTranslations[english]?.[activeLanguage] || english;
+}
+
+function translateTextNode(node) {
+  const trimmed = node.nodeValue.trim();
+  if (!trimmed) return;
+
+  if (!textNodeOriginals.has(node)) {
+    textNodeOriginals.set(node, uiTranslations[trimmed] ? trimmed : reverseTranslations[trimmed] || trimmed);
+  }
+
+  const original = textNodeOriginals.get(node);
+  const nextText = translate(original);
+  const leading = node.nodeValue.match(/^\s*/)[0];
+  const trailing = node.nodeValue.match(/\s*$/)[0];
+  node.nodeValue = `${leading}${nextText}${trailing}`;
+}
+
+function applyTranslations() {
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent || ["SCRIPT", "STYLE"].includes(parent.tagName)) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) {
+    nodes.push(walker.currentNode);
+  }
+  nodes.forEach(translateTextNode);
+
+  document.querySelectorAll("[placeholder]").forEach((element) => {
+    const original = element.dataset.i18nPlaceholder || element.getAttribute("placeholder");
+    element.dataset.i18nPlaceholder = original;
+    element.setAttribute("placeholder", translate(original));
+  });
+}
+
 function showView(viewId) {
+  activeViewId = viewId;
   document.querySelectorAll(".view").forEach((view) => view.classList.remove("active"));
   document.querySelectorAll(".nav-item").forEach((item) => item.classList.remove("active"));
   document.getElementById(viewId).classList.add("active");
   document.querySelector(`[data-view="${viewId}"]`)?.classList.add("active");
-  document.getElementById("viewTitle").textContent = titles[viewId] || "Salon Control";
+  document.getElementById("viewTitle").textContent = translate(titles[viewId] || "Salon Control");
+  applyTranslations();
 }
 
 document.querySelectorAll(".nav-item").forEach((button) => {
@@ -161,7 +523,9 @@ function syncLanguageButtons() {
   document.body.classList.toggle("rtl-preview", isRtlLanguage());
   document.documentElement.lang = activeLanguage;
   document.documentElement.dir = isRtlLanguage() ? "rtl" : "ltr";
-  document.getElementById("languageStatus").textContent = `Language: ${languageLabels[activeLanguage] || "English"}`;
+  document.getElementById("languageStatus").textContent = translate(`Language: ${languageLabels[activeLanguage] || "English"}`);
+  document.getElementById("viewTitle").textContent = translate(titles[activeViewId] || "Salon Control");
+  applyTranslations();
 }
 
 function syncReportTotals() {
@@ -214,7 +578,7 @@ function updatePurchaseCalculation() {
   const subtotal = qty * unitCost;
   const total = Math.max(subtotal - discount, 0);
 
-  document.getElementById("calcQty").textContent = `${qty.toLocaleString("en-AE")} ${unit}`;
+  document.getElementById("calcQty").textContent = `${qty.toLocaleString("en-AE")} ${translate(unit)}`;
   document.getElementById("calcUnitCost").textContent = moneyFixed(unitCost);
   document.getElementById("calcSubtotal").textContent = moneyFixed(subtotal);
   document.getElementById("calcPurchaseTotal").textContent = moneyFixed(total);
@@ -231,7 +595,7 @@ function renderSaleServices() {
       button.type = "button";
       button.innerHTML = `
         <strong class="${isRtlLanguage() ? "rtl-preview" : ""}">${serviceName(service)}</strong>
-        <small>${service.recipe}</small>
+        <small>${translate(service.recipe)}</small>
         <span>${money(service.price)}</span>
       `;
       button.addEventListener("click", () => {
@@ -249,13 +613,13 @@ function renderServiceTable() {
   services.forEach((service, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td><strong>${service.name}</strong></td>
+      <td><strong>${serviceName(service)}</strong></td>
       <td class="${isRtlLanguage() ? "rtl-preview" : ""}">${serviceName(service)}</td>
-      <td>${service.category}</td>
+      <td>${translate(service.category)}</td>
       <td>${money(service.price)}</td>
-      <td>${service.recipe}</td>
-      <td>${service.active ? "Active" : "Inactive"}</td>
-      <td><button class="danger-button" data-delete-service="${index}" type="button">Delete</button></td>
+      <td>${translate(service.recipe)}</td>
+      <td>${translate(service.active ? "Active" : "Inactive")}</td>
+      <td><button class="danger-button" data-delete-service="${index}" type="button">${translate("Delete")}</button></td>
     `;
     row.addEventListener("click", () => {
       document.getElementById("serviceName").value = service.name;
@@ -291,10 +655,10 @@ function renderPurchaseTable() {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${purchase.supplier}</td>
-      <td>${purchase.item}<br><small>${purchase.qty} ${purchase.unit} × ${moneyFixed(purchase.unitCost)}</small></td>
-      <td>${purchase.payment || "Cash"}</td>
+      <td>${translate(purchase.item)}<br><small>${purchase.qty} ${translate(purchase.unit)} × ${moneyFixed(purchase.unitCost)}</small></td>
+      <td>${translate(purchase.payment || "Cash")}</td>
       <td>${moneyFixed(purchaseTotal(purchase))}</td>
-      <td><button class="danger-button" data-delete-purchase="${index}" type="button">Delete</button></td>
+      <td><button class="danger-button" data-delete-purchase="${index}" type="button">${translate("Delete")}</button></td>
     `;
     body.appendChild(row);
   });
@@ -310,7 +674,8 @@ function renderPurchaseTable() {
       saveState();
       renderPurchaseTable();
       syncSummaryTotals();
-      document.getElementById("purchaseNote").textContent = "Purchase deleted. Totals were recalculated.";
+      document.getElementById("purchaseNote").textContent = translate("Purchase deleted. Totals were recalculated.");
+      applyTranslations();
     });
   });
 }
@@ -321,11 +686,11 @@ function renderExpenseTable() {
   expenses.forEach((expense, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${expense.category}</td>
-      <td>${expense.note || "-"}</td>
-      <td>${expense.payment}</td>
+      <td>${translate(expense.category)}</td>
+      <td>${translate(expense.note || "-")}</td>
+      <td>${translate(expense.payment)}</td>
       <td>${moneyFixed(Number(expense.amount) || 0)}</td>
-      <td><button class="danger-button" data-delete-expense="${index}" type="button">Delete</button></td>
+      <td><button class="danger-button" data-delete-expense="${index}" type="button">${translate("Delete")}</button></td>
     `;
     body.appendChild(row);
   });
@@ -341,7 +706,8 @@ function renderExpenseTable() {
       saveState();
       renderExpenseTable();
       syncSummaryTotals();
-      document.getElementById("expenseNote").textContent = "Expense deleted. Totals were recalculated.";
+      document.getElementById("expenseNote").textContent = translate("Expense deleted. Totals were recalculated.");
+      applyTranslations();
     });
   });
 }
@@ -356,7 +722,10 @@ document.getElementById("saveSale").addEventListener("click", () => {
   saveState();
   syncReportTotals();
   const taxText = vatEnabled ? "VAT invoice fields are active." : "No VAT was added.";
-  document.getElementById("saleNote").textContent = `${selectedService.name} saved. Cash, staff performance and stock recipe were updated. ${taxText}`;
+  document.getElementById("saleNote").textContent = activeLanguage === "en"
+    ? `${selectedService.name} saved. Cash, staff performance and stock recipe were updated. ${taxText}`
+    : `${serviceName(selectedService)} ${activeLanguage === "ar" ? "تم حفظها" : activeLanguage === "hi" ? "सेव हुई" : "محفوظ ہو گئی"}.`;
+  applyTranslations();
 });
 
 document.getElementById("saveService").addEventListener("click", () => {
@@ -385,6 +754,7 @@ document.getElementById("saveService").addEventListener("click", () => {
   renderSaleServices();
   saveState();
   syncSelectedServiceLabel();
+  applyTranslations();
 });
 
 document.getElementById("addServiceBtn").addEventListener("click", () => {
@@ -396,15 +766,17 @@ document.getElementById("addServiceBtn").addEventListener("click", () => {
   document.getElementById("serviceCategory").value = "Custom";
   document.getElementById("servicePrice").value = "30";
   document.getElementById("serviceRecipe").value = "No stock recipe";
+  applyTranslations();
 });
 
 document.querySelectorAll(".language-switch button").forEach((button) => {
   button.addEventListener("click", () => {
     activeLanguage = button.textContent.trim().toLowerCase();
-    syncLanguageButtons();
     renderSaleServices();
     renderServiceTable();
     syncSelectedServiceLabel();
+    syncTaxSettings();
+    syncLanguageButtons();
     saveState();
   });
 });
@@ -443,7 +815,7 @@ document.getElementById("loginForm").addEventListener("submit", (event) => {
   document.body.classList.add("is-authenticated");
   document.getElementById("frontpage").classList.add("front-hidden");
   document.getElementById("appShell").classList.remove("app-hidden");
-  document.getElementById("userChip").textContent = `${role} · Al Barsha`;
+  document.getElementById("userChip").textContent = `${translate(role)} · Al Barsha`;
   showView(role === "Staff" ? "quick-sale" : "dashboard");
 });
 
@@ -479,7 +851,10 @@ document.getElementById("savePurchase").addEventListener("click", () => {
   saveState();
   renderPurchaseTable();
   syncSummaryTotals();
-  document.getElementById("purchaseNote").textContent = `${purchase.item} saved. ${purchase.qty} ${purchase.unit} × ${moneyFixed(purchase.unitCost)} = ${moneyFixed(purchaseTotal(purchase))}.`;
+  document.getElementById("purchaseNote").textContent = activeLanguage === "en"
+    ? `${purchase.item} saved. ${purchase.qty} ${purchase.unit} × ${moneyFixed(purchase.unitCost)} = ${moneyFixed(purchaseTotal(purchase))}.`
+    : `${purchase.item} ${activeLanguage === "ar" ? "تم حفظها" : activeLanguage === "hi" ? "सेव हुआ" : "محفوظ ہو گیا"}: ${purchase.qty} ${purchase.unit} × ${moneyFixed(purchase.unitCost)} = ${moneyFixed(purchaseTotal(purchase))}.`;
+  applyTranslations();
 });
 
 document.getElementById("saveExpense").addEventListener("click", () => {
@@ -498,7 +873,10 @@ document.getElementById("saveExpense").addEventListener("click", () => {
   saveState();
   renderExpenseTable();
   syncSummaryTotals();
-  document.getElementById("expenseNote").textContent = `${expense.category} expense saved for ${moneyFixed(expense.amount)}.`;
+  document.getElementById("expenseNote").textContent = activeLanguage === "en"
+    ? `${expense.category} expense saved for ${moneyFixed(expense.amount)}.`
+    : `${translate(expense.category)} ${activeLanguage === "ar" ? "تم حفظ المصروف" : activeLanguage === "hi" ? "खर्च सेव हुआ" : "خرچ محفوظ ہو گیا"} ${moneyFixed(expense.amount)}.`;
+  applyTranslations();
 });
 
 ["purchaseQty", "purchaseUnit", "purchaseUnitCost", "purchaseDiscount"].forEach((id) => {
@@ -512,21 +890,22 @@ function syncTaxSettings() {
   const receiptText = receiptEnabled ? "Receipt on" : "Receipt off";
 
   document.body.classList.toggle("vat-enabled", vatEnabled);
-  document.getElementById("taxModeLabel").textContent = taxMode;
-  document.getElementById("branchTaxLabel").textContent = branchLabel;
-  document.getElementById("topTaxLabel").textContent = `Monday, 31 Aug · AED · ${taxMode}`;
-  document.getElementById("toggleVat").textContent = vatEnabled ? "Turn VAT off" : "Turn VAT on";
-  document.getElementById("toggleReceipt").textContent = receiptText;
-  document.getElementById("checkoutTaxNote").textContent = checkoutNote;
-  document.getElementById("checkoutTaxMode").textContent = taxMode;
-  document.getElementById("checkoutReceiptMode").textContent = receiptEnabled ? "Optional On" : "Optional Off";
-  document.getElementById("salesCardLabel").textContent = vatEnabled ? "Sales incl. VAT" : "Sales";
-  document.getElementById("salesCardNote").textContent = vatEnabled
+  document.getElementById("taxModeLabel").textContent = translate(taxMode);
+  document.getElementById("branchTaxLabel").textContent = translate(branchLabel);
+  document.getElementById("topTaxLabel").textContent = translate(`Monday, 31 Aug · AED · ${taxMode}`);
+  document.getElementById("toggleVat").textContent = translate(vatEnabled ? "Turn VAT off" : "Turn VAT on");
+  document.getElementById("toggleReceipt").textContent = translate(receiptText);
+  document.getElementById("checkoutTaxNote").textContent = translate(checkoutNote);
+  document.getElementById("checkoutTaxMode").textContent = translate(taxMode);
+  document.getElementById("checkoutReceiptMode").textContent = translate(receiptEnabled ? "Optional On" : "Optional Off");
+  document.getElementById("salesCardLabel").textContent = translate(vatEnabled ? "Sales incl. VAT" : "Sales");
+  document.getElementById("salesCardNote").textContent = translate(vatEnabled
     ? "64 services · VAT calculated separately"
-    : "64 services · 7 retail items · no VAT added";
+    : "64 services · 7 retail items · no VAT added");
   document.getElementById("vatModeSelect").value = vatEnabled ? "on" : "off";
   document.getElementById("receiptModeSelect").value = receiptEnabled ? "simple" : "off";
-  document.getElementById("settingsTaxPill").textContent = vatEnabled ? "VAT on" : "VAT optional";
+  document.getElementById("settingsTaxPill").textContent = translate(vatEnabled ? "VAT On" : "VAT optional");
+  applyTranslations();
   saveState();
 }
 
