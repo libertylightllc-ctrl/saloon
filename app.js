@@ -6,6 +6,7 @@ const icons = {
   purchase: '<svg viewBox="0 0 24 24"><path d="M6 2v4"/><path d="M18 2v4"/><path d="M3 6h18v16H3z"/><path d="M8 12h8"/><path d="M8 16h5"/></svg>',
   expense: '<svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg>',
   stock: '<svg viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2Z"/><path d="M7 8v8"/><path d="M17 8v8"/></svg>',
+  compliance: '<svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6z"/><path d="m8.5 12 2.3 2.3 4.7-5"/></svg>',
   cash: '<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01"/><path d="M18 14h.01"/></svg>',
   report: '<svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 14h2v3H7z"/><path d="M12 10h2v7h-2z"/><path d="M17 7h2v10h-2z"/></svg>',
   settings: '<svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 0 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 0 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 0 1 4 0v.1A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.2.36.56.6 1 .6h.6a2 2 0 0 1 0 4h-.6a1.7 1.7 0 0 0-1 .6Z"/></svg>',
@@ -20,8 +21,8 @@ const rolePins = {
 };
 
 const roleAccess = {
-  Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "cash", "reports", "settings"],
-  Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "cash", "reports"],
+  Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
+  Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
   Staff: ["quick-sale", "services"]
 };
 
@@ -55,6 +56,79 @@ const uiTranslations = {
   Expenses: { ar: "المصروفات", hi: "खर्चे", ur: "اخراجات" },
   "Inventory & Tools": { ar: "المخزون والأدوات", hi: "इन्वेंटरी और टूल्स", ur: "اسٹاک اور اوزار" },
   Inventory: { ar: "المخزون", hi: "इन्वेंटरी", ur: "اسٹاک" },
+  Compliance: { ar: "الامتثال", hi: "अनुपालन", ur: "تعمیل" },
+  "Compliance Control": { ar: "تحكم الامتثال", hi: "अनुपालन कंट्रोल", ur: "تعمیل کنٹرول" },
+  "Inspection readiness": { ar: "جاهزية التفتيش", hi: "निरीक्षण तैयारी", ur: "معائنہ تیاری" },
+  "Open hygiene, document and product checks": { ar: "فحوصات النظافة والوثائق والمنتجات المفتوحة", hi: "खुले हाइजीन, दस्तावेज और उत्पाद चेक", ur: "کھلے صفائی، دستاویز اور مصنوعات چیک" },
+  "Overdue records": { ar: "السجلات المتأخرة", hi: "ओवरड्यू रिकॉर्ड", ur: "اوور ڈیو ریکارڈ" },
+  "Amber and red items need owner action": { ar: "العناصر الصفراء والحمراء تحتاج إجراء المالك", hi: "एम्बर और रेड आइटम पर मालिक कार्रवाई चाहिए", ur: "ایمبر اور ریڈ آئٹمز پر مالک عمل چاہیے" },
+  "WPS status": { ar: "حالة نظام حماية الأجور", hi: "WPS स्थिति", ur: "WPS حالت" },
+  "Day 2": { ar: "اليوم 2", hi: "दिन 2", ur: "دن 2" },
+  "Salary transfer countdown": { ar: "عد تنازلي لتحويل الراتب", hi: "सैलरी ट्रांसफर काउंटडाउन", ur: "تنخواہ ٹرانسفر کاؤنٹ ڈاؤن" },
+  "Montaji watch": { ar: "متابعة منتجي", hi: "Montaji निगरानी", ur: "منتجی نگرانی" },
+  "Product registration warning": { ar: "تحذير تسجيل المنتج", hi: "उत्पाद पंजीकरण चेतावनी", ur: "مصنوعات رجسٹریشن وارننگ" },
+  "Inspection Binder": { ar: "ملف التفتيش", hi: "निरीक्षण बाइंडर", ur: "معائنہ بائنڈر" },
+  "Dubai Municipality records, due dates, signer and evidence slot": { ar: "سجلات بلدية دبي وتواريخ الاستحقاق والموقع وخانة الإثبات", hi: "दुबई नगरपालिका रिकॉर्ड, देय तारीख, हस्ताक्षर और प्रमाण स्लॉट", ur: "دبئی میونسپلٹی ریکارڈ، due dates، signer اور evidence slot" },
+  "Complete round": { ar: "إكمال الجولة", hi: "राउंड पूरा करें", ur: "راؤنڈ مکمل کریں" },
+  Record: { ar: "السجل", hi: "रिकॉर्ड", ur: "ریکارڈ" },
+  Cadence: { ar: "التكرار", hi: "आवृत्ति", ur: "وقفہ" },
+  Due: { ar: "الاستحقاق", hi: "देय", ur: "واجب" },
+  "Signed by": { ar: "وقع بواسطة", hi: "हस्ताक्षर", ur: "دستخط کنندہ" },
+  Evidence: { ar: "الإثبات", hi: "प्रमाण", ur: "ثبوت" },
+  "Expiry Graph": { ar: "رسم انتهاء الصلاحية", hi: "एक्सपायरी ग्राफ", ur: "ایکسپائری گراف" },
+  "Dependencies that can block renewals and visas": { ar: "اعتماديات قد توقف التجديدات والتأشيرات", hi: "निर्भरता जो रिन्यूअल और वीजा रोक सकती है", ur: "انحصار جو renewals اور visas روک سکتے ہیں" },
+  "Sterilization & Hygiene Log": { ar: "سجل التعقيم والنظافة", hi: "स्टरलाइजेशन और हाइजीन लॉग", ur: "جراثیم کشی اور صفائی لاگ" },
+  "Device, operator, cycle, towels, apron and blade checks": { ar: "فحص الجهاز والمشغل والدورة والمناشف والمريلة والشفرات", hi: "डिवाइस, ऑपरेटर, साइकिल, तौलिए, एप्रन और ब्लेड चेक", ur: "ڈیوائس، آپریٹر، سائیکل، تولیے، ایپرن اور بلیڈ چیک" },
+  "Add hygiene log": { ar: "إضافة سجل نظافة", hi: "हाइजीन लॉग जोड़ें", ur: "صفائی لاگ شامل کریں" },
+  Time: { ar: "الوقت", hi: "समय", ur: "وقت" },
+  Device: { ar: "الجهاز", hi: "डिवाइस", ur: "ڈیوائس" },
+  Operator: { ar: "المشغل", hi: "ऑपरेटर", ur: "آپریٹر" },
+  Cycle: { ar: "الدورة", hi: "साइकिल", ur: "سائیکل" },
+  "Single-use check": { ar: "فحص الاستخدام الواحد", hi: "सिंगल-यूज चेक", ur: "سنگل یوز چیک" },
+  "WPS & Product Watch": { ar: "متابعة الأجور والمنتجات", hi: "WPS और उत्पाद निगरानी", ur: "WPS اور مصنوعات نگرانی" },
+  "Salary deadline and cosmetic registration controls": { ar: "مهلة الراتب وضوابط تسجيل مستحضرات التجميل", hi: "सैलरी डेडलाइन और कॉस्मेटिक पंजीकरण नियंत्रण", ur: "تنخواہ deadline اور cosmetic registration controls" },
+  "Salary file": { ar: "ملف الرواتب", hi: "सैलरी फ़ाइल", ur: "تنخواہ فائل" },
+  "Due in 3 days · 5 of 6 staff paid": { ar: "مستحق خلال 3 أيام · دفع 5 من 6 موظفين", hi: "3 दिन में देय · 6 में से 5 स्टाफ paid", ur: "3 دن میں واجب · 6 میں سے 5 اسٹاف ادا" },
+  "Target: meet 85% paid staff before Day 5": { ar: "الهدف: تحقيق 85% موظفين مدفوعين قبل اليوم الخامس", hi: "लक्ष्य: Day 5 से पहले 85% paid staff", ur: "ہدف: Day 5 سے پہلے 85% paid staff" },
+  SKU: { ar: "رمز المنتج", hi: "SKU", ur: "SKU" },
+  Ready: { ar: "جاهز", hi: "तैयार", ur: "تیار" },
+  DueSoon: { ar: "قريب الاستحقاق", hi: "जल्द देय", ur: "جلد واجب" },
+  Overdue: { ar: "متأخر", hi: "ओवरड्यू", ur: "اوور ڈیو" },
+  Unknown: { ar: "غير معروف", hi: "अज्ञात", ur: "نامعلوم" },
+  Registered: { ar: "مسجل", hi: "पंजीकृत", ur: "رجسٹرڈ" },
+  "Needs ref": { ar: "يحتاج رقم مرجعي", hi: "रेफरेंस चाहिए", ur: "ریفرنس چاہیے" },
+  Signed: { ar: "تم التوقيع", hi: "हस्ताक्षर हुआ", ur: "دستخط ہو گیا" },
+  "Mark signed": { ar: "تسجيل التوقيع", hi: "हस्ताक्षर मार्क करें", ur: "دستخط مارک کریں" },
+  Today: { ar: "اليوم", hi: "आज", ur: "آج" },
+  Tomorrow: { ar: "غداً", hi: "कल", ur: "کل" },
+  Pending: { ar: "معلق", hi: "लंबित", ur: "زیر التوا" },
+  "Checklist photo": { ar: "صورة القائمة", hi: "चेकलिस्ट फोटो", ur: "چیک لسٹ تصویر" },
+  "Cycle log": { ar: "سجل الدورة", hi: "साइकिल लॉग", ur: "سائیکل لاگ" },
+  "PDF missing": { ar: "PDF مفقود", hi: "PDF गायब", ur: "PDF غائب" },
+  "Card copies": { ar: "نسخ البطاقات", hi: "कार्ड कॉपी", ur: "کارڈ کاپیاں" },
+  "10 min heat cycle": { ar: "دورة حرارة 10 دقائق", hi: "10 मिनट हीट साइकिल", ur: "10 منٹ ہیٹ سائیکل" },
+  "Fresh blade pack opened": { ar: "تم فتح عبوة شفرات جديدة", hi: "नया ब्लेड पैक खोला गया", ur: "نیا بلیڈ پیک کھولا گیا" },
+  "Surface wipe + towel change": { ar: "مسح السطح + تغيير المنشفة", hi: "सतह वाइप + तौलिया बदला", ur: "سطح صاف + تولیہ تبدیل" },
+  "Cape and neck strip replaced": { ar: "تم تغيير الغطاء وشريط الرقبة", hi: "केप और नेक स्ट्रिप बदले गए", ur: "کیپ اور نیک اسٹرپ تبدیل" },
+  "44 blades counted": { ar: "تم عد 44 شفرة", hi: "44 ब्लेड गिने गए", ur: "44 بلیڈ گنے گئے" },
+  "38 shaves recorded": { ar: "تم تسجيل 38 حلاقة", hi: "38 शेव दर्ज", ur: "38 شیو درج" },
+  "Fresh cycle logged": { ar: "تم تسجيل دورة جديدة", hi: "नई साइकिल लॉग हुई", ur: "نیا سائیکل لاگ ہوا" },
+  "Blade and towel check completed": { ar: "اكتمل فحص الشفرات والمناشف", hi: "ब्लेड और तौलिया चेक पूरा", ur: "بلیڈ اور تولیہ چیک مکمل" },
+  "Trade licence": { ar: "رخصة تجارية", hi: "ट्रेड लाइसेंस", ur: "ٹریڈ لائسنس" },
+  "Establishment card": { ar: "بطاقة المنشأة", hi: "एस्टैब्लिशमेंट कार्ड", ur: "اسٹیبلشمنٹ کارڈ" },
+  "Visas / EID / health cards": { ar: "التأشيرات / الهوية / البطاقات الصحية", hi: "वीजा / EID / हेल्थ कार्ड", ur: "ویزے / EID / صحت کارڈ" },
+  "Upload supplier proof": { ar: "ارفع إثبات المورد", hi: "सप्लायर प्रमाण अपलोड", ur: "سپلائر ثبوت اپ لوڈ" },
+  "Do not reorder until checked": { ar: "لا تعد الطلب قبل الفحص", hi: "जांच तक रीऑर्डर न करें", ur: "چیک تک ری آرڈر نہ کریں" },
+  "Cleaning & sanitization": { ar: "التنظيف والتعقيم", hi: "सफाई और सैनिटाइजेशन", ur: "صفائی اور سینیٹائزیشن" },
+  "Sterilizer cycle": { ar: "دورة جهاز التعقيم", hi: "स्टरलाइज़र साइकिल", ur: "سٹرلائزر سائیکل" },
+  "Water tap flushing": { ar: "غسل صنابير المياه", hi: "वॉटर टैप फ्लशिंग", ur: "پانی نل فلشنگ" },
+  "Pest control certificate": { ar: "شهادة مكافحة الآفات", hi: "पेस्ट कंट्रोल प्रमाणपत्र", ur: "پیسٹ کنٹرول سرٹیفکیٹ" },
+  "Employee health cards": { ar: "بطاقات صحة الموظفين", hi: "कर्मचारी हेल्थ कार्ड", ur: "ملازم صحت کارڈ" },
+  Daily: { ar: "يومي", hi: "दैनिक", ur: "روزانہ" },
+  Weekly: { ar: "أسبوعي", hi: "साप्ताहिक", ur: "ہفتہ وار" },
+  Monthly: { ar: "شهري", hi: "मासिक", ur: "ماہانہ" },
+  Quarterly: { ar: "ربع سنوي", hi: "त्रैमासिक", ur: "سہ ماہی" },
+  Yearly: { ar: "سنوي", hi: "वार्षिक", ur: "سالانہ" },
   Audit: { ar: "التدقيق", hi: "ऑडिट", ur: "آڈٹ" },
   "Cash Closing": { ar: "إغلاق النقدية", hi: "कैश क्लोजिंग", ur: "کیش کلوزنگ" },
   Reports: { ar: "التقارير", hi: "रिपोर्ट्स", ur: "رپورٹس" },
@@ -398,6 +472,35 @@ const defaultState = {
     openingStock: false,
     suppliersAdded: false,
     openingCash: false
+  },
+  inspectionRecords: [
+    { record: "Cleaning & sanitization", cadence: "Daily", due: "Today", signedBy: "Rafiq", evidence: "Checklist photo", status: "Ready" },
+    { record: "Sterilizer cycle", cadence: "Daily", due: "Today", signedBy: "Sameer", evidence: "Cycle log", status: "Ready" },
+    { record: "Water tap flushing", cadence: "Quarterly", due: "Tomorrow", signedBy: "Owner", evidence: "Pending", status: "DueSoon" },
+    { record: "Pest control certificate", cadence: "Monthly", due: "31 Aug", signedBy: "Supplier", evidence: "PDF missing", status: "Overdue" },
+    { record: "Employee health cards", cadence: "Yearly", due: "05 Sep", signedBy: "PRO", evidence: "Card copies", status: "DueSoon" }
+  ],
+  hygieneLogs: [
+    { time: "09:05", device: "Sterilizer", operator: "Rafiq", cycle: "10 min heat cycle", singleUse: "Fresh blade pack opened", status: "Ready" },
+    { time: "12:30", device: "Chair 2", operator: "Sameer", cycle: "Surface wipe + towel change", singleUse: "Cape and neck strip replaced", status: "Ready" },
+    { time: "15:15", device: "Blade bin", operator: "Imran", cycle: "44 blades counted", singleUse: "38 shaves recorded", status: "DueSoon" }
+  ],
+  documentChain: [
+    { name: "Ejari", due: "20 Sep", status: "Ready" },
+    { name: "Trade licence", due: "28 Sep", status: "DueSoon" },
+    { name: "Establishment card", due: "03 Oct", status: "DueSoon" },
+    { name: "Visas / EID / health cards", due: "05 Oct", status: "Overdue" }
+  ],
+  montajiItems: [
+    { sku: "Hair color 5.0", status: "Registered", action: "Ref MTJ-44821" },
+    { sku: "Beard dye black", status: "Needs ref", action: "Upload supplier proof" },
+    { sku: "Face mask charcoal", status: "Unknown", action: "Do not reorder until checked" }
+  ],
+  wps: {
+    day: 2,
+    staffPaid: 5,
+    staffTotal: 6,
+    dueInDays: 3
   }
 };
 
@@ -422,6 +525,11 @@ let activeLanguage = state.activeLanguage || "en";
 let sales = state.sales || [];
 let auditLog = state.auditLog || [];
 let checklist = { ...defaultState.checklist, ...(state.checklist || {}) };
+let inspectionRecords = state.inspectionRecords || defaultState.inspectionRecords;
+let hygieneLogs = state.hygieneLogs || defaultState.hygieneLogs;
+let documentChain = state.documentChain || defaultState.documentChain;
+let montajiItems = state.montajiItems || defaultState.montajiItems;
+let wps = { ...defaultState.wps, ...(state.wps || {}) };
 let activeSaleCategory = "All";
 let currentRole = "Owner";
 
@@ -448,7 +556,12 @@ function saveState() {
     vatEnabled,
     salesTotal,
     expectedCash,
-    activeLanguage
+    activeLanguage,
+    inspectionRecords,
+    hygieneLogs,
+    documentChain,
+    montajiItems,
+    wps
   }));
 }
 
@@ -465,6 +578,7 @@ const titles = {
   purchases: "Purchases",
   expenses: "Expenses",
   inventory: "Inventory & Tools",
+  compliance: "Compliance Control",
   cash: "Cash Closing",
   reports: "Reports",
   settings: "Settings"
@@ -559,7 +673,13 @@ function numberValue(id) {
 }
 
 function todayLabel() {
-  return new Intl.DateTimeFormat("en-AE", {
+  const locales = {
+    en: "en-AE",
+    ar: "ar-AE",
+    hi: "hi-IN",
+    ur: "ur-PK"
+  };
+  return new Intl.DateTimeFormat(locales[activeLanguage] || "en-AE", {
     weekday: "long",
     day: "2-digit",
     month: "short"
@@ -670,6 +790,116 @@ function renderAuditLog() {
     row.append(action, detail);
     container.appendChild(row);
   });
+  applyTranslations();
+}
+
+function statusClass(status) {
+  if (status === "Overdue" || status === "Unknown") return "danger";
+  if (status === "DueSoon" || status === "Needs ref") return "warning";
+  return "ok";
+}
+
+function renderInspectionRecords() {
+  const body = document.getElementById("inspectionRecordTable");
+  if (!body) return;
+  body.innerHTML = "";
+
+  inspectionRecords.forEach((record, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><strong>${escapeHtml(translate(record.record))}</strong></td>
+      <td>${escapeHtml(translate(record.cadence))}</td>
+      <td>${escapeHtml(translate(record.due))}</td>
+      <td>${escapeHtml(translate(record.signedBy || "Owner"))}</td>
+      <td>${escapeHtml(translate(record.evidence || "Pending"))}</td>
+      <td><span class="status-pill ${statusClass(record.status)}">${escapeHtml(translate(record.status))}</span></td>
+      <td><button class="mini-action" data-sign-record="${index}" type="button">${translate("Mark signed")}</button></td>
+    `;
+    body.appendChild(row);
+  });
+
+  body.querySelectorAll("[data-sign-record]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const record = inspectionRecords[Number(button.dataset.signRecord)];
+      if (!record) return;
+      record.status = "Ready";
+      record.signedBy = currentRole;
+      record.evidence = "Signed";
+      record.due = todayLabel();
+      addAudit("Stock adjusted", `${currentRole} · inspection signed · ${record.record}`);
+      saveState();
+      renderCompliance();
+    });
+  });
+}
+
+function renderDocumentChain() {
+  const container = document.getElementById("documentChain");
+  if (!container) return;
+  container.innerHTML = "";
+  documentChain.forEach((docItem, index) => {
+    const item = document.createElement("div");
+    item.className = statusClass(docItem.status);
+    item.innerHTML = `
+      <span>${index + 1}</span>
+      <div><strong>${escapeHtml(translate(docItem.name))}</strong><small>${escapeHtml(translate("Due"))}: ${escapeHtml(docItem.due)}</small></div>
+      <b>${escapeHtml(translate(docItem.status))}</b>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function renderHygieneLogs() {
+  const body = document.getElementById("hygieneLogTable");
+  if (!body) return;
+  body.innerHTML = "";
+  hygieneLogs.slice(0, 8).forEach((log) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${escapeHtml(log.time)}</td>
+      <td>${escapeHtml(translate(log.device))}</td>
+      <td>${escapeHtml(translate(log.operator))}</td>
+      <td>${escapeHtml(translate(log.cycle))}</td>
+      <td>${escapeHtml(translate(log.singleUse))}</td>
+      <td><span class="status-pill ${statusClass(log.status)}">${escapeHtml(translate(log.status))}</span></td>
+    `;
+    body.appendChild(row);
+  });
+}
+
+function renderMontajiItems() {
+  const body = document.getElementById("montajiTable");
+  if (!body) return;
+  body.innerHTML = "";
+  montajiItems.forEach((item) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${escapeHtml(translate(item.sku))}</td>
+      <td><span class="status-pill ${statusClass(item.status)}">${escapeHtml(translate(item.status))}</span></td>
+      <td>${escapeHtml(translate(item.action))}</td>
+    `;
+    body.appendChild(row);
+  });
+}
+
+function syncComplianceMetrics() {
+  const notReadyRecords = inspectionRecords.filter((record) => record.status !== "Ready").length;
+  const documentProblems = documentChain.filter((document) => document.status !== "Ready").length;
+  const montajiProblems = montajiItems.filter((item) => item.status !== "Registered").length;
+  const readiness = Math.max(0, Math.round(100 - ((notReadyRecords + documentProblems + montajiProblems) * 7)));
+  document.getElementById("inspectionReadiness").textContent = `${readiness}%`;
+  document.getElementById("overdueRecordCount").textContent = String(notReadyRecords + documentProblems);
+  document.getElementById("wpsMetric").textContent = `Day ${wps.day}`;
+  document.getElementById("montajiMetric").textContent = String(montajiProblems);
+  document.getElementById("wpsDetail").textContent = `Due in ${wps.dueInDays} days · ${wps.staffPaid} of ${wps.staffTotal} staff paid`;
+}
+
+function renderCompliance() {
+  renderInspectionRecords();
+  renderDocumentChain();
+  renderHygieneLogs();
+  renderMontajiItems();
+  syncComplianceMetrics();
   applyTranslations();
 }
 
@@ -925,6 +1155,7 @@ document.querySelectorAll(".language-switch button").forEach((button) => {
     renderServiceTable();
     renderPurchaseTable();
     renderExpenseTable();
+    renderCompliance();
     renderAuditLog();
     syncSelectedServiceLabel();
     syncSummaryTotals();
@@ -1083,6 +1314,35 @@ document.getElementById("approveClosing").addEventListener("click", () => {
   addAudit("Stock adjusted", `${currentRole} · day closed · ${document.getElementById("closingDifference").textContent}`);
 });
 
+document.getElementById("completeInspectionRound").addEventListener("click", () => {
+  inspectionRecords = inspectionRecords.map((record) => ({
+    ...record,
+    status: "Ready",
+    signedBy: currentRole,
+    evidence: record.evidence === "Pending" ? "Signed" : record.evidence,
+    due: todayLabel()
+  }));
+  addAudit("Stock adjusted", `${currentRole} · inspection round completed · ${inspectionRecords.length} records`);
+  saveState();
+  renderCompliance();
+});
+
+document.getElementById("addHygieneLog").addEventListener("click", () => {
+  const time = new Intl.DateTimeFormat("en-AE", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
+  hygieneLogs.unshift({
+    time,
+    device: "Sterilizer",
+    operator: currentRole,
+    cycle: "Fresh cycle logged",
+    singleUse: "Blade and towel check completed",
+    status: "Ready"
+  });
+  hygieneLogs = hygieneLogs.slice(0, 12);
+  addAudit("Stock adjusted", `${currentRole} · hygiene log added · ${time}`);
+  saveState();
+  renderCompliance();
+});
+
 document.querySelectorAll("[data-export]").forEach((button) => {
   button.addEventListener("click", () => {
     addAudit("Stock adjusted", `${currentRole} · export requested · ${button.dataset.export}`);
@@ -1124,6 +1384,7 @@ renderSaleServices();
 renderServiceTable();
 renderPurchaseTable();
 renderExpenseTable();
+renderCompliance();
 renderAuditLog();
 syncChecklist();
 syncLanguageButtons();

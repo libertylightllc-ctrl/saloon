@@ -822,6 +822,36 @@ select:focus {
   white-space: nowrap;
 }
 
+.status-pill.warning {
+  border-color: rgba(173, 122, 31, 0.28);
+  color: var(--amber);
+  background: #fff4d8;
+}
+
+.status-pill.danger {
+  border-color: rgba(189, 73, 61, 0.28);
+  color: var(--red);
+  background: #ffe7e2;
+}
+
+.status-pill.ok {
+  border-color: rgba(24, 114, 90, 0.22);
+  color: var(--green);
+  background: var(--green-2);
+}
+
+.mini-action {
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--deep);
+  background: var(--panel);
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
 .setup-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -978,6 +1008,128 @@ tr:last-child td {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 16px;
+}
+
+.compliance-metrics {
+  margin-bottom: 16px;
+}
+
+.compliance-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.compliance-layout.lower {
+  align-items: start;
+}
+
+.compliance-binder table {
+  min-width: 840px;
+}
+
+.dependency-chain {
+  display: grid;
+}
+
+.dependency-chain div {
+  min-height: 76px;
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.dependency-chain div:last-child {
+  border-bottom: 0;
+}
+
+.dependency-chain span {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: var(--green);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.dependency-chain .warning span {
+  background: var(--amber);
+}
+
+.dependency-chain .danger span {
+  background: var(--red);
+}
+
+.dependency-chain strong,
+.watch-card strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.dependency-chain small,
+.watch-card small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.dependency-chain b {
+  color: var(--green);
+  font-size: 12px;
+}
+
+.dependency-chain .warning b {
+  color: var(--amber);
+}
+
+.dependency-chain .danger b {
+  color: var(--red);
+}
+
+.watch-stack {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.watch-card {
+  min-height: 112px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--soft);
+  padding: 14px;
+}
+
+.watch-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.watch-card strong {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.mini-table table {
+  min-width: 0;
+}
+
+.mini-table th,
+.mini-table td {
+  padding: 12px;
 }
 
 .final-output {
@@ -1137,7 +1289,8 @@ tr:last-child td {
   .dashboard-grid,
   .work-grid,
   .sale-layout,
-  .split-layout {
+  .split-layout,
+  .compliance-layout {
     grid-template-columns: 1fr;
   }
 

@@ -11,7 +11,7 @@
     <title>Salon Control MVP</title>
     <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="stylesheet" href="./styles.css?v=20260901-4" />
+    <link rel="stylesheet" href="./styles.css?v=20260902-1" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -37,6 +37,7 @@
           <span class="nav-item"><span class="nav-icon" data-icon="purchase"></span>Purchases</span>
           <span class="nav-item"><span class="nav-icon" data-icon="expense"></span>Expenses</span>
           <span class="nav-item"><span class="nav-icon" data-icon="stock"></span>Inventory & Tools</span>
+          <span class="nav-item"><span class="nav-icon" data-icon="compliance"></span>Compliance</span>
           <span class="nav-item"><span class="nav-icon" data-icon="cash"></span>Cash Closing</span>
           <span class="nav-item"><span class="nav-icon" data-icon="report"></span>Reports</span>
         </nav>
@@ -159,6 +160,10 @@
           <button class="nav-item" data-view="inventory" type="button">
             <span class="nav-icon" data-icon="stock"></span>
             Inventory & Tools
+          </button>
+          <button class="nav-item" data-view="compliance" type="button">
+            <span class="nav-icon" data-icon="compliance"></span>
+            Compliance
           </button>
           <button class="nav-item" data-view="cash" type="button">
             <span class="nav-icon" data-icon="cash"></span>
@@ -598,6 +603,120 @@
           </div>
         </section>
 
+        <section class="view" id="compliance">
+          <div class="metric-grid compliance-metrics">
+            <article class="metric-card highlight">
+              <span>Inspection readiness</span>
+              <strong id="inspectionReadiness">86%</strong>
+              <small>Open hygiene, document and product checks</small>
+            </article>
+            <article class="metric-card">
+              <span>Overdue records</span>
+              <strong id="overdueRecordCount">2</strong>
+              <small>Amber and red items need owner action</small>
+            </article>
+            <article class="metric-card">
+              <span>WPS status</span>
+              <strong id="wpsMetric">Day 2</strong>
+              <small>Salary transfer countdown</small>
+            </article>
+            <article class="metric-card">
+              <span>Montaji watch</span>
+              <strong id="montajiMetric">1</strong>
+              <small>Product registration warning</small>
+            </article>
+          </div>
+
+          <div class="compliance-layout">
+            <article class="panel compliance-binder">
+              <div class="panel-head">
+                <div>
+                  <h3>Inspection Binder</h3>
+                  <p>Dubai Municipality records, due dates, signer and evidence slot</p>
+                </div>
+                <button class="primary-button" id="completeInspectionRound" type="button">Complete round</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Record</th>
+                      <th>Cadence</th>
+                      <th>Due</th>
+                      <th>Signed by</th>
+                      <th>Evidence</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inspectionRecordTable"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <aside class="panel">
+              <div class="panel-head compact">
+                <div>
+                  <h3>Expiry Graph</h3>
+                  <p>Dependencies that can block renewals and visas</p>
+                </div>
+              </div>
+              <div class="dependency-chain" id="documentChain"></div>
+            </aside>
+          </div>
+
+          <div class="compliance-layout lower">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Sterilization & Hygiene Log</h3>
+                  <p>Device, operator, cycle, towels, apron and blade checks</p>
+                </div>
+                <button class="ghost-button" id="addHygieneLog" type="button">Add hygiene log</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Device</th>
+                      <th>Operator</th>
+                      <th>Cycle</th>
+                      <th>Single-use check</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="hygieneLogTable"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <aside class="panel">
+              <div class="panel-head compact">
+                <div>
+                  <h3>WPS & Product Watch</h3>
+                  <p>Salary deadline and cosmetic registration controls</p>
+                </div>
+              </div>
+              <div class="watch-stack">
+                <div class="watch-card">
+                  <span>Salary file</span>
+                  <strong id="wpsDetail">Due in 3 days · 5 of 6 staff paid</strong>
+                  <small>Target: meet 85% paid staff before Day 5</small>
+                </div>
+                <div class="table-wrap mini-table">
+                  <table>
+                    <thead>
+                      <tr><th>SKU</th><th>Status</th><th>Action</th></tr>
+                    </thead>
+                    <tbody id="montajiTable"></tbody>
+                  </table>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
         <section class="view" id="cash">
           <div class="split-layout">
             <article class="panel form-panel">
@@ -752,6 +871,6 @@
       </main>
     </div>
 
-    <script src="./app.js?v=20260901-4"></script>
+    <script src="./app.js?v=20260902-1"></script>
   </body>
 </html>
