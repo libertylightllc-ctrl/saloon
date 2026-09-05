@@ -6,6 +6,7 @@ import { dirname } from "node:path";
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const checks = [
   "dist/index.html",
+  "dist/marketing.html",
   "dist/styles.css",
   "dist/app.js",
   "dist/manifest.webmanifest",
@@ -18,6 +19,7 @@ for (const file of checks) {
 }
 
 const html = await readFile(join(root, "dist/index.html"), "utf8");
+const marketing = await readFile(join(root, "dist/marketing.html"), "utf8");
 const js = await readFile(join(root, "dist/app.js"), "utf8");
 
 const requiredHtml = [
@@ -98,6 +100,10 @@ for (const text of forbiddenHtml) {
 
 for (const text of forbiddenJs) {
   if (js.includes(text)) throw new Error(`Forbidden JS regression: ${text}`);
+}
+
+for (const text of ["Close the day.", "id=\"product\"", "href=\"./\""]) {
+  if (!marketing.includes(text)) throw new Error(`Missing marketing page hook: ${text}`);
 }
 
 console.log("Validation passed");

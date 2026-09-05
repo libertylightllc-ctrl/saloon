@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, "dist");
-const files = ["index.html", "styles.css", "app.js", "manifest.webmanifest"];
+const files = ["index.html", "marketing.html", "styles.css", "app.js", "manifest.webmanifest"];
 
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
