@@ -744,7 +744,7 @@ function syncSelectedServiceLabel() {
 
 function syncLanguageButtons() {
   document.querySelectorAll(".language-switch button").forEach((button) => {
-    const language = button.textContent.trim().toLowerCase();
+    const language = button.dataset.lang || button.textContent.trim().toLowerCase();
     button.classList.toggle("active", language === activeLanguage);
   });
   document.body.classList.toggle("rtl-preview", isRtlLanguage());
@@ -1319,7 +1319,7 @@ document.getElementById("addServiceBtn").addEventListener("click", () => {
 
 document.querySelectorAll(".language-switch button").forEach((button) => {
   button.addEventListener("click", () => {
-    activeLanguage = button.textContent.trim().toLowerCase();
+    activeLanguage = button.dataset.lang || button.textContent.trim().toLowerCase();
     renderSaleServices();
     renderServiceTable();
     renderPurchaseTable();
@@ -1393,8 +1393,12 @@ document.getElementById("loginForm").addEventListener("submit", (event) => {
   currentRole = role;
   window.scrollTo({ top: 0, left: 0 });
   document.body.classList.add("is-authenticated");
-  document.getElementById("frontpage").classList.add("front-hidden");
-  document.getElementById("appShell").classList.remove("app-hidden");
+  const frontpage = document.getElementById("frontpage");
+  const appShell = document.getElementById("appShell");
+  frontpage.hidden = true;
+  appShell.hidden = false;
+  frontpage.classList.add("front-hidden");
+  appShell.classList.remove("app-hidden");
   applyRoleAccess();
   document.getElementById("userChip").textContent = `${translate(role)} · Al Barsha`;
   showView(role === "Staff" ? "quick-sale" : "dashboard");
@@ -1403,8 +1407,12 @@ document.getElementById("loginForm").addEventListener("submit", (event) => {
 document.getElementById("logoutBtn").addEventListener("click", () => {
   window.scrollTo({ top: 0, left: 0 });
   document.body.classList.remove("is-authenticated");
-  document.getElementById("appShell").classList.add("app-hidden");
-  document.getElementById("frontpage").classList.remove("front-hidden");
+  const frontpage = document.getElementById("frontpage");
+  const appShell = document.getElementById("appShell");
+  appShell.hidden = true;
+  frontpage.hidden = false;
+  appShell.classList.add("app-hidden");
+  frontpage.classList.remove("front-hidden");
 });
 
 document.getElementById("printReport").addEventListener("click", () => {

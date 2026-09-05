@@ -39,7 +39,11 @@ const requiredHtml = [
   "id=\"auditList\"",
   "id=\"vatModeSelect\"",
   "id=\"printReport\"",
-  "data-export=\"csv\""
+  "data-export=\"csv\"",
+  "data-lang=\"en\"",
+  "data-lang=\"ar\"",
+  "data-lang=\"hi\"",
+  "data-lang=\"ur\""
 ];
 
 const requiredJs = [
@@ -66,7 +70,11 @@ const requiredJs = [
 const forbiddenHtml = [
   "id=\"completeInspectionRound\"",
   "Staff commission</span><strong>AED 224</strong>",
-  "Cash difference</span><strong class=\"negative\">AED -50</strong>"
+  "Cash difference</span><strong class=\"negative\">AED -50</strong>",
+  "id=\"dashboardPurchasesTotal\">AED 640</strong>",
+  "id=\"dashboardExpensesTotal\">AED 310</strong>",
+  "id=\"reportPurchases\">AED 640</strong>",
+  "id=\"reportExpenses\">AED 310</strong>"
 ];
 
 const forbiddenJs = [
