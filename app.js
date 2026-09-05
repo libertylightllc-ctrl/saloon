@@ -70,6 +70,10 @@ const uiTranslations = {
   "Inspection Binder": { ar: "ملف التفتيش", hi: "निरीक्षण बाइंडर", ur: "معائنہ بائنڈر" },
   "Dubai Municipality records, due dates, signer and evidence slot": { ar: "سجلات بلدية دبي وتواريخ الاستحقاق والموقع وخانة الإثبات", hi: "दुबई नगरपालिका रिकॉर्ड, देय तारीख, हस्ताक्षर और प्रमाण स्लॉट", ur: "دبئی میونسپلٹی ریکارڈ، due dates، signer اور evidence slot" },
   "Complete round": { ar: "إكمال الجولة", hi: "राउंड पूरा करें", ur: "راؤنڈ مکمل کریں" },
+  "Evidence required": { ar: "الإثبات مطلوب", hi: "प्रमाण आवश्यक", ur: "ثبوت ضروری" },
+  "Evidence is required before an inspection record can be signed.": { ar: "الإثبات مطلوب قبل توقيع سجل التفتيش.", hi: "निरीक्षण रिकॉर्ड पर हस्ताक्षर से पहले प्रमाण जरूरी है।", ur: "معائنہ ریکارڈ پر دستخط سے پہلے ثبوت ضروری ہے۔" },
+  "Evidence required before signing.": { ar: "الإثبات مطلوب قبل التوقيع.", hi: "हस्ताक्षर से पहले प्रमाण जरूरी है।", ur: "دستخط سے پہلے ثبوت ضروری ہے۔" },
+  "Inspection signed with evidence.": { ar: "تم توقيع التفتيش مع الإثبات.", hi: "निरीक्षण प्रमाण के साथ हस्ताक्षरित हुआ।", ur: "معائنہ ثبوت کے ساتھ دستخط ہوا۔" },
   Record: { ar: "السجل", hi: "रिकॉर्ड", ur: "ریکارڈ" },
   Cadence: { ar: "التكرار", hi: "आवृत्ति", ur: "وقفہ" },
   Due: { ar: "الاستحقاق", hi: "देय", ur: "واجب" },
@@ -84,10 +88,16 @@ const uiTranslations = {
   Device: { ar: "الجهاز", hi: "डिवाइस", ur: "ڈیوائس" },
   Operator: { ar: "المشغل", hi: "ऑपरेटर", ur: "آپریٹر" },
   Cycle: { ar: "الدورة", hi: "साइकिल", ur: "سائیکل" },
+  Solution: { ar: "المحلول", hi: "सॉल्यूशन", ur: "سلوشن" },
   "Single-use check": { ar: "فحص الاستخدام الواحد", hi: "सिंगल-यूज चेक", ur: "سنگل یوز چیک" },
+  "Every hygiene entry needs a real cycle and evidence note.": { ar: "كل إدخال نظافة يحتاج دورة فعلية وملاحظة إثبات.", hi: "हर हाइजीन एंट्री में असली साइकिल और प्रमाण नोट चाहिए।", ur: "ہر صفائی اندراج میں اصل سائیکل اور ثبوت نوٹ چاہیے۔" },
+  "Enter device, cycle and evidence before saving.": { ar: "أدخل الجهاز والدورة والإثبات قبل الحفظ.", hi: "सेव करने से पहले डिवाइस, साइकिल और प्रमाण भरें।", ur: "محفوظ کرنے سے پہلے ڈیوائس، سائیکل اور ثبوت درج کریں۔" },
+  "Hygiene log saved with evidence.": { ar: "تم حفظ سجل النظافة مع الإثبات.", hi: "हाइजीन लॉग प्रमाण के साथ सेव हुआ।", ur: "صفائی لاگ ثبوت کے ساتھ محفوظ ہوا۔" },
   "WPS & Product Watch": { ar: "متابعة الأجور والمنتجات", hi: "WPS और उत्पाद निगरानी", ur: "WPS اور مصنوعات نگرانی" },
   "Salary deadline and cosmetic registration controls": { ar: "مهلة الراتب وضوابط تسجيل مستحضرات التجميل", hi: "सैलरी डेडलाइन और कॉस्मेटिक पंजीकरण नियंत्रण", ur: "تنخواہ deadline اور cosmetic registration controls" },
   "Salary file": { ar: "ملف الرواتب", hi: "सैलरी फ़ाइल", ur: "تنخواہ فائل" },
+  "WPS below 85%": { ar: "نظام الأجور أقل من 85%", hi: "WPS 85% से कम", ur: "WPS 85% سے کم" },
+  "WPS on track": { ar: "نظام الأجور على المسار", hi: "WPS सही चल रहा है", ur: "WPS درست ہے" },
   "Due in 3 days · 5 of 6 staff paid": { ar: "مستحق خلال 3 أيام · دفع 5 من 6 موظفين", hi: "3 दिन में देय · 6 में से 5 स्टाफ paid", ur: "3 دن میں واجب · 6 میں سے 5 اسٹاف ادا" },
   "Target: meet 85% paid staff before Day 5": { ar: "الهدف: تحقيق 85% موظفين مدفوعين قبل اليوم الخامس", hi: "लक्ष्य: Day 5 से पहले 85% paid staff", ur: "ہدف: Day 5 سے پہلے 85% paid staff" },
   SKU: { ar: "رمز المنتج", hi: "SKU", ur: "SKU" },
@@ -360,6 +370,10 @@ const uiTranslations = {
   "Cash expected": { ar: "النقد المتوقع", hi: "अपेक्षित नकद", ur: "متوقع کیش" },
   "Staff commission": { ar: "عمولة الموظفين", hi: "स्टाफ कमीशन", ur: "اسٹاف کمیشن" },
   "Cash difference": { ar: "فرق النقد", hi: "कैश अंतर", ur: "کیش فرق" },
+  "No records yet": { ar: "لا توجد سجلات بعد", hi: "अभी कोई रिकॉर्ड नहीं", ur: "ابھی کوئی ریکارڈ نہیں" },
+  "Start with Quick Sale, Purchases and Expenses.": { ar: "ابدأ بالبيع السريع والمشتريات والمصروفات.", hi: "Quick Sale, Purchases और Expenses से शुरू करें।", ur: "Quick Sale، Purchases اور Expenses سے شروع کریں۔" },
+  "Cash closing approved.": { ar: "تم اعتماد إغلاق النقدية.", hi: "कैश क्लोजिंग मंजूर हुई।", ur: "کیش کلوزنگ منظور ہو گئی۔" },
+  "Shortage reason required.": { ar: "سبب النقص مطلوب.", hi: "शॉर्टेज कारण जरूरी है।", ur: "کمی وجہ ضروری ہے۔" },
   Section: { ar: "القسم", hi: "सेक्शन", ur: "سیکشن" },
   Result: { ar: "النتيجة", hi: "परिणाम", ur: "نتیجہ" },
   "Owner action": { ar: "إجراء المالك", hi: "मालिक कार्रवाई", ur: "مالک عمل" },
@@ -374,6 +388,7 @@ const uiTranslations = {
   "Excel / CSV": { ar: "Excel / CSV", hi: "Excel / CSV", ur: "Excel / CSV" },
   "Cash shortage report": { ar: "تقرير نقص النقد", hi: "कैश शॉर्टेज रिपोर्ट", ur: "کیش کمی رپورٹ" },
   "Stock movement report": { ar: "تقرير حركة المخزون", hi: "स्टॉक मूवमेंट रिपोर्ट", ur: "اسٹاک موومنٹ رپورٹ" },
+  "Export is not built yet.": { ar: "التصدير غير مبني بعد.", hi: "एक्सपोर्ट अभी नहीं बना है।", ur: "ایکسپورٹ ابھی نہیں بنا۔" },
   "AI owner summary": { ar: "ملخص ذكي للمالك", hi: "AI मालिक सारांश", ur: "AI مالک خلاصہ" },
   "How It Works": { ar: "طريقة العمل", hi: "यह कैसे काम करता है", ur: "یہ کیسے کام کرتا ہے" },
   "The app never forces VAT or invoices on a non-VAT barber shop": { ar: "التطبيق لا يفرض الضريبة أو الفواتير على صالون غير مسجل للضريبة", hi: "ऐप बिना VAT बारबर शॉप पर VAT या इनवॉइस मजबूर नहीं करता", ur: "ایپ غیر VAT حجام دکان پر VAT یا انوائس مجبور نہیں کرتی" },
@@ -432,6 +447,13 @@ Object.entries(uiTranslations).forEach(([english, translations]) => {
   });
 });
 
+function isoOffset(days) {
+  const date = new Date();
+  date.setHours(12, 0, 0, 0);
+  date.setDate(date.getDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
 const defaultState = {
   services: [
     { name: "Haircut", names: { ar: "قص شعر", hi: "हेयरकट", ur: "بال کٹوانا" }, category: "Hair", price: 25, recipe: "Neck strip 1, shampoo optional", active: true },
@@ -442,28 +464,18 @@ const defaultState = {
     { name: "Facial", names: { ar: "تنظيف البشرة", hi: "फेशियल", ur: "فیشل" }, category: "Face", price: 60, recipe: "Cream 10ml, mask 1, towel laundry", active: true },
     { name: "Head Massage", names: { ar: "مساج الرأس", hi: "हेड मसाज", ur: "سر کا مساج" }, category: "Massage", price: 35, recipe: "Oil 15ml, towel laundry", active: true }
   ],
-  purchases: [
-    { supplier: "Beauty Supply LLC", type: "Consumable stock", item: "Blades, foam, tissues", qty: 1, unit: "bill", unitCost: 420, discount: 0, payment: "Cash" },
-    { supplier: "Color House", type: "Consumable stock", item: "Hair color, developer", qty: 1, unit: "bill", unitCost: 220, discount: 0, payment: "Card" },
-    { supplier: "Gulf Salon Tools", type: "Reusable tool / asset", item: "Clipper machine", qty: 1, unit: "piece", unitCost: 250, discount: 0, payment: "Bank" }
-  ],
-  expenses: [
-    { category: "Tea & Food", amount: 35, payment: "Cash", note: "Tea and water for staff" },
-    { category: "Dry Cleaning", amount: 85, payment: "Cash", note: "Towels and capes" },
-    { category: "Transport", amount: 40, payment: "Cash", note: "Supplier pickup" }
-  ],
+  purchases: [],
+  expenses: [],
   receiptEnabled: false,
   vatEnabled: false,
-  salesTotal: 1870,
-  expectedCash: 1245,
-  sales: [
-    { service: "Haircut", staff: "Rafiq", payment: "Cash", amount: 25, discountReason: "", createdAt: new Date().toISOString() }
-  ],
-  auditLog: [
-    { action: "Sale created", detail: "Rafiq · Haircut · Cash · AED 25", createdAt: new Date().toISOString() },
-    { action: "Purchase entered", detail: "Owner · Blades · 100 pcs · AED 120", createdAt: new Date().toISOString() },
-    { action: "Expense entered", detail: "Owner · Tea & Food · AED 35 · Cash", createdAt: new Date().toISOString() },
-    { action: "Stock adjusted", detail: "Owner · Blades · -6 · reason required", createdAt: new Date().toISOString() }
+  openingCash: 200,
+  sales: [],
+  auditLog: [],
+  cashClosings: [],
+  staffPayments: [
+    { staff: "Rafiq", paidAt: "" },
+    { staff: "Sameer", paidAt: "" },
+    { staff: "Imran", paidAt: "" }
   ],
   checklist: {
     servicesApproved: true,
@@ -474,34 +486,24 @@ const defaultState = {
     openingCash: false
   },
   inspectionRecords: [
-    { record: "Cleaning & sanitization", cadence: "Daily", due: "Today", signedBy: "Rafiq", evidence: "Checklist photo", status: "Ready" },
-    { record: "Sterilizer cycle", cadence: "Daily", due: "Today", signedBy: "Sameer", evidence: "Cycle log", status: "Ready" },
-    { record: "Water tap flushing", cadence: "Quarterly", due: "Tomorrow", signedBy: "Owner", evidence: "Pending", status: "DueSoon" },
-    { record: "Pest control certificate", cadence: "Monthly", due: "31 Aug", signedBy: "Supplier", evidence: "PDF missing", status: "Overdue" },
-    { record: "Employee health cards", cadence: "Yearly", due: "05 Sep", signedBy: "PRO", evidence: "Card copies", status: "DueSoon" }
+    { record: "Cleaning & sanitization", cadence: "Daily", dueDate: isoOffset(0), signedBy: "", evidence: "", signedAt: "" },
+    { record: "Sterilizer cycle", cadence: "Daily", dueDate: isoOffset(0), signedBy: "", evidence: "", signedAt: "" },
+    { record: "Water tap flushing", cadence: "Quarterly", dueDate: isoOffset(1), signedBy: "", evidence: "", signedAt: "" },
+    { record: "Pest control certificate", cadence: "Monthly", dueDate: isoOffset(-5), signedBy: "", evidence: "", signedAt: "" },
+    { record: "Employee health cards", cadence: "Yearly", dueDate: isoOffset(7), signedBy: "", evidence: "", signedAt: "" }
   ],
-  hygieneLogs: [
-    { time: "09:05", device: "Sterilizer", operator: "Rafiq", cycle: "10 min heat cycle", singleUse: "Fresh blade pack opened", status: "Ready" },
-    { time: "12:30", device: "Chair 2", operator: "Sameer", cycle: "Surface wipe + towel change", singleUse: "Cape and neck strip replaced", status: "Ready" },
-    { time: "15:15", device: "Blade bin", operator: "Imran", cycle: "44 blades counted", singleUse: "38 shaves recorded", status: "DueSoon" }
-  ],
+  hygieneLogs: [],
   documentChain: [
-    { name: "Ejari", due: "20 Sep", status: "Ready" },
-    { name: "Trade licence", due: "28 Sep", status: "DueSoon" },
-    { name: "Establishment card", due: "03 Oct", status: "DueSoon" },
-    { name: "Visas / EID / health cards", due: "05 Oct", status: "Overdue" }
+    { name: "Ejari", dueDate: isoOffset(15), evidence: "" },
+    { name: "Trade licence", dueDate: isoOffset(23), evidence: "" },
+    { name: "Establishment card", dueDate: isoOffset(28), evidence: "" },
+    { name: "Visas / EID / health cards", dueDate: isoOffset(30), evidence: "" }
   ],
   montajiItems: [
-    { sku: "Hair color 5.0", status: "Registered", action: "Ref MTJ-44821" },
+    { sku: "Hair color 5.0", status: "Needs ref", action: "Upload supplier proof" },
     { sku: "Beard dye black", status: "Needs ref", action: "Upload supplier proof" },
     { sku: "Face mask charcoal", status: "Unknown", action: "Do not reorder until checked" }
-  ],
-  wps: {
-    day: 2,
-    staffPaid: 5,
-    staffTotal: 6,
-    dueInDays: 3
-  }
+  ]
 };
 
 function loadState() {
@@ -519,17 +521,17 @@ let expenses = state.expenses;
 let selectedService = services[0];
 let receiptEnabled = state.receiptEnabled;
 let vatEnabled = state.vatEnabled;
-let salesTotal = state.salesTotal;
-let expectedCash = state.expectedCash;
+let openingCash = Number(state.openingCash ?? defaultState.openingCash);
 let activeLanguage = state.activeLanguage || "en";
 let sales = state.sales || [];
 let auditLog = state.auditLog || [];
+let cashClosings = state.cashClosings || [];
+let staffPayments = state.staffPayments || defaultState.staffPayments;
 let checklist = { ...defaultState.checklist, ...(state.checklist || {}) };
 let inspectionRecords = state.inspectionRecords || defaultState.inspectionRecords;
 let hygieneLogs = state.hygieneLogs || defaultState.hygieneLogs;
 let documentChain = state.documentChain || defaultState.documentChain;
 let montajiItems = state.montajiItems || defaultState.montajiItems;
-let wps = { ...defaultState.wps, ...(state.wps || {}) };
 let activeSaleCategory = "All";
 let currentRole = "Owner";
 
@@ -544,6 +546,38 @@ function migrateServices() {
   state.services = services;
 }
 
+function removeLegacyDemoRows() {
+  sales = sales.filter((sale) => !(sale.service === "Haircut" && sale.staff === "Rafiq" && Number(sale.amount) === 25 && !sale.discountReason));
+  purchases = purchases.filter((purchase) => ![
+    "Beauty Supply LLC|Blades, foam, tissues|420",
+    "Color House|Hair color, developer|220",
+    "Gulf Salon Tools|Clipper machine|250"
+  ].includes(`${purchase.supplier}|${purchase.item}|${purchase.unitCost}`));
+  expenses = expenses.filter((expense) => ![
+    "Tea & Food|35|Tea and water for staff",
+    "Dry Cleaning|85|Towels and capes",
+    "Transport|40|Supplier pickup"
+  ].includes(`${expense.category}|${expense.amount}|${expense.note}`));
+  auditLog = auditLog.filter((entry) => ![
+    "Rafiq · Haircut · Cash · AED 25",
+    "Owner · Blades · 100 pcs · AED 120",
+    "Owner · Tea & Food · AED 35 · Cash",
+    "Owner · Blades · -6 · reason required"
+  ].includes(entry.detail));
+  hygieneLogs = hygieneLogs.filter((log) => !["10 min heat cycle", "Surface wipe + towel change", "44 blades counted"].includes(log.cycle));
+  inspectionRecords = inspectionRecords.map((record, index) => ({
+    ...record,
+    dueDate: record.dueDate || defaultState.inspectionRecords[index]?.dueDate || isoOffset(0),
+    signedBy: record.evidence && !["Pending", "PDF missing"].includes(record.evidence) ? record.signedBy : "",
+    signedAt: record.evidence && !["Pending", "PDF missing"].includes(record.evidence) ? record.signedAt || "" : "",
+    evidence: ["Pending", "PDF missing"].includes(record.evidence) ? "" : record.evidence || ""
+  }));
+  documentChain = documentChain.map((document, index) => ({
+    ...document,
+    dueDate: document.dueDate || defaultState.documentChain[index]?.dueDate || isoOffset(30)
+  }));
+}
+
 function saveState() {
   localStorage.setItem(storageKey, JSON.stringify({
     services,
@@ -554,14 +588,14 @@ function saveState() {
     checklist,
     receiptEnabled,
     vatEnabled,
-    salesTotal,
-    expectedCash,
+    openingCash,
     activeLanguage,
     inspectionRecords,
     hygieneLogs,
     documentChain,
     montajiItems,
-    wps
+    cashClosings,
+    staffPayments
   }));
 }
 
@@ -722,13 +756,23 @@ function syncLanguageButtons() {
 }
 
 function syncReportTotals() {
-  document.getElementById("reportSales").textContent = money(salesTotal);
-  document.getElementById("reportCash").textContent = money(expectedCash);
+  const latestClosing = cashClosings[0];
+  const difference = latestClosing ? Number(latestClosing.difference) || 0 : 0;
+  document.getElementById("reportSales").textContent = moneyFixed(totalSales());
+  document.getElementById("reportCash").textContent = moneyFixed(expectedCashTotal());
+  document.getElementById("reportCommission").textContent = moneyFixed(staffCommissionTotal());
+  document.getElementById("reportDifference").textContent = moneyFixed(difference);
+  document.getElementById("reportDifference").classList.toggle("negative", difference < 0);
+  renderReportOutput();
 }
 
 function syncDashboardTotals() {
-  document.getElementById("todaySales").textContent = money(Math.round(salesTotal));
-  document.getElementById("expectedCash").textContent = money(Math.round(expectedCash));
+  document.getElementById("todaySales").textContent = moneyFixed(totalSales());
+  document.getElementById("expectedCash").textContent = moneyFixed(expectedCashTotal());
+  document.getElementById("salesCardNote").textContent = activeLanguage === "en"
+    ? `${sales.length} services · ${purchases.length} purchase records · no VAT added`
+    : `${sales.length} · ${translate("Services")} · ${purchases.length} · ${translate("Purchases")}`;
+  renderOwnerChecks();
 }
 
 function purchaseTotal(purchase) {
@@ -743,13 +787,29 @@ function totalExpenses() {
   return expenses.reduce((sum, expense) => sum + (Number(expense.amount) || 0), 0);
 }
 
+function totalSales() {
+  return sales.reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0);
+}
+
+function cashSalesTotal() {
+  return sales.reduce((sum, sale) => sale.payment === "Cash" ? sum + (Number(sale.amount) || 0) : sum, 0);
+}
+
+function expectedCashTotal() {
+  return openingCash + cashSalesTotal() - cashOutTotal(purchases) - cashOutTotal(expenses);
+}
+
+function staffCommissionTotal() {
+  return totalSales() * 0.12;
+}
+
 function cashOutTotal(records) {
   return records.reduce((sum, record) => record.payment === "Cash" ? sum + (purchaseTotal(record) || Number(record.amount) || 0) : sum, 0);
 }
 
 function syncSummaryTotals() {
-  const purchaseText = money(Math.round(totalPurchases()));
-  const expenseText = money(Math.round(totalExpenses()));
+  const purchaseText = moneyFixed(totalPurchases());
+  const expenseText = moneyFixed(totalExpenses());
   document.getElementById("loginPurchasesTotal").textContent = purchaseText;
   document.getElementById("loginExpensesTotal").textContent = expenseText;
   document.getElementById("dashboardPurchasesTotal").textContent = purchaseText;
@@ -769,7 +829,11 @@ function moneyFixed(amount) {
 }
 
 function updateClosingCalculation() {
-  const expected = numberValue("closingOpeningCash") + numberValue("closingCashSales") - numberValue("closingCashExpenses") - numberValue("closingCashPurchases");
+  openingCash = numberValue("closingOpeningCash");
+  document.getElementById("closingCashSales").value = cashSalesTotal().toFixed(2);
+  document.getElementById("closingCashExpenses").value = cashOutTotal(expenses).toFixed(2);
+  document.getElementById("closingCashPurchases").value = cashOutTotal(purchases).toFixed(2);
+  const expected = expectedCashTotal();
   const difference = numberValue("closingActualCash") - expected;
   document.getElementById("closingExpectedCash").textContent = moneyFixed(expected);
   document.getElementById("closingDifference").textContent = moneyFixed(difference);
@@ -799,20 +863,46 @@ function statusClass(status) {
   return "ok";
 }
 
+function daysUntil(dateString) {
+  const date = new Date(`${dateString}T12:00:00`);
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  return Math.ceil((date - today) / 86400000);
+}
+
+function dateLabel(dateString) {
+  if (!dateString) return translate("Pending");
+  const locales = { en: "en-AE", ar: "ar-AE", hi: "hi-IN", ur: "ur-PK" };
+  return new Intl.DateTimeFormat(locales[activeLanguage] || "en-AE", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short"
+  }).format(new Date(`${dateString}T12:00:00`));
+}
+
+function computedRecordStatus(record) {
+  if (record.evidence && record.signedAt) return "Ready";
+  const days = daysUntil(record.dueDate);
+  if (days < 0) return "Overdue";
+  if (days <= 7) return "DueSoon";
+  return "Ready";
+}
+
 function renderInspectionRecords() {
   const body = document.getElementById("inspectionRecordTable");
   if (!body) return;
   body.innerHTML = "";
 
   inspectionRecords.forEach((record, index) => {
+    const status = computedRecordStatus(record);
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><strong>${escapeHtml(translate(record.record))}</strong></td>
       <td>${escapeHtml(translate(record.cadence))}</td>
-      <td>${escapeHtml(translate(record.due))}</td>
-      <td>${escapeHtml(translate(record.signedBy || "Owner"))}</td>
-      <td>${escapeHtml(translate(record.evidence || "Pending"))}</td>
-      <td><span class="status-pill ${statusClass(record.status)}">${escapeHtml(translate(record.status))}</span></td>
+      <td>${escapeHtml(dateLabel(record.dueDate))}</td>
+      <td>${escapeHtml(record.signedBy ? translate(record.signedBy) : translate("Pending"))}</td>
+      <td><input class="inline-evidence" data-evidence-input="${index}" value="${escapeHtml(record.evidence || "")}" placeholder="${escapeHtml(translate("Evidence required"))}" /></td>
+      <td><span class="status-pill ${statusClass(status)}">${escapeHtml(translate(status))}</span></td>
       <td><button class="mini-action" data-sign-record="${index}" type="button">${translate("Mark signed")}</button></td>
     `;
     body.appendChild(row);
@@ -822,13 +912,18 @@ function renderInspectionRecords() {
     button.addEventListener("click", () => {
       const record = inspectionRecords[Number(button.dataset.signRecord)];
       if (!record) return;
-      record.status = "Ready";
+      const evidence = document.querySelector(`[data-evidence-input="${button.dataset.signRecord}"]`)?.value.trim();
+      if (!evidence) {
+        document.getElementById("inspectionNote").textContent = translate("Evidence required before signing.");
+        return;
+      }
       record.signedBy = currentRole;
-      record.evidence = "Signed";
-      record.due = todayLabel();
+      record.evidence = evidence;
+      record.signedAt = new Date().toISOString();
       addAudit("Stock adjusted", `${currentRole} · inspection signed · ${record.record}`);
       saveState();
       renderCompliance();
+      document.getElementById("inspectionNote").textContent = translate("Inspection signed with evidence.");
     });
   });
 }
@@ -838,12 +933,13 @@ function renderDocumentChain() {
   if (!container) return;
   container.innerHTML = "";
   documentChain.forEach((docItem, index) => {
+    const status = computedRecordStatus(docItem);
     const item = document.createElement("div");
-    item.className = statusClass(docItem.status);
+    item.className = statusClass(status);
     item.innerHTML = `
       <span>${index + 1}</span>
-      <div><strong>${escapeHtml(translate(docItem.name))}</strong><small>${escapeHtml(translate("Due"))}: ${escapeHtml(docItem.due)}</small></div>
-      <b>${escapeHtml(translate(docItem.status))}</b>
+      <div><strong>${escapeHtml(translate(docItem.name))}</strong><small>${escapeHtml(translate("Due"))}: ${escapeHtml(dateLabel(docItem.dueDate))}</small></div>
+      <b>${escapeHtml(translate(status))}</b>
     `;
     container.appendChild(item);
   });
@@ -860,7 +956,9 @@ function renderHygieneLogs() {
       <td>${escapeHtml(translate(log.device))}</td>
       <td>${escapeHtml(translate(log.operator))}</td>
       <td>${escapeHtml(translate(log.cycle))}</td>
+      <td>${escapeHtml(translate(log.solution || "Pending"))}</td>
       <td>${escapeHtml(translate(log.singleUse))}</td>
+      <td>${escapeHtml(translate(log.evidence || "Pending"))}</td>
       <td><span class="status-pill ${statusClass(log.status)}">${escapeHtml(translate(log.status))}</span></td>
     `;
     body.appendChild(row);
@@ -883,15 +981,21 @@ function renderMontajiItems() {
 }
 
 function syncComplianceMetrics() {
-  const notReadyRecords = inspectionRecords.filter((record) => record.status !== "Ready").length;
-  const documentProblems = documentChain.filter((document) => document.status !== "Ready").length;
+  const notReadyRecords = inspectionRecords.filter((record) => computedRecordStatus(record) !== "Ready").length;
+  const documentProblems = documentChain.filter((document) => computedRecordStatus(document) !== "Ready").length;
   const montajiProblems = montajiItems.filter((item) => item.status !== "Registered").length;
   const readiness = Math.max(0, Math.round(100 - ((notReadyRecords + documentProblems + montajiProblems) * 7)));
+  const paidStaff = staffPayments.filter((staff) => staff.paidAt).length;
+  const staffTotal = Math.max(staffPayments.length, 1);
+  const paidPercent = Math.round((paidStaff / staffTotal) * 100);
+  const wpsDay = new Date().getDate();
   document.getElementById("inspectionReadiness").textContent = `${readiness}%`;
   document.getElementById("overdueRecordCount").textContent = String(notReadyRecords + documentProblems);
-  document.getElementById("wpsMetric").textContent = `Day ${wps.day}`;
+  document.getElementById("wpsMetric").textContent = activeLanguage === "en" ? `Day ${wpsDay}` : `${translate("Day 2").replace("2", wpsDay)}`;
   document.getElementById("montajiMetric").textContent = String(montajiProblems);
-  document.getElementById("wpsDetail").textContent = `Due in ${wps.dueInDays} days · ${wps.staffPaid} of ${wps.staffTotal} staff paid`;
+  document.getElementById("wpsDetail").textContent = activeLanguage === "en"
+    ? `Wage cycle day ${wpsDay} · ${paidStaff} of ${staffTotal} staff paid · ${paidPercent < 85 ? "WPS below 85%" : "WPS on track"}`
+    : `${paidStaff}/${staffTotal} · ${paidPercent}% · ${translate(paidPercent < 85 ? "WPS below 85%" : "WPS on track")}`;
 }
 
 function renderCompliance() {
@@ -901,6 +1005,83 @@ function renderCompliance() {
   renderMontajiItems();
   syncComplianceMetrics();
   applyTranslations();
+}
+
+function renderOwnerChecks() {
+  const container = document.getElementById("ownerCheckList");
+  if (!container) return;
+  const latestClosing = cashClosings[0];
+  const checks = [];
+  if (latestClosing && Number(latestClosing.difference) !== 0) {
+    checks.push({
+      level: Number(latestClosing.difference) < 0 ? "danger" : "warning",
+      title: "Cash shortage pending",
+      detail: `${translate("Cash expected")} ${moneyFixed(latestClosing.expected)} · ${translate("Actual cash counted")} ${moneyFixed(latestClosing.actual)}`,
+      action: moneyFixed(latestClosing.difference)
+    });
+  }
+  const missingInspection = inspectionRecords.filter((record) => computedRecordStatus(record) !== "Ready").length;
+  if (missingInspection) {
+    checks.push({
+      level: "warning",
+      title: "Inspection Binder",
+      detail: `${missingInspection} ${translate("Overdue records")}`,
+      action: "Review"
+    });
+  }
+  const montajiProblems = montajiItems.filter((item) => item.status !== "Registered").length;
+  if (montajiProblems) {
+    checks.push({
+      level: "warning",
+      title: "Montaji watch",
+      detail: `${montajiProblems} ${translate("Product registration warning")}`,
+      action: "Check"
+    });
+  }
+  if (!checks.length) {
+    checks.push({
+      level: "",
+      title: "No records yet",
+      detail: "Start with Quick Sale, Purchases and Expenses.",
+      action: "Ready"
+    });
+  }
+  container.innerHTML = "";
+  checks.slice(0, 4).forEach((check) => {
+    const row = document.createElement("div");
+    row.className = `check-row ${check.level}`.trim();
+    row.innerHTML = `
+      <div>
+        <strong>${escapeHtml(translate(check.title))}</strong>
+        <span>${escapeHtml(translate(check.detail))}</span>
+      </div>
+      <b>${escapeHtml(translate(check.action))}</b>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function renderReportOutput() {
+  const body = document.getElementById("reportOutputTable");
+  if (!body) return;
+  const latestClosing = cashClosings[0];
+  const rows = [
+    ["Sales", `${sales.length} ${translate("Services")} · ${moneyFixed(totalSales())}`, sales.length ? "Approved" : "No records yet"],
+    ["Purchases", `${purchases.length} ${translate("Purchases")} · ${moneyFixed(totalPurchases())}`, purchases.length ? "Stock updated" : "No records yet"],
+    ["Expenses", `${expenses.length} ${translate("Expenses")} · ${moneyFixed(totalExpenses())}`, expenses.length ? "Approved" : "No records yet"],
+    ["Cash", latestClosing ? `${translate("Cash difference")} ${moneyFixed(latestClosing.difference)}` : "No records yet", latestClosing ? "Approved" : "Reason required"],
+    ["Audit", `${auditLog.length} ${translate("Audit")}`, "No silent edits"]
+  ];
+  body.innerHTML = "";
+  rows.forEach(([section, result, action]) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${escapeHtml(translate(section))}</td>
+      <td>${escapeHtml(translate(result))}</td>
+      <td>${escapeHtml(translate(action))}</td>
+    `;
+    body.appendChild(row);
+  });
 }
 
 function syncChecklist() {
@@ -1025,9 +1206,6 @@ function renderPurchaseTable() {
       const index = Number(button.dataset.deletePurchase);
       const purchase = purchases[index];
       if (!window.confirm("Delete this purchase? Expected cash will be recalculated.")) return;
-      if (purchase?.payment === "Cash") {
-        expectedCash += purchaseTotal(purchase);
-      }
       purchases.splice(index, 1);
       addAudit("Purchase entered", `${currentRole} · purchase deleted · ${purchase?.item || "purchase"} · ${moneyFixed(purchaseTotal(purchase || {}))}`);
       saveState();
@@ -1059,9 +1237,6 @@ function renderExpenseTable() {
       const index = Number(button.dataset.deleteExpense);
       const expense = expenses[index];
       if (!window.confirm("Delete this expense? Expected cash will be recalculated.")) return;
-      if (expense?.payment === "Cash") {
-        expectedCash += Number(expense.amount) || 0;
-      }
       expenses.splice(index, 1);
       addAudit("Expense entered", `${currentRole} · expense deleted · ${expense?.category || "expense"} · ${moneyFixed(Number(expense?.amount) || 0)}`);
       saveState();
@@ -1086,15 +1261,9 @@ document.getElementById("saveSale").addEventListener("click", () => {
     createdAt: new Date().toISOString()
   };
   sales.push(sale);
-  salesTotal += amount;
-  if (payment === "Cash") {
-    expectedCash += amount;
-  }
-  document.getElementById("todaySales").textContent = money(salesTotal);
-  document.getElementById("expectedCash").textContent = money(expectedCash);
   addAudit("Sale created", `${staff} · ${selectedService.name} · ${payment} · ${moneyFixed(amount)}`);
   saveState();
-  syncReportTotals();
+  syncSummaryTotals();
   const taxText = vatEnabled ? "VAT invoice fields are active." : "No VAT was added.";
   document.getElementById("saleNote").textContent = activeLanguage === "en"
     ? `${selectedService.name} saved. Cash, staff performance and stock recipe were updated. ${taxText}`
@@ -1252,7 +1421,8 @@ document.getElementById("savePurchase").addEventListener("click", () => {
     unit: document.getElementById("purchaseUnit").value.trim() || "unit",
     unitCost: Number(document.getElementById("purchaseUnitCost").value || 0),
     discount: Number(document.getElementById("purchaseDiscount").value || 0),
-    payment: document.getElementById("purchasePayment").value
+    payment: document.getElementById("purchasePayment").value,
+    createdAt: new Date().toISOString()
   };
   if (!purchase.item || purchase.qty < 0 || purchase.unitCost < 0 || purchase.discount < 0) {
     document.getElementById("purchaseNote").textContent = "Enter a valid item, quantity, unit cost and discount.";
@@ -1260,10 +1430,6 @@ document.getElementById("savePurchase").addEventListener("click", () => {
   }
 
   purchases.push(purchase);
-  if (purchase.payment === "Cash") {
-    expectedCash -= purchaseTotal(purchase);
-    document.getElementById("expectedCash").textContent = money(Math.round(expectedCash));
-  }
   saveState();
   addAudit("Purchase entered", `${currentRole} · ${purchase.item} · ${purchase.qty} ${purchase.unit} · ${moneyFixed(purchaseTotal(purchase))}`);
   renderPurchaseTable();
@@ -1279,7 +1445,8 @@ document.getElementById("saveExpense").addEventListener("click", () => {
     category: document.getElementById("expenseCategory").value,
     amount: Number(document.getElementById("expenseAmount").value || 0),
     payment: document.getElementById("expensePayment").value,
-    note: document.getElementById("expenseNoteInput").value.trim()
+    note: document.getElementById("expenseNoteInput").value.trim(),
+    createdAt: new Date().toISOString()
   };
   if (expense.amount < 0) {
     document.getElementById("expenseNote").textContent = "Enter a valid expense amount.";
@@ -1287,10 +1454,6 @@ document.getElementById("saveExpense").addEventListener("click", () => {
   }
 
   expenses.push(expense);
-  if (expense.payment === "Cash") {
-    expectedCash -= expense.amount;
-    document.getElementById("expectedCash").textContent = money(Math.round(expectedCash));
-  }
   saveState();
   addAudit("Expense entered", `${currentRole} · ${expense.category} · ${expense.payment} · ${moneyFixed(expense.amount)}`);
   renderExpenseTable();
@@ -1311,42 +1474,67 @@ document.getElementById("saveExpense").addEventListener("click", () => {
 
 document.getElementById("approveClosing").addEventListener("click", () => {
   updateClosingCalculation();
-  addAudit("Stock adjusted", `${currentRole} · day closed · ${document.getElementById("closingDifference").textContent}`);
-});
-
-document.getElementById("completeInspectionRound").addEventListener("click", () => {
-  inspectionRecords = inspectionRecords.map((record) => ({
-    ...record,
-    status: "Ready",
-    signedBy: currentRole,
-    evidence: record.evidence === "Pending" ? "Signed" : record.evidence,
-    due: todayLabel()
-  }));
-  addAudit("Stock adjusted", `${currentRole} · inspection round completed · ${inspectionRecords.length} records`);
+  const expected = expectedCashTotal();
+  const actual = numberValue("closingActualCash");
+  const difference = actual - expected;
+  const reason = document.getElementById("closingReason").value.trim();
+  if (difference !== 0 && !reason) {
+    document.getElementById("closingReason").focus();
+    document.getElementById("closingDifference").textContent = translate("Shortage reason required.");
+    return;
+  }
+  cashClosings.unshift({
+    openingCash,
+    cashSales: cashSalesTotal(),
+    cashExpenses: cashOutTotal(expenses),
+    cashPurchases: cashOutTotal(purchases),
+    expected,
+    actual,
+    difference,
+    reason,
+    approvedBy: currentRole,
+    createdAt: new Date().toISOString()
+  });
+  cashClosings = cashClosings.slice(0, 30);
+  addAudit("Stock adjusted", `${currentRole} · day closed · ${moneyFixed(difference)}`);
   saveState();
-  renderCompliance();
+  syncSummaryTotals();
+  document.getElementById("closingReason").placeholder = translate("Cash closing approved.");
 });
 
 document.getElementById("addHygieneLog").addEventListener("click", () => {
   const time = new Intl.DateTimeFormat("en-AE", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
+  const device = document.getElementById("hygieneDevice").value.trim();
+  const operator = document.getElementById("hygieneOperator").value.trim() || currentRole;
+  const cycle = document.getElementById("hygieneCycle").value.trim();
+  const solution = document.getElementById("hygieneSolution").value.trim();
+  const singleUse = document.getElementById("hygieneSingleUse").value.trim();
+  const evidence = document.getElementById("hygieneEvidence").value.trim();
+  if (!device || !cycle || !evidence) {
+    document.getElementById("hygieneNote").textContent = translate("Enter device, cycle and evidence before saving.");
+    return;
+  }
   hygieneLogs.unshift({
     time,
-    device: "Sterilizer",
-    operator: currentRole,
-    cycle: "Fresh cycle logged",
-    singleUse: "Blade and towel check completed",
+    device,
+    operator,
+    cycle,
+    solution,
+    singleUse,
+    evidence,
     status: "Ready"
   });
   hygieneLogs = hygieneLogs.slice(0, 12);
-  addAudit("Stock adjusted", `${currentRole} · hygiene log added · ${time}`);
+  addAudit("Stock adjusted", `${currentRole} · hygiene log added · ${device} · ${time}`);
   saveState();
   renderCompliance();
+  document.getElementById("hygieneNote").textContent = translate("Hygiene log saved with evidence.");
 });
 
 document.querySelectorAll("[data-export]").forEach((button) => {
   button.addEventListener("click", () => {
     addAudit("Stock adjusted", `${currentRole} · export requested · ${button.dataset.export}`);
-    document.querySelector(".ai-summary span").textContent = `${button.textContent.trim()} is ready through Print / Save PDF in this static build.`;
+    document.querySelector(".ai-summary span").textContent = translate("Export is not built yet.");
     applyTranslations();
   });
 });
@@ -1379,6 +1567,8 @@ function syncTaxSettings() {
 }
 
 migrateServices();
+removeLegacyDemoRows();
+document.getElementById("closingOpeningCash").value = openingCash.toFixed(2);
 saveState();
 renderSaleServices();
 renderServiceTable();

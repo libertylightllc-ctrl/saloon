@@ -63,12 +63,33 @@ const requiredJs = [
   "saveState"
 ];
 
+const forbiddenHtml = [
+  "id=\"completeInspectionRound\"",
+  "Staff commission</span><strong>AED 224</strong>",
+  "Cash difference</span><strong class=\"negative\">AED -50</strong>"
+];
+
+const forbiddenJs = [
+  "salesTotal",
+  "expectedCash: 1245",
+  "is ready through Print / Save PDF",
+  "inspection round completed"
+];
+
 for (const text of requiredHtml) {
   if (!html.includes(text)) throw new Error(`Missing HTML hook: ${text}`);
 }
 
 for (const text of requiredJs) {
   if (!js.includes(text)) throw new Error(`Missing JS behavior: ${text}`);
+}
+
+for (const text of forbiddenHtml) {
+  if (html.includes(text)) throw new Error(`Forbidden HTML regression: ${text}`);
+}
+
+for (const text of forbiddenJs) {
+  if (js.includes(text)) throw new Error(`Forbidden JS regression: ${text}`);
 }
 
 console.log("Validation passed");

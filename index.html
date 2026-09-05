@@ -11,7 +11,7 @@
     <title>Salon Control MVP</title>
     <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="stylesheet" href="./styles.css?v=20260902-1" />
+    <link rel="stylesheet" href="./styles.css?v=20260905-1" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -58,22 +58,22 @@
         <div class="metric-grid login-preview">
           <article class="metric-card highlight">
             <span>Expected cash today</span>
-            <strong>AED 1,245</strong>
+            <strong>AED 0.00</strong>
             <small>Sales minus purchases and expenses</small>
           </article>
           <article class="metric-card">
             <span>Sales</span>
-            <strong>AED 1,870</strong>
+            <strong>AED 0.00</strong>
             <small>Haircut, beard, color, facial</small>
           </article>
           <article class="metric-card">
             <span>Purchases</span>
-            <strong id="loginPurchasesTotal">AED 640</strong>
+            <strong id="loginPurchasesTotal">AED 0.00</strong>
             <small>Blades, foam, oil, tools</small>
           </article>
           <article class="metric-card">
             <span>Expenses</span>
-            <strong id="loginExpensesTotal">AED 310</strong>
+            <strong id="loginExpensesTotal">AED 0.00</strong>
             <small>Tea, food, laundry, repair</small>
           </article>
         </div>
@@ -216,13 +216,13 @@
           <div class="metric-grid">
             <article class="metric-card highlight">
               <span>Expected cash today</span>
-              <strong id="expectedCash">AED 1,245</strong>
+              <strong id="expectedCash">AED 0.00</strong>
               <small>Cash sales minus cash expenses and purchases</small>
             </article>
             <article class="metric-card">
               <span id="salesCardLabel">Sales</span>
-              <strong id="todaySales">AED 1,870</strong>
-              <small id="salesCardNote">64 services · 7 retail items · no VAT added</small>
+              <strong id="todaySales">AED 0.00</strong>
+              <small id="salesCardNote">0 services · 0 retail items · no VAT added</small>
             </article>
             <article class="metric-card">
               <span>Purchases</span>
@@ -245,29 +245,7 @@
                 </div>
                 <button class="ghost-button" data-jump="cash" type="button">Close day</button>
               </div>
-              <div class="check-list">
-                <div class="check-row danger">
-                  <div>
-                    <strong>Cash shortage pending</strong>
-                    <span>Expected AED 1,245 · counted AED 1,195</span>
-                  </div>
-                  <b>-50</b>
-                </div>
-                <div class="check-row warning">
-                  <div>
-                    <strong>Blade usage higher than shave count</strong>
-                    <span>44 blades consumed · 38 shave services</span>
-                  </div>
-                  <b>Review</b>
-                </div>
-                <div class="check-row">
-                  <div>
-                    <strong>Dry cleaning expense added</strong>
-                    <span>AED 85 · cash paid · receipt missing</span>
-                  </div>
-                  <b>Attach</b>
-                </div>
-              </div>
+              <div class="check-list" id="ownerCheckList"></div>
             </article>
 
             <article class="panel">
@@ -634,8 +612,8 @@
                   <h3>Inspection Binder</h3>
                   <p>Dubai Municipality records, due dates, signer and evidence slot</p>
                 </div>
-                <button class="primary-button" id="completeInspectionRound" type="button">Complete round</button>
               </div>
+              <p class="system-note" id="inspectionNote">Evidence is required before an inspection record can be signed.</p>
               <div class="table-wrap">
                 <table>
                   <thead>
@@ -672,8 +650,18 @@
                   <h3>Sterilization & Hygiene Log</h3>
                   <p>Device, operator, cycle, towels, apron and blade checks</p>
                 </div>
-                <button class="ghost-button" id="addHygieneLog" type="button">Add hygiene log</button>
+                <span class="status-pill">Evidence required</span>
               </div>
+              <div class="hygiene-form">
+                <label>Device <input id="hygieneDevice" value="Sterilizer" /></label>
+                <label>Operator <input id="hygieneOperator" value="Owner" /></label>
+                <label>Cycle <input id="hygieneCycle" placeholder="Manufacturer cycle or cleaning step" /></label>
+                <label>Solution <input id="hygieneSolution" placeholder="Solution changed / surface cleaned" /></label>
+                <label>Single-use check <input id="hygieneSingleUse" placeholder="Blade, towel, cape, apron check" /></label>
+                <label>Evidence <input id="hygieneEvidence" placeholder="Photo, initials, supplier note or file reference" /></label>
+              </div>
+              <button class="primary-button table-action" id="addHygieneLog" type="button">Add hygiene log</button>
+              <p class="system-note" id="hygieneNote">Every hygiene entry needs a real cycle and evidence note.</p>
               <div class="table-wrap">
                 <table>
                   <thead>
@@ -682,7 +670,9 @@
                       <th>Device</th>
                       <th>Operator</th>
                       <th>Cycle</th>
+                      <th>Solution</th>
                       <th>Single-use check</th>
+                      <th>Evidence</th>
                       <th>Status</th>
                     </tr>
                   </thead>
@@ -727,11 +717,11 @@
                 </div>
               </div>
               <label>Opening cash <input id="closingOpeningCash" type="number" min="0" step="0.01" value="200" /></label>
-              <label>Cash sales <input id="closingCashSales" type="number" min="0" step="0.01" value="1390" /></label>
-              <label>Cash expenses <input id="closingCashExpenses" type="number" min="0" step="0.01" value="225" /></label>
-              <label>Cash purchases <input id="closingCashPurchases" type="number" min="0" step="0.01" value="120" /></label>
-              <label>Actual cash counted <input id="closingActualCash" type="number" min="0" step="0.01" value="1195" /></label>
-              <label>Shortage reason <input id="closingReason" value="Pending owner review" /></label>
+              <label>Cash sales <input id="closingCashSales" type="number" min="0" step="0.01" value="0" readonly /></label>
+              <label>Cash expenses <input id="closingCashExpenses" type="number" min="0" step="0.01" value="0" readonly /></label>
+              <label>Cash purchases <input id="closingCashPurchases" type="number" min="0" step="0.01" value="0" readonly /></label>
+              <label>Actual cash counted <input id="closingActualCash" type="number" min="0" step="0.01" value="0" /></label>
+              <label>Shortage reason <input id="closingReason" placeholder="Required when counted cash does not match" /></label>
               <div class="calculation-box">
                 <div><span>Expected cash</span><strong id="closingExpectedCash">AED 0.00</strong></div>
                 <div><span>Cash difference</span><strong id="closingDifference">AED 0.00</strong></div>
@@ -768,25 +758,18 @@
                 <button class="primary-button" id="printReport" type="button">Print / Save PDF</button>
               </div>
               <div class="statement-grid">
-                <div><span>Total sales</span><strong id="reportSales">AED 1,870</strong></div>
-                <div><span>Cash expected</span><strong id="reportCash">AED 1,245</strong></div>
+                <div><span>Total sales</span><strong id="reportSales">AED 0.00</strong></div>
+                <div><span>Cash expected</span><strong id="reportCash">AED 0.00</strong></div>
                 <div><span>Purchases</span><strong id="reportPurchases">AED 640</strong></div>
                 <div><span>Expenses</span><strong id="reportExpenses">AED 310</strong></div>
-                <div><span>Staff commission</span><strong>AED 224</strong></div>
-                <div><span>Cash difference</span><strong class="negative">AED -50</strong></div>
+                <div><span>Staff commission</span><strong id="reportCommission">AED 0.00</strong></div>
+                <div><span>Cash difference</span><strong id="reportDifference">AED 0.00</strong></div>
               </div>
               <table class="output-table">
                 <thead>
                   <tr><th>Section</th><th>Result</th><th>Owner action</th></tr>
                 </thead>
-                <tbody>
-                  <tr><td>Sales</td><td>64 services recorded; top service Haircut</td><td>Approved</td></tr>
-                  <tr><td>Purchases</td><td>Blades, foam, tissues, hair color and clipper machine entered</td><td>Stock updated</td></tr>
-                  <tr><td>Expenses</td><td>Tea, dry cleaning, repair and transport captured</td><td>Receipts pending for 1 item</td></tr>
-                  <tr><td>Inventory</td><td>Developer 20 Vol below minimum level</td><td>Reorder suggested</td></tr>
-                  <tr><td>Cash</td><td>AED 50 shortage after counted cash</td><td>Reason required</td></tr>
-                  <tr><td>Audit</td><td>7 sensitive actions logged today</td><td>No silent edits</td></tr>
-                </tbody>
+                <tbody id="reportOutputTable"></tbody>
               </table>
             </article>
 
@@ -871,6 +854,6 @@
       </main>
     </div>
 
-    <script src="./app.js?v=20260902-1"></script>
+    <script src="./app.js?v=20260905-1"></script>
   </body>
 </html>
