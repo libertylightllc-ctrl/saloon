@@ -1,21 +1,51 @@
 :root {
-  color-scheme: light;
-  --ink: #17231f;
-  --muted: #63736d;
-  --subtle: #83918c;
-  --line: #d8e2df;
-  --bg: #eef3f1;
+  color-scheme: light dark;
+  --green: #0f3d33;
+  --green-deep: #0a2a24;
+  --deep: #0f3d33;
+  --deep-2: #174a3f;
+  --live: #17795f;
+  --brass: #8f650f;
+  --brass-lt: #e7c87a;
+  --ink: #10201b;
+  --ink-2: #4a5b54;
+  --ink-3: #647169;
+  --muted: #4a5b54;
+  --subtle: #647169;
+  --on-green: #eff1ee;
+  --bg: #eff1ee;
+  --bone: #eff1ee;
   --panel: #ffffff;
-  --soft: #f5f8f7;
-  --deep: #17362f;
-  --deep-2: #244941;
-  --green: #18725a;
-  --green-2: #dff2ea;
-  --blue: #326fb2;
-  --red: #bd493d;
-  --amber: #ad7a1f;
-  --teal: #17858b;
-  --shadow: 0 18px 45px rgba(29, 42, 50, 0.12);
+  --surface: #ffffff;
+  --soft: #f6f8f5;
+  --surface-2: #f6f8f5;
+  --surface-3: #e9ede9;
+  --line: #dae1dc;
+  --line-strong: #c2ccc6;
+  --short: #a8261d;
+  --low: #8a6011;
+  --ok: #17795f;
+  --red: #a8261d;
+  --amber: #8a6011;
+  --blue: #17795f;
+  --teal: #17795f;
+  --green-2: #e3f1eb;
+  --short-bg: #faebe9;
+  --low-bg: #f7efdc;
+  --ok-bg: #e3f1eb;
+  --r-control: 4px;
+  --r-surface: 8px;
+  --shadow: none;
+  --shadow-float: 0 6px 24px rgba(16, 32, 27, 0.14);
+  --font-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-num: Archivo, "IBM Plex Sans", system-ui, sans-serif;
+  --t-1: 11px;
+  --t-2: 13px;
+  --t-3: 15px;
+  --t-4: 20px;
+  --t-5: 26px;
+  --t-6: 34px;
+  --touch: 56px;
 }
 
 * {
@@ -1443,5 +1473,468 @@ tr:last-child td {
 
   .language-switch button {
     flex: 1;
+  }
+}
+
+/* Enamel design layer */
+html {
+  font-size: 16px;
+}
+
+body {
+  background: var(--bone);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--t-3);
+}
+
+:lang(ar),
+:lang(ur) {
+  font-family: "IBM Plex Sans Arabic", var(--font-ui);
+}
+
+:lang(hi) {
+  font-family: "IBM Plex Sans Devanagari", var(--font-ui);
+}
+
+.sidebar {
+  background: var(--green);
+  color: var(--on-green);
+  padding: 24px 18px;
+}
+
+.brand-mark {
+  border-radius: var(--r-surface);
+  background: var(--on-green);
+  color: var(--green);
+  font-family: var(--font-num);
+  letter-spacing: 0;
+}
+
+.brand-block h1,
+.topbar h2,
+.metric-card strong,
+.selected-sale strong,
+.tax-summary strong,
+.calculation-box strong,
+.statement-grid strong,
+.report-header h3,
+.watch-card strong {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+}
+
+.brand-block h1 {
+  font-size: var(--t-4);
+}
+
+.brand-block p,
+.branch-card span,
+.branch-card small,
+.mode-card span {
+  color: rgba(239, 241, 238, 0.82);
+  font-size: var(--t-2);
+}
+
+.branch-card,
+.mode-card {
+  border-color: rgba(239, 241, 238, 0.18);
+  border-radius: var(--r-surface);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-list {
+  gap: 4px;
+}
+
+.nav-item {
+  min-height: var(--touch);
+  border-radius: var(--r-control);
+  color: rgba(239, 241, 238, 0.82);
+  padding-inline: 12px;
+  text-align: start;
+  font-size: var(--t-3);
+  font-weight: 600;
+}
+
+.nav-item.active,
+.nav-item:hover {
+  color: var(--green);
+  background: var(--brass-lt);
+}
+
+.mini-button {
+  min-height: 44px;
+  border-radius: var(--r-control);
+  color: var(--brass-lt);
+  background: transparent;
+}
+
+.main,
+.login-main {
+  padding: 24px;
+}
+
+.topbar h2 {
+  font-size: var(--t-6);
+}
+
+.eyebrow,
+.metric-card span,
+.selected-sale span,
+.tax-summary span,
+.calculation-box span,
+.statement-grid span,
+th,
+label {
+  color: var(--ink-2);
+  font-size: var(--t-2);
+  letter-spacing: 0;
+}
+
+.user-chip,
+.language-status,
+.language-switch,
+.metric-card,
+.panel,
+.report-card,
+.setup-card,
+.login-card,
+.selected-sale,
+.tax-summary div,
+.calculation-box div,
+.expense-category-grid div,
+.statement-grid div,
+.watch-card,
+.output-table,
+.ai-summary {
+  border-radius: var(--r-surface);
+  box-shadow: none;
+}
+
+.metric-card,
+.panel,
+.report-card,
+.setup-card,
+.login-card {
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+.login-card {
+  box-shadow: var(--shadow-float);
+}
+
+.metric-card.highlight {
+  color: var(--on-green);
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.metric-card.highlight span,
+.metric-card.highlight small {
+  color: rgba(239, 241, 238, 0.82);
+}
+
+.metric-card strong {
+  font-size: var(--t-6);
+  text-align: end;
+}
+
+.metric-card small,
+.panel-head p,
+.system-note,
+.check-row span,
+.stock-list span,
+.audit-list span,
+.flow-steps small,
+.report-card span,
+.expense-category-grid span,
+.settings-list span,
+.dependency-chain small,
+.watch-card small,
+.report-header p,
+.ai-summary span {
+  color: var(--ink-3);
+  font-size: var(--t-2);
+}
+
+.primary-button,
+.ghost-button,
+.mini-action,
+.danger-button,
+.segmented button,
+.language-switch button {
+  min-height: 44px;
+  border-radius: var(--r-control);
+  font-size: var(--t-2);
+  font-weight: 700;
+}
+
+.primary-button {
+  border-color: var(--live);
+  background: var(--live);
+}
+
+.primary-button:hover {
+  background: var(--green);
+}
+
+.ghost-button,
+.mini-action {
+  border-color: var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.language-switch {
+  border-radius: var(--r-control);
+  background: var(--surface-3);
+}
+
+.language-switch button.active {
+  color: var(--green);
+  background: var(--brass-lt);
+}
+
+.status-pill {
+  border-radius: var(--r-control);
+  border-color: rgba(143, 101, 15, 0.28);
+  color: var(--brass);
+  background: #fbf5e6;
+}
+
+.status-pill.ok {
+  border-color: rgba(23, 121, 95, 0.24);
+  color: var(--ok);
+  background: var(--ok-bg);
+}
+
+.status-pill.warning {
+  border-color: rgba(138, 96, 17, 0.28);
+  color: var(--low);
+  background: var(--low-bg);
+}
+
+.status-pill.danger,
+.danger-button {
+  border-color: rgba(168, 38, 29, 0.28);
+  color: var(--short);
+  background: var(--short-bg);
+}
+
+.segmented {
+  border-radius: var(--r-control);
+  background: var(--surface-3);
+}
+
+.segmented button.active {
+  color: var(--green);
+  background: var(--brass-lt);
+}
+
+.service-tile {
+  min-height: 118px;
+  border-radius: var(--r-surface);
+  background: var(--surface);
+  text-align: start;
+}
+
+.service-tile.active {
+  border-color: var(--brass);
+  background: #fbf5e6;
+  box-shadow: inset 4px 0 0 var(--brass);
+}
+
+:dir(rtl) .service-tile.active {
+  box-shadow: inset -4px 0 0 var(--brass);
+}
+
+.service-tile span {
+  color: var(--green);
+  font-family: var(--font-num);
+  font-size: var(--t-4);
+  font-variant-numeric: tabular-nums;
+}
+
+input,
+select {
+  min-height: 48px;
+  border-radius: var(--r-control);
+  border-color: var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--t-3);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--live);
+  outline-offset: 2px;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--live);
+  box-shadow: 0 0 0 2px rgba(23, 121, 95, 0.16);
+}
+
+.check-row {
+  border-inline-start: 4px solid transparent;
+}
+
+.check-row.danger {
+  border-inline-start-color: var(--short);
+}
+
+.check-row.warning {
+  border-inline-start-color: var(--low);
+}
+
+.check-row b,
+.stock-list b,
+.dependency-chain b,
+.report-header span {
+  color: var(--brass);
+}
+
+.check-row.danger b,
+.stock-list b.warn,
+.dependency-chain .danger b,
+.negative {
+  color: var(--short);
+}
+
+.check-row.warning b,
+.dependency-chain .warning b {
+  color: var(--low);
+}
+
+.flow-steps span,
+.setup-card.done span,
+.dependency-chain span {
+  background: var(--brass);
+}
+
+.dependency-chain .warning span {
+  background: var(--low);
+}
+
+.dependency-chain .danger span {
+  background: var(--short);
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th,
+td {
+  text-align: start;
+  font-size: var(--t-2);
+}
+
+td:nth-child(n + 3),
+th:nth-child(n + 3) {
+  font-variant-numeric: tabular-nums;
+}
+
+th {
+  background: var(--surface-2);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bone: #0d1714;
+    --bg: #0d1714;
+    --surface: #13231e;
+    --panel: #13231e;
+    --soft: #172a24;
+    --surface-2: #172a24;
+    --surface-3: #21352f;
+    --line: #294139;
+    --line-strong: #36564b;
+    --ink: #eef4f0;
+    --ink-2: #c0cdc7;
+    --ink-3: #a1b0aa;
+    --green: #0f3d33;
+    --deep: #0a2a24;
+    --deep-2: #10382f;
+    --live: #3f9a7d;
+    --brass: #e7c87a;
+    --short-bg: rgba(168, 38, 29, 0.18);
+    --low-bg: rgba(138, 96, 17, 0.2);
+    --ok-bg: rgba(23, 121, 95, 0.18);
+  }
+
+  .status-pill,
+  .service-tile.active {
+    background: rgba(231, 200, 122, 0.12);
+  }
+
+  .service-tile span,
+  .selected-sale strong,
+  .tax-summary strong,
+  .calculation-box strong,
+  .statement-grid strong,
+  .report-card strong,
+  .watch-card strong {
+    color: var(--brass-lt);
+  }
+
+  .metric-card:not(.highlight) strong,
+  .service-tile strong,
+  .panel-head h3 {
+    color: var(--ink);
+  }
+
+  .primary-button {
+    color: #081713;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell {
+    padding-bottom: 76px;
+  }
+
+  body.is-authenticated .sidebar {
+    position: fixed;
+    inset-inline: 0;
+    inset-block: auto 0;
+    z-index: 20;
+    height: auto;
+    padding: 8px;
+    border-top: 1px solid rgba(239, 241, 238, 0.16);
+  }
+
+  body.is-authenticated .sidebar .brand-block,
+  body.is-authenticated .sidebar .branch-card,
+  body.is-authenticated .sidebar .mode-card {
+    display: none;
+  }
+
+  body.is-authenticated .sidebar .nav-list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(76px, 1fr);
+    overflow-x: auto;
+    gap: 4px;
+    padding-bottom: 0;
+  }
+
+  body.is-authenticated .sidebar .nav-item {
+    min-height: 58px;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px;
+    font-size: 11px;
+  }
+
+  body.is-authenticated .main {
+    padding: 16px;
   }
 }
