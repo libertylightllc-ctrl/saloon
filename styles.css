@@ -2359,6 +2359,22 @@ th {
   }
 }
 
+@media (max-width: 1320px) {
+  #master-admin .split-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #master-admin table {
+    min-width: 800px;
+  }
+
+  #master-admin th,
+  #master-admin td {
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+}
+
 @media (max-width: 820px) {
   .app-shell {
     display: block;
