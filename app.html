@@ -260,8 +260,18 @@
               <div class="panel-head">
                 <div>
                   <h3>Shop List</h3>
-                  <p>Open, review or disable each branch</p>
+                  <p>Search, open, suspend, restore or delete each branch</p>
                 </div>
+              </div>
+              <div class="admin-toolbar">
+                <label>Search shops <input id="shopSearch" placeholder="Name, shop ID, owner or location" /></label>
+                <label>Status
+                  <select id="shopStatusFilter">
+                    <option value="active">Active only</option>
+                    <option value="all">All shops</option>
+                    <option value="suspended">Suspended</option>
+                  </select>
+                </label>
               </div>
               <div class="table-wrap">
                 <table>
@@ -273,7 +283,7 @@
                       <th>Sales</th>
                       <th>Cash</th>
                       <th>Status</th>
-                      <th>Action</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody id="masterShopTable"></tbody>
@@ -446,7 +456,7 @@
                       <th>Price</th>
                       <th>Recipe</th>
                       <th>Status</th>
-                      <th>Action</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody id="serviceTable"></tbody>

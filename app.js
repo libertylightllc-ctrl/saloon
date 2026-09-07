@@ -913,6 +913,8 @@ document.getElementById("shopSwitcher")?.addEventListener("change", (event) => {
 
 document.getElementById("createShopBtn")?.addEventListener("click", createShopFromForm);
 document.getElementById("createUserBtn")?.addEventListener("click", createUserFromForm);
+document.getElementById("shopSearch")?.addEventListener("input", renderMasterDashboard);
+document.getElementById("shopStatusFilter")?.addEventListener("change", renderMasterDashboard);
 
 function money(amount) {
   return `AED ${amount.toLocaleString("en-AE")}`;
@@ -1054,9 +1056,27 @@ function renderMasterDashboard() {
 
   const body = document.getElementById("masterShopTable");
   body.innerHTML = "";
-  activeShops.forEach((shop) => {
+  const search = (document.getElementById("shopSearch")?.value || "").trim().toLowerCase();
+  const statusFilter = document.getElementById("shopStatusFilter")?.value || "active";
+  const visibleShops = shops
+    .filter((shop) => shop.deleted !== true)
+    .filter((shop) => statusFilter === "all" || (statusFilter === "suspended" ? shop.enabled === false : shop.enabled !== false))
+    .filter((shop) => {
+      if (!search) return true;
+      return [shop.name, shop.shopCode, shop.location, shop.owner, shop.ownerUsername]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(search));
+    });
+
+  if (!visibleShops.length) {
+    body.innerHTML = `<tr><td colspan="7">No shops match this filter.</td></tr>`;
+    return;
+  }
+
+  visibleShops.forEach((shop) => {
     const shopState = shopStates[shop.id] || createShopState();
     const attention = shopAttentionCount(shopState);
+    const isSuspended = shop.enabled === false;
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><strong>${escapeHtml(shop.name)}</strong><br><span>${escapeHtml(shop.location)}</span></td>
@@ -1064,8 +1084,15 @@ function renderMasterDashboard() {
       <td>${escapeHtml(shop.owner || "Owner")}</td>
       <td>${moneyFixed(shopSalesTotal(shopState))}</td>
       <td>${moneyFixed(shopExpectedCash(shopState))}</td>
-      <td><span class="status-pill ${attention ? "warning" : "ok"}">${attention ? `${attention} checks` : "Ready"}</span></td>
-      <td><button class="mini-action" data-open-shop="${escapeHtml(shop.id)}" type="button">Open shop</button></td>
+      <td><span class="status-pill ${isSuspended || attention ? "warning" : "ok"}">${isSuspended ? "Suspended" : attention ? `${attention} checks` : "Active"}</span></td>
+      <td>
+        <div class="action-cluster">
+          <button class="mini-action" data-open-shop="${escapeHtml(shop.id)}" type="button" ${isSuspended ? "disabled" : ""}>Open</button>
+          <button class="mini-action" data-reset-owner="${escapeHtml(shop.id)}" type="button">Reset</button>
+          <button class="mini-action" data-toggle-shop="${escapeHtml(shop.id)}" type="button">${isSuspended ? "Restore" : "Suspend"}</button>
+          <button class="danger-button" data-delete-shop="${escapeHtml(shop.id)}" type="button">Delete</button>
+        </div>
+      </td>
     `;
     body.appendChild(row);
   });
@@ -1075,6 +1102,15 @@ function renderMasterDashboard() {
       switchShop(button.dataset.openShop);
       showView("dashboard");
     });
+  });
+  body.querySelectorAll("[data-reset-owner]").forEach((button) => {
+    button.addEventListener("click", () => resetOwnerPassword(button.dataset.resetOwner));
+  });
+  body.querySelectorAll("[data-toggle-shop]").forEach((button) => {
+    button.addEventListener("click", () => toggleShopStatus(button.dataset.toggleShop));
+  });
+  body.querySelectorAll("[data-delete-shop]").forEach((button) => {
+    button.addEventListener("click", () => deleteShop(button.dataset.deleteShop));
   });
 }
 
@@ -1515,6 +1551,69 @@ function createShopFromForm() {
   showView("dashboard");
 }
 
+function generatedPassword(prefix = "Temp") {
+  return `${prefix}${Math.floor(1000 + Math.random() * 9000)}`;
+}
+
+function resetOwnerPassword(shopId) {
+  const shop = shops.find((candidate) => candidate.id === shopId);
+  if (!shop) return;
+  const shopState = shopStates[shopId] || createShopState();
+  shopStates[shopId] = shopState;
+  shopState.users = shopState.users?.length ? shopState.users : defaultShopUsers(shop.owner || "Owner", shop.ownerUsername || "owner");
+  const owner = shopState.users.find((user) => user.role === "Owner") || shopState.users[0];
+  const password = generatedPassword("Owner");
+  owner.password = password;
+  owner.active = true;
+  shop.ownerUsername = owner.username;
+  document.getElementById("handoverCard").hidden = false;
+  document.getElementById("handoverShop").textContent = `${shop.name} · owner password reset`;
+  document.getElementById("handoverCredentials").textContent = `Shop ID: ${shop.shopCode} · Username: ${owner.username} · Password: ${password}`;
+  document.getElementById("masterNote").textContent = "Owner password reset. Hand over the new credentials.";
+  addAudit("Stock adjusted", `${currentRole} · reset owner password · ${shop.shopCode}`);
+  saveState();
+  renderMasterDashboard();
+}
+
+function toggleShopStatus(shopId) {
+  const shop = shops.find((candidate) => candidate.id === shopId);
+  if (!shop) return;
+  if (shop.id === activeShopId && shop.enabled !== false && shops.filter((candidate) => candidate.enabled !== false && candidate.id !== shopId).length === 0) {
+    document.getElementById("masterNote").textContent = "At least one active shop is required.";
+    return;
+  }
+  shop.enabled = shop.enabled === false;
+  if (shop.enabled === false && shop.id === activeShopId) {
+    const next = shops.find((candidate) => candidate.enabled !== false && candidate.id !== shopId);
+    if (next) switchShop(next.id);
+  }
+  document.getElementById("masterNote").textContent = `${shop.name} ${shop.enabled === false ? "suspended" : "restored"}.`;
+  addAudit("Stock adjusted", `${currentRole} · ${shop.enabled === false ? "suspended" : "restored"} shop · ${shop.shopCode}`);
+  saveState();
+  renderMasterDashboard();
+}
+
+function deleteShop(shopId) {
+  const shop = shops.find((candidate) => candidate.id === shopId);
+  if (!shop) return;
+  if (shops.filter((candidate) => candidate.enabled !== false && candidate.id !== shopId && candidate.deleted !== true).length === 0) {
+    document.getElementById("masterNote").textContent = "Cannot delete the last active shop.";
+    return;
+  }
+  if (!window.confirm(`Delete ${shop.name}? This removes its local records in this MVP.`)) return;
+  shops = shops.filter((candidate) => candidate.id !== shopId);
+  delete shopStates[shopId];
+  if (activeShopId === shopId) {
+    activeShopId = shops.find((candidate) => candidate.enabled !== false)?.id || shops[0]?.id;
+    hydrateActiveShop();
+  }
+  document.getElementById("masterNote").textContent = `${shop.name} deleted.`;
+  addAudit("Stock adjusted", `${currentRole} · deleted shop · ${shop.shopCode}`);
+  saveState();
+  syncSummaryTotals();
+  renderMasterDashboard();
+}
+
 function renderUserManagement() {
   const table = document.getElementById("userTable");
   if (!table || !activeShopState) return;
@@ -1529,9 +1628,30 @@ function renderUserManagement() {
       <td><code>${escapeHtml(user.username)}</code></td>
       <td>${escapeHtml(user.role)}</td>
       <td><span class="status-pill ${user.active === false ? "warning" : "ok"}">${user.active === false ? "Disabled" : "Active"}</span></td>
-      <td><button class="mini-action" data-toggle-user="${index}" type="button">${user.active === false ? "Enable" : "Disable"}</button></td>
+      <td>
+        <div class="action-cluster">
+          <button class="mini-action" data-reset-user="${index}" type="button">Reset</button>
+          <button class="mini-action" data-toggle-user="${index}" type="button">${user.active === false ? "Enable" : "Disable"}</button>
+          <button class="danger-button" data-delete-user="${index}" type="button">Delete</button>
+        </div>
+      </td>
     `;
     table.appendChild(row);
+  });
+
+  table.querySelectorAll("[data-reset-user]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+      const user = activeShopState.users[Number(button.dataset.resetUser)];
+      if (!user) return;
+      const password = generatedPassword(user.role === "Owner" ? "Owner" : "User");
+      user.password = password;
+      user.active = true;
+      document.getElementById("userAccessNote").textContent = `${user.name} password reset. Shop ID ${currentShopCode()}, username ${user.username}, password ${password}.`;
+      addAudit("Stock adjusted", `${currentRole} · reset ${user.role} password · ${user.username}`);
+      saveState();
+      renderUserManagement();
+    });
   });
 
   table.querySelectorAll("[data-toggle-user]").forEach((button) => {
@@ -1544,6 +1664,24 @@ function renderUserManagement() {
       }
       user.active = user.active === false;
       addAudit("Stock adjusted", `${currentRole} · ${user.active ? "enabled" : "disabled"} user · ${user.username}`);
+      saveState();
+      renderUserManagement();
+    });
+  });
+
+  table.querySelectorAll("[data-delete-user]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+      const index = Number(button.dataset.deleteUser);
+      const user = activeShopState.users[index];
+      if (!user || user.role === "Owner") {
+        document.getElementById("userAccessNote").textContent = "Owner login cannot be deleted from this screen.";
+        return;
+      }
+      if (!window.confirm(`Delete login for ${user.name}?`)) return;
+      activeShopState.users.splice(index, 1);
+      document.getElementById("userAccessNote").textContent = `${user.name} deleted.`;
+      addAudit("Stock adjusted", `${currentRole} · deleted ${user.role} login · ${user.username}`);
       saveState();
       renderUserManagement();
     });

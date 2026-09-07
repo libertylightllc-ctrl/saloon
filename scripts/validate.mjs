@@ -60,7 +60,9 @@ const requiredHtml = [
   "id=\"newOwnerUsername\"",
   "id=\"newOwnerPassword\"",
   "id=\"createUserBtn\"",
-  "id=\"userTable\""
+  "id=\"userTable\"",
+  "id=\"shopSearch\"",
+  "id=\"shopStatusFilter\""
 ];
 
 const requiredJs = [
@@ -90,6 +92,12 @@ const requiredJs = [
   "authenticateLogin",
   "defaultShopUsers",
   "createUserFromForm",
+  "deleteShop",
+  "toggleShopStatus",
+  "resetOwnerPassword",
+  "data-delete-user",
+  "data-reset-user",
+  "data-delete-shop",
   "Platform Admin",
   "\"Master Admin\": \"9999\""
 ];
