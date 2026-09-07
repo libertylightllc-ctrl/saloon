@@ -71,6 +71,10 @@ button {
   cursor: pointer;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .frontpage {
   min-height: 100vh;
 }
@@ -2299,6 +2303,28 @@ th {
 /* Responsive hardening: keep navigation and actions reachable on every viewport. */
 .mobile-module-field {
   display: none;
+}
+
+body.is-platform-admin .app-shell {
+  grid-template-columns: 1fr;
+}
+
+body.is-platform-admin .sidebar {
+  display: none;
+}
+
+body.is-platform-admin .main {
+  min-height: 100vh;
+}
+
+body.is-platform-admin .topbar {
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+body.is-platform-admin #master-admin {
+  max-width: 1280px;
+  margin-inline: auto;
 }
 
 .sidebar {

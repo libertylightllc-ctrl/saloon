@@ -31,7 +31,7 @@ const rolePins = {
 };
 
 const roleAccess = {
-  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
+  "Platform Admin": ["master-admin"],
   "Master Admin": ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
   Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
   Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
@@ -39,7 +39,7 @@ const roleAccess = {
 };
 
 const viewLabels = {
-  "master-admin": "Master Admin",
+  "master-admin": "Platform Admin",
   dashboard: "Dashboard",
   setup: "Setup",
   "quick-sale": "Quick Sale",
@@ -837,7 +837,7 @@ document.querySelectorAll("[data-icon]").forEach((element) => {
 });
 
 const titles = {
-  "master-admin": "Master Dashboard",
+  "master-admin": "Platform Admin Console",
   dashboard: "Daily Control Dashboard",
   setup: "Launch Setup",
   "quick-sale": "Quick Sale",
@@ -1054,13 +1054,15 @@ function renderShopSwitcher() {
     option.selected = shop.id === activeShopId;
     switcher.appendChild(option);
   });
-  switcher.hidden = currentRole !== "Platform Admin";
+  switcher.hidden = true;
 }
 
 function renderMobileViewSwitcher() {
   const switcher = document.getElementById("mobileViewSwitcher");
   if (!switcher) return;
   const allowed = roleAccess[currentRole] || roleAccess.Owner;
+  const field = switcher.closest(".mobile-module-field");
+  if (field) field.hidden = allowed.length <= 1;
   switcher.innerHTML = "";
   allowed.forEach((viewId) => {
     const option = document.createElement("option");
@@ -1130,7 +1132,7 @@ function renderMasterDashboard() {
       <td><span class="status-pill ${isSuspended || attention ? "warning" : "ok"}">${isSuspended ? "Suspended" : attention ? `${attention} checks` : "Active"}</span></td>
       <td>
         <div class="action-cluster">
-          <button class="mini-action" data-open-shop="${escapeHtml(shop.id)}" type="button" ${isSuspended ? "disabled" : ""}>Open</button>
+          <button class="mini-action" data-show-shop="${escapeHtml(shop.id)}" type="button">View</button>
           <button class="mini-action" data-reset-owner="${escapeHtml(shop.id)}" type="button">Reset</button>
           <button class="mini-action" data-toggle-shop="${escapeHtml(shop.id)}" type="button">${isSuspended ? "Restore" : "Suspend"}</button>
           <button class="danger-button" data-delete-shop="${escapeHtml(shop.id)}" type="button">Delete</button>
@@ -1140,10 +1142,9 @@ function renderMasterDashboard() {
     body.appendChild(row);
   });
 
-  body.querySelectorAll("[data-open-shop]").forEach((button) => {
+  body.querySelectorAll("[data-show-shop]").forEach((button) => {
     button.addEventListener("click", () => {
-      switchShop(button.dataset.openShop);
-      showView("dashboard");
+      showShopHandover(button.dataset.showShop);
     });
   });
   body.querySelectorAll("[data-reset-owner]").forEach((button) => {
@@ -1167,7 +1168,9 @@ function syncShopIdentity() {
   if (businessCard) businessCard.textContent = `${shop.name} Barber`;
   const reportSubtitle = document.querySelector(".report-header p");
   if (reportSubtitle) reportSubtitle.textContent = `${shop.name} · ${todayLabel()} · ${vatEnabled ? "VAT records" : "non-VAT internal records"}`;
-  document.getElementById("userChip").textContent = `${translate(currentRole)} · ${currentUser.name || currentUser.username || shop.location}`;
+  document.getElementById("userChip").textContent = currentRole === "Platform Admin"
+    ? "Platform Admin · Network"
+    : `${translate(currentRole)} · ${currentUser.name || currentUser.username || shop.location}`;
   renderShopSwitcher();
   renderUserManagement();
 }
@@ -1500,11 +1503,19 @@ function syncChecklist() {
 
 function applyRoleAccess() {
   const allowed = roleAccess[currentRole] || roleAccess.Owner;
+  const isPlatformAdmin = currentRole === "Platform Admin";
   document.querySelectorAll("#appShell .nav-item[data-view]").forEach((item) => {
     const enabled = allowed.includes(item.dataset.view);
     item.hidden = !enabled;
     item.disabled = !enabled;
   });
+  document.querySelectorAll(".shop-only-control").forEach((item) => {
+    item.hidden = isPlatformAdmin;
+  });
+  document.body.classList.toggle("is-platform-admin", isPlatformAdmin);
+  if (isPlatformAdmin) {
+    document.getElementById("topTaxLabel").textContent = "Platform network · AED";
+  }
   renderShopSwitcher();
   renderMobileViewSwitcher();
 }
@@ -1619,6 +1630,17 @@ function resetOwnerPassword(shopId) {
   renderMasterDashboard();
 }
 
+function showShopHandover(shopId) {
+  const shop = shops.find((candidate) => candidate.id === shopId);
+  if (!shop) return;
+  const shopState = shopStates[shopId] || createShopState();
+  const owner = (shopState.users || []).find((user) => user.role === "Owner") || { username: shop.ownerUsername || "owner" };
+  document.getElementById("handoverCard").hidden = false;
+  document.getElementById("handoverShop").textContent = `${shop.name} · ${shop.enabled === false ? "suspended" : "active"}`;
+  document.getElementById("handoverCredentials").textContent = `Shop ID: ${shop.shopCode} · Owner: ${shop.owner || "Owner"} · Username: ${owner.username}`;
+  document.getElementById("masterNote").textContent = "Platform Admin manages shop creation, owner handover, suspension and deletion. Shop staff are created inside the owner dashboard.";
+}
+
 function toggleShopStatus(shopId) {
   const shop = shops.find((candidate) => candidate.id === shopId);
   if (!shop) return;
@@ -1685,7 +1707,7 @@ function renderUserManagement() {
 
   table.querySelectorAll("[data-reset-user]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+      if (!["Owner", "Master Admin"].includes(currentRole)) return;
       const user = activeShopState.users[Number(button.dataset.resetUser)];
       if (!user) return;
       const password = generatedPassword(user.role === "Owner" ? "Owner" : "User");
@@ -1700,7 +1722,7 @@ function renderUserManagement() {
 
   table.querySelectorAll("[data-toggle-user]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+      if (!["Owner", "Master Admin"].includes(currentRole)) return;
       const user = activeShopState.users[Number(button.dataset.toggleUser)];
       if (!user || user.role === "Owner") {
         document.getElementById("userAccessNote").textContent = "Owner login cannot be disabled from this screen.";
@@ -1715,7 +1737,7 @@ function renderUserManagement() {
 
   table.querySelectorAll("[data-delete-user]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+      if (!["Owner", "Master Admin"].includes(currentRole)) return;
       const index = Number(button.dataset.deleteUser);
       const user = activeShopState.users[index];
       if (!user || user.role === "Owner") {
@@ -1733,7 +1755,7 @@ function renderUserManagement() {
 }
 
 function createUserFromForm() {
-  if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+  if (!["Owner", "Master Admin"].includes(currentRole)) return;
   const name = document.getElementById("newUserName").value.trim();
   const username = document.getElementById("newUserUsername").value.trim();
   const password = document.getElementById("newUserPassword").value.trim();
@@ -2092,6 +2114,7 @@ document.getElementById("loginForm").addEventListener("submit", (event) => {
 document.getElementById("logoutBtn").addEventListener("click", () => {
   window.scrollTo({ top: 0, left: 0 });
   document.body.classList.remove("is-authenticated");
+  document.body.classList.remove("is-platform-admin");
   const frontpage = document.getElementById("frontpage");
   const appShell = document.getElementById("appShell");
   appShell.hidden = true;
@@ -2237,7 +2260,7 @@ function syncTaxSettings() {
   const branchLabel = vatEnabled ? "VAT enabled · tax invoice mode" : "VAT optional · currently off";
   const checkoutNote = vatEnabled ? "VAT on: tax invoice mode" : "VAT off: internal sale record only";
   const receiptText = receiptEnabled ? "Receipt on" : "Receipt off";
-  const headerLabel = `${todayLabel()} · AED · ${taxMode}`;
+  const headerLabel = currentRole === "Platform Admin" ? "Platform network · AED" : `${todayLabel()} · AED · ${taxMode}`;
 
   document.body.classList.toggle("vat-enabled", vatEnabled);
   document.getElementById("taxModeLabel").textContent = translate(taxMode);
