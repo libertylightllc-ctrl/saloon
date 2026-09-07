@@ -60,21 +60,28 @@
           <form class="login-card" id="loginForm">
             <span class="status-pill">Secure demo access</span>
             <h2>Login</h2>
-            <p>Choose your role and enter the PIN to open the right workspace.</p>
+            <p>Use the shop ID, username and password issued for your role.</p>
+            <label>Shop ID
+              <input id="loginShopId" value="PLATFORM" autocomplete="organization" />
+            </label>
+            <label>Username
+              <input id="loginUsername" value="admin" autocomplete="username" />
+            </label>
             <label>Role
               <select id="loginRole">
+                <option value="Platform Admin">Platform Admin</option>
                 <option value="Owner">Owner</option>
                 <option value="Master Admin">Master Admin</option>
                 <option value="Staff">Staff</option>
                 <option value="Cashier">Cashier</option>
               </select>
             </label>
-            <label>PIN
-              <input id="loginPin" value="1234" inputmode="numeric" />
+            <label>Password
+              <input id="loginPin" value="9999" type="password" autocomplete="current-password" />
             </label>
-            <p class="system-note danger-note" id="loginError" hidden>Wrong PIN for this role.</p>
+            <p class="system-note danger-note" id="loginError" hidden>Wrong shop ID, username, password or role.</p>
             <button class="primary-button full login-submit" type="submit">Enter Salon Control</button>
-            <small>Master PIN: 9999 · Owner: 1234 · Cashier: 2222 · Staff: 1111</small>
+            <small>Demo platform: Shop ID PLATFORM · username admin · password 9999</small>
           </form>
           <div class="login-preview" aria-hidden="true">
             <strong id="loginPurchasesTotal">AED 0.00</strong>
@@ -214,13 +221,16 @@
               <div class="panel-head">
                 <div>
                   <h3>Shop Control</h3>
-                  <p>Create a new shop and allocate its dashboard</p>
+                  <p>Create a shop, issue owner credentials and hand them over</p>
                 </div>
               </div>
               <div class="master-form">
+                <label>Shop ID <input id="newShopCode" placeholder="ALBARSHA001" /></label>
                 <label>Shop name <input id="newShopName" placeholder="Marina Gents" /></label>
                 <label>Location <input id="newShopLocation" placeholder="Dubai Marina" /></label>
                 <label>Owner name <input id="newShopOwner" placeholder="Owner name" /></label>
+                <label>Owner username <input id="newOwnerUsername" placeholder="owner.albarsha" /></label>
+                <label>Temporary password <input id="newOwnerPassword" placeholder="ChangeMe123" /></label>
                 <label>Opening cash <input id="newShopOpeningCash" type="number" min="0" step="0.01" value="200" /></label>
                 <label>Default language
                   <select id="newShopLanguage">
@@ -239,6 +249,11 @@
               </div>
               <button class="primary-button table-action" id="createShopBtn" type="button">Create shop</button>
               <p class="system-note" id="masterNote">New shops receive services, purchases, expenses, inventory, compliance, cash closing and reports.</p>
+              <div class="handover-card" id="handoverCard" hidden>
+                <span>Owner handover</span>
+                <strong id="handoverShop">Shop created</strong>
+                <code id="handoverCredentials">Shop ID · username · password</code>
+              </div>
             </article>
 
             <article class="panel">
@@ -253,6 +268,7 @@
                   <thead>
                     <tr>
                       <th>Shop</th>
+                      <th>Shop ID</th>
                       <th>Owner</th>
                       <th>Sales</th>
                       <th>Cash</th>
@@ -902,6 +918,54 @@
                   <strong>VAT On</strong>
                   <span>For registered salons only. TRN, VAT amount, invoice numbering and tax reports become active.</span>
                 </div>
+              </div>
+            </article>
+          </div>
+          <div class="split-layout user-access-layout">
+            <article class="panel form-panel">
+              <div class="panel-head compact">
+                <div>
+                  <h3>User Access</h3>
+                  <p>Owner creates logins for this shop only</p>
+                </div>
+                <span class="status-pill" id="userAccessPill">Shop users</span>
+              </div>
+              <div class="master-form">
+                <label>Name <input id="newUserName" placeholder="Rafiq" /></label>
+                <label>Username <input id="newUserUsername" placeholder="rafiq.cashier" /></label>
+                <label>Password <input id="newUserPassword" placeholder="Give a temporary password" /></label>
+                <label>Role
+                  <select id="newUserRole">
+                    <option value="Master Admin">Master Admin</option>
+                    <option value="Cashier">Cashier</option>
+                    <option value="Staff">Staff</option>
+                  </select>
+                </label>
+              </div>
+              <button class="primary-button full" id="createUserBtn" type="button">Create user</button>
+              <p class="system-note" id="userAccessNote">Created users can log in with this shop ID, username and password.</p>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Shop Logins</h3>
+                  <p>Users allocated to the active shop</p>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Username</th>
+                      <th>Role</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="userTable"></tbody>
+                </table>
               </div>
             </article>
           </div>

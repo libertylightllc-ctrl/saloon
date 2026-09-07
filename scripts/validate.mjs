@@ -26,6 +26,8 @@ const js = await readFile(join(root, "dist/app.js"), "utf8");
 
 const requiredHtml = [
   "id=\"loginForm\"",
+  "id=\"loginShopId\"",
+  "id=\"loginUsername\"",
   "id=\"loginPin\"",
   "id=\"loginError\"",
   "id=\"purchaseTable\"",
@@ -52,7 +54,13 @@ const requiredHtml = [
   "id=\"createShopBtn\"",
   "id=\"shopSwitcher\"",
   "id=\"masterShopTable\"",
-  "value=\"Master Admin\""
+  "value=\"Platform Admin\"",
+  "id=\"handoverCard\"",
+  "id=\"newShopCode\"",
+  "id=\"newOwnerUsername\"",
+  "id=\"newOwnerPassword\"",
+  "id=\"createUserBtn\"",
+  "id=\"userTable\""
 ];
 
 const requiredJs = [
@@ -79,6 +87,10 @@ const requiredJs = [
   "activeShopId",
   "createShopFromForm",
   "switchShop",
+  "authenticateLogin",
+  "defaultShopUsers",
+  "createUserFromForm",
+  "Platform Admin",
   "\"Master Admin\": \"9999\""
 ];
 

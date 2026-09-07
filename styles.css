@@ -1141,6 +1141,49 @@ select:focus {
   padding-bottom: 16px;
 }
 
+.handover-card {
+  margin: 0 20px 18px;
+  border: 1px solid rgba(23, 121, 95, 0.22);
+  border-radius: var(--r-surface);
+  background: var(--ok-bg);
+  padding: 16px;
+}
+
+.handover-card span,
+.handover-card strong,
+.handover-card code {
+  display: block;
+}
+
+.handover-card span {
+  color: var(--green);
+  font-size: var(--t-2);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.handover-card strong {
+  margin-top: 7px;
+  font-size: var(--t-4);
+}
+
+.handover-card code,
+td code {
+  font-family: var(--font-num);
+  font-size: var(--t-2);
+  font-weight: 700;
+}
+
+.handover-card code {
+  margin-top: 10px;
+  color: var(--ink);
+  white-space: normal;
+}
+
+.user-access-layout {
+  margin-top: 18px;
+}
+
 .shop-switcher {
   width: auto;
   min-width: 210px;

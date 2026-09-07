@@ -14,7 +14,16 @@ const icons = {
 };
 
 const storageKey = "salon-control-mvp";
+const platformAccount = {
+  shopCode: "PLATFORM",
+  username: "admin",
+  password: "9999",
+  role: "Platform Admin",
+  name: "Platform Admin"
+};
+
 const rolePins = {
+  "Platform Admin": "9999",
   "Master Admin": "9999",
   Owner: "1234",
   Cashier: "2222",
@@ -22,7 +31,8 @@ const rolePins = {
 };
 
 const roleAccess = {
-  "Master Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
+  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
+  "Master Admin": ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
   Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
   Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
   Staff: ["quick-sale", "services"]
@@ -151,6 +161,7 @@ const uiTranslations = {
   "Salon Control Dashboard": { ar: "لوحة تحكم الصالون", hi: "सैलून कंट्रोल डैशबोर्ड", ur: "سیلون کنٹرول ڈیش بورڈ" },
   "Daily Control Dashboard": { ar: "لوحة التحكم اليومية", hi: "दैनिक कंट्रोल डैशबोर्ड", ur: "روزانہ کنٹرول ڈیش بورڈ" },
   "Master Dashboard": { ar: "لوحة المدير الرئيسية", hi: "मास्टर डैशबोर्ड", ur: "ماسٹر ڈیش بورڈ" },
+  "Platform Admin": { ar: "مدير المنصة", hi: "प्लैटफ़ॉर्म एडमिन", ur: "پلیٹ فارم ایڈمن" },
   "Login required": { ar: "تسجيل الدخول مطلوب", hi: "लॉगिन आवश्यक", ur: "لاگ اِن ضروری" },
   "Product site": { ar: "موقع المنتج", hi: "प्रोडक्ट साइट", ur: "پروڈکٹ سائٹ" },
   "Language: English": { ar: "اللغة: الإنجليزية", hi: "भाषा: अंग्रेज़ी", ur: "زبان: انگریزی" },
@@ -462,7 +473,7 @@ function isoOffset(days) {
 const defaultState = {
   activeShopId: "al-barsha-gents",
   shops: [
-    { id: "al-barsha-gents", name: "Al Barsha Gents", location: "Al Barsha", owner: "Owner", currency: "AED", enabled: true }
+    { id: "al-barsha-gents", shopCode: "ALBARSHA001", name: "Al Barsha Gents", location: "Al Barsha", owner: "Owner", ownerUsername: "owner.albarsha", currency: "AED", enabled: true }
   ],
   shopStates: {},
   services: [
@@ -487,6 +498,7 @@ const defaultState = {
     { staff: "Sameer", paidAt: "" },
     { staff: "Imran", paidAt: "" }
   ],
+  users: [],
   checklist: {
     servicesApproved: true,
     staffPins: true,
@@ -527,6 +539,7 @@ const shopStateFields = [
   "auditLog",
   "cashClosings",
   "staffPayments",
+  "users",
   "checklist",
   "inspectionRecords",
   "hygieneLogs",
@@ -543,6 +556,7 @@ function createShopState(overrides = {}) {
   shopStateFields.forEach((field) => {
     state[field] = clone(defaultState[field]);
   });
+  state.users = defaultShopUsers();
   return { ...state, ...overrides };
 }
 
@@ -567,6 +581,11 @@ let state = loadState();
 let shops = state.shops?.length ? state.shops : clone(defaultState.shops);
 let activeShopId = state.activeShopId || shops[0].id;
 let shopStates = state.shopStates || {};
+shops = shops.map((shop, index) => ({
+  ...shop,
+  shopCode: shop.shopCode || (index === 0 ? "ALBARSHA001" : shopCodeFromName(shop.name || `Shop ${index + 1}`)),
+  ownerUsername: shop.ownerUsername || uniqueUsername(`owner.${shop.name || "shop"}`, shop.id)
+}));
 if (!shopStates[activeShopId]) {
   shopStates[activeShopId] = legacyShopState(state);
 }
@@ -590,6 +609,16 @@ let documentChain = activeShopState.documentChain || defaultState.documentChain;
 let montajiItems = activeShopState.montajiItems || defaultState.montajiItems;
 let activeSaleCategory = "All";
 let currentRole = "Owner";
+let currentUser = { ...platformAccount };
+
+function defaultShopUsers(ownerName = "Owner", ownerUsername = "owner.albarsha", ownerPassword = "1234") {
+  return [
+    { name: ownerName, username: ownerUsername, password: ownerPassword, role: "Owner", active: true, createdAt: new Date().toISOString() },
+    { name: "Shop Master", username: "master.albarsha", password: "9999", role: "Master Admin", active: true, createdAt: new Date().toISOString() },
+    { name: "Cashier", username: "cashier.albarsha", password: "2222", role: "Cashier", active: true, createdAt: new Date().toISOString() },
+    { name: "Staff", username: "staff.albarsha", password: "1111", role: "Staff", active: true, createdAt: new Date().toISOString() }
+  ];
+}
 
 function currentShop() {
   return shops.find((shop) => shop.id === activeShopId) || shops[0];
@@ -605,6 +634,11 @@ function currentShopLocation() {
   return shop ? shop.location : "Al Barsha";
 }
 
+function currentShopCode() {
+  const shop = currentShop();
+  return shop?.shopCode || "ALBARSHA001";
+}
+
 function captureActiveShopState() {
   shopStates[activeShopId] = {
     services,
@@ -617,6 +651,7 @@ function captureActiveShopState() {
     auditLog,
     cashClosings,
     staffPayments,
+    users: activeShopState.users || defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha"),
     checklist,
     inspectionRecords,
     hygieneLogs,
@@ -639,6 +674,9 @@ function hydrateActiveShop() {
   auditLog = activeShopState.auditLog || [];
   cashClosings = activeShopState.cashClosings || [];
   staffPayments = activeShopState.staffPayments || clone(defaultState.staffPayments);
+  activeShopState.users = activeShopState.users?.length
+    ? activeShopState.users
+    : defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha");
   checklist = { ...defaultState.checklist, ...(activeShopState.checklist || {}) };
   inspectionRecords = activeShopState.inspectionRecords || clone(defaultState.inspectionRecords);
   hygieneLogs = activeShopState.hygieneLogs || [];
@@ -656,6 +694,58 @@ function slugify(value) {
     count += 1;
   }
   return id;
+}
+
+function shopCodeFromName(value) {
+  const base = value.toUpperCase().replace(/[^A-Z0-9]+/g, "").slice(0, 8) || "SHOP";
+  let code = `${base}001`;
+  let count = 2;
+  while (shops.some((shop) => (shop.shopCode || "").toUpperCase() === code)) {
+    code = `${base}${String(count).padStart(3, "0")}`;
+    count += 1;
+  }
+  return code;
+}
+
+function uniqueUsername(base, shopId = activeShopId) {
+  const clean = base.toLowerCase().replace(/[^a-z0-9.]+/g, ".").replace(/^\.+|\.+$/g, "") || "user";
+  const users = shopStates[shopId]?.users || [];
+  let username = clean;
+  let count = 2;
+  while (users.some((user) => user.username.toLowerCase() === username)) {
+    username = `${clean}.${count}`;
+    count += 1;
+  }
+  return username;
+}
+
+function authenticateLogin({ shopCode, username, password, role }) {
+  const normalizedCode = shopCode.trim().toUpperCase();
+  const normalizedUser = username.trim().toLowerCase();
+  if (
+    role === platformAccount.role &&
+    normalizedCode === platformAccount.shopCode &&
+    normalizedUser === platformAccount.username &&
+    password === platformAccount.password
+  ) {
+    return { ok: true, role: platformAccount.role, user: { ...platformAccount }, shopId: activeShopId };
+  }
+
+  const shop = shops.find((candidate) => (candidate.shopCode || "").toUpperCase() === normalizedCode && candidate.enabled !== false);
+  if (!shop) return { ok: false };
+  const shopState = shopStates[shop.id] || createShopState();
+  shopStates[shop.id] = shopState;
+  shopState.users = shopState.users?.length
+    ? shopState.users
+    : defaultShopUsers(shop.owner || "Owner", shop.ownerUsername || "owner");
+  const user = shopState.users.find((candidate) =>
+    candidate.active !== false &&
+    candidate.role === role &&
+    candidate.username.toLowerCase() === normalizedUser &&
+    candidate.password === password
+  );
+  if (!user) return { ok: false };
+  return { ok: true, role: user.role, user, shopId: shop.id };
 }
 
 function migrateServices() {
@@ -822,6 +912,7 @@ document.getElementById("shopSwitcher")?.addEventListener("change", (event) => {
 });
 
 document.getElementById("createShopBtn")?.addEventListener("click", createShopFromForm);
+document.getElementById("createUserBtn")?.addEventListener("click", createUserFromForm);
 
 function money(amount) {
   return `AED ${amount.toLocaleString("en-AE")}`;
@@ -941,7 +1032,7 @@ function renderShopSwitcher() {
     option.selected = shop.id === activeShopId;
     switcher.appendChild(option);
   });
-  switcher.hidden = currentRole !== "Master Admin";
+  switcher.hidden = currentRole !== "Platform Admin";
 }
 
 function renderMasterDashboard() {
@@ -969,6 +1060,7 @@ function renderMasterDashboard() {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><strong>${escapeHtml(shop.name)}</strong><br><span>${escapeHtml(shop.location)}</span></td>
+      <td><code>${escapeHtml(shop.shopCode || "")}</code></td>
       <td>${escapeHtml(shop.owner || "Owner")}</td>
       <td>${moneyFixed(shopSalesTotal(shopState))}</td>
       <td>${moneyFixed(shopExpectedCash(shopState))}</td>
@@ -996,8 +1088,9 @@ function syncShopIdentity() {
   if (businessCard) businessCard.textContent = `${shop.name} Barber`;
   const reportSubtitle = document.querySelector(".report-header p");
   if (reportSubtitle) reportSubtitle.textContent = `${shop.name} · ${todayLabel()} · ${vatEnabled ? "VAT records" : "non-VAT internal records"}`;
-  document.getElementById("userChip").textContent = `${translate(currentRole)} · ${shop.location}`;
+  document.getElementById("userChip").textContent = `${translate(currentRole)} · ${currentUser.name || currentUser.username || shop.location}`;
   renderShopSwitcher();
+  renderUserManagement();
 }
 
 function syncDashboardTotals() {
@@ -1360,8 +1453,11 @@ function switchShop(shopId) {
 
 function createShopFromForm() {
   const name = document.getElementById("newShopName").value.trim();
+  const requestedCode = document.getElementById("newShopCode").value.trim().toUpperCase();
   const location = document.getElementById("newShopLocation").value.trim() || "New branch";
   const owner = document.getElementById("newShopOwner").value.trim() || "Owner";
+  const ownerUsername = document.getElementById("newOwnerUsername").value.trim() || uniqueUsername(`${owner}.${name}`);
+  const ownerPassword = document.getElementById("newOwnerPassword").value.trim() || "ChangeMe123";
   const opening = Number(document.getElementById("newShopOpeningCash").value || 0);
   const language = document.getElementById("newShopLanguage").value;
   const vat = document.getElementById("newShopVat").value === "on";
@@ -1375,20 +1471,33 @@ function createShopFromForm() {
 
   captureActiveShopState();
   const id = slugify(name);
-  shops.push({ id, name, location, owner, currency: "AED", enabled: true });
+  const shopCode = requestedCode || shopCodeFromName(name);
+  if (shops.some((shop) => (shop.shopCode || "").toUpperCase() === shopCode)) {
+    note.textContent = "Shop ID already exists. Use a unique shop ID.";
+    document.getElementById("newShopCode").focus();
+    return;
+  }
+  shops.push({ id, shopCode, name, location, owner, ownerUsername, currency: "AED", enabled: true });
   shopStates[id] = createShopState({
     openingCash: opening,
     vatEnabled: vat,
-    receiptEnabled: false
+    receiptEnabled: false,
+    users: defaultShopUsers(owner, ownerUsername, ownerPassword)
   });
   activeShopId = id;
   activeLanguage = language;
   hydrateActiveShop();
   migrateServices();
-  note.textContent = `${name} created and opened. Services, purchases, expenses, inventory, compliance, cash closing and reports are ready.`;
+  note.textContent = `${name} created. Hand over the owner credentials below.`;
+  document.getElementById("handoverCard").hidden = false;
+  document.getElementById("handoverShop").textContent = `${name} · ${location}`;
+  document.getElementById("handoverCredentials").textContent = `Shop ID: ${shopCode} · Username: ${ownerUsername} · Password: ${ownerPassword}`;
+  document.getElementById("newShopCode").value = "";
   document.getElementById("newShopName").value = "";
   document.getElementById("newShopLocation").value = "";
   document.getElementById("newShopOwner").value = "";
+  document.getElementById("newOwnerUsername").value = "";
+  document.getElementById("newOwnerPassword").value = "";
   document.getElementById("closingOpeningCash").value = openingCash.toFixed(2);
   renderSaleServices();
   renderServiceTable();
@@ -1396,6 +1505,7 @@ function createShopFromForm() {
   renderExpenseTable();
   renderCompliance();
   renderAuditLog();
+  renderUserManagement();
   syncChecklist();
   syncSelectedServiceLabel();
   syncSummaryTotals();
@@ -1403,6 +1513,69 @@ function createShopFromForm() {
   updatePurchaseCalculation();
   saveState();
   showView("dashboard");
+}
+
+function renderUserManagement() {
+  const table = document.getElementById("userTable");
+  if (!table || !activeShopState) return;
+  activeShopState.users = activeShopState.users?.length
+    ? activeShopState.users
+    : defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha");
+  table.innerHTML = "";
+  activeShopState.users.forEach((user, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><strong>${escapeHtml(user.name)}</strong></td>
+      <td><code>${escapeHtml(user.username)}</code></td>
+      <td>${escapeHtml(user.role)}</td>
+      <td><span class="status-pill ${user.active === false ? "warning" : "ok"}">${user.active === false ? "Disabled" : "Active"}</span></td>
+      <td><button class="mini-action" data-toggle-user="${index}" type="button">${user.active === false ? "Enable" : "Disable"}</button></td>
+    `;
+    table.appendChild(row);
+  });
+
+  table.querySelectorAll("[data-toggle-user]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+      const user = activeShopState.users[Number(button.dataset.toggleUser)];
+      if (!user || user.role === "Owner") {
+        document.getElementById("userAccessNote").textContent = "Owner login cannot be disabled from this screen.";
+        return;
+      }
+      user.active = user.active === false;
+      addAudit("Stock adjusted", `${currentRole} · ${user.active ? "enabled" : "disabled"} user · ${user.username}`);
+      saveState();
+      renderUserManagement();
+    });
+  });
+}
+
+function createUserFromForm() {
+  if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+  const name = document.getElementById("newUserName").value.trim();
+  const username = document.getElementById("newUserUsername").value.trim();
+  const password = document.getElementById("newUserPassword").value.trim();
+  const role = document.getElementById("newUserRole").value;
+  const note = document.getElementById("userAccessNote");
+  activeShopState.users = activeShopState.users || [];
+
+  if (!name || !username || !password) {
+    note.textContent = "Name, username and password are required.";
+    return;
+  }
+  if (activeShopState.users.some((user) => user.username.toLowerCase() === username.toLowerCase())) {
+    note.textContent = "Username already exists in this shop.";
+    return;
+  }
+
+  activeShopState.users.push({ name, username, password, role, active: true, createdAt: new Date().toISOString() });
+  note.textContent = `${name} created. Login with Shop ID ${currentShopCode()}, username ${username} and the assigned password.`;
+  document.getElementById("newUserName").value = "";
+  document.getElementById("newUserUsername").value = "";
+  document.getElementById("newUserPassword").value = "";
+  addAudit("Stock adjusted", `${currentRole} · created ${role} login · ${username}`);
+  saveState();
+  renderUserManagement();
 }
 
 function updatePurchaseCalculation() {
@@ -1641,6 +1814,21 @@ document.querySelectorAll(".language-switch button").forEach((button) => {
   });
 });
 
+document.getElementById("loginRole").addEventListener("change", (event) => {
+  const role = event.target.value;
+  const demoByRole = {
+    "Platform Admin": ["PLATFORM", "admin", "9999"],
+    Owner: [currentShopCode(), "owner.albarsha", "1234"],
+    "Master Admin": [currentShopCode(), "master.albarsha", "9999"],
+    Cashier: [currentShopCode(), "cashier.albarsha", "2222"],
+    Staff: [currentShopCode(), "staff.albarsha", "1111"]
+  };
+  const [shopCode, username, password] = demoByRole[role] || demoByRole.Owner;
+  document.getElementById("loginShopId").value = shopCode;
+  document.getElementById("loginUsername").value = username;
+  document.getElementById("loginPin").value = password;
+});
+
 document.querySelectorAll("[data-category]").forEach((button) => {
   button.addEventListener("click", () => {
     activeSaleCategory = button.dataset.category;
@@ -1689,14 +1877,23 @@ document.getElementById("saveSettings").addEventListener("click", () => {
 document.getElementById("loginForm").addEventListener("submit", (event) => {
   event.preventDefault();
   const role = document.getElementById("loginRole").value;
-  const pin = document.getElementById("loginPin").value.trim();
+  const shopCode = document.getElementById("loginShopId").value;
+  const username = document.getElementById("loginUsername").value;
+  const password = document.getElementById("loginPin").value.trim();
   const loginError = document.getElementById("loginError");
-  if (pin !== rolePins[role]) {
+  const login = authenticateLogin({ shopCode, username, password, role });
+  if (!login.ok) {
     loginError.hidden = false;
     return;
   }
   loginError.hidden = true;
-  currentRole = role;
+  captureActiveShopState();
+  activeShopId = login.shopId;
+  currentRole = login.role;
+  currentUser = login.user;
+  hydrateActiveShop();
+  removeLegacyDemoRows();
+  migrateServices();
   window.scrollTo({ top: 0, left: 0 });
   document.body.classList.add("is-authenticated");
   const frontpage = document.getElementById("frontpage");
@@ -1707,7 +1904,7 @@ document.getElementById("loginForm").addEventListener("submit", (event) => {
   appShell.classList.remove("app-hidden");
   applyRoleAccess();
   syncShopIdentity();
-  showView(role === "Master Admin" ? "master-admin" : role === "Staff" ? "quick-sale" : "dashboard");
+  showView(currentRole === "Platform Admin" ? "master-admin" : currentRole === "Staff" ? "quick-sale" : "dashboard");
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
@@ -1890,6 +2087,7 @@ renderPurchaseTable();
 renderExpenseTable();
 renderCompliance();
 renderAuditLog();
+renderUserManagement();
 syncChecklist();
 syncLanguageButtons();
 syncSelectedServiceLabel();
