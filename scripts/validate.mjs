@@ -6,6 +6,7 @@ import { dirname } from "node:path";
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const checks = [
   "dist/index.html",
+  "dist/app.html",
   "dist/marketing.html",
   "dist/styles.css",
   "dist/app.js",
@@ -18,7 +19,8 @@ for (const file of checks) {
   await stat(join(root, file));
 }
 
-const html = await readFile(join(root, "dist/index.html"), "utf8");
+const marketingHome = await readFile(join(root, "dist/index.html"), "utf8");
+const html = await readFile(join(root, "dist/app.html"), "utf8");
 const marketing = await readFile(join(root, "dist/marketing.html"), "utf8");
 const js = await readFile(join(root, "dist/app.js"), "utf8");
 
@@ -45,7 +47,12 @@ const requiredHtml = [
   "data-lang=\"en\"",
   "data-lang=\"ar\"",
   "data-lang=\"hi\"",
-  "data-lang=\"ur\""
+  "data-lang=\"ur\"",
+  "id=\"master-admin\"",
+  "id=\"createShopBtn\"",
+  "id=\"shopSwitcher\"",
+  "id=\"masterShopTable\"",
+  "value=\"Master Admin\""
 ];
 
 const requiredJs = [
@@ -66,7 +73,13 @@ const requiredJs = [
   "montajiItems",
   "renderAuditLog",
   "syncLanguageButtons",
-  "saveState"
+  "saveState",
+  "shops",
+  "shopStates",
+  "activeShopId",
+  "createShopFromForm",
+  "switchShop",
+  "\"Master Admin\": \"9999\""
 ];
 
 const forbiddenHtml = [
@@ -102,7 +115,11 @@ for (const text of forbiddenJs) {
   if (js.includes(text)) throw new Error(`Forbidden JS regression: ${text}`);
 }
 
-for (const text of ["Close the day.", "id=\"product\"", "href=\"./\""]) {
+for (const text of ["Close the day.", "id=\"product\"", "href=\"./app.html\""]) {
+  if (!marketingHome.includes(text)) throw new Error(`Missing home marketing hook: ${text}`);
+}
+
+for (const text of ["Close the day.", "id=\"product\"", "href=\"./app.html\""]) {
   if (!marketing.includes(text)) throw new Error(`Missing marketing page hook: ${text}`);
 }
 

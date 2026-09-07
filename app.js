@@ -15,12 +15,14 @@ const icons = {
 
 const storageKey = "salon-control-mvp";
 const rolePins = {
+  "Master Admin": "9999",
   Owner: "1234",
   Cashier: "2222",
   Staff: "1111"
 };
 
 const roleAccess = {
+  "Master Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
   Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
   Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
   Staff: ["quick-sale", "services"]
@@ -148,6 +150,7 @@ const uiTranslations = {
   "Monday, 31 Aug · AED · VAT optional": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة اختيارية", hi: "सोमवार, 31 अगस्त · AED · VAT वैकल्पिक", ur: "پیر، 31 اگست · AED · VAT اختیاری" },
   "Salon Control Dashboard": { ar: "لوحة تحكم الصالون", hi: "सैलून कंट्रोल डैशबोर्ड", ur: "سیلون کنٹرول ڈیش بورڈ" },
   "Daily Control Dashboard": { ar: "لوحة التحكم اليومية", hi: "दैनिक कंट्रोल डैशबोर्ड", ur: "روزانہ کنٹرول ڈیش بورڈ" },
+  "Master Dashboard": { ar: "لوحة المدير الرئيسية", hi: "मास्टर डैशबोर्ड", ur: "ماسٹر ڈیش بورڈ" },
   "Login required": { ar: "تسجيل الدخول مطلوب", hi: "लॉगिन आवश्यक", ur: "لاگ اِن ضروری" },
   "Product site": { ar: "موقع المنتج", hi: "प्रोडक्ट साइट", ur: "پروڈکٹ سائٹ" },
   "Language: English": { ar: "اللغة: الإنجليزية", hi: "भाषा: अंग्रेज़ी", ur: "زبان: انگریزی" },
@@ -170,6 +173,7 @@ const uiTranslations = {
   "Enter workspace": { ar: "دخول مساحة العمل", hi: "वर्कस्पेस खोलें", ur: "ورک اسپیس کھولیں" },
   "Owner opens the full control room. Staff opens fast sale entry.": { ar: "المالك يفتح التحكم الكامل. الموظف يفتح البيع السريع.", hi: "मालिक पूरा कंट्रोल खोलता है। स्टाफ तेज बिक्री एंट्री खोलता है।", ur: "مالک مکمل کنٹرول کھولتا ہے۔ اسٹاف فوری سیل انٹری کھولتا ہے۔" },
   Role: { ar: "الدور", hi: "भूमिका", ur: "کردار" },
+  "Master Admin": { ar: "المدير الرئيسي", hi: "मास्टर एडमिन", ur: "ماسٹر ایڈمن" },
   Owner: { ar: "المالك", hi: "मालिक", ur: "مالک" },
   Staff: { ar: "الموظف", hi: "स्टाफ", ur: "اسٹاف" },
   Cashier: { ar: "أمين الصندوق", hi: "कैशियर", ur: "کیشئر" },
@@ -456,6 +460,11 @@ function isoOffset(days) {
 }
 
 const defaultState = {
+  activeShopId: "al-barsha-gents",
+  shops: [
+    { id: "al-barsha-gents", name: "Al Barsha Gents", location: "Al Barsha", owner: "Owner", currency: "AED", enabled: true }
+  ],
+  shopStates: {},
   services: [
     { name: "Haircut", names: { ar: "قص شعر", hi: "हेयरकट", ur: "بال کٹوانا" }, category: "Hair", price: 25, recipe: "Neck strip 1, shampoo optional", active: true },
     { name: "Shave", names: { ar: "حلاقة", hi: "शेव", ur: "شیو" }, category: "Beard", price: 15, recipe: "Blade 1, foam 8ml, tissue 2", active: true },
@@ -507,34 +516,147 @@ const defaultState = {
   ]
 };
 
+const shopStateFields = [
+  "services",
+  "purchases",
+  "expenses",
+  "receiptEnabled",
+  "vatEnabled",
+  "openingCash",
+  "sales",
+  "auditLog",
+  "cashClosings",
+  "staffPayments",
+  "checklist",
+  "inspectionRecords",
+  "hygieneLogs",
+  "documentChain",
+  "montajiItems"
+];
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function createShopState(overrides = {}) {
+  const state = {};
+  shopStateFields.forEach((field) => {
+    state[field] = clone(defaultState[field]);
+  });
+  return { ...state, ...overrides };
+}
+
+function legacyShopState(source) {
+  const state = {};
+  shopStateFields.forEach((field) => {
+    state[field] = source[field] !== undefined ? source[field] : defaultState[field];
+  });
+  return createShopState(state);
+}
+
 function loadState() {
   try {
-    return { ...defaultState, ...JSON.parse(localStorage.getItem(storageKey) || "{}") };
+    const stored = JSON.parse(localStorage.getItem(storageKey) || "{}");
+    return { ...defaultState, ...stored };
   } catch {
     return { ...defaultState };
   }
 }
 
 let state = loadState();
-let services = state.services;
-let purchases = state.purchases;
-let expenses = state.expenses;
+let shops = state.shops?.length ? state.shops : clone(defaultState.shops);
+let activeShopId = state.activeShopId || shops[0].id;
+let shopStates = state.shopStates || {};
+if (!shopStates[activeShopId]) {
+  shopStates[activeShopId] = legacyShopState(state);
+}
+let activeShopState = shopStates[activeShopId];
+let services = activeShopState.services;
+let purchases = activeShopState.purchases;
+let expenses = activeShopState.expenses;
 let selectedService = services[0];
-let receiptEnabled = state.receiptEnabled;
-let vatEnabled = state.vatEnabled;
-let openingCash = Number(state.openingCash ?? defaultState.openingCash);
+let receiptEnabled = activeShopState.receiptEnabled;
+let vatEnabled = activeShopState.vatEnabled;
+let openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
 let activeLanguage = state.activeLanguage || "en";
-let sales = state.sales || [];
-let auditLog = state.auditLog || [];
-let cashClosings = state.cashClosings || [];
-let staffPayments = state.staffPayments || defaultState.staffPayments;
-let checklist = { ...defaultState.checklist, ...(state.checklist || {}) };
-let inspectionRecords = state.inspectionRecords || defaultState.inspectionRecords;
-let hygieneLogs = state.hygieneLogs || defaultState.hygieneLogs;
-let documentChain = state.documentChain || defaultState.documentChain;
-let montajiItems = state.montajiItems || defaultState.montajiItems;
+let sales = activeShopState.sales || [];
+let auditLog = activeShopState.auditLog || [];
+let cashClosings = activeShopState.cashClosings || [];
+let staffPayments = activeShopState.staffPayments || defaultState.staffPayments;
+let checklist = { ...defaultState.checklist, ...(activeShopState.checklist || {}) };
+let inspectionRecords = activeShopState.inspectionRecords || defaultState.inspectionRecords;
+let hygieneLogs = activeShopState.hygieneLogs || defaultState.hygieneLogs;
+let documentChain = activeShopState.documentChain || defaultState.documentChain;
+let montajiItems = activeShopState.montajiItems || defaultState.montajiItems;
 let activeSaleCategory = "All";
 let currentRole = "Owner";
+
+function currentShop() {
+  return shops.find((shop) => shop.id === activeShopId) || shops[0];
+}
+
+function currentShopLabel() {
+  const shop = currentShop();
+  return shop ? shop.name : "Salon Control";
+}
+
+function currentShopLocation() {
+  const shop = currentShop();
+  return shop ? shop.location : "Al Barsha";
+}
+
+function captureActiveShopState() {
+  shopStates[activeShopId] = {
+    services,
+    purchases,
+    expenses,
+    receiptEnabled,
+    vatEnabled,
+    openingCash,
+    sales,
+    auditLog,
+    cashClosings,
+    staffPayments,
+    checklist,
+    inspectionRecords,
+    hygieneLogs,
+    documentChain,
+    montajiItems
+  };
+}
+
+function hydrateActiveShop() {
+  activeShopState = shopStates[activeShopId] || createShopState();
+  shopStates[activeShopId] = activeShopState;
+  services = activeShopState.services || clone(defaultState.services);
+  purchases = activeShopState.purchases || [];
+  expenses = activeShopState.expenses || [];
+  selectedService = services.find((service) => service.active) || services[0] || { name: "No service", price: 0, active: false };
+  receiptEnabled = !!activeShopState.receiptEnabled;
+  vatEnabled = !!activeShopState.vatEnabled;
+  openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
+  sales = activeShopState.sales || [];
+  auditLog = activeShopState.auditLog || [];
+  cashClosings = activeShopState.cashClosings || [];
+  staffPayments = activeShopState.staffPayments || clone(defaultState.staffPayments);
+  checklist = { ...defaultState.checklist, ...(activeShopState.checklist || {}) };
+  inspectionRecords = activeShopState.inspectionRecords || clone(defaultState.inspectionRecords);
+  hygieneLogs = activeShopState.hygieneLogs || [];
+  documentChain = activeShopState.documentChain || clone(defaultState.documentChain);
+  montajiItems = activeShopState.montajiItems || clone(defaultState.montajiItems);
+  activeSaleCategory = "All";
+}
+
+function slugify(value) {
+  const base = value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "shop";
+  let id = base;
+  let count = 2;
+  while (shops.some((shop) => shop.id === id)) {
+    id = `${base}-${count}`;
+    count += 1;
+  }
+  return id;
+}
 
 function migrateServices() {
   services = services.map((service) => ({
@@ -580,7 +702,11 @@ function removeLegacyDemoRows() {
 }
 
 function saveState() {
+  captureActiveShopState();
   localStorage.setItem(storageKey, JSON.stringify({
+    shops,
+    activeShopId,
+    shopStates,
     services,
     purchases,
     expenses,
@@ -606,6 +732,7 @@ document.querySelectorAll("[data-icon]").forEach((element) => {
 });
 
 const titles = {
+  "master-admin": "Master Dashboard",
   dashboard: "Daily Control Dashboard",
   setup: "Launch Setup",
   "quick-sale": "Quick Sale",
@@ -689,6 +816,13 @@ document.querySelectorAll("[data-jump]").forEach((button) => {
   button.addEventListener("click", () => showView(button.dataset.jump));
 });
 
+document.getElementById("shopSwitcher")?.addEventListener("change", (event) => {
+  switchShop(event.target.value);
+  renderMasterDashboard();
+});
+
+document.getElementById("createShopBtn")?.addEventListener("click", createShopFromForm);
+
 function money(amount) {
   return `AED ${amount.toLocaleString("en-AE")}`;
 }
@@ -767,6 +901,105 @@ function syncReportTotals() {
   renderReportOutput();
 }
 
+function shopPurchaseTotal(shopState) {
+  return (shopState.purchases || []).reduce((sum, purchase) => sum + purchaseTotal(purchase), 0);
+}
+
+function shopExpenseTotal(shopState) {
+  return (shopState.expenses || []).reduce((sum, expense) => sum + (Number(expense.amount) || 0), 0);
+}
+
+function shopSalesTotal(shopState) {
+  return (shopState.sales || []).reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0);
+}
+
+function shopCashOutTotal(records) {
+  return (records || []).reduce((sum, record) => record.payment === "Cash" ? sum + (purchaseTotal(record) || Number(record.amount) || 0) : sum, 0);
+}
+
+function shopExpectedCash(shopState) {
+  const cashSales = (shopState.sales || []).reduce((sum, sale) => sale.payment === "Cash" ? sum + (Number(sale.amount) || 0) : sum, 0);
+  return Number(shopState.openingCash || 0) + cashSales - shopCashOutTotal(shopState.purchases) - shopCashOutTotal(shopState.expenses);
+}
+
+function shopAttentionCount(shopState) {
+  const complianceCount = (shopState.inspectionRecords || []).filter((record) => computedRecordStatus(record) !== "Ready").length;
+  const latestClosing = (shopState.cashClosings || [])[0];
+  const cashFlag = latestClosing && Number(latestClosing.difference) !== 0 ? 1 : 0;
+  const setupFlag = Object.values(shopState.checklist || {}).some((value) => !value) ? 1 : 0;
+  return complianceCount + cashFlag + setupFlag;
+}
+
+function renderShopSwitcher() {
+  const switcher = document.getElementById("shopSwitcher");
+  if (!switcher) return;
+  switcher.innerHTML = "";
+  shops.filter((shop) => shop.enabled !== false).forEach((shop) => {
+    const option = document.createElement("option");
+    option.value = shop.id;
+    option.textContent = `${shop.name} · ${shop.location}`;
+    option.selected = shop.id === activeShopId;
+    switcher.appendChild(option);
+  });
+  switcher.hidden = currentRole !== "Master Admin";
+}
+
+function renderMasterDashboard() {
+  captureActiveShopState();
+  const activeShops = shops.filter((shop) => shop.enabled !== false);
+  const totals = activeShops.reduce((summary, shop) => {
+    const shopState = shopStates[shop.id] || createShopState();
+    summary.sales += shopSalesTotal(shopState);
+    summary.expected += shopExpectedCash(shopState);
+    summary.attention += shopAttentionCount(shopState);
+    return summary;
+  }, { sales: 0, expected: 0, attention: 0 });
+
+  document.getElementById("masterExpectedCash").textContent = moneyFixed(totals.expected);
+  document.getElementById("masterShopCount").textContent = String(activeShops.length);
+  document.getElementById("masterShopNote").textContent = `${activeShops.length} active branches`;
+  document.getElementById("masterSalesTotal").textContent = moneyFixed(totals.sales);
+  document.getElementById("masterAttentionCount").textContent = String(totals.attention);
+
+  const body = document.getElementById("masterShopTable");
+  body.innerHTML = "";
+  activeShops.forEach((shop) => {
+    const shopState = shopStates[shop.id] || createShopState();
+    const attention = shopAttentionCount(shopState);
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><strong>${escapeHtml(shop.name)}</strong><br><span>${escapeHtml(shop.location)}</span></td>
+      <td>${escapeHtml(shop.owner || "Owner")}</td>
+      <td>${moneyFixed(shopSalesTotal(shopState))}</td>
+      <td>${moneyFixed(shopExpectedCash(shopState))}</td>
+      <td><span class="status-pill ${attention ? "warning" : "ok"}">${attention ? `${attention} checks` : "Ready"}</span></td>
+      <td><button class="mini-action" data-open-shop="${escapeHtml(shop.id)}" type="button">Open shop</button></td>
+    `;
+    body.appendChild(row);
+  });
+
+  body.querySelectorAll("[data-open-shop]").forEach((button) => {
+    button.addEventListener("click", () => {
+      switchShop(button.dataset.openShop);
+      showView("dashboard");
+    });
+  });
+}
+
+function syncShopIdentity() {
+  const shop = currentShop();
+  if (!shop) return;
+  document.querySelectorAll(".branch-card strong").forEach((element) => {
+    element.textContent = shop.name;
+  });
+  const businessCard = document.querySelector("#setup .setup-card strong + small");
+  if (businessCard) businessCard.textContent = `${shop.name} Barber`;
+  const reportSubtitle = document.querySelector(".report-header p");
+  if (reportSubtitle) reportSubtitle.textContent = `${shop.name} · ${todayLabel()} · ${vatEnabled ? "VAT records" : "non-VAT internal records"}`;
+  document.getElementById("userChip").textContent = `${translate(currentRole)} · ${shop.location}`;
+  renderShopSwitcher();
+}
+
 function syncDashboardTotals() {
   document.getElementById("todaySales").textContent = moneyFixed(totalSales());
   document.getElementById("expectedCash").textContent = moneyFixed(expectedCashTotal());
@@ -774,6 +1007,8 @@ function syncDashboardTotals() {
     ? `${sales.length} services · ${purchases.length} purchase records · no VAT added`
     : `${sales.length} · ${translate("Services")} · ${purchases.length} · ${translate("Purchases")}`;
   renderOwnerChecks();
+  syncShopIdentity();
+  renderMasterDashboard();
 }
 
 function purchaseTotal(purchase) {
@@ -1098,6 +1333,76 @@ function applyRoleAccess() {
     item.hidden = !enabled;
     item.disabled = !enabled;
   });
+  renderShopSwitcher();
+}
+
+function switchShop(shopId) {
+  if (!shops.some((shop) => shop.id === shopId && shop.enabled !== false)) return;
+  captureActiveShopState();
+  activeShopId = shopId;
+  hydrateActiveShop();
+  removeLegacyDemoRows();
+  migrateServices();
+  document.getElementById("closingOpeningCash").value = openingCash.toFixed(2);
+  renderSaleServices();
+  renderServiceTable();
+  renderPurchaseTable();
+  renderExpenseTable();
+  renderCompliance();
+  renderAuditLog();
+  syncChecklist();
+  syncSelectedServiceLabel();
+  syncSummaryTotals();
+  syncTaxSettings();
+  updatePurchaseCalculation();
+  saveState();
+}
+
+function createShopFromForm() {
+  const name = document.getElementById("newShopName").value.trim();
+  const location = document.getElementById("newShopLocation").value.trim() || "New branch";
+  const owner = document.getElementById("newShopOwner").value.trim() || "Owner";
+  const opening = Number(document.getElementById("newShopOpeningCash").value || 0);
+  const language = document.getElementById("newShopLanguage").value;
+  const vat = document.getElementById("newShopVat").value === "on";
+  const note = document.getElementById("masterNote");
+
+  if (!name) {
+    note.textContent = "Shop name is required.";
+    document.getElementById("newShopName").focus();
+    return;
+  }
+
+  captureActiveShopState();
+  const id = slugify(name);
+  shops.push({ id, name, location, owner, currency: "AED", enabled: true });
+  shopStates[id] = createShopState({
+    openingCash: opening,
+    vatEnabled: vat,
+    receiptEnabled: false
+  });
+  activeShopId = id;
+  activeLanguage = language;
+  hydrateActiveShop();
+  migrateServices();
+  note.textContent = `${name} created and opened. Services, purchases, expenses, inventory, compliance, cash closing and reports are ready.`;
+  document.getElementById("newShopName").value = "";
+  document.getElementById("newShopLocation").value = "";
+  document.getElementById("newShopOwner").value = "";
+  document.getElementById("closingOpeningCash").value = openingCash.toFixed(2);
+  renderSaleServices();
+  renderServiceTable();
+  renderPurchaseTable();
+  renderExpenseTable();
+  renderCompliance();
+  renderAuditLog();
+  syncChecklist();
+  syncSelectedServiceLabel();
+  syncSummaryTotals();
+  syncTaxSettings();
+  updatePurchaseCalculation();
+  saveState();
+  showView("dashboard");
 }
 
 function updatePurchaseCalculation() {
@@ -1401,8 +1706,8 @@ document.getElementById("loginForm").addEventListener("submit", (event) => {
   frontpage.classList.add("front-hidden");
   appShell.classList.remove("app-hidden");
   applyRoleAccess();
-  document.getElementById("userChip").textContent = `${translate(role)} · Al Barsha`;
-  showView(role === "Staff" ? "quick-sale" : "dashboard");
+  syncShopIdentity();
+  showView(role === "Master Admin" ? "master-admin" : role === "Staff" ? "quick-sale" : "dashboard");
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {

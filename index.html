@@ -1,866 +1,595 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Salon Control is a publishable barber shop daily-control web app for sales, purchases, expenses, stock, tools, cash closing and reports."
-    />
-    <meta name="theme-color" content="#17362f" />
-    <title>Salon Control MVP</title>
-    <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
-    />
-    <link rel="stylesheet" href="./styles.css?v=20260905-3" />
-  </head>
-  <body>
-    <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
-    <section class="frontpage" id="frontpage">
-      <aside class="sidebar login-sidebar" aria-label="Preview navigation">
-        <div class="brand-block">
-          <div class="brand-mark">SC</div>
-          <div>
-            <h1>Salon Control</h1>
-            <p>Barber shop mode</p>
-          </div>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Salon Control is the till, stock book and Dubai Municipality file for a barbershop that runs on cash. Flat price, no commission, works offline, Arabic throughout.">
+<meta name="theme-color" content="#0A2A24">
+<meta property="og:title" content="Salon Control">
+<meta property="og:description" content="Close the day. Not the books. Cash, stock and municipal compliance for gents salons in the UAE.">
+<meta property="og:type" content="website">
+<link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+<title>Salon Control — cash, stock and compliance for gents salons in the UAE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --green:#0A2A24; --green-2:#0F3D33; --green-3:#123F35;
+  --live:#17795F; --live-lt:#3FB48D;
+  --brass:#E7C87A; --brass-dp:#8F650F;
+  --ink:#10201B; --ink-2:#4A5B54; --ink-3:#647169;
+  --bone:#EFF1EE; --surface:#FFFFFF; --surface-2:#F6F8F5;
+  --line:#DAE1DC; --line-dk:rgba(231,200,122,.22);
+  --on-dark:#EFF1EE; --on-dark-2:rgba(239,241,238,.68); --on-dark-3:rgba(239,241,238,.45);
+  --short:#E0776C; --low:#DFA85A;
+  --f-num:Archivo,system-ui,sans-serif;
+  --f-ui:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --f-ar:"IBM Plex Sans Arabic","IBM Plex Sans",sans-serif;
+  --pad:clamp(20px,5vw,72px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--green);color:var(--ink);font-family:var(--f-ui);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%}
+:where(a,button):focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px}
+
+/* ---------- shared ---------- */
+.band{padding-block:clamp(64px,10vw,132px);padding-inline:var(--pad);position:relative}
+.band--dark{background:var(--green);color:var(--on-dark)}
+.band--deep{background:#071E1A;color:var(--on-dark)}
+.band--light{background:var(--bone);color:var(--ink)}
+.inner{max-width:1240px;margin:0 auto}
+.narrow{max-width:920px;margin:0 auto}
+
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin:0 0 22px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";inline-size:26px;block-size:1px;background:currentColor;opacity:.5;flex:0 0 26px}
+.band--light .eyebrow{color:var(--ink-3)}
+.band--dark .eyebrow,.band--deep .eyebrow{color:var(--brass)}
+
+h2.big{font-family:var(--f-num);font-weight:700;font-size:clamp(30px,5.4vw,66px);line-height:1.02;letter-spacing:-.03em;margin:0 0 20px;text-wrap:balance;max-width:19ch}
+h3.mid{font-family:var(--f-num);font-weight:700;font-size:clamp(21px,2.4vw,29px);line-height:1.12;letter-spacing:-.02em;margin:0 0 10px}
+.lede{font-size:clamp(16px,1.5vw,19px);line-height:1.6;max-width:56ch;margin:0}
+.band--light .lede{color:var(--ink-2)}
+.band--dark .lede,.band--deep .lede{color:var(--on-dark-2)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;background:rgba(10,42,36,.82);backdrop-filter:blur(14px);border-block-end:1px solid var(--line-dk)}
+.nav-in{max-width:1240px;margin:0 auto;padding:13px var(--pad);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-mark{inline-size:30px;block-size:30px;border-radius:4px;background:var(--brass);color:var(--green);font-family:var(--f-num);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.brand-txt{font-family:var(--f-num);font-weight:700;font-size:16px;color:#FBFDFB;letter-spacing:-.01em}
+.nav-links{display:none;gap:28px}
+@media (min-width:900px){.nav-links{display:flex}}
+.nav-links a{font-size:13px;color:var(--on-dark-2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--brass)}
+@media (max-width:520px){
+  .nav-in{padding-inline:14px;gap:10px}
+  .brand{min-width:0}
+  .brand-txt{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav .btn{min-height:42px;padding-inline:14px;font-size:13px;flex:0 0 auto}
+}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding-inline:20px;border:0;border-radius:4px;background:var(--brass);color:var(--green);font-family:var(--f-ui);font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap;transition:transform .15s,background .15s}
+.btn:hover{background:#F0D693;transform:translateY(-1px)}
+.btn--lg{min-height:56px;padding-inline:30px;font-size:16px}
+.btn--ghost{background:transparent;color:var(--on-dark);border:1px solid var(--line-dk)}
+.btn--ghost:hover{background:rgba(231,200,122,.1);color:var(--brass)}
+.btn--ink{background:var(--green-2);color:#FBFDFB}
+.btn--ink:hover{background:var(--live)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;background:var(--green);color:var(--on-dark);padding-block:clamp(56px,9vw,104px) 0;padding-inline:var(--pad);overflow:hidden}
+.hero::after{content:"";position:absolute;inset-block-start:-30%;inset-inline-end:-14%;inline-size:min(760px,86vw);block-size:min(760px,86vw);border-radius:50%;background:radial-gradient(circle,rgba(23,121,95,.34),transparent 66%);pointer-events:none}
+.hero-in{max-width:1240px;margin:0 auto;position:relative;z-index:1}
+.hero h1{font-family:var(--f-num);font-weight:800;font-size:clamp(44px,10.5vw,146px);line-height:.9;letter-spacing:-.045em;margin:0 0 26px;color:#FBFDFB;text-wrap:balance}
+.hero h1 .brs{color:var(--brass);display:block}
+.hero-sub{font-size:clamp(16px,1.7vw,21px);line-height:1.55;color:var(--on-dark-2);max-width:50ch;margin:0 0 32px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:clamp(44px,7vw,80px)}
+.hero-note{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--on-dark-3)}
+
+/* price rail — the enamel board */
+.rail-wrap{border-block-start:1px solid var(--line-dk);border-block-end:1px solid var(--line-dk);margin-inline:calc(var(--pad)*-1);overflow:hidden;position:relative}
+.rail-wrap::before,.rail-wrap::after{content:"";position:absolute;inset-block:0;inline-size:90px;z-index:2;pointer-events:none}
+.rail-wrap::before{inset-inline-start:0;background:linear-gradient(90deg,var(--green),transparent)}
+.rail-wrap::after{inset-inline-end:0;background:linear-gradient(270deg,var(--green),transparent)}
+.rail{display:flex;inline-size:max-content;animation:slide 46s linear infinite}
+@media (prefers-reduced-motion:reduce){.rail{animation:none}}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.rail-item{display:flex;align-items:baseline;gap:14px;padding:20px 30px;border-inline-end:1px solid var(--line-dk);white-space:nowrap}
+.rail-item span{font-size:14px;color:var(--on-dark-2)}
+.rail-item b{font-family:var(--f-num);font-weight:700;font-size:22px;color:var(--brass);font-variant-numeric:tabular-nums}
+.rail-item b i{font-style:normal;font-size:11px;font-weight:500;color:var(--on-dark-3);letter-spacing:.08em;margin-inline-end:4px}
+
+/* ---------- stat band ---------- */
+.stats{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-block-start:clamp(40px,6vw,64px)}
+@media (min-width:640px){.stats{grid-template-columns:1fr 1fr}}
+@media (min-width:1000px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--bone);padding:clamp(22px,3vw,32px)}
+.stat b{display:block;font-family:var(--f-num);font-weight:700;font-size:clamp(38px,5.4vw,62px);line-height:1;letter-spacing:-.035em;color:var(--ink);font-variant-numeric:tabular-nums;margin-bottom:10px}
+.stat b em{font-style:normal;font-size:.44em;color:var(--ink-3);font-weight:600}
+.stat p{margin:0;font-size:14px;line-height:1.5;color:var(--ink-2)}
+.stat small{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:10px}
+
+/* ---------- the math ---------- */
+.math{display:grid;gap:clamp(24px,4vw,56px);grid-template-columns:1fr;align-items:center;margin-block-start:clamp(36px,5vw,56px)}
+@media (min-width:900px){.math{grid-template-columns:minmax(0,1fr) minmax(0,.9fr)}}
+.receipt{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:clamp(20px,3vw,30px);font-family:var(--f-mono);font-size:13px;box-shadow:0 20px 50px rgba(16,32,27,.08)}
+.receipt .rh{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding-block-end:14px;margin-block-end:14px;border-block-end:1px dashed var(--line)}
+.receipt .rl{display:flex;justify-content:space-between;gap:16px;padding-block:8px;color:var(--ink-2)}
+.receipt .rl b{color:var(--ink);font-variant-numeric:tabular-nums}
+.receipt .rt{display:flex;justify-content:space-between;gap:16px;margin-block-start:14px;padding-block-start:14px;border-block-start:1px solid var(--ink);font-size:15px}
+.receipt .rt b{font-family:var(--f-num);font-size:26px;font-weight:700;color:var(--short);line-height:1}
+.receipt .rn{margin:16px 0 0;font-family:var(--f-ui);font-size:12.5px;line-height:1.5;color:var(--ink-3)}
+
+/* ---------- gap cards ---------- */
+.gaps{display:grid;gap:1px;background:var(--line-dk);border:1px solid var(--line-dk);margin-block-start:clamp(36px,5vw,60px)}
+@media (min-width:860px){.gaps{grid-template-columns:repeat(3,1fr)}}
+.gap{background:var(--green);padding:clamp(26px,3.4vw,40px);position:relative;transition:background .25s}
+.gap:hover{background:var(--green-3)}
+.gap .no{font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;color:var(--brass);margin-block-end:20px;display:block}
+.gap h3{font-family:var(--f-num);font-weight:700;font-size:clamp(20px,2.1vw,26px);line-height:1.14;letter-spacing:-.02em;margin:0 0 12px;color:#FBFDFB}
+.gap p{margin:0 0 14px;font-size:14.5px;line-height:1.6;color:var(--on-dark-2)}
+.gap p:last-child{margin-bottom:0}
+.gap .who{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:var(--on-dark-3);padding-block-start:14px;border-block-start:1px solid var(--line-dk);margin-block-start:18px;display:block;line-height:1.5}
+
+/* ---------- product ---------- */
+.prod{display:grid;gap:clamp(28px,4vw,56px);grid-template-columns:1fr;align-items:center;margin-block-start:clamp(36px,5vw,60px)}
+@media (min-width:960px){.prod{grid-template-columns:minmax(0,1fr) auto}}
+.phones{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+.ph{inline-size:262px;flex:0 0 262px;border:1px solid #C2CCC6;border-radius:16px;overflow:hidden;background:var(--bone);box-shadow:0 26px 60px rgba(16,32,27,.16)}
+.ph-band{background:var(--green-2);color:var(--on-dark);padding:12px 13px 13px}
+.ph-band .r1{display:flex;justify-content:space-between;align-items:baseline}
+.ph-band .who{font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--on-dark-3)}
+.ph-band .dt{font-family:var(--f-mono);font-size:9.5px;color:var(--brass)}
+.ph-band h4{font-family:var(--f-num);font-size:19px;font-weight:700;margin:5px 0 0;color:#FBFDFB;letter-spacing:-.01em}
+.ph-body{padding:11px 11px 0}
+.tile{display:flex;justify-content:space-between;align-items:center;gap:9px;min-height:52px;padding-inline:11px;margin-block-end:6px;background:var(--surface);border:1px solid var(--line);border-radius:4px}
+.tile.on{border-color:var(--live);border-width:2px;padding-inline:10px;background:var(--surface-2)}
+.tile .nm{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.2}
+.tile .rc{font-size:10px;color:var(--ink-3);margin-block-start:2px}
+.tile .pr{font-family:var(--f-num);font-size:18px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tile .pr i{font-style:normal;display:block;font-size:9px;font-weight:500;color:var(--ink-3);letter-spacing:.07em;text-align:end;margin-block-end:-3px}
+.ph-bar{display:flex;align-items:center;gap:9px;padding:9px 11px;border-block-start:1px solid var(--line);background:var(--surface)}
+.ph-bar .am{flex:1;min-width:0}
+.ph-bar .am small{display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.ph-bar .am b{display:block;font-family:var(--f-num);font-size:20px;font-weight:700;color:var(--ink);line-height:1.15;font-variant-numeric:tabular-nums}
+.ph-bar button{min-height:42px;padding-inline:18px;border:0;border-radius:4px;background:var(--live);color:#fff;font-family:var(--f-ui);font-size:13.5px;font-weight:600}
+.ph-tabs{display:grid;grid-template-columns:repeat(4,1fr);border-block-start:1px solid var(--line);background:var(--surface)}
+.ph-tabs div{padding:8px 2px 10px;text-align:center;font-size:9.5px;font-weight:600;color:var(--ink-3);border-block-start:2px solid transparent;margin-block-start:-1px}
+.ph-tabs div.on{color:var(--live);border-block-start-color:var(--live)}
+.ph-tabs svg{display:block;margin:0 auto 3px;inline-size:17px;block-size:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ar{direction:rtl;font-family:var(--f-ar)}
+.ar .tile .pr i{text-align:start}
+.ph-cap{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);text-align:center;margin:12px 0 0}
+
+.featlist{display:grid;gap:0;border-block-start:1px solid var(--line)}
+.feat{padding-block:clamp(18px,2.4vw,26px);border-block-end:1px solid var(--line);display:grid;gap:6px 22px;grid-template-columns:1fr}
+@media (min-width:620px){.feat{grid-template-columns:34px minmax(0,1fr)}}
+.feat .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;color:var(--ink-3);padding-block-start:4px}
+.feat h4{font-family:var(--f-num);font-size:19px;font-weight:700;letter-spacing:-.015em;margin:0 0 6px;color:var(--ink)}
+.feat p{margin:0;font-size:14.5px;line-height:1.6;color:var(--ink-2);max-width:52ch}
+
+/* ---------- compliance ---------- */
+.comp-grid{display:grid;gap:clamp(22px,3vw,34px);grid-template-columns:1fr;margin-block-start:clamp(36px,5vw,60px)}
+@media (min-width:900px){.comp-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}}
+.panel-dk{background:rgba(255,255,255,.04);border:1px solid var(--line-dk);border-radius:10px;padding:clamp(20px,2.6vw,28px)}
+.panel-dk h4{font-family:var(--f-num);font-size:17px;font-weight:700;margin:0 0 4px;color:#FBFDFB;letter-spacing:-.01em}
+.panel-dk .sb{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--brass);margin:0 0 18px}
+.rec{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding-block:12px;border-block-end:1px solid var(--line-dk)}
+.rec:last-child{border-block-end:0;padding-block-end:0}
+.rec .nm{font-size:13.5px;font-weight:600;color:#FBFDFB;line-height:1.3}
+.rec .mt{font-size:11px;color:var(--on-dark-3);margin-block-start:3px;line-height:1.45}
+.pill{font-family:var(--f-mono);font-size:9px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;padding:4px 8px;border-radius:2px;white-space:nowrap;flex:0 0 auto}
+.pill.s{background:rgba(231,200,122,.16);color:var(--brass)}
+.pill.d{background:rgba(223,168,90,.14);color:var(--low)}
+.pill.o{background:rgba(224,119,108,.14);color:var(--short)}
+.wps{display:flex;gap:2px;margin-block-start:18px}
+.wps div{flex:1;text-align:center;padding:9px 2px;background:rgba(255,255,255,.04);font-family:var(--f-mono);font-size:10px;color:var(--on-dark-3);border-radius:2px}
+.wps div.now{background:var(--brass);color:var(--green);font-weight:600}
+.wps div.hot{background:rgba(224,119,108,.2);color:var(--short);font-weight:600}
+.wps-note{font-size:12.5px;color:var(--on-dark-2);margin:14px 0 0;line-height:1.55}
+
+/* ---------- pricing ---------- */
+.ptable{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin-block-start:clamp(30px,4vw,48px);box-shadow:0 18px 44px rgba(16,32,27,.07)}
+.ptable table{border-collapse:collapse;inline-size:100%;min-inline-size:660px;font-size:14px}
+.ptable th{text-align:start;font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);padding:14px 18px;background:var(--surface-2);border-block-end:1px solid #C2CCC6;white-space:nowrap}
+.ptable td{padding:15px 18px;border-block-end:1px solid var(--line);vertical-align:middle;color:var(--ink-2)}
+.ptable tbody tr:last-child td{border-block-end:0}
+.ptable .us td{background:var(--green);color:var(--on-dark-2);border-block-end-color:rgba(255,255,255,.09)}
+.ptable .us td:first-child{color:#FBFDFB;font-weight:700;font-family:var(--f-num);font-size:16px}
+.ptable .us .g{color:var(--brass);font-weight:600}
+.ptable td:first-child{font-weight:600;color:var(--ink)}
+.ptable .num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ptable .bad{color:#A8261D;font-weight:600}
+
+/* ---------- close ---------- */
+.close-in{text-align:center;max-width:820px;margin:0 auto}
+.close-in h2{font-family:var(--f-num);font-weight:800;font-size:clamp(34px,7vw,86px);line-height:.98;letter-spacing:-.04em;margin:0 0 22px;color:#FBFDFB;text-wrap:balance}
+.close-in .lede{margin:0 auto 34px}
+.close-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+
+footer{background:#071E1A;color:var(--on-dark-3);padding:clamp(38px,5vw,56px) var(--pad)}
+.foot-in{max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:20px 40px;justify-content:space-between;align-items:flex-start}
+footer p{margin:0;font-size:12.5px;line-height:1.6;max-width:56ch}
+footer a{color:var(--on-dark-2);text-decoration:none;font-size:12.5px}
+footer a:hover{color:var(--brass)}
+.foot-links{display:flex;flex-wrap:wrap;gap:8px 22px}
+</style>
+
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top"><span class="brand-mark">SC</span><span class="brand-txt">Salon Control</span></a>
+    <div class="nav-links">
+      <a href="#cost">The maths</a>
+      <a href="#gaps">What's missing</a>
+      <a href="#product">Product</a>
+      <a href="#compliance">Compliance</a>
+      <a href="#price">Pricing</a>
+    </div>
+    <a class="btn" href="./app.html">Login</a>
+  </div>
+</nav>
+
+<!-- ============ 01 HERO ============ -->
+<header class="hero" id="top">
+  <div class="hero-in">
+    <p class="eyebrow rv">Built in Dubai · for gents salons</p>
+    <h1 class="rv">Close the day.<span class="brs">Not the books.</span></h1>
+    <p class="hero-sub rv">Salon Control is the till, the stock book and the municipality file for a barbershop that runs on cash. Every dirham, every blade, every inspection record — closed by the time you lock the door.</p>
+    <div class="hero-cta rv">
+      <a class="btn btn--lg" href="./app.html">Login</a>
+      <a class="btn btn--lg btn--ghost" href="#product">See the till</a>
+    </div>
+    <p class="hero-note rv">Arabic · हिन्दी · اردو · English &nbsp;·&nbsp; Works offline &nbsp;·&nbsp; No commission, ever</p>
+  </div>
+
+  <div class="rail-wrap" aria-hidden="true">
+    <div class="rail">
+      <div class="rail-item"><span>Haircut</span><b><i>AED</i>25</b></div>
+      <div class="rail-item"><span>Shave</span><b><i>AED</i>15</b></div>
+      <div class="rail-item"><span>Beard trim · تشذيب</span><b><i>AED</i>10</b></div>
+      <div class="rail-item"><span>Skin fade · تدريج</span><b><i>AED</i>45</b></div>
+      <div class="rail-item"><span>Beard colour</span><b><i>AED</i>45</b></div>
+      <div class="rail-item"><span>Hair colour</span><b><i>AED</i>80</b></div>
+      <div class="rail-item"><span>Facial · تنظيف</span><b><i>AED</i>60</b></div>
+      <div class="rail-item"><span>Head massage</span><b><i>AED</i>35</b></div>
+      <div class="rail-item"><span>Hot towel shave</span><b><i>AED</i>95</b></div>
+      <div class="rail-item"><span>Kids cut</span><b><i>AED</i>20</b></div>
+      <div class="rail-item"><span>Haircut</span><b><i>AED</i>25</b></div>
+      <div class="rail-item"><span>Shave</span><b><i>AED</i>15</b></div>
+      <div class="rail-item"><span>Beard trim · تشذيب</span><b><i>AED</i>10</b></div>
+      <div class="rail-item"><span>Skin fade · تدريج</span><b><i>AED</i>45</b></div>
+      <div class="rail-item"><span>Beard colour</span><b><i>AED</i>45</b></div>
+      <div class="rail-item"><span>Hair colour</span><b><i>AED</i>80</b></div>
+      <div class="rail-item"><span>Facial · تنظيف</span><b><i>AED</i>60</b></div>
+      <div class="rail-item"><span>Head massage</span><b><i>AED</i>35</b></div>
+      <div class="rail-item"><span>Hot towel shave</span><b><i>AED</i>95</b></div>
+      <div class="rail-item"><span>Kids cut</span><b><i>AED</i>20</b></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 02 THE MATHS ============ -->
+<section class="band band--light" id="cost">
+  <div class="inner">
+    <p class="eyebrow rv">01 — The maths nobody shows you</p>
+    <h2 class="big rv">A forty-dirham haircut costs you five percent.</h2>
+    <p class="lede rv">Not two and a half. The fixed fee is what does it — and at a barbershop ticket, the fixed fee is most of the bill. Here is one real cut, priced honestly.</p>
+
+    <div class="math">
+      <div class="receipt rv">
+        <div class="rh"><span>One haircut · card</span><span>Al Barsha</span></div>
+        <div class="rl"><span>Service charged</span><b>AED 40.00</b></div>
+        <div class="rl"><span>Acquirer rate · 2.50%</span><b>− AED 1.00</b></div>
+        <div class="rl"><span>Fixed fee per sale</span><b>− AED 1.00</b></div>
+        <div class="rl"><span>Regulated debit interchange · 0.75%</span><b>AED 0.30</b></div>
+        <div class="rt"><span>Effective cost</span><b>5.0%</b></div>
+        <p class="rn">The UAE central bank caps domestic debit interchange at 0.75% card-present. You are not paying interchange — you are paying acquirer margin plus a flat fee that never shrinks with your ticket. On an AED 30 cut it is 5.8%.</p>
+      </div>
+
+      <div>
+        <div class="featlist rv">
+          <div class="feat"><span class="k">A</span><div><h4>We show you the number</h4><p>Cash, card and Aani side by side on every service, with your real rate. The first time most owners see it, they move their small tickets.</p></div></div>
+          <div class="feat"><span class="k">B</span><div><h4>We check your statement</h4><p>Blended pricing is prohibited in the UAE — debit, prepaid and credit must be billed separately. So your statement can be verified, and we verify it.</p></div></div>
+          <div class="feat"><span class="k">C</span><div><h4>We take nothing</h4><p>No commission on a walk-in. No percentage of a new client. No cut of a tip. Your money moves between you and your bank.</p></div></div>
         </div>
-
-        <div class="branch-card">
-          <span>Active branch</span>
-          <strong>Al Barsha Gents</strong>
-          <small>VAT optional · currently off</small>
-        </div>
-
-        <nav class="nav-list" aria-label="App modules preview">
-          <span class="nav-item active"><span class="nav-icon" data-icon="dashboard"></span>Dashboard</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="sale"></span>Quick Sale</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="purchase"></span>Purchases</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="expense"></span>Expenses</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="stock"></span>Inventory & Tools</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="compliance"></span>Compliance</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="cash"></span>Cash Closing</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="report"></span>Reports</span>
-        </nav>
-      </aside>
-
-      <main class="main login-main">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Monday, 31 Aug · AED · VAT Off</p>
-            <h2>Salon Control Dashboard</h2>
-          </div>
-          <div class="top-actions">
-            <span class="user-chip">Login required</span>
-            <span class="language-status">Language: English</span>
-            <a class="ghost-button" href="./marketing.html">Product site</a>
-          </div>
-        </header>
-
-        <div class="metric-grid login-preview">
-          <article class="metric-card highlight">
-            <span>Expected cash today</span>
-            <strong>AED 0.00</strong>
-            <small>Sales minus purchases and expenses</small>
-          </article>
-          <article class="metric-card">
-            <span>Sales</span>
-            <strong>AED 0.00</strong>
-            <small>Haircut, beard, color, facial</small>
-          </article>
-          <article class="metric-card">
-            <span>Purchases</span>
-            <strong id="loginPurchasesTotal">AED 0.00</strong>
-            <small>Blades, foam, oil, tools</small>
-          </article>
-          <article class="metric-card">
-            <span>Expenses</span>
-            <strong id="loginExpensesTotal">AED 0.00</strong>
-            <small>Tea, food, laundry, repair</small>
-          </article>
-        </div>
-
-        <div class="login-stage">
-          <form class="login-card" id="loginForm">
-            <span class="status-pill">Secure demo access</span>
-            <h3>Enter workspace</h3>
-            <p>Owner opens the full control room. Staff opens fast sale entry.</p>
-            <label>Role
-              <select id="loginRole">
-                <option value="Owner">Owner</option>
-                <option value="Staff">Staff</option>
-                <option value="Cashier">Cashier</option>
-              </select>
-            </label>
-            <label>PIN
-              <input id="loginPin" value="1234" inputmode="numeric" />
-            </label>
-            <p class="system-note danger-note" id="loginError" hidden>Wrong PIN for this role.</p>
-            <button class="primary-button full" type="submit">Enter Salon Control</button>
-            <small>Owner PIN: 1234 · Cashier: 2222 · Staff: 1111</small>
-          </form>
-
-          <article class="panel login-flow">
-            <div class="panel-head">
-              <div>
-                <h3>Today’s Flow</h3>
-                <p>The same workflow opens after login</p>
-              </div>
-            </div>
-            <div class="flow-steps">
-              <div><span>1</span><strong>Sale recorded</strong><small>Services and custom items</small></div>
-              <div><span>2</span><strong>Stock consumed</strong><small>Blades, foam, oil, towels</small></div>
-              <div><span>3</span><strong>Money out entered</strong><small>Purchases and expenses separated</small></div>
-              <div><span>4</span><strong>Cash closed</strong><small>Owner report is ready</small></div>
-            </div>
-          </article>
-        </div>
-      </main>
-    </section>
-
-    <div class="app-shell app-hidden" id="appShell">
-      <aside class="sidebar" aria-label="Main navigation">
-        <div class="brand-block">
-          <div class="brand-mark">SC</div>
-          <div>
-            <h1>Salon Control</h1>
-            <p>Barber shop mode</p>
-          </div>
-        </div>
-
-        <div class="branch-card">
-          <span>Active branch</span>
-          <strong>Al Barsha Gents</strong>
-          <small id="branchTaxLabel">VAT optional · currently off</small>
-        </div>
-
-        <nav class="nav-list" aria-label="Owner modules">
-          <button class="nav-item active" data-view="dashboard" type="button">
-            <span class="nav-icon" data-icon="dashboard"></span>
-            Dashboard
-          </button>
-          <button class="nav-item" data-view="setup" type="button">
-            <span class="nav-icon" data-icon="setup"></span>
-            Setup
-          </button>
-          <button class="nav-item" data-view="quick-sale" type="button">
-            <span class="nav-icon" data-icon="sale"></span>
-            Quick Sale
-          </button>
-          <button class="nav-item" data-view="services" type="button">
-            <span class="nav-icon" data-icon="services"></span>
-            Services
-          </button>
-          <button class="nav-item" data-view="purchases" type="button">
-            <span class="nav-icon" data-icon="purchase"></span>
-            Purchases
-          </button>
-          <button class="nav-item" data-view="expenses" type="button">
-            <span class="nav-icon" data-icon="expense"></span>
-            Expenses
-          </button>
-          <button class="nav-item" data-view="inventory" type="button">
-            <span class="nav-icon" data-icon="stock"></span>
-            Inventory & Tools
-          </button>
-          <button class="nav-item" data-view="compliance" type="button">
-            <span class="nav-icon" data-icon="compliance"></span>
-            Compliance
-          </button>
-          <button class="nav-item" data-view="cash" type="button">
-            <span class="nav-icon" data-icon="cash"></span>
-            Cash Closing
-          </button>
-          <button class="nav-item" data-view="reports" type="button">
-            <span class="nav-icon" data-icon="report"></span>
-            Reports
-          </button>
-          <button class="nav-item" data-view="settings" type="button">
-            <span class="nav-icon" data-icon="settings"></span>
-            Settings
-          </button>
-        </nav>
-
-        <div class="mode-card">
-          <div>
-            <span>Business tax mode</span>
-            <strong id="taxModeLabel">VAT Off</strong>
-          </div>
-          <button class="mini-button" type="button" id="toggleVat">Turn VAT on</button>
-          <button class="mini-button" type="button" id="toggleReceipt">Receipt off</button>
-        </div>
-      </aside>
-
-      <main class="main">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow" id="topTaxLabel">Monday, 31 Aug · AED · VAT optional</p>
-            <h2 id="viewTitle">Daily Control Dashboard</h2>
-          </div>
-          <div class="top-actions">
-            <span class="user-chip" id="userChip">Owner · Al Barsha</span>
-            <div class="language-switch" aria-label="Language preview">
-              <button class="active" data-lang="en" type="button">EN</button>
-              <button data-lang="ar" type="button">AR</button>
-              <button data-lang="hi" type="button">HI</button>
-              <button data-lang="ur" type="button">UR</button>
-            </div>
-            <span class="language-status" id="languageStatus">Language: English</span>
-            <button class="primary-button" data-jump="quick-sale" type="button">
-              <span data-icon="plus"></span>
-              New Sale
-            </button>
-            <button class="ghost-button" id="logoutBtn" type="button">Logout</button>
-          </div>
-        </header>
-
-        <section class="view active" id="dashboard">
-          <div class="metric-grid">
-            <article class="metric-card highlight">
-              <span>Expected cash today</span>
-              <strong id="expectedCash">AED 0.00</strong>
-              <small>Cash sales minus cash expenses and purchases</small>
-            </article>
-            <article class="metric-card">
-              <span id="salesCardLabel">Sales</span>
-              <strong id="todaySales">AED 0.00</strong>
-              <small id="salesCardNote">0 services · 0 retail items · no VAT added</small>
-            </article>
-            <article class="metric-card">
-              <span>Purchases</span>
-              <strong id="dashboardPurchasesTotal">AED 0.00</strong>
-              <small>Supplier bills entered today</small>
-            </article>
-            <article class="metric-card">
-              <span>Expenses</span>
-              <strong id="dashboardExpensesTotal">AED 0.00</strong>
-              <small>Tea, laundry, transport, repair</small>
-            </article>
-          </div>
-
-          <div class="dashboard-grid">
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Owner Checks</h3>
-                  <p>Items that need review before closing the day</p>
-                </div>
-                <button class="ghost-button" data-jump="cash" type="button">Close day</button>
-              </div>
-              <div class="check-list" id="ownerCheckList"></div>
-            </article>
-
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Today’s Flow</h3>
-                  <p>Everything connects to cash, stock and profit</p>
-                </div>
-              </div>
-              <div class="flow-steps">
-                <div><span>1</span><strong>Sale recorded</strong><small>Haircut, beard, facial or custom service</small></div>
-                <div><span>2</span><strong>Stock consumed</strong><small>Blades, foam, oil, color, towels where relevant</small></div>
-                <div><span>3</span><strong>Money out entered</strong><small>Purchases and expenses separated properly</small></div>
-                <div><span>4</span><strong>Owner closes cash</strong><small>Shortage, reason and approval are logged</small></div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" id="setup">
-          <div class="setup-grid">
-            <article class="setup-card done"><span>1</span><strong>Business</strong><small>Al Barsha Gents Barber</small></article>
-            <article class="setup-card done"><span>2</span><strong>Branch</strong><small>AED currency · non-VAT default</small></article>
-            <article class="setup-card done"><span>3</span><strong>Staff</strong><small>Owner, cashier, barber roles</small></article>
-            <article class="setup-card done"><span>4</span><strong>Services</strong><small>Haircut, shave, color, facial, custom</small></article>
-            <article class="setup-card done"><span>5</span><strong>Products</strong><small>Consumables, retail and tools</small></article>
-            <article class="setup-card"><span>6</span><strong>Opening Stock</strong><small>Count stock before launch</small></article>
-          </div>
-          <article class="panel launch-panel">
-            <div>
-              <h3>Launch Checklist</h3>
-              <p>Everything needed before the barber shop starts using the app live.</p>
-            </div>
-            <div class="checklist-grid">
-              <label><input data-checklist="servicesApproved" type="checkbox" /> Services and prices approved</label>
-              <label><input data-checklist="staffPins" type="checkbox" /> Staff PINs created</label>
-              <label><input data-checklist="vatConfirmed" type="checkbox" /> VAT off confirmed</label>
-              <label><input data-checklist="openingStock" type="checkbox" /> Opening stock counted</label>
-              <label><input data-checklist="suppliersAdded" type="checkbox" /> Suppliers added</label>
-              <label><input data-checklist="openingCash" type="checkbox" /> Cash drawer opening balance set</label>
-            </div>
-          </article>
-        </section>
-
-        <section class="view" id="quick-sale">
-          <div class="work-grid sale-layout">
-            <article class="panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Quick Sale</h3>
-                  <p>Staff records common services in a few taps</p>
-                </div>
-                <span class="status-pill">PIN staff mode</span>
-              </div>
-              <div class="segmented" role="tablist" aria-label="Service category">
-                <button class="active" data-category="All" type="button">All</button>
-                <button data-category="Hair" type="button">Hair</button>
-                <button data-category="Beard" type="button">Beard</button>
-                <button data-category="Color" type="button">Color</button>
-                <button data-category="Face" type="button">Face</button>
-              </div>
-              <div class="service-tile-grid" id="saleServices"></div>
-            </article>
-
-            <article class="panel checkout-panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Checkout</h3>
-                  <p id="checkoutTaxNote">VAT off: internal sale record only</p>
-                </div>
-              </div>
-              <label>
-                Staff
-                <select id="saleStaff">
-                  <option>Rafiq</option>
-                  <option>Sameer</option>
-                  <option>Imran</option>
-                </select>
-              </label>
-              <label>
-                Payment
-                <select id="paymentMethod">
-                  <option>Cash</option>
-                  <option>Card</option>
-                  <option>Wallet</option>
-                  <option>Split</option>
-                </select>
-              </label>
-              <label>
-                Discount reason
-                <input id="discountReason" placeholder="Required only when price is changed" />
-              </label>
-              <div class="selected-sale">
-                <span>Selected service</span>
-                <strong id="selectedService">Haircut · AED 25</strong>
-              </div>
-              <div class="tax-summary">
-                <div><span>Tax mode</span><strong id="checkoutTaxMode">VAT Off</strong></div>
-                <div><span>Receipt</span><strong id="checkoutReceiptMode">Optional Off</strong></div>
-              </div>
-              <button class="primary-button full" id="saveSale" type="button">Save Sale</button>
-              <p class="system-note" id="saleNote">This will update cash expected, staff performance and stock consumption.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" id="services">
-          <div class="split-layout">
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Editable Service Catalog</h3>
-                  <p>Add haircut, beard color, hair color, facial, massage or any custom service</p>
-                </div>
-                <button class="primary-button" id="addServiceBtn" type="button">
-                  <span data-icon="plus"></span>
-                  Add Service
-                </button>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Service</th>
-                      <th>Selected language</th>
-                      <th>Category</th>
-                      <th>Price</th>
-                      <th>Recipe</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="serviceTable"></tbody>
-                </table>
-              </div>
-            </article>
-
-            <article class="panel form-panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3 id="serviceFormTitle">Add / Edit Service</h3>
-                  <p>Owner controls price, recipe and availability</p>
-                </div>
-              </div>
-              <label>Service name <input id="serviceName" value="Beard Color" /></label>
-              <div class="translation-grid">
-                <label>Arabic <input id="serviceNameAr" dir="rtl" value="لون اللحية" /></label>
-                <label>Hindi <input id="serviceNameHi" value="दाढ़ी कलर" /></label>
-                <label>Urdu <input id="serviceNameUr" dir="rtl" value="داڑھی رنگ" /></label>
-              </div>
-              <label>Category
-                <select id="serviceCategory">
-                  <option>Hair</option>
-                  <option>Beard</option>
-                  <option>Color</option>
-                  <option>Face</option>
-                  <option>Massage</option>
-                  <option>Custom</option>
-                </select>
-              </label>
-              <label>Price <input id="servicePrice" type="number" min="0" step="0.01" value="45" /></label>
-              <label>Recipe / stock use <input id="serviceRecipe" value="Beard color 20ml, developer 20ml, gloves 1 pair" /></label>
-              <button class="primary-button full" id="saveService" type="button">Save Service</button>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" id="purchases">
-          <div class="split-layout">
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Purchases</h3>
-                  <p>Supplier bills increase stock and affect cash/profit</p>
-                </div>
-                <span class="status-pill">Stock-in</span>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Supplier</th>
-                      <th>Items</th>
-                      <th>Payment</th>
-                      <th>Total</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="purchaseTable"></tbody>
-                </table>
-              </div>
-            </article>
-
-            <article class="panel form-panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Add Purchase</h3>
-                  <p>Consumable, retail product or reusable tool</p>
-                </div>
-              </div>
-              <label>Supplier <input id="purchaseSupplier" value="Beauty Supply LLC" /></label>
-              <label>Item type
-                <select id="purchaseType">
-                  <option>Consumable stock</option>
-                  <option>Retail product</option>
-                  <option>Reusable tool / asset</option>
-                  <option>Operational supply</option>
-                </select>
-              </label>
-              <label>Item <input id="purchaseItem" value="Blades" /></label>
-              <div class="inline-fields">
-                <label>Qty <input id="purchaseQty" type="number" min="0" step="1" value="100" /></label>
-                <label>Unit <input id="purchaseUnit" value="pcs" /></label>
-              </div>
-              <label>Unit cost <input id="purchaseUnitCost" type="number" min="0" step="0.01" value="1.20" /></label>
-              <label>Discount <input id="purchaseDiscount" type="number" min="0" step="0.01" value="0" /></label>
-              <label>Payment method
-                <select id="purchasePayment">
-                  <option>Cash</option>
-                  <option>Card</option>
-                  <option>Bank</option>
-                </select>
-              </label>
-              <div class="calculation-box">
-                <div><span>Qty</span><strong id="calcQty">100 pcs</strong></div>
-                <div><span>Unit cost</span><strong id="calcUnitCost">AED 1.20</strong></div>
-                <div><span>Subtotal</span><strong id="calcSubtotal">AED 120.00</strong></div>
-                <div><span>Total</span><strong id="calcPurchaseTotal">AED 120.00</strong></div>
-              </div>
-              <button class="primary-button full" id="savePurchase" type="button">Save Purchase</button>
-              <p class="system-note" id="purchaseNote">Purchase will be saved, stock-in will be recorded, and cash/bank outflow will update.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" id="expenses">
-          <div class="split-layout">
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Expenses</h3>
-                  <p>Money spent that does not become stock</p>
-                </div>
-                <span class="status-pill">Money-out</span>
-              </div>
-              <div class="expense-category-grid">
-                <div><strong>Tea & Food</strong><span>Tea, coffee, water, staff meals</span></div>
-                <div><strong>Dry Cleaning</strong><span>Towels, capes, laundry service</span></div>
-                <div><strong>Rent & Utilities</strong><span>Rent, electricity, water, internet</span></div>
-                <div><strong>Repairs</strong><span>Machine repair, chair repair, maintenance</span></div>
-                <div><strong>Staff</strong><span>Salary, advance, allowance</span></div>
-                <div><strong>Other</strong><span>Transport, cleaning, misc.</span></div>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Category</th>
-                      <th>Note</th>
-                      <th>Payment</th>
-                      <th>Amount</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="expenseTable"></tbody>
-                </table>
-              </div>
-            </article>
-
-            <article class="panel form-panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Add Expense</h3>
-                  <p>Cash expenses reduce expected cash</p>
-                </div>
-              </div>
-              <label>Category
-                <select id="expenseCategory">
-                  <option>Tea & Food</option>
-                  <option>Dry Cleaning</option>
-                  <option>Rent</option>
-                  <option>Utilities</option>
-                  <option>Repair</option>
-                  <option>Staff Advance</option>
-                </select>
-              </label>
-              <label>Amount <input id="expenseAmount" type="number" min="0" step="0.01" value="35" /></label>
-              <label>Payment method
-                <select id="expensePayment">
-                  <option>Cash</option>
-                  <option>Card</option>
-                  <option>Bank</option>
-                </select>
-              </label>
-              <label>Note <input id="expenseNoteInput" value="Tea and water for staff" /></label>
-              <button class="primary-button full" id="saveExpense" type="button">Save Expense</button>
-              <p class="system-note" id="expenseNote">Expense will be saved and cash closing will update if paid by cash.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" id="inventory">
-          <div class="dashboard-grid">
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Consumable Inventory</h3>
-                  <p>Used during services and deducted by recipes</p>
-                </div>
-              </div>
-              <div class="stock-list">
-                <div><strong>Blades</strong><span>156 pcs · minimum 80</span><b class="ok">Good</b></div>
-                <div><strong>Shaving Foam</strong><span>8 bottles · minimum 5</span><b class="ok">Good</b></div>
-                <div><strong>Hair Oil</strong><span>1.5 L · minimum 1 L</span><b class="ok">Good</b></div>
-                <div><strong>Developer 20 Vol</strong><span>900 ml · minimum 1 L</span><b class="warn">Low</b></div>
-              </div>
-            </article>
-
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Reusable Tools / Assets</h3>
-                  <p>Tracked separately from consumable stock</p>
-                </div>
-              </div>
-              <div class="stock-list">
-                <div><strong>Trimming Machine</strong><span>Chair 2 · good condition</span><b>Asset</b></div>
-                <div><strong>Scissors</strong><span>Rafiq · last sharpened 20 Aug</span><b>Tool</b></div>
-                <div><strong>Hair Dryer</strong><span>Ladies section · repair due</span><b class="warn">Check</b></div>
-                <div><strong>Sterilizer</strong><span>Branch asset · warranty active</span><b>Asset</b></div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" id="compliance">
-          <div class="metric-grid compliance-metrics">
-            <article class="metric-card highlight">
-              <span>Inspection readiness</span>
-              <strong id="inspectionReadiness">86%</strong>
-              <small>Open hygiene, document and product checks</small>
-            </article>
-            <article class="metric-card">
-              <span>Overdue records</span>
-              <strong id="overdueRecordCount">2</strong>
-              <small>Amber and red items need owner action</small>
-            </article>
-            <article class="metric-card">
-              <span>WPS status</span>
-              <strong id="wpsMetric">Day 2</strong>
-              <small>Salary transfer countdown</small>
-            </article>
-            <article class="metric-card">
-              <span>Montaji watch</span>
-              <strong id="montajiMetric">1</strong>
-              <small>Product registration warning</small>
-            </article>
-          </div>
-
-          <div class="compliance-layout">
-            <article class="panel compliance-binder">
-              <div class="panel-head">
-                <div>
-                  <h3>Inspection Binder</h3>
-                  <p>Dubai Municipality records, due dates, signer and evidence slot</p>
-                </div>
-              </div>
-              <p class="system-note" id="inspectionNote">Evidence is required before an inspection record can be signed.</p>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Record</th>
-                      <th>Cadence</th>
-                      <th>Due</th>
-                      <th>Signed by</th>
-                      <th>Evidence</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="inspectionRecordTable"></tbody>
-                </table>
-              </div>
-            </article>
-
-            <aside class="panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Expiry Graph</h3>
-                  <p>Dependencies that can block renewals and visas</p>
-                </div>
-              </div>
-              <div class="dependency-chain" id="documentChain"></div>
-            </aside>
-          </div>
-
-          <div class="compliance-layout lower">
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Sterilization & Hygiene Log</h3>
-                  <p>Device, operator, cycle, towels, apron and blade checks</p>
-                </div>
-                <span class="status-pill">Evidence required</span>
-              </div>
-              <div class="hygiene-form">
-                <label>Device <input id="hygieneDevice" value="Sterilizer" /></label>
-                <label>Operator <input id="hygieneOperator" value="Owner" /></label>
-                <label>Cycle <input id="hygieneCycle" placeholder="Manufacturer cycle or cleaning step" /></label>
-                <label>Solution <input id="hygieneSolution" placeholder="Solution changed / surface cleaned" /></label>
-                <label>Single-use check <input id="hygieneSingleUse" placeholder="Blade, towel, cape, apron check" /></label>
-                <label>Evidence <input id="hygieneEvidence" placeholder="Photo, initials, supplier note or file reference" /></label>
-              </div>
-              <button class="primary-button table-action" id="addHygieneLog" type="button">Add hygiene log</button>
-              <p class="system-note" id="hygieneNote">Every hygiene entry needs a real cycle and evidence note.</p>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Time</th>
-                      <th>Device</th>
-                      <th>Operator</th>
-                      <th>Cycle</th>
-                      <th>Solution</th>
-                      <th>Single-use check</th>
-                      <th>Evidence</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody id="hygieneLogTable"></tbody>
-                </table>
-              </div>
-            </article>
-
-            <aside class="panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>WPS & Product Watch</h3>
-                  <p>Salary deadline and cosmetic registration controls</p>
-                </div>
-              </div>
-              <div class="watch-stack">
-                <div class="watch-card">
-                  <span>Salary file</span>
-                  <strong id="wpsDetail">Due in 3 days · 5 of 6 staff paid</strong>
-                  <small>Target: meet 85% paid staff before Day 5</small>
-                </div>
-                <div class="table-wrap mini-table">
-                  <table>
-                    <thead>
-                      <tr><th>SKU</th><th>Status</th><th>Action</th></tr>
-                    </thead>
-                    <tbody id="montajiTable"></tbody>
-                  </table>
-                </div>
-              </div>
-            </aside>
-          </div>
-        </section>
-
-        <section class="view" id="cash">
-          <div class="split-layout">
-            <article class="panel form-panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Close Day</h3>
-                  <p>Owner enters counted cash and approves shortage</p>
-                </div>
-              </div>
-              <label>Opening cash <input id="closingOpeningCash" type="number" min="0" step="0.01" value="200" /></label>
-              <label>Cash sales <input id="closingCashSales" type="number" min="0" step="0.01" value="0" readonly /></label>
-              <label>Cash expenses <input id="closingCashExpenses" type="number" min="0" step="0.01" value="0" readonly /></label>
-              <label>Cash purchases <input id="closingCashPurchases" type="number" min="0" step="0.01" value="0" readonly /></label>
-              <label>Actual cash counted <input id="closingActualCash" type="number" min="0" step="0.01" value="0" /></label>
-              <label>Shortage reason <input id="closingReason" placeholder="Required when counted cash does not match" /></label>
-              <div class="calculation-box">
-                <div><span>Expected cash</span><strong id="closingExpectedCash">AED 0.00</strong></div>
-                <div><span>Cash difference</span><strong id="closingDifference">AED 0.00</strong></div>
-              </div>
-              <button class="primary-button full" id="approveClosing" type="button">Approve Closing</button>
-            </article>
-
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Audit Trail</h3>
-                  <p>No silent changes after sale, purchase, expense or stock adjustment</p>
-                </div>
-              </div>
-              <div class="audit-list" id="auditList">
-                <div><strong>Sale created</strong><span>Rafiq · Haircut · Cash · AED 25</span></div>
-                <div><strong>Purchase entered</strong><span>Owner · Blades · 100 pcs · AED 120</span></div>
-                <div><strong>Expense entered</strong><span>Owner · Tea & Food · AED 35 · Cash</span></div>
-                <div><strong>Stock adjusted</strong><span>Owner · Blades · -6 · reason required</span></div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="view" id="reports">
-          <div class="output-layout">
-            <article class="panel final-output">
-              <div class="report-header">
-                <div>
-                  <span>Final data output</span>
-                  <h3>Daily Closing Report</h3>
-                  <p>Al Barsha Gents · Monday, 31 Aug · non-VAT internal records</p>
-                </div>
-                <button class="primary-button" id="printReport" type="button">Print / Save PDF</button>
-              </div>
-              <div class="statement-grid">
-                <div><span>Total sales</span><strong id="reportSales">AED 0.00</strong></div>
-                <div><span>Cash expected</span><strong id="reportCash">AED 0.00</strong></div>
-                <div><span>Purchases</span><strong id="reportPurchases">AED 0.00</strong></div>
-                <div><span>Expenses</span><strong id="reportExpenses">AED 0.00</strong></div>
-                <div><span>Staff commission</span><strong id="reportCommission">AED 0.00</strong></div>
-                <div><span>Cash difference</span><strong id="reportDifference">AED 0.00</strong></div>
-              </div>
-              <table class="output-table">
-                <thead>
-                  <tr><th>Section</th><th>Result</th><th>Owner action</th></tr>
-                </thead>
-                <tbody id="reportOutputTable"></tbody>
-              </table>
-            </article>
-
-            <aside class="panel export-panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Exports</h3>
-                  <p>Owner or accountant output</p>
-                </div>
-              </div>
-              <button class="ghost-button full" data-export="daily" type="button">Daily PDF</button>
-              <button class="ghost-button full" data-export="csv" type="button">Excel / CSV</button>
-              <button class="ghost-button full" data-export="shortage" type="button">Cash shortage report</button>
-              <button class="ghost-button full" data-export="stock" type="button">Stock movement report</button>
-              <div class="ai-summary">
-                <strong>AI owner summary</strong>
-                <span>Cash is short by AED 50. Blade usage is higher than recorded shave services. Developer stock should be reordered within 2 days.</span>
-              </div>
-            </aside>
-          </div>
-        </section>
-
-        <section class="view" id="settings">
-          <div class="split-layout">
-            <article class="panel form-panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Tax & Receipt Settings</h3>
-                  <p>Default for small barber shops is VAT off</p>
-                </div>
-                <span class="status-pill" id="settingsTaxPill">VAT optional</span>
-              </div>
-              <label>Business tax mode
-                <select id="vatModeSelect">
-                  <option value="off">VAT Off - internal records only</option>
-                  <option value="on">VAT On - tax invoice mode</option>
-                </select>
-              </label>
-              <label class="vat-only">TRN number
-                <input id="trnInput" value="100000000000003" />
-              </label>
-              <label class="vat-only">VAT price display
-                <select>
-                  <option>Prices include VAT</option>
-                  <option>Prices exclude VAT</option>
-                </select>
-              </label>
-              <label>Customer receipt mode
-                <select id="receiptModeSelect">
-                  <option value="off">Receipt disabled by default</option>
-                  <option value="simple">Simple receipt optional</option>
-                  <option value="whatsapp">WhatsApp receipt optional</option>
-                </select>
-              </label>
-              <button class="primary-button full" id="saveSettings" type="button">Save Settings</button>
-            </article>
-
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>How It Works</h3>
-                  <p>The app never forces VAT or invoices on a non-VAT barber shop</p>
-                </div>
-              </div>
-              <div class="settings-list">
-                <div>
-                  <strong>VAT Off</strong>
-                  <span>Sale is saved as an internal business record. No VAT, no TRN and no tax invoice fields are required.</span>
-                </div>
-                <div>
-                  <strong>Simple Receipt</strong>
-                  <span>Optional customer receipt with salon name, service, amount, staff and payment method.</span>
-                </div>
-                <div>
-                  <strong>VAT On</strong>
-                  <span>For registered salons only. TRN, VAT amount, invoice numbering and tax reports become active.</span>
-                </div>
-              </div>
-            </article>
-          </div>
-        </section>
-      </main>
+      </div>
     </div>
 
-    <script src="./app.js?v=20260905-1"></script>
-  </body>
+    <div class="stats rv">
+      <div class="stat"><b data-count="23">0</b><p>of UAE consumer transactions are still cash — and 51% of tips.</p><small>Visa GCC study 2025</small></div>
+      <div class="stat"><b data-count="35">0</b><p>of barbershop customers usually or always walk in without booking.</p><small>Industry benchmark 2026</small></div>
+      <div class="stat"><b data-count="56">0</b><p>median barber chair utilisation. Top quartile reaches 75%.</p><small>Industry benchmark 2026</small></div>
+      <div class="stat"><b data-count="2" data-dec="1" data-suffix="×">0</b><p>municipal inspection visits per salon per year, on average.</p><small>Dubai Municipality figures</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 THE GAPS ============ -->
+<section class="band band--dark" id="gaps">
+  <div class="inner">
+    <p class="eyebrow rv">02 — Three things no salon platform has built</p>
+    <h2 class="big rv">Everyone else sells you a calendar.</h2>
+    <p class="lede rv">Fresha, Zenoti, Salonist, Booksy — every one is a booking engine with a payment take-rate attached. Your problem was never an empty calendar. It is not knowing where the cash and the stock went.</p>
+
+    <div class="gaps">
+      <article class="gap rv">
+        <span class="no">GAP 01</span>
+        <h3>Stock that empties itself</h3>
+        <p>Put the recipe on the service — blade one, foam 8ml, developer 20ml — and the shelf empties as you sell. Cost of goods per cut, margin per service, and an alert the day blade consumption outruns shave count.</p>
+        <p>That last one catches theft and satisfies the municipality's single-use-tool rule in the same query.</p>
+        <span class="who">Only one enterprise product auto-deducts back-bar stock, at $300–600 per location plus implementation.</span>
+      </article>
+
+      <article class="gap rv">
+        <span class="no">GAP 02</span>
+        <h3>The day, actually closed</h3>
+        <p>Expected against counted. A reason required for the variance before it can be approved, the approver's name on it, and the whole thing written to a log that later edits cannot rewrite.</p>
+        <p>Cash tips captured and split — evenly, by hours, by points, or as a percentage tip-out — with a screen each barber can open to see their own arithmetic.</p>
+        <span class="who">Not one platform reviewed markets cash-drawer reconciliation or cash-tip pooling. The category-leading POS cannot pool cash tips at all.</span>
+      </article>
+
+      <article class="gap rv">
+        <span class="no">GAP 03</span>
+        <h3>The inspector's file</h3>
+        <p>Dubai Municipality asks for cleaning logs, sterilizer cycles, quarterly water tests, monthly tank checks, pest control certificates and a valid health card for every barber — and its own guideline permits an electronic system in place of paper.</p>
+        <p>One screen holds all of it, computes what is overdue from the calendar, and prints a pack you can hand over.</p>
+        <span class="who">No salon platform in the world models UAE municipal compliance. It has no revenue outside one country — which is exactly why it stays open.</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 PRODUCT ============ -->
+<section class="band band--light" id="product">
+  <div class="inner">
+    <p class="eyebrow rv">03 — On the device the shop actually uses</p>
+    <h2 class="big rv">A price board, not a spreadsheet.</h2>
+    <p class="lede rv">The barber holds a phone, standing, one hand, in a bright room. So the service is a tile, the price is large, the target is 56 pixels, and the charge button never leaves the thumb.</p>
+
+    <div class="prod">
+      <div class="featlist rv">
+        <div class="feat"><span class="k">01</span><div><h4>Four taps to a recorded sale</h4><p>Category, service, payment, charge. Staff, time, discount reason and stock movement are captured without anyone typing them.</p></div></div>
+        <div class="feat"><span class="k">02</span><div><h4>Arabic that is the same product</h4><p>Not a mirrored afterthought. Same weights, same rhythm, Eastern Arabic numerals, drawn in a typeface with a real Arabic cut. Hindi and Urdu on the same footing.</p></div></div>
+        <div class="feat"><span class="k">03</span><div><h4>Keeps selling when the wifi drops</h4><p>Sales and shifts work offline and sync when you reconnect. Refunds and drawer counts wait for a connection, on purpose — those are decisions, not entries.</p></div></div>
+        <div class="feat"><span class="k">04</span><div><h4>A receipt on WhatsApp, usually free</h4><p>When the customer messages first, the reply window is free. We build the flow that way, so your receipts and reminders cost almost nothing.</p></div></div>
+        <div class="feat"><span class="k">05</span><div><h4>The owner sees it from home</h4><p>Every branch, every barber, every day. Not one browser on one tablet behind the till.</p></div></div>
+      </div>
+
+      <div>
+        <div class="phones rv">
+          <div>
+            <div class="ph">
+              <div class="ph-band">
+                <div class="r1"><span class="who">Rafiq · Al Barsha</span><span class="dt">SAT 05 SEP</span></div>
+                <h4>Quick Sale</h4>
+              </div>
+              <div class="ph-body">
+                <div class="tile on"><div><div class="nm">Haircut</div><div class="rc">Neck strip · shampoo</div></div><div class="pr"><i>AED</i>25</div></div>
+                <div class="tile"><div><div class="nm">Shave</div><div class="rc">Blade 1 · foam 8ml</div></div><div class="pr"><i>AED</i>15</div></div>
+                <div class="tile"><div><div class="nm">Beard Trim</div><div class="rc">Machine · tissue 1</div></div><div class="pr"><i>AED</i>10</div></div>
+                <div class="tile"><div><div class="nm">Beard Colour</div><div class="rc">Colour 20ml · dev 20ml</div></div><div class="pr"><i>AED</i>45</div></div>
+              </div>
+              <div class="ph-bar"><div class="am"><small>Haircut · Cash</small><b>AED 25</b></div><button type="button">Charge</button></div>
+              <div class="ph-tabs">
+                <div class="on"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Sale</div>
+                <div><svg viewBox="0 0 24 24"><path d="M3 7h18v12H3zM3 11h18"/></svg>Money</div>
+                <div><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4"/></svg>Stock</div>
+                <div><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>Day</div>
+              </div>
+            </div>
+            <p class="ph-cap">English</p>
+          </div>
+
+          <div>
+            <div class="ph ar">
+              <div class="ph-band">
+                <div class="r1"><span class="who">رفيق · البرشاء</span><span class="dt">٠٥ سبتمبر</span></div>
+                <h4>بيع سريع</h4>
+              </div>
+              <div class="ph-body">
+                <div class="tile on"><div><div class="nm">قص شعر</div><div class="rc">ورق رقبة · شامبو</div></div><div class="pr"><i>درهم</i>٢٥</div></div>
+                <div class="tile"><div><div class="nm">حلاقة</div><div class="rc">شفرة ١ · رغوة ٨ مل</div></div><div class="pr"><i>درهم</i>١٥</div></div>
+                <div class="tile"><div><div class="nm">تشذيب اللحية</div><div class="rc">ماكينة · منديل ١</div></div><div class="pr"><i>درهم</i>١٠</div></div>
+                <div class="tile"><div><div class="nm">لون اللحية</div><div class="rc">صبغة ٢٠ مل</div></div><div class="pr"><i>درهم</i>٤٥</div></div>
+              </div>
+              <div class="ph-bar"><div class="am"><small>قص شعر · نقداً</small><b>٢٥ درهم</b></div><button type="button">استلام</button></div>
+              <div class="ph-tabs">
+                <div class="on"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>بيع</div>
+                <div><svg viewBox="0 0 24 24"><path d="M3 7h18v12H3zM3 11h18"/></svg>مصاريف</div>
+                <div><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4"/></svg>مخزون</div>
+                <div><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>اليوم</div>
+              </div>
+            </div>
+            <p class="ph-cap">العربية</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 COMPLIANCE ============ -->
+<section class="band band--deep" id="compliance">
+  <div class="inner">
+    <p class="eyebrow rv">04 — The part that is not optional</p>
+    <h2 class="big rv">The file the inspector asks for, already made.</h2>
+    <p class="lede rv">Dubai Municipality made 8,737 inspection visits to 3,592 beauty centres in a single measured year, and issued 5,245 warnings. Inspections intensify in the week before Eid — the same week you take your best money.</p>
+
+    <div class="comp-grid">
+      <div class="panel-dk rv">
+        <h4>Inspection binder</h4>
+        <p class="sb">DM-HSD-GU77 · 3 of 5 signed today</p>
+        <div class="rec">
+          <div><div class="nm">Cleaning &amp; sanitization</div><div class="mt">Daily · signed 09:12 by Rafiq · checklist photo</div></div>
+          <span class="pill s">Signed</span>
+        </div>
+        <div class="rec">
+          <div><div class="nm">Sterilizer cycle</div><div class="mt">Daily · signed 09:05 by Rafiq · UV 1 per 3 chairs</div></div>
+          <span class="pill s">Signed</span>
+        </div>
+        <div class="rec">
+          <div><div class="nm">Water tank inspection</div><div class="mt">Monthly · due in 4 days · last done 08 Aug</div></div>
+          <span class="pill d">Due</span>
+        </div>
+        <div class="rec">
+          <div><div class="nm">Pest control certificate</div><div class="mt">Monthly · overdue 5 days · supplier PDF not attached</div></div>
+          <span class="pill o">Blocked</span>
+        </div>
+        <div class="rec">
+          <div><div class="nm">Health card · Imran</div><div class="mt">Yearly · expires in 11 days · renew 30 days ahead</div></div>
+          <span class="pill d">Due</span>
+        </div>
+        <p class="wps-note" style="border-block-start:1px solid var(--line-dk);padding-block-start:14px;margin-block-start:16px"><strong style="color:#FBFDFB">A record cannot be signed without its evidence.</strong> The overdue certificate offers one action — attach the PDF. There is no button anywhere in Salon Control that marks a batch of records done.</p>
+      </div>
+
+      <div>
+        <div class="panel-dk rv" style="margin-block-end:20px">
+          <h4>Wage deadline</h4>
+          <p class="sb">Ministerial Resolution 340 of 2026</p>
+          <div class="wps">
+            <div>1</div><div class="now">2</div><div>3</div><div>4</div><div class="hot">5</div><div>11</div><div>16</div><div>21</div>
+          </div>
+          <p class="wps-note">Wages are due on the first of the month. <strong style="color:var(--brass)">On day five, new work permits are suspended</strong> — so you cannot replace a barber who resigns. We count the days from the calendar and flag you before that, including when you are at 83% and the threshold is 85%.</p>
+        </div>
+
+        <div class="panel-dk rv">
+          <h4>Expiry chain</h4>
+          <p class="sb">One lapse freezes everything downstream</p>
+          <div class="rec"><div><div class="nm">Ejari</div><div class="mt">Annual · gates the trade licence</div></div><span class="pill s">45 days</span></div>
+          <div class="rec"><div><div class="nm">Trade licence</div><div class="mt">Annual · gates the establishment card</div></div><span class="pill d">23 days</span></div>
+          <div class="rec"><div><div class="nm">Staff visas · Emirates ID</div><div class="mt">Two-year cycle · blocked if the licence lapses</div></div><span class="pill s">6 months</span></div>
+          <div class="rec"><div><div class="nm">Occupational health cards</div><div class="mt">Annual · a different clock to the visa</div></div><span class="pill d">11 days</span></div>
+          <p class="wps-note">Four clocks per barber, on one-year, two-year and thirty-month cycles, none of them aligned. Your PRO gets their own login and their own export. You get to hold them to it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 PRICING ============ -->
+<section class="band band--light" id="price">
+  <div class="inner">
+    <p class="eyebrow rv">05 — One price, every chair</p>
+    <h2 class="big rv">Never per barber. Never per sale.</h2>
+    <p class="lede rv">Hire your sixth barber and pay what you paid for your first. The loudest complaint in this market is per-head billing, and the second loudest is a commission on a customer who was already yours.</p>
+
+    <div class="ptable rv">
+      <table>
+        <thead><tr><th>Platform</th><th>Monthly</th><th>Per extra barber</th><th>Commission</th><th>Offline</th><th>Arabic</th></tr></thead>
+        <tbody>
+          <tr class="us">
+            <td>Salon Control</td>
+            <td class="num g">AED 199 · flat</td>
+            <td class="g">Nothing</td>
+            <td class="g">0%</td>
+            <td class="g">Yes</td>
+            <td class="g">Yes</td>
+          </tr>
+          <tr><td>Fresha</td><td class="num">$14.95 per bookable staff</td><td class="bad">$14.95</td><td class="bad">20% of first visit</td><td class="bad">No</td><td>Listed, unverified</td></tr>
+          <tr><td>Zenoti</td><td class="num">~$300–600 per location</td><td>Included</td><td>None</td><td class="bad">No</td><td class="bad">Not evidenced</td></tr>
+          <tr><td>Salonist</td><td class="num">$59 – $179</td><td>Included</td><td class="bad">15% new client</td><td class="bad">No</td><td class="bad">No</td></tr>
+          <tr><td>Dingg</td><td class="num">AED 450 – 850</td><td>Varies</td><td>None</td><td class="bad">No</td><td>Unverified</td></tr>
+          <tr><td>Booksy · Square · Vagaro</td><td colspan="5" style="color:#647169">Not available to a UAE business.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--ink-3);margin:14px 0 0;line-height:1.7">Competitor figures from published pricing pages and vendor documentation, September 2026. Fresha's UAE dirham rate is not published; the per-staff figure is its US listing. Zenoti does not publish pricing — the range is third-party reported.</p>
+  </div>
+</section>
+
+<!-- ============ 07 CLOSE ============ -->
+<section class="band band--dark" id="close">
+  <div class="close-in">
+    <p class="eyebrow rv" style="justify-content:center">06 — Start with one shop</p>
+    <h2 class="rv">Bring your last month's numbers.</h2>
+    <p class="lede rv">Forty minutes, at your shop, on your phone. We set up your services and your recipes, close one real day with you, and show you what the cash actually did. If it does not tell you something you did not know, we leave.</p>
+    <div class="close-cta rv">
+      <a class="btn btn--lg" href="./app.html">Login</a>
+      <a class="btn btn--lg btn--ghost" href="#product">See the till again</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-in">
+    <div>
+      <a class="brand" href="#top" style="margin-block-end:14px"><span class="brand-mark">SC</span><span class="brand-txt">Salon Control</span></a>
+      <p>Cash, stock and municipal compliance for gents salons in the UAE. Built in Dubai.</p>
+    </div>
+    <div class="foot-links">
+      <a href="#cost">The maths</a>
+      <a href="#gaps">What's missing</a>
+      <a href="#product">Product</a>
+      <a href="#compliance">Compliance</a>
+      <a href="#price">Pricing</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var nodes = document.querySelectorAll('.rv');
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    nodes.forEach(function (n) { n.classList.add('in'); });
+    runCounts(true);
+    return;
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      var sibs = Array.prototype.slice.call(el.parentElement.children).filter(function (c) { return c.classList.contains('rv'); });
+      var i = Math.max(0, sibs.indexOf(el));
+      el.style.transitionDelay = Math.min(i * 90, 450) + 'ms';
+      el.classList.add('in');
+      io.unobserve(el);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+
+  nodes.forEach(function (n) { io.observe(n); });
+
+  // count-up on the stat band
+  var counted = false;
+  var statsEl = document.querySelector('.stats');
+  if (statsEl) {
+    var io2 = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && !counted) { counted = true; runCounts(false); io2.disconnect(); }
+      });
+    }, { threshold: 0.3 });
+    io2.observe(statsEl);
+  }
+
+  function runCounts(instant) {
+    document.querySelectorAll('[data-count]').forEach(function (el) {
+      var target = parseFloat(el.dataset.count);
+      var dec = parseInt(el.dataset.dec || '0', 10);
+      var suffix = el.dataset.suffix || '%';
+      if (instant) { el.innerHTML = target.toFixed(dec) + '<em>' + suffix + '</em>'; return; }
+      var start = null, dur = 1100;
+      function step(ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.innerHTML = (target * eased).toFixed(dec) + '<em>' + suffix + '</em>';
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+})();
+</script>
+
+</body>
 </html>
