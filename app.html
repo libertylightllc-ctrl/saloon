@@ -21,75 +21,46 @@
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
-    <section class="frontpage" id="frontpage">
-      <aside class="sidebar login-sidebar" aria-label="Preview navigation">
-        <div class="brand-block">
-          <div class="brand-mark">SC</div>
-          <div>
-            <h1>Salon Control</h1>
-            <p>Barber shop mode</p>
+    <section class="frontpage premium-login" id="frontpage">
+      <div class="login-atmosphere" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <main class="login-shell" aria-label="Salon Control login">
+        <section class="login-brand-panel">
+          <a class="login-brand" href="./">
+            <span class="brand-mark">SC</span>
+            <span>Salon Control</span>
+          </a>
+          <div class="login-brand-copy">
+            <p class="login-kicker">Built in Dubai · gents salon control</p>
+            <h1>One command room for every shop.</h1>
+            <p>Sales, purchases, expenses, reusable tools, stock, cash closing and owner reports stay separated by branch and visible from one master dashboard.</p>
           </div>
-        </div>
-
-        <div class="branch-card">
-          <span>Active branch</span>
-          <strong>Al Barsha Gents</strong>
-          <small>VAT optional · currently off</small>
-        </div>
-
-        <nav class="nav-list" aria-label="App modules preview">
-          <span class="nav-item active"><span class="nav-icon" data-icon="dashboard"></span>Dashboard</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="sale"></span>Quick Sale</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="purchase"></span>Purchases</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="expense"></span>Expenses</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="stock"></span>Inventory & Tools</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="compliance"></span>Compliance</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="cash"></span>Cash Closing</span>
-          <span class="nav-item"><span class="nav-icon" data-icon="report"></span>Reports</span>
-        </nav>
-      </aside>
-
-      <main class="main login-main">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Monday, 31 Aug · AED · VAT Off</p>
-            <h2>Salon Control Dashboard</h2>
+          <div class="login-proof-grid">
+            <div>
+              <strong>0 VAT</strong>
+              <span>optional by shop</span>
+            </div>
+            <div>
+              <strong>4 roles</strong>
+              <span>master, owner, cashier, staff</span>
+            </div>
+            <div>
+              <strong>AED</strong>
+              <span>cash-first reports</span>
+            </div>
           </div>
-          <div class="top-actions">
-            <span class="user-chip">Login required</span>
-            <span class="language-status">Language: English</span>
-            <a class="ghost-button" href="./">Product site</a>
-          </div>
-        </header>
+        </section>
 
-        <div class="metric-grid login-preview">
-          <article class="metric-card highlight">
-            <span>Expected cash today</span>
-            <strong>AED 0.00</strong>
-            <small>Sales minus purchases and expenses</small>
-          </article>
-          <article class="metric-card">
-            <span>Sales</span>
-            <strong>AED 0.00</strong>
-            <small>Haircut, beard, color, facial</small>
-          </article>
-          <article class="metric-card">
-            <span>Purchases</span>
-            <strong id="loginPurchasesTotal">AED 0.00</strong>
-            <small>Blades, foam, oil, tools</small>
-          </article>
-          <article class="metric-card">
-            <span>Expenses</span>
-            <strong id="loginExpensesTotal">AED 0.00</strong>
-            <small>Tea, food, laundry, repair</small>
-          </article>
-        </div>
-
-        <div class="login-stage">
+        <section class="login-access-panel">
+          <a class="login-back-link" href="./">Product site</a>
           <form class="login-card" id="loginForm">
             <span class="status-pill">Secure demo access</span>
-            <h3>Enter workspace</h3>
-            <p>Owner opens the full control room. Staff opens fast sale entry.</p>
+            <h2>Login</h2>
+            <p>Choose your role and enter the PIN to open the right workspace.</p>
             <label>Role
               <select id="loginRole">
                 <option value="Owner">Owner</option>
@@ -102,25 +73,14 @@
               <input id="loginPin" value="1234" inputmode="numeric" />
             </label>
             <p class="system-note danger-note" id="loginError" hidden>Wrong PIN for this role.</p>
-            <button class="primary-button full" type="submit">Enter Salon Control</button>
+            <button class="primary-button full login-submit" type="submit">Enter Salon Control</button>
             <small>Master PIN: 9999 · Owner: 1234 · Cashier: 2222 · Staff: 1111</small>
           </form>
-
-          <article class="panel login-flow">
-            <div class="panel-head">
-              <div>
-                <h3>Today’s Flow</h3>
-                <p>The same workflow opens after login</p>
-              </div>
-            </div>
-            <div class="flow-steps">
-              <div><span>1</span><strong>Sale recorded</strong><small>Services and custom items</small></div>
-              <div><span>2</span><strong>Stock consumed</strong><small>Blades, foam, oil, towels</small></div>
-              <div><span>3</span><strong>Money out entered</strong><small>Purchases and expenses separated</small></div>
-              <div><span>4</span><strong>Cash closed</strong><small>Owner report is ready</small></div>
-            </div>
-          </article>
-        </div>
+          <div class="login-preview" aria-hidden="true">
+            <strong id="loginPurchasesTotal">AED 0.00</strong>
+            <strong id="loginExpensesTotal">AED 0.00</strong>
+          </div>
+        </section>
       </main>
     </section>
 
