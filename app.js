@@ -14,6 +14,7 @@ const icons = {
 };
 
 const storageKey = "salon-control-mvp";
+let memoryState = null;
 const platformAccount = {
   shopCode: "PLATFORM",
   username: "admin",
@@ -31,7 +32,7 @@ const rolePins = {
 };
 
 const roleAccess = {
-  "Platform Admin": ["master-admin"],
+  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
   "Master Admin": ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
   Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
   Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
@@ -39,7 +40,7 @@ const roleAccess = {
 };
 
 const viewLabels = {
-  "master-admin": "Platform Admin",
+  "master-admin": "Super Admin",
   dashboard: "Dashboard",
   setup: "Setup",
   "quick-sale": "Quick Sale",
@@ -586,9 +587,10 @@ function legacyShopState(source) {
 function loadState() {
   try {
     const stored = JSON.parse(localStorage.getItem(storageKey) || "{}");
+    memoryState = stored;
     return { ...defaultState, ...stored };
   } catch {
-    return { ...defaultState };
+    return memoryState ? { ...defaultState, ...memoryState } : { ...defaultState };
   }
 }
 
@@ -808,7 +810,7 @@ function removeLegacyDemoRows() {
 
 function saveState() {
   captureActiveShopState();
-  localStorage.setItem(storageKey, JSON.stringify({
+  const nextState = {
     shops,
     activeShopId,
     shopStates,
@@ -828,7 +830,14 @@ function saveState() {
     montajiItems,
     cashClosings,
     staffPayments
-  }));
+  };
+  memoryState = nextState;
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(nextState));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 document.querySelectorAll("[data-icon]").forEach((element) => {
@@ -837,7 +846,7 @@ document.querySelectorAll("[data-icon]").forEach((element) => {
 });
 
 const titles = {
-  "master-admin": "Platform Admin Console",
+  "master-admin": "Super Admin Console",
   dashboard: "Daily Control Dashboard",
   setup: "Launch Setup",
   "quick-sale": "Quick Sale",
@@ -1054,7 +1063,7 @@ function renderShopSwitcher() {
     option.selected = shop.id === activeShopId;
     switcher.appendChild(option);
   });
-  switcher.hidden = true;
+  switcher.hidden = currentRole !== "Platform Admin";
 }
 
 function renderMobileViewSwitcher() {
@@ -1132,7 +1141,7 @@ function renderMasterDashboard() {
       <td><span class="status-pill ${isSuspended || attention ? "warning" : "ok"}">${isSuspended ? "Suspended" : attention ? `${attention} checks` : "Active"}</span></td>
       <td>
         <div class="action-cluster">
-          <button class="mini-action" data-show-shop="${escapeHtml(shop.id)}" type="button">View</button>
+          <button class="mini-action" data-open-shop="${escapeHtml(shop.id)}" type="button" ${isSuspended ? "disabled" : ""}>Open</button>
           <button class="mini-action" data-reset-owner="${escapeHtml(shop.id)}" type="button">Reset</button>
           <button class="mini-action" data-toggle-shop="${escapeHtml(shop.id)}" type="button">${isSuspended ? "Restore" : "Suspend"}</button>
           <button class="danger-button" data-delete-shop="${escapeHtml(shop.id)}" type="button">Delete</button>
@@ -1142,9 +1151,10 @@ function renderMasterDashboard() {
     body.appendChild(row);
   });
 
-  body.querySelectorAll("[data-show-shop]").forEach((button) => {
+  body.querySelectorAll("[data-open-shop]").forEach((button) => {
     button.addEventListener("click", () => {
-      showShopHandover(button.dataset.showShop);
+      switchShop(button.dataset.openShop);
+      showView("dashboard");
     });
   });
   body.querySelectorAll("[data-reset-owner]").forEach((button) => {
@@ -1503,19 +1513,15 @@ function syncChecklist() {
 
 function applyRoleAccess() {
   const allowed = roleAccess[currentRole] || roleAccess.Owner;
-  const isPlatformAdmin = currentRole === "Platform Admin";
   document.querySelectorAll("#appShell .nav-item[data-view]").forEach((item) => {
     const enabled = allowed.includes(item.dataset.view);
     item.hidden = !enabled;
     item.disabled = !enabled;
   });
   document.querySelectorAll(".shop-only-control").forEach((item) => {
-    item.hidden = isPlatformAdmin;
+    item.hidden = false;
   });
-  document.body.classList.toggle("is-platform-admin", isPlatformAdmin);
-  if (isPlatformAdmin) {
-    document.getElementById("topTaxLabel").textContent = "Platform network · AED";
-  }
+  document.body.classList.remove("is-platform-admin");
   renderShopSwitcher();
   renderMobileViewSwitcher();
 }
@@ -1630,17 +1636,6 @@ function resetOwnerPassword(shopId) {
   renderMasterDashboard();
 }
 
-function showShopHandover(shopId) {
-  const shop = shops.find((candidate) => candidate.id === shopId);
-  if (!shop) return;
-  const shopState = shopStates[shopId] || createShopState();
-  const owner = (shopState.users || []).find((user) => user.role === "Owner") || { username: shop.ownerUsername || "owner" };
-  document.getElementById("handoverCard").hidden = false;
-  document.getElementById("handoverShop").textContent = `${shop.name} · ${shop.enabled === false ? "suspended" : "active"}`;
-  document.getElementById("handoverCredentials").textContent = `Shop ID: ${shop.shopCode} · Owner: ${shop.owner || "Owner"} · Username: ${owner.username}`;
-  document.getElementById("masterNote").textContent = "Platform Admin manages shop creation, owner handover, suspension and deletion. Shop staff are created inside the owner dashboard.";
-}
-
 function toggleShopStatus(shopId) {
   const shop = shops.find((candidate) => candidate.id === shopId);
   if (!shop) return;
@@ -1707,7 +1702,7 @@ function renderUserManagement() {
 
   table.querySelectorAll("[data-reset-user]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (!["Owner", "Master Admin"].includes(currentRole)) return;
+      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
       const user = activeShopState.users[Number(button.dataset.resetUser)];
       if (!user) return;
       const password = generatedPassword(user.role === "Owner" ? "Owner" : "User");
@@ -1722,7 +1717,7 @@ function renderUserManagement() {
 
   table.querySelectorAll("[data-toggle-user]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (!["Owner", "Master Admin"].includes(currentRole)) return;
+      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
       const user = activeShopState.users[Number(button.dataset.toggleUser)];
       if (!user || user.role === "Owner") {
         document.getElementById("userAccessNote").textContent = "Owner login cannot be disabled from this screen.";
@@ -1737,7 +1732,7 @@ function renderUserManagement() {
 
   table.querySelectorAll("[data-delete-user]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (!["Owner", "Master Admin"].includes(currentRole)) return;
+      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
       const index = Number(button.dataset.deleteUser);
       const user = activeShopState.users[index];
       if (!user || user.role === "Owner") {
@@ -1755,7 +1750,7 @@ function renderUserManagement() {
 }
 
 function createUserFromForm() {
-  if (!["Owner", "Master Admin"].includes(currentRole)) return;
+  if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
   const name = document.getElementById("newUserName").value.trim();
   const username = document.getElementById("newUserUsername").value.trim();
   const password = document.getElementById("newUserPassword").value.trim();
