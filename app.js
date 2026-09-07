@@ -38,6 +38,21 @@ const roleAccess = {
   Staff: ["quick-sale", "services"]
 };
 
+const viewLabels = {
+  "master-admin": "Master Admin",
+  dashboard: "Dashboard",
+  setup: "Setup",
+  "quick-sale": "Quick Sale",
+  services: "Services",
+  purchases: "Purchases",
+  expenses: "Expenses",
+  inventory: "Inventory & Tools",
+  compliance: "Compliance",
+  cash: "Cash Closing",
+  reports: "Reports",
+  settings: "Settings"
+};
+
 const serviceTranslations = {
   Haircut: { ar: "قص شعر", hi: "हेयरकट", ur: "بال کٹوانا" },
   Shave: { ar: "حلاقة", hi: "शेव", ur: "شیو" },
@@ -892,6 +907,7 @@ function showView(viewId) {
   document.querySelectorAll(".nav-item").forEach((item) => item.classList.remove("active"));
   document.getElementById(viewId).classList.add("active");
   document.querySelector(`[data-view="${viewId}"]`)?.classList.add("active");
+  syncMobileViewSwitcher();
   document.getElementById("viewTitle").textContent = translate(titles[viewId] || "Salon Control");
   applyTranslations();
 }
@@ -909,6 +925,10 @@ document.querySelectorAll("[data-jump]").forEach((button) => {
 document.getElementById("shopSwitcher")?.addEventListener("change", (event) => {
   switchShop(event.target.value);
   renderMasterDashboard();
+});
+
+document.getElementById("mobileViewSwitcher")?.addEventListener("change", (event) => {
+  showView(event.target.value);
 });
 
 document.getElementById("createShopBtn")?.addEventListener("click", createShopFromForm);
@@ -1035,6 +1055,29 @@ function renderShopSwitcher() {
     switcher.appendChild(option);
   });
   switcher.hidden = currentRole !== "Platform Admin";
+}
+
+function renderMobileViewSwitcher() {
+  const switcher = document.getElementById("mobileViewSwitcher");
+  if (!switcher) return;
+  const allowed = roleAccess[currentRole] || roleAccess.Owner;
+  switcher.innerHTML = "";
+  allowed.forEach((viewId) => {
+    const option = document.createElement("option");
+    option.value = viewId;
+    option.textContent = translate(viewLabels[viewId] || titles[viewId] || viewId);
+    option.selected = viewId === activeViewId;
+    switcher.appendChild(option);
+  });
+}
+
+function syncMobileViewSwitcher() {
+  const switcher = document.getElementById("mobileViewSwitcher");
+  if (!switcher) return;
+  if (![...switcher.options].some((option) => option.value === activeViewId)) {
+    renderMobileViewSwitcher();
+  }
+  switcher.value = activeViewId;
 }
 
 function renderMasterDashboard() {
@@ -1463,6 +1506,7 @@ function applyRoleAccess() {
     item.disabled = !enabled;
   });
   renderShopSwitcher();
+  renderMobileViewSwitcher();
 }
 
 function switchShop(shopId) {
