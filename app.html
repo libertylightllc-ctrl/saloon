@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260908-sale-basket-3" />
+    <link rel="stylesheet" href="./styles.css?v=20260908-gcc-country-1" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -49,7 +49,7 @@
               <span>platform, owner, master, cashier, staff</span>
             </div>
             <div>
-              <strong>AED</strong>
+              <strong id="loginCurrencySignal">AED</strong>
               <span>cash-first reports</span>
             </div>
           </div>
@@ -232,6 +232,16 @@
                 <label>Shop ID <input id="newShopCode" placeholder="ALBARSHA001" /></label>
                 <label>Shop name <input id="newShopName" placeholder="Marina Gents" /></label>
                 <label>Location <input id="newShopLocation" placeholder="Dubai Marina" /></label>
+                <label>Country
+                  <select id="newShopCountry">
+                    <option value="AE">United Arab Emirates · AED</option>
+                    <option value="QA">Qatar · QAR</option>
+                    <option value="SA">Saudi Arabia · SAR</option>
+                    <option value="KW">Kuwait · KWD</option>
+                    <option value="BH">Bahrain · BHD</option>
+                    <option value="OM">Oman · OMR</option>
+                  </select>
+                </label>
                 <label>Owner name <input id="newShopOwner" placeholder="Owner name" /></label>
                 <label>Owner username <input id="newOwnerUsername" placeholder="owner.albarsha" /></label>
                 <label>Temporary password <input id="newOwnerPassword" placeholder="ChangeMe123" /></label>
@@ -283,6 +293,7 @@
                     <tr>
                       <th>Shop</th>
                       <th>Shop ID</th>
+                      <th>Country</th>
                       <th>Owner</th>
                       <th>Sales</th>
                       <th>Cash</th>
@@ -353,7 +364,7 @@
         <section class="view" id="setup">
           <div class="setup-grid">
             <article class="setup-card done"><span>1</span><strong>Business</strong><small>Al Barsha Gents Barber</small></article>
-            <article class="setup-card done"><span>2</span><strong>Branch</strong><small>AED currency · non-VAT default</small></article>
+            <article class="setup-card done"><span>2</span><strong>Branch</strong><small id="setupCountryLabel">AED currency · non-VAT default</small></article>
             <article class="setup-card done"><span>3</span><strong>Staff</strong><small>Owner, cashier, barber roles</small></article>
             <article class="setup-card done"><span>4</span><strong>Services</strong><small>Haircut, shave, color, facial, custom</small></article>
             <article class="setup-card done"><span>5</span><strong>Products</strong><small>Consumables, retail and tools</small></article>
@@ -883,11 +894,21 @@
             <article class="panel form-panel">
               <div class="panel-head compact">
                 <div>
-                  <h3>Tax & Receipt Settings</h3>
-                  <p>Default for small barber shops is VAT off</p>
+                  <h3>Country, Tax & Receipt</h3>
+                  <p>Country controls currency and local operating profile</p>
                 </div>
                 <span class="status-pill" id="settingsTaxPill">VAT optional</span>
               </div>
+              <label>Country profile
+                <select id="countrySelect">
+                  <option value="AE">United Arab Emirates · AED</option>
+                  <option value="QA">Qatar · QAR</option>
+                  <option value="SA">Saudi Arabia · SAR</option>
+                  <option value="KW">Kuwait · KWD</option>
+                  <option value="BH">Bahrain · BHD</option>
+                  <option value="OM">Oman · OMR</option>
+                </select>
+              </label>
               <label>Business tax mode
                 <select id="vatModeSelect">
                   <option value="off">VAT Off - internal records only</option>
@@ -988,6 +1009,6 @@
       </main>
     </div>
 
-    <script src="./app.js?v=20260908-sale-basket-3"></script>
+    <script src="./app.js?v=20260908-gcc-country-1"></script>
   </body>
 </html>

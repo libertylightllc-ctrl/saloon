@@ -23,6 +23,19 @@ const platformAccount = {
   name: "Platform Admin"
 };
 
+const countryProfiles = {
+  AE: { name: "United Arab Emirates", currency: "AED", locale: "en-AE", decimals: 2, taxLabel: "VAT" },
+  QA: { name: "Qatar", currency: "QAR", locale: "en-QA", decimals: 2, taxLabel: "VAT" },
+  SA: { name: "Saudi Arabia", currency: "SAR", locale: "en-SA", decimals: 2, taxLabel: "VAT" },
+  KW: { name: "Kuwait", currency: "KWD", locale: "en-KW", decimals: 3, taxLabel: "VAT" },
+  BH: { name: "Bahrain", currency: "BHD", locale: "en-BH", decimals: 3, taxLabel: "VAT" },
+  OM: { name: "Oman", currency: "OMR", locale: "en-OM", decimals: 3, taxLabel: "VAT" }
+};
+
+const currencyToCountry = Object.fromEntries(
+  Object.entries(countryProfiles).map(([country, profile]) => [profile.currency, country])
+);
+
 const rolePins = {
   "Platform Admin": "9999",
   "Master Admin": "9999",
@@ -489,7 +502,7 @@ function isoOffset(days) {
 const defaultState = {
   activeShopId: "al-barsha-gents",
   shops: [
-    { id: "al-barsha-gents", shopCode: "ALBARSHA001", name: "Al Barsha Gents", location: "Al Barsha", owner: "Owner", ownerUsername: "owner.albarsha", currency: "AED", enabled: true }
+    { id: "al-barsha-gents", shopCode: "ALBARSHA001", name: "Al Barsha Gents", location: "Al Barsha", country: "AE", owner: "Owner", ownerUsername: "owner.albarsha", currency: "AED", enabled: true }
   ],
   shopStates: {},
   services: [
@@ -601,7 +614,9 @@ let shopStates = state.shopStates || {};
 shops = shops.map((shop, index) => ({
   ...shop,
   shopCode: shop.shopCode || (index === 0 ? "ALBARSHA001" : shopCodeFromName(shop.name || `Shop ${index + 1}`)),
-  ownerUsername: shop.ownerUsername || uniqueUsername(`owner.${shop.name || "shop"}`, shop.id)
+  ownerUsername: shop.ownerUsername || uniqueUsername(`owner.${shop.name || "shop"}`, shop.id),
+  country: shop.country || currencyToCountry[shop.currency] || "AE",
+  currency: countryProfiles[shop.country || currencyToCountry[shop.currency] || "AE"]?.currency || shop.currency || "AED"
 }));
 if (!shopStates[activeShopId]) {
   shopStates[activeShopId] = legacyShopState(state);
@@ -655,6 +670,15 @@ function currentShopLocation() {
 function currentShopCode() {
   const shop = currentShop();
   return shop?.shopCode || "ALBARSHA001";
+}
+
+function currentCountryProfile(shop = currentShop()) {
+  const country = shop?.country || currencyToCountry[shop?.currency] || "AE";
+  return countryProfiles[country] || countryProfiles.AE;
+}
+
+function currentCurrency(shop = currentShop()) {
+  return currentCountryProfile(shop).currency;
 }
 
 function captureActiveShopState() {
@@ -959,8 +983,12 @@ document.getElementById("createUserBtn")?.addEventListener("click", createUserFr
 document.getElementById("shopSearch")?.addEventListener("input", renderMasterDashboard);
 document.getElementById("shopStatusFilter")?.addEventListener("change", renderMasterDashboard);
 
-function money(amount) {
-  return `AED ${amount.toLocaleString("en-AE")}`;
+function money(amount, shop = currentShop()) {
+  const profile = currentCountryProfile(shop);
+  return `${profile.currency} ${Number(amount || 0).toLocaleString(profile.locale, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: profile.decimals
+  })}`;
 }
 
 function escapeHtml(value) {
@@ -1120,16 +1148,14 @@ function renderMasterDashboard() {
   const activeShops = shops.filter((shop) => shop.enabled !== false);
   const totals = activeShops.reduce((summary, shop) => {
     const shopState = shopStates[shop.id] || createShopState();
-    summary.sales += shopSalesTotal(shopState);
-    summary.expected += shopExpectedCash(shopState);
     summary.attention += shopAttentionCount(shopState);
     return summary;
-  }, { sales: 0, expected: 0, attention: 0 });
+  }, { attention: 0 });
 
-  document.getElementById("masterExpectedCash").textContent = moneyFixed(totals.expected);
+  document.getElementById("masterExpectedCash").textContent = groupedMoneyForShops(activeShops, (shop) => shopExpectedCash(shopStates[shop.id] || createShopState()));
   document.getElementById("masterShopCount").textContent = String(activeShops.length);
   document.getElementById("masterShopNote").textContent = `${activeShops.length} active branches`;
-  document.getElementById("masterSalesTotal").textContent = moneyFixed(totals.sales);
+  document.getElementById("masterSalesTotal").textContent = groupedMoneyForShops(activeShops, (shop) => shopSalesTotal(shopStates[shop.id] || createShopState()));
   document.getElementById("masterAttentionCount").textContent = String(totals.attention);
 
   const body = document.getElementById("masterShopTable");
@@ -1141,27 +1167,30 @@ function renderMasterDashboard() {
     .filter((shop) => statusFilter === "all" || (statusFilter === "suspended" ? shop.enabled === false : shop.enabled !== false))
     .filter((shop) => {
       if (!search) return true;
-      return [shop.name, shop.shopCode, shop.location, shop.owner, shop.ownerUsername]
+      const profile = currentCountryProfile(shop);
+      return [shop.name, shop.shopCode, shop.location, shop.owner, shop.ownerUsername, profile.name, profile.currency]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(search));
     });
 
   if (!visibleShops.length) {
-    body.innerHTML = `<tr><td colspan="7">No shops match this filter.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="8">No shops match this filter.</td></tr>`;
     return;
   }
 
   visibleShops.forEach((shop) => {
     const shopState = shopStates[shop.id] || createShopState();
+    const profile = currentCountryProfile(shop);
     const attention = shopAttentionCount(shopState);
     const isSuspended = shop.enabled === false;
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><strong>${escapeHtml(shop.name)}</strong><br><span>${escapeHtml(shop.location)}</span></td>
       <td><code>${escapeHtml(shop.shopCode || "")}</code></td>
+      <td>${escapeHtml(profile.name)}<br><small>${escapeHtml(profile.currency)}</small></td>
       <td>${escapeHtml(shop.owner || "Owner")}</td>
-      <td>${moneyFixed(shopSalesTotal(shopState))}</td>
-      <td>${moneyFixed(shopExpectedCash(shopState))}</td>
+      <td>${moneyFixed(shopSalesTotal(shopState), shop)}</td>
+      <td>${moneyFixed(shopExpectedCash(shopState), shop)}</td>
       <td><span class="status-pill ${isSuspended || attention ? "warning" : "ok"}">${isSuspended ? "Suspended" : attention ? `${attention} checks` : "Active"}</span></td>
       <td>
         <div class="action-cluster">
@@ -1195,16 +1224,21 @@ function renderMasterDashboard() {
 function syncShopIdentity() {
   const shop = currentShop();
   if (!shop) return;
+  const profile = currentCountryProfile(shop);
   document.querySelectorAll(".branch-card strong").forEach((element) => {
     element.textContent = shop.name;
   });
   const businessCard = document.querySelector("#setup .setup-card strong + small");
   if (businessCard) businessCard.textContent = `${shop.name} Barber`;
+  const setupCountryLabel = document.getElementById("setupCountryLabel");
+  if (setupCountryLabel) setupCountryLabel.textContent = `${profile.name} · ${profile.currency} currency · ${vatEnabled ? "VAT on" : "VAT optional"}`;
   const reportSubtitle = document.querySelector(".report-header p");
   if (reportSubtitle) reportSubtitle.textContent = `${shop.name} · ${todayLabel()} · ${vatEnabled ? "VAT records" : "non-VAT internal records"}`;
   document.getElementById("userChip").textContent = currentRole === "Platform Admin"
     ? "Platform Admin · Network"
     : `${translate(currentRole)} · ${currentUser.name || currentUser.username || shop.location}`;
+  const countrySelect = document.getElementById("countrySelect");
+  if (countrySelect) countrySelect.value = shop.country || currencyToCountry[shop.currency] || "AE";
   renderShopSwitcher();
   renderUserManagement();
 }
@@ -1271,11 +1305,31 @@ function syncSummaryTotals() {
   updateClosingCalculation();
 }
 
-function moneyFixed(amount) {
-  return `AED ${amount.toLocaleString("en-AE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+function moneyFixed(amount, shop = currentShop()) {
+  const profile = currentCountryProfile(shop);
+  return `${profile.currency} ${Number(amount || 0).toLocaleString(profile.locale, {
+    minimumFractionDigits: profile.decimals,
+    maximumFractionDigits: profile.decimals
   })}`;
+}
+
+function formatMoneyForProfile(amount, profile) {
+  return `${profile.currency} ${Number(amount || 0).toLocaleString(profile.locale, {
+    minimumFractionDigits: profile.decimals,
+    maximumFractionDigits: profile.decimals
+  })}`;
+}
+
+function groupedMoneyForShops(sourceShops, selector) {
+  const groups = sourceShops.reduce((totals, shop) => {
+    const profile = currentCountryProfile(shop);
+    totals[profile.currency] = totals[profile.currency] || { total: 0, profile };
+    totals[profile.currency].total += Number(selector(shop) || 0);
+    return totals;
+  }, {});
+  const values = Object.values(groups);
+  if (!values.length) return moneyFixed(0);
+  return values.map((group) => formatMoneyForProfile(group.total, group.profile)).join(" · ");
 }
 
 function updateClosingCalculation() {
@@ -1586,6 +1640,8 @@ function createShopFromForm() {
   const ownerPassword = document.getElementById("newOwnerPassword").value.trim() || "ChangeMe123";
   const opening = Number(document.getElementById("newShopOpeningCash").value || 0);
   const language = document.getElementById("newShopLanguage").value;
+  const country = document.getElementById("newShopCountry").value || "AE";
+  const profile = countryProfiles[country] || countryProfiles.AE;
   const vat = document.getElementById("newShopVat").value === "on";
   const note = document.getElementById("masterNote");
 
@@ -1603,7 +1659,7 @@ function createShopFromForm() {
     document.getElementById("newShopCode").focus();
     return;
   }
-  shops.push({ id, shopCode, name, location, owner, ownerUsername, currency: "AED", enabled: true });
+  shops.push({ id, shopCode, name, location, country, owner, ownerUsername, currency: profile.currency, enabled: true });
   shopStates[id] = createShopState({
     openingCash: opening,
     vatEnabled: vat,
@@ -1621,6 +1677,7 @@ function createShopFromForm() {
   document.getElementById("newShopCode").value = "";
   document.getElementById("newShopName").value = "";
   document.getElementById("newShopLocation").value = "";
+  document.getElementById("newShopCountry").value = "AE";
   document.getElementById("newShopOwner").value = "";
   document.getElementById("newOwnerUsername").value = "";
   document.getElementById("newOwnerPassword").value = "";
@@ -2105,6 +2162,22 @@ document.getElementById("vatModeSelect").addEventListener("change", (event) => {
   syncTaxSettings();
 });
 
+document.getElementById("countrySelect").addEventListener("change", (event) => {
+  const shop = currentShop();
+  if (!shop) return;
+  const profile = countryProfiles[event.target.value] || countryProfiles.AE;
+  shop.country = event.target.value;
+  shop.currency = profile.currency;
+  syncShopIdentity();
+  renderPurchaseTable();
+  renderExpenseTable();
+  renderServiceTable();
+  renderSaleServices();
+  syncSelectedServiceLabel();
+  syncSummaryTotals();
+  syncTaxSettings();
+});
+
 document.getElementById("receiptModeSelect").addEventListener("change", (event) => {
   receiptEnabled = event.target.value !== "off";
   syncTaxSettings();
@@ -2295,13 +2368,15 @@ document.querySelectorAll("[data-export]").forEach((button) => {
 });
 
 function syncTaxSettings() {
+  const profile = currentCountryProfile();
   const taxMode = vatEnabled ? "VAT On" : "VAT Off";
   const branchLabel = vatEnabled ? "VAT enabled · tax invoice mode" : "VAT optional · currently off";
   const checkoutNote = vatEnabled ? "VAT on: tax invoice mode" : "VAT off: internal sale record only";
   const receiptText = receiptEnabled ? "Receipt on" : "Receipt off";
-  const headerLabel = currentRole === "Platform Admin" ? "Platform network · AED" : `${todayLabel()} · AED · ${taxMode}`;
+  const headerLabel = currentRole === "Platform Admin" ? "Platform network · GCC currencies" : `${todayLabel()} · ${profile.currency} · ${taxMode}`;
 
   document.body.classList.toggle("vat-enabled", vatEnabled);
+  document.getElementById("loginCurrencySignal").textContent = profile.currency;
   document.getElementById("taxModeLabel").textContent = translate(taxMode);
   document.getElementById("branchTaxLabel").textContent = translate(branchLabel);
   document.getElementById("topTaxLabel").textContent = headerLabel;
@@ -2315,8 +2390,10 @@ function syncTaxSettings() {
     ? `${totalServiceItemsSold()} services · ${purchases.length} purchase records · ${vatEnabled ? "VAT calculated separately" : "no VAT added"}`
     : `${totalServiceItemsSold()} · ${translate("Services")} · ${purchases.length} · ${translate("Purchases")}`;
   document.getElementById("vatModeSelect").value = vatEnabled ? "on" : "off";
+  document.getElementById("countrySelect").value = currentShop()?.country || currencyToCountry[currentShop()?.currency] || "AE";
   document.getElementById("receiptModeSelect").value = receiptEnabled ? "simple" : "off";
   document.getElementById("settingsTaxPill").textContent = translate(vatEnabled ? "VAT On" : "VAT optional");
+  syncShopIdentity();
   applyTranslations();
   saveState();
 }
