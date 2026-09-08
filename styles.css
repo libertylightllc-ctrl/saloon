@@ -988,6 +988,22 @@ body.is-authenticated .app-shell {
   background: var(--surface-2);
 }
 
+.accounting-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.34fr);
+  gap: 18px;
+}
+
+.accounting-trial-panel {
+  margin-top: 18px;
+}
+
+.trial-total-row td {
+  border-top: 2px solid var(--line-strong);
+  color: var(--ink);
+  font-weight: 900;
+}
+
 .segmented {
   display: flex;
   gap: 6px;
@@ -2505,6 +2521,7 @@ th {
     grid-template-columns: 240px minmax(0, 1fr);
   }
 
+  .accounting-layout,
   .audit-layout,
   #master-admin .split-layout {
     grid-template-columns: 1fr;

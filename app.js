@@ -58,9 +58,9 @@ const rolePins = {
 };
 
 const roleAccess = {
-  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "launch-audit", "settings"],
-  "Master Admin": ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "launch-audit", "settings"],
-  Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "launch-audit", "settings"],
+  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
+  "Master Admin": ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
+  Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
   Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
   Staff: ["quick-sale", "services"]
 };
@@ -76,10 +76,25 @@ const viewLabels = {
   inventory: "Inventory & Tools",
   compliance: "Compliance",
   cash: "Cash Closing",
+  accounting: "Accounting",
   reports: "Reports",
   "launch-audit": "Launch Audit",
   settings: "Settings"
 };
+
+const chartOfAccounts = [
+  { code: "1000", name: "Cash on hand", type: "Asset" },
+  { code: "1010", name: "Bank / card clearing", type: "Asset" },
+  { code: "1200", name: "Inventory and supplies", type: "Asset" },
+  { code: "1500", name: "Reusable tools and equipment", type: "Asset" },
+  { code: "2000", name: "Supplier payable", type: "Liability" },
+  { code: "2100", name: "VAT payable", type: "Liability" },
+  { code: "4000", name: "Service revenue", type: "Income" },
+  { code: "5000", name: "Consumable purchases", type: "Cost" },
+  { code: "6100", name: "Shop operating expenses", type: "Expense" },
+  { code: "6200", name: "Cash shortage / overage", type: "Expense" },
+  { code: "7000", name: "Staff commission payable", type: "Liability" }
+];
 
 const launchAuditItems = [
   { id: "marketing", area: "Front Door", title: "Marketing site and premium login", priority: "P1", launchRequired: true, marketReason: "A new shop must understand the offer before login.", test: () => !!document.getElementById("frontpage") && !!document.getElementById("loginForm"), next: "Keep brand, app and login design consistent." },
@@ -92,7 +107,7 @@ const launchAuditItems = [
   { id: "compliance", area: "Compliance", title: "Expiry register and photo/PDF evidence", priority: "P0", launchRequired: true, marketReason: "Lease, visa, pest control and health files need reminders and proof.", test: () => !!document.getElementById("expiryEvidenceFile") && !!document.getElementById("hygieneEvidenceFile"), next: "Store files in cloud storage and add renewal workflow." },
   { id: "country", area: "GCC", title: "Country profile, currency and VAT mode", priority: "P0", launchRequired: true, marketReason: "UAE, Qatar, Saudi, Kuwait, Bahrain and Oman need different currency and tax defaults.", test: () => !!countryProfiles.AE && !!countryProfiles.QA && !!countryProfiles.SA && !!document.getElementById("countrySelect"), next: "Add official rule packs and per-country compliance templates." },
   { id: "reports", area: "Reporting", title: "Daily close and owner reports", priority: "P0", launchRequired: true, marketReason: "Owners need cash, purchases, expenses, commission and shortage output.", test: () => !!document.getElementById("reportOutputTable") && !!document.getElementById("approveClosing"), next: "Add accountant exports and immutable close periods." },
-  { id: "accounting", area: "Accounting", title: "Real accounting ledger", priority: "P0", launchRequired: true, marketReason: "A market product cannot rely on dashboard totals only.", test: () => false, next: "Build chart of accounts, journals, ledgers, supplier balances and owner drawings." },
+  { id: "accounting", area: "Accounting", title: "Real accounting ledger", priority: "P0", launchRequired: true, marketReason: "A market product cannot rely on dashboard totals only.", test: () => !!document.querySelector("#accountingJournalTable tr") && !!document.querySelector("#accountingTrialTable tr"), next: "Move journals to backend storage, add supplier balances and locked accounting periods." },
   { id: "backend", area: "Backend", title: "Database, APIs and cloud persistence", priority: "P0", launchRequired: true, marketReason: "Active users need data available across devices and protected from browser clearing.", test: () => false, next: "Add Supabase/Firebase/Postgres backend with migrations and APIs." },
   { id: "files", area: "Storage", title: "Production file storage and backups", priority: "P0", launchRequired: true, marketReason: "PDFs and images must be backed up, previewable and recoverable.", test: () => false, next: "Add object storage, malware checks, size limits, retention and restore." },
   { id: "security", area: "Security", title: "Secure auth, password reset and audit logs", priority: "P0", launchRequired: true, marketReason: "Demo passwords are not acceptable for paying users.", test: () => false, next: "Hash passwords, add sessions, MFA option, lockout and login history." },
@@ -967,6 +982,7 @@ const titles = {
   inventory: "Inventory & Tools",
   compliance: "Compliance Control",
   cash: "Cash Closing",
+  accounting: "Accounting Ledger",
   reports: "Reports",
   "launch-audit": "Launch Audit",
   settings: "Settings"
@@ -1029,6 +1045,7 @@ function showView(viewId) {
   document.getElementById(viewId).classList.add("active");
   document.querySelector(`[data-view="${viewId}"]`)?.classList.add("active");
   syncMobileViewSwitcher();
+  if (viewId === "accounting") renderAccounting();
   if (viewId === "launch-audit") renderLaunchAudit();
   document.getElementById("viewTitle").textContent = translate(titles[viewId] || "Salon Control");
   applyTranslations();
@@ -1515,6 +1532,78 @@ function cashOutTotal(records) {
   return records.reduce((sum, record) => record.payment === "Cash" ? sum + (purchaseTotal(record) || Number(record.amount) || 0) : sum, 0);
 }
 
+function paymentAccount(payment) {
+  return payment === "Cash" ? "1000 Cash on hand" : "1010 Bank / card clearing";
+}
+
+function purchaseDebitAccount(purchase) {
+  if (purchase.type === "Reusable tool / asset") return "1500 Reusable tools and equipment";
+  if (purchase.type === "Operational supply") return "6100 Shop operating expenses";
+  return "1200 Inventory and supplies";
+}
+
+function journalLine(date, account, description, debit = 0, credit = 0, source = "") {
+  return { date, account, description, debit: Number(debit) || 0, credit: Number(credit) || 0, source };
+}
+
+function journalEntries() {
+  const entries = [];
+  if (openingCash) {
+    entries.push(journalLine("Opening", "1000 Cash on hand", "Opening cash float", openingCash, 0, "opening"));
+    entries.push(journalLine("Opening", "3000 Owner capital", "Opening cash float", 0, openingCash, "opening"));
+  }
+  sales.forEach((sale) => {
+    const amount = Number(sale.amount) || 0;
+    const date = sale.createdAt || "";
+    const description = `${sale.service || (sale.services || []).join(" + ")} · ${sale.staff || "Staff"}`;
+    entries.push(journalLine(date, paymentAccount(sale.payment), description, amount, 0, "sale"));
+    entries.push(journalLine(date, "4000 Service revenue", description, 0, amount, "sale"));
+    const commission = amount * 0.12;
+    if (commission) {
+      entries.push(journalLine(date, "6300 Staff commission expense", description, commission, 0, "commission"));
+      entries.push(journalLine(date, "7000 Staff commission payable", description, 0, commission, "commission"));
+    }
+  });
+  purchases.forEach((purchase) => {
+    const amount = purchaseTotal(purchase);
+    const date = purchase.createdAt || "";
+    const description = `${purchase.supplier || "Supplier"} · ${purchase.item || "Purchase"}`;
+    entries.push(journalLine(date, purchaseDebitAccount(purchase), description, amount, 0, "purchase"));
+    entries.push(journalLine(date, paymentAccount(purchase.payment), description, 0, amount, "purchase"));
+  });
+  expenses.forEach((expense) => {
+    const amount = Number(expense.amount) || 0;
+    const date = expense.createdAt || "";
+    const description = `${expense.category || "Expense"} · ${expense.note || ""}`.trim();
+    entries.push(journalLine(date, "6100 Shop operating expenses", description, amount, 0, "expense"));
+    entries.push(journalLine(date, paymentAccount(expense.payment), description, 0, amount, "expense"));
+  });
+  cashClosings.forEach((closing) => {
+    const difference = Number(closing.difference) || 0;
+    if (!difference) return;
+    const description = closing.reason || "Cash closing difference";
+    if (difference < 0) {
+      entries.push(journalLine(closing.createdAt || "", "6200 Cash shortage / overage", description, Math.abs(difference), 0, "cash-close"));
+      entries.push(journalLine(closing.createdAt || "", "1000 Cash on hand", description, 0, Math.abs(difference), "cash-close"));
+    } else {
+      entries.push(journalLine(closing.createdAt || "", "1000 Cash on hand", description, difference, 0, "cash-close"));
+      entries.push(journalLine(closing.createdAt || "", "6200 Cash shortage / overage", description, 0, difference, "cash-close"));
+    }
+  });
+  return entries;
+}
+
+function trialBalanceRows() {
+  const balances = new Map();
+  journalEntries().forEach((entry) => {
+    const current = balances.get(entry.account) || { account: entry.account, debit: 0, credit: 0 };
+    current.debit += entry.debit;
+    current.credit += entry.credit;
+    balances.set(entry.account, current);
+  });
+  return [...balances.values()].filter((row) => row.debit || row.credit);
+}
+
 function syncSummaryTotals() {
   const purchaseText = moneyFixed(totalPurchases());
   const expenseText = moneyFixed(totalExpenses());
@@ -1526,6 +1615,7 @@ function syncSummaryTotals() {
   document.getElementById("reportExpenses").textContent = expenseText;
   syncDashboardTotals();
   syncReportTotals();
+  renderAccounting();
   renderLaunchAudit();
   updateClosingCalculation();
 }
@@ -1601,12 +1691,16 @@ function daysUntil(dateString) {
 
 function dateLabel(dateString) {
   if (!dateString) return translate("Pending");
+  if (dateString === "Opening") return "Opening";
+  const value = String(dateString);
+  const date = value.includes("T") ? new Date(value) : new Date(`${value}T12:00:00`);
+  if (Number.isNaN(date.getTime())) return value;
   const locales = { en: "en-AE", ar: "ar-AE", hi: "hi-IN", ur: "ur-PK" };
   return new Intl.DateTimeFormat(locales[activeLanguage] || "en-AE", {
     weekday: "short",
     day: "2-digit",
     month: "short"
-  }).format(new Date(`${dateString}T12:00:00`));
+  }).format(date);
 }
 
 function computedRecordStatus(record) {
@@ -1992,6 +2086,76 @@ function renderReportOutput() {
     `;
     body.appendChild(row);
   });
+}
+
+function renderAccounting() {
+  const journalBody = document.getElementById("accountingJournalTable");
+  const chartBody = document.getElementById("accountingChartTable");
+  const trialBody = document.getElementById("accountingTrialTable");
+  if (!journalBody || !chartBody || !trialBody) return;
+
+  const entries = journalEntries();
+  const shortageTotal = cashClosings.reduce((sum, closing) => sum + Math.abs(Number(closing.difference) || 0), 0);
+  const costTotal = totalPurchases() + totalExpenses() + shortageTotal + staffCommissionTotal();
+  document.getElementById("accountingCashBalance").textContent = moneyFixed(expectedCashTotal());
+  document.getElementById("accountingRevenue").textContent = moneyFixed(totalSales());
+  document.getElementById("accountingCosts").textContent = moneyFixed(costTotal);
+  document.getElementById("accountingResult").textContent = moneyFixed(totalSales() - costTotal);
+
+  chartBody.innerHTML = "";
+  chartOfAccounts.forEach((account) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><code>${escapeHtml(account.code)}</code></td>
+      <td>${escapeHtml(account.name)}</td>
+      <td>${escapeHtml(account.type)}</td>
+    `;
+    chartBody.appendChild(row);
+  });
+
+  journalBody.innerHTML = "";
+  const visibleEntries = entries.slice(-28).reverse();
+  if (!visibleEntries.length) {
+    journalBody.innerHTML = `<tr><td colspan="5">No accounting entries yet. Save a sale, purchase or expense first.</td></tr>`;
+  } else {
+    visibleEntries.forEach((entry) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${escapeHtml(entry.date === "Opening" ? "Opening" : dateLabel(entry.date))}</td>
+        <td>${escapeHtml(entry.account)}</td>
+        <td>${escapeHtml(entry.description)}</td>
+        <td>${entry.debit ? moneyFixed(entry.debit) : "-"}</td>
+        <td>${entry.credit ? moneyFixed(entry.credit) : "-"}</td>
+      `;
+      journalBody.appendChild(row);
+    });
+  }
+
+  const trialRows = trialBalanceRows();
+  const totalDebit = trialRows.reduce((sum, row) => sum + row.debit, 0);
+  const totalCredit = trialRows.reduce((sum, row) => sum + row.credit, 0);
+  trialBody.innerHTML = "";
+  trialRows.forEach((entry) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${escapeHtml(entry.account)}</td>
+      <td>${entry.debit ? moneyFixed(entry.debit) : "-"}</td>
+      <td>${entry.credit ? moneyFixed(entry.credit) : "-"}</td>
+    `;
+    trialBody.appendChild(row);
+  });
+  const totalRow = document.createElement("tr");
+  totalRow.className = "trial-total-row";
+  totalRow.innerHTML = `
+    <td>Total</td>
+    <td>${moneyFixed(totalDebit)}</td>
+    <td>${moneyFixed(totalCredit)}</td>
+  `;
+  trialBody.appendChild(totalRow);
+  const balanced = Math.abs(totalDebit - totalCredit) < 0.01;
+  const status = document.getElementById("trialBalanceStatus");
+  status.textContent = balanced ? "Balanced" : "Review needed";
+  status.className = `status-pill ${balanced ? "ok" : "danger"}`;
 }
 
 function launchAuditSnapshot() {
@@ -2935,6 +3099,7 @@ renderExpenseTable();
 renderCompliance();
 renderAuditLog();
 renderUserManagement();
+renderAccounting();
 renderLaunchAudit();
 syncChecklist();
 syncLanguageButtons();

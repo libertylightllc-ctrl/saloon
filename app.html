@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260908-launch-audit-2" />
+    <link rel="stylesheet" href="./styles.css?v=20260908-accounting-1" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -147,6 +147,10 @@
           <button class="nav-item" data-view="cash" type="button">
             <span class="nav-icon" data-icon="cash"></span>
             Cash Closing
+          </button>
+          <button class="nav-item" data-view="accounting" type="button">
+            <span class="nav-icon" data-icon="report"></span>
+            Accounting
           </button>
           <button class="nav-item" data-view="reports" type="button">
             <span class="nav-icon" data-icon="report"></span>
@@ -890,6 +894,92 @@
           </div>
         </section>
 
+        <section class="view" id="accounting">
+          <div class="metric-grid">
+            <article class="metric-card highlight">
+              <span>Cash balance</span>
+              <strong id="accountingCashBalance">AED 0.00</strong>
+              <small>Opening cash plus cash movement</small>
+            </article>
+            <article class="metric-card">
+              <span>Revenue posted</span>
+              <strong id="accountingRevenue">AED 0.00</strong>
+              <small>Sales credited to service revenue</small>
+            </article>
+            <article class="metric-card">
+              <span>Cost & expenses</span>
+              <strong id="accountingCosts">AED 0.00</strong>
+              <small>Purchases, shop expenses and shortages</small>
+            </article>
+            <article class="metric-card">
+              <span>Operating result</span>
+              <strong id="accountingResult">AED 0.00</strong>
+              <small>Revenue minus posted costs</small>
+            </article>
+          </div>
+
+          <div class="accounting-layout">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Journal Entries</h3>
+                  <p>Sales, purchases, expenses and cash close converted into accounting lines</p>
+                </div>
+                <button class="ghost-button" data-export="csv" type="button">Export ledger CSV</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Account</th>
+                      <th>Description</th>
+                      <th>Debit</th>
+                      <th>Credit</th>
+                    </tr>
+                  </thead>
+                  <tbody id="accountingJournalTable"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <aside class="panel">
+              <div class="panel-head compact">
+                <div>
+                  <h3>Chart of Accounts</h3>
+                  <p>Launch accounting structure for each shop</p>
+                </div>
+              </div>
+              <div class="table-wrap mini-table">
+                <table>
+                  <thead>
+                    <tr><th>Code</th><th>Account</th><th>Type</th></tr>
+                  </thead>
+                  <tbody id="accountingChartTable"></tbody>
+                </table>
+              </div>
+            </aside>
+          </div>
+
+          <article class="panel accounting-trial-panel">
+            <div class="panel-head">
+              <div>
+                <h3>Trial Balance Preview</h3>
+                <p>Every generated debit and credit is checked before owner reports</p>
+              </div>
+              <span class="status-pill" id="trialBalanceStatus">Balanced</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Account</th><th>Debit</th><th>Credit</th></tr>
+                </thead>
+                <tbody id="accountingTrialTable"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
         <section class="view" id="reports">
           <div class="output-layout">
             <article class="panel final-output">
@@ -1115,6 +1205,6 @@
       </main>
     </div>
 
-    <script src="./app.js?v=20260908-launch-audit-2"></script>
+    <script src="./app.js?v=20260908-accounting-1"></script>
   </body>
 </html>
