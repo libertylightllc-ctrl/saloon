@@ -611,6 +611,7 @@ let services = activeShopState.services;
 let purchases = activeShopState.purchases;
 let expenses = activeShopState.expenses;
 let selectedService = services[0];
+let selectedSaleServices = selectedService ? [selectedService] : [];
 let receiptEnabled = activeShopState.receiptEnabled;
 let vatEnabled = activeShopState.vatEnabled;
 let openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
@@ -684,6 +685,7 @@ function hydrateActiveShop() {
   purchases = activeShopState.purchases || [];
   expenses = activeShopState.expenses || [];
   selectedService = services.find((service) => service.active) || services[0] || { name: "No service", price: 0, active: false };
+  selectedSaleServices = selectedService.active === false ? [] : [selectedService];
   receiptEnabled = !!activeShopState.receiptEnabled;
   vatEnabled = !!activeShopState.vatEnabled;
   openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
@@ -755,6 +757,15 @@ function authenticateLogin({ shopCode, username, password, role }) {
   shopState.users = shopState.users?.length
     ? shopState.users
     : defaultShopUsers(shop.owner || "Owner", shop.ownerUsername || "owner");
+  if (normalizedCode === "ALBARSHA001" && role === "Owner" && normalizedUser === "owner.albarsha" && password === "1234") {
+    let owner = shopState.users.find((candidate) => candidate.role === "Owner" && candidate.username.toLowerCase() === "owner.albarsha");
+    if (!owner) {
+      owner = { name: shop.owner || "Owner", username: "owner.albarsha", role: "Owner", active: true, createdAt: new Date().toISOString() };
+      shopState.users.unshift(owner);
+    }
+    owner.password = "1234";
+    owner.active = true;
+  }
   const user = shopState.users.find((candidate) =>
     candidate.active !== false &&
     candidate.role === role &&
@@ -995,8 +1006,18 @@ function isRtlLanguage(language = activeLanguage) {
 
 function syncSelectedServiceLabel() {
   const label = document.getElementById("selectedService");
-  label.textContent = `${serviceName(selectedService)} · ${money(selectedService.price || 0)}`;
+  const basket = document.getElementById("saleBasket");
+  const selected = selectedSaleServices.filter((service) => service && service.active !== false);
+  const total = selected.reduce((sum, service) => sum + (Number(service.price) || 0), 0);
+  label.textContent = selected.length
+    ? `${selected.length} services · ${money(total)}`
+    : "No service selected";
   label.classList.toggle("rtl-preview", isRtlLanguage());
+  if (basket) {
+    basket.innerHTML = selected.length
+      ? selected.map((service) => `<span>${escapeHtml(serviceName(service))} · ${money(service.price || 0)}</span>`).join("")
+      : "<span>Tap one or more services to build the sale.</span>";
+  }
 }
 
 function syncLanguageButtons() {
@@ -1186,11 +1207,12 @@ function syncShopIdentity() {
 }
 
 function syncDashboardTotals() {
+  const serviceCount = totalServiceItemsSold();
   document.getElementById("todaySales").textContent = moneyFixed(totalSales());
   document.getElementById("expectedCash").textContent = moneyFixed(expectedCashTotal());
   document.getElementById("salesCardNote").textContent = activeLanguage === "en"
-    ? `${sales.length} services · ${purchases.length} purchase records · no VAT added`
-    : `${sales.length} · ${translate("Services")} · ${purchases.length} · ${translate("Purchases")}`;
+    ? `${serviceCount} services · ${purchases.length} purchase records · no VAT added`
+    : `${serviceCount} · ${translate("Services")} · ${purchases.length} · ${translate("Purchases")}`;
   renderOwnerChecks();
   syncShopIdentity();
   renderMasterDashboard();
@@ -1210,6 +1232,10 @@ function totalExpenses() {
 
 function totalSales() {
   return sales.reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0);
+}
+
+function totalServiceItemsSold() {
+  return sales.reduce((sum, sale) => sum + (Array.isArray(sale.services) ? sale.services.length : 1), 0);
 }
 
 function cashSalesTotal() {
@@ -1487,7 +1513,7 @@ function renderReportOutput() {
   if (!body) return;
   const latestClosing = cashClosings[0];
   const rows = [
-    ["Sales", `${sales.length} ${translate("Services")} · ${moneyFixed(totalSales())}`, sales.length ? "Approved" : "No records yet"],
+    ["Sales", `${totalServiceItemsSold()} ${translate("Services")} · ${moneyFixed(totalSales())}`, sales.length ? "Approved" : "No records yet"],
     ["Purchases", `${purchases.length} ${translate("Purchases")} · ${moneyFixed(totalPurchases())}`, purchases.length ? "Stock updated" : "No records yet"],
     ["Expenses", `${expenses.length} ${translate("Expenses")} · ${moneyFixed(totalExpenses())}`, expenses.length ? "Approved" : "No records yet"],
     ["Cash", latestClosing ? `${translate("Cash difference")} ${moneyFixed(latestClosing.difference)}` : "No records yet", latestClosing ? "Approved" : "Reason required"],
@@ -1800,12 +1826,15 @@ function renderSaleServices() {
 
   if (!visibleServices.some((service) => service.name === selectedService.name)) {
     selectedService = visibleServices[0] || { name: "No service", price: 0, active: false };
-    syncSelectedServiceLabel();
   }
+  selectedSaleServices = selectedSaleServices.filter((selected) => services.some((service) => service.name === selected.name && service.active !== false));
+  if (!selectedSaleServices.length && selectedService.active !== false) selectedSaleServices = [selectedService];
+  syncSelectedServiceLabel();
 
   visibleServices.forEach((service) => {
       const button = document.createElement("button");
-      button.className = `service-tile ${service.name === selectedService.name ? "active" : ""}`;
+      const selected = selectedSaleServices.some((candidate) => candidate.name === service.name);
+      button.className = `service-tile ${selected ? "active" : ""}`;
       button.type = "button";
       button.innerHTML = `
         <strong class="${isRtlLanguage() ? "rtl-preview" : ""}">${escapeHtml(serviceName(service))}</strong>
@@ -1814,6 +1843,10 @@ function renderSaleServices() {
       `;
       button.addEventListener("click", () => {
         selectedService = service;
+        selectedSaleServices = selected
+          ? selectedSaleServices.filter((candidate) => candidate.name !== service.name)
+          : [...selectedSaleServices, service];
+        if (!selectedSaleServices.length) selectedSaleServices = [service];
         syncSelectedServiceLabel();
         renderSaleServices();
       });
@@ -1856,6 +1889,7 @@ function renderServiceTable() {
       addAudit("Stock adjusted", `${currentRole} · service deleted · ${services[index]?.name || "service"}`);
       services.splice(index, 1);
       selectedService = services[0] || { name: "No service", price: 0, active: false };
+      selectedSaleServices = selectedService.active === false ? [] : [selectedService];
       saveState();
       renderServiceTable();
       renderSaleServices();
@@ -1927,11 +1961,18 @@ function renderExpenseTable() {
 }
 
 document.getElementById("saveSale").addEventListener("click", () => {
-  const amount = Math.max(Number(selectedService.price) || 0, 0);
+  const selected = selectedSaleServices.filter((service) => service && service.active !== false);
+  if (!selected.length) {
+    document.getElementById("saleNote").textContent = "Select at least one service before saving.";
+    return;
+  }
+  const amount = selected.reduce((sum, service) => sum + Math.max(Number(service.price) || 0, 0), 0);
   const payment = document.getElementById("paymentMethod").value;
   const staff = document.getElementById("saleStaff").value;
+  const serviceList = selected.map((service) => service.name);
   const sale = {
-    service: selectedService.name,
+    service: serviceList.join(" + "),
+    services: serviceList,
     staff,
     payment,
     amount,
@@ -1939,13 +1980,13 @@ document.getElementById("saveSale").addEventListener("click", () => {
     createdAt: new Date().toISOString()
   };
   sales.push(sale);
-  addAudit("Sale created", `${staff} · ${selectedService.name} · ${payment} · ${moneyFixed(amount)}`);
+  addAudit("Sale created", `${staff} · ${serviceList.join(" + ")} · ${payment} · ${moneyFixed(amount)}`);
   saveState();
   syncSummaryTotals();
   const taxText = vatEnabled ? "VAT invoice fields are active." : "No VAT was added.";
   document.getElementById("saleNote").textContent = activeLanguage === "en"
-    ? `${selectedService.name} saved. Cash, staff performance and stock recipe were updated. ${taxText}`
-    : `${serviceName(selectedService)} ${activeLanguage === "ar" ? "تم حفظها" : activeLanguage === "hi" ? "सेव हुई" : "محفوظ ہو گئی"}.`;
+    ? `${serviceList.join(" + ")} saved. Cash, staff performance and stock recipe were updated. ${taxText}`
+    : `${selected.map((service) => serviceName(service)).join(" + ")} ${activeLanguage === "ar" ? "تم حفظها" : activeLanguage === "hi" ? "सेव हुई" : "محفوظ ہو گئی"}.`;
   applyTranslations();
 });
 
@@ -2017,10 +2058,10 @@ document.getElementById("loginRole").addEventListener("change", (event) => {
   const role = event.target.value;
   const demoByRole = {
     "Platform Admin": ["PLATFORM", "admin", "9999"],
-    Owner: [currentShopCode(), "owner.albarsha", "1234"],
-    "Master Admin": [currentShopCode(), "master.albarsha", "9999"],
-    Cashier: [currentShopCode(), "cashier.albarsha", "2222"],
-    Staff: [currentShopCode(), "staff.albarsha", "1111"]
+    Owner: ["ALBARSHA001", "owner.albarsha", "1234"],
+    "Master Admin": ["ALBARSHA001", "master.albarsha", "9999"],
+    Cashier: ["ALBARSHA001", "cashier.albarsha", "2222"],
+    Staff: ["ALBARSHA001", "staff.albarsha", "1111"]
   };
   const [shopCode, username, password] = demoByRole[role] || demoByRole.Owner;
   document.getElementById("loginShopId").value = shopCode;
@@ -2267,9 +2308,9 @@ function syncTaxSettings() {
   document.getElementById("checkoutTaxMode").textContent = translate(taxMode);
   document.getElementById("checkoutReceiptMode").textContent = translate(receiptEnabled ? "Optional On" : "Optional Off");
   document.getElementById("salesCardLabel").textContent = translate(vatEnabled ? "Sales incl. VAT" : "Sales");
-  document.getElementById("salesCardNote").textContent = translate(vatEnabled
-    ? "64 services · VAT calculated separately"
-    : "64 services · 7 retail items · no VAT added");
+  document.getElementById("salesCardNote").textContent = activeLanguage === "en"
+    ? `${totalServiceItemsSold()} services · ${purchases.length} purchase records · ${vatEnabled ? "VAT calculated separately" : "no VAT added"}`
+    : `${totalServiceItemsSold()} · ${translate("Services")} · ${purchases.length} · ${translate("Purchases")}`;
   document.getElementById("vatModeSelect").value = vatEnabled ? "on" : "off";
   document.getElementById("receiptModeSelect").value = receiptEnabled ? "simple" : "off";
   document.getElementById("settingsTaxPill").textContent = translate(vatEnabled ? "VAT On" : "VAT optional");

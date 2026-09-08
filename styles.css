@@ -1018,6 +1018,27 @@ select:focus {
   font-size: 18px;
 }
 
+.sale-basket {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.sale-basket span {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  padding: 0 10px;
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: none;
+}
+
 .tax-summary {
   margin: 0 20px 18px;
   display: grid;
