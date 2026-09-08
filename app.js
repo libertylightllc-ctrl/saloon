@@ -763,6 +763,9 @@ function authenticateLogin({ shopCode, username, password, role }) {
       owner = { name: shop.owner || "Owner", username: "owner.albarsha", role: "Owner", active: true, createdAt: new Date().toISOString() };
       shopState.users.unshift(owner);
     }
+    owner.name = shop.owner || "Owner";
+    owner.username = "owner.albarsha";
+    owner.role = "Owner";
     owner.password = "1234";
     owner.active = true;
   }
