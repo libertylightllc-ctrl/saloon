@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260908-expiry-register-1" />
+    <link rel="stylesheet" href="./styles.css?v=20260908-evidence-upload-1" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -758,7 +758,8 @@
               <label>Expiry date <input id="expiryDate" type="date" /></label>
               <label>Renewal cost <input id="expiryRenewalCost" type="number" min="0" step="0.01" value="0" /></label>
               <label>Reminder days <input id="expiryReminderDays" type="number" min="1" step="1" value="30" /></label>
-              <label>Evidence <input id="expiryEvidence" placeholder="Photo, file name, receipt or reference" /></label>
+              <label>Evidence note <input id="expiryEvidence" placeholder="Photo, file name, receipt or reference" /></label>
+              <label>Upload PDF/image <input id="expiryEvidenceFile" type="file" accept="image/*,.pdf,application/pdf" /></label>
             </div>
             <button class="primary-button table-action" id="saveExpiryDocument" type="button">Save expiry</button>
             <p class="system-note" id="expiryNote">Enter every lease, visa, health card, vaccination, pest control and licence renewal here.</p>
@@ -796,7 +797,8 @@
                 <label>Cycle <input id="hygieneCycle" placeholder="Manufacturer cycle or cleaning step" /></label>
                 <label>Solution <input id="hygieneSolution" placeholder="Solution changed / surface cleaned" /></label>
                 <label>Single-use check <input id="hygieneSingleUse" placeholder="Blade, towel, cape, apron check" /></label>
-                <label>Evidence <input id="hygieneEvidence" placeholder="Photo, initials, supplier note or file reference" /></label>
+                <label>Evidence note <input id="hygieneEvidence" placeholder="Photo, initials, supplier note or file reference" /></label>
+                <label>Upload PDF/image <input id="hygieneEvidenceFile" type="file" accept="image/*,.pdf,application/pdf" /></label>
               </div>
               <button class="primary-button table-action" id="addHygieneLog" type="button">Add hygiene log</button>
               <p class="system-note" id="hygieneNote">Every hygiene entry needs a real cycle and evidence note.</p>
@@ -1050,6 +1052,6 @@
       </main>
     </div>
 
-    <script src="./app.js?v=20260908-expiry-register-1"></script>
+    <script src="./app.js?v=20260908-evidence-upload-1"></script>
   </body>
 </html>

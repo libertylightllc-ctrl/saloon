@@ -1152,6 +1152,26 @@ select:focus {
   min-width: 180px;
 }
 
+.inline-file {
+  display: block;
+  max-width: 220px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.evidence-link {
+  display: inline-block;
+  color: var(--green);
+  font-weight: 850;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.evidence-link:hover {
+  text-decoration: underline;
+}
+
 .hygiene-form {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

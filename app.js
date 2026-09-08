@@ -1428,7 +1428,7 @@ function dateLabel(dateString) {
 }
 
 function computedRecordStatus(record) {
-  if (record.evidence && record.signedAt) return "Ready";
+  if ((record.evidence || record.evidenceFile) && record.signedAt) return "Ready";
   const days = daysUntil(record.dueDate);
   if (days < 0) return "Overdue";
   if (days <= 7) return "DueSoon";
@@ -1440,8 +1440,47 @@ function computedExpiryStatus(document) {
   const days = daysUntil(document.expiryDate);
   if (days < 0) return "Expired";
   if (days <= Number(document.reminderDays || 30)) return "DueSoon";
-  if (!document.evidence) return "EvidenceMissing";
+  if (!document.evidence && !document.evidenceFile) return "EvidenceMissing";
   return "Ready";
+}
+
+function fileSizeLabel(bytes = 0) {
+  if (bytes >= 1048576) return `${(bytes / 1048576).toFixed(1)} MB`;
+  if (bytes >= 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${bytes} B`;
+}
+
+function evidenceLabel(record) {
+  if (record.evidenceFile?.name) return `${record.evidenceFile.name} · ${fileSizeLabel(record.evidenceFile.size)}`;
+  return record.evidence || "Pending";
+}
+
+function evidenceMarkup(record) {
+  if (record.evidenceFile?.dataUrl) {
+    return `<a class="evidence-link" href="${record.evidenceFile.dataUrl}" target="_blank" rel="noopener">${escapeHtml(evidenceLabel(record))}</a>`;
+  }
+  return escapeHtml(evidenceLabel(record));
+}
+
+function readEvidenceFile(inputId) {
+  const input = document.getElementById(inputId);
+  const file = input?.files?.[0];
+  if (!file) return Promise.resolve(null);
+  const allowed = file.type.startsWith("image/") || file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+  if (!allowed) return Promise.reject(new Error("Only PDF or image files can be uploaded."));
+  if (file.size > 2 * 1024 * 1024) return Promise.reject(new Error("Upload must be 2 MB or smaller in this MVP."));
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("File upload could not be read."));
+    reader.onload = () => resolve({
+      name: file.name,
+      type: file.type || (file.name.toLowerCase().endsWith(".pdf") ? "application/pdf" : "application/octet-stream"),
+      size: file.size,
+      uploadedAt: new Date().toISOString(),
+      dataUrl: reader.result
+    });
+    reader.readAsDataURL(file);
+  });
 }
 
 function ensureComplianceDocumentsForCountry() {
@@ -1485,7 +1524,11 @@ function renderInspectionRecords() {
       <td>${escapeHtml(translate(record.cadence))}</td>
       <td>${escapeHtml(dateLabel(record.dueDate))}</td>
       <td>${escapeHtml(record.signedBy ? translate(record.signedBy) : translate("Pending"))}</td>
-      <td><input class="inline-evidence" data-evidence-input="${index}" value="${escapeHtml(record.evidence || "")}" placeholder="${escapeHtml(translate("Evidence required"))}" /></td>
+      <td>
+        <input class="inline-evidence" data-evidence-input="${index}" value="${escapeHtml(record.evidence || "")}" placeholder="${escapeHtml(translate("Evidence required"))}" />
+        <input class="inline-file" data-evidence-file="${index}" type="file" accept="image/*,.pdf,application/pdf" />
+        <small>${evidenceMarkup(record)}</small>
+      </td>
       <td><span class="status-pill ${statusClass(status)}">${escapeHtml(translate(status))}</span></td>
       <td><button class="mini-action" data-sign-record="${index}" type="button">${translate("Mark signed")}</button></td>
     `;
@@ -1493,16 +1536,29 @@ function renderInspectionRecords() {
   });
 
   body.querySelectorAll("[data-sign-record]").forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const record = inspectionRecords[Number(button.dataset.signRecord)];
       if (!record) return;
       const evidence = document.querySelector(`[data-evidence-input="${button.dataset.signRecord}"]`)?.value.trim();
-      if (!evidence) {
+      let evidenceFile = null;
+      try {
+        const fileInput = document.querySelector(`[data-evidence-file="${button.dataset.signRecord}"]`);
+        if (fileInput?.files?.[0]) {
+          const syntheticId = `inspectionEvidenceFile${button.dataset.signRecord}`;
+          fileInput.id = syntheticId;
+          evidenceFile = await readEvidenceFile(syntheticId);
+        }
+      } catch (error) {
+        document.getElementById("inspectionNote").textContent = error.message;
+        return;
+      }
+      if (!evidence && !evidenceFile && !record.evidenceFile) {
         document.getElementById("inspectionNote").textContent = translate("Evidence required before signing.");
         return;
       }
       record.signedBy = currentRole;
-      record.evidence = evidence;
+      record.evidence = evidence || record.evidence || evidenceFile?.name || "";
+      if (evidenceFile) record.evidenceFile = evidenceFile;
       record.signedAt = new Date().toISOString();
       addAudit("Stock adjusted", `${currentRole} · inspection signed · ${record.record}`);
       saveState();
@@ -1567,7 +1623,7 @@ function renderExpiryDocuments() {
         <td>${escapeHtml(expiryDocument.number || "Pending")}</td>
         <td>${escapeHtml(dateLabel(expiryDocument.expiryDate))}</td>
         <td>${moneyFixed(expiryDocument.renewalCost || 0)}</td>
-        <td>${escapeHtml(expiryDocument.evidence || "Pending")}</td>
+        <td>${evidenceMarkup(expiryDocument)}</td>
         <td><span class="status-pill ${statusClass(status)}">${escapeHtml(expiryStatusLabel(status))}</span></td>
         <td><button class="mini-action danger" data-delete-expiry="${originalIndex}" type="button">Delete</button></td>
       `;
@@ -1599,7 +1655,7 @@ function renderHygieneLogs() {
       <td>${escapeHtml(translate(log.cycle))}</td>
       <td>${escapeHtml(translate(log.solution || "Pending"))}</td>
       <td>${escapeHtml(translate(log.singleUse))}</td>
-      <td>${escapeHtml(translate(log.evidence || "Pending"))}</td>
+      <td>${evidenceMarkup(log)}</td>
       <td><span class="status-pill ${statusClass(log.status)}">${escapeHtml(translate(log.status))}</span></td>
     `;
     body.appendChild(row);
@@ -2489,7 +2545,7 @@ document.getElementById("approveClosing").addEventListener("click", () => {
   document.getElementById("closingReason").placeholder = translate("Cash closing approved.");
 });
 
-document.getElementById("saveExpiryDocument").addEventListener("click", () => {
+document.getElementById("saveExpiryDocument").addEventListener("click", async () => {
   const type = document.getElementById("expiryType").value;
   const holder = document.getElementById("expiryHolder").value.trim() || "Shop";
   const number = document.getElementById("expiryNumber").value.trim();
@@ -2499,12 +2555,20 @@ document.getElementById("saveExpiryDocument").addEventListener("click", () => {
   const reminderDays = Math.max(Number(document.getElementById("expiryReminderDays").value || 30), 1);
   const evidence = document.getElementById("expiryEvidence").value.trim();
   const note = document.getElementById("expiryNote");
+  let evidenceFile = null;
   if (!type || !expiryDate) {
     note.textContent = "Document type and expiry date are required.";
     return;
   }
+  try {
+    evidenceFile = await readEvidenceFile("expiryEvidenceFile");
+  } catch (error) {
+    note.textContent = error.message;
+    return;
+  }
   const existing = complianceDocuments.find((document) => document.type === type && document.holder.toLowerCase() === holder.toLowerCase());
-  const nextRecord = { type, holder, number, issueDate, expiryDate, renewalCost, reminderDays, evidence };
+  const nextRecord = { type, holder, number, issueDate, expiryDate, renewalCost, reminderDays, evidence: evidence || evidenceFile?.name || existing?.evidence || "" };
+  if (evidenceFile) nextRecord.evidenceFile = evidenceFile;
   if (existing) {
     Object.assign(existing, nextRecord);
   } else {
@@ -2520,9 +2584,10 @@ document.getElementById("saveExpiryDocument").addEventListener("click", () => {
   document.getElementById("expiryRenewalCost").value = "0";
   document.getElementById("expiryReminderDays").value = "30";
   document.getElementById("expiryEvidence").value = "";
+  document.getElementById("expiryEvidenceFile").value = "";
 });
 
-document.getElementById("addHygieneLog").addEventListener("click", () => {
+document.getElementById("addHygieneLog").addEventListener("click", async () => {
   const time = new Intl.DateTimeFormat("en-AE", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
   const device = document.getElementById("hygieneDevice").value.trim();
   const operator = document.getElementById("hygieneOperator").value.trim() || currentRole;
@@ -2530,7 +2595,14 @@ document.getElementById("addHygieneLog").addEventListener("click", () => {
   const solution = document.getElementById("hygieneSolution").value.trim();
   const singleUse = document.getElementById("hygieneSingleUse").value.trim();
   const evidence = document.getElementById("hygieneEvidence").value.trim();
-  if (!device || !cycle || !evidence) {
+  let evidenceFile = null;
+  try {
+    evidenceFile = await readEvidenceFile("hygieneEvidenceFile");
+  } catch (error) {
+    document.getElementById("hygieneNote").textContent = error.message;
+    return;
+  }
+  if (!device || !cycle || (!evidence && !evidenceFile)) {
     document.getElementById("hygieneNote").textContent = translate("Enter device, cycle and evidence before saving.");
     return;
   }
@@ -2541,7 +2613,8 @@ document.getElementById("addHygieneLog").addEventListener("click", () => {
     cycle,
     solution,
     singleUse,
-    evidence,
+    evidence: evidence || evidenceFile?.name || "",
+    evidenceFile,
     status: "Ready"
   });
   hygieneLogs = hygieneLogs.slice(0, 12);
@@ -2549,6 +2622,7 @@ document.getElementById("addHygieneLog").addEventListener("click", () => {
   saveState();
   renderCompliance();
   document.getElementById("hygieneNote").textContent = translate("Hygiene log saved with evidence.");
+  document.getElementById("hygieneEvidenceFile").value = "";
 });
 
 document.querySelectorAll("[data-export]").forEach((button) => {
