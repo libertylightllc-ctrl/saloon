@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260908-accounting-1" />
+    <link rel="stylesheet" href="./styles.css?v=20260908-clients-queue-2" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -123,6 +123,10 @@
           <button class="nav-item" data-view="quick-sale" type="button">
             <span class="nav-icon" data-icon="sale"></span>
             Quick Sale
+          </button>
+          <button class="nav-item" data-view="clients" type="button">
+            <span class="nav-icon" data-icon="dashboard"></span>
+            Clients & Queue
           </button>
           <button class="nav-item" data-view="services" type="button">
             <span class="nav-icon" data-icon="services"></span>
@@ -422,6 +426,10 @@
                 </div>
               </div>
               <label>
+                Customer
+                <select id="saleCustomer"></select>
+              </label>
+              <label>
                 Staff
                 <select id="saleStaff">
                   <option>Rafiq</option>
@@ -453,6 +461,107 @@
               </div>
               <button class="primary-button full" id="saveSale" type="button">Save Sale</button>
               <p class="system-note" id="saleNote">This will update cash expected, staff performance and stock consumption.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="clients">
+          <div class="metric-grid">
+            <article class="metric-card highlight">
+              <span>Waiting now</span>
+              <strong id="queueWaitingCount">0</strong>
+              <small>Walk-ins not yet completed</small>
+            </article>
+            <article class="metric-card">
+              <span>Today appointments</span>
+              <strong id="appointmentTodayCount">0</strong>
+              <small>Booked visits and deposits</small>
+            </article>
+            <article class="metric-card">
+              <span>Customer profiles</span>
+              <strong id="customerProfileCount">0</strong>
+              <small>History, preference and no-show notes</small>
+            </article>
+            <article class="metric-card">
+              <span>Deposits collected</span>
+              <strong id="appointmentDepositTotal">AED 0.00</strong>
+              <small>Applied at checkout later</small>
+            </article>
+          </div>
+
+          <div class="client-layout">
+            <article class="panel form-panel">
+              <div class="panel-head compact">
+                <div>
+                  <h3>Add Customer</h3>
+                  <p>Profile used for queue, bookings and visit history</p>
+                </div>
+              </div>
+              <label>Name <input id="customerName" value="Walk-in Guest" /></label>
+              <label>Phone <input id="customerPhone" placeholder="+971 50 000 0000" /></label>
+              <label>Preference <input id="customerPreference" placeholder="Skin fade, beard line, preferred barber" /></label>
+              <label>Risk note <input id="customerRiskNote" placeholder="No-show, allergy, formula or special care" /></label>
+              <button class="primary-button full" id="saveCustomer" type="button">Save customer</button>
+              <p class="system-note" id="customerNote">Customer can be selected in Quick Sale after saving.</p>
+            </article>
+
+            <article class="panel form-panel">
+              <div class="panel-head compact">
+                <div>
+                  <h3>Add Walk-in / Appointment</h3>
+                  <p>Queue and booking calendar from the same customer list</p>
+                </div>
+              </div>
+              <label>Customer <select id="bookingCustomer"></select></label>
+              <label>Visit type
+                <select id="bookingType">
+                  <option>Walk-in</option>
+                  <option>Appointment</option>
+                </select>
+              </label>
+              <label>Date <input id="bookingDate" type="date" /></label>
+              <label>Time <input id="bookingTime" type="time" /></label>
+              <label>Service <select id="bookingService"></select></label>
+              <label>Staff <input id="bookingStaff" value="Rafiq" /></label>
+              <label>Deposit <input id="bookingDeposit" type="number" min="0" step="0.01" value="0" /></label>
+              <button class="primary-button full" id="saveBooking" type="button">Add to queue</button>
+              <p class="system-note" id="bookingNote">Walk-ins appear immediately; appointments stay scheduled until checked in.</p>
+            </article>
+          </div>
+
+          <div class="client-layout lower">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Live Queue</h3>
+                  <p>Check in, start, complete or mark no-show</p>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Customer</th><th>Service</th><th>Time</th><th>Staff</th><th>Status</th><th>Action</th></tr>
+                  </thead>
+                  <tbody id="queueTable"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Customer Book</h3>
+                  <p>Profiles with last visit, preferences and risk notes</p>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Name</th><th>Phone</th><th>Visits</th><th>Preference</th><th>Risk note</th><th>Action</th></tr>
+                  </thead>
+                  <tbody id="customerTable"></tbody>
+                </table>
+              </div>
             </article>
           </div>
         </section>
@@ -1205,6 +1314,6 @@
       </main>
     </div>
 
-    <script src="./app.js?v=20260908-accounting-1"></script>
+    <script src="./app.js?v=20260908-clients-queue-2"></script>
   </body>
 </html>

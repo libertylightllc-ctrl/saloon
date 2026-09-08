@@ -994,6 +994,16 @@ body.is-authenticated .app-shell {
   gap: 18px;
 }
 
+.client-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.client-layout.lower {
+  margin-top: 18px;
+}
+
 .accounting-trial-panel {
   margin-top: 18px;
 }
@@ -2522,6 +2532,7 @@ th {
   }
 
   .accounting-layout,
+  .client-layout,
   .audit-layout,
   #master-admin .split-layout {
     grid-template-columns: 1fr;

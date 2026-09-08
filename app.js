@@ -58,9 +58,9 @@ const rolePins = {
 };
 
 const roleAccess = {
-  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
-  "Master Admin": ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
-  Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
+  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
+  "Master Admin": ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
+  Owner: ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
   Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
   Staff: ["quick-sale", "services"]
 };
@@ -70,6 +70,7 @@ const viewLabels = {
   dashboard: "Dashboard",
   setup: "Setup",
   "quick-sale": "Quick Sale",
+  clients: "Clients & Queue",
   services: "Services",
   purchases: "Purchases",
   expenses: "Expenses",
@@ -111,7 +112,7 @@ const launchAuditItems = [
   { id: "backend", area: "Backend", title: "Database, APIs and cloud persistence", priority: "P0", launchRequired: true, marketReason: "Active users need data available across devices and protected from browser clearing.", test: () => false, next: "Add Supabase/Firebase/Postgres backend with migrations and APIs." },
   { id: "files", area: "Storage", title: "Production file storage and backups", priority: "P0", launchRequired: true, marketReason: "PDFs and images must be backed up, previewable and recoverable.", test: () => false, next: "Add object storage, malware checks, size limits, retention and restore." },
   { id: "security", area: "Security", title: "Secure auth, password reset and audit logs", priority: "P0", launchRequired: true, marketReason: "Demo passwords are not acceptable for paying users.", test: () => false, next: "Hash passwords, add sessions, MFA option, lockout and login history." },
-  { id: "customers", area: "CRM", title: "Customers, appointments and walk-in queue", priority: "P1", launchRequired: true, marketReason: "Professional salon systems include booking, queue, customer history and reminders.", test: () => false, next: "Build queue/calendar, customer profiles, deposits and no-show tracking." },
+  { id: "customers", area: "CRM", title: "Customers, appointments and walk-in queue", priority: "P1", launchRequired: true, marketReason: "Professional salon systems include booking, queue, customer history and reminders.", test: () => !!document.getElementById("customerTable") && !!document.getElementById("queueTable") && customers.length > 0, next: "Add online booking links, SMS/WhatsApp reminders and deposit redemption." },
   { id: "payroll", area: "Staff", title: "Attendance, salary, commission and WPS", priority: "P1", launchRequired: true, marketReason: "Owners need accurate barber payout and payroll control.", test: () => Array.isArray(staffPayments) && staffPayments.length > 0, next: "Add attendance, leave, advances, deductions and commission rules." },
   { id: "exports", area: "Data Output", title: "CSV, PDF and accounting export", priority: "P1", launchRequired: true, marketReason: "A real shop must send data to owner, accountant and auditor.", test: () => typeof downloadDataExport === "function" && !!document.querySelector('[data-export="backup"]'), next: "Add scheduled monthly packs and backend-stored export history." },
   { id: "qa", area: "QA", title: "Desktop and mobile browser QA", priority: "P0", launchRequired: true, marketReason: "No buttons should disappear and every save path must be tested before handoff.", test: () => window.innerWidth > 0 && !!document.getElementById("mobileViewSwitcher"), next: "Add automated browser smoke tests for each role and viewport." }
@@ -591,6 +592,16 @@ const defaultState = {
   vatEnabled: false,
   openingCash: 200,
   sales: [],
+  customers: [
+    { id: "walk-in-guest", name: "Walk-in Guest", phone: "", preference: "No saved preference", riskNote: "", visits: 0, noShows: 0, lastVisit: "" },
+    { id: "ali-khan", name: "Ali Khan", phone: "+971 50 000 0000", preference: "Skin fade with beard line", riskNote: "Prefers Rafiq", visits: 3, noShows: 0, lastVisit: isoOffset(-10) },
+    { id: "omar-saeed", name: "Omar Saeed", phone: "+971 55 111 2222", preference: "Hair color touch-up", riskNote: "Patch test before color", visits: 1, noShows: 1, lastVisit: isoOffset(-32) }
+  ],
+  queueTickets: [
+    { id: "q-1001", customerId: "ali-khan", service: "Haircut", staff: "Rafiq", type: "Walk-in", date: isoOffset(0), time: "10:15", deposit: 0, status: "Waiting", createdAt: new Date().toISOString() },
+    { id: "q-1002", customerId: "omar-saeed", service: "Beard Color", staff: "Sameer", type: "Appointment", date: isoOffset(0), time: "11:30", deposit: 20, status: "Booked", createdAt: new Date().toISOString() }
+  ],
+  appointments: [],
   auditLog: [],
   cashClosings: [],
   staffPayments: [
@@ -637,6 +648,9 @@ const shopStateFields = [
   "vatEnabled",
   "openingCash",
   "sales",
+  "customers",
+  "queueTickets",
+  "appointments",
   "auditLog",
   "cashClosings",
   "staffPayments",
@@ -705,6 +719,9 @@ let vatEnabled = activeShopState.vatEnabled;
 let openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
 let activeLanguage = state.activeLanguage || "en";
 let sales = activeShopState.sales || [];
+let customers = activeShopState.customers?.length ? activeShopState.customers : clone(defaultState.customers);
+let queueTickets = activeShopState.queueTickets || clone(defaultState.queueTickets);
+let appointments = activeShopState.appointments || [];
 let auditLog = activeShopState.auditLog || [];
 let cashClosings = activeShopState.cashClosings || [];
 let staffPayments = activeShopState.staffPayments || defaultState.staffPayments;
@@ -764,6 +781,9 @@ function captureActiveShopState() {
     vatEnabled,
     openingCash,
     sales,
+    customers,
+    queueTickets,
+    appointments,
     auditLog,
     cashClosings,
     staffPayments,
@@ -789,6 +809,9 @@ function hydrateActiveShop() {
   vatEnabled = !!activeShopState.vatEnabled;
   openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
   sales = activeShopState.sales || [];
+  customers = activeShopState.customers?.length ? activeShopState.customers : clone(defaultState.customers);
+  queueTickets = activeShopState.queueTickets || clone(defaultState.queueTickets);
+  appointments = activeShopState.appointments || [];
   auditLog = activeShopState.auditLog || [];
   cashClosings = activeShopState.cashClosings || [];
   staffPayments = activeShopState.staffPayments || clone(defaultState.staffPayments);
@@ -837,6 +860,29 @@ function uniqueUsername(base, shopId = activeShopId) {
     count += 1;
   }
   return username;
+}
+
+function uniqueCustomerId(name) {
+  const base = slugify(name || "customer");
+  let id = base;
+  let count = 2;
+  while (customers.some((customer) => customer.id === id)) {
+    id = `${base}-${count}`;
+    count += 1;
+  }
+  return id;
+}
+
+function customerById(id) {
+  return customers.find((customer) => customer.id === id) || customers[0] || { id: "walk-in-guest", name: "Walk-in Guest" };
+}
+
+function selectedCustomer() {
+  return customerById(document.getElementById("saleCustomer")?.value);
+}
+
+function todayIso() {
+  return new Date().toISOString().slice(0, 10);
 }
 
 function authenticateLogin({ shopCode, username, password, role }) {
@@ -943,6 +989,9 @@ function saveState() {
     purchases,
     expenses,
     sales,
+    customers,
+    queueTickets,
+    appointments,
     auditLog,
     checklist,
     receiptEnabled,
@@ -976,6 +1025,7 @@ const titles = {
   dashboard: "Daily Control Dashboard",
   setup: "Launch Setup",
   "quick-sale": "Quick Sale",
+  clients: "Clients & Queue",
   services: "Editable Service Catalog",
   purchases: "Purchases",
   expenses: "Expenses",
@@ -1045,6 +1095,7 @@ function showView(viewId) {
   document.getElementById(viewId).classList.add("active");
   document.querySelector(`[data-view="${viewId}"]`)?.classList.add("active");
   syncMobileViewSwitcher();
+  if (viewId === "clients") renderClientsQueue();
   if (viewId === "accounting") renderAccounting();
   if (viewId === "launch-audit") renderLaunchAudit();
   document.getElementById("viewTitle").textContent = translate(titles[viewId] || "Salon Control");
@@ -1074,6 +1125,8 @@ document.getElementById("createShopBtn")?.addEventListener("click", createShopFr
 document.getElementById("createUserBtn")?.addEventListener("click", createUserFromForm);
 document.getElementById("shopSearch")?.addEventListener("input", renderMasterDashboard);
 document.getElementById("shopStatusFilter")?.addEventListener("change", renderMasterDashboard);
+document.getElementById("saveCustomer")?.addEventListener("click", saveCustomerFromForm);
+document.getElementById("saveBooking")?.addEventListener("click", saveBookingFromForm);
 document.getElementById("runLaunchAudit")?.addEventListener("click", () => {
   renderLaunchAudit();
   addAudit("Stock adjusted", `${currentRole} · launch audit checked · ${new Date().toLocaleTimeString("en-AE", { hour: "2-digit", minute: "2-digit" })}`);
@@ -1130,7 +1183,7 @@ function accountingExportRows() {
   sales.forEach((sale) => rows.push([
     sale.createdAt || "",
     "Sale",
-    sale.service || (sale.services || []).join(" + "),
+    `${sale.customerName || "Walk-in"} · ${sale.service || (sale.services || []).join(" + ")}`,
     sale.payment || "",
     "",
     Number(sale.amount || 0).toFixed(2),
@@ -1555,7 +1608,7 @@ function journalEntries() {
   sales.forEach((sale) => {
     const amount = Number(sale.amount) || 0;
     const date = sale.createdAt || "";
-    const description = `${sale.service || (sale.services || []).join(" + ")} · ${sale.staff || "Staff"}`;
+    const description = `${sale.customerName || "Walk-in"} · ${sale.service || (sale.services || []).join(" + ")} · ${sale.staff || "Staff"}`;
     entries.push(journalLine(date, paymentAccount(sale.payment), description, amount, 0, "sale"));
     entries.push(journalLine(date, "4000 Service revenue", description, 0, amount, "sale"));
     const commission = amount * 0.12;
@@ -1615,6 +1668,7 @@ function syncSummaryTotals() {
   document.getElementById("reportExpenses").textContent = expenseText;
   syncDashboardTotals();
   syncReportTotals();
+  renderClientsQueue();
   renderAccounting();
   renderLaunchAudit();
   updateClosingCalculation();
@@ -1997,6 +2051,7 @@ function applySelectedCountryProfile() {
   renderExpenseTable();
   renderServiceTable();
   renderSaleServices();
+  renderClientsQueue();
   syncSelectedServiceLabel();
   renderCompliance();
   syncSummaryTotals();
@@ -2265,6 +2320,7 @@ function switchShop(shopId) {
   migrateServices();
   document.getElementById("closingOpeningCash").value = openingCash.toFixed(2);
   renderSaleServices();
+  renderClientsQueue();
   renderServiceTable();
   renderPurchaseTable();
   renderExpenseTable();
@@ -2637,6 +2693,194 @@ function renderPurchaseTable() {
   });
 }
 
+function renderCustomerSelects() {
+  const customerOptions = customers.map((customer) => `<option value="${escapeHtml(customer.id)}">${escapeHtml(customer.name)}${customer.phone ? ` · ${escapeHtml(customer.phone)}` : ""}</option>`).join("");
+  ["saleCustomer", "bookingCustomer"].forEach((id) => {
+    const select = document.getElementById(id);
+    if (!select) return;
+    const currentValue = select.value;
+    select.innerHTML = customerOptions;
+    if ([...select.options].some((option) => option.value === currentValue)) select.value = currentValue;
+  });
+  const serviceSelect = document.getElementById("bookingService");
+  if (serviceSelect) {
+    const currentValue = serviceSelect.value;
+    serviceSelect.innerHTML = services
+      .filter((service) => service.active)
+      .map((service) => `<option>${escapeHtml(service.name)}</option>`)
+      .join("");
+    if ([...serviceSelect.options].some((option) => option.value === currentValue)) serviceSelect.value = currentValue;
+  }
+  const dateInput = document.getElementById("bookingDate");
+  if (dateInput && !dateInput.value) dateInput.value = todayIso();
+}
+
+function renderClientMetrics() {
+  const today = todayIso();
+  const waiting = queueTickets.filter((ticket) => ["Waiting", "Booked", "In chair"].includes(ticket.status)).length;
+  const todaysAppointments = queueTickets.filter((ticket) => ticket.type === "Appointment" && ticket.date === today).length;
+  const deposits = queueTickets.reduce((sum, ticket) => sum + (Number(ticket.deposit) || 0), 0);
+  document.getElementById("queueWaitingCount").textContent = String(waiting);
+  document.getElementById("appointmentTodayCount").textContent = String(todaysAppointments);
+  document.getElementById("customerProfileCount").textContent = String(customers.length);
+  document.getElementById("appointmentDepositTotal").textContent = moneyFixed(deposits);
+}
+
+function renderCustomerTable() {
+  const body = document.getElementById("customerTable");
+  if (!body) return;
+  body.innerHTML = "";
+  customers.forEach((customer) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><strong>${escapeHtml(customer.name)}</strong><br><small>${escapeHtml(customer.lastVisit ? `Last ${dateLabel(customer.lastVisit)}` : "No visit yet")}</small></td>
+      <td>${escapeHtml(customer.phone || "-")}</td>
+      <td>${escapeHtml(customer.visits || 0)}${customer.noShows ? `<br><small>${escapeHtml(customer.noShows)} no-show</small>` : ""}</td>
+      <td>${escapeHtml(customer.preference || "-")}</td>
+      <td>${escapeHtml(customer.riskNote || "-")}</td>
+      <td><button class="mini-action" data-select-customer="${escapeHtml(customer.id)}" type="button">Use</button></td>
+    `;
+    body.appendChild(row);
+  });
+  body.querySelectorAll("[data-select-customer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.getElementById("saleCustomer").value = button.dataset.selectCustomer;
+      showView("quick-sale");
+    });
+  });
+}
+
+function queueStatusAction(status) {
+  if (status === "Booked") return "Check in";
+  if (status === "Waiting") return "Start";
+  if (status === "In chair") return "Complete";
+  return "Archive";
+}
+
+function nextQueueStatus(status) {
+  if (status === "Booked") return "Waiting";
+  if (status === "Waiting") return "In chair";
+  if (status === "In chair") return "Completed";
+  return "Archived";
+}
+
+function renderQueueTable() {
+  const body = document.getElementById("queueTable");
+  if (!body) return;
+  body.innerHTML = "";
+  queueTickets
+    .filter((ticket) => ticket.status !== "Archived")
+    .forEach((ticket) => {
+      const customer = customerById(ticket.customerId);
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td><strong>${escapeHtml(customer.name)}</strong><br><small>${escapeHtml(ticket.type)}${ticket.deposit ? ` · ${moneyFixed(ticket.deposit)} deposit` : ""}</small></td>
+        <td>${escapeHtml(ticket.service)}</td>
+        <td>${escapeHtml(ticket.date)} · ${escapeHtml(ticket.time || "Now")}</td>
+        <td>${escapeHtml(ticket.staff || "-")}</td>
+        <td><span class="status-pill ${ticket.status === "Completed" ? "ok" : ticket.status === "No-show" ? "danger" : "warning"}">${escapeHtml(ticket.status)}</span></td>
+        <td>
+          <div class="action-cluster">
+            <button class="mini-action" data-queue-next="${escapeHtml(ticket.id)}" type="button">${queueStatusAction(ticket.status)}</button>
+            <button class="danger-button" data-queue-noshow="${escapeHtml(ticket.id)}" type="button">No-show</button>
+          </div>
+        </td>
+      `;
+      body.appendChild(row);
+  });
+  body.querySelectorAll("[data-queue-next]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const ticket = queueTickets.find((item) => item.id === button.dataset.queueNext);
+      updateQueueStatus(button.dataset.queueNext, nextQueueStatus(ticket?.status));
+    });
+  });
+  body.querySelectorAll("[data-queue-noshow]").forEach((button) => {
+    button.addEventListener("click", () => updateQueueStatus(button.dataset.queueNoshow, "No-show"));
+  });
+}
+
+function renderClientsQueue() {
+  renderCustomerSelects();
+  renderClientMetrics();
+  renderQueueTable();
+  renderCustomerTable();
+  applyTranslations();
+}
+
+function saveCustomerFromForm() {
+  const name = document.getElementById("customerName").value.trim();
+  const phone = document.getElementById("customerPhone").value.trim();
+  const preference = document.getElementById("customerPreference").value.trim();
+  const riskNote = document.getElementById("customerRiskNote").value.trim();
+  const note = document.getElementById("customerNote");
+  if (!name) {
+    note.textContent = "Customer name is required.";
+    document.getElementById("customerName").focus();
+    return;
+  }
+  const existing = customers.find((customer) => customer.phone && phone && customer.phone === phone);
+  if (existing) {
+    Object.assign(existing, { name, phone, preference, riskNote });
+    note.textContent = `${name} profile updated.`;
+  } else {
+    customers.push({ id: uniqueCustomerId(name), name, phone, preference, riskNote, visits: 0, noShows: 0, lastVisit: "" });
+    note.textContent = `${name} saved and available in Quick Sale.`;
+  }
+  document.getElementById("customerName").value = "Walk-in Guest";
+  document.getElementById("customerPhone").value = "";
+  document.getElementById("customerPreference").value = "";
+  document.getElementById("customerRiskNote").value = "";
+  addAudit("Stock adjusted", `${currentRole} · customer saved · ${name}`);
+  saveState();
+  renderClientsQueue();
+}
+
+function saveBookingFromForm() {
+  const customerId = document.getElementById("bookingCustomer").value;
+  const type = document.getElementById("bookingType").value;
+  const service = document.getElementById("bookingService").value;
+  const staff = document.getElementById("bookingStaff").value.trim() || "Any staff";
+  const date = document.getElementById("bookingDate").value || todayIso();
+  const time = document.getElementById("bookingTime").value || new Intl.DateTimeFormat("en-AE", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
+  const deposit = numberValue("bookingDeposit");
+  const customer = customerById(customerId);
+  queueTickets.push({
+    id: `q-${Date.now()}`,
+    customerId,
+    service,
+    staff,
+    type,
+    date,
+    time,
+    deposit,
+    status: type === "Appointment" ? "Booked" : "Waiting",
+    createdAt: new Date().toISOString()
+  });
+  if (type === "Appointment") appointments.push({ customerId, service, staff, date, time, deposit, status: "Booked" });
+  document.getElementById("bookingNote").textContent = `${customer.name} added as ${type.toLowerCase()} for ${service}.`;
+  addAudit("Stock adjusted", `${currentRole} · ${type.toLowerCase()} added · ${customer.name} · ${service}`);
+  saveState();
+  renderClientsQueue();
+  renderLaunchAudit();
+}
+
+function updateQueueStatus(ticketId, status) {
+  const ticket = queueTickets.find((item) => item.id === ticketId);
+  if (!ticket) return;
+  ticket.status = status;
+  const customer = customerById(ticket.customerId);
+  if (status === "Completed") {
+    customer.visits = Number(customer.visits || 0) + 1;
+    customer.lastVisit = todayIso();
+  }
+  if (status === "No-show") {
+    customer.noShows = Number(customer.noShows || 0) + 1;
+  }
+  addAudit("Stock adjusted", `${currentRole} · queue ${status.toLowerCase()} · ${customer.name}`);
+  saveState();
+  renderClientsQueue();
+}
+
 function renderExpenseTable() {
   const body = document.getElementById("expenseTable");
   body.innerHTML = "";
@@ -2677,10 +2921,13 @@ document.getElementById("saveSale").addEventListener("click", () => {
   const amount = selected.reduce((sum, service) => sum + Math.max(Number(service.price) || 0, 0), 0);
   const payment = document.getElementById("paymentMethod").value;
   const staff = document.getElementById("saleStaff").value;
+  const customer = selectedCustomer();
   const serviceList = selected.map((service) => service.name);
   const sale = {
     service: serviceList.join(" + "),
     services: serviceList,
+    customerId: customer.id,
+    customerName: customer.name,
     staff,
     payment,
     amount,
@@ -2688,7 +2935,11 @@ document.getElementById("saveSale").addEventListener("click", () => {
     createdAt: new Date().toISOString()
   };
   sales.push(sale);
-  addAudit("Sale created", `${staff} · ${serviceList.join(" + ")} · ${payment} · ${moneyFixed(amount)}`);
+  if (customer?.id && customer.id !== "walk-in-guest") {
+    customer.visits = Number(customer.visits || 0) + 1;
+    customer.lastVisit = todayIso();
+  }
+  addAudit("Sale created", `${customer.name} · ${staff} · ${serviceList.join(" + ")} · ${payment} · ${moneyFixed(amount)}`);
   saveState();
   syncSummaryTotals();
   const taxText = vatEnabled ? "VAT invoice fields are active." : "No VAT was added.";
@@ -3093,6 +3344,7 @@ removeLegacyDemoRows();
 document.getElementById("closingOpeningCash").value = openingCash.toFixed(2);
 saveState();
 renderSaleServices();
+renderClientsQueue();
 renderServiceTable();
 renderPurchaseTable();
 renderExpenseTable();
