@@ -58,9 +58,9 @@ const rolePins = {
 };
 
 const roleAccess = {
-  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
-  "Master Admin": ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
-  Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "settings"],
+  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "launch-audit", "settings"],
+  "Master Admin": ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "launch-audit", "settings"],
+  Owner: ["dashboard", "setup", "quick-sale", "services", "purchases", "expenses", "inventory", "compliance", "cash", "reports", "launch-audit", "settings"],
   Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
   Staff: ["quick-sale", "services"]
 };
@@ -77,8 +77,39 @@ const viewLabels = {
   compliance: "Compliance",
   cash: "Cash Closing",
   reports: "Reports",
+  "launch-audit": "Launch Audit",
   settings: "Settings"
 };
+
+const launchAuditItems = [
+  { id: "marketing", area: "Front Door", title: "Marketing site and premium login", priority: "P1", launchRequired: true, marketReason: "A new shop must understand the offer before login.", test: () => !!document.getElementById("frontpage") && !!document.getElementById("loginForm"), next: "Keep brand, app and login design consistent." },
+  { id: "roles", area: "Access", title: "Role-based navigation", priority: "P0", launchRequired: true, marketReason: "Owner, cashier and staff must only see their own tools.", test: () => currentRole === "Platform Admin" || !roleAccess[currentRole]?.includes("master-admin"), next: "Move permissions to backend and add per-action rules." },
+  { id: "shops", area: "Platform Admin", title: "Create, suspend, restore and delete shops", priority: "P0", launchRequired: true, marketReason: "The platform admin must provision every branch and hand over credentials.", test: () => shops.length > 0 && !!document.getElementById("createShopBtn") && !!document.getElementById("masterShopTable"), next: "Persist shops on server with tenant isolation." },
+  { id: "sales", area: "POS", title: "Quick sale with multiple services", priority: "P0", launchRequired: true, marketReason: "Barber checkout must handle haircut plus beard plus facial in one ticket.", test: () => services.filter((service) => service.active).length >= 5 && !!document.getElementById("saleServices"), next: "Add customer, discount, tip and refund controls." },
+  { id: "purchases", area: "Purchasing", title: "Purchases with qty, unit cost and total", priority: "P0", launchRequired: true, marketReason: "Supplier bills must update stock and cash/bank outflow.", test: () => !!document.getElementById("purchaseQty") && !!document.getElementById("purchaseUnitCost") && !!document.getElementById("calcPurchaseTotal"), next: "Add suppliers, invoice files, payables and receiving workflow." },
+  { id: "expenses", area: "Expenses", title: "Cash expenses and shop running costs", priority: "P0", launchRequired: true, marketReason: "Tea, food, laundry, cleaning and repair must affect cash closing.", test: () => !!document.getElementById("expenseCategory") && !!document.getElementById("saveExpense"), next: "Add recurring expenses, approvals and receipt uploads." },
+  { id: "inventory", area: "Stock", title: "Consumables and reusable tools", priority: "P0", launchRequired: true, marketReason: "Blades, foam, oil, color and tools must be controlled separately.", test: () => !!document.getElementById("stockList") || !!document.getElementById("inventory"), next: "Add stock counts, batches, expiry, transfers and tool maintenance." },
+  { id: "compliance", area: "Compliance", title: "Expiry register and photo/PDF evidence", priority: "P0", launchRequired: true, marketReason: "Lease, visa, pest control and health files need reminders and proof.", test: () => !!document.getElementById("expiryEvidenceFile") && !!document.getElementById("hygieneEvidenceFile"), next: "Store files in cloud storage and add renewal workflow." },
+  { id: "country", area: "GCC", title: "Country profile, currency and VAT mode", priority: "P0", launchRequired: true, marketReason: "UAE, Qatar, Saudi, Kuwait, Bahrain and Oman need different currency and tax defaults.", test: () => !!countryProfiles.AE && !!countryProfiles.QA && !!countryProfiles.SA && !!document.getElementById("countrySelect"), next: "Add official rule packs and per-country compliance templates." },
+  { id: "reports", area: "Reporting", title: "Daily close and owner reports", priority: "P0", launchRequired: true, marketReason: "Owners need cash, purchases, expenses, commission and shortage output.", test: () => !!document.getElementById("reportOutputTable") && !!document.getElementById("approveClosing"), next: "Add accountant exports and immutable close periods." },
+  { id: "accounting", area: "Accounting", title: "Real accounting ledger", priority: "P0", launchRequired: true, marketReason: "A market product cannot rely on dashboard totals only.", test: () => false, next: "Build chart of accounts, journals, ledgers, supplier balances and owner drawings." },
+  { id: "backend", area: "Backend", title: "Database, APIs and cloud persistence", priority: "P0", launchRequired: true, marketReason: "Active users need data available across devices and protected from browser clearing.", test: () => false, next: "Add Supabase/Firebase/Postgres backend with migrations and APIs." },
+  { id: "files", area: "Storage", title: "Production file storage and backups", priority: "P0", launchRequired: true, marketReason: "PDFs and images must be backed up, previewable and recoverable.", test: () => false, next: "Add object storage, malware checks, size limits, retention and restore." },
+  { id: "security", area: "Security", title: "Secure auth, password reset and audit logs", priority: "P0", launchRequired: true, marketReason: "Demo passwords are not acceptable for paying users.", test: () => false, next: "Hash passwords, add sessions, MFA option, lockout and login history." },
+  { id: "customers", area: "CRM", title: "Customers, appointments and walk-in queue", priority: "P1", launchRequired: true, marketReason: "Professional salon systems include booking, queue, customer history and reminders.", test: () => false, next: "Build queue/calendar, customer profiles, deposits and no-show tracking." },
+  { id: "payroll", area: "Staff", title: "Attendance, salary, commission and WPS", priority: "P1", launchRequired: true, marketReason: "Owners need accurate barber payout and payroll control.", test: () => Array.isArray(staffPayments) && staffPayments.length > 0, next: "Add attendance, leave, advances, deductions and commission rules." },
+  { id: "exports", area: "Data Output", title: "CSV, PDF and accounting export", priority: "P1", launchRequired: true, marketReason: "A real shop must send data to owner, accountant and auditor.", test: () => typeof downloadDataExport === "function" && !!document.querySelector('[data-export="backup"]'), next: "Add scheduled monthly packs and backend-stored export history." },
+  { id: "qa", area: "QA", title: "Desktop and mobile browser QA", priority: "P0", launchRequired: true, marketReason: "No buttons should disappear and every save path must be tested before handoff.", test: () => window.innerWidth > 0 && !!document.getElementById("mobileViewSwitcher"), next: "Add automated browser smoke tests for each role and viewport." }
+];
+
+const productionRequirements = [
+  ["Backend", "Database tables for shops, users, roles, sales, purchases, expenses, stock, documents and files."],
+  ["Accounting", "Chart of accounts, journals, ledgers, closing periods, supplier balances and owner drawings."],
+  ["Security", "Hashed passwords, sessions, password reset, lockout, audit history and tenant isolation."],
+  ["Backups", "Daily backups, point-in-time restore, export pack and file retention policy."],
+  ["Compliance", "Country rule packs for GCC currencies, VAT defaults, licences, health cards and renewals."],
+  ["Operations", "Customers, appointments, walk-in queue, staff attendance, payroll and commission workflow."]
+];
 
 const serviceTranslations = {
   Haircut: { ar: "قص شعر", hi: "हेयरकट", ur: "بال کٹوانا" },
@@ -937,6 +968,7 @@ const titles = {
   compliance: "Compliance Control",
   cash: "Cash Closing",
   reports: "Reports",
+  "launch-audit": "Launch Audit",
   settings: "Settings"
 };
 
@@ -997,6 +1029,7 @@ function showView(viewId) {
   document.getElementById(viewId).classList.add("active");
   document.querySelector(`[data-view="${viewId}"]`)?.classList.add("active");
   syncMobileViewSwitcher();
+  if (viewId === "launch-audit") renderLaunchAudit();
   document.getElementById("viewTitle").textContent = translate(titles[viewId] || "Salon Control");
   applyTranslations();
 }
@@ -1024,6 +1057,10 @@ document.getElementById("createShopBtn")?.addEventListener("click", createShopFr
 document.getElementById("createUserBtn")?.addEventListener("click", createUserFromForm);
 document.getElementById("shopSearch")?.addEventListener("input", renderMasterDashboard);
 document.getElementById("shopStatusFilter")?.addEventListener("change", renderMasterDashboard);
+document.getElementById("runLaunchAudit")?.addEventListener("click", () => {
+  renderLaunchAudit();
+  addAudit("Stock adjusted", `${currentRole} · launch audit checked · ${new Date().toLocaleTimeString("en-AE", { hour: "2-digit", minute: "2-digit" })}`);
+});
 
 function money(amount, shop = currentShop()) {
   const profile = currentCountryProfile(shop);
@@ -1041,6 +1078,150 @@ function escapeHtml(value) {
     "\"": "&quot;",
     "'": "&#39;"
   }[char]));
+}
+
+function csvCell(value) {
+  const text = String(value ?? "");
+  return /[",\n]/.test(text) ? `"${text.replaceAll("\"", "\"\"")}"` : text;
+}
+
+function csvRows(rows) {
+  return rows.map((row) => row.map(csvCell).join(",")).join("\n");
+}
+
+function downloadTextFile(filename, content, type = "text/plain") {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function exportFilePrefix(kind) {
+  const shop = currentShop();
+  const code = shop?.shopCode || shop?.id || "shop";
+  const date = new Date().toISOString().slice(0, 10);
+  return `salon-control-${code}-${kind}-${date}`.toLowerCase();
+}
+
+function accountingExportRows() {
+  const rows = [["Date", "Module", "Description", "Payment", "Debit", "Credit", "Staff", "Reference"]];
+  sales.forEach((sale) => rows.push([
+    sale.createdAt || "",
+    "Sale",
+    sale.service || (sale.services || []).join(" + "),
+    sale.payment || "",
+    "",
+    Number(sale.amount || 0).toFixed(2),
+    sale.staff || "",
+    sale.id || ""
+  ]));
+  purchases.forEach((purchase) => rows.push([
+    purchase.createdAt || "",
+    "Purchase",
+    `${purchase.supplier || "Supplier"} · ${purchase.item || "Item"} · ${purchase.qty || 0} ${purchase.unit || ""}`.trim(),
+    purchase.payment || "",
+    purchaseTotal(purchase).toFixed(2),
+    "",
+    "",
+    purchase.type || ""
+  ]));
+  expenses.forEach((expense) => rows.push([
+    expense.createdAt || "",
+    "Expense",
+    `${expense.category || "Expense"} · ${expense.note || ""}`.trim(),
+    expense.payment || "",
+    Number(expense.amount || 0).toFixed(2),
+    "",
+    "",
+    ""
+  ]));
+  cashClosings.forEach((closing) => rows.push([
+    closing.createdAt || "",
+    "Cash closing",
+    closing.reason || "Daily close",
+    "Cash",
+    Number(closing.difference < 0 ? Math.abs(closing.difference) : 0).toFixed(2),
+    Number(closing.difference > 0 ? closing.difference : 0).toFixed(2),
+    closing.approvedBy || "",
+    "closing"
+  ]));
+  return rows;
+}
+
+function stockMovementRows() {
+  const rows = [["Date", "Type", "Item", "Qty", "Unit", "Unit cost", "Total", "Payment"]];
+  purchases.forEach((purchase) => rows.push([
+    purchase.createdAt || "",
+    purchase.type || "Purchase",
+    purchase.item || "",
+    purchase.qty || 0,
+    purchase.unit || "",
+    Number(purchase.unitCost || 0).toFixed(2),
+    purchaseTotal(purchase).toFixed(2),
+    purchase.payment || ""
+  ]));
+  sales.forEach((sale) => {
+    (sale.services || [sale.service]).forEach((service) => rows.push([
+      sale.createdAt || "",
+      "Service recipe",
+      service || "",
+      -1,
+      "service",
+      "",
+      "",
+      sale.payment || ""
+    ]));
+  });
+  return rows;
+}
+
+function shortageRows() {
+  const rows = [["Date", "Expected cash", "Actual cash", "Difference", "Reason", "Approved by"]];
+  cashClosings.forEach((closing) => rows.push([
+    closing.createdAt || "",
+    Number(closing.expected || 0).toFixed(2),
+    Number(closing.actual || 0).toFixed(2),
+    Number(closing.difference || 0).toFixed(2),
+    closing.reason || "",
+    closing.approvedBy || ""
+  ]));
+  return rows;
+}
+
+function downloadDataExport(kind) {
+  captureActiveShopState();
+  if (kind === "daily") {
+    window.print();
+    return "Daily report opened for PDF save.";
+  }
+  if (kind === "backup") {
+    const backup = {
+      exportedAt: new Date().toISOString(),
+      activeShopId,
+      shops,
+      shopStates,
+      currentShop: currentShop()
+    };
+    downloadTextFile(`${exportFilePrefix("backup")}.json`, JSON.stringify(backup, null, 2), "application/json");
+    return "Full JSON backup downloaded.";
+  }
+  const rowsByKind = {
+    csv: accountingExportRows(),
+    stock: stockMovementRows(),
+    shortage: shortageRows()
+  };
+  const labels = {
+    csv: "Accounting CSV downloaded.",
+    stock: "Stock movement CSV downloaded.",
+    shortage: "Cash shortage CSV downloaded."
+  };
+  downloadTextFile(`${exportFilePrefix(kind)}.csv`, csvRows(rowsByKind[kind] || accountingExportRows()), "text/csv");
+  return labels[kind] || "Export downloaded.";
 }
 
 function numberValue(id) {
@@ -1345,6 +1526,7 @@ function syncSummaryTotals() {
   document.getElementById("reportExpenses").textContent = expenseText;
   syncDashboardTotals();
   syncReportTotals();
+  renderLaunchAudit();
   updateClosingCalculation();
 }
 
@@ -1809,6 +1991,83 @@ function renderReportOutput() {
       <td>${escapeHtml(translate(action))}</td>
     `;
     body.appendChild(row);
+  });
+}
+
+function launchAuditSnapshot() {
+  return launchAuditItems.map((item) => {
+    let passed = false;
+    try {
+      passed = Boolean(item.test());
+    } catch {
+      passed = false;
+    }
+    const backendRequired = ["accounting", "backend", "files", "security", "exports"].includes(item.id);
+    return {
+      ...item,
+      passed,
+      status: passed ? "Working" : backendRequired ? "Backend required" : "Needs build"
+    };
+  });
+}
+
+function renderLaunchAudit() {
+  const list = document.getElementById("launchAuditList");
+  const priorityStack = document.getElementById("launchPriorityStack");
+  const requirementGrid = document.getElementById("productionRequirementGrid");
+  if (!list || !priorityStack || !requirementGrid) return;
+
+  const snapshot = launchAuditSnapshot();
+  const completed = snapshot.filter((item) => item.passed).length;
+  const backendGaps = snapshot.filter((item) => item.status === "Backend required").length;
+  const nextSprint = snapshot.filter((item) => !item.passed && item.priority === "P0").length;
+  const score = Math.round((completed / snapshot.length) * 100);
+
+  document.getElementById("auditReadinessScore").textContent = `${score}%`;
+  document.getElementById("auditWorkingCount").textContent = `${completed}/${snapshot.length}`;
+  document.getElementById("auditBackendCount").textContent = String(backendGaps);
+  document.getElementById("auditNextSprintCount").textContent = String(nextSprint);
+
+  list.innerHTML = "";
+  snapshot.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = `launch-audit-row ${item.passed ? "pass" : item.status === "Backend required" ? "blocked" : "todo"}`;
+    row.innerHTML = `
+      <div class="audit-status-dot" aria-hidden="true"></div>
+      <div>
+        <span>${escapeHtml(item.area)} · ${escapeHtml(item.priority)}</span>
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(item.marketReason)}</small>
+        <em>${escapeHtml(item.next)}</em>
+      </div>
+      <b>${escapeHtml(item.status)}</b>
+    `;
+    list.appendChild(row);
+  });
+
+  priorityStack.innerHTML = "";
+  snapshot
+    .filter((item) => !item.passed)
+    .sort((a, b) => a.priority.localeCompare(b.priority))
+    .slice(0, 8)
+    .forEach((item, index) => {
+      const card = document.createElement("div");
+      card.className = "priority-card";
+      card.innerHTML = `
+        <span>${index + 1}</span>
+        <div>
+          <strong>${escapeHtml(item.title)}</strong>
+          <small>${escapeHtml(item.next)}</small>
+        </div>
+      `;
+      priorityStack.appendChild(card);
+    });
+
+  requirementGrid.innerHTML = "";
+  productionRequirements.forEach(([title, detail]) => {
+    const card = document.createElement("div");
+    card.innerHTML = `<strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span>`;
+    requirementGrid.appendChild(card);
   });
 }
 
@@ -2627,8 +2886,9 @@ document.getElementById("addHygieneLog").addEventListener("click", async () => {
 
 document.querySelectorAll("[data-export]").forEach((button) => {
   button.addEventListener("click", () => {
-    addAudit("Stock adjusted", `${currentRole} · export requested · ${button.dataset.export}`);
-    document.querySelector(".ai-summary span").textContent = translate("Export is not built yet.");
+    const message = downloadDataExport(button.dataset.export);
+    addAudit("Stock adjusted", `${currentRole} · export downloaded · ${button.dataset.export}`);
+    document.querySelector(".ai-summary span").textContent = translate(message);
     applyTranslations();
   });
 });
@@ -2675,6 +2935,7 @@ renderExpenseTable();
 renderCompliance();
 renderAuditLog();
 renderUserManagement();
+renderLaunchAudit();
 syncChecklist();
 syncLanguageButtons();
 syncSelectedServiceLabel();
