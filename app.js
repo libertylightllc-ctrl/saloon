@@ -24,17 +24,30 @@ const platformAccount = {
 };
 
 const countryProfiles = {
-  AE: { name: "United Arab Emirates", currency: "AED", locale: "en-AE", decimals: 2, taxLabel: "VAT" },
-  QA: { name: "Qatar", currency: "QAR", locale: "en-QA", decimals: 2, taxLabel: "VAT" },
-  SA: { name: "Saudi Arabia", currency: "SAR", locale: "en-SA", decimals: 2, taxLabel: "VAT" },
-  KW: { name: "Kuwait", currency: "KWD", locale: "en-KW", decimals: 3, taxLabel: "VAT" },
-  BH: { name: "Bahrain", currency: "BHD", locale: "en-BH", decimals: 3, taxLabel: "VAT" },
-  OM: { name: "Oman", currency: "OMR", locale: "en-OM", decimals: 3, taxLabel: "VAT" }
+  AE: { name: "United Arab Emirates", currency: "AED", locale: "en-AE", decimals: 2, taxLabel: "VAT", tenancyName: "Ejari / tenancy contract", healthName: "Occupational health card" },
+  QA: { name: "Qatar", currency: "QAR", locale: "en-QA", decimals: 2, taxLabel: "VAT", tenancyName: "Lease contract", healthName: "Health certificate" },
+  SA: { name: "Saudi Arabia", currency: "SAR", locale: "en-SA", decimals: 2, taxLabel: "VAT", tenancyName: "Lease / deed proof", healthName: "Balady health certificate" },
+  KW: { name: "Kuwait", currency: "KWD", locale: "en-KW", decimals: 3, taxLabel: "VAT", tenancyName: "Lease contract", healthName: "Worker health fitness record" },
+  BH: { name: "Bahrain", currency: "BHD", locale: "en-BH", decimals: 3, taxLabel: "VAT", tenancyName: "Lease contract / address card", healthName: "MOH health certificate" },
+  OM: { name: "Oman", currency: "OMR", locale: "en-OM", decimals: 3, taxLabel: "VAT", tenancyName: "Municipal lease / location approval", healthName: "Annual medical fitness" }
 };
 
 const currencyToCountry = Object.fromEntries(
   Object.entries(countryProfiles).map(([country, profile]) => [profile.currency, country])
 );
+
+const baseExpiryTypes = [
+  "Trade licence",
+  "Municipality licence",
+  "Civil defence / safety certificate",
+  "Pest control certificate",
+  "Staff visa / residence permit",
+  "Staff ID card",
+  "Staff vaccination record",
+  "Product registration / cosmetics approval",
+  "Insurance policy",
+  "WPS / payroll file"
+];
 
 const rolePins = {
   "Platform Admin": "9999",
@@ -499,6 +512,18 @@ function isoOffset(days) {
   return date.toISOString().slice(0, 10);
 }
 
+function defaultComplianceDocuments(country = "AE") {
+  const profile = countryProfiles[country] || countryProfiles.AE;
+  return [
+    { type: profile.tenancyName, holder: "Shop premises", number: "", issueDate: isoOffset(-335), expiryDate: isoOffset(30), renewalCost: 0, evidence: "", reminderDays: 30, status: "DueSoon" },
+    { type: "Trade licence", holder: "Company", number: "", issueDate: isoOffset(-330), expiryDate: isoOffset(45), renewalCost: 0, evidence: "", reminderDays: 45, status: "Ready" },
+    { type: "Pest control certificate", holder: "Shop premises", number: "", issueDate: isoOffset(-25), expiryDate: isoOffset(5), renewalCost: 0, evidence: "", reminderDays: 7, status: "DueSoon" },
+    { type: profile.healthName, holder: "All barbers", number: "", issueDate: isoOffset(-330), expiryDate: isoOffset(20), renewalCost: 0, evidence: "", reminderDays: 30, status: "DueSoon" },
+    { type: "Staff visa / residence permit", holder: "Staff file", number: "", issueDate: isoOffset(-650), expiryDate: isoOffset(60), renewalCost: 0, evidence: "", reminderDays: 60, status: "Ready" },
+    { type: "Staff vaccination record", holder: "Staff file", number: "", issueDate: isoOffset(-300), expiryDate: isoOffset(90), renewalCost: 0, evidence: "", reminderDays: 30, status: "Ready" }
+  ];
+}
+
 const defaultState = {
   activeShopId: "al-barsha-gents",
   shops: [
@@ -544,6 +569,7 @@ const defaultState = {
     { record: "Employee health cards", cadence: "Yearly", dueDate: isoOffset(7), signedBy: "", evidence: "", signedAt: "" }
   ],
   hygieneLogs: [],
+  complianceDocuments: defaultComplianceDocuments("AE"),
   documentChain: [
     { name: "Ejari", dueDate: isoOffset(15), evidence: "" },
     { name: "Trade licence", dueDate: isoOffset(23), evidence: "" },
@@ -572,6 +598,7 @@ const shopStateFields = [
   "checklist",
   "inspectionRecords",
   "hygieneLogs",
+  "complianceDocuments",
   "documentChain",
   "montajiItems"
 ];
@@ -638,6 +665,7 @@ let staffPayments = activeShopState.staffPayments || defaultState.staffPayments;
 let checklist = { ...defaultState.checklist, ...(activeShopState.checklist || {}) };
 let inspectionRecords = activeShopState.inspectionRecords || defaultState.inspectionRecords;
 let hygieneLogs = activeShopState.hygieneLogs || defaultState.hygieneLogs;
+let complianceDocuments = activeShopState.complianceDocuments || defaultComplianceDocuments(currentShop()?.country || "AE");
 let documentChain = activeShopState.documentChain || defaultState.documentChain;
 let montajiItems = activeShopState.montajiItems || defaultState.montajiItems;
 let activeSaleCategory = "All";
@@ -697,6 +725,7 @@ function captureActiveShopState() {
     checklist,
     inspectionRecords,
     hygieneLogs,
+    complianceDocuments,
     documentChain,
     montajiItems
   };
@@ -723,6 +752,8 @@ function hydrateActiveShop() {
   checklist = { ...defaultState.checklist, ...(activeShopState.checklist || {}) };
   inspectionRecords = activeShopState.inspectionRecords || clone(defaultState.inspectionRecords);
   hygieneLogs = activeShopState.hygieneLogs || [];
+  complianceDocuments = activeShopState.complianceDocuments || defaultComplianceDocuments(currentShop()?.country || "AE");
+  ensureComplianceDocumentsForCountry();
   documentChain = activeShopState.documentChain || clone(defaultState.documentChain);
   montajiItems = activeShopState.montajiItems || clone(defaultState.montajiItems);
   activeSaleCategory = "All";
@@ -844,6 +875,16 @@ function removeLegacyDemoRows() {
     ...document,
     dueDate: document.dueDate || defaultState.documentChain[index]?.dueDate || isoOffset(30)
   }));
+  ensureComplianceDocumentsForCountry();
+  complianceDocuments = complianceDocuments.map((document) => ({
+    ...document,
+    holder: document.holder || "Shop",
+    issueDate: document.issueDate || "",
+    expiryDate: document.expiryDate || document.dueDate || isoOffset(30),
+    renewalCost: Number(document.renewalCost || 0),
+    evidence: document.evidence || "",
+    reminderDays: Number(document.reminderDays || 30)
+  }));
 }
 
 function saveState() {
@@ -864,6 +905,7 @@ function saveState() {
     activeLanguage,
     inspectionRecords,
     hygieneLogs,
+    complianceDocuments,
     documentChain,
     montajiItems,
     cashClosings,
@@ -1098,10 +1140,11 @@ function shopExpectedCash(shopState) {
 
 function shopAttentionCount(shopState) {
   const complianceCount = (shopState.inspectionRecords || []).filter((record) => computedRecordStatus(record) !== "Ready").length;
+  const expiryCount = (shopState.complianceDocuments || []).filter((documentItem) => computedExpiryStatus(documentItem) !== "Ready").length;
   const latestClosing = (shopState.cashClosings || [])[0];
   const cashFlag = latestClosing && Number(latestClosing.difference) !== 0 ? 1 : 0;
   const setupFlag = Object.values(shopState.checklist || {}).some((value) => !value) ? 1 : 0;
-  return complianceCount + cashFlag + setupFlag;
+  return complianceCount + expiryCount + cashFlag + setupFlag;
 }
 
 function renderShopSwitcher() {
@@ -1362,8 +1405,8 @@ function renderAuditLog() {
 }
 
 function statusClass(status) {
-  if (status === "Overdue" || status === "Unknown") return "danger";
-  if (status === "DueSoon" || status === "Needs ref") return "warning";
+  if (["Overdue", "Expired", "Unknown", "Missing"].includes(status)) return "danger";
+  if (["DueSoon", "Needs ref", "EvidenceMissing"].includes(status)) return "warning";
   return "ok";
 }
 
@@ -1390,6 +1433,43 @@ function computedRecordStatus(record) {
   if (days < 0) return "Overdue";
   if (days <= 7) return "DueSoon";
   return "Ready";
+}
+
+function computedExpiryStatus(document) {
+  if (!document.expiryDate) return "Missing";
+  const days = daysUntil(document.expiryDate);
+  if (days < 0) return "Expired";
+  if (days <= Number(document.reminderDays || 30)) return "DueSoon";
+  if (!document.evidence) return "EvidenceMissing";
+  return "Ready";
+}
+
+function ensureComplianceDocumentsForCountry() {
+  const requiredDocs = defaultComplianceDocuments(currentShop()?.country || "AE");
+  complianceDocuments = Array.isArray(complianceDocuments) ? complianceDocuments : [];
+  const currentNames = new Set(requiredDocs.map((documentItem) => documentItem.type));
+  const countrySpecificNames = new Set(
+    Object.values(countryProfiles).flatMap((profile) => [profile.tenancyName, profile.healthName])
+  );
+  complianceDocuments = complianceDocuments.filter((documentItem) => {
+    if (!countrySpecificNames.has(documentItem.type) || currentNames.has(documentItem.type)) return true;
+    return !!(documentItem.number || documentItem.evidence || Number(documentItem.renewalCost || 0));
+  });
+  requiredDocs.forEach((required) => {
+    if (!complianceDocuments.some((document) => document.type === required.type)) {
+      complianceDocuments.push(required);
+    }
+  });
+}
+
+function expiryStatusLabel(status) {
+  return {
+    Missing: "Missing date",
+    Expired: "Expired",
+    DueSoon: "Expiring soon",
+    EvidenceMissing: "Evidence missing",
+    Ready: "Valid"
+  }[status] || status;
 }
 
 function renderInspectionRecords() {
@@ -1449,6 +1529,63 @@ function renderDocumentChain() {
   });
 }
 
+function expiryOptionsForCountry() {
+  const profile = currentCountryProfile();
+  return [profile.tenancyName, profile.healthName, ...baseExpiryTypes]
+    .filter((value, index, list) => list.indexOf(value) === index);
+}
+
+function renderExpiryTypeOptions() {
+  const select = document.getElementById("expiryType");
+  if (!select) return;
+  const current = select.value;
+  select.innerHTML = expiryOptionsForCountry().map((type) => `<option value="${escapeHtml(type)}">${escapeHtml(type)}</option>`).join("");
+  if ([...select.options].some((option) => option.value === current)) {
+    select.value = current;
+  }
+}
+
+function renderExpiryDocuments() {
+  const body = document.getElementById("expiryDocumentTable");
+  if (!body) return;
+  renderExpiryTypeOptions();
+  const profile = currentCountryProfile();
+  document.getElementById("expiryCountryNote").textContent = `${profile.name} profile · ${profile.currency} renewal costs · ${profile.healthName}`;
+  const openCount = complianceDocuments.filter((expiryDocument) => computedExpiryStatus(expiryDocument) !== "Ready").length;
+  document.getElementById("expiryOpenCount").textContent = `${openCount} expiring`;
+  body.innerHTML = "";
+  complianceDocuments
+    .slice()
+    .sort((first, second) => daysUntil(first.expiryDate) - daysUntil(second.expiryDate))
+    .forEach((expiryDocument) => {
+      const originalIndex = complianceDocuments.indexOf(expiryDocument);
+      const status = computedExpiryStatus(expiryDocument);
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td><strong>${escapeHtml(expiryDocument.type)}</strong><br><small>Reminder ${escapeHtml(expiryDocument.reminderDays || 30)} days before</small></td>
+        <td>${escapeHtml(expiryDocument.holder || "Shop")}</td>
+        <td>${escapeHtml(expiryDocument.number || "Pending")}</td>
+        <td>${escapeHtml(dateLabel(expiryDocument.expiryDate))}</td>
+        <td>${moneyFixed(expiryDocument.renewalCost || 0)}</td>
+        <td>${escapeHtml(expiryDocument.evidence || "Pending")}</td>
+        <td><span class="status-pill ${statusClass(status)}">${escapeHtml(expiryStatusLabel(status))}</span></td>
+        <td><button class="mini-action danger" data-delete-expiry="${originalIndex}" type="button">Delete</button></td>
+      `;
+      body.appendChild(row);
+    });
+
+  body.querySelectorAll("[data-delete-expiry]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const index = Number(button.dataset.deleteExpiry);
+      const removed = complianceDocuments.splice(index, 1)[0];
+      addAudit("Stock adjusted", `${currentRole} · expiry deleted · ${removed?.type || "document"}`);
+      saveState();
+      renderCompliance();
+      document.getElementById("expiryNote").textContent = "Expiry record deleted.";
+    });
+  });
+}
+
 function renderHygieneLogs() {
   const body = document.getElementById("hygieneLogTable");
   if (!body) return;
@@ -1487,14 +1624,15 @@ function renderMontajiItems() {
 function syncComplianceMetrics() {
   const notReadyRecords = inspectionRecords.filter((record) => computedRecordStatus(record) !== "Ready").length;
   const documentProblems = documentChain.filter((document) => computedRecordStatus(document) !== "Ready").length;
+  const expiryProblems = complianceDocuments.filter((document) => computedExpiryStatus(document) !== "Ready").length;
   const montajiProblems = montajiItems.filter((item) => item.status !== "Registered").length;
-  const readiness = Math.max(0, Math.round(100 - ((notReadyRecords + documentProblems + montajiProblems) * 7)));
+  const readiness = Math.max(0, Math.round(100 - ((notReadyRecords + documentProblems + expiryProblems + montajiProblems) * 7)));
   const paidStaff = staffPayments.filter((staff) => staff.paidAt).length;
   const staffTotal = Math.max(staffPayments.length, 1);
   const paidPercent = Math.round((paidStaff / staffTotal) * 100);
   const wpsDay = new Date().getDate();
   document.getElementById("inspectionReadiness").textContent = `${readiness}%`;
-  document.getElementById("overdueRecordCount").textContent = String(notReadyRecords + documentProblems);
+  document.getElementById("overdueRecordCount").textContent = String(notReadyRecords + documentProblems + expiryProblems);
   document.getElementById("wpsMetric").textContent = activeLanguage === "en" ? `Day ${wpsDay}` : `${translate("Day 2").replace("2", wpsDay)}`;
   document.getElementById("montajiMetric").textContent = String(montajiProblems);
   document.getElementById("wpsDetail").textContent = activeLanguage === "en"
@@ -1505,10 +1643,31 @@ function syncComplianceMetrics() {
 function renderCompliance() {
   renderInspectionRecords();
   renderDocumentChain();
+  renderExpiryDocuments();
   renderHygieneLogs();
   renderMontajiItems();
   syncComplianceMetrics();
+  renderOwnerChecks();
   applyTranslations();
+}
+
+function applySelectedCountryProfile() {
+  const shop = currentShop();
+  const select = document.getElementById("countrySelect");
+  if (!shop || !select) return;
+  const country = select.value || "AE";
+  const profile = countryProfiles[country] || countryProfiles.AE;
+  shop.country = country;
+  shop.currency = profile.currency;
+  ensureComplianceDocumentsForCountry();
+  syncShopIdentity();
+  renderPurchaseTable();
+  renderExpenseTable();
+  renderServiceTable();
+  renderSaleServices();
+  syncSelectedServiceLabel();
+  renderCompliance();
+  syncSummaryTotals();
 }
 
 function renderOwnerChecks() {
@@ -1531,6 +1690,15 @@ function renderOwnerChecks() {
       title: "Inspection Binder",
       detail: `${missingInspection} ${translate("Overdue records")}`,
       action: "Review"
+    });
+  }
+  const expiringDocuments = complianceDocuments.filter((document) => computedExpiryStatus(document) !== "Ready").length;
+  if (expiringDocuments) {
+    checks.push({
+      level: "danger",
+      title: "Document expiries",
+      detail: `${expiringDocuments} lease, licence, visa, health or pest control records need action`,
+      action: "Renew"
     });
   }
   const montajiProblems = montajiItems.filter((item) => item.status !== "Registered").length;
@@ -1664,6 +1832,7 @@ function createShopFromForm() {
     openingCash: opening,
     vatEnabled: vat,
     receiptEnabled: false,
+    complianceDocuments: defaultComplianceDocuments(country),
     users: defaultShopUsers(owner, ownerUsername, ownerPassword)
   });
   activeShopId = id;
@@ -2163,18 +2332,7 @@ document.getElementById("vatModeSelect").addEventListener("change", (event) => {
 });
 
 document.getElementById("countrySelect").addEventListener("change", (event) => {
-  const shop = currentShop();
-  if (!shop) return;
-  const profile = countryProfiles[event.target.value] || countryProfiles.AE;
-  shop.country = event.target.value;
-  shop.currency = profile.currency;
-  syncShopIdentity();
-  renderPurchaseTable();
-  renderExpenseTable();
-  renderServiceTable();
-  renderSaleServices();
-  syncSelectedServiceLabel();
-  syncSummaryTotals();
+  applySelectedCountryProfile();
   syncTaxSettings();
 });
 
@@ -2184,6 +2342,7 @@ document.getElementById("receiptModeSelect").addEventListener("change", (event) 
 });
 
 document.getElementById("saveSettings").addEventListener("click", () => {
+  applySelectedCountryProfile();
   document.getElementById("settingsTaxPill").textContent = vatEnabled
     ? "VAT on"
     : "VAT optional";
@@ -2328,6 +2487,39 @@ document.getElementById("approveClosing").addEventListener("click", () => {
   saveState();
   syncSummaryTotals();
   document.getElementById("closingReason").placeholder = translate("Cash closing approved.");
+});
+
+document.getElementById("saveExpiryDocument").addEventListener("click", () => {
+  const type = document.getElementById("expiryType").value;
+  const holder = document.getElementById("expiryHolder").value.trim() || "Shop";
+  const number = document.getElementById("expiryNumber").value.trim();
+  const issueDate = document.getElementById("expiryIssueDate").value;
+  const expiryDate = document.getElementById("expiryDate").value;
+  const renewalCost = numberValue("expiryRenewalCost");
+  const reminderDays = Math.max(Number(document.getElementById("expiryReminderDays").value || 30), 1);
+  const evidence = document.getElementById("expiryEvidence").value.trim();
+  const note = document.getElementById("expiryNote");
+  if (!type || !expiryDate) {
+    note.textContent = "Document type and expiry date are required.";
+    return;
+  }
+  const existing = complianceDocuments.find((document) => document.type === type && document.holder.toLowerCase() === holder.toLowerCase());
+  const nextRecord = { type, holder, number, issueDate, expiryDate, renewalCost, reminderDays, evidence };
+  if (existing) {
+    Object.assign(existing, nextRecord);
+  } else {
+    complianceDocuments.unshift(nextRecord);
+  }
+  addAudit("Stock adjusted", `${currentRole} · expiry saved · ${type} · ${holder} · ${dateLabel(expiryDate)}`);
+  saveState();
+  renderCompliance();
+  note.textContent = `${type} saved for ${holder}. Reminder starts ${reminderDays} days before expiry.`;
+  document.getElementById("expiryNumber").value = "";
+  document.getElementById("expiryIssueDate").value = "";
+  document.getElementById("expiryDate").value = "";
+  document.getElementById("expiryRenewalCost").value = "0";
+  document.getElementById("expiryReminderDays").value = "30";
+  document.getElementById("expiryEvidence").value = "";
 });
 
 document.getElementById("addHygieneLog").addEventListener("click", () => {
