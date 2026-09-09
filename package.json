@@ -8,6 +8,10 @@
     "dev": "python3 -m http.server 5182 --bind 127.0.0.1",
     "build": "node scripts/build.mjs",
     "preview": "python3 -m http.server 5183 --bind 127.0.0.1 --directory dist",
-    "validate": "node scripts/validate.mjs"
+    "validate": "node scripts/validate.mjs",
+    "test": "node --test scripts/*.test.mjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8"
   }
 }

@@ -2568,8 +2568,10 @@ th {
 }
 
 @media (max-width: 820px) {
-  .app-shell {
+  .app-shell,
+  body.is-authenticated .app-shell {
     display: block;
+    grid-template-columns: minmax(0, 1fr);
     padding-bottom: 0;
   }
 
@@ -2584,7 +2586,7 @@ th {
   }
 
   .topbar {
-    position: sticky;
+    position: static;
     top: 0;
     z-index: 12;
     margin: -14px -14px 14px;
@@ -2595,7 +2597,7 @@ th {
   }
 
   .topbar h2 {
-    font-size: clamp(22px, 7vw, 30px);
+    font-size: 24px;
   }
 
   .top-actions {
@@ -2609,7 +2611,7 @@ th {
   .statement-grid strong,
   .report-card strong,
   .watch-card strong {
-    font-size: clamp(26px, 8vw, 34px);
+    font-size: 28px;
     line-height: 1;
     text-align: start;
     overflow-wrap: anywhere;
@@ -2705,7 +2707,12 @@ th {
 
 @media (max-width: 520px) {
   .top-actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .top-actions .user-chip,
+  .top-actions .shop-switcher {
+    grid-column: 1 / -1;
   }
 
   .metric-card,

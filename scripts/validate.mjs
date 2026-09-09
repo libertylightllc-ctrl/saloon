@@ -54,7 +54,6 @@ const requiredHtml = [
   "id=\"createShopBtn\"",
   "id=\"shopSwitcher\"",
   "id=\"masterShopTable\"",
-  "value=\"Platform Admin\"",
   "id=\"handoverCard\"",
   "id=\"newShopCode\"",
   "id=\"newOwnerUsername\"",
@@ -103,6 +102,8 @@ const requiredJs = [
 ];
 
 const forbiddenHtml = [
+  "id=\"loginRole\"",
+  "data-view=\"launch-audit\"",
   "id=\"completeInspectionRound\"",
   "Staff commission</span><strong>AED 224</strong>",
   "Cash difference</span><strong class=\"negative\">AED -50</strong>",

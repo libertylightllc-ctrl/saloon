@@ -58,9 +58,9 @@ const rolePins = {
 };
 
 const roleAccess = {
-  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
-  "Master Admin": ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
-  Owner: ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "launch-audit", "settings"],
+  "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "settings"],
+  "Master Admin": ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "settings"],
+  Owner: ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "settings"],
   Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
   Staff: ["quick-sale", "services"]
 };
@@ -885,11 +885,10 @@ function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function authenticateLogin({ shopCode, username, password, role }) {
+function authenticateLogin({ shopCode, username, password }) {
   const normalizedCode = shopCode.trim().toUpperCase();
   const normalizedUser = username.trim().toLowerCase();
   if (
-    role === platformAccount.role &&
     normalizedCode === platformAccount.shopCode &&
     normalizedUser === platformAccount.username &&
     password === platformAccount.password
@@ -904,21 +903,9 @@ function authenticateLogin({ shopCode, username, password, role }) {
   shopState.users = shopState.users?.length
     ? shopState.users
     : defaultShopUsers(shop.owner || "Owner", shop.ownerUsername || "owner");
-  if (normalizedCode === "ALBARSHA001" && role === "Owner" && normalizedUser === "owner.albarsha" && password === "1234") {
-    let owner = shopState.users.find((candidate) => candidate.role === "Owner" && candidate.username.toLowerCase() === "owner.albarsha");
-    if (!owner) {
-      owner = { name: shop.owner || "Owner", username: "owner.albarsha", role: "Owner", active: true, createdAt: new Date().toISOString() };
-      shopState.users.unshift(owner);
-    }
-    owner.name = shop.owner || "Owner";
-    owner.username = "owner.albarsha";
-    owner.role = "Owner";
-    owner.password = "1234";
-    owner.active = true;
-  }
   const user = shopState.users.find((candidate) =>
     candidate.active !== false &&
-    candidate.role === role &&
+    Object.hasOwn(roleAccess, candidate.role) && candidate.role !== "Platform Admin" &&
     candidate.username.toLowerCase() === normalizedUser &&
     candidate.password === password
   );
@@ -938,24 +925,7 @@ function migrateServices() {
 }
 
 function removeLegacyDemoRows() {
-  sales = sales.filter((sale) => !(sale.service === "Haircut" && sale.staff === "Rafiq" && Number(sale.amount) === 25 && !sale.discountReason));
-  purchases = purchases.filter((purchase) => ![
-    "Beauty Supply LLC|Blades, foam, tissues|420",
-    "Color House|Hair color, developer|220",
-    "Gulf Salon Tools|Clipper machine|250"
-  ].includes(`${purchase.supplier}|${purchase.item}|${purchase.unitCost}`));
-  expenses = expenses.filter((expense) => ![
-    "Tea & Food|35|Tea and water for staff",
-    "Dry Cleaning|85|Towels and capes",
-    "Transport|40|Supplier pickup"
-  ].includes(`${expense.category}|${expense.amount}|${expense.note}`));
-  auditLog = auditLog.filter((entry) => ![
-    "Rafiq · Haircut · Cash · AED 25",
-    "Owner · Blades · 100 pcs · AED 120",
-    "Owner · Tea & Food · AED 35 · Cash",
-    "Owner · Blades · -6 · reason required"
-  ].includes(entry.detail));
-  hygieneLogs = hygieneLogs.filter((log) => !["10 min heat cycle", "Surface wipe + towel change", "44 blades counted"].includes(log.cycle));
+  // Preserve records: matching old demo values does not prove a row is disposable.
   inspectionRecords = inspectionRecords.map((record, index) => ({
     ...record,
     dueDate: record.dueDate || defaultState.inspectionRecords[index]?.dueDate || isoOffset(0),
@@ -3013,21 +2983,6 @@ document.querySelectorAll(".language-switch button").forEach((button) => {
   });
 });
 
-document.getElementById("loginRole").addEventListener("change", (event) => {
-  const role = event.target.value;
-  const demoByRole = {
-    "Platform Admin": ["PLATFORM", "admin", "9999"],
-    Owner: ["ALBARSHA001", "owner.albarsha", "1234"],
-    "Master Admin": ["ALBARSHA001", "master.albarsha", "9999"],
-    Cashier: ["ALBARSHA001", "cashier.albarsha", "2222"],
-    Staff: ["ALBARSHA001", "staff.albarsha", "1111"]
-  };
-  const [shopCode, username, password] = demoByRole[role] || demoByRole.Owner;
-  document.getElementById("loginShopId").value = shopCode;
-  document.getElementById("loginUsername").value = username;
-  document.getElementById("loginPin").value = password;
-});
-
 document.querySelectorAll("[data-category]").forEach((button) => {
   button.addEventListener("click", () => {
     activeSaleCategory = button.dataset.category;
@@ -3081,12 +3036,11 @@ document.getElementById("saveSettings").addEventListener("click", () => {
 
 document.getElementById("loginForm").addEventListener("submit", (event) => {
   event.preventDefault();
-  const role = document.getElementById("loginRole").value;
   const shopCode = document.getElementById("loginShopId").value;
   const username = document.getElementById("loginUsername").value;
-  const password = document.getElementById("loginPin").value.trim();
+  const password = document.getElementById("loginPin").value;
   const loginError = document.getElementById("loginError");
-  const login = authenticateLogin({ shopCode, username, password, role });
+  const login = authenticateLogin({ shopCode, username, password });
   if (!login.ok) {
     loginError.hidden = false;
     return;
@@ -3131,9 +3085,9 @@ document.getElementById("printReport").addEventListener("click", () => {
 
 document.getElementById("savePurchase").addEventListener("click", () => {
   const purchase = {
-    supplier: document.getElementById("purchaseSupplier").value.trim() || "Unknown supplier",
+    supplier: document.getElementById("purchaseSupplier").value.trim(),
     type: document.getElementById("purchaseType").value,
-    item: document.getElementById("purchaseItem").value.trim() || "Unnamed item",
+    item: document.getElementById("purchaseItem").value.trim(),
     qty: Number(document.getElementById("purchaseQty").value || 0),
     unit: document.getElementById("purchaseUnit").value.trim() || "unit",
     unitCost: Number(document.getElementById("purchaseUnitCost").value || 0),
@@ -3141,7 +3095,7 @@ document.getElementById("savePurchase").addEventListener("click", () => {
     payment: document.getElementById("purchasePayment").value,
     createdAt: new Date().toISOString()
   };
-  if (!purchase.item || purchase.qty < 0 || purchase.unitCost < 0 || purchase.discount < 0) {
+  if (!purchase.supplier || !purchase.item || ![purchase.qty, purchase.unitCost, purchase.discount].every(Number.isFinite) || purchase.qty <= 0 || purchase.unitCost < 0 || purchase.discount < 0 || purchase.discount > purchase.qty * purchase.unitCost) {
     document.getElementById("purchaseNote").textContent = "Enter a valid item, quantity, unit cost and discount.";
     return;
   }

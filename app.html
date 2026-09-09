@@ -58,28 +58,18 @@
         <section class="login-access-panel">
           <a class="login-back-link" href="./">Product site</a>
           <form class="login-card" id="loginForm">
-            <span class="status-pill">Secure demo access</span>
+            <span class="status-pill">Demo access</span>
             <h2>Login</h2>
-            <p>Use the shop ID, username and password issued for your role.</p>
             <label>Shop ID
-              <input id="loginShopId" value="PLATFORM" autocomplete="organization" />
+              <input id="loginShopId" autocomplete="organization" required />
             </label>
             <label>Username
-              <input id="loginUsername" value="admin" autocomplete="username" />
-            </label>
-            <label>Role
-              <select id="loginRole">
-                <option value="Platform Admin">Platform Admin</option>
-                <option value="Owner">Owner</option>
-                <option value="Master Admin">Master Admin</option>
-                <option value="Cashier">Cashier</option>
-                <option value="Staff">Staff</option>
-              </select>
+              <input id="loginUsername" autocomplete="username" required />
             </label>
             <label>Password
-              <input id="loginPin" value="9999" type="password" autocomplete="current-password" />
+              <input id="loginPin" type="password" autocomplete="current-password" required />
             </label>
-            <p class="system-note danger-note" id="loginError" hidden>Wrong shop ID, username, password or role.</p>
+            <p class="system-note danger-note" id="loginError" role="alert" hidden>Unable to sign in. Check your shop ID, username and password.</p>
             <button class="primary-button full login-submit" type="submit">Enter Salon Control</button>
             <small>Demo platform: Shop ID PLATFORM · username admin · password 9999</small>
           </form>
@@ -159,10 +149,6 @@
           <button class="nav-item" data-view="reports" type="button">
             <span class="nav-icon" data-icon="report"></span>
             Reports
-          </button>
-          <button class="nav-item" data-view="launch-audit" type="button">
-            <span class="nav-icon" data-icon="report"></span>
-            Launch Audit
           </button>
           <button class="nav-item" data-view="settings" type="button">
             <span class="nav-icon" data-icon="settings"></span>
