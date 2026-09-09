@@ -954,6 +954,7 @@ function enterAuthenticatedApp(login) {
   applyRoleAccess();
   setSyncStatus(isLocalDemo ? "Local demo" : "Cloud connected", isLocalDemo ? "local" : "connected");
   syncShopIdentity();
+  syncTaxSettings();
   showView(currentRole === "Platform Admin" ? "master-admin" : currentRole === "Staff" ? "quick-sale" : "dashboard");
 }
 
@@ -3434,6 +3435,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   frontpage.hidden = false;
   appShell.classList.add("app-hidden");
   frontpage.classList.remove("front-hidden");
+  document.getElementById("loginCurrencySignal").textContent = "GCC";
 });
 
 document.getElementById("printReport").addEventListener("click", () => {
@@ -3644,7 +3646,7 @@ function syncTaxSettings() {
   const headerLabel = currentRole === "Platform Admin" ? "Platform network · GCC currencies" : `${todayLabel()} · ${profile.currency} · ${taxMode}`;
 
   document.body.classList.toggle("vat-enabled", vatEnabled);
-  document.getElementById("loginCurrencySignal").textContent = profile.currency;
+  document.getElementById("loginCurrencySignal").textContent = document.body.classList.contains("is-authenticated") ? profile.currency : "GCC";
   document.getElementById("taxModeLabel").textContent = translate(taxMode);
   document.getElementById("branchTaxLabel").textContent = translate(branchLabel);
   document.getElementById("topTaxLabel").textContent = headerLabel;
