@@ -59,3 +59,25 @@ test('login rejects a valid account assigned to another shop', async () => {
   await assert.rejects(fixture.backend.signIn('SHOP_A', 'owner', 'password'), /not assigned/);
   assert.equal(fixture.values.has('salon-control-session'), false);
 });
+
+test('cloud deletions use a tenant-scoped soft delete', async () => {
+  const fixture = backendFixture([{ status: 204, body: null }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  await fixture.backend.softDeleteRecord('shop-id', 'purchase', 'purchase-1');
+  assert.match(fixture.calls[0].url, /shop_id=eq\.shop-id/);
+  assert.match(fixture.calls[0].url, /record_type=eq\.purchase/);
+  assert.equal(fixture.calls[0].options.method, 'PATCH');
+  assert.ok(JSON.parse(fixture.calls[0].options.body).deleted_at);
+});
+
+test('expired API responses refresh the session once and retry', async () => {
+  const fixture = backendFixture([
+    { status: 401, body: { message: 'expired' } },
+    { status: 200, body: { access_token: 'new-token', refresh_token: 'new-refresh' } },
+    { status: 200, body: [] }
+  ]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'old-token', refresh_token: 'refresh-token' }));
+  await fixture.backend.loadShops();
+  assert.match(fixture.calls[1].url, /grant_type=refresh_token/);
+  assert.match(fixture.calls[2].options.headers.Authorization, /new-token/);
+});

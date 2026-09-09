@@ -1,18 +1,17 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const allowedOrigins = new Set([
-  "https://libertylightllc-ctrl.github.io",
-  "http://127.0.0.1:5207",
-  "http://localhost:5182",
-  "http://localhost:5183"
-]);
+function allowedOrigin(origin: string) {
+  if (origin === "https://libertylightllc-ctrl.github.io") return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) return origin;
+  return "https://libertylightllc-ctrl.github.io";
+}
 
 function response(origin: string, body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
+  return new Response(status === 204 ? null : JSON.stringify(body), {
     status,
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": allowedOrigins.has(origin) ? origin : "https://libertylightllc-ctrl.github.io",
+      "Access-Control-Allow-Origin": allowedOrigin(origin),
       "Access-Control-Allow-Headers": "authorization, apikey, content-type",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Vary": "Origin"
@@ -64,7 +63,9 @@ Deno.serve(async (request) => {
       const country = clean(payload.country, /^(AE|SA|QA|KW|BH|OM)$/, "country");
       const username = clean(payload.username, /^[a-zA-Z0-9._-]{3,64}$/, "username").toLowerCase();
       const password = clean(payload.password, /^.{10,128}$/, "password");
-      const { data: shop, error: shopError } = await admin.from("salon_shops").insert({ code, name, country }).select().single();
+      const { data: shop, error: shopError } = await admin.from("salon_shops").insert({
+        code, name, country, vat_enabled: Boolean(payload.vatEnabled)
+      }).select().single();
       if (shopError) throw shopError;
       const { data: created, error: userError } = await admin.auth.admin.createUser({
         email: authEmail(code, username), password, email_confirm: true,
@@ -80,12 +81,44 @@ Deno.serve(async (request) => {
         await admin.from("salon_shops").delete().eq("id", shop.id);
         throw memberError;
       }
-      return response(origin, { shop, username });
+      await admin.from("salon_records").insert({
+        shop_id: shop.id,
+        record_type: "shop_setting",
+        external_id: "operations",
+        created_by: callerId,
+        data: {
+          location: String(payload.location || ""),
+          openingCash: Number(payload.openingCash || 0),
+          activeLanguage: String(payload.language || "en"),
+          vatEnabled: Boolean(payload.vatEnabled),
+          receiptEnabled: false
+        }
+      });
+      return response(origin, { shop, username, userId: created.user.id });
     }
 
     const shopId = clean(payload.shopId, /^[0-9a-f-]{36}$/i, "shop");
     const role = await callerRole(shopId);
     if (!["platform_admin", "owner", "shop_admin"].includes(String(role))) return response(origin, { error: "Forbidden" }, 403);
+
+    if (action === "list_users") {
+      const { data: memberships, error } = await admin.from("salon_memberships").select("user_id,role,active,created_at").eq("shop_id", shopId);
+      if (error) throw error;
+      const users = await Promise.all((memberships || []).map(async (membership) => {
+        const { data } = await admin.auth.admin.getUserById(membership.user_id);
+        const email = data.user?.email || "";
+        const username = email.split("@")[0].split(".").slice(1).join(".");
+        return {
+          id: membership.user_id,
+          name: data.user?.user_metadata?.display_name || username,
+          username,
+          role: membership.role,
+          active: membership.active,
+          createdAt: membership.created_at
+        };
+      }));
+      return response(origin, { users });
+    }
 
     if (action === "create_user") {
       const targetRole = clean(payload.role, /^(owner|shop_admin|cashier|staff)$/, "role");
@@ -111,6 +144,19 @@ Deno.serve(async (request) => {
       const { error } = await admin.auth.admin.updateUserById(userId, { password });
       if (error) throw error;
       return response(origin, { updated: true });
+    }
+
+    if (action === "set_user_status") {
+      const userId = clean(payload.userId, /^[0-9a-f-]{36}$/i, "user");
+      const active = Boolean(payload.active);
+      const { data: membership } = await admin.from("salon_memberships").select("role").eq("shop_id", shopId).eq("user_id", userId).single();
+      if (membership.role === "owner") return response(origin, { error: "Owner access cannot be disabled here" }, 403);
+      if (role === "shop_admin" && membership.role === "shop_admin") return response(origin, { error: "Only an owner can change management access" }, 403);
+      const { error } = await admin.from("salon_memberships").update({ active }).eq("shop_id", shopId).eq("user_id", userId);
+      if (error) throw error;
+      const { error: authUpdateError } = await admin.auth.admin.updateUserById(userId, { ban_duration: active ? "none" : "876000h" });
+      if (authUpdateError) throw authUpdateError;
+      return response(origin, { active });
     }
 
     if (action === "set_shop_status" && isPlatform) {

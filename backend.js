@@ -17,8 +17,28 @@
     else sessionStorage.removeItem(sessionKey);
   }
 
-  async function request(path, options = {}) {
-    const session = readSession();
+  async function refreshSession() {
+    const current = readSession();
+    if (!current?.refresh_token) throw new Error("Your session has expired. Please sign in again.");
+    const response = await fetch(`${projectUrl}/auth/v1/token?grant_type=refresh_token`, {
+      method: "POST",
+      headers: { apikey: publishableKey, "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh_token: current.refresh_token })
+    });
+    if (!response.ok) {
+      writeSession(null);
+      throw new Error("Your session has expired. Please sign in again.");
+    }
+    const session = await response.json();
+    writeSession(session);
+    return session;
+  }
+
+  async function request(path, options = {}, retry = true) {
+    let session = readSession();
+    if (session?.expires_at && session.expires_at * 1000 < Date.now() + 30000 && session.refresh_token) {
+      session = await refreshSession();
+    }
     const response = await fetch(`${projectUrl}${path}`, {
       ...options,
       headers: {
@@ -28,6 +48,10 @@
         ...(options.headers || {})
       }
     });
+    if (response.status === 401 && retry && session?.refresh_token && !path.startsWith("/auth/v1/token")) {
+      await refreshSession();
+      return request(path, options, false);
+    }
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
       throw new Error(body.msg || body.message || body.error_description || "Cloud request failed");
@@ -89,9 +113,65 @@
     });
   }
 
+  async function softDeleteRecord(shopId, recordType, externalId) {
+    return request(`/rest/v1/salon_records?shop_id=eq.${encodeURIComponent(shopId)}&record_type=eq.${encodeURIComponent(recordType)}&external_id=eq.${encodeURIComponent(externalId)}`, {
+      method: "PATCH",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({ deleted_at: new Date().toISOString() })
+    });
+  }
+
+  async function uploadEvidence(shopId, file) {
+    let session = readSession();
+    if (session?.expires_at && session.expires_at * 1000 < Date.now() + 30000) session = await refreshSession();
+    if (!session?.access_token) throw new Error("Please sign in before uploading evidence.");
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(-120) || "evidence";
+    const objectPath = `${shopId}/${Date.now()}-${crypto.randomUUID()}-${safeName}`;
+    const routePath = objectPath.split("/").map(encodeURIComponent).join("/");
+    const upload = await fetch(`${projectUrl}/storage/v1/object/salon-documents/${routePath}`, {
+      method: "POST",
+      headers: {
+        apikey: publishableKey,
+        Authorization: `Bearer ${session.access_token}`,
+        "Content-Type": file.type || "application/octet-stream",
+        "x-upsert": "false"
+      },
+      body: file
+    });
+    if (!upload.ok) {
+      const body = await upload.json().catch(() => ({}));
+      throw new Error(body.message || body.error || "Evidence upload failed.");
+    }
+    const signed = await request(`/storage/v1/object/sign/salon-documents/${routePath}`, {
+      method: "POST",
+      body: JSON.stringify({ expiresIn: 604800 })
+    });
+    const signedUrl = signed?.signedURL || signed?.signedUrl || "";
+    return {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      uploadedAt: new Date().toISOString(),
+      storagePath: objectPath,
+      dataUrl: signedUrl.startsWith("http") ? signedUrl : `${projectUrl}/storage/v1${signedUrl.startsWith("/") ? "" : "/"}${signedUrl}`
+    };
+  }
+
+  async function saveDocumentMetadata(document) {
+    return request("/rest/v1/salon_documents?on_conflict=object_path", {
+      method: "POST",
+      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify(document)
+    });
+  }
+
   async function provision(payload) {
     return request("/functions/v1/provision-user", { method: "POST", body: JSON.stringify(payload) });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, provision, isConfigured: true };
+  async function loadUsers(shopId) {
+    return provision({ action: "list_users", shopId });
+  }
+
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, provision, loadUsers, isConfigured: true };
 })();

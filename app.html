@@ -8,7 +8,7 @@
       content="Salon Control is a publishable barber shop daily-control web app for sales, purchases, expenses, stock, tools, cash closing and reports."
     />
     <meta name="theme-color" content="#17362f" />
-    <title>Salon Control MVP</title>
+    <title>Salon Control</title>
     <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260908-clients-queue-2" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-1" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -243,7 +243,7 @@
                 </label>
                 <label>Owner name <input id="newShopOwner" placeholder="Owner name" /></label>
                 <label>Owner username <input id="newOwnerUsername" placeholder="owner.albarsha" /></label>
-                <label>Temporary password <input id="newOwnerPassword" placeholder="ChangeMe123" /></label>
+                <label>Temporary password <input id="newOwnerPassword" type="password" minlength="10" autocomplete="new-password" placeholder="Minimum 10 characters" /></label>
                 <label>Opening cash <input id="newShopOpeningCash" type="number" min="0" step="0.01" value="200" /></label>
                 <label>Default language
                   <select id="newShopLanguage">
@@ -1123,64 +1123,6 @@
           </div>
         </section>
 
-        <section class="view" id="launch-audit">
-          <div class="metric-grid">
-            <article class="metric-card highlight">
-              <span>Market readiness</span>
-              <strong id="auditReadinessScore">0%</strong>
-              <small>Weighted launch controls completed</small>
-            </article>
-            <article class="metric-card">
-              <span>Working MVP modules</span>
-              <strong id="auditWorkingCount">0</strong>
-              <small>Browser-visible and saveable now</small>
-            </article>
-            <article class="metric-card">
-              <span>Backend gaps</span>
-              <strong id="auditBackendCount">0</strong>
-              <small>Must move from browser storage to server</small>
-            </article>
-            <article class="metric-card">
-              <span>Next sprint</span>
-              <strong id="auditNextSprintCount">0</strong>
-              <small>Highest-priority build items</small>
-            </article>
-          </div>
-
-          <div class="audit-layout">
-            <article class="panel launch-readiness-panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Launch Readiness Checklist</h3>
-                  <p>Pre-market audit for onboarding real barber shops</p>
-                </div>
-                <button class="primary-button" id="runLaunchAudit" type="button">Run Audit</button>
-              </div>
-              <div class="launch-audit-list" id="launchAuditList"></div>
-            </article>
-
-            <aside class="panel launch-priority-panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Build Order</h3>
-                  <p>Move one checked item at a time into the product</p>
-                </div>
-              </div>
-              <div class="priority-stack" id="launchPriorityStack"></div>
-            </aside>
-          </div>
-
-          <article class="panel launch-gap-panel">
-            <div class="panel-head">
-              <div>
-                <h3>Production Requirements</h3>
-                <p>What must exist before active users trust the platform</p>
-              </div>
-            </div>
-            <div class="requirement-grid" id="productionRequirementGrid"></div>
-          </article>
-        </section>
-
         <section class="view" id="settings">
           <div class="split-layout">
             <article class="panel form-panel">
@@ -1261,7 +1203,7 @@
               <div class="master-form">
                 <label>Name <input id="newUserName" placeholder="Rafiq" /></label>
                 <label>Username <input id="newUserUsername" placeholder="rafiq.cashier" /></label>
-                <label>Password <input id="newUserPassword" placeholder="Give a temporary password" /></label>
+                <label>Password <input id="newUserPassword" type="password" minlength="10" autocomplete="new-password" placeholder="Minimum 10 characters" /></label>
                 <label>Role
                   <select id="newUserRole">
                     <option value="Shop Admin">Shop Admin</option>
@@ -1301,7 +1243,7 @@
       </main>
     </div>
 
-    <script src="./backend.js?v=20260909-cloud-1"></script>
-    <script src="./app.js?v=20260909-cloud-1"></script>
+    <script src="./backend.js?v=20260910-release-1"></script>
+    <script src="./app.js?v=20260910-release-1"></script>
   </body>
 </html>
