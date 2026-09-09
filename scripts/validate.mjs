@@ -9,6 +9,7 @@ const checks = [
   "dist/app.html",
   "dist/marketing.html",
   "dist/styles.css",
+  "dist/backend.js",
   "dist/app.js",
   "dist/manifest.webmanifest",
   "dist/assets/icon.svg",
@@ -98,7 +99,7 @@ const requiredJs = [
   "data-reset-user",
   "data-delete-shop",
   "Platform Admin",
-  "\"Master Admin\": \"9999\""
+  "\"Shop Admin\": \"9999\""
 ];
 
 const forbiddenHtml = [

@@ -571,6 +571,26 @@ body.is-authenticated .app-shell {
   white-space: nowrap;
 }
 
+.sync-status {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid #88b9a8;
+  border-radius: 999px;
+  background: #e8f4ef;
+  color: #155f4d;
+  font-size: 12px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.sync-status[data-state="local"] {
+  border-color: var(--line);
+  background: var(--panel);
+  color: var(--muted);
+}
+
 .language-status {
   min-height: 34px;
   display: inline-flex;

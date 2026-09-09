@@ -29,7 +29,13 @@ test('tenant foundation enforces database permissions', async (t) => {
       grant usage on schema storage to authenticated;
       grant select,insert,update on storage.objects to authenticated;
     `);
-    await db.exec(await readFile(new URL('../supabase/migrations/202609090001_tenant_foundation.sql', import.meta.url), 'utf8'));
+    for (const migration of [
+      '202609090001_tenant_foundation.sql',
+      '202609090003_session_api.sql',
+      '202609090004_record_types.sql'
+    ]) {
+      await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
+    }
     await db.query('insert into auth.users(id) values ($1),($2),($3)', [owner,staff,platform]);
     await db.query("insert into public.salon_shops(id,code,name,country) values ($1,'SHOP_A','A','AE'),($2,'SHOP_B','B','QA')", [a,b]);
     await db.query("insert into public.salon_memberships(shop_id,user_id,role) values ($1,$2,'owner'),($1,$3,'staff')", [a,owner,staff]);
@@ -46,6 +52,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,1);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_records')).rows.length,2);
+      assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'SHOP_A',role:'owner'}]);
     });
     await t.test('owner cannot insert documents into another shop', async () => {
       await assert.rejects(db.query("insert into public.salon_documents(shop_id,title,category) values ($1,'Intrusion','lease')",[b]), /row-level security/);
@@ -67,6 +74,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,3);
       assert.equal((await db.query('select * from public.salon_records')).rows.length,3);
+      assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {
       await db.exec('reset role');

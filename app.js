@@ -51,7 +51,7 @@ const baseExpiryTypes = [
 
 const rolePins = {
   "Platform Admin": "9999",
-  "Master Admin": "9999",
+  "Shop Admin": "9999",
   Owner: "1234",
   Cashier: "2222",
   Staff: "1111"
@@ -59,7 +59,7 @@ const rolePins = {
 
 const roleAccess = {
   "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "settings"],
-  "Master Admin": ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "settings"],
+  "Shop Admin": ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "settings"],
   Owner: ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "compliance", "cash", "accounting", "reports", "settings"],
   Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
   Staff: ["quick-sale", "services"]
@@ -273,7 +273,7 @@ const uiTranslations = {
   "Enter workspace": { ar: "دخول مساحة العمل", hi: "वर्कस्पेस खोलें", ur: "ورک اسپیس کھولیں" },
   "Owner opens the full control room. Staff opens fast sale entry.": { ar: "المالك يفتح التحكم الكامل. الموظف يفتح البيع السريع.", hi: "मालिक पूरा कंट्रोल खोलता है। स्टाफ तेज बिक्री एंट्री खोलता है।", ur: "مالک مکمل کنٹرول کھولتا ہے۔ اسٹاف فوری سیل انٹری کھولتا ہے۔" },
   Role: { ar: "الدور", hi: "भूमिका", ur: "کردار" },
-  "Master Admin": { ar: "المدير الرئيسي", hi: "मास्टर एडमिन", ur: "ماسٹر ایڈمن" },
+  "Shop Admin": { ar: "مدير المتجر", hi: "शॉप एडमिन", ur: "شاپ ایڈمن" },
   Owner: { ar: "المالك", hi: "मालिक", ur: "مالک" },
   Staff: { ar: "الموظف", hi: "स्टाफ", ur: "اسٹاف" },
   Cashier: { ar: "أمين الصندوق", hi: "कैशियर", ur: "کیشئر" },
@@ -734,11 +734,167 @@ let montajiItems = activeShopState.montajiItems || defaultState.montajiItems;
 let activeSaleCategory = "All";
 let currentRole = "Owner";
 let currentUser = { ...platformAccount };
+let cloudIdentity = null;
+let cloudSaveTimer = null;
+let cloudHydrating = false;
+const isLocalDemo = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const backendRoleLabels = {
+  platform_admin: "Platform Admin",
+  owner: "Owner",
+  shop_admin: "Shop Admin",
+  cashier: "Cashier",
+  staff: "Staff"
+};
+
+if (!isLocalDemo) {
+  document.querySelector(".login-card .status-pill").textContent = "Secure cloud access";
+  document.querySelector(".login-card small").hidden = true;
+}
+
+function setSyncStatus(label, syncState = "") {
+  const status = document.getElementById("syncStatus");
+  if (!status) return;
+  status.hidden = !label;
+  status.textContent = label;
+  status.dataset.state = syncState;
+}
+
+const cloudCollections = [
+  ["services", "service"],
+  ["customers", "customer"],
+  ["appointments", "appointment"],
+  ["queueTickets", "queue_ticket"],
+  ["sales", "sale"],
+  ["purchases", "purchase"],
+  ["expenses", "expense"],
+  ["cashClosings", "cash_closing"],
+  ["staffPayments", "staff_payment"],
+  ["inspectionRecords", "inspection"],
+  ["hygieneLogs", "hygiene_log"],
+  ["complianceDocuments", "compliance_document"],
+  ["documentChain", "document_chain"],
+  ["montajiItems", "product_registration"]
+];
+
+const cloudWritableTypes = {
+  "Platform Admin": cloudCollections.map(([, type]) => type).concat("shop_setting"),
+  Owner: cloudCollections.map(([, type]) => type).concat("shop_setting"),
+  "Shop Admin": cloudCollections.map(([, type]) => type).concat("shop_setting"),
+  Cashier: ["customer", "appointment", "queue_ticket", "sale", "purchase", "expense", "cash_closing"],
+  Staff: ["queue_ticket", "sale"]
+};
+
+function cloudExternalId(item, type, index) {
+  if (item.id) return String(item.id);
+  const source = item.createdAt || item.name || item.record || item.type || item.sku || item.staff;
+  item.id = source
+    ? `${type}-${String(source).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${index}`
+    : `${type}-${crypto.randomUUID()}`;
+  return item.id;
+}
+
+function buildCloudRecords() {
+  if (!cloudIdentity?.shop_id) return [];
+  captureActiveShopState();
+  const allowed = new Set(cloudWritableTypes[currentRole] || []);
+  const records = [];
+  cloudCollections.forEach(([field, type]) => {
+    if (!allowed.has(type)) return;
+    (activeShopState[field] || []).forEach((item, index) => {
+      records.push({
+        shop_id: cloudIdentity.shop_id,
+        record_type: type,
+        external_id: cloudExternalId(item, type, index),
+        data: item,
+        deleted_at: null
+      });
+    });
+  });
+  if (allowed.has("shop_setting")) {
+    records.push({
+      shop_id: cloudIdentity.shop_id,
+      record_type: "shop_setting",
+      external_id: "operations",
+      data: { receiptEnabled, vatEnabled, openingCash, checklist },
+      deleted_at: null
+    });
+  }
+  return records;
+}
+
+function scheduleCloudSave() {
+  if (isLocalDemo || cloudHydrating || !cloudIdentity?.shop_id) return;
+  clearTimeout(cloudSaveTimer);
+  setSyncStatus("Saving…", "saving");
+  cloudSaveTimer = setTimeout(async () => {
+    try {
+      await window.SalonBackend.upsertRecords(buildCloudRecords());
+      setSyncStatus("Saved", "connected");
+    } catch (error) {
+      console.error("Cloud save failed", error);
+      setSyncStatus("Save failed", "error");
+    }
+  }, 350);
+}
+
+async function loadCloudShopState(shopId) {
+  const rows = await window.SalonBackend.loadRecords(shopId);
+  if (!rows.length) return;
+  cloudHydrating = true;
+  const target = shopStates[shopId] || createShopState({ customers: [], queueTickets: [] });
+  cloudCollections.forEach(([field, type]) => {
+    const matching = rows.filter((row) => row.record_type === type).map((row) => row.data);
+    if (matching.length) target[field] = matching;
+  });
+  const settings = rows.find((row) => row.record_type === "shop_setting" && row.external_id === "operations")?.data;
+  if (settings) Object.assign(target, settings);
+  shopStates[shopId] = target;
+  cloudHydrating = false;
+}
+
+async function authenticateCloudLogin({ shopCode, username, password }) {
+  const result = await window.SalonBackend.signIn(shopCode, username, password);
+  const identity = result.identity;
+  const role = backendRoleLabels[identity.role];
+  if (!role) throw new Error("Account role is not supported");
+  cloudIdentity = identity;
+  if (identity.shop_id) {
+    let shop = shops.find((candidate) => candidate.id === identity.shop_id);
+    if (!shop) {
+      shop = {
+        id: identity.shop_id,
+        shopCode: identity.shop_code,
+        name: identity.shop_name,
+        location: "",
+        country: "AE",
+        currency: "AED",
+        enabled: true
+      };
+      shops.push(shop);
+      shopStates[shop.id] = createShopState({ customers: [], queueTickets: [] });
+    }
+    activeShopId = shop.id;
+    await loadCloudShopState(shop.id);
+  } else {
+    const remoteShops = await window.SalonBackend.loadShops();
+    shops = remoteShops.map((shop) => ({
+      id: shop.id,
+      shopCode: shop.code,
+      name: shop.name,
+      location: "",
+      country: shop.country,
+      currency: countryProfiles[shop.country]?.currency || "AED",
+      enabled: shop.status === "active"
+    }));
+    if (shops[0]) activeShopId = shops[0].id;
+  }
+  return { ok: true, role, user: { name: username, username, role }, shopId: activeShopId };
+}
 
 function defaultShopUsers(ownerName = "Owner", ownerUsername = "owner.albarsha", ownerPassword = "1234") {
   return [
     { name: ownerName, username: ownerUsername, password: ownerPassword, role: "Owner", active: true, createdAt: new Date().toISOString() },
-    { name: "Shop Master", username: "master.albarsha", password: "9999", role: "Master Admin", active: true, createdAt: new Date().toISOString() },
+    { name: "Shop Admin", username: "admin.albarsha", password: "9999", role: "Shop Admin", active: true, createdAt: new Date().toISOString() },
     { name: "Cashier", username: "cashier.albarsha", password: "2222", role: "Cashier", active: true, createdAt: new Date().toISOString() },
     { name: "Staff", username: "staff.albarsha", password: "1111", role: "Staff", active: true, createdAt: new Date().toISOString() }
   ];
@@ -809,8 +965,8 @@ function hydrateActiveShop() {
   vatEnabled = !!activeShopState.vatEnabled;
   openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
   sales = activeShopState.sales || [];
-  customers = activeShopState.customers?.length ? activeShopState.customers : clone(defaultState.customers);
-  queueTickets = activeShopState.queueTickets || clone(defaultState.queueTickets);
+  customers = Array.isArray(activeShopState.customers) ? activeShopState.customers : clone(defaultState.customers);
+  queueTickets = Array.isArray(activeShopState.queueTickets) ? activeShopState.queueTickets : clone(defaultState.queueTickets);
   appointments = activeShopState.appointments || [];
   auditLog = activeShopState.auditLog || [];
   cashClosings = activeShopState.cashClosings || [];
@@ -979,6 +1135,7 @@ function saveState() {
   memoryState = nextState;
   try {
     localStorage.setItem(storageKey, JSON.stringify(nextState));
+    scheduleCloudSave();
     return true;
   } catch {
     return false;
@@ -2462,7 +2619,7 @@ function renderUserManagement() {
 
   table.querySelectorAll("[data-reset-user]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+      if (!["Owner", "Shop Admin", "Platform Admin"].includes(currentRole)) return;
       const user = activeShopState.users[Number(button.dataset.resetUser)];
       if (!user) return;
       const password = generatedPassword(user.role === "Owner" ? "Owner" : "User");
@@ -2477,7 +2634,7 @@ function renderUserManagement() {
 
   table.querySelectorAll("[data-toggle-user]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+      if (!["Owner", "Shop Admin", "Platform Admin"].includes(currentRole)) return;
       const user = activeShopState.users[Number(button.dataset.toggleUser)];
       if (!user || user.role === "Owner") {
         document.getElementById("userAccessNote").textContent = "Owner login cannot be disabled from this screen.";
@@ -2492,7 +2649,7 @@ function renderUserManagement() {
 
   table.querySelectorAll("[data-delete-user]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+      if (!["Owner", "Shop Admin", "Platform Admin"].includes(currentRole)) return;
       const index = Number(button.dataset.deleteUser);
       const user = activeShopState.users[index];
       if (!user || user.role === "Owner") {
@@ -2510,7 +2667,7 @@ function renderUserManagement() {
 }
 
 function createUserFromForm() {
-  if (!["Owner", "Master Admin", "Platform Admin"].includes(currentRole)) return;
+  if (!["Owner", "Shop Admin", "Platform Admin"].includes(currentRole)) return;
   const name = document.getElementById("newUserName").value.trim();
   const username = document.getElementById("newUserUsername").value.trim();
   const password = document.getElementById("newUserPassword").value.trim();
@@ -3034,13 +3191,26 @@ document.getElementById("saveSettings").addEventListener("click", () => {
   saveState();
 });
 
-document.getElementById("loginForm").addEventListener("submit", (event) => {
+document.getElementById("loginForm").addEventListener("submit", async (event) => {
   event.preventDefault();
   const shopCode = document.getElementById("loginShopId").value;
   const username = document.getElementById("loginUsername").value;
   const password = document.getElementById("loginPin").value;
   const loginError = document.getElementById("loginError");
-  const login = authenticateLogin({ shopCode, username, password });
+  const submit = event.submitter || document.querySelector(".login-submit");
+  submit.disabled = true;
+  loginError.hidden = true;
+  let login;
+  try {
+    login = isLocalDemo
+      ? authenticateLogin({ shopCode, username, password })
+      : await authenticateCloudLogin({ shopCode, username, password });
+  } catch (error) {
+    loginError.textContent = error instanceof Error ? error.message : "Unable to sign in.";
+    login = { ok: false };
+  } finally {
+    submit.disabled = false;
+  }
   if (!login.ok) {
     loginError.hidden = false;
     return;
@@ -3062,11 +3232,15 @@ document.getElementById("loginForm").addEventListener("submit", (event) => {
   frontpage.classList.add("front-hidden");
   appShell.classList.remove("app-hidden");
   applyRoleAccess();
+  setSyncStatus(isLocalDemo ? "Local demo" : "Cloud connected", isLocalDemo ? "local" : "connected");
   syncShopIdentity();
   showView(currentRole === "Platform Admin" ? "master-admin" : currentRole === "Staff" ? "quick-sale" : "dashboard");
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
+  if (!isLocalDemo) void window.SalonBackend.signOut();
+  cloudIdentity = null;
+  setSyncStatus("");
   window.scrollTo({ top: 0, left: 0 });
   document.body.classList.remove("is-authenticated");
   document.body.classList.remove("is-platform-admin");

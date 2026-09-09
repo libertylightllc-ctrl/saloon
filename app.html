@@ -46,7 +46,7 @@
             </div>
             <div>
               <strong>5 roles</strong>
-              <span>platform, owner, master, cashier, staff</span>
+              <span>platform, owner, shop admin, cashier, staff</span>
             </div>
             <div>
               <strong id="loginCurrencySignal">AED</strong>
@@ -178,6 +178,7 @@
               <select class="mobile-module-switcher" id="mobileViewSwitcher" aria-label="Choose module"></select>
             </label>
             <span class="user-chip" id="userChip">Owner · Al Barsha</span>
+            <span class="sync-status" id="syncStatus" hidden>Cloud</span>
             <select class="shop-switcher shop-only-control" id="shopSwitcher" aria-label="Active shop"></select>
             <div class="language-switch shop-only-control" aria-label="Language preview">
               <button class="active" data-lang="en" type="button">EN</button>
@@ -1263,7 +1264,7 @@
                 <label>Password <input id="newUserPassword" placeholder="Give a temporary password" /></label>
                 <label>Role
                   <select id="newUserRole">
-                    <option value="Master Admin">Master Admin</option>
+                    <option value="Shop Admin">Shop Admin</option>
                     <option value="Cashier">Cashier</option>
                     <option value="Staff">Staff</option>
                   </select>
@@ -1300,6 +1301,7 @@
       </main>
     </div>
 
-    <script src="./app.js?v=20260908-clients-queue-2"></script>
+    <script src="./backend.js?v=20260909-cloud-1"></script>
+    <script src="./app.js?v=20260909-cloud-1"></script>
   </body>
 </html>
