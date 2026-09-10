@@ -93,6 +93,17 @@ test('refund RPC sends a tenant-scoped full refund request', async () => {
   });
 });
 
+test('daily close RPC sends counted cash for server calculation', async () => {
+  const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const closing = { id: 'closing-2026-09-10', businessDate: '2026-09-10', actual: 100, reason: '' };
+  await fixture.backend.closeDay('shop-id', closing);
+  assert.match(fixture.calls[0].url, /rpc\/salon_close_day$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), {
+    target_shop: 'shop-id', closing_external_id: closing.id, closing_data: closing
+  });
+});
+
 test('expired API responses refresh the session once and retry', async () => {
   const fixture = backendFixture([
     { status: 401, body: { message: 'expired' } },

@@ -35,7 +35,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609090003_session_api.sql',
       '202609090004_record_types.sql',
       '202609100006_inventory_transactions.sql',
-      '202609100007_supplier_refunds.sql'
+      '202609100007_supplier_refunds.sql',
+      '202609100008_immutable_daily_close.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -98,11 +99,24 @@ test('tenant foundation enforces database permissions', async (t) => {
       await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'supplier','supplier-1','{\"name\":\"Vendor\"}',$2),($1,'supplier_payment','payment-1','{\"amount\":10}',$2)",[a,owner]);
       assert.equal((await db.query("select * from public.salon_records where record_type in ('supplier','supplier_payment')")).rows.length,2);
     });
+    await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
+      const businessDate = new Date().toISOString().slice(0,10);
+      await asUser(owner);
+      await assert.rejects(db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'cash_closing','forged','{}',$2)",[a,owner]), /controlled close workflow/);
+      await asUser(cashier);
+      await assert.rejects(db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,`closing-${businessDate}`,JSON.stringify({businessDate,actual:5,reason:''})]), /variance reason/);
+      await db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,`closing-${businessDate}`,JSON.stringify({businessDate,actual:0,reason:''})]);
+      assert.equal((await db.query("select data->>'status' status from public.salon_records where record_type='cash_closing'")).rows[0].status,'Submitted');
+      await asUser(owner);
+      await db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,`closing-${businessDate}`,JSON.stringify({businessDate,actual:0,reason:''})]);
+      assert.equal((await db.query("select data->>'status' status from public.salon_records where record_type='cash_closing'")).rows[0].status,'Approved');
+      await assert.rejects(db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,'duplicate-close',JSON.stringify({businessDate,actual:0,reason:''})]), /approved and locked/);
+    });
     await t.test('platform admin can view all shops', async () => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,3);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,9);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,10);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {

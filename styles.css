@@ -2824,7 +2824,8 @@ th {
 }
 
 .sale-history-panel,
-.supplier-layout {
+.supplier-layout,
+.closing-history-panel {
   margin-top: 16px;
 }
 

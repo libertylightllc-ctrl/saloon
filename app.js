@@ -873,7 +873,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type)) return;
+    if (!allowed.has(type) || type === "cash_closing") return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -2135,6 +2135,7 @@ function syncSummaryTotals() {
   syncReportTotals();
   renderClientsQueue();
   renderAccounting();
+  renderClosingHistory();
   renderLaunchAudit();
   updateClosingCalculation();
 }
@@ -2176,6 +2177,41 @@ function updateClosingCalculation() {
   document.getElementById("closingExpectedCash").textContent = moneyFixed(expected);
   document.getElementById("closingDifference").textContent = moneyFixed(difference);
   document.getElementById("closingDifference").classList.toggle("negative", difference < 0);
+}
+
+function renderClosingHistory() {
+  const body = document.getElementById("closingHistoryTable");
+  if (!body) return;
+  const todayClose = cashClosings.find((closing) => (closing.businessDate || String(closing.createdAt || "").slice(0, 10)) === todayIso());
+  document.getElementById("closingStatus").textContent = todayClose ? todayClose.status || "Approved" : "No close today";
+  body.innerHTML = cashClosings.length ? cashClosings.map((closing) => {
+    const status = closing.status || "Approved";
+    const canApprove = status === "Submitted" && ["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
+    return `<tr><td>${escapeHtml(closing.businessDate || String(closing.createdAt || "").slice(0, 10))}</td><td>${moneyFixed(closing.expected)}</td><td>${moneyFixed(closing.actual)}</td><td><b class="${Number(closing.difference) ? "warn" : "ok"}">${moneyFixed(closing.difference)}</b></td><td>${escapeHtml(closing.reason || "-")}</td><td><b class="${status === "Approved" ? "ok" : "warn"}">${escapeHtml(status)}</b></td><td>${escapeHtml(closing.approvedBy || closing.submittedBy || "-")}</td><td>${canApprove ? `<button class="primary-button" data-approve-close="${escapeHtml(closing.id)}" type="button">Approve</button>` : "-"}</td></tr>`;
+  }).join("") : '<tr><td colspan="8">No daily closes yet.</td></tr>';
+
+  body.querySelectorAll("[data-approve-close]").forEach((button) => button.addEventListener("click", async () => {
+    const closing = cashClosings.find((candidate) => candidate.id === button.dataset.approveClose);
+    if (!closing) return;
+    button.disabled = true;
+    try {
+      if (!isLocalDemo) {
+        const result = await window.SalonBackend.closeDay(cloudTargetShopId(), closing);
+        Object.assign(closing, result?.closing || {}, { status: "Approved" });
+      } else {
+        closing.status = "Approved";
+        closing.approvedBy = currentUser?.name || currentRole;
+        closing.approvedAt = new Date().toISOString();
+      }
+      addAudit("Cash close approved", `${currentRole} · ${closing.businessDate} · variance ${moneyFixed(closing.difference)}`);
+      saveState();
+      renderClosingHistory();
+      document.getElementById("closingNote").textContent = `${closing.businessDate} approved and locked.`;
+    } catch (error) {
+      document.getElementById("closingNote").textContent = error instanceof Error ? error.message : "Close approval failed.";
+      button.disabled = false;
+    }
+  }));
 }
 
 function renderAuditLog() {
@@ -2784,6 +2820,10 @@ function applyRoleAccess() {
   document.getElementById("serviceCatalogDescription").textContent = canManageServices
     ? "Add haircut, beard color, hair color, facial, massage or any custom service"
     : "Current services, prices and stock recipes";
+  document.getElementById("approveClosing").textContent = currentRole === "Cashier" ? "Submit Closing" : "Approve Closing";
+  document.getElementById("closingRoleDescription").textContent = currentRole === "Cashier"
+    ? "Count the drawer and submit any variance to the owner"
+    : "Review counted cash, variance reasons and approve the day";
   document.body.classList.remove("is-platform-admin");
   renderShopSwitcher();
   renderMobileViewSwitcher();
@@ -4286,7 +4326,7 @@ document.getElementById("saveStockMovement").addEventListener("click", () => {
   document.getElementById(id).addEventListener("input", updateClosingCalculation);
 });
 
-document.getElementById("approveClosing").addEventListener("click", () => {
+document.getElementById("approveClosing").addEventListener("click", async () => {
   updateClosingCalculation();
   const expected = expectedCashTotal();
   const actual = numberValue("closingActualCash");
@@ -4297,23 +4337,51 @@ document.getElementById("approveClosing").addEventListener("click", () => {
     document.getElementById("closingDifference").textContent = translate("Shortage reason required.");
     return;
   }
-  cashClosings.unshift({
+  const businessDate = todayIso();
+  if (cashClosings.some((closing) => (closing.businessDate || String(closing.createdAt || "").slice(0, 10)) === businessDate)) {
+    document.getElementById("closingNote").textContent = "This business date already has a close record.";
+    return;
+  }
+  const status = currentRole === "Cashier" ? "Submitted" : "Approved";
+  const closing = {
+    id: `closing-${businessDate}`,
+    businessDate,
     openingCash,
     cashSales: cashSalesTotal(),
     cashExpenses: cashOutTotal(expenses),
-    cashPurchases: cashOutTotal(purchases),
+    cashPurchases: cashOutTotal(purchases) + cashOutTotal(supplierPayments),
     expected,
     actual,
     difference,
     reason,
-    approvedBy: currentRole,
+    status,
+    ...(status === "Approved"
+      ? { approvedBy: currentUser?.name || currentRole, approvedAt: new Date().toISOString() }
+      : { submittedBy: currentUser?.name || currentRole }),
     createdAt: new Date().toISOString()
-  });
+  };
+  const button = document.getElementById("approveClosing");
+  if (!isLocalDemo) {
+    button.disabled = true;
+    document.getElementById("closingNote").textContent = "Server is recalculating the drawer…";
+    try {
+      const result = await window.SalonBackend.closeDay(cloudTargetShopId(), closing);
+      Object.assign(closing, result?.closing || {});
+    } catch (error) {
+      document.getElementById("closingNote").textContent = error instanceof Error ? error.message : "Daily close could not be saved.";
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
+  cashClosings.unshift(closing);
   cashClosings = cashClosings.slice(0, 30);
-  addAudit("Stock adjusted", `${currentRole} · day closed · ${moneyFixed(difference)}`);
+  addAudit(status === "Approved" ? "Cash close approved" : "Cash close submitted", `${currentRole} · ${businessDate} · ${moneyFixed(closing.difference)}`);
   saveState();
   syncSummaryTotals();
-  document.getElementById("closingReason").placeholder = translate("Cash closing approved.");
+  renderClosingHistory();
+  document.getElementById("closingReason").placeholder = translate(status === "Approved" ? "Cash closing approved." : "Waiting for owner approval.");
+  document.getElementById("closingNote").textContent = status === "Approved" ? "Daily close approved and locked." : "Daily close submitted for owner approval.";
 });
 
 document.getElementById("saveExpiryDocument").addEventListener("click", async () => {

@@ -189,6 +189,17 @@
     });
   }
 
+  async function closeDay(shopId, closing) {
+    return request("/rest/v1/rpc/salon_close_day", {
+      method: "POST",
+      body: JSON.stringify({
+        target_shop: shopId,
+        closing_external_id: closing.id,
+        closing_data: closing
+      })
+    });
+  }
+
   async function provision(payload) {
     return request("/functions/v1/provision-user", { method: "POST", body: JSON.stringify(payload) });
   }
@@ -197,5 +208,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, recordSale, refundSale, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, recordSale, refundSale, closeDay, provision, loadUsers, isConfigured: true };
 })();
