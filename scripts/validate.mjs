@@ -74,6 +74,7 @@ const requiredHtml = [
   "id=\"expenseEvidenceFile\"",
   "id=\"taxModeCard\"",
   "id=\"inventoryItemForm\"",
+  "id=\"inventoryChangeReason\"",
   "id=\"expenseReversalField\""
 ];
 
@@ -122,7 +123,10 @@ const requiredJs = [
   "recordPurchase",
   "reversePurchase",
   "recordSupplierPayment",
-  "reverseSupplierPayment"
+  "reverseSupplierPayment",
+  "saveInventoryItem",
+  "recordStockMovement",
+  "archiveInventoryItem"
 ];
 
 const forbiddenHtml = [

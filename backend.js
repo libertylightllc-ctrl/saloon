@@ -247,6 +247,27 @@
     });
   }
 
+  async function saveInventoryItem(shopId, item, movementId, reason) {
+    return request("/rest/v1/rpc/salon_save_inventory_item", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, item_external_id: item.id, change_external_id: movementId, item_data: item, change_reason: reason })
+    });
+  }
+
+  async function recordStockMovement(shopId, movementId, itemId, type, quantity, reason) {
+    return request("/rest/v1/rpc/salon_record_stock_movement", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, movement_external_id: movementId, item_external_id: itemId, movement_type: type, entered_quantity: quantity, movement_reason: reason })
+    });
+  }
+
+  async function archiveInventoryItem(shopId, itemId, reason) {
+    return request("/rest/v1/rpc/salon_archive_inventory_item", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, item_external_id: itemId, archive_reason: reason })
+    });
+  }
+
   async function closeDay(shopId, closing) {
     return request("/rest/v1/rpc/salon_close_day", {
       method: "POST",
@@ -310,5 +331,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();

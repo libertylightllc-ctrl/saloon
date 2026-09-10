@@ -146,6 +146,23 @@ test('supplier payment creation and reversal use controlled RPCs', async () => {
   });
 });
 
+test('inventory master, movement and archive use controlled RPCs', async () => {
+  const fixture = backendFixture([
+    { status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }
+  ]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const item = { id: 'inv-1', name: 'Towels', quantity: 10 };
+  await fixture.backend.saveInventoryItem('shop-id', item, 'movement-1', 'Opening count');
+  await fixture.backend.recordStockMovement('shop-id', 'movement-2', item.id, 'waste', 2, 'Damaged stock');
+  await fixture.backend.archiveInventoryItem('shop-id', item.id, 'Item retired');
+  assert.match(fixture.calls[0].url, /rpc\/salon_save_inventory_item$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), { target_shop:'shop-id', item_external_id:'inv-1', change_external_id:'movement-1', item_data:item, change_reason:'Opening count' });
+  assert.match(fixture.calls[1].url, /rpc\/salon_record_stock_movement$/);
+  assert.deepEqual(JSON.parse(fixture.calls[1].options.body), { target_shop:'shop-id', movement_external_id:'movement-2', item_external_id:'inv-1', movement_type:'waste', entered_quantity:2, movement_reason:'Damaged stock' });
+  assert.match(fixture.calls[2].url, /rpc\/salon_archive_inventory_item$/);
+  assert.deepEqual(JSON.parse(fixture.calls[2].options.body), { target_shop:'shop-id', item_external_id:'inv-1', archive_reason:'Item retired' });
+});
+
 test('daily close RPC sends counted cash for server calculation', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));

@@ -46,7 +46,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100014_operational_documents.sql',
       '202609100015_controlled_expenses.sql',
       '202609100016_controlled_purchases.sql',
-      '202609100017_controlled_supplier_payments.sql'
+      '202609100017_controlled_supplier_payments.sql',
+      '202609110018_controlled_inventory.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -93,6 +94,7 @@ test('tenant foundation enforces database permissions', async (t) => {
     });
     await t.test('staff sale deducts recipe stock atomically and is idempotent', async () => {
       await db.exec('reset role');
+      await db.query("select set_config('request.jwt.claim.sub','',false)");
       await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'inventory_item','inv-blades',$2,$3)", [a, JSON.stringify({name:'Blades',unit:'pcs',quantity:5,unitCost:1}), owner]);
       await asUser(staff);
       const sale = {id:'sale-atomic-1',service:'Shave',payment:'Cash',amount:15,createdAt:new Date().toISOString()};
@@ -195,6 +197,28 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal(reversed.status,'Reversed');
       assert.equal(Number(reversed.amount),20);
     });
+    await t.test('server controls inventory edits, movements and recipe-safe archiving', async () => {
+      const item = {id:'inv-controlled',name:'Controlled towels',type:'operational',unit:'pcs',quantity:10,reorderLevel:2,unitCost:3,assignedTo:'Store room',condition:'Good',maintenanceDate:''};
+      await asUser(owner);
+      await db.query('select public.salon_save_inventory_item($1,$2,$3,$4::jsonb,$5)',[a,item.id,'movement-inventory-opening',JSON.stringify(item),'Opening count']);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"quantity\":99}' where shop_id=$1 and record_type='inventory_item' and external_id=$2",[a,item.id]), /controlled inventory workflow/);
+      await asUser(cashier);
+      await db.query('select public.salon_record_stock_movement($1,$2,$3,$4,$5,$6)',[a,'movement-stock-out',item.id,'adjustment_out',3,'Issued to floor']);
+      await db.query('select public.salon_record_stock_movement($1,$2,$3,$4,$5,$6)',[a,'movement-stock-out',item.id,'adjustment_out',3,'Issued to floor']);
+      assert.equal(Number((await db.query("select data->>'quantity' quantity from public.salon_records where shop_id=$1 and record_type='inventory_item' and external_id=$2",[a,item.id])).rows[0].quantity),7);
+      await db.query('select public.salon_record_stock_movement($1,$2,$3,$4,$5,$6)',[a,'movement-count',item.id,'count',4,'Physical count']);
+      await assert.rejects(db.query('select public.salon_record_stock_movement($1,$2,$3,$4,$5,$6)',[a,'movement-negative',item.id,'adjustment_out',9,'Impossible issue']), /Insufficient stock/);
+      await asUser(staff);
+      await assert.rejects(db.query('select public.salon_record_stock_movement($1,$2,$3,$4,$5,$6)',[a,'movement-forged',item.id,'waste',1,'Forged waste']), /Not authorized/);
+      await asUser(owner);
+      await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'service','inventory-recipe',$2,$3)",[a,JSON.stringify({name:'Towel service',active:true,recipeItems:[{itemId:item.id,quantity:1}]}),owner]);
+      await assert.rejects(db.query('select public.salon_archive_inventory_item($1,$2,$3)',[a,item.id,'Retire item']), /active service recipes/);
+      await db.query("update public.salon_records set data=jsonb_set(data,'{active}','false'::jsonb) where shop_id=$1 and record_type='service' and external_id='inventory-recipe'",[a]);
+      await db.query('select public.salon_archive_inventory_item($1,$2,$3)',[a,item.id,'Retire item']);
+      const archived = (await db.query("select data from public.salon_records where shop_id=$1 and record_type='inventory_item' and external_id=$2",[a,item.id])).rows[0].data;
+      assert.equal(archived.active,false);
+      assert.equal(Number(archived.quantity),4);
+    });
     await t.test('owner manages payroll while staff sees only their own employment records', async () => {
       await asUser(owner);
       await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'staff_profile','profile-1',$2,$3),($1,'attendance','attendance-1',$4,$3),($1,'payroll','payroll-1',$5,$3)",[
@@ -261,7 +285,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,4);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,25);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,30);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {

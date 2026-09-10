@@ -912,7 +912,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment"].includes(type)) return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -3720,6 +3720,7 @@ function resetInventoryForm() {
   document.getElementById("inventoryAssigned").value = "";
   document.getElementById("inventoryCondition").value = "Good";
   document.getElementById("inventoryMaintenance").value = "";
+  document.getElementById("inventoryChangeReason").value = "";
   document.getElementById("inventoryFormTitle").textContent = "Add inventory item";
 }
 
@@ -3769,11 +3770,30 @@ function renderInventory() {
   body.querySelectorAll("[data-archive-inventory]").forEach((button) => button.addEventListener("click", async () => {
     const item = inventoryItems.find((candidate) => candidate.id === button.dataset.archiveInventory);
     if (!item || !window.confirm(`Archive ${item.name}? Existing movement history will remain.`)) return;
-    item.active = false;
+    const reason = document.getElementById("inventoryChangeReason").value.trim();
+    if (!reason) {
+      document.getElementById("inventoryNote").textContent = "Enter the archive reason in the inventory form first.";
+      return;
+    }
+    if (!isLocalDemo) {
+      button.disabled = true;
+      try {
+        const result = await window.SalonBackend.archiveInventoryItem(cloudTargetShopId(), item.id, reason);
+        if (result?.inventoryItem) Object.assign(item, result.inventoryItem);
+      } catch (error) {
+        document.getElementById("inventoryNote").textContent = error.message;
+        button.disabled = false;
+        return;
+      }
+    } else {
+      Object.assign(item, { active: false, archiveReason: reason, archivedAt: new Date().toISOString(), archivedBy: currentUser?.name || currentRole });
+    }
     addAudit("Stock adjusted", `${currentRole} · archived ${item.name}`);
     saveState();
     renderInventory();
     renderRecipeBuilder();
+    document.getElementById("inventoryChangeReason").value = "";
+    document.getElementById("inventoryNote").textContent = `${item.name} archived. Movement history is retained.`;
   }));
   renderRecipeBuilder();
 }
@@ -5124,7 +5144,7 @@ document.getElementById("saveExpense").addEventListener("click", async (event) =
   document.getElementById(id).addEventListener("input", updatePurchaseCalculation);
 });
 
-document.getElementById("saveInventoryItem").addEventListener("click", () => {
+document.getElementById("saveInventoryItem").addEventListener("click", async (event) => {
   if (!canManageShopOperations()) return;
   const editId = document.getElementById("inventoryEditId").value;
   const name = document.getElementById("inventoryName").value.trim();
@@ -5132,38 +5152,51 @@ document.getElementById("saveInventoryItem").addEventListener("click", () => {
   const reorderLevel = Number(document.getElementById("inventoryReorder").value || 0);
   const unitCost = Number(document.getElementById("inventoryUnitCost").value || 0);
   const unit = document.getElementById("inventoryUnit").value.trim() || "unit";
+  const reason = document.getElementById("inventoryChangeReason").value.trim();
   if (!name || ![quantity, reorderLevel, unitCost].every(Number.isFinite) || quantity < 0 || reorderLevel < 0 || unitCost < 0) {
     document.getElementById("inventoryNote").textContent = "Enter a valid name, quantity, reorder level and unit cost.";
     return;
   }
   let item = inventoryItems.find((candidate) => candidate.id === editId);
-  if (item) {
-    const delta = quantity - Number(item.quantity || 0);
-    item.name = name;
-    item.type = document.getElementById("inventoryType").value;
-    item.unit = unit;
-    item.reorderLevel = reorderLevel;
-    item.assignedTo = document.getElementById("inventoryAssigned").value.trim();
-    item.condition = document.getElementById("inventoryCondition").value;
-    item.maintenanceDate = document.getElementById("inventoryMaintenance").value;
-    if (delta) addStockMovement(item, delta, "opening_correction", `inventory-${item.id}`, "Quantity edited", unitCost);
+  const isNew = !item;
+  const oldQuantity = Number(item?.quantity || 0);
+  const oldUnitCost = Number(item?.unitCost || 0);
+  const quantityChanged = quantity !== oldQuantity;
+  if (quantityChanged && !reason) {
+    document.getElementById("inventoryNote").textContent = "Enter a reason for the quantity change.";
+    return;
+  }
+  const itemId = item?.id || `inv-${crypto.randomUUID()}`;
+  const desired = {
+    id: itemId, name, type: document.getElementById("inventoryType").value, unit, quantity, reorderLevel, unitCost,
+    assignedTo: document.getElementById("inventoryAssigned").value.trim(),
+    condition: document.getElementById("inventoryCondition").value,
+    maintenanceDate: document.getElementById("inventoryMaintenance").value, active: true
+  };
+  if (!isLocalDemo) {
+    const button = event.currentTarget;
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.saveInventoryItem(cloudTargetShopId(), desired, `movement-inventory-${crypto.randomUUID()}`, reason);
+      if (result?.inventoryItem) Object.assign(desired, result.inventoryItem);
+      if (result?.movement && !stockMovements.some((movement) => movement.id === result.movement.id)) stockMovements.unshift(result.movement);
+    } catch (error) {
+      document.getElementById("inventoryNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+    if (item) Object.assign(item, desired); else inventoryItems.push(desired);
+    item = item || desired;
+  } else if (item) {
+    const delta = quantity-oldQuantity;
+    Object.assign(item, desired, { quantity: oldQuantity, unitCost: oldUnitCost });
+    if (delta) addStockMovement(item, delta, "opening_correction", `inventory-${item.id}`, reason, unitCost);
     item.unitCost = unitCost;
   } else {
-    item = {
-      id: `inv-${crypto.randomUUID()}`,
-      name,
-      type: document.getElementById("inventoryType").value,
-      unit,
-      quantity: 0,
-      reorderLevel,
-      unitCost,
-      assignedTo: document.getElementById("inventoryAssigned").value.trim(),
-      condition: document.getElementById("inventoryCondition").value,
-      maintenanceDate: document.getElementById("inventoryMaintenance").value,
-      active: true
-    };
+    item = { ...desired, quantity: 0 };
     inventoryItems.push(item);
-    if (quantity) addStockMovement(item, quantity, "opening_balance", `inventory-${item.id}`, "Opening quantity", unitCost);
+    if (quantity) addStockMovement(item, quantity, "opening_balance", `inventory-${item.id}`, reason, unitCost);
   }
   checklist.openingStock = inventoryItems.some((candidate) => Number(candidate.quantity || 0) > 0);
   addAudit("Stock adjusted", `${currentRole} · saved ${item.name} · ${inventoryQuantity(item)}`);
@@ -5176,7 +5209,7 @@ document.getElementById("saveInventoryItem").addEventListener("click", () => {
 
 document.getElementById("clearInventoryForm").addEventListener("click", resetInventoryForm);
 
-document.getElementById("saveStockMovement").addEventListener("click", () => {
+document.getElementById("saveStockMovement").addEventListener("click", async (event) => {
   const item = inventoryItems.find((candidate) => candidate.id === document.getElementById("movementItem").value);
   const type = document.getElementById("movementType").value;
   const entered = Number(document.getElementById("movementQty").value || 0);
@@ -5190,7 +5223,23 @@ document.getElementById("saveStockMovement").addEventListener("click", () => {
     document.getElementById("movementNote").textContent = `Cannot post: ${item.name} has only ${inventoryQuantity(item)} available.`;
     return;
   }
-  addStockMovement(item, delta, type, `manual-${crypto.randomUUID()}`, reason);
+  const movementId = `manual-${crypto.randomUUID()}`;
+  if (!isLocalDemo) {
+    const button = event.currentTarget;
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.recordStockMovement(cloudTargetShopId(), movementId, item.id, type, entered, reason);
+      if (result?.inventoryItem) Object.assign(item, result.inventoryItem);
+      if (result?.movement && !stockMovements.some((movement) => movement.id === result.movement.id)) stockMovements.unshift(result.movement);
+    } catch (error) {
+      document.getElementById("movementNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  } else {
+    addStockMovement(item, delta, type, movementId, reason);
+  }
   addAudit("Stock adjusted", `${currentRole} · ${item.name} · ${delta > 0 ? "+" : ""}${delta} ${item.unit} · ${reason}`);
   saveState();
   renderInventory();
