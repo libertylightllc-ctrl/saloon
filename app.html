@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-2" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-3" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -608,8 +608,22 @@
                 </select>
               </label>
               <label>Price <input id="servicePrice" type="number" min="0" step="0.01" value="45" /></label>
-              <label>Recipe / stock use <input id="serviceRecipe" value="Beard color 20ml, developer 20ml, gloves 1 pair" /></label>
+              <label>Recipe notes <input id="serviceRecipe" value="Beard color, developer and gloves" /></label>
+              <fieldset class="recipe-builder">
+                <legend>Automatic stock use per service</legend>
+                <div class="inline-fields recipe-controls">
+                  <label>Inventory item
+                    <select id="recipeItem"></select>
+                  </label>
+                  <label>Quantity
+                    <input id="recipeQty" type="number" min="0.001" step="0.001" value="1" />
+                  </label>
+                </div>
+                <button class="ghost-button full" id="addRecipeItem" type="button">Add recipe line</button>
+                <div class="recipe-lines" id="recipeLines"></div>
+              </fieldset>
               <button class="primary-button full" id="saveService" type="button">Save Service</button>
+              <p class="system-note" id="serviceNote">Recipe quantities are deducted when the service is sold.</p>
             </article>
           </div>
         </section>
@@ -749,34 +763,70 @@
         </section>
 
         <section class="view" id="inventory">
-          <div class="dashboard-grid">
+          <div class="metric-grid inventory-metrics">
+            <article class="metric-card highlight"><span>Stock value</span><strong id="inventoryValue">AED 0.00</strong><small>Current quantity at weighted unit cost</small></article>
+            <article class="metric-card"><span>Low stock</span><strong id="inventoryLowCount">0</strong><small>Items at or below reorder level</small></article>
+            <article class="metric-card"><span>Active items</span><strong id="inventoryItemCount">0</strong><small>Consumables, products and assets</small></article>
+            <article class="metric-card"><span>Movements</span><strong id="inventoryMovementCount">0</strong><small>Auditable stock changes</small></article>
+          </div>
+
+          <div class="split-layout inventory-layout">
             <article class="panel">
               <div class="panel-head">
-                <div>
-                  <h3>Consumable Inventory</h3>
-                  <p>Used during services and deducted by recipes</p>
-                </div>
+                <div><h3>Inventory Register</h3><p>Live quantity, reorder level, cost and asset condition</p></div>
+                <span class="status-pill" id="inventoryHealth">Stock ready</span>
               </div>
-              <div class="stock-list">
-                <div><strong>Blades</strong><span>156 pcs · minimum 80</span><b class="ok">Good</b></div>
-                <div><strong>Shaving Foam</strong><span>8 bottles · minimum 5</span><b class="ok">Good</b></div>
-                <div><strong>Hair Oil</strong><span>1.5 L · minimum 1 L</span><b class="ok">Good</b></div>
-                <div><strong>Developer 20 Vol</strong><span>900 ml · minimum 1 L</span><b class="warn">Low</b></div>
+              <div class="table-wrap">
+                <table class="inventory-table">
+                  <thead><tr><th>Item</th><th>Type</th><th>On hand</th><th>Reorder</th><th>Unit cost</th><th>Value</th><th>Status</th><th>Action</th></tr></thead>
+                  <tbody id="inventoryTable"></tbody>
+                </table>
               </div>
             </article>
 
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Reusable Tools / Assets</h3>
-                  <p>Tracked separately from consumable stock</p>
-                </div>
+            <article class="panel form-panel">
+              <div class="panel-head compact"><div><h3 id="inventoryFormTitle">Add inventory item</h3><p>Set stock or register a reusable tool</p></div></div>
+              <input id="inventoryEditId" type="hidden" />
+              <label>Item name <input id="inventoryName" placeholder="e.g. Shaving blades" /></label>
+              <label>Item type
+                <select id="inventoryType"><option value="consumable">Consumable</option><option value="retail">Retail product</option><option value="asset">Reusable tool / asset</option><option value="operational">Operational supply</option></select>
+              </label>
+              <div class="inline-fields">
+                <label>Quantity <input id="inventoryQty" type="number" min="0" step="0.001" value="0" /></label>
+                <label>Unit <input id="inventoryUnit" value="pcs" /></label>
               </div>
-              <div class="stock-list">
-                <div><strong>Trimming Machine</strong><span>Chair 2 · good condition</span><b>Asset</b></div>
-                <div><strong>Scissors</strong><span>Rafiq · last sharpened 20 Aug</span><b>Tool</b></div>
-                <div><strong>Hair Dryer</strong><span>Ladies section · repair due</span><b class="warn">Check</b></div>
-                <div><strong>Sterilizer</strong><span>Branch asset · warranty active</span><b>Asset</b></div>
+              <div class="inline-fields">
+                <label>Reorder at <input id="inventoryReorder" type="number" min="0" step="0.001" value="0" /></label>
+                <label>Unit cost <input id="inventoryUnitCost" type="number" min="0" step="0.001" value="0" /></label>
+              </div>
+              <label>Assigned to / location <input id="inventoryAssigned" placeholder="Store room, Chair 2 or staff name" /></label>
+              <label>Condition
+                <select id="inventoryCondition"><option>Good</option><option>Needs service</option><option>Under repair</option><option>Retired</option></select>
+              </label>
+              <label>Next maintenance <input id="inventoryMaintenance" type="date" /></label>
+              <button class="primary-button full" id="saveInventoryItem" type="button">Save item</button>
+              <button class="ghost-button full" id="clearInventoryForm" type="button">Clear form</button>
+              <p class="system-note" id="inventoryNote">Every quantity change creates a stock movement.</p>
+            </article>
+          </div>
+
+          <div class="split-layout inventory-lower">
+            <article class="panel form-panel">
+              <div class="panel-head compact"><div><h3>Stock Adjustment</h3><p>Count, waste, return or correction with a reason</p></div></div>
+              <label>Item <select id="movementItem"></select></label>
+              <label>Movement
+                <select id="movementType"><option value="adjustment_in">Stock in</option><option value="adjustment_out">Stock out</option><option value="waste">Waste / damaged</option><option value="return">Supplier return</option><option value="count">Physical count</option></select>
+              </label>
+              <label>Quantity <input id="movementQty" type="number" min="0" step="0.001" value="1" /></label>
+              <label>Reason <input id="movementReason" placeholder="Required for audit trail" /></label>
+              <button class="primary-button full" id="saveStockMovement" type="button">Post movement</button>
+              <p class="system-note" id="movementNote">Stock-out cannot reduce an item below zero.</p>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head"><div><h3>Movement History</h3><p>Purchases, service use and manual changes</p></div></div>
+              <div class="table-wrap">
+                <table><thead><tr><th>Date</th><th>Item</th><th>Movement</th><th>Quantity</th><th>Reference</th><th>By</th></tr></thead><tbody id="stockMovementTable"></tbody></table>
               </div>
             </article>
           </div>
@@ -1243,7 +1293,7 @@
       </main>
     </div>
 
-    <script src="./backend.js?v=20260910-release-2"></script>
-    <script src="./app.js?v=20260910-release-2"></script>
+    <script src="./backend.js?v=20260910-release-3"></script>
+    <script src="./app.js?v=20260910-release-3"></script>
   </body>
 </html>

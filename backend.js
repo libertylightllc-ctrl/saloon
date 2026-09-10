@@ -165,6 +165,18 @@
     });
   }
 
+  async function recordSale(shopId, sale, stockUsage) {
+    return request("/rest/v1/rpc/salon_record_sale", {
+      method: "POST",
+      body: JSON.stringify({
+        target_shop: shopId,
+        sale_external_id: sale.id,
+        sale_data: sale,
+        stock_usage: stockUsage
+      })
+    });
+  }
+
   async function provision(payload) {
     return request("/functions/v1/provision-user", { method: "POST", body: JSON.stringify(payload) });
   }
@@ -173,5 +185,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, recordSale, provision, loadUsers, isConfigured: true };
 })();

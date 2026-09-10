@@ -571,6 +571,24 @@ function defaultComplianceDocuments(country = "AE") {
   ];
 }
 
+function defaultInventoryItems(openingQuantity = true) {
+  const quantity = (value) => openingQuantity ? value : 0;
+  return [
+    { id: "inv-blades", name: "Blades", type: "consumable", unit: "pcs", quantity: quantity(156), reorderLevel: 80, unitCost: 1.2, assignedTo: "Store room", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-foam", name: "Shaving Foam", type: "consumable", unit: "ml", quantity: quantity(4000), reorderLevel: 2500, unitCost: 0.03, assignedTo: "Store room", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-oil", name: "Hair Oil", type: "consumable", unit: "ml", quantity: quantity(1500), reorderLevel: 1000, unitCost: 0.05, assignedTo: "Store room", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-developer", name: "Developer 20 Vol", type: "consumable", unit: "ml", quantity: quantity(900), reorderLevel: 1000, unitCost: 0.04, assignedTo: "Color station", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-beard-color", name: "Beard Color", type: "consumable", unit: "ml", quantity: quantity(800), reorderLevel: 300, unitCost: 0.18, assignedTo: "Color station", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-hair-color", name: "Hair Color", type: "consumable", unit: "ml", quantity: quantity(1800), reorderLevel: 600, unitCost: 0.2, assignedTo: "Color station", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-gloves", name: "Gloves", type: "consumable", unit: "pairs", quantity: quantity(80), reorderLevel: 30, unitCost: 0.7, assignedTo: "Store room", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-tissues", name: "Tissues", type: "consumable", unit: "pcs", quantity: quantity(500), reorderLevel: 150, unitCost: 0.05, assignedTo: "Store room", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-neck-strips", name: "Neck Strips", type: "consumable", unit: "pcs", quantity: quantity(200), reorderLevel: 80, unitCost: 0.15, assignedTo: "Store room", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-facial-cream", name: "Facial Cream", type: "consumable", unit: "ml", quantity: quantity(600), reorderLevel: 200, unitCost: 0.16, assignedTo: "Facial station", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-machine", name: "Trimming Machine", type: "asset", unit: "pcs", quantity: quantity(3), reorderLevel: 1, unitCost: 450, assignedTo: "Chair 2", condition: "Good", maintenanceDate: "", active: true },
+    { id: "inv-scissors", name: "Scissors", type: "asset", unit: "pcs", quantity: quantity(6), reorderLevel: 2, unitCost: 120, assignedTo: "Barber team", condition: "Good", maintenanceDate: "", active: true }
+  ];
+}
+
 const defaultState = {
   activeShopId: "al-barsha-gents",
   shops: [
@@ -578,14 +596,16 @@ const defaultState = {
   ],
   shopStates: {},
   services: [
-    { name: "Haircut", names: { ar: "قص شعر", hi: "हेयरकट", ur: "بال کٹوانا" }, category: "Hair", price: 25, recipe: "Neck strip 1, shampoo optional", active: true },
-    { name: "Shave", names: { ar: "حلاقة", hi: "शेव", ur: "شیو" }, category: "Beard", price: 15, recipe: "Blade 1, foam 8ml, tissue 2", active: true },
-    { name: "Beard Trim", names: { ar: "تشذيب اللحية", hi: "दाढ़ी ट्रिम", ur: "داڑھی ٹرم" }, category: "Beard", price: 10, recipe: "Machine use, tissue 1", active: true },
-    { name: "Beard Color", names: { ar: "لون اللحية", hi: "दाढ़ी कलर", ur: "داڑھی رنگ" }, category: "Color", price: 45, recipe: "Beard color 20ml, developer 20ml, gloves 1 pair", active: true },
-    { name: "Hair Color", names: { ar: "صبغ الشعر", hi: "हेयर कलर", ur: "بالوں کا رنگ" }, category: "Color", price: 80, recipe: "Color 60ml, developer 60ml, gloves 1 pair", active: true },
-    { name: "Facial", names: { ar: "تنظيف البشرة", hi: "फेशियल", ur: "فیشل" }, category: "Face", price: 60, recipe: "Cream 10ml, mask 1, towel laundry", active: true },
-    { name: "Head Massage", names: { ar: "مساج الرأس", hi: "हेड मसाज", ur: "سر کا مساج" }, category: "Massage", price: 35, recipe: "Oil 15ml, towel laundry", active: true }
+    { id: "svc-haircut", name: "Haircut", names: { ar: "قص شعر", hi: "हेयरकट", ur: "بال کٹوانا" }, category: "Hair", price: 25, recipe: "Neck strip", recipeItems: [{ itemId: "inv-neck-strips", quantity: 1 }], active: true },
+    { id: "svc-shave", name: "Shave", names: { ar: "حلاقة", hi: "शेव", ur: "شیو" }, category: "Beard", price: 15, recipe: "Blade, foam and tissues", recipeItems: [{ itemId: "inv-blades", quantity: 1 }, { itemId: "inv-foam", quantity: 8 }, { itemId: "inv-tissues", quantity: 2 }], active: true },
+    { id: "svc-beard-trim", name: "Beard Trim", names: { ar: "تشذيب اللحية", hi: "दाढ़ी ट्रिम", ur: "داڑھی ٹرم" }, category: "Beard", price: 10, recipe: "Tissue", recipeItems: [{ itemId: "inv-tissues", quantity: 1 }], active: true },
+    { id: "svc-beard-color", name: "Beard Color", names: { ar: "لون اللحية", hi: "दाढ़ी कलर", ur: "داڑھی رنگ" }, category: "Color", price: 45, recipe: "Beard color, developer and gloves", recipeItems: [{ itemId: "inv-beard-color", quantity: 20 }, { itemId: "inv-developer", quantity: 20 }, { itemId: "inv-gloves", quantity: 1 }], active: true },
+    { id: "svc-hair-color", name: "Hair Color", names: { ar: "صبغ الشعر", hi: "हेयर कलर", ur: "بالوں کا رنگ" }, category: "Color", price: 80, recipe: "Hair color, developer and gloves", recipeItems: [{ itemId: "inv-hair-color", quantity: 60 }, { itemId: "inv-developer", quantity: 60 }, { itemId: "inv-gloves", quantity: 1 }], active: true },
+    { id: "svc-facial", name: "Facial", names: { ar: "تنظيف البشرة", hi: "फेशियल", ur: "فیشل" }, category: "Face", price: 60, recipe: "Facial cream", recipeItems: [{ itemId: "inv-facial-cream", quantity: 10 }], active: true },
+    { id: "svc-head-massage", name: "Head Massage", names: { ar: "مساج الرأس", hi: "हेड मसाज", ur: "سر کا مساج" }, category: "Massage", price: 35, recipe: "Hair oil", recipeItems: [{ itemId: "inv-oil", quantity: 15 }], active: true }
   ],
+  inventoryItems: defaultInventoryItems(true),
+  stockMovements: [],
   purchases: [],
   expenses: [],
   receiptEnabled: false,
@@ -642,6 +662,8 @@ const defaultState = {
 
 const shopStateFields = [
   "services",
+  "inventoryItems",
+  "stockMovements",
   "purchases",
   "expenses",
   "receiptEnabled",
@@ -674,6 +696,29 @@ function createShopState(overrides = {}) {
   });
   state.users = defaultShopUsers();
   return { ...state, ...overrides };
+}
+
+function createProductionShopState(country = "AE", overrides = {}) {
+  return createShopState({
+    inventoryItems: defaultInventoryItems(false),
+    stockMovements: [],
+    purchases: [],
+    expenses: [],
+    sales: [],
+    customers: [{ id: "walk-in-guest", name: "Walk-in Guest", phone: "", preference: "", riskNote: "", visits: 0, noShows: 0, lastVisit: "" }],
+    queueTickets: [],
+    appointments: [],
+    auditLog: [],
+    cashClosings: [],
+    staffPayments: [],
+    hygieneLogs: [],
+    complianceDocuments: defaultComplianceDocuments(country).map((document) => ({ ...document, issueDate: "", expiryDate: "", status: "Not set" })),
+    documentChain: [],
+    montajiItems: [],
+    inspectionRecords: [],
+    checklist: { servicesApproved: false, staffPins: false, vatConfirmed: false, openingStock: false, suppliersAdded: false, openingCash: false },
+    ...overrides
+  });
 }
 
 function legacyShopState(source) {
@@ -712,8 +757,11 @@ let activeShopState = shopStates[activeShopId];
 let services = activeShopState.services;
 let purchases = activeShopState.purchases;
 let expenses = activeShopState.expenses;
+let inventoryItems = activeShopState.inventoryItems || clone(defaultState.inventoryItems);
+let stockMovements = activeShopState.stockMovements || [];
 let selectedService = services[0];
 let selectedSaleServices = selectedService ? [selectedService] : [];
+let recipeDraft = clone(selectedService?.recipeItems || []);
 let receiptEnabled = activeShopState.receiptEnabled;
 let vatEnabled = activeShopState.vatEnabled;
 let openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
@@ -768,6 +816,8 @@ const cloudCollections = [
   ["sales", "sale"],
   ["purchases", "purchase"],
   ["expenses", "expense"],
+  ["inventoryItems", "inventory_item"],
+  ["stockMovements", "stock_movement"],
   ["cashClosings", "cash_closing"],
   ["staffPayments", "staff_payment"],
   ["inspectionRecords", "inspection"],
@@ -781,7 +831,7 @@ const cloudWritableTypes = {
   "Platform Admin": cloudCollections.map(([, type]) => type).concat("shop_setting"),
   Owner: cloudCollections.map(([, type]) => type).concat("shop_setting"),
   "Shop Admin": cloudCollections.map(([, type]) => type).concat("shop_setting"),
-  Cashier: ["customer", "appointment", "queue_ticket", "sale", "purchase", "expense", "cash_closing"],
+  Cashier: ["customer", "appointment", "queue_ticket", "sale", "purchase", "expense", "inventory_item", "stock_movement", "cash_closing"],
   Staff: ["queue_ticket", "sale"]
 };
 
@@ -865,7 +915,7 @@ function cloudTargetShopId() {
 async function loadCloudUsers(shopId) {
   if (!shopId || isLocalDemo) return;
   const result = await window.SalonBackend.loadUsers(shopId);
-  const target = shopStates[shopId] || createShopState({ customers: [], queueTickets: [] });
+  const target = shopStates[shopId] || createProductionShopState("AE");
   target.users = (result.users || []).map((user) => ({ ...user, role: backendRoleLabels[user.role] || user.role }));
   shopStates[shopId] = target;
 }
@@ -874,9 +924,11 @@ async function loadCloudShopState(shopId) {
   const rows = await window.SalonBackend.loadRecords(shopId);
   cloudHydrating = true;
   try {
-    const target = shopStates[shopId] || createShopState({ customers: [], queueTickets: [] });
+    const shopCountry = shops.find((shop) => shop.id === shopId)?.country || "AE";
+    const target = shopStates[shopId] || createProductionShopState(shopCountry);
     cloudCollections.forEach(([field, type]) => {
-      target[field] = rows.filter((row) => row.record_type === type).map((row) => row.data);
+      const collection = rows.filter((row) => row.record_type === type).map((row) => row.data);
+      if (collection.length || !["services", "inventoryItems"].includes(field)) target[field] = collection;
     });
     const settings = rows.find((row) => row.record_type === "shop_setting" && row.external_id === "operations")?.data;
     if (settings) {
@@ -907,7 +959,7 @@ async function prepareCloudIdentity(identity, username = "Account") {
         enabled: true
       };
       shops.push(shop);
-      shopStates[shop.id] = createShopState({ customers: [], queueTickets: [] });
+      shopStates[shop.id] = createProductionShopState(shop.country || "AE");
     }
     activeShopId = shop.id;
     await loadCloudShopState(shop.id);
@@ -955,6 +1007,17 @@ function enterAuthenticatedApp(login) {
   setSyncStatus(isLocalDemo ? "Local demo" : "Cloud connected", isLocalDemo ? "local" : "connected");
   syncShopIdentity();
   syncTaxSettings();
+  renderSaleServices();
+  renderServiceTable();
+  renderPurchaseTable();
+  renderExpenseTable();
+  renderInventory();
+  renderClientsQueue();
+  renderCompliance();
+  renderAuditLog();
+  renderUserManagement();
+  syncChecklist();
+  syncSummaryTotals();
   showView(currentRole === "Platform Admin" ? "master-admin" : currentRole === "Staff" ? "quick-sale" : "dashboard");
 }
 
@@ -1014,6 +1077,8 @@ function captureActiveShopState() {
     services,
     purchases,
     expenses,
+    inventoryItems,
+    stockMovements,
     receiptEnabled,
     vatEnabled,
     openingCash,
@@ -1040,8 +1105,11 @@ function hydrateActiveShop() {
   services = activeShopState.services || clone(defaultState.services);
   purchases = activeShopState.purchases || [];
   expenses = activeShopState.expenses || [];
+  inventoryItems = Array.isArray(activeShopState.inventoryItems) ? activeShopState.inventoryItems : clone(defaultState.inventoryItems);
+  stockMovements = Array.isArray(activeShopState.stockMovements) ? activeShopState.stockMovements : [];
   selectedService = services.find((service) => service.active) || services[0] || { name: "No service", price: 0, active: false };
   selectedSaleServices = selectedService.active === false ? [] : [selectedService];
+  recipeDraft = clone(selectedService.recipeItems || []);
   receiptEnabled = !!activeShopState.receiptEnabled;
   vatEnabled = !!activeShopState.vatEnabled;
   openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
@@ -1151,13 +1219,23 @@ function authenticateLogin({ shopCode, username, password }) {
 }
 
 function migrateServices() {
+  const templates = new Map(defaultState.services.map((service) => [service.name.toLowerCase(), service]));
+  const selectedNames = new Set((selectedSaleServices || []).map((service) => service.name));
+  const selectedName = selectedService?.name;
   services = services.map((service) => ({
     ...service,
+    id: service.id || `svc-${String(service.name || crypto.randomUUID()).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
+    recipeItems: Array.isArray(service.recipeItems) ? service.recipeItems : clone(templates.get(service.name.toLowerCase())?.recipeItems || []),
     names: {
       ...(serviceTranslations[service.name] || {}),
       ...(service.names || {})
     }
   }));
+  selectedSaleServices = services.filter((service) => selectedNames.has(service.name));
+  selectedService = services.find((service) => service.name === selectedName) || services.find((service) => service.active !== false) || services[0];
+  if (!selectedSaleServices.length && selectedService) selectedSaleServices = [selectedService];
+  recipeDraft = clone(selectedService?.recipeItems || []);
+  activeShopState.services = services;
   state.services = services;
 }
 
@@ -1195,6 +1273,8 @@ function saveState() {
     services,
     purchases,
     expenses,
+    inventoryItems,
+    stockMovements,
     sales,
     customers,
     queueTickets,
@@ -1433,27 +1513,18 @@ function accountingExportRows() {
 
 function stockMovementRows() {
   const rows = [["Date", "Type", "Item", "Qty", "Unit", "Unit cost", "Total", "Payment"]];
-  purchases.forEach((purchase) => rows.push([
-    purchase.createdAt || "",
-    purchase.type || "Purchase",
-    purchase.item || "",
-    purchase.qty || 0,
-    purchase.unit || "",
-    Number(purchase.unitCost || 0).toFixed(2),
-    purchaseTotal(purchase).toFixed(2),
-    purchase.payment || ""
-  ]));
-  sales.forEach((sale) => {
-    (sale.services || [sale.service]).forEach((service) => rows.push([
-      sale.createdAt || "",
-      "Service recipe",
-      service || "",
-      -1,
-      "service",
-      "",
-      "",
-      sale.payment || ""
-    ]));
+  stockMovements.forEach((movement) => {
+    const item = inventoryItems.find((candidate) => candidate.id === movement.itemId);
+    rows.push([
+      movement.createdAt || "",
+      movement.type || "Adjustment",
+      movement.itemName || item?.name || "",
+      movement.quantity || 0,
+      movement.unit || item?.unit || "",
+      Number(movement.unitCost || item?.unitCost || 0).toFixed(2),
+      (Math.abs(Number(movement.quantity || 0)) * Number(movement.unitCost || item?.unitCost || 0)).toFixed(2),
+      movement.reference || movement.reason || ""
+    ]);
   });
   return rows;
 }
@@ -2262,6 +2333,7 @@ function applySelectedCountryProfile() {
   renderExpenseTable();
   renderServiceTable();
   renderSaleServices();
+  renderInventory();
   renderClientsQueue();
   syncSelectedServiceLabel();
   renderCompliance();
@@ -2546,6 +2618,7 @@ async function switchShop(shopId) {
   renderServiceTable();
   renderPurchaseTable();
   renderExpenseTable();
+  renderInventory();
   renderCompliance();
   renderAuditLog();
   syncChecklist();
@@ -2610,7 +2683,7 @@ async function createShopFromForm() {
     button.disabled = false;
   }
   shops.push({ id, shopCode, name, location, country, owner, ownerUsername, currency: profile.currency, enabled: true, status: "active" });
-  shopStates[id] = createShopState({
+  shopStates[id] = createProductionShopState(country, {
     openingCash: opening,
     vatEnabled: vat,
     receiptEnabled: false,
@@ -2639,6 +2712,7 @@ async function createShopFromForm() {
   renderServiceTable();
   renderPurchaseTable();
   renderExpenseTable();
+  renderInventory();
   renderCompliance();
   renderAuditLog();
   renderUserManagement();
@@ -2908,6 +2982,145 @@ function updatePurchaseCalculation() {
   document.getElementById("calcPurchaseTotal").textContent = moneyFixed(total);
 }
 
+function inventoryTypeLabel(type) {
+  return ({ consumable: "Consumable", retail: "Retail product", asset: "Reusable tool / asset", operational: "Operational supply" })[type] || type;
+}
+
+function inventoryQuantity(item, value = item.quantity) {
+  return `${Number(value || 0).toLocaleString(currentCountryProfile().locale, { maximumFractionDigits: 3 })} ${item.unit || "unit"}`;
+}
+
+function serviceRecipeLabel(service) {
+  const lines = (service.recipeItems || []).map((line) => {
+    const item = inventoryItems.find((candidate) => candidate.id === line.itemId);
+    return item ? `${item.name} ${inventoryQuantity(item, line.quantity)}` : "";
+  }).filter(Boolean);
+  return lines.join(" · ") || service.recipe || "No automatic stock use";
+}
+
+function addStockMovement(item, quantity, type, reference, reason = "", unitCost = item.unitCost, movementId = "") {
+  const delta = Number(quantity);
+  item.quantity = Math.max(Number(item.quantity || 0) + delta, 0);
+  if (Number.isFinite(Number(unitCost)) && Number(unitCost) >= 0 && delta > 0) {
+    const oldQuantity = Math.max(Number(item.quantity) - delta, 0);
+    const oldValue = oldQuantity * Number(item.unitCost || 0);
+    item.unitCost = (oldValue + delta * Number(unitCost)) / Math.max(oldQuantity + delta, 1);
+  }
+  const movement = {
+    id: movementId || `movement-${crypto.randomUUID()}`,
+    itemId: item.id,
+    itemName: item.name,
+    type,
+    quantity: delta,
+    unit: item.unit,
+    unitCost: Number(item.unitCost || 0),
+    reference,
+    reason,
+    createdBy: currentUser?.name || currentRole,
+    createdAt: new Date().toISOString()
+  };
+  stockMovements.unshift(movement);
+  return movement;
+}
+
+function saleStockUsage(selected) {
+  const usage = new Map();
+  selected.forEach((service) => {
+    const templateRecipe = defaultState.services.find((template) => template.name === service.name)?.recipeItems || [];
+    const recipeItems = service.recipeItems?.length ? service.recipeItems : templateRecipe;
+    recipeItems.forEach((line) => {
+      const quantity = Number(line.quantity || 0);
+      if (quantity > 0) usage.set(line.itemId, (usage.get(line.itemId) || 0) + quantity);
+    });
+  });
+  return [...usage.entries()].map(([itemId, quantity]) => ({ itemId, quantity }));
+}
+
+function renderRecipeBuilder() {
+  const select = document.getElementById("recipeItem");
+  const container = document.getElementById("recipeLines");
+  if (!select || !container) return;
+  const current = select.value;
+  select.innerHTML = inventoryItems.filter((item) => item.active !== false && item.type !== "asset")
+    .map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)} · ${escapeHtml(item.unit)}</option>`).join("");
+  if ([...select.options].some((option) => option.value === current)) select.value = current;
+  container.innerHTML = recipeDraft.length ? recipeDraft.map((line, index) => {
+    const item = inventoryItems.find((candidate) => candidate.id === line.itemId);
+    return `<div><span>${escapeHtml(item?.name || "Missing item")} · ${escapeHtml(item ? inventoryQuantity(item, line.quantity) : line.quantity)}</span><button class="danger-button" data-remove-recipe="${index}" type="button">Remove</button></div>`;
+  }).join("") : "<small>No automatic stock deductions configured.</small>";
+  container.querySelectorAll("[data-remove-recipe]").forEach((button) => button.addEventListener("click", () => {
+    recipeDraft.splice(Number(button.dataset.removeRecipe), 1);
+    renderRecipeBuilder();
+  }));
+}
+
+function resetInventoryForm() {
+  document.getElementById("inventoryEditId").value = "";
+  document.getElementById("inventoryName").value = "";
+  document.getElementById("inventoryType").value = "consumable";
+  document.getElementById("inventoryQty").value = "0";
+  document.getElementById("inventoryUnit").value = "pcs";
+  document.getElementById("inventoryReorder").value = "0";
+  document.getElementById("inventoryUnitCost").value = "0";
+  document.getElementById("inventoryAssigned").value = "";
+  document.getElementById("inventoryCondition").value = "Good";
+  document.getElementById("inventoryMaintenance").value = "";
+  document.getElementById("inventoryFormTitle").textContent = "Add inventory item";
+}
+
+function renderInventory() {
+  const body = document.getElementById("inventoryTable");
+  const movementBody = document.getElementById("stockMovementTable");
+  if (!body || !movementBody) return;
+  const activeItems = inventoryItems.filter((item) => item.active !== false);
+  const lowItems = activeItems.filter((item) => item.type !== "asset" && Number(item.quantity || 0) <= Number(item.reorderLevel || 0));
+  const stockValue = activeItems.reduce((sum, item) => sum + Number(item.quantity || 0) * Number(item.unitCost || 0), 0);
+  document.getElementById("inventoryValue").textContent = moneyFixed(stockValue);
+  document.getElementById("inventoryLowCount").textContent = String(lowItems.length);
+  document.getElementById("inventoryItemCount").textContent = String(activeItems.length);
+  document.getElementById("inventoryMovementCount").textContent = String(stockMovements.length);
+  document.getElementById("inventoryHealth").textContent = lowItems.length ? `${lowItems.length} need reorder` : "Stock ready";
+  body.innerHTML = activeItems.length ? activeItems.map((item) => {
+    const low = item.type !== "asset" && Number(item.quantity || 0) <= Number(item.reorderLevel || 0);
+    const maintenance = item.maintenanceDate && item.maintenanceDate <= todayIso();
+    const status = item.type === "asset" ? (maintenance ? "Service due" : item.condition || "Good") : (low ? "Low" : "Good");
+    return `<tr><td><strong>${escapeHtml(item.name)}</strong><br><small>${escapeHtml(item.assignedTo || "Unassigned")}</small></td><td>${escapeHtml(inventoryTypeLabel(item.type))}</td><td>${escapeHtml(inventoryQuantity(item))}</td><td>${escapeHtml(inventoryQuantity(item, item.reorderLevel))}</td><td>${moneyFixed(item.unitCost)}</td><td>${moneyFixed(Number(item.quantity || 0) * Number(item.unitCost || 0))}</td><td><b class="${low || maintenance ? "warn" : "ok"}">${escapeHtml(status)}</b></td><td><div class="action-cluster"><button class="mini-action" data-edit-inventory="${escapeHtml(item.id)}" type="button">Edit</button><button class="danger-button" data-archive-inventory="${escapeHtml(item.id)}" type="button">Archive</button></div></td></tr>`;
+  }).join("") : '<tr><td colspan="8">No inventory items yet.</td></tr>';
+  movementBody.innerHTML = stockMovements.length ? stockMovements.slice(0, 100).map((movement) => {
+    const item = inventoryItems.find((candidate) => candidate.id === movement.itemId);
+    return `<tr><td>${escapeHtml(new Date(movement.createdAt).toLocaleString())}</td><td>${escapeHtml(movement.itemName || item?.name || "Item")}</td><td>${escapeHtml(String(movement.type || "adjustment").replaceAll("_", " "))}</td><td>${Number(movement.quantity) > 0 ? "+" : ""}${escapeHtml(inventoryQuantity(item || { unit: movement.unit }, movement.quantity))}</td><td>${escapeHtml(movement.reference || movement.reason || "-")}</td><td>${escapeHtml(movement.createdBy || "Account")}</td></tr>`;
+  }).join("") : '<tr><td colspan="6">No stock movements yet.</td></tr>';
+  const movementSelect = document.getElementById("movementItem");
+  const selectedMovement = movementSelect.value;
+  movementSelect.innerHTML = activeItems.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)} · ${escapeHtml(inventoryQuantity(item))}</option>`).join("");
+  if ([...movementSelect.options].some((option) => option.value === selectedMovement)) movementSelect.value = selectedMovement;
+  body.querySelectorAll("[data-edit-inventory]").forEach((button) => button.addEventListener("click", () => {
+    const item = inventoryItems.find((candidate) => candidate.id === button.dataset.editInventory);
+    if (!item) return;
+    document.getElementById("inventoryEditId").value = item.id;
+    document.getElementById("inventoryName").value = item.name;
+    document.getElementById("inventoryType").value = item.type;
+    document.getElementById("inventoryQty").value = item.quantity;
+    document.getElementById("inventoryUnit").value = item.unit;
+    document.getElementById("inventoryReorder").value = item.reorderLevel;
+    document.getElementById("inventoryUnitCost").value = item.unitCost;
+    document.getElementById("inventoryAssigned").value = item.assignedTo || "";
+    document.getElementById("inventoryCondition").value = item.condition || "Good";
+    document.getElementById("inventoryMaintenance").value = item.maintenanceDate || "";
+    document.getElementById("inventoryFormTitle").textContent = `Edit ${item.name}`;
+  }));
+  body.querySelectorAll("[data-archive-inventory]").forEach((button) => button.addEventListener("click", async () => {
+    const item = inventoryItems.find((candidate) => candidate.id === button.dataset.archiveInventory);
+    if (!item || !window.confirm(`Archive ${item.name}? Existing movement history will remain.`)) return;
+    item.active = false;
+    addAudit("Stock adjusted", `${currentRole} · archived ${item.name}`);
+    saveState();
+    renderInventory();
+    renderRecipeBuilder();
+  }));
+  renderRecipeBuilder();
+}
+
 function renderSaleServices() {
   const container = document.getElementById("saleServices");
   container.innerHTML = "";
@@ -2929,7 +3142,7 @@ function renderSaleServices() {
       button.type = "button";
       button.innerHTML = `
         <strong class="${isRtlLanguage() ? "rtl-preview" : ""}">${escapeHtml(serviceName(service))}</strong>
-        <small>${escapeHtml(translate(service.recipe))}</small>
+        <small>${escapeHtml(serviceRecipeLabel(service))}</small>
         <span>${money(service.price)}</span>
       `;
       button.addEventListener("click", () => {
@@ -2955,7 +3168,7 @@ function renderServiceTable() {
       <td class="${isRtlLanguage() ? "rtl-preview" : ""}">${escapeHtml(serviceName(service))}</td>
       <td>${escapeHtml(translate(service.category))}</td>
       <td>${money(service.price)}</td>
-      <td>${escapeHtml(translate(service.recipe))}</td>
+      <td>${escapeHtml(serviceRecipeLabel(service))}</td>
       <td>${translate(service.active ? "Active" : "Inactive")}</td>
       <td><button class="danger-button" data-delete-service="${index}" type="button">${translate("Delete")}</button></td>
     `;
@@ -2967,6 +3180,8 @@ function renderServiceTable() {
       document.getElementById("serviceCategory").value = service.category;
       document.getElementById("servicePrice").value = service.price;
       document.getElementById("serviceRecipe").value = service.recipe;
+      recipeDraft = clone(service.recipeItems || []);
+      renderRecipeBuilder();
       document.getElementById("serviceFormTitle").textContent = `Edit ${service.name}`;
     });
     body.appendChild(row);
@@ -3010,11 +3225,18 @@ function renderPurchaseTable() {
       const index = Number(button.dataset.deletePurchase);
       const purchase = purchases[index];
       if (!window.confirm("Delete this purchase? Expected cash will be recalculated.")) return;
+      const stockItem = inventoryItems.find((item) => item.id === purchase.inventoryItemId);
+      if (stockItem && Number(stockItem.quantity || 0) < Number(purchase.qty || 0)) {
+        document.getElementById("purchaseNote").textContent = `Cannot delete: only ${inventoryQuantity(stockItem)} remains. Post a supplier return or correction instead.`;
+        return;
+      }
       if (!await deleteCloudRecord(purchase, "purchase", index)) return;
+      if (stockItem) addStockMovement(stockItem, -Number(purchase.qty || 0), "purchase_reversal", purchase.id || "purchase", "Purchase deleted");
       purchases.splice(index, 1);
       addAudit("Purchase entered", `${currentRole} · purchase deleted · ${purchase?.item || "purchase"} · ${moneyFixed(purchaseTotal(purchase || {}))}`);
       saveState();
       renderPurchaseTable();
+      renderInventory();
       syncSummaryTotals();
       document.getElementById("purchaseNote").textContent = translate("Purchase deleted. Totals were recalculated.");
       applyTranslations();
@@ -3242,8 +3464,10 @@ function renderExpenseTable() {
   });
 }
 
-document.getElementById("saveSale").addEventListener("click", () => {
-  const selected = selectedSaleServices.filter((service) => service && service.active !== false);
+document.getElementById("saveSale").addEventListener("click", async () => {
+  const selected = selectedSaleServices
+    .map((service) => services.find((candidate) => candidate.id === service.id || candidate.name === service.name) || service)
+    .filter((service) => service && service.active !== false);
   if (!selected.length) {
     document.getElementById("saleNote").textContent = "Select at least one service before saving.";
     return;
@@ -3253,7 +3477,17 @@ document.getElementById("saveSale").addEventListener("click", () => {
   const staff = document.getElementById("saleStaff").value;
   const customer = selectedCustomer();
   const serviceList = selected.map((service) => service.name);
+  const usage = saleStockUsage(selected);
+  const shortage = usage.map((line) => {
+    const item = inventoryItems.find((candidate) => candidate.id === line.itemId && candidate.active !== false);
+    return !item || Number(item.quantity || 0) < line.quantity ? { item, ...line } : null;
+  }).filter(Boolean);
+  if (shortage.length) {
+    document.getElementById("saleNote").textContent = `Cannot save: insufficient ${shortage.map((line) => line.item?.name || "recipe item").join(", ")}. Receive or adjust stock first.`;
+    return;
+  }
   const sale = {
+    id: `sale-${crypto.randomUUID()}`,
     service: serviceList.join(" + "),
     services: serviceList,
     customerId: customer.id,
@@ -3264,6 +3498,23 @@ document.getElementById("saveSale").addEventListener("click", () => {
     discountReason: document.getElementById("discountReason").value.trim(),
     createdAt: new Date().toISOString()
   };
+  if (!isLocalDemo) {
+    const button = document.getElementById("saveSale");
+    button.disabled = true;
+    document.getElementById("saleNote").textContent = "Checking stock and saving sale…";
+    try {
+      await window.SalonBackend.recordSale(cloudTargetShopId(), sale, usage);
+    } catch (error) {
+      document.getElementById("saleNote").textContent = error instanceof Error ? error.message : "Sale could not be saved.";
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
+  usage.forEach((line) => {
+    const item = inventoryItems.find((candidate) => candidate.id === line.itemId);
+    addStockMovement(item, -line.quantity, "service_use", sale.id, serviceList.join(" + "), item.unitCost, `${sale.id}:${line.itemId}`);
+  });
   sales.push(sale);
   if (customer?.id && customer.id !== "walk-in-guest") {
     customer.visits = Number(customer.visits || 0) + 1;
@@ -3272,6 +3523,7 @@ document.getElementById("saveSale").addEventListener("click", () => {
   addAudit("Sale created", `${customer.name} · ${staff} · ${serviceList.join(" + ")} · ${payment} · ${moneyFixed(amount)}`);
   saveState();
   syncSummaryTotals();
+  renderInventory();
   const taxText = vatEnabled ? "VAT invoice fields are active." : "No VAT was added.";
   document.getElementById("saleNote").textContent = activeLanguage === "en"
     ? `${serviceList.join(" + ")} saved. Cash, staff performance and stock recipe were updated. ${taxText}`
@@ -3299,9 +3551,10 @@ document.getElementById("saveService").addEventListener("click", () => {
     existing.category = category;
     existing.price = price;
     existing.recipe = recipe;
+    existing.recipeItems = clone(recipeDraft);
     existing.names = names;
   } else if (name) {
-    services.push({ name, names, category, price, recipe, active: true });
+    services.push({ id: `svc-${crypto.randomUUID()}`, name, names, category, price, recipe, recipeItems: clone(recipeDraft), active: true });
   }
 
   selectedService = services.find((service) => service.name === name) || selectedService;
@@ -3322,7 +3575,23 @@ document.getElementById("addServiceBtn").addEventListener("click", () => {
   document.getElementById("serviceCategory").value = "Custom";
   document.getElementById("servicePrice").value = "30";
   document.getElementById("serviceRecipe").value = "No stock recipe";
+  recipeDraft = [];
+  renderRecipeBuilder();
   applyTranslations();
+});
+
+document.getElementById("addRecipeItem").addEventListener("click", () => {
+  const itemId = document.getElementById("recipeItem").value;
+  const quantity = Number(document.getElementById("recipeQty").value || 0);
+  if (!itemId || !Number.isFinite(quantity) || quantity <= 0) {
+    document.getElementById("serviceNote").textContent = "Choose an inventory item and enter a quantity above zero.";
+    return;
+  }
+  const existing = recipeDraft.find((line) => line.itemId === itemId);
+  if (existing) existing.quantity += quantity;
+  else recipeDraft.push({ itemId, quantity });
+  document.getElementById("serviceNote").textContent = "Recipe line added. Save the service to keep it.";
+  renderRecipeBuilder();
 });
 
 document.querySelectorAll(".language-switch button").forEach((button) => {
@@ -3445,6 +3714,7 @@ document.getElementById("printReport").addEventListener("click", () => {
 
 document.getElementById("savePurchase").addEventListener("click", () => {
   const purchase = {
+    id: `purchase-${crypto.randomUUID()}`,
     supplier: document.getElementById("purchaseSupplier").value.trim(),
     type: document.getElementById("purchaseType").value,
     item: document.getElementById("purchaseItem").value.trim(),
@@ -3460,10 +3730,31 @@ document.getElementById("savePurchase").addEventListener("click", () => {
     return;
   }
 
+  const typeMap = { "Consumable stock": "consumable", "Retail product": "retail", "Reusable tool / asset": "asset", "Operational supply": "operational" };
+  let stockItem = inventoryItems.find((item) => item.active !== false && item.name.toLowerCase() === purchase.item.toLowerCase() && item.unit.toLowerCase() === purchase.unit.toLowerCase());
+  if (!stockItem) {
+    stockItem = {
+      id: `inv-${crypto.randomUUID()}`,
+      name: purchase.item,
+      type: typeMap[purchase.type] || "consumable",
+      unit: purchase.unit,
+      quantity: 0,
+      reorderLevel: 0,
+      unitCost: 0,
+      assignedTo: "Store room",
+      condition: "Good",
+      maintenanceDate: "",
+      active: true
+    };
+    inventoryItems.push(stockItem);
+  }
+  purchase.inventoryItemId = stockItem.id;
+  addStockMovement(stockItem, purchase.qty, "purchase", purchase.id, purchase.supplier, purchaseTotal(purchase) / purchase.qty);
   purchases.push(purchase);
   saveState();
   addAudit("Purchase entered", `${currentRole} · ${purchase.item} · ${purchase.qty} ${purchase.unit} · ${moneyFixed(purchaseTotal(purchase))}`);
   renderPurchaseTable();
+  renderInventory();
   syncSummaryTotals();
   document.getElementById("purchaseNote").textContent = activeLanguage === "en"
     ? `${purchase.item} saved. ${purchase.qty} ${purchase.unit} × ${moneyFixed(purchase.unitCost)} = ${moneyFixed(purchaseTotal(purchase))}.`
@@ -3497,6 +3788,79 @@ document.getElementById("saveExpense").addEventListener("click", () => {
 
 ["purchaseQty", "purchaseUnit", "purchaseUnitCost", "purchaseDiscount"].forEach((id) => {
   document.getElementById(id).addEventListener("input", updatePurchaseCalculation);
+});
+
+document.getElementById("saveInventoryItem").addEventListener("click", () => {
+  const editId = document.getElementById("inventoryEditId").value;
+  const name = document.getElementById("inventoryName").value.trim();
+  const quantity = Number(document.getElementById("inventoryQty").value || 0);
+  const reorderLevel = Number(document.getElementById("inventoryReorder").value || 0);
+  const unitCost = Number(document.getElementById("inventoryUnitCost").value || 0);
+  const unit = document.getElementById("inventoryUnit").value.trim() || "unit";
+  if (!name || ![quantity, reorderLevel, unitCost].every(Number.isFinite) || quantity < 0 || reorderLevel < 0 || unitCost < 0) {
+    document.getElementById("inventoryNote").textContent = "Enter a valid name, quantity, reorder level and unit cost.";
+    return;
+  }
+  let item = inventoryItems.find((candidate) => candidate.id === editId);
+  if (item) {
+    const delta = quantity - Number(item.quantity || 0);
+    item.name = name;
+    item.type = document.getElementById("inventoryType").value;
+    item.unit = unit;
+    item.reorderLevel = reorderLevel;
+    item.assignedTo = document.getElementById("inventoryAssigned").value.trim();
+    item.condition = document.getElementById("inventoryCondition").value;
+    item.maintenanceDate = document.getElementById("inventoryMaintenance").value;
+    if (delta) addStockMovement(item, delta, "opening_correction", `inventory-${item.id}`, "Quantity edited", unitCost);
+    item.unitCost = unitCost;
+  } else {
+    item = {
+      id: `inv-${crypto.randomUUID()}`,
+      name,
+      type: document.getElementById("inventoryType").value,
+      unit,
+      quantity: 0,
+      reorderLevel,
+      unitCost,
+      assignedTo: document.getElementById("inventoryAssigned").value.trim(),
+      condition: document.getElementById("inventoryCondition").value,
+      maintenanceDate: document.getElementById("inventoryMaintenance").value,
+      active: true
+    };
+    inventoryItems.push(item);
+    if (quantity) addStockMovement(item, quantity, "opening_balance", `inventory-${item.id}`, "Opening quantity", unitCost);
+  }
+  checklist.openingStock = inventoryItems.some((candidate) => Number(candidate.quantity || 0) > 0);
+  addAudit("Stock adjusted", `${currentRole} · saved ${item.name} · ${inventoryQuantity(item)}`);
+  saveState();
+  renderInventory();
+  syncChecklist();
+  resetInventoryForm();
+  document.getElementById("inventoryNote").textContent = `${item.name} saved with a complete quantity trail.`;
+});
+
+document.getElementById("clearInventoryForm").addEventListener("click", resetInventoryForm);
+
+document.getElementById("saveStockMovement").addEventListener("click", () => {
+  const item = inventoryItems.find((candidate) => candidate.id === document.getElementById("movementItem").value);
+  const type = document.getElementById("movementType").value;
+  const entered = Number(document.getElementById("movementQty").value || 0);
+  const reason = document.getElementById("movementReason").value.trim();
+  if (!item || !Number.isFinite(entered) || entered < 0 || !reason || (type !== "count" && entered === 0)) {
+    document.getElementById("movementNote").textContent = "Select an item, enter a valid quantity and provide the audit reason.";
+    return;
+  }
+  const delta = type === "count" ? entered - Number(item.quantity || 0) : ["adjustment_out", "waste", "return"].includes(type) ? -entered : entered;
+  if (Number(item.quantity || 0) + delta < 0) {
+    document.getElementById("movementNote").textContent = `Cannot post: ${item.name} has only ${inventoryQuantity(item)} available.`;
+    return;
+  }
+  addStockMovement(item, delta, type, `manual-${crypto.randomUUID()}`, reason);
+  addAudit("Stock adjusted", `${currentRole} · ${item.name} · ${delta > 0 ? "+" : ""}${delta} ${item.unit} · ${reason}`);
+  saveState();
+  renderInventory();
+  document.getElementById("movementReason").value = "";
+  document.getElementById("movementNote").textContent = `${item.name} is now ${inventoryQuantity(item)}.`;
 });
 
 ["closingOpeningCash", "closingCashSales", "closingCashExpenses", "closingCashPurchases", "closingActualCash"].forEach((id) => {
@@ -3677,6 +4041,7 @@ renderClientsQueue();
 renderServiceTable();
 renderPurchaseTable();
 renderExpenseTable();
+renderInventory();
 renderCompliance();
 renderAuditLog();
 renderUserManagement();

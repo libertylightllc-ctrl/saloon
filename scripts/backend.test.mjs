@@ -70,6 +70,18 @@ test('cloud deletions use a tenant-scoped soft delete', async () => {
   assert.ok(JSON.parse(fixture.calls[0].options.body).deleted_at);
 });
 
+test('sale RPC sends one tenant-scoped transaction with stock usage', async () => {
+  const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const sale = { id: 'sale-1', service: 'Shave', amount: 15 };
+  const usage = [{ itemId: 'inv-blades', quantity: 1 }];
+  await fixture.backend.recordSale('shop-id', sale, usage);
+  assert.match(fixture.calls[0].url, /rpc\/salon_record_sale$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), {
+    target_shop: 'shop-id', sale_external_id: 'sale-1', sale_data: sale, stock_usage: usage
+  });
+});
+
 test('expired API responses refresh the session once and retry', async () => {
   const fixture = backendFixture([
     { status: 401, body: { message: 'expired' } },

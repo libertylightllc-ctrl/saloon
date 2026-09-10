@@ -1534,6 +1534,75 @@ td code {
   -webkit-overflow-scrolling: touch;
 }
 
+.inventory-metrics {
+  margin-bottom: 16px;
+}
+
+.inventory-layout,
+.inventory-lower {
+  align-items: start;
+  margin-bottom: 16px;
+}
+
+.inventory-table {
+  min-width: 920px;
+}
+
+.inventory-table b,
+.stock-list b {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  border-radius: 6px;
+  padding: 0 8px;
+  background: var(--surface-3);
+}
+
+.inventory-table b.ok {
+  color: var(--live);
+  background: var(--ok-bg);
+}
+
+.inventory-table b.warn {
+  color: var(--low);
+  background: var(--low-bg);
+}
+
+.recipe-builder {
+  margin: 2px 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.recipe-builder legend {
+  padding: 0 6px;
+  color: var(--ink-2);
+  font-size: var(--t-2);
+  font-weight: 800;
+}
+
+.recipe-controls {
+  align-items: end;
+}
+
+.recipe-lines {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.recipe-lines > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+  color: var(--ink-2);
+  font-size: var(--t-2);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -2555,6 +2624,11 @@ th {
   .client-layout,
   .audit-layout,
   #master-admin .split-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .inventory-layout,
+  .inventory-lower {
     grid-template-columns: 1fr;
   }
 

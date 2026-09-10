@@ -32,7 +32,8 @@ test('tenant foundation enforces database permissions', async (t) => {
     for (const migration of [
       '202609090001_tenant_foundation.sql',
       '202609090003_session_api.sql',
-      '202609090004_record_types.sql'
+      '202609090004_record_types.sql',
+      '202609100006_inventory_transactions.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -69,11 +70,23 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal((await db.query("update public.salon_documents set title='tampered' returning id")).rows.length,0);
       await assert.rejects(db.query("insert into public.salon_documents(shop_id,title,category) values ($1,'New','health')",[a]), /row-level security/);
     });
+    await t.test('staff sale deducts recipe stock atomically and is idempotent', async () => {
+      await db.exec('reset role');
+      await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'inventory_item','inv-blades',$2,$3)", [a, JSON.stringify({name:'Blades',unit:'pcs',quantity:5,unitCost:1}), owner]);
+      await asUser(staff);
+      const sale = {id:'sale-atomic-1',service:'Shave',amount:15,createdAt:new Date().toISOString()};
+      const usage = [{itemId:'inv-blades',quantity:2}];
+      await db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'sale-atomic-1',JSON.stringify(sale),JSON.stringify(usage)]);
+      assert.equal(Number((await db.query("select (data->>'quantity')::numeric quantity from public.salon_records where record_type='inventory_item' and external_id='inv-blades'")).rows[0].quantity),3);
+      await db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'sale-atomic-1',JSON.stringify(sale),JSON.stringify(usage)]);
+      assert.equal(Number((await db.query("select (data->>'quantity')::numeric quantity from public.salon_records where record_type='inventory_item' and external_id='inv-blades'")).rows[0].quantity),3);
+      await assert.rejects(db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'sale-atomic-2',JSON.stringify({...sale,id:'sale-atomic-2'}),JSON.stringify([{itemId:'inv-blades',quantity:4}])]), /Insufficient stock/);
+    });
     await t.test('platform admin can view all shops', async () => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,3);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,3);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,6);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {
