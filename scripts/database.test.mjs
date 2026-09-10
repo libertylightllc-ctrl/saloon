@@ -39,7 +39,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100008_immutable_daily_close.sql',
       '202609100009_staff_payroll.sql',
       '202609100010_appointment_deposits.sql',
-      '202609100011_accounting_period_lock.sql'
+      '202609100011_accounting_period_lock.sql',
+      '202609100012_login_history.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -147,6 +148,19 @@ test('tenant foundation enforces database permissions', async (t) => {
       await db.query('select public.salon_reopen_accounting_period($1,$2,$3)',[a,period,'Approved correction request']);
       await asUser(owner);
       assert.equal((await db.query("update public.salon_records set data=data || '{\"amount\":11}' where shop_id=$1 and external_id='e1' returning id",[a])).rows.length,1);
+    });
+    await t.test('login history is append-only and tenant scoped', async () => {
+      await asUser(staff);
+      await db.query('select public.salon_record_login($1)',[a]);
+      assert.equal((await db.query('select * from public.salon_login_history($1)',[a])).rows.length,1);
+      await assert.rejects(db.query('select public.salon_record_login($1)',[b]), /not active for this shop/);
+      await assert.rejects(db.query('delete from public.salon_login_events'), /permission denied/);
+      await asUser(owner);
+      await db.query('select public.salon_record_login($1)',[a]);
+      assert.equal((await db.query('select * from public.salon_login_history($1)',[a])).rows.length,2);
+      await asUser(platform);
+      await db.query('select public.salon_record_login(null)');
+      assert.equal((await db.query('select * from public.salon_login_history(null)')).rows.length,1);
     });
     await t.test('platform admin can view all shops', async () => {
       await asUser(platform);

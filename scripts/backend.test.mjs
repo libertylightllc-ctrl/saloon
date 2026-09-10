@@ -115,6 +115,17 @@ test('accounting period close and reopen use controlled RPCs', async () => {
   assert.deepEqual(JSON.parse(fixture.calls[1].options.body), { target_shop: 'shop-id', target_period: '2026-08', reopen_reason: 'Approved correction' });
 });
 
+test('login activity uses server-side record and history RPCs', async () => {
+  const fixture = backendFixture([{ status: 200, body: { id: 1 } }, { status: 200, body: [] }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  await fixture.backend.recordLogin('shop-id');
+  await fixture.backend.loadLoginHistory('shop-id');
+  assert.match(fixture.calls[0].url, /rpc\/salon_record_login$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), { target_shop: 'shop-id' });
+  assert.match(fixture.calls[1].url, /rpc\/salon_login_history$/);
+  assert.deepEqual(JSON.parse(fixture.calls[1].options.body), { target_shop: 'shop-id' });
+});
+
 test('expired API responses refresh the session once and retry', async () => {
   const fixture = backendFixture([
     { status: 401, body: { message: 'expired' } },

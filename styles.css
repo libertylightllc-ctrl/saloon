@@ -1554,6 +1554,35 @@ td code {
   margin-top: 16px;
 }
 
+.security-history-panel {
+  margin-top: 16px;
+}
+
+.security-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.security-summary > div {
+  display: grid;
+  gap: 5px;
+  padding: 14px 16px;
+  background: var(--surface);
+}
+
+.security-summary span,
+.security-summary small {
+  color: var(--ink-2);
+}
+
+.security-summary strong {
+  font-size: 22px;
+}
+
 #staff table {
   min-width: 760px;
 }
@@ -2886,4 +2915,10 @@ th {
 
 .purchase-table {
   min-width: 860px;
+}
+
+@media (max-width: 520px) {
+  .security-summary {
+    grid-template-columns: 1fr;
+  }
 }

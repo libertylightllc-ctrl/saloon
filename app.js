@@ -653,6 +653,7 @@ const defaultState = {
   staffAdjustments: [],
   payrollRuns: [],
   accountingPeriods: [],
+  loginEvents: [],
   users: [],
   checklist: {
     servicesApproved: true,
@@ -708,6 +709,7 @@ const shopStateFields = [
   "staffAdjustments",
   "payrollRuns",
   "accountingPeriods",
+  "loginEvents",
   "users",
   "checklist",
   "inspectionRecords",
@@ -751,6 +753,7 @@ function createProductionShopState(country = "AE", overrides = {}) {
     staffAdjustments: [],
     payrollRuns: [],
     accountingPeriods: [],
+    loginEvents: [],
     hygieneLogs: [],
     complianceDocuments: defaultComplianceDocuments(country).map((document) => ({ ...document, issueDate: "", expiryDate: "", status: "Not set" })),
     documentChain: [],
@@ -821,6 +824,7 @@ let attendanceRecords = activeShopState.attendanceRecords || [];
 let staffAdjustments = activeShopState.staffAdjustments || [];
 let payrollRuns = activeShopState.payrollRuns || [];
 let accountingPeriods = activeShopState.accountingPeriods || [];
+let loginEvents = activeShopState.loginEvents || [];
 let checklist = { ...defaultState.checklist, ...(activeShopState.checklist || {}) };
 let inspectionRecords = activeShopState.inspectionRecords || defaultState.inspectionRecords;
 let hygieneLogs = activeShopState.hygieneLogs || defaultState.hygieneLogs;
@@ -977,6 +981,17 @@ async function loadCloudUsers(shopId) {
   shopStates[shopId] = target;
 }
 
+async function loadCloudLoginEvents(shopId) {
+  if (isLocalDemo) return;
+  const result = await window.SalonBackend.loadLoginHistory(shopId || null);
+  loginEvents = Array.isArray(result) ? result : [];
+  if (shopId) {
+    const target = shopStates[shopId] || createProductionShopState("AE");
+    target.loginEvents = loginEvents;
+    shopStates[shopId] = target;
+  }
+}
+
 async function loadCloudShopState(shopId) {
   const rows = await window.SalonBackend.loadRecords(shopId);
   cloudHydrating = true;
@@ -1020,7 +1035,7 @@ async function prepareCloudIdentity(identity, username = "Account") {
     }
     activeShopId = shop.id;
     await loadCloudShopState(shop.id);
-    if (["Platform Admin", "Owner", "Shop Admin"].includes(role)) await loadCloudUsers(shop.id);
+    if (["Platform Admin", "Owner", "Shop Admin"].includes(role)) await Promise.all([loadCloudUsers(shop.id), loadCloudLoginEvents(shop.id)]);
   } else {
     const remoteShops = await window.SalonBackend.loadShops();
     shops = remoteShops.map((shop) => ({
@@ -1034,13 +1049,15 @@ async function prepareCloudIdentity(identity, username = "Account") {
       status: shop.status
     }));
     activeShopId = shops.find((shop) => shop.enabled !== false)?.id || "";
-    if (activeShopId) await Promise.all([loadCloudShopState(activeShopId), loadCloudUsers(activeShopId)]);
+    if (activeShopId) await Promise.all([loadCloudShopState(activeShopId), loadCloudUsers(activeShopId), loadCloudLoginEvents(activeShopId)]);
+    else await loadCloudLoginEvents(null);
   }
   return { ok: true, role, user: { id: identity.user_id, name: username, username, role }, shopId: activeShopId };
 }
 
 async function authenticateCloudLogin({ shopCode, username, password }) {
   const result = await window.SalonBackend.signIn(shopCode, username, password);
+  await window.SalonBackend.recordLogin(result.identity.shop_id || null);
   return prepareCloudIdentity(result.identity, username);
 }
 
@@ -1050,6 +1067,10 @@ function enterAuthenticatedApp(login) {
   currentRole = login.role;
   currentUser = login.user;
   hydrateActiveShop();
+  if (isLocalDemo) {
+    loginEvents.unshift({ id: `login-${crypto.randomUUID()}`, user_id: currentUser.id || currentUser.username, account_label: currentUser.username, role: backendRoleValues[currentRole] || currentRole.toLowerCase(), shop_id: activeShopId, signed_in_at: new Date().toISOString() });
+    loginEvents = loginEvents.slice(0, 50);
+  }
   removeLegacyDemoRows();
   migrateServices();
   migratePurchasing();
@@ -1075,6 +1096,7 @@ function enterAuthenticatedApp(login) {
   renderCompliance();
   renderAuditLog();
   renderUserManagement();
+  renderSecurityHistory();
   syncChecklist();
   syncSummaryTotals();
   showView(currentRole === "Platform Admin" ? "master-admin" : currentRole === "Staff" ? "quick-sale" : "dashboard");
@@ -1159,6 +1181,7 @@ function captureActiveShopState() {
     staffAdjustments,
     payrollRuns,
     accountingPeriods,
+    loginEvents,
     users: activeShopState.users || (isLocalDemo ? defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha") : []),
     checklist,
     inspectionRecords,
@@ -1198,6 +1221,7 @@ function hydrateActiveShop() {
   staffAdjustments = activeShopState.staffAdjustments || [];
   payrollRuns = activeShopState.payrollRuns || [];
   accountingPeriods = activeShopState.accountingPeriods || [];
+  loginEvents = activeShopState.loginEvents || [];
   activeShopState.users = Array.isArray(activeShopState.users)
     ? activeShopState.users
     : (isLocalDemo ? defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha") : []);
@@ -1411,7 +1435,8 @@ function saveState() {
     attendanceRecords,
     staffAdjustments,
     payrollRuns,
-    accountingPeriods
+    accountingPeriods,
+    loginEvents
   };
   memoryState = nextState;
   try {
@@ -3079,7 +3104,7 @@ async function switchShop(shopId) {
   if (!isLocalDemo) {
     setSyncStatus("Loading…", "saving");
     try {
-      await Promise.all([loadCloudShopState(shopId), loadCloudUsers(shopId)]);
+      await Promise.all([loadCloudShopState(shopId), loadCloudUsers(shopId), loadCloudLoginEvents(shopId)]);
       setSyncStatus("Cloud connected", "connected");
     } catch (error) {
       console.error("Cloud shop load failed", error);
@@ -3101,6 +3126,8 @@ async function switchShop(shopId) {
   renderInventory();
   renderCompliance();
   renderAuditLog();
+  renderUserManagement();
+  renderSecurityHistory();
   syncChecklist();
   syncSelectedServiceLabel();
   syncSummaryTotals();
@@ -3401,6 +3428,29 @@ function renderUserManagement() {
       renderUserManagement();
     });
   });
+}
+
+function renderSecurityHistory() {
+  const body = document.getElementById("securityLoginTable");
+  if (!body) return;
+  const events = [...loginEvents].sort((a, b) => String(b.signed_in_at || "").localeCompare(String(a.signed_in_at || ""))).slice(0, 50);
+  const locale = { en: "en-AE", ar: "ar-AE", hi: "hi-IN", ur: "ur-PK" }[activeLanguage] || "en-AE";
+  const timestamp = (value) => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "Unknown" : new Intl.DateTimeFormat(locale, {
+      day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+    }).format(date);
+  };
+  document.getElementById("securityLoginCount").textContent = String(events.length);
+  document.getElementById("securityLastLogin").textContent = events.length ? timestamp(events[0].signed_in_at) : "No activity";
+  document.getElementById("securitySessionMode").textContent = isLocalDemo ? "Local demonstration" : "Server verified";
+  body.innerHTML = events.length ? events.map((event) => {
+    const knownUser = (activeShopState.users || []).find((user) => user.id === event.user_id);
+    const account = knownUser?.username || (event.user_id === currentUser?.id ? currentUser.username : "") || event.account_label || String(event.user_id || "Unknown").slice(0, 8);
+    const role = backendRoleLabels[event.role] || event.role || "Account";
+    const shop = event.shop_code || (event.shop_id ? currentShopCode() : "PLATFORM");
+    return `<tr><td>${escapeHtml(timestamp(event.signed_in_at))}</td><td><code>${escapeHtml(account)}</code></td><td>${escapeHtml(role)}</td><td>${escapeHtml(shop)}</td></tr>`;
+  }).join("") : '<tr><td colspan="4">No successful login events recorded.</td></tr>';
 }
 
 async function createUserFromForm() {
@@ -5172,6 +5222,7 @@ renderInventory();
 renderCompliance();
 renderAuditLog();
 renderUserManagement();
+renderSecurityHistory();
 renderAccounting();
 renderLaunchAudit();
 syncChecklist();

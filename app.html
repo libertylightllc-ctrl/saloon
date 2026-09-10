@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-9" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-10" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -1406,11 +1406,19 @@
               </div>
             </article>
           </div>
+          <article class="panel security-history-panel">
+            <div class="panel-head"><div><h3>Access History</h3><p>Successful authenticated sessions for the active shop</p></div><span class="status-pill" id="securitySessionMode">Server verified</span></div>
+            <div class="security-summary">
+              <div><span>Successful logins</span><strong id="securityLoginCount">0</strong><small>Most recent 50 events</small></div>
+              <div><span>Last access</span><strong id="securityLastLogin">No activity</strong><small>Recorded by Supabase</small></div>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>Date & time</th><th>Account</th><th>Role</th><th>Shop</th></tr></thead><tbody id="securityLoginTable"></tbody></table></div>
+          </article>
         </section>
       </main>
     </div>
 
-    <script src="./backend.js?v=20260910-release-9"></script>
-    <script src="./app.js?v=20260910-release-9"></script>
+    <script src="./backend.js?v=20260910-release-10"></script>
+    <script src="./app.js?v=20260910-release-10"></script>
   </body>
 </html>
