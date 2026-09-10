@@ -268,6 +268,34 @@
     });
   }
 
+  async function saveService(shopId, service, reason) {
+    return request("/rest/v1/rpc/salon_save_service", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, service_external_id: service.id, service_data: service, change_reason: reason })
+    });
+  }
+
+  async function archiveService(shopId, serviceId, reason) {
+    return request("/rest/v1/rpc/salon_archive_service", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, service_external_id: serviceId, archive_reason: reason })
+    });
+  }
+
+  async function saveSupplier(shopId, supplier, reason) {
+    return request("/rest/v1/rpc/salon_save_supplier", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, supplier_external_id: supplier.id, supplier_data: supplier, change_reason: reason })
+    });
+  }
+
+  async function archiveSupplier(shopId, supplierId, reason) {
+    return request("/rest/v1/rpc/salon_archive_supplier", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, supplier_external_id: supplierId, archive_reason: reason })
+    });
+  }
+
   async function closeDay(shopId, closing) {
     return request("/rest/v1/rpc/salon_close_day", {
       method: "POST",
@@ -331,5 +359,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();

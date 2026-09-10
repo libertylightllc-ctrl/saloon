@@ -47,7 +47,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100015_controlled_expenses.sql',
       '202609100016_controlled_purchases.sql',
       '202609100017_controlled_supplier_payments.sql',
-      '202609110018_controlled_inventory.sql'
+      '202609110018_controlled_inventory.sql',
+      '202609110019_controlled_master_data.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -144,8 +145,30 @@ test('tenant foundation enforces database permissions', async (t) => {
     });
     await t.test('owner can save supplier account records', async () => {
       await asUser(owner);
-      await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'supplier','supplier-1','{\"name\":\"Vendor\"}',$2)",[a,owner]);
+      await db.query('select public.salon_save_supplier($1,$2,$3::jsonb,$4)',[a,'supplier-1',JSON.stringify({name:'Vendor',termsDays:30,openingBalance:0}),'']);
       assert.equal((await db.query("select * from public.salon_records where record_type='supplier'")).rows.length,1);
+    });
+    await t.test('server controls service and supplier master data', async () => {
+      await asUser(owner);
+      const service = {id:'service-controlled',name:'Precision Cut',category:'Hair',price:25,recipe:'Blade preparation',recipeItems:[{itemId:'inv-blades',quantity:1}]};
+      await db.query('select public.salon_save_service($1,$2,$3::jsonb,$4)',[a,service.id,JSON.stringify(service),'']);
+      await assert.rejects(db.query('select public.salon_save_service($1,$2,$3::jsonb,$4)',[a,service.id,JSON.stringify({...service,price:30}),'']), /change reason/);
+      await db.query('select public.salon_save_service($1,$2,$3::jsonb,$4)',[a,service.id,JSON.stringify({...service,price:30}),'Annual price review']);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"price\":999}' where shop_id=$1 and record_type='service' and external_id=$2",[a,service.id]), /controlled master-data workflow/);
+      await assert.rejects(db.query('select public.salon_save_service($1,$2,$3::jsonb,$4)',[a,'service-duplicate',JSON.stringify({...service,id:'service-duplicate'}),'']), /already exists/);
+      await asUser(cashier);
+      await assert.rejects(db.query('select public.salon_save_service($1,$2,$3::jsonb,$4)',[a,'cashier-service',JSON.stringify({...service,id:'cashier-service',name:'Cashier service'}),'']), /Management authorization/);
+      await asUser(owner);
+      await db.query('select public.salon_archive_service($1,$2,$3)',[a,service.id,'Service retired']);
+      await assert.rejects(db.query('select public.salon_save_service($1,$2,$3::jsonb,$4)',[a,service.id,JSON.stringify({...service,price:35}),'Reopen']), /Archived service/);
+
+      const supplier = {id:'supplier-controlled',name:'GCC Grooming Supply',phone:'0500000000',contact:'Accounts',termsDays:14,openingBalance:0};
+      await db.query('select public.salon_save_supplier($1,$2,$3::jsonb,$4)',[a,supplier.id,JSON.stringify(supplier),'']);
+      await assert.rejects(db.query('select public.salon_save_supplier($1,$2,$3::jsonb,$4)',[a,supplier.id,JSON.stringify({...supplier,termsDays:21}),'']), /change reason/);
+      await db.query('select public.salon_save_supplier($1,$2,$3::jsonb,$4)',[a,supplier.id,JSON.stringify({...supplier,termsDays:21}),'Updated payment terms']);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"termsDays\":1}' where shop_id=$1 and record_type='supplier' and external_id=$2",[a,supplier.id]), /controlled master-data workflow/);
+      await db.query('select public.salon_archive_supplier($1,$2,$3)',[a,supplier.id,'Supplier relationship ended']);
+      await assert.rejects(db.query('select public.salon_save_supplier($1,$2,$3::jsonb,$4)',[a,supplier.id,JSON.stringify(supplier),'Reopen']), /Archived supplier/);
     });
     await t.test('server posts and reverses purchases with stock atomically', async () => {
       const today = new Date().toISOString().slice(0,10);
@@ -211,9 +234,9 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(staff);
       await assert.rejects(db.query('select public.salon_record_stock_movement($1,$2,$3,$4,$5,$6)',[a,'movement-forged',item.id,'waste',1,'Forged waste']), /Not authorized/);
       await asUser(owner);
-      await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'service','inventory-recipe',$2,$3)",[a,JSON.stringify({name:'Towel service',active:true,recipeItems:[{itemId:item.id,quantity:1}]}),owner]);
+      await db.query('select public.salon_save_service($1,$2,$3::jsonb,$4)',[a,'inventory-recipe',JSON.stringify({id:'inventory-recipe',name:'Towel service',category:'Custom',price:10,recipe:'One towel',recipeItems:[{itemId:item.id,quantity:1}]}),'']);
       await assert.rejects(db.query('select public.salon_archive_inventory_item($1,$2,$3)',[a,item.id,'Retire item']), /active service recipes/);
-      await db.query("update public.salon_records set data=jsonb_set(data,'{active}','false'::jsonb) where shop_id=$1 and record_type='service' and external_id='inventory-recipe'",[a]);
+      await db.query('select public.salon_archive_service($1,$2,$3)',[a,'inventory-recipe','Recipe retired']);
       await db.query('select public.salon_archive_inventory_item($1,$2,$3)',[a,item.id,'Retire item']);
       const archived = (await db.query("select data from public.salon_records where shop_id=$1 and record_type='inventory_item' and external_id=$2",[a,item.id])).rows[0].data;
       assert.equal(archived.active,false);
@@ -285,7 +308,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,4);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,30);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,32);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {

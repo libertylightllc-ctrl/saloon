@@ -163,6 +163,28 @@ test('inventory master, movement and archive use controlled RPCs', async () => {
   assert.deepEqual(JSON.parse(fixture.calls[2].options.body), { target_shop:'shop-id', item_external_id:'inv-1', archive_reason:'Item retired' });
 });
 
+test('service and supplier master data use controlled RPCs', async () => {
+  const fixture = backendFixture([
+    { status: 200, body: { ok: true } }, { status: 200, body: { ok: true } },
+    { status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }
+  ]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const service = { id: 'service-1', name: 'Haircut', category: 'Hair', price: 35 };
+  const supplier = { id: 'supplier-1', name: 'Grooming Supply', termsDays: 30 };
+  await fixture.backend.saveService('shop-id', service, 'Price review');
+  await fixture.backend.archiveService('shop-id', service.id, 'Service retired');
+  await fixture.backend.saveSupplier('shop-id', supplier, 'Terms updated');
+  await fixture.backend.archiveSupplier('shop-id', supplier.id, 'Supplier retired');
+  assert.match(fixture.calls[0].url, /rpc\/salon_save_service$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), { target_shop:'shop-id', service_external_id:'service-1', service_data:service, change_reason:'Price review' });
+  assert.match(fixture.calls[1].url, /rpc\/salon_archive_service$/);
+  assert.deepEqual(JSON.parse(fixture.calls[1].options.body), { target_shop:'shop-id', service_external_id:'service-1', archive_reason:'Service retired' });
+  assert.match(fixture.calls[2].url, /rpc\/salon_save_supplier$/);
+  assert.deepEqual(JSON.parse(fixture.calls[2].options.body), { target_shop:'shop-id', supplier_external_id:'supplier-1', supplier_data:supplier, change_reason:'Terms updated' });
+  assert.match(fixture.calls[3].url, /rpc\/salon_archive_supplier$/);
+  assert.deepEqual(JSON.parse(fixture.calls[3].options.body), { target_shop:'shop-id', supplier_external_id:'supplier-1', archive_reason:'Supplier retired' });
+});
+
 test('daily close RPC sends counted cash for server calculation', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));

@@ -912,7 +912,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement"].includes(type)) return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement", "service", "supplier"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -3177,6 +3177,7 @@ function applyRoleAccess() {
   document.querySelectorAll(".shop-only-control").forEach((item) => {
     item.hidden = false;
   });
+  document.getElementById("ownerChecksPanel").hidden = !canManage;
   document.getElementById("taxModeCard").hidden = !canManage;
   document.getElementById("purchaseReversalField").hidden = !canManage;
   document.getElementById("supplierPaymentReversalField").hidden = !canManage;
@@ -3848,9 +3849,10 @@ function renderServiceTable() {
       <td>${money(service.price)}</td>
       <td>${escapeHtml(serviceRecipeLabel(service))}</td>
       <td>${translate(service.active ? "Active" : "Inactive")}</td>
-      <td>${canEdit ? '<button class="danger-button" data-delete-service="' + index + '" type="button">' + translate("Delete") + '</button>' : "-"}</td>
+      <td>${canEdit ? `<button class="danger-button" data-delete-service="${index}" type="button" ${service.active === false ? "disabled" : ""}>${service.active === false ? "Archived" : "Archive"}</button>` : "-"}</td>
     `;
-    if (canEdit) row.addEventListener("click", () => {
+    if (canEdit && service.active !== false) row.addEventListener("click", () => {
+      document.getElementById("serviceEditId").value = service.id;
       document.getElementById("serviceName").value = service.name;
       document.getElementById("serviceNameAr").value = service.names?.ar || "";
       document.getElementById("serviceNameHi").value = service.names?.hi || "";
@@ -3859,6 +3861,7 @@ function renderServiceTable() {
       document.getElementById("servicePrice").value = service.price;
       document.getElementById("serviceRecipe").value = service.recipe;
       recipeDraft = clone(service.recipeItems || []);
+      document.getElementById("serviceChangeReason").value = "";
       renderRecipeBuilder();
       document.getElementById("serviceFormTitle").textContent = `Edit ${service.name}`;
     });
@@ -3869,16 +3872,32 @@ function renderServiceTable() {
     button.addEventListener("click", async (event) => {
       event.stopPropagation();
       const index = Number(button.dataset.deleteService);
-      if (!window.confirm("Delete this service? This action will be recorded in the audit trail.")) return;
-      if (!await deleteCloudRecord(services[index], "service", index)) return;
-      addAudit("Stock adjusted", `${currentRole} · service deleted · ${services[index]?.name || "service"}`);
-      services.splice(index, 1);
-      selectedService = services[0] || { name: "No service", price: 0, active: false };
+      const service = services[index];
+      if (!window.confirm("Archive this service? Sales history will remain.")) return;
+      const reason = document.getElementById("serviceChangeReason").value.trim();
+      if (!reason) {
+        document.getElementById("serviceNote").textContent = "Enter the archive reason in the service editor first.";
+        return;
+      }
+      if (!isLocalDemo) {
+        try {
+          const result = await window.SalonBackend.archiveService(cloudTargetShopId(), service.id, reason);
+          if (result?.service) Object.assign(service, result.service);
+        } catch (error) {
+          document.getElementById("serviceNote").textContent = error.message;
+          return;
+        }
+      } else Object.assign(service, { active:false, archiveReason:reason, archivedAt:new Date().toISOString(), archivedBy:currentUser?.name || currentRole });
+      addAudit("Stock adjusted", `${currentRole} · service archived · ${service.name} · ${reason}`);
+      selectedService = services.find((candidate) => candidate.active !== false) || { name: "No service", price: 0, active: false };
       selectedSaleServices = selectedService.active === false ? [] : [selectedService];
       saveState();
       renderServiceTable();
       renderSaleServices();
       syncSelectedServiceLabel();
+      document.getElementById("serviceEditId").value = "";
+      document.getElementById("serviceChangeReason").value = "";
+      document.getElementById("serviceNote").textContent = `${service.name} archived. Existing sales remain unchanged.`;
     });
   });
 }
@@ -3910,8 +3929,55 @@ function renderSupplierAccounts() {
     const paid = postedPurchases.filter((purchase) => purchase.supplierId === supplier.id).reduce((sum, purchase) => sum + purchasePaidAmount(purchase), 0)
       + supplierPayments.filter((payment) => payment.supplierId === supplier.id && payment.status !== "Reversed").reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
     const balance = supplierBalance(supplier.id);
-    return `<tr><td><strong>${escapeHtml(supplier.name)}</strong></td><td>${escapeHtml(supplier.contact || "-")}<br><small>${escapeHtml(supplier.phone || "-")}</small></td><td>${escapeHtml(supplier.termsDays)} days</td><td>${moneyFixed(bills + Number(supplier.openingBalance || 0))}</td><td>${moneyFixed(paid)}</td><td>${moneyFixed(balance)}</td><td><b class="${balance ? "warn" : "ok"}">${balance ? "Due" : "Clear"}</b></td></tr>`;
-  }).join("") : '<tr><td colspan="7">No suppliers yet. Add the first supplier to enter a purchase bill.</td></tr>';
+    const canManage = canManageShopOperations();
+    const actions = canManage ? `<div class="action-cluster"><button class="mini-action" data-edit-supplier="${escapeHtml(supplier.id)}" type="button" ${supplier.active === false ? "disabled" : ""}>Edit</button><button class="danger-button" data-archive-supplier="${escapeHtml(supplier.id)}" type="button" ${supplier.active === false ? "disabled" : ""}>${supplier.active === false ? "Archived" : "Archive"}</button></div>` : "-";
+    return `<tr><td><strong>${escapeHtml(supplier.name)}</strong>${supplier.active === false ? "<br><small>Archived</small>" : ""}</td><td>${escapeHtml(supplier.contact || "-")}<br><small>${escapeHtml(supplier.phone || "-")}</small></td><td>${escapeHtml(supplier.termsDays)} days</td><td>${moneyFixed(bills + Number(supplier.openingBalance || 0))}</td><td>${moneyFixed(paid)}</td><td>${moneyFixed(balance)}</td><td><b class="${balance ? "warn" : "ok"}">${balance ? "Due" : "Clear"}</b></td><td>${actions}</td></tr>`;
+  }).join("") : '<tr><td colspan="8">No suppliers yet. Add the first supplier to enter a purchase bill.</td></tr>';
+  body.querySelectorAll("[data-edit-supplier]").forEach((button) => button.addEventListener("click", () => {
+    const supplier = suppliers.find((candidate) => candidate.id === button.dataset.editSupplier);
+    if (!supplier) return;
+    document.getElementById("supplierEditId").value = supplier.id;
+    document.getElementById("supplierName").value = supplier.name;
+    document.getElementById("supplierPhone").value = supplier.phone || "";
+    document.getElementById("supplierContact").value = supplier.contact || "";
+    document.getElementById("supplierTerms").value = supplier.termsDays;
+    document.getElementById("supplierOpeningBalance").value = supplier.openingBalance || 0;
+    document.getElementById("supplierChangeReason").value = "";
+    document.getElementById("supplierNote").textContent = `Editing ${supplier.name}. A change reason is required.`;
+  }));
+  body.querySelectorAll("[data-archive-supplier]").forEach((button) => button.addEventListener("click", async () => {
+    const supplier = suppliers.find((candidate) => candidate.id === button.dataset.archiveSupplier);
+    const reason = document.getElementById("supplierChangeReason").value.trim();
+    if (!supplier || !window.confirm(`Archive ${supplier?.name || "supplier"}? Historical bills remain.`)) return;
+    if (!reason) {
+      document.getElementById("supplierNote").textContent = "Enter the archive reason in the supplier form first.";
+      return;
+    }
+    if (!isLocalDemo) {
+      button.disabled = true;
+      try {
+        const result = await window.SalonBackend.archiveSupplier(cloudTargetShopId(), supplier.id, reason);
+        if (result?.supplier) Object.assign(supplier, result.supplier);
+      } catch (error) {
+        document.getElementById("supplierNote").textContent = error.message;
+        button.disabled = false;
+        return;
+      }
+    } else {
+      if (Math.abs(supplierBalance(supplier.id)) > 0.0005) {
+        document.getElementById("supplierNote").textContent = "Supplier balance must be zero before archiving.";
+        button.disabled = false;
+        return;
+      }
+      Object.assign(supplier, { active:false, archiveReason:reason, archivedAt:new Date().toISOString(), archivedBy:currentUser?.name || currentRole });
+    }
+    addAudit("Supplier archived", `${currentRole} · ${supplier.name} · ${reason}`);
+    saveState();
+    renderSupplierAccounts();
+    document.getElementById("supplierEditId").value = "";
+    document.getElementById("supplierChangeReason").value = "";
+    document.getElementById("supplierNote").textContent = `${supplier.name} archived. Historical bills remain available.`;
+  }));
   renderSupplierSelects();
   renderSupplierPayments();
 }
@@ -4705,7 +4771,9 @@ document.getElementById("saveSale").addEventListener("click", async () => {
   applyTranslations();
 });
 
-document.getElementById("saveService").addEventListener("click", () => {
+document.getElementById("saveService").addEventListener("click", async (event) => {
+  if (!canManageShopOperations()) return;
+  const editId = document.getElementById("serviceEditId").value;
   const name = document.getElementById("serviceName").value.trim();
   const names = {
     ar: document.getElementById("serviceNameAr").value.trim(),
@@ -4715,32 +4783,50 @@ document.getElementById("saveService").addEventListener("click", () => {
   const category = document.getElementById("serviceCategory").value;
   const price = Number(document.getElementById("servicePrice").value || 0);
   const recipe = document.getElementById("serviceRecipe").value.trim();
-  if (!name || price < 0) {
-    document.getElementById("serviceFormTitle").textContent = translate("Add / Edit Service");
+  const reason = document.getElementById("serviceChangeReason").value.trim();
+  if (!name || !Number.isFinite(price) || price < 0) {
+    document.getElementById("serviceNote").textContent = "Enter a service name and a valid non-negative price.";
     return;
   }
-  const existing = services.find((service) => service.name.toLowerCase() === name.toLowerCase());
-
-  if (existing) {
-    existing.category = category;
-    existing.price = price;
-    existing.recipe = recipe;
-    existing.recipeItems = clone(recipeDraft);
-    existing.names = names;
-  } else if (name) {
-    services.push({ id: `svc-${crypto.randomUUID()}`, name, names, category, price, recipe, recipeItems: clone(recipeDraft), active: true });
+  const existing = services.find((service) => service.id === editId);
+  if (existing && !reason) {
+    document.getElementById("serviceNote").textContent = "Enter a reason for the service change.";
+    return;
   }
-
-  selectedService = services.find((service) => service.name === name) || selectedService;
-  addAudit("Stock adjusted", `${currentRole} · service saved · ${name} · ${moneyFixed(price)}`);
+  if (services.some((service) => service !== existing && service.active !== false && service.name.toLowerCase() === name.toLowerCase())) {
+    document.getElementById("serviceNote").textContent = "An active service with that name already exists.";
+    return;
+  }
+  const service = { id: existing?.id || `svc-${crypto.randomUUID()}`, name, names, category, price, recipe, recipeItems: clone(recipeDraft), active:true };
+  if (!isLocalDemo) {
+    const button = event.currentTarget;
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.saveService(cloudTargetShopId(), service, reason);
+      if (result?.service) Object.assign(service, result.service);
+    } catch (error) {
+      document.getElementById("serviceNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
+  if (existing) Object.assign(existing, service); else services.push(service);
+  selectedService = existing || service;
+  addAudit("Stock adjusted", `${currentRole} · service saved · ${name} · ${moneyFixed(price)}${reason ? ` · ${reason}` : ""}`);
   renderServiceTable();
   renderSaleServices();
   saveState();
   syncSelectedServiceLabel();
+  document.getElementById("serviceEditId").value = service.id;
+  document.getElementById("serviceFormTitle").textContent = `Edit ${service.name}`;
+  document.getElementById("serviceChangeReason").value = "";
+  document.getElementById("serviceNote").textContent = `${service.name} saved at ${moneyFixed(service.price)}.`;
   applyTranslations();
 });
 
 document.getElementById("addServiceBtn").addEventListener("click", () => {
+  document.getElementById("serviceEditId").value = "";
   document.getElementById("serviceFormTitle").textContent = "Add New Service";
   document.getElementById("serviceName").value = "Custom Service";
   document.getElementById("serviceNameAr").value = "";
@@ -4749,6 +4835,7 @@ document.getElementById("addServiceBtn").addEventListener("click", () => {
   document.getElementById("serviceCategory").value = "Custom";
   document.getElementById("servicePrice").value = "30";
   document.getElementById("serviceRecipe").value = "No stock recipe";
+  document.getElementById("serviceChangeReason").value = "";
   recipeDraft = [];
   renderRecipeBuilder();
   applyTranslations();
@@ -4998,30 +5085,59 @@ document.getElementById("savePurchase").addEventListener("click", async (event) 
   document.getElementById("purchaseEvidenceFile").value = "";
 });
 
-document.getElementById("saveSupplier").addEventListener("click", () => {
+document.getElementById("saveSupplier").addEventListener("click", async (event) => {
   if (!canManageShopOperations()) return;
+  const editId = document.getElementById("supplierEditId").value;
   const name = document.getElementById("supplierName").value.trim();
   const termsDays = Number(document.getElementById("supplierTerms").value || 0);
   const openingBalance = Number(document.getElementById("supplierOpeningBalance").value || 0);
+  const reason = document.getElementById("supplierChangeReason").value.trim();
   if (!name || !Number.isFinite(termsDays) || termsDays < 0 || !Number.isFinite(openingBalance) || openingBalance < 0) {
     document.getElementById("supplierNote").textContent = "Enter a supplier name, valid payment terms and a non-negative opening balance.";
     return;
   }
-  if (suppliers.some((supplier) => supplier.active !== false && supplier.name.toLowerCase() === name.toLowerCase())) {
+  const existing = suppliers.find((supplier) => supplier.id === editId);
+  if (existing?.active === false) {
+    document.getElementById("supplierNote").textContent = "Archived suppliers are read-only.";
+    return;
+  }
+  if (existing && !reason) {
+    document.getElementById("supplierNote").textContent = "Enter a reason for the supplier change.";
+    return;
+  }
+  if (suppliers.some((supplier) => supplier !== existing && supplier.active !== false && supplier.name.toLowerCase() === name.toLowerCase())) {
     document.getElementById("supplierNote").textContent = "That supplier already exists.";
     return;
   }
+  if (isLocalDemo && existing && Number(existing.openingBalance || 0) !== openingBalance
+    && (purchases.some((purchase) => purchase.supplierId === existing.id) || supplierPayments.some((payment) => payment.supplierId === existing.id))) {
+    document.getElementById("supplierNote").textContent = "Opening balance cannot change after supplier activity exists.";
+    return;
+  }
   const supplier = {
-    id: `supplier-${crypto.randomUUID()}`,
+    id: existing?.id || `supplier-${crypto.randomUUID()}`,
     name,
     phone: document.getElementById("supplierPhone").value.trim(),
     contact: document.getElementById("supplierContact").value.trim(),
     termsDays,
     openingBalance,
     active: true,
-    createdAt: new Date().toISOString()
+    createdAt: existing?.createdAt || new Date().toISOString()
   };
-  suppliers.push(supplier);
+  if (!isLocalDemo) {
+    const button = event.currentTarget;
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.saveSupplier(cloudTargetShopId(), supplier, reason);
+      if (result?.supplier) Object.assign(supplier, result.supplier);
+    } catch (error) {
+      document.getElementById("supplierNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
+  if (existing) Object.assign(existing, supplier); else suppliers.push(supplier);
   checklist.suppliersAdded = true;
   addAudit("Supplier added", `${currentRole} · ${supplier.name} · ${termsDays} day terms`);
   saveState();
@@ -5033,6 +5149,8 @@ document.getElementById("saveSupplier").addEventListener("click", () => {
   document.getElementById("supplierPhone").value = "";
   document.getElementById("supplierContact").value = "";
   document.getElementById("supplierOpeningBalance").value = "0";
+  document.getElementById("supplierEditId").value = "";
+  document.getElementById("supplierChangeReason").value = "";
   document.getElementById("supplierNote").textContent = `${supplier.name} is ready for bills and payments.`;
   syncSummaryTotals();
 });

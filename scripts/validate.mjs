@@ -66,6 +66,7 @@ const requiredHtml = [
   "id=\"accountSecurityForm\"",
   "id=\"changePasswordBtn\"",
   "id=\"ownerControlSummary\"",
+  "id=\"ownerChecksPanel\"",
   "id=\"splitPaymentFields\"",
   "id=\"saleDiscountAmount\"",
   "id=\"saleTipAmount\"",
@@ -75,6 +76,10 @@ const requiredHtml = [
   "id=\"taxModeCard\"",
   "id=\"inventoryItemForm\"",
   "id=\"inventoryChangeReason\"",
+  "id=\"serviceEditId\"",
+  "id=\"serviceChangeReason\"",
+  "id=\"supplierEditId\"",
+  "id=\"supplierChangeReason\"",
   "id=\"expenseReversalField\""
 ];
 
@@ -126,7 +131,11 @@ const requiredJs = [
   "reverseSupplierPayment",
   "saveInventoryItem",
   "recordStockMovement",
-  "archiveInventoryItem"
+  "archiveInventoryItem",
+  "saveService",
+  "archiveService",
+  "saveSupplier",
+  "archiveSupplier"
 ];
 
 const forbiddenHtml = [

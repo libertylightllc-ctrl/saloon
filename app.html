@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260911-release-19" />
+    <link rel="stylesheet" href="./styles.css?v=20260911-release-20" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -337,7 +337,7 @@
           </div>
 
           <div class="dashboard-grid">
-            <article class="panel">
+            <article class="panel" id="ownerChecksPanel">
               <div class="panel-head">
                 <div>
                   <h3>Owner Checks</h3>
@@ -629,15 +629,16 @@
             <article class="panel form-panel" id="serviceEditor">
               <div class="panel-head compact">
                 <div>
-                  <h3 id="serviceFormTitle">Add / Edit Service</h3>
+                  <h3 id="serviceFormTitle">Add New Service</h3>
                   <p>Owner controls price, recipe and availability</p>
                 </div>
               </div>
-              <label>Service name <input id="serviceName" value="Beard Color" /></label>
+              <input id="serviceEditId" type="hidden" />
+              <label>Service name <input id="serviceName" value="Custom Service" /></label>
               <div class="translation-grid">
-                <label>Arabic <input id="serviceNameAr" dir="rtl" value="لون اللحية" /></label>
-                <label>Hindi <input id="serviceNameHi" value="दाढ़ी कलर" /></label>
-                <label>Urdu <input id="serviceNameUr" dir="rtl" value="داڑھی رنگ" /></label>
+                <label>Arabic <input id="serviceNameAr" dir="rtl" /></label>
+                <label>Hindi <input id="serviceNameHi" /></label>
+                <label>Urdu <input id="serviceNameUr" dir="rtl" /></label>
               </div>
               <label>Category
                 <select id="serviceCategory">
@@ -646,11 +647,11 @@
                   <option>Color</option>
                   <option>Face</option>
                   <option>Massage</option>
-                  <option>Custom</option>
+                  <option selected>Custom</option>
                 </select>
               </label>
-              <label>Price <input id="servicePrice" type="number" min="0" step="0.01" value="45" /></label>
-              <label>Recipe notes <input id="serviceRecipe" value="Beard color, developer and gloves" /></label>
+              <label>Price <input id="servicePrice" type="number" min="0" step="0.01" value="30" /></label>
+              <label>Recipe notes <input id="serviceRecipe" value="No stock recipe" /></label>
               <fieldset class="recipe-builder">
                 <legend>Automatic stock use per service</legend>
                 <div class="inline-fields recipe-controls">
@@ -664,6 +665,7 @@
                 <button class="ghost-button full" id="addRecipeItem" type="button">Add recipe line</button>
                 <div class="recipe-lines" id="recipeLines"></div>
               </fieldset>
+              <label>Change / archive reason <input id="serviceChangeReason" placeholder="Required when editing or archiving a service" /></label>
               <button class="primary-button full" id="saveService" type="button">Save Service</button>
               <p class="system-note" id="serviceNote">Recipe quantities are deducted when the service is sold.</p>
             </article>
@@ -710,7 +712,7 @@
           <div class="split-layout supplier-layout">
             <article class="panel">
               <div class="panel-head"><div><h3>Supplier Accounts</h3><p>Terms, contact details and outstanding balances</p></div></div>
-              <div class="table-wrap"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Terms</th><th>Billed</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead><tbody id="supplierTable"></tbody></table></div>
+              <div class="table-wrap"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Terms</th><th>Billed</th><th>Paid</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead><tbody id="supplierTable"></tbody></table></div>
               <div class="subsection-head"><h3>Recent Supplier Payments</h3><span>Auditable cash and bank outflow</span></div>
               <div class="table-wrap"><table><thead><tr><th>Date</th><th>Supplier</th><th>Method</th><th>Reference</th><th>Amount</th><th>Action</th></tr></thead><tbody id="supplierPaymentTable"></tbody></table></div>
               <label class="table-reason-field" id="supplierPaymentReversalField">Payment reversal reason <input id="supplierPaymentReversalReason" placeholder="Required before reversing a supplier payment" /></label>
@@ -718,10 +720,12 @@
             <article class="panel form-panel">
               <div id="supplierMasterForm">
                 <div class="panel-head compact"><div><h3>Add Supplier</h3><p>Create once, then select on each bill</p></div></div>
+                <input id="supplierEditId" type="hidden" />
                 <label>Supplier name <input id="supplierName" placeholder="Company or representative" /></label>
                 <div class="inline-fields"><label>Phone <input id="supplierPhone" placeholder="+971…" /></label><label>Contact person <input id="supplierContact" /></label></div>
                 <label>Payment terms (days) <input id="supplierTerms" type="number" min="0" step="1" value="30" /></label>
                 <label>Opening balance <input id="supplierOpeningBalance" type="number" min="0" step="0.01" value="0" /></label>
+                <label>Change / archive reason <input id="supplierChangeReason" placeholder="Required when editing or archiving a supplier" /></label>
                 <button class="primary-button full" id="saveSupplier" type="button">Save supplier</button>
                 <p class="system-note" id="supplierNote">Opening balances are included in supplier payables.</p>
                 <hr />
@@ -1454,7 +1458,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260911-release-19"></script>
-    <script src="./app.js?v=20260911-release-19"></script>
+    <script src="./backend.js?v=20260911-release-20"></script>
+    <script src="./app.js?v=20260911-release-20"></script>
   </body>
 </html>
