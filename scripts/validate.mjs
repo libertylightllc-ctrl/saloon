@@ -69,7 +69,9 @@ const requiredHtml = [
   "id=\"splitPaymentFields\"",
   "id=\"saleDiscountAmount\"",
   "id=\"saleTipAmount\"",
-  "id=\"refundAmount\""
+  "id=\"refundAmount\"",
+  "id=\"purchaseEvidenceFile\"",
+  "id=\"expenseEvidenceFile\""
 ];
 
 const requiredJs = [
@@ -108,7 +110,8 @@ const requiredJs = [
   "Platform Admin",
   "\"Shop Admin\": \"9999\"",
   "openPasswordDialog",
-  "changePassword"
+  "changePassword",
+  "signEvidence"
 ];
 
 const forbiddenHtml = [

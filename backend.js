@@ -157,6 +157,17 @@
     };
   }
 
+  async function signEvidence(objectPath) {
+    const routePath = String(objectPath || "").split("/").map(encodeURIComponent).join("/");
+    if (!routePath) throw new Error("Evidence file path is missing.");
+    const signed = await request(`/storage/v1/object/sign/salon-documents/${routePath}`, {
+      method: "POST",
+      body: JSON.stringify({ expiresIn: 604800 })
+    });
+    const signedUrl = signed?.signedURL || signed?.signedUrl || "";
+    return signedUrl.startsWith("http") ? signedUrl : `${projectUrl}/storage/v1${signedUrl.startsWith("/") ? "" : "/"}${signedUrl}`;
+  }
+
   async function saveDocumentMetadata(document) {
     return request("/rest/v1/salon_documents?on_conflict=object_path", {
       method: "POST",
@@ -252,5 +263,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, recordSale, refundSale, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();

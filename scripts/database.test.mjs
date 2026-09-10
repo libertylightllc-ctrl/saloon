@@ -23,6 +23,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       create schema storage;
       create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
       create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text);
+      alter table storage.objects enable row level security;
       create function storage.foldername(text) returns text[] language sql immutable as
       $$ select string_to_array($1,'/') $$;
       grant usage on schema auth to authenticated;
@@ -41,7 +42,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100010_appointment_deposits.sql',
       '202609100011_accounting_period_lock.sql',
       '202609100012_login_history.sql',
-      '202609100013_checkout_controls.sql'
+      '202609100013_checkout_controls.sql',
+      '202609100014_operational_documents.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -77,6 +79,14 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.deepEqual((await db.query('select record_type from public.salon_records')).rows, [{record_type:'service'}]);
       assert.equal((await db.query("update public.salon_documents set title='tampered' returning id")).rows.length,0);
       await assert.rejects(db.query("insert into public.salon_documents(shop_id,title,category) values ($1,'New','health')",[a]), /row-level security/);
+    });
+    await t.test('cashier can attach operational evidence only inside their shop', async () => {
+      await asUser(cashier);
+      const objectPath = `${a}/expense-receipt.pdf`;
+      await db.query("insert into public.salon_documents(shop_id,title,category,object_path) values ($1,'Tea receipt','Expense receipt',$2)",[a,objectPath]);
+      await db.query("insert into storage.objects(bucket_id,name) values ('salon-documents',$1)",[objectPath]);
+      await assert.rejects(db.query("insert into public.salon_documents(shop_id,title,category) values ($1,'Other shop receipt','Expense receipt')",[b]), /row-level security/);
+      await assert.rejects(db.query("insert into storage.objects(bucket_id,name) values ('salon-documents',$1)",[`${b}/intrusion.pdf`]), /row-level security/);
     });
     await t.test('staff sale deducts recipe stock atomically and is idempotent', async () => {
       await db.exec('reset role');
@@ -180,7 +190,7 @@ test('tenant foundation enforces database permissions', async (t) => {
     await t.test('platform admin can view all shops', async () => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
-      assert.equal((await db.query('select * from public.salon_documents')).rows.length,3);
+      assert.equal((await db.query('select * from public.salon_documents')).rows.length,4);
       assert.equal((await db.query('select * from public.salon_records')).rows.length,17);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });

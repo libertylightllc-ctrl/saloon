@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-13" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-14" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -696,6 +696,7 @@
               <label>Discount <input id="purchaseDiscount" type="number" min="0" step="0.01" value="0" /></label>
               <label>Amount paid now <input id="purchaseAmountPaid" type="number" min="0" step="0.01" value="0" /></label>
               <label>Payment method <select id="purchasePayment"><option>Cash</option><option>Card</option><option>Bank</option></select></label>
+              <label>Supplier invoice PDF/image <input id="purchaseEvidenceFile" type="file" accept="image/jpeg,image/png,image/webp,.pdf,application/pdf" /></label>
               <div class="calculation-box">
                 <div><span>Qty</span><strong id="calcQty">100 pcs</strong></div><div><span>Unit cost</span><strong id="calcUnitCost">AED 1.20</strong></div>
                 <div><span>Subtotal</span><strong id="calcSubtotal">AED 120.00</strong></div><div><span>Total</span><strong id="calcPurchaseTotal">AED 120.00</strong></div>
@@ -796,6 +797,7 @@
                 </select>
               </label>
               <label>Note <input id="expenseNoteInput" value="Tea and water for staff" /></label>
+              <label>Receipt PDF/image <input id="expenseEvidenceFile" type="file" accept="image/jpeg,image/png,image/webp,.pdf,application/pdf" /></label>
               <button class="primary-button full" id="saveExpense" type="button">Save Expense</button>
               <p class="system-note" id="expenseNote">Expense will be saved and cash closing will update if paid by cash.</p>
             </article>
@@ -1456,7 +1458,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260910-release-13"></script>
-    <script src="./app.js?v=20260910-release-13"></script>
+    <script src="./backend.js?v=20260910-release-14"></script>
+    <script src="./app.js?v=20260910-release-14"></script>
   </body>
 </html>

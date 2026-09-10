@@ -70,6 +70,14 @@ test('cloud deletions use a tenant-scoped soft delete', async () => {
   assert.ok(JSON.parse(fixture.calls[0].options.body).deleted_at);
 });
 
+test('stored evidence paths receive fresh private links', async () => {
+  const fixture = backendFixture([{ status: 200, body: { signedURL: '/object/sign/salon-documents/token' } }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const url = await fixture.backend.signEvidence('shop-id/folder/invoice 1.pdf');
+  assert.match(fixture.calls[0].url, /shop-id\/folder\/invoice%201\.pdf$/);
+  assert.equal(url, 'https://vmoocchjtlpggnoadpio.supabase.co/storage/v1/object/sign/salon-documents/token');
+});
+
 test('sale RPC sends one tenant-scoped transaction with stock usage', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));

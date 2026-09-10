@@ -1008,6 +1008,18 @@ async function loadCloudShopState(shopId) {
       const shop = shops.find((candidate) => candidate.id === shopId);
       if (shop) shop.location = settings.location || shop.location || "";
     }
+    const evidenceFiles = Object.values(target)
+      .filter(Array.isArray)
+      .flat()
+      .map((item) => item?.evidenceFile)
+      .filter((file) => file?.storagePath);
+    await Promise.all(evidenceFiles.map(async (file) => {
+      try {
+        file.dataUrl = await window.SalonBackend.signEvidence(file.storagePath);
+      } catch {
+        file.dataUrl = "";
+      }
+    }));
     shopStates[shopId] = target;
   } finally {
     cloudHydrating = false;
@@ -2546,7 +2558,8 @@ async function readEvidenceFile(inputId) {
   const input = document.getElementById(inputId);
   const file = input?.files?.[0];
   if (!file) return null;
-  const allowed = file.type.startsWith("image/") || file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+  const allowedTypes = new Set(["application/pdf", "image/jpeg", "image/png", "image/webp"]);
+  const allowed = allowedTypes.has(file.type) || (file.type === "" && /\.(pdf|jpe?g|png|webp)$/i.test(file.name));
   if (!allowed) return Promise.reject(new Error("Only PDF or image files can be uploaded."));
   if (file.size > 10 * 1024 * 1024) throw new Error("Upload must be 10 MB or smaller.");
   if (!isLocalDemo) return window.SalonBackend.uploadEvidence(cloudTargetShopId(), file);
@@ -3903,7 +3916,7 @@ function renderPurchaseTable() {
     row.innerHTML = `
       <td><strong>${escapeHtml(purchase.supplier)}</strong></td>
       <td>${escapeHtml(translate(purchase.item))}<br><small>${escapeHtml(purchase.qty)} ${escapeHtml(translate(purchase.unit))} × ${moneyFixed(purchase.unitCost)}</small></td>
-      <td>${escapeHtml(purchase.invoiceNumber || "No reference")}<br><small>${escapeHtml(purchase.invoiceDate || "-")} · due ${escapeHtml(purchase.dueDate || "-")}</small></td>
+      <td>${escapeHtml(purchase.invoiceNumber || "No reference")}<br><small>${escapeHtml(purchase.invoiceDate || "-")} · due ${escapeHtml(purchase.dueDate || "-")}</small>${purchase.evidenceFile ? `<br><small>${evidenceMarkup(purchase)}</small>` : ""}</td>
       <td>${moneyFixed(purchasePaidAmount(purchase))}<br><small>${reversed ? "Reversed" : `${moneyFixed(balance)} due`}</small></td>
       <td>${moneyFixed(purchaseTotal(purchase))}</td>
       <td><button class="danger-button" data-reverse-purchase="${index}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button></td>
@@ -4452,7 +4465,7 @@ function renderExpenseTable() {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${translate(expense.category)}</td>
-      <td>${escapeHtml(translate(expense.note || "-"))}</td>
+      <td>${escapeHtml(translate(expense.note || "-"))}${expense.evidenceFile ? `<br><small>${evidenceMarkup(expense)}</small>` : ""}</td>
       <td>${translate(expense.payment)}</td>
       <td>${moneyFixed(Number(expense.amount) || 0)}</td>
       <td><button class="danger-button" data-delete-expense="${index}" type="button">${translate("Delete")}</button></td>
@@ -4793,7 +4806,7 @@ document.getElementById("printReport").addEventListener("click", () => {
   window.print();
 });
 
-document.getElementById("savePurchase").addEventListener("click", () => {
+document.getElementById("savePurchase").addEventListener("click", async (event) => {
   const supplierId = document.getElementById("purchaseSupplier").value;
   const supplier = suppliers.find((candidate) => candidate.id === supplierId);
   const purchase = {
@@ -4818,6 +4831,25 @@ document.getElementById("savePurchase").addEventListener("click", () => {
   if (!supplier || !purchase.item || ![purchase.qty, purchase.unitCost, purchase.discount, purchase.amountPaid].every(Number.isFinite) || purchase.qty <= 0 || purchase.unitCost < 0 || purchase.discount < 0 || purchase.discount > purchase.qty * purchase.unitCost || purchase.amountPaid < 0 || purchase.amountPaid > total) {
     document.getElementById("purchaseNote").textContent = "Select a supplier and enter valid quantities, costs, discount and amount paid. Payment cannot exceed the bill total.";
     return;
+  }
+
+  const saveButton = event.currentTarget;
+  saveButton.disabled = true;
+  try {
+    const evidenceFile = await readEvidenceFile("purchaseEvidenceFile");
+    if (evidenceFile?.storagePath) {
+      await window.SalonBackend.saveDocumentMetadata({
+        shop_id: cloudTargetShopId(), title: `${purchase.supplier} · ${purchase.invoiceNumber || purchase.item}`,
+        category: "Purchase invoice", issue_date: purchase.invoiceDate, expiry_date: null,
+        reminder_days: 0, object_path: evidenceFile.storagePath
+      });
+    }
+    if (evidenceFile) purchase.evidenceFile = evidenceFile;
+  } catch (error) {
+    document.getElementById("purchaseNote").textContent = error.message;
+    return;
+  } finally {
+    saveButton.disabled = false;
   }
 
   const typeMap = { "Consumable stock": "consumable", "Retail product": "retail", "Reusable tool / asset": "asset", "Operational supply": "operational" };
@@ -4851,6 +4883,7 @@ document.getElementById("savePurchase").addEventListener("click", () => {
     ? `${purchase.item} saved. Bill ${moneyFixed(total)}, paid ${moneyFixed(purchase.amountPaid)}, balance ${moneyFixed(purchaseBalance(purchase))}.`
     : `${purchase.item} ${activeLanguage === "ar" ? "تم حفظها" : activeLanguage === "hi" ? "सेव हुआ" : "محفوظ ہو گیا"}: ${purchase.qty} ${purchase.unit} × ${moneyFixed(purchase.unitCost)} = ${moneyFixed(purchaseTotal(purchase))}.`;
   applyTranslations();
+  document.getElementById("purchaseEvidenceFile").value = "";
 });
 
 document.getElementById("saveSupplier").addEventListener("click", () => {
@@ -4931,17 +4964,37 @@ document.getElementById("saveSupplierPayment").addEventListener("click", () => {
   document.getElementById("supplierPaymentNote").textContent = `${moneyFixed(amount)} paid to ${supplier.name}. Remaining balance ${moneyFixed(supplierBalance(supplierId))}.`;
 });
 
-document.getElementById("saveExpense").addEventListener("click", () => {
+document.getElementById("saveExpense").addEventListener("click", async (event) => {
   const expense = {
+    id: `expense-${crypto.randomUUID()}`,
     category: document.getElementById("expenseCategory").value,
     amount: Number(document.getElementById("expenseAmount").value || 0),
     payment: document.getElementById("expensePayment").value,
     note: document.getElementById("expenseNoteInput").value.trim(),
     createdAt: new Date().toISOString()
   };
-  if (expense.amount < 0) {
-    document.getElementById("expenseNote").textContent = "Enter a valid expense amount.";
+  if (!Number.isFinite(expense.amount) || expense.amount <= 0) {
+    document.getElementById("expenseNote").textContent = "Enter an expense amount greater than zero.";
     return;
+  }
+
+  const saveButton = event.currentTarget;
+  saveButton.disabled = true;
+  try {
+    const evidenceFile = await readEvidenceFile("expenseEvidenceFile");
+    if (evidenceFile?.storagePath) {
+      await window.SalonBackend.saveDocumentMetadata({
+        shop_id: cloudTargetShopId(), title: `${expense.category} · ${expense.note || "Receipt"}`,
+        category: "Expense receipt", issue_date: todayIso(), expiry_date: null,
+        reminder_days: 0, object_path: evidenceFile.storagePath
+      });
+    }
+    if (evidenceFile) expense.evidenceFile = evidenceFile;
+  } catch (error) {
+    document.getElementById("expenseNote").textContent = error.message;
+    return;
+  } finally {
+    saveButton.disabled = false;
   }
 
   expenses.push(expense);
@@ -4953,6 +5006,7 @@ document.getElementById("saveExpense").addEventListener("click", () => {
     ? `${expense.category} expense saved for ${moneyFixed(expense.amount)}.`
     : `${translate(expense.category)} ${activeLanguage === "ar" ? "تم حفظ المصروف" : activeLanguage === "hi" ? "खर्च सेव हुआ" : "خرچ محفوظ ہو گیا"} ${moneyFixed(expense.amount)}.`;
   applyTranslations();
+  document.getElementById("expenseEvidenceFile").value = "";
 });
 
 ["purchaseQty", "purchaseUnit", "purchaseUnitCost", "purchaseDiscount", "purchaseAmountPaid"].forEach((id) => {
