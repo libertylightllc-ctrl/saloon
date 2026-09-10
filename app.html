@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-11" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-12" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -1282,10 +1282,10 @@
               <button class="ghost-button full" data-export="csv" type="button">Excel / CSV</button>
               <button class="ghost-button full" data-export="shortage" type="button">Cash shortage report</button>
               <button class="ghost-button full" data-export="stock" type="button">Stock movement report</button>
-              <button class="ghost-button full" data-export="backup" type="button">Full backup JSON</button>
+              <button class="ghost-button full" data-export="backup" type="button">Operational data JSON</button>
               <div class="ai-summary">
-                <strong>AI owner summary</strong>
-                <span>Cash is short by AED 50. Blade usage is higher than recorded shave services. Developer stock should be reordered within 2 days.</span>
+                <strong>Owner control summary</strong>
+                <span id="ownerControlSummary">No activity has been recorded yet.</span>
               </div>
             </aside>
           </div>
@@ -1440,7 +1440,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260910-release-11"></script>
-    <script src="./app.js?v=20260910-release-11"></script>
+    <script src="./backend.js?v=20260910-release-12"></script>
+    <script src="./app.js?v=20260910-release-12"></script>
   </body>
 </html>

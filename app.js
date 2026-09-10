@@ -1066,6 +1066,10 @@ function enterAuthenticatedApp(login) {
   activeShopId = login.shopId;
   currentRole = login.role;
   currentUser = login.user;
+  const loginError = document.getElementById("loginError");
+  loginError.hidden = true;
+  loginError.textContent = "Unable to sign in. Check your shop ID, username and password.";
+  document.getElementById("loginPin").value = "";
   hydrateActiveShop();
   if (isLocalDemo) {
     loginEvents.unshift({ id: `login-${crypto.randomUUID()}`, user_id: currentUser.id || currentUser.username, account_label: currentUser.username, role: backendRoleValues[currentRole] || currentRole.toLowerCase(), shop_id: activeShopId, signed_in_at: new Date().toISOString() });
@@ -1785,14 +1789,19 @@ function downloadDataExport(kind) {
   }
   if (kind === "backup") {
     const backup = {
+      format: "salon-control-operational-export",
+      formatVersion: 1,
       exportedAt: new Date().toISOString(),
+      scope: currentRole === "Platform Admin" ? "data loaded in this platform session" : "active shop",
+      includesStorageFiles: false,
+      recoveryNotice: "Operational export only. Database and Storage disaster recovery require managed infrastructure backups.",
       activeShopId,
       shops,
       shopStates,
       currentShop: currentShop()
     };
-    downloadTextFile(`${exportFilePrefix("backup")}.json`, JSON.stringify(backup, null, 2), "application/json");
-    return "Full JSON backup downloaded.";
+    downloadTextFile(`${exportFilePrefix("operational-data")}.json`, JSON.stringify(backup, null, 2), "application/json");
+    return "Operational data export downloaded. This is not a database or Storage recovery backup.";
   }
   const rowsByKind = {
     csv: accountingExportRows(),
@@ -2351,6 +2360,7 @@ function syncSummaryTotals() {
   document.getElementById("dashboardExpensesTotal").textContent = expenseText;
   document.getElementById("reportPurchases").textContent = purchaseText;
   document.getElementById("reportExpenses").textContent = expenseText;
+  syncOwnerControlSummary();
   syncDashboardTotals();
   syncReportTotals();
   renderClientsQueue();
@@ -2359,6 +2369,27 @@ function syncSummaryTotals() {
   renderStaffModule();
   renderLaunchAudit();
   updateClosingCalculation();
+}
+
+function syncOwnerControlSummary() {
+  const output = document.getElementById("ownerControlSummary");
+  if (!output) return;
+  const facts = [];
+  const latestClose = [...cashClosings].sort((a, b) => String(b.createdAt || b.businessDate || "").localeCompare(String(a.createdAt || a.businessDate || "")))[0];
+  if (latestClose && Number(latestClose.difference || 0) !== 0) {
+    const direction = Number(latestClose.difference) < 0 ? "short" : "over";
+    facts.push(`Latest cash close is ${direction} by ${moneyFixed(Math.abs(Number(latestClose.difference)))}.`);
+  }
+  const payable = totalSupplierPayable();
+  if (payable > 0) facts.push(`Supplier balances due total ${moneyFixed(payable)}.`);
+  const lowStock = inventoryItems.filter((item) => item.active !== false && !["Reusable tool / asset", "Service equipment"].includes(item.type) && Number(item.quantity || 0) <= Number(item.reorderLevel || 0));
+  if (lowStock.length) facts.push(`${lowStock.length} stock ${lowStock.length === 1 ? "item is" : "items are"} at or below reorder level.`);
+  const complianceAlerts = complianceDocuments.filter((document) => ["Expired", "Missing", "DueSoon"].includes(computedExpiryStatus(document)));
+  if (complianceAlerts.length) facts.push(`${complianceAlerts.length} compliance ${complianceAlerts.length === 1 ? "record needs" : "records need"} attention.`);
+  const activityCount = sales.length + purchases.length + expenses.length + cashClosings.length;
+  if (!facts.length && activityCount === 0) facts.push("No transactions or cash closings have been recorded yet.");
+  if (!facts.length) facts.push(`No exceptions detected across ${sales.length} sales and ${cashClosings.length} cash closes.`);
+  output.textContent = facts.join(" ");
 }
 
 function moneyFixed(amount, shop = currentShop()) {
