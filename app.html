@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-10" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-11" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -195,6 +195,7 @@
               <span data-icon="plus"></span>
               New Sale
             </button>
+            <button class="ghost-button" id="changePasswordBtn" type="button">Password</button>
             <button class="ghost-button" id="logoutBtn" type="button">Logout</button>
           </div>
         </header>
@@ -1418,7 +1419,28 @@
       </main>
     </div>
 
-    <script src="./backend.js?v=20260910-release-10"></script>
-    <script src="./app.js?v=20260910-release-10"></script>
+    <div class="account-security-backdrop" id="accountSecurityBackdrop" hidden>
+      <section class="account-security-dialog" role="dialog" aria-modal="true" aria-labelledby="accountSecurityTitle">
+        <div class="panel-head compact">
+          <div>
+            <span class="status-pill" id="accountSecurityPill">Account security</span>
+            <h3 id="accountSecurityTitle">Change password</h3>
+            <p id="accountSecurityIntro">Use a password that is unique to this account.</p>
+          </div>
+        </div>
+        <form id="accountSecurityForm">
+          <label>New password <input id="accountNewPassword" type="password" minlength="10" maxlength="128" autocomplete="new-password" required /></label>
+          <label>Confirm password <input id="accountConfirmPassword" type="password" minlength="10" maxlength="128" autocomplete="new-password" required /></label>
+          <p class="system-note" id="accountSecurityNote">Use at least 10 characters with letters and numbers.</p>
+          <div class="account-security-actions">
+            <button class="ghost-button" id="cancelPasswordChange" type="button">Cancel</button>
+            <button class="primary-button" type="submit">Update password</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <script src="./backend.js?v=20260910-release-11"></script>
+    <script src="./app.js?v=20260910-release-11"></script>
   </body>
 </html>

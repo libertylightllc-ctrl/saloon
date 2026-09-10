@@ -69,7 +69,7 @@ Deno.serve(async (request) => {
       if (shopError) throw shopError;
       const { data: created, error: userError } = await admin.auth.admin.createUser({
         email: authEmail(code, username), password, email_confirm: true,
-        user_metadata: { display_name: String(payload.ownerName || "Owner") }
+        user_metadata: { display_name: String(payload.ownerName || "Owner"), must_change_password: true }
       });
       if (userError || !created.user) {
         await admin.from("salon_shops").delete().eq("id", shop.id);
@@ -128,7 +128,7 @@ Deno.serve(async (request) => {
       const { data: shop } = await admin.from("salon_shops").select("code").eq("id", shopId).single();
       const { data: created, error: userError } = await admin.auth.admin.createUser({
         email: authEmail(shop.code, username), password, email_confirm: true,
-        user_metadata: { display_name: String(payload.name || username) }
+        user_metadata: { display_name: String(payload.name || username), must_change_password: true }
       });
       if (userError || !created.user) throw userError || new Error("User could not be created");
       const { error: memberError } = await admin.from("salon_memberships").insert({ shop_id: shopId, user_id: created.user.id, role: targetRole });
@@ -141,7 +141,11 @@ Deno.serve(async (request) => {
       const password = clean(payload.password, /^.{10,128}$/, "password");
       const { data: membership } = await admin.from("salon_memberships").select("role").eq("shop_id", shopId).eq("user_id", userId).single();
       if (role === "shop_admin" && ["owner", "shop_admin"].includes(membership.role)) return response(origin, { error: "Only an owner can reset management access" }, 403);
-      const { error } = await admin.auth.admin.updateUserById(userId, { password });
+      const { data: targetUser } = await admin.auth.admin.getUserById(userId);
+      const { error } = await admin.auth.admin.updateUserById(userId, {
+        password,
+        user_metadata: { ...(targetUser.user?.user_metadata || {}), must_change_password: true }
+      });
       if (error) throw error;
       return response(origin, { updated: true });
     }

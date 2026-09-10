@@ -72,7 +72,7 @@
       if (!identity || (identity.shop_code !== "PLATFORM" && identity.shop_code !== shopCode.trim().toUpperCase())) {
         throw new Error("This account is not assigned to that shop");
       }
-      return { session, identity };
+      return { session, identity, mustChangePassword: Boolean(session.user?.user_metadata?.must_change_password) };
     } catch (error) {
       writeSession(null);
       throw error;
@@ -88,7 +88,7 @@
     if (!session?.access_token) return null;
     try {
       const rows = await request("/rest/v1/rpc/salon_session", { method: "POST", body: "{}" });
-      return rows?.[0] ? { session, identity: rows[0] } : null;
+      return rows?.[0] ? { session, identity: rows[0], mustChangePassword: Boolean(session.user?.user_metadata?.must_change_password) } : null;
     } catch {
       writeSession(null);
       return null;
@@ -228,6 +228,22 @@
     });
   }
 
+  async function changePassword(password) {
+    const result = await request("/auth/v1/user", {
+      method: "PUT",
+      body: JSON.stringify({ password, data: { must_change_password: false } })
+    });
+    const session = readSession();
+    const updatedUser = result?.user || result;
+    if (session?.user) writeSession({
+      ...session,
+      user: updatedUser?.id
+        ? updatedUser
+        : { ...session.user, user_metadata: { ...(session.user.user_metadata || {}), must_change_password: false } }
+    });
+    return result;
+  }
+
   async function provision(payload) {
     return request("/functions/v1/provision-user", { method: "POST", body: JSON.stringify(payload) });
   }
@@ -236,5 +252,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, recordSale, refundSale, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, recordSale, refundSale, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();

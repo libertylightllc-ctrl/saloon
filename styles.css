@@ -1583,6 +1583,54 @@ td code {
   font-size: 22px;
 }
 
+.account-security-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(10, 42, 36, 0.72);
+}
+
+.account-security-dialog {
+  width: min(100%, 460px);
+  padding: 24px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-surface);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+}
+
+.account-security-dialog h3 {
+  margin: 14px 0 4px;
+  font-size: 24px;
+}
+
+.account-security-dialog form {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.account-security-dialog label {
+  display: grid;
+  gap: 7px;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.account-security-dialog input {
+  width: 100%;
+}
+
+.account-security-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
 #staff table {
   min-width: 760px;
 }
@@ -2856,6 +2904,10 @@ th {
     grid-column: 1 / -1;
   }
 
+  .top-actions > .primary-button {
+    grid-column: 1 / -1;
+  }
+
   .metric-card,
   .panel,
   .report-card,
@@ -2920,5 +2972,16 @@ th {
 @media (max-width: 520px) {
   .security-summary {
     grid-template-columns: 1fr;
+  }
+
+  .account-security-backdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .account-security-dialog {
+    width: 100%;
+    padding: 20px 16px;
+    border-radius: var(--r-surface) var(--r-surface) 0 0;
   }
 }

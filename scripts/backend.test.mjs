@@ -126,6 +126,24 @@ test('login activity uses server-side record and history RPCs', async () => {
   assert.deepEqual(JSON.parse(fixture.calls[1].options.body), { target_shop: 'shop-id' });
 });
 
+test('temporary credentials are detected and the authenticated user can replace them', async () => {
+  const fixture = backendFixture([
+    { status: 200, body: { access_token: 'session-token', refresh_token: 'refresh-token', user: { user_metadata: { must_change_password: true } } } },
+    { status: 200, body: [{ shop_code: 'SHOP_A', role: 'cashier', shop_id: 'shop-id' }] },
+    { status: 200, body: { id: 'user-id', user_metadata: { must_change_password: false } } }
+  ]);
+  const result = await fixture.backend.signIn('SHOP_A', 'cashier', 'Temporary10');
+  assert.equal(result.mustChangePassword, true);
+  await fixture.backend.changePassword('PrivatePass20');
+  assert.match(fixture.calls[2].url, /auth\/v1\/user$/);
+  assert.equal(fixture.calls[2].options.method, 'PUT');
+  assert.deepEqual(JSON.parse(fixture.calls[2].options.body), {
+    password: 'PrivatePass20', data: { must_change_password: false }
+  });
+  const stored = JSON.parse(fixture.values.get('salon-control-session'));
+  assert.equal(stored.user.user_metadata.must_change_password, false);
+});
+
 test('expired API responses refresh the session once and retry', async () => {
   const fixture = backendFixture([
     { status: 401, body: { message: 'expired' } },

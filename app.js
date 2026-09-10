@@ -1014,7 +1014,7 @@ async function loadCloudShopState(shopId) {
   }
 }
 
-async function prepareCloudIdentity(identity, username = "Account") {
+async function prepareCloudIdentity(identity, username = "Account", mustChangePassword = false) {
   const role = backendRoleLabels[identity.role];
   if (!role) throw new Error("Account role is not supported");
   cloudIdentity = identity;
@@ -1052,13 +1052,13 @@ async function prepareCloudIdentity(identity, username = "Account") {
     if (activeShopId) await Promise.all([loadCloudShopState(activeShopId), loadCloudUsers(activeShopId), loadCloudLoginEvents(activeShopId)]);
     else await loadCloudLoginEvents(null);
   }
-  return { ok: true, role, user: { id: identity.user_id, name: username, username, role }, shopId: activeShopId };
+  return { ok: true, role, user: { id: identity.user_id, name: username, username, role, mustChangePassword }, shopId: activeShopId };
 }
 
 async function authenticateCloudLogin({ shopCode, username, password }) {
   const result = await window.SalonBackend.signIn(shopCode, username, password);
   await window.SalonBackend.recordLogin(result.identity.shop_id || null);
-  return prepareCloudIdentity(result.identity, username);
+  return prepareCloudIdentity(result.identity, username, result.mustChangePassword);
 }
 
 function enterAuthenticatedApp(login) {
@@ -1100,6 +1100,7 @@ function enterAuthenticatedApp(login) {
   syncChecklist();
   syncSummaryTotals();
   showView(currentRole === "Platform Admin" ? "master-admin" : currentRole === "Staff" ? "quick-sale" : "dashboard");
+  if (currentUser.mustChangePassword) openPasswordDialog(true);
 }
 
 async function restoreCloudLogin() {
@@ -1109,7 +1110,7 @@ async function restoreCloudLogin() {
     if (!restored?.identity) return;
     const email = restored.session?.user?.email || "";
     const username = email.split("@")[0].split(".").slice(1).join(".") || "Account";
-    const login = await prepareCloudIdentity(restored.identity, username);
+    const login = await prepareCloudIdentity(restored.identity, username, restored.mustChangePassword);
     enterAuthenticatedApp(login);
   } catch (error) {
     console.error("Session restore failed", error);
@@ -1318,6 +1319,62 @@ function authenticateLogin({ shopCode, username, password }) {
   );
   if (!user) return { ok: false };
   return { ok: true, role: user.role, user, shopId: shop.id };
+}
+
+function openPasswordDialog(required = false) {
+  const backdrop = document.getElementById("accountSecurityBackdrop");
+  const cancel = document.getElementById("cancelPasswordChange");
+  document.getElementById("accountSecurityPill").textContent = required ? "Action required" : "Account security";
+  document.getElementById("accountSecurityTitle").textContent = required ? "Replace temporary password" : "Change password";
+  document.getElementById("accountSecurityIntro").textContent = required
+    ? "Create your private password before continuing. The temporary password must not be reused."
+    : "Use a password that is unique to this account.";
+  document.getElementById("accountSecurityNote").textContent = "Use at least 10 characters with letters and numbers.";
+  document.getElementById("accountSecurityForm").reset();
+  backdrop.dataset.required = required ? "true" : "false";
+  cancel.hidden = required;
+  backdrop.hidden = false;
+  document.getElementById("accountNewPassword").focus();
+}
+
+function closePasswordDialog() {
+  const backdrop = document.getElementById("accountSecurityBackdrop");
+  if (backdrop.dataset.required === "true") return;
+  backdrop.hidden = true;
+}
+
+async function updateAccountPassword(event) {
+  event.preventDefault();
+  const password = document.getElementById("accountNewPassword").value;
+  const confirmation = document.getElementById("accountConfirmPassword").value;
+  const note = document.getElementById("accountSecurityNote");
+  const submit = event.submitter;
+  if (password.length < 10 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+    note.textContent = "Password must contain at least 10 characters, including a letter and a number.";
+    return;
+  }
+  if (password !== confirmation) {
+    note.textContent = "The passwords do not match.";
+    return;
+  }
+  submit.disabled = true;
+  note.textContent = "Updating password...";
+  try {
+    if (isLocalDemo) {
+      note.textContent = "Demo credentials stay fixed. Password changes are saved for secure cloud accounts.";
+      return;
+    } else {
+      await window.SalonBackend.changePassword(password);
+    }
+    currentUser.mustChangePassword = false;
+    document.getElementById("accountSecurityBackdrop").dataset.required = "false";
+    note.textContent = "Password updated. Use the new password at your next login.";
+    setTimeout(() => { document.getElementById("accountSecurityBackdrop").hidden = true; }, 500);
+  } catch (error) {
+    note.textContent = error instanceof Error ? error.message : "Password could not be updated.";
+  } finally {
+    submit.disabled = false;
+  }
 }
 
 function migrateServices() {
@@ -4600,6 +4657,10 @@ document.getElementById("loginForm").addEventListener("submit", async (event) =>
   enterAuthenticatedApp(login);
 });
 
+document.getElementById("changePasswordBtn").addEventListener("click", () => openPasswordDialog(false));
+document.getElementById("cancelPasswordChange").addEventListener("click", closePasswordDialog);
+document.getElementById("accountSecurityForm").addEventListener("submit", updateAccountPassword);
+
 document.getElementById("logoutBtn").addEventListener("click", () => {
   if (!isLocalDemo) void window.SalonBackend.signOut();
   cloudIdentity = null;
@@ -4607,6 +4668,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   window.scrollTo({ top: 0, left: 0 });
   document.body.classList.remove("is-authenticated");
   document.body.classList.remove("is-platform-admin");
+  document.getElementById("accountSecurityBackdrop").hidden = true;
   const frontpage = document.getElementById("frontpage");
   const appShell = document.getElementById("appShell");
   appShell.hidden = true;

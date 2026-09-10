@@ -62,7 +62,9 @@ const requiredHtml = [
   "id=\"createUserBtn\"",
   "id=\"userTable\"",
   "id=\"shopSearch\"",
-  "id=\"shopStatusFilter\""
+  "id=\"shopStatusFilter\"",
+  "id=\"accountSecurityForm\"",
+  "id=\"changePasswordBtn\""
 ];
 
 const requiredJs = [
@@ -99,7 +101,9 @@ const requiredJs = [
   "data-reset-user",
   "data-delete-shop",
   "Platform Admin",
-  "\"Shop Admin\": \"9999\""
+  "\"Shop Admin\": \"9999\"",
+  "openPasswordDialog",
+  "changePassword"
 ];
 
 const forbiddenHtml = [
