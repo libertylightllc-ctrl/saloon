@@ -296,6 +296,27 @@
     });
   }
 
+  async function saveCustomer(shopId, customer) {
+    return request("/rest/v1/rpc/salon_save_customer", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, customer_external_id: customer.id, customer_data: customer })
+    });
+  }
+
+  async function recordBooking(shopId, ticket) {
+    return request("/rest/v1/rpc/salon_record_booking", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, ticket_external_id: ticket.id, ticket_data: ticket })
+    });
+  }
+
+  async function updateBookingStatus(shopId, ticketId, status, reason = "") {
+    return request("/rest/v1/rpc/salon_update_booking_status", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, ticket_external_id: ticketId, next_status: status, action_reason: reason })
+    });
+  }
+
   async function closeDay(shopId, closing) {
     return request("/rest/v1/rpc/salon_close_day", {
       method: "POST",
@@ -359,5 +380,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, saveCustomer, recordBooking, updateBookingStatus, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();

@@ -67,6 +67,8 @@ const requiredHtml = [
   "id=\"changePasswordBtn\"",
   "id=\"ownerControlSummary\"",
   "id=\"ownerChecksPanel\"",
+  "id=\"customerEditId\"",
+  "id=\"customerFormTitle\"",
   "id=\"splitPaymentFields\"",
   "id=\"saleDiscountAmount\"",
   "id=\"saleTipAmount\"",
@@ -135,7 +137,10 @@ const requiredJs = [
   "saveService",
   "archiveService",
   "saveSupplier",
-  "archiveSupplier"
+  "archiveSupplier",
+  "saveCustomer",
+  "recordBooking",
+  "updateBookingStatus"
 ];
 
 const forbiddenHtml = [

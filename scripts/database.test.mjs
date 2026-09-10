@@ -48,7 +48,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100016_controlled_purchases.sql',
       '202609100017_controlled_supplier_payments.sql',
       '202609110018_controlled_inventory.sql',
-      '202609110019_controlled_master_data.sql'
+      '202609110019_controlled_master_data.sql',
+      '202609110020_controlled_crm_bookings.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -170,6 +171,49 @@ test('tenant foundation enforces database permissions', async (t) => {
       await db.query('select public.salon_archive_supplier($1,$2,$3)',[a,supplier.id,'Supplier relationship ended']);
       await assert.rejects(db.query('select public.salon_save_supplier($1,$2,$3::jsonb,$4)',[a,supplier.id,JSON.stringify(supplier),'Reopen']), /Archived supplier/);
     });
+    await t.test('server controls customers, bookings and deposit redemption', async () => {
+      const today = new Date().toISOString().slice(0,10);
+      const service = {id:'booking-service',name:'Booking Cut',category:'Hair',price:40,recipe:'No stock recipe',recipeItems:[]};
+      const customer = {id:'customer-controlled',name:'Hassan Ali',phone:'+971 50 123 4567',preference:'Skin fade',riskNote:''};
+      await asUser(owner);
+      await db.query('select public.salon_save_service($1,$2,$3::jsonb,$4)',[a,service.id,JSON.stringify(service),'']);
+      await asUser(cashier);
+      await db.query('select public.salon_save_customer($1,$2,$3::jsonb)',[a,customer.id,JSON.stringify(customer)]);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"name\":\"Forged\"}' where shop_id=$1 and record_type='customer' and external_id=$2",[a,customer.id]), /controlled CRM workflow/);
+      await assert.rejects(db.query('select public.salon_save_customer($1,$2,$3::jsonb)',[a,'customer-duplicate',JSON.stringify({...customer,id:'customer-duplicate'})]), /phone number already exists/);
+      await asUser(staff);
+      await assert.rejects(db.query('select public.salon_save_customer($1,$2,$3::jsonb)',[a,'staff-customer',JSON.stringify({...customer,id:'staff-customer',phone:'0509999999'})]), /Front desk authorization/);
+
+      const booking = {id:'booking-controlled',customerId:customer.id,serviceId:service.id,service:service.name,staff:'Rafiq',type:'Appointment',date:today,time:'10:00',deposit:20,depositPayment:'Cash',cancellationPolicy:'refund'};
+      await asUser(cashier);
+      await db.query('select public.salon_record_booking($1,$2,$3::jsonb)',[a,booking.id,JSON.stringify(booking)]);
+      await db.query('select public.salon_record_booking($1,$2,$3::jsonb)',[a,booking.id,JSON.stringify(booking)]);
+      assert.equal((await db.query("select * from public.salon_records where shop_id=$1 and external_id=$2 and record_type in ('appointment','queue_ticket')",[a,booking.id])).rows.length,2);
+      await assert.rejects(db.query('select public.salon_record_booking($1,$2,$3::jsonb)',[a,'booking-duplicate-slot',JSON.stringify({...booking,id:'booking-duplicate-slot'})]), /already booked/);
+      await db.query('select public.salon_update_booking_status($1,$2,$3,$4)',[a,booking.id,'Waiting','']);
+      await db.query('select public.salon_update_booking_status($1,$2,$3,$4)',[a,booking.id,'In chair','']);
+      const sale = {id:'booking-sale',service:service.name,services:[service.name],serviceIds:[service.id],customerId:customer.id,customerName:customer.name,staff:'Rafiq',payment:'Cash',paymentLines:[{method:'Cash',amount:20}],subtotal:40,discount:0,revenueAmount:40,tip:0,amount:40,amountPaid:20,cashAmount:20,bookingId:booking.id,depositApplied:20,depositPayment:'Cash',createdAt:`${today}T10:30:00.000Z`};
+      await db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)',[a,sale.id,JSON.stringify(sale),'[]']);
+      const redeemed = (await db.query("select data from public.salon_records where shop_id=$1 and record_type='queue_ticket' and external_id=$2",[a,booking.id])).rows[0].data;
+      assert.equal(redeemed.status,'Completed');
+      assert.equal(redeemed.depositStatus,'Redeemed');
+      let savedCustomer = (await db.query("select data from public.salon_records where shop_id=$1 and record_type='customer' and external_id=$2",[a,customer.id])).rows[0].data;
+      assert.equal(Number(savedCustomer.visits),1);
+
+      const noShow = {...booking,id:'booking-no-show',time:'11:00',deposit:10,cancellationPolicy:'forfeit'};
+      await db.query('select public.salon_record_booking($1,$2,$3::jsonb)',[a,noShow.id,JSON.stringify(noShow)]);
+      await asUser(staff);
+      await assert.rejects(db.query('select public.salon_update_booking_status($1,$2,$3,$4)',[a,noShow.id,'No-show','Customer absent']), /Front desk authorization/);
+      await asUser(cashier);
+      await db.query('select public.salon_update_booking_status($1,$2,$3,$4)',[a,noShow.id,'No-show','Customer did not arrive']);
+      await db.query('select public.salon_update_booking_status($1,$2,$3,$4)',[a,noShow.id,'No-show','Customer did not arrive']);
+      savedCustomer = (await db.query("select data from public.salon_records where shop_id=$1 and record_type='customer' and external_id=$2",[a,customer.id])).rows[0].data;
+      assert.equal(Number(savedCustomer.noShows),1);
+      const cancelled = {...booking,id:'booking-cancelled',time:'12:00',deposit:5,cancellationPolicy:'refund'};
+      await db.query('select public.salon_record_booking($1,$2,$3::jsonb)',[a,cancelled.id,JSON.stringify(cancelled)]);
+      await db.query('select public.salon_update_booking_status($1,$2,$3,$4)',[a,cancelled.id,'Cancelled','Customer requested cancellation']);
+      assert.equal((await db.query("select data->>'depositStatus' status from public.salon_records where shop_id=$1 and record_type='queue_ticket' and external_id=$2",[a,cancelled.id])).rows[0].status,'Refunded');
+    });
     await t.test('server posts and reverses purchases with stock atomically', async () => {
       const today = new Date().toISOString().slice(0,10);
       const purchase = {
@@ -260,7 +304,7 @@ test('tenant foundation enforces database permissions', async (t) => {
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);
       await asUser(owner);
-      await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'queue_ticket','deposit-close-test',$2,$3)", [a, JSON.stringify({deposit:20,depositPayment:'Cash',depositStatus:'Held',createdAt:`${businessDate}T09:00:00.000Z`}), owner]);
+      await db.query('select public.salon_record_booking($1,$2,$3::jsonb)',[a,'deposit-close-test',JSON.stringify({id:'deposit-close-test',customerId:'customer-controlled',serviceId:'booking-service',service:'Booking Cut',staff:'Sameer',type:'Appointment',date:businessDate,time:'09:00',deposit:20,depositPayment:'Cash',cancellationPolicy:'refund'})]);
       await assert.rejects(db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'cash_closing','forged','{}',$2)",[a,owner]), /controlled close workflow/);
       await asUser(cashier);
       await assert.rejects(db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,`closing-${businessDate}`,JSON.stringify({businessDate,actual:5,reason:''})]), /variance reason/);
@@ -308,7 +352,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,4);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,32);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,42);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {

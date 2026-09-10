@@ -185,6 +185,24 @@ test('service and supplier master data use controlled RPCs', async () => {
   assert.deepEqual(JSON.parse(fixture.calls[3].options.body), { target_shop:'shop-id', supplier_external_id:'supplier-1', archive_reason:'Supplier retired' });
 });
 
+test('customer and booking lifecycle use controlled RPCs', async () => {
+  const fixture = backendFixture([
+    { status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }
+  ]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const customer = { id:'customer-1', name:'Hassan', phone:'0501234567' };
+  const ticket = { id:'ticket-1', customerId:customer.id, serviceId:'service-1', type:'Appointment', deposit:20 };
+  await fixture.backend.saveCustomer('shop-id', customer);
+  await fixture.backend.recordBooking('shop-id', ticket);
+  await fixture.backend.updateBookingStatus('shop-id', ticket.id, 'Cancelled', 'Customer requested');
+  assert.match(fixture.calls[0].url, /rpc\/salon_save_customer$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), { target_shop:'shop-id', customer_external_id:'customer-1', customer_data:customer });
+  assert.match(fixture.calls[1].url, /rpc\/salon_record_booking$/);
+  assert.deepEqual(JSON.parse(fixture.calls[1].options.body), { target_shop:'shop-id', ticket_external_id:'ticket-1', ticket_data:ticket });
+  assert.match(fixture.calls[2].url, /rpc\/salon_update_booking_status$/);
+  assert.deepEqual(JSON.parse(fixture.calls[2].options.body), { target_shop:'shop-id', ticket_external_id:'ticket-1', next_status:'Cancelled', action_reason:'Customer requested' });
+});
+
 test('daily close RPC sends counted cash for server calculation', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));

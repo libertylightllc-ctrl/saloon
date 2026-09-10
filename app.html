@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260911-release-20" />
+    <link rel="stylesheet" href="./styles.css?v=20260911-release-21" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -516,11 +516,12 @@
             <article class="panel form-panel">
               <div class="panel-head compact">
                 <div>
-                  <h3>Add Customer</h3>
+                  <h3 id="customerFormTitle">Add Customer</h3>
                   <p>Profile used for queue, bookings and visit history</p>
                 </div>
               </div>
-              <label>Name <input id="customerName" value="Walk-in Guest" /></label>
+              <input id="customerEditId" type="hidden" />
+              <label>Name <input id="customerName" /></label>
               <label>Phone <input id="customerPhone" placeholder="+971 50 000 0000" /></label>
               <label>Preference <input id="customerPreference" placeholder="Skin fade, beard line, preferred barber" /></label>
               <label>Risk note <input id="customerRiskNote" placeholder="No-show, allergy, formula or special care" /></label>
@@ -1458,7 +1459,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260911-release-20"></script>
-    <script src="./app.js?v=20260911-release-20"></script>
+    <script src="./backend.js?v=20260911-release-21"></script>
+    <script src="./app.js?v=20260911-release-21"></script>
   </body>
 </html>

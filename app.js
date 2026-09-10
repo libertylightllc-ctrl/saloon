@@ -61,7 +61,7 @@ const roleAccess = {
   "Platform Admin": ["master-admin", "dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "staff", "compliance", "cash", "accounting", "reports", "settings"],
   "Shop Admin": ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "staff", "compliance", "cash", "accounting", "reports", "settings"],
   Owner: ["dashboard", "setup", "quick-sale", "clients", "services", "purchases", "expenses", "inventory", "staff", "compliance", "cash", "accounting", "reports", "settings"],
-  Cashier: ["dashboard", "quick-sale", "purchases", "expenses", "inventory", "cash", "reports"],
+  Cashier: ["dashboard", "quick-sale", "clients", "purchases", "expenses", "inventory", "cash", "reports"],
   Staff: ["quick-sale", "services", "staff"]
 };
 
@@ -912,7 +912,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement", "service", "supplier"].includes(type)) return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement", "service", "supplier", "customer", "appointment", "queue_ticket"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -4359,6 +4359,7 @@ function renderClientMetrics() {
 function renderCustomerTable() {
   const body = document.getElementById("customerTable");
   if (!body) return;
+  const canEdit = ["Platform Admin", "Owner", "Shop Admin", "Cashier"].includes(currentRole);
   body.innerHTML = "";
   customers.forEach((customer) => {
     const row = document.createElement("tr");
@@ -4368,7 +4369,7 @@ function renderCustomerTable() {
       <td>${escapeHtml(customer.visits || 0)}${customer.noShows ? `<br><small>${escapeHtml(customer.noShows)} no-show</small>` : ""}</td>
       <td>${escapeHtml(customer.preference || "-")}</td>
       <td>${escapeHtml(customer.riskNote || "-")}</td>
-      <td><button class="mini-action" data-select-customer="${escapeHtml(customer.id)}" type="button">Use</button></td>
+      <td><div class="action-cluster"><button class="mini-action" data-select-customer="${escapeHtml(customer.id)}" type="button">Use</button>${canEdit && customer.id !== "walk-in-guest" ? `<button class="mini-action" data-edit-customer="${escapeHtml(customer.id)}" type="button">Edit</button>` : ""}</div></td>
     `;
     body.appendChild(row);
   });
@@ -4376,6 +4377,19 @@ function renderCustomerTable() {
     button.addEventListener("click", async () => {
       document.getElementById("saleCustomer").value = button.dataset.selectCustomer;
       showView("quick-sale");
+    });
+  });
+  body.querySelectorAll("[data-edit-customer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const customer = customers.find((candidate) => candidate.id === button.dataset.editCustomer);
+      if (!customer) return;
+      document.getElementById("customerEditId").value = customer.id;
+      document.getElementById("customerName").value = customer.name;
+      document.getElementById("customerPhone").value = customer.phone || "";
+      document.getElementById("customerPreference").value = customer.preference || "";
+      document.getElementById("customerRiskNote").value = customer.riskNote || "";
+      document.getElementById("customerFormTitle").textContent = `Edit ${customer.name}`;
+      document.getElementById("customerNote").textContent = "Update the profile and save. Visit and no-show history is preserved.";
     });
   });
 }
@@ -4416,26 +4430,17 @@ function prepareTicketCheckout(ticket) {
   document.getElementById("saleNote").textContent = `${customerById(ticket.customerId).name}'s ${moneyFixed(ticket.deposit)} booking deposit is ready to apply.`;
 }
 
-function cancelTicket(ticket) {
+async function cancelTicket(ticket) {
   if (!ticket || !["Booked", "Waiting"].includes(ticket.status)) return;
   const reason = document.getElementById("bookingActionReason").value.trim();
   if (!reason) {
     document.getElementById("queueActionNote").textContent = "Enter a cancellation reason first.";
     return;
   }
-  const refund = Number(ticket.deposit || 0) > 0 && (ticket.cancellationPolicy || "refund") === "refund";
-  ticket.status = "Cancelled";
-  ticket.depositStatus = Number(ticket.deposit || 0) ? (refund ? "Refunded" : "Forfeited") : "None";
-  ticket.cancelledAt = new Date().toISOString();
-  ticket.cancelledBy = currentUser?.name || currentRole;
-  ticket.cancellationReason = reason;
-  syncAppointmentFromTicket(ticket);
-  addAudit("Booking cancelled", `${currentRole} · ${customerById(ticket.customerId).name} · ${ticket.depositStatus}`);
-  saveState();
-  renderClientsQueue();
-  syncSummaryTotals();
+  const updated = await updateQueueStatus(ticket.id, "Cancelled", reason);
+  if (!updated) return;
   document.getElementById("bookingActionReason").value = "";
-  document.getElementById("queueActionNote").textContent = `Booking cancelled. Deposit ${ticket.depositStatus.toLowerCase()}.`;
+  document.getElementById("queueActionNote").textContent = `Booking cancelled. Deposit ${updated.depositStatus.toLowerCase()}.`;
 }
 
 function syncAppointmentFromTicket(ticket) {
@@ -4470,14 +4475,14 @@ function renderQueueTable() {
       body.appendChild(row);
   });
   body.querySelectorAll("[data-queue-next]").forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const ticket = queueTickets.find((item) => item.id === button.dataset.queueNext);
       if (ticket?.status === "In chair") prepareTicketCheckout(ticket);
-      else updateQueueStatus(button.dataset.queueNext, nextQueueStatus(ticket?.status));
+      else await updateQueueStatus(button.dataset.queueNext, nextQueueStatus(ticket?.status));
     });
   });
   body.querySelectorAll("[data-queue-noshow]").forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const reason = document.getElementById("bookingActionReason").value.trim();
       if (!reason) {
         document.getElementById("queueActionNote").textContent = "Enter a no-show reason first.";
@@ -4485,7 +4490,8 @@ function renderQueueTable() {
       }
       const ticket = queueTickets.find((candidate) => candidate.id === button.dataset.queueNoshow);
       if (ticket) ticket.cancellationReason = reason;
-      updateQueueStatus(button.dataset.queueNoshow, "No-show");
+      const updated = await updateQueueStatus(button.dataset.queueNoshow, "No-show", reason);
+      if (!updated) return;
       document.getElementById("bookingActionReason").value = "";
       document.getElementById("queueActionNote").textContent = "No-show recorded; any held deposit was forfeited.";
     });
@@ -4503,7 +4509,8 @@ function renderClientsQueue() {
   applyTranslations();
 }
 
-function saveCustomerFromForm() {
+async function saveCustomerFromForm() {
+  const editId = document.getElementById("customerEditId").value;
   const name = document.getElementById("customerName").value.trim();
   const phone = document.getElementById("customerPhone").value.trim();
   const preference = document.getElementById("customerPreference").value.trim();
@@ -4514,24 +4521,41 @@ function saveCustomerFromForm() {
     document.getElementById("customerName").focus();
     return;
   }
-  const existing = customers.find((customer) => customer.phone && phone && customer.phone === phone);
-  if (existing) {
-    Object.assign(existing, { name, phone, preference, riskNote });
-    note.textContent = `${name} profile updated.`;
-  } else {
-    customers.push({ id: uniqueCustomerId(name), name, phone, preference, riskNote, visits: 0, noShows: 0, lastVisit: "" });
-    note.textContent = `${name} saved and available in Quick Sale.`;
+  const normalizedPhone = phone.replace(/[^0-9+]/g, "");
+  const existing = customers.find((customer) => customer.id === editId)
+    || customers.find((customer) => customer.phone && normalizedPhone && customer.phone.replace(/[^0-9+]/g, "") === normalizedPhone);
+  const customer = {
+    id: existing?.id || uniqueCustomerId(name), name, phone, preference, riskNote,
+    visits: Number(existing?.visits || 0), noShows: Number(existing?.noShows || 0), lastVisit: existing?.lastVisit || "",
+    createdAt: existing?.createdAt || new Date().toISOString()
+  };
+  if (!isLocalDemo) {
+    const button = document.getElementById("saveCustomer");
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.saveCustomer(cloudTargetShopId(), customer);
+      if (result?.customer) Object.assign(customer, result.customer);
+    } catch (error) {
+      note.textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
   }
-  document.getElementById("customerName").value = "Walk-in Guest";
+  if (existing) Object.assign(existing, customer); else customers.push(customer);
+  note.textContent = existing ? `${name} profile updated.` : `${name} saved and available in Quick Sale.`;
+  document.getElementById("customerEditId").value = "";
+  document.getElementById("customerFormTitle").textContent = "Add Customer";
+  document.getElementById("customerName").value = "";
   document.getElementById("customerPhone").value = "";
   document.getElementById("customerPreference").value = "";
   document.getElementById("customerRiskNote").value = "";
-  addAudit("Stock adjusted", `${currentRole} · customer saved · ${name}`);
+  addAudit("Customer saved", `${currentRole} · ${existing ? "profile updated" : "profile created"} · ${name}`);
   saveState();
   renderClientsQueue();
 }
 
-function saveBookingFromForm() {
+async function saveBookingFromForm() {
   const customerId = document.getElementById("bookingCustomer").value;
   const type = document.getElementById("bookingType").value;
   const service = document.getElementById("bookingService").value;
@@ -4540,16 +4564,18 @@ function saveBookingFromForm() {
   const time = document.getElementById("bookingTime").value || new Intl.DateTimeFormat("en-AE", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
   const deposit = numberValue("bookingDeposit");
   const customer = customerById(customerId);
-  const servicePrice = Number(services.find((candidate) => candidate.name === service)?.price || 0);
-  if (!customerId || !service || deposit < 0 || (type !== "Appointment" && deposit > 0) || deposit > servicePrice) {
+  const selectedBookingService = services.find((candidate) => candidate.name === service && candidate.active !== false);
+  const servicePrice = Number(selectedBookingService?.price || 0);
+  if (!customerId || !selectedBookingService || deposit < 0 || (type !== "Appointment" && deposit > 0) || deposit > servicePrice) {
     document.getElementById("bookingNote").textContent = type !== "Appointment" && deposit > 0
       ? "Deposits can only be collected for appointments."
       : `Select a customer and service, and keep the deposit between ${moneyFixed(0)} and ${moneyFixed(servicePrice)}.`;
     return;
   }
   const ticket = {
-    id: `q-${Date.now()}`,
+    id: `q-${crypto.randomUUID()}`,
     customerId,
+    serviceId: selectedBookingService.id,
     service,
     staff,
     type,
@@ -4562,19 +4588,49 @@ function saveBookingFromForm() {
     status: type === "Appointment" ? "Booked" : "Waiting",
     createdAt: new Date().toISOString()
   };
+  if (!isLocalDemo) {
+    const button = document.getElementById("saveBooking");
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.recordBooking(cloudTargetShopId(), ticket);
+      if (result?.ticket) Object.assign(ticket, result.ticket);
+    } catch (error) {
+      document.getElementById("bookingNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
   queueTickets.push(ticket);
   if (type === "Appointment") appointments.push({ ...ticket });
   document.getElementById("bookingNote").textContent = `${customer.name} added as ${type.toLowerCase()} for ${service}.`;
-  addAudit("Stock adjusted", `${currentRole} · ${type.toLowerCase()} added · ${customer.name} · ${service}`);
+  addAudit("Booking created", `${currentRole} · ${type.toLowerCase()} added · ${customer.name} · ${service}`);
   saveState();
   syncSummaryTotals();
-  renderLaunchAudit();
+  renderClientsQueue();
 }
 
-function updateQueueStatus(ticketId, status) {
+async function updateQueueStatus(ticketId, status, reason = "") {
   const ticket = queueTickets.find((item) => item.id === ticketId);
-  if (!ticket) return;
-  ticket.status = status;
+  if (!ticket) return null;
+  if (!isLocalDemo) {
+    try {
+      const result = await window.SalonBackend.updateBookingStatus(cloudTargetShopId(), ticketId, status, reason);
+      if (result?.ticket) Object.assign(ticket, result.ticket);
+    } catch (error) {
+      document.getElementById("queueActionNote").textContent = error.message;
+      return null;
+    }
+  } else {
+    ticket.status = status;
+    if (["Cancelled", "No-show"].includes(status)) {
+      const refund = status === "Cancelled" && (ticket.cancellationPolicy || "refund") === "refund";
+      ticket.depositStatus = Number(ticket.deposit || 0) ? (refund ? "Refunded" : "Forfeited") : "None";
+      ticket.cancelledAt = new Date().toISOString();
+      ticket.cancelledBy = currentUser?.name || currentRole;
+      ticket.cancellationReason = reason;
+    }
+  }
   const customer = customerById(ticket.customerId);
   if (status === "Completed") {
     customer.visits = Number(customer.visits || 0) + 1;
@@ -4586,9 +4642,11 @@ function updateQueueStatus(ticketId, status) {
     ticket.cancelledAt = new Date().toISOString();
   }
   syncAppointmentFromTicket(ticket);
-  addAudit("Stock adjusted", `${currentRole} · queue ${status.toLowerCase()} · ${customer.name}`);
+  addAudit("Booking status changed", `${currentRole} · queue ${status.toLowerCase()} · ${customer.name}${reason ? ` · ${reason}` : ""}`);
   saveState();
   renderClientsQueue();
+  syncSummaryTotals();
+  return ticket;
 }
 
 function renderExpenseTable() {
