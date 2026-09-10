@@ -200,6 +200,20 @@
     });
   }
 
+  async function recordExpense(shopId, expense) {
+    return request("/rest/v1/rpc/salon_record_expense", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, expense_external_id: expense.id, expense_data: expense })
+    });
+  }
+
+  async function reverseExpense(shopId, expenseId, reason) {
+    return request("/rest/v1/rpc/salon_reverse_expense", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, expense_external_id: expenseId, reversal_reason: reason })
+    });
+  }
+
   async function closeDay(shopId, closing) {
     return request("/rest/v1/rpc/salon_close_day", {
       method: "POST",
@@ -263,5 +277,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();

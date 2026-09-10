@@ -116,7 +116,9 @@ const requiredJs = [
   "changePassword",
   "signEvidence",
   "canManageShopOperations",
-  "data-reverse-expense"
+  "data-reverse-expense",
+  "recordExpense",
+  "reverseExpense"
 ];
 
 const forbiddenHtml = [

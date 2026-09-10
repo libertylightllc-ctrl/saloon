@@ -892,7 +892,7 @@ const cloudWritableTypes = {
   "Platform Admin": cloudCollections.map(([, type]) => type).concat("shop_setting"),
   Owner: cloudCollections.map(([, type]) => type).concat("shop_setting"),
   "Shop Admin": cloudCollections.map(([, type]) => type).concat("shop_setting"),
-  Cashier: ["customer", "appointment", "queue_ticket", "sale", "refund", "purchase", "supplier_payment", "expense", "inventory_item", "stock_movement", "cash_closing"],
+  Cashier: ["customer", "appointment", "queue_ticket", "sale", "refund", "purchase", "supplier_payment", "inventory_item", "stock_movement", "cash_closing"],
   Staff: ["queue_ticket", "sale"]
 };
 
@@ -912,7 +912,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || ["cash_closing", "accounting_period"].includes(type)) return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -2132,6 +2132,10 @@ function totalSupplierPayable() {
 
 function totalExpenses() {
   return expenses.reduce((sum, expense) => expense.status === "Reversed" ? sum : sum + (Number(expense.amount) || 0), 0);
+}
+
+function expenseDisplayAmount(expense) {
+  return Number(expense.originalAmount ?? expense.amount) || 0;
 }
 
 function serviceMaterialCost() {
@@ -4486,7 +4490,7 @@ function renderExpenseTable() {
       <td>${translate(expense.category)}</td>
       <td>${escapeHtml(translate(expense.note || "-"))}${expense.evidenceFile ? `<br><small>${evidenceMarkup(expense)}</small>` : ""}</td>
       <td>${translate(expense.payment)}</td>
-      <td>${moneyFixed(Number(expense.amount) || 0)}</td>
+      <td>${moneyFixed(expenseDisplayAmount(expense))}</td>
       <td><b class="${reversed ? "warn" : "ok"}">${reversed ? "Reversed" : "Posted"}</b></td>
       <td>${canReverse ? `<button class="danger-button" data-reverse-expense="${index}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button>` : "-"}</td>
     `;
@@ -4495,7 +4499,7 @@ function renderExpenseTable() {
   if (!expenses.length) body.innerHTML = '<tr><td colspan="6">No expenses yet.</td></tr>';
 
   body.querySelectorAll("[data-reverse-expense]").forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const index = Number(button.dataset.reverseExpense);
       const expense = expenses[index];
       const reason = document.getElementById("expenseReversalReason").value.trim();
@@ -4503,11 +4507,22 @@ function renderExpenseTable() {
         document.getElementById("expenseNote").textContent = "Enter a reversal reason before reversing an expense.";
         return;
       }
-      expense.status = "Reversed";
-      expense.reversalReason = reason;
-      expense.reversedAt = new Date().toISOString();
-      expense.reversedBy = currentUser?.name || currentRole;
-      addAudit("Expense reversed", `${currentRole} · ${expense.category} · ${moneyFixed(Number(expense.amount) || 0)} · ${reason}`);
+      const originalAmount = expenseDisplayAmount(expense);
+      if (!isLocalDemo) {
+        try {
+          const result = await window.SalonBackend.reverseExpense(cloudTargetShopId(), expense.id, reason);
+          if (result?.expense) Object.assign(expense, result.expense);
+        } catch (error) {
+          document.getElementById("expenseNote").textContent = error.message;
+          return;
+        }
+      } else {
+        Object.assign(expense, {
+          status: "Reversed", originalAmount, amount: 0, reversalReason: reason,
+          reversedAt: new Date().toISOString(), reversedBy: currentUser?.name || currentRole
+        });
+      }
+      addAudit("Expense reversed", `${currentRole} · ${expense.category} · ${moneyFixed(originalAmount)} · ${reason}`);
       saveState();
       renderExpenseTable();
       syncSummaryTotals();
@@ -5026,6 +5041,10 @@ document.getElementById("saveExpense").addEventListener("click", async (event) =
       });
     }
     if (evidenceFile) expense.evidenceFile = evidenceFile;
+    if (!isLocalDemo) {
+      const result = await window.SalonBackend.recordExpense(cloudTargetShopId(), expense);
+      if (result?.expense) Object.assign(expense, result.expense);
+    }
   } catch (error) {
     document.getElementById("expenseNote").textContent = error.message;
     return;

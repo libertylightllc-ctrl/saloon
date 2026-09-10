@@ -43,7 +43,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100011_accounting_period_lock.sql',
       '202609100012_login_history.sql',
       '202609100013_checkout_controls.sql',
-      '202609100014_operational_documents.sql'
+      '202609100014_operational_documents.sql',
+      '202609100015_controlled_expenses.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -123,6 +124,20 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal(Number(saved.cashAmount),10);
       await assert.rejects(db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'bad-tender',JSON.stringify({...discounted,id:'bad-tender',discount:0,discountReason:'',revenueAmount:20,amount:25,paymentLines:[{method:'Cash',amount:24}],cashAmount:24}),'[]']), /Payment lines/);
     });
+    await t.test('server controls expense posting and management reversals', async () => {
+      const expense = {id:'expense-controlled',category:'Tea & Food',amount:12,payment:'Cash',note:'Team tea'};
+      await asUser(cashier);
+      await assert.rejects(db.query('select public.salon_record_expense($1,$2,$3::jsonb)',[a,'expense-bad',JSON.stringify({...expense,id:'expense-bad',amount:-1})]), /amount is invalid/);
+      await db.query('select public.salon_record_expense($1,$2,$3::jsonb)',[a,expense.id,JSON.stringify(expense)]);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"amount\":999}' where shop_id=$1 and external_id=$2",[a,expense.id]), /controlled expense workflow/);
+      await assert.rejects(db.query('select public.salon_reverse_expense($1,$2,$3)',[a,expense.id,'Duplicate entry']), /Management authorization/);
+      await asUser(owner);
+      await db.query('select public.salon_reverse_expense($1,$2,$3)',[a,expense.id,'Duplicate entry']);
+      const reversed = (await db.query("select data from public.salon_records where shop_id=$1 and external_id=$2",[a,expense.id])).rows[0].data;
+      assert.equal(reversed.status,'Reversed');
+      assert.equal(Number(reversed.originalAmount),12);
+      assert.equal(Number(reversed.amount),0);
+    });
     await t.test('owner can save supplier account records', async () => {
       await asUser(owner);
       await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'supplier','supplier-1','{\"name\":\"Vendor\"}',$2),($1,'supplier_payment','payment-1','{\"amount\":10}',$2)",[a,owner]);
@@ -162,17 +177,20 @@ test('tenant foundation enforces database permissions', async (t) => {
       previous.setUTCDate(1);
       previous.setUTCMonth(previous.getUTCMonth()-1);
       const period = previous.toISOString().slice(0,7);
+      await db.exec('reset role');
+      await db.query("select set_config('request.jwt.claim.sub','',false)");
+      await db.query("update public.salon_records set data=$1 where shop_id=$2 and record_type='expense' and external_id='e1'", [JSON.stringify({id:'e1',category:'Other',amount:10,payment:'Cash',status:'Posted',createdAt:`${period}-10T09:00:00.000Z`}),a]);
       await asUser(owner);
-      await db.query("update public.salon_records set data=$1 where shop_id=$2 and record_type='expense' and external_id='e1'", [JSON.stringify({amount:10,createdAt:`${period}-10T09:00:00.000Z`}),a]);
       await assert.rejects(db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'accounting_period','forged','{}',$2)",[a,owner]), /controlled close workflow/);
       await db.query('select public.salon_close_accounting_period($1,$2)',[a,period]);
-      await assert.rejects(db.query("update public.salon_records set data=data || '{\"amount\":11}' where shop_id=$1 and external_id='e1'",[a]), /is closed/);
+      await assert.rejects(db.query('select public.salon_reverse_expense($1,$2,$3)',[a,'e1','Period correction']), /is closed/);
       await assert.rejects(db.query('select public.salon_reopen_accounting_period($1,$2,$3)',[a,period,'Owner correction']), /platform administrator/);
       await asUser(platform);
       await assert.rejects(db.query('select public.salon_reopen_accounting_period($1,$2,$3)',[a,period,'no']), /reason is required/);
       await db.query('select public.salon_reopen_accounting_period($1,$2,$3)',[a,period,'Approved correction request']);
       await asUser(owner);
-      assert.equal((await db.query("update public.salon_records set data=data || '{\"amount\":11}' where shop_id=$1 and external_id='e1' returning id",[a])).rows.length,1);
+      await db.query('select public.salon_reverse_expense($1,$2,$3)',[a,'e1','Approved correction']);
+      assert.equal((await db.query("select data->>'status' status from public.salon_records where external_id='e1'")).rows[0].status,'Reversed');
     });
     await t.test('login history is append-only and tenant scoped', async () => {
       await asUser(staff);
@@ -191,7 +209,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,4);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,17);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,18);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {
