@@ -652,6 +652,7 @@ const defaultState = {
   attendanceRecords: [],
   staffAdjustments: [],
   payrollRuns: [],
+  accountingPeriods: [],
   users: [],
   checklist: {
     servicesApproved: true,
@@ -706,6 +707,7 @@ const shopStateFields = [
   "attendanceRecords",
   "staffAdjustments",
   "payrollRuns",
+  "accountingPeriods",
   "users",
   "checklist",
   "inspectionRecords",
@@ -748,6 +750,7 @@ function createProductionShopState(country = "AE", overrides = {}) {
     attendanceRecords: [],
     staffAdjustments: [],
     payrollRuns: [],
+    accountingPeriods: [],
     hygieneLogs: [],
     complianceDocuments: defaultComplianceDocuments(country).map((document) => ({ ...document, issueDate: "", expiryDate: "", status: "Not set" })),
     documentChain: [],
@@ -817,6 +820,7 @@ let staffProfiles = activeShopState.staffProfiles || defaultState.staffProfiles;
 let attendanceRecords = activeShopState.attendanceRecords || [];
 let staffAdjustments = activeShopState.staffAdjustments || [];
 let payrollRuns = activeShopState.payrollRuns || [];
+let accountingPeriods = activeShopState.accountingPeriods || [];
 let checklist = { ...defaultState.checklist, ...(activeShopState.checklist || {}) };
 let inspectionRecords = activeShopState.inspectionRecords || defaultState.inspectionRecords;
 let hygieneLogs = activeShopState.hygieneLogs || defaultState.hygieneLogs;
@@ -872,6 +876,7 @@ const cloudCollections = [
   ["attendanceRecords", "attendance"],
   ["staffAdjustments", "staff_adjustment"],
   ["payrollRuns", "payroll"],
+  ["accountingPeriods", "accounting_period"],
   ["inspectionRecords", "inspection"],
   ["hygieneLogs", "hygiene_log"],
   ["complianceDocuments", "compliance_document"],
@@ -903,7 +908,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || type === "cash_closing") return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -1153,6 +1158,7 @@ function captureActiveShopState() {
     attendanceRecords,
     staffAdjustments,
     payrollRuns,
+    accountingPeriods,
     users: activeShopState.users || (isLocalDemo ? defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha") : []),
     checklist,
     inspectionRecords,
@@ -1191,6 +1197,7 @@ function hydrateActiveShop() {
   attendanceRecords = activeShopState.attendanceRecords || [];
   staffAdjustments = activeShopState.staffAdjustments || [];
   payrollRuns = activeShopState.payrollRuns || [];
+  accountingPeriods = activeShopState.accountingPeriods || [];
   activeShopState.users = Array.isArray(activeShopState.users)
     ? activeShopState.users
     : (isLocalDemo ? defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha") : []);
@@ -1403,7 +1410,8 @@ function saveState() {
     staffProfiles,
     attendanceRecords,
     staffAdjustments,
-    payrollRuns
+    payrollRuns,
+    accountingPeriods
   };
   memoryState = nextState;
   try {
@@ -1528,6 +1536,7 @@ document.getElementById("shopSearch")?.addEventListener("input", renderMasterDas
 document.getElementById("shopStatusFilter")?.addEventListener("change", renderMasterDashboard);
 document.getElementById("saveCustomer")?.addEventListener("click", saveCustomerFromForm);
 document.getElementById("saveBooking")?.addEventListener("click", saveBookingFromForm);
+document.getElementById("closeAccountingPeriod")?.addEventListener("click", closeAccountingPeriodFromForm);
 document.getElementById("saleCustomer")?.addEventListener("change", () => renderBookingDepositOptions());
 document.getElementById("bookingType")?.addEventListener("change", (event) => {
   const isAppointment = event.target.value === "Appointment";
@@ -2847,6 +2856,103 @@ function renderAccounting() {
   const status = document.getElementById("trialBalanceStatus");
   status.textContent = balanced ? "Balanced" : "Review needed";
   status.className = `status-pill ${balanced ? "ok" : "danger"}`;
+  renderAccountingPeriods();
+}
+
+function previousCompletedMonth() {
+  const date = new Date();
+  date.setUTCDate(1);
+  date.setUTCMonth(date.getUTCMonth() - 1);
+  return date.toISOString().slice(0, 7);
+}
+
+function transactionPeriod(record) {
+  return String(record.businessDate || record.date || record.invoiceDate || record.paidAt || record.createdAt || "").slice(0, 7);
+}
+
+function localAccountingPeriodSnapshot(period) {
+  const count = (records) => records.filter((record) => transactionPeriod(record) === period && record.status !== "Reversed").length;
+  return {
+    id: `period-${period}`,
+    period,
+    status: "Closed",
+    salesCount: count(sales),
+    purchasesCount: count(purchases),
+    expensesCount: count(expenses),
+    payrollCount: payrollRuns.filter((run) => run.period === period).length,
+    closedBy: currentUser?.name || currentRole,
+    closedAt: new Date().toISOString()
+  };
+}
+
+function renderAccountingPeriods() {
+  const body = document.getElementById("accountingPeriodTable");
+  if (!body) return;
+  const closed = accountingPeriods.filter((period) => period.status === "Closed");
+  document.getElementById("accountingPeriodStatus").textContent = closed.length ? `${closed.length} closed` : "No closed periods";
+  body.innerHTML = accountingPeriods.length ? [...accountingPeriods].sort((a, b) => b.period.localeCompare(a.period)).map((period) => {
+    const canReopen = currentRole === "Platform Admin" && period.status === "Closed";
+    return `<tr><td><strong>${escapeHtml(period.period)}</strong></td><td><b class="${period.status === "Closed" ? "ok" : "warn"}">${escapeHtml(period.status)}</b></td><td>${Number(period.salesCount || 0)}</td><td>${Number(period.purchasesCount || 0)}</td><td>${Number(period.expensesCount || 0)}</td><td>${escapeHtml(period.closedBy || "-")}</td><td>${canReopen ? `<button class="danger-button" data-reopen-period="${escapeHtml(period.period)}" type="button">Reopen</button>` : "-"}</td></tr>`;
+  }).join("") : '<tr><td colspan="7">No accounting periods have been closed.</td></tr>';
+
+  body.querySelectorAll("[data-reopen-period]").forEach((button) => button.addEventListener("click", async () => {
+    const period = accountingPeriods.find((candidate) => candidate.period === button.dataset.reopenPeriod);
+    const reason = document.getElementById("accountingReopenReason").value.trim();
+    if (!period || !reason) {
+      document.getElementById("accountingPeriodNote").textContent = "Enter a reopen reason before selecting Reopen.";
+      return;
+    }
+    button.disabled = true;
+    try {
+      if (!isLocalDemo) {
+        const result = await window.SalonBackend.reopenAccountingPeriod(cloudTargetShopId(), period.period, reason);
+        Object.assign(period, result?.period || {}, { status: "Reopened" });
+      } else {
+        Object.assign(period, { status: "Reopened", reopenedAt: new Date().toISOString(), reopenedBy: currentUser?.name || currentRole, reopenReason: reason });
+      }
+      addAudit("Accounting period reopened", `${currentRole} · ${period.period} · ${reason}`);
+      saveState();
+      renderAccountingPeriods();
+      document.getElementById("accountingReopenReason").value = "";
+      document.getElementById("accountingPeriodNote").textContent = `${period.period} reopened. Backdated corrections are enabled and audited.`;
+    } catch (error) {
+      document.getElementById("accountingPeriodNote").textContent = error instanceof Error ? error.message : "Period could not be reopened.";
+      button.disabled = false;
+    }
+  }));
+}
+
+async function closeAccountingPeriodFromForm() {
+  const period = document.getElementById("accountingPeriodMonth").value;
+  const note = document.getElementById("accountingPeriodNote");
+  if (!/^\d{4}-\d{2}$/.test(period) || period >= new Date().toISOString().slice(0, 7)) {
+    note.textContent = "Select a completed month. The current or a future month cannot be closed.";
+    return;
+  }
+  if (accountingPeriods.some((candidate) => candidate.period === period && candidate.status === "Closed")) {
+    note.textContent = `${period} is already closed.`;
+    return;
+  }
+  const button = document.getElementById("closeAccountingPeriod");
+  button.disabled = true;
+  try {
+    let snapshot = localAccountingPeriodSnapshot(period);
+    if (!isLocalDemo) {
+      const result = await window.SalonBackend.closeAccountingPeriod(cloudTargetShopId(), period);
+      snapshot = result?.period || snapshot;
+    }
+    const existing = accountingPeriods.find((candidate) => candidate.period === period);
+    if (existing) Object.assign(existing, snapshot, { status: "Closed" });
+    else accountingPeriods.push(snapshot);
+    addAudit("Accounting period closed", `${currentRole} · ${period}`);
+    saveState();
+    renderAccountingPeriods();
+    note.textContent = `${period} closed. Transactions in this month are now protected.`;
+  } catch (error) {
+    note.textContent = error instanceof Error ? error.message : "Period could not be closed.";
+  } finally {
+    button.disabled = false;
+  }
 }
 
 function launchAuditSnapshot() {
@@ -2959,6 +3065,8 @@ function applyRoleAccess() {
   ["staffProfileForm", "attendanceForm", "payrollControlForm"].forEach((id) => {
     document.getElementById(id).hidden = !canManageStaff;
   });
+  document.getElementById("accountingPeriodForm").hidden = !["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
+  document.getElementById("platformReopenControls").hidden = currentRole !== "Platform Admin";
   document.body.classList.remove("is-platform-admin");
   renderShopSwitcher();
   renderMobileViewSwitcher();
@@ -5050,6 +5158,7 @@ document.getElementById("purchaseDate").value = todayIso();
 document.getElementById("staffJoinDate").value = todayIso();
 document.getElementById("attendanceDate").value = todayIso();
 document.getElementById("payrollMonth").value = new Date().toISOString().slice(0, 7);
+document.getElementById("accountingPeriodMonth").value = previousCompletedMonth();
 document.getElementById("bookingType").dispatchEvent(new Event("change"));
 saveState();
 renderSaleServices();

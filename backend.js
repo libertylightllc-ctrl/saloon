@@ -200,6 +200,20 @@
     });
   }
 
+  async function closeAccountingPeriod(shopId, period) {
+    return request("/rest/v1/rpc/salon_close_accounting_period", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, target_period: period })
+    });
+  }
+
+  async function reopenAccountingPeriod(shopId, period, reason) {
+    return request("/rest/v1/rpc/salon_reopen_accounting_period", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, target_period: period, reopen_reason: reason })
+    });
+  }
+
   async function provision(payload) {
     return request("/functions/v1/provision-user", { method: "POST", body: JSON.stringify(payload) });
   }
@@ -208,5 +222,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, recordSale, refundSale, closeDay, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, saveDocumentMetadata, recordSale, refundSale, closeDay, closeAccountingPeriod, reopenAccountingPeriod, provision, loadUsers, isConfigured: true };
 })();

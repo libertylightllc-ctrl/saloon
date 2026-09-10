@@ -104,6 +104,17 @@ test('daily close RPC sends counted cash for server calculation', async () => {
   });
 });
 
+test('accounting period close and reopen use controlled RPCs', async () => {
+  const fixture = backendFixture([{ status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  await fixture.backend.closeAccountingPeriod('shop-id', '2026-08');
+  await fixture.backend.reopenAccountingPeriod('shop-id', '2026-08', 'Approved correction');
+  assert.match(fixture.calls[0].url, /rpc\/salon_close_accounting_period$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), { target_shop: 'shop-id', target_period: '2026-08' });
+  assert.match(fixture.calls[1].url, /rpc\/salon_reopen_accounting_period$/);
+  assert.deepEqual(JSON.parse(fixture.calls[1].options.body), { target_shop: 'shop-id', target_period: '2026-08', reopen_reason: 'Approved correction' });
+});
+
 test('expired API responses refresh the session once and retry', async () => {
   const fixture = backendFixture([
     { status: 401, body: { message: 'expired' } },

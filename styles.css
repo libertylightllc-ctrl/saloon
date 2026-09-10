@@ -1549,6 +1549,11 @@ td code {
   margin-top: 16px;
 }
 
+.accounting-period-layout {
+  align-items: start;
+  margin-top: 16px;
+}
+
 #staff table {
   min-width: 760px;
 }

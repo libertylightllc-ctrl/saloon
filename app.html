@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-8" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-9" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -1223,6 +1223,24 @@
               </table>
             </div>
           </article>
+
+          <div class="split-layout accounting-period-layout">
+            <article class="panel">
+              <div class="panel-head"><div><h3>Accounting Periods</h3><p>Closed months are protected from backdated transaction changes</p></div><span class="status-pill" id="accountingPeriodStatus">No closed periods</span></div>
+              <div class="table-wrap"><table><thead><tr><th>Period</th><th>Status</th><th>Sales</th><th>Purchases</th><th>Expenses</th><th>Closed by</th><th>Action</th></tr></thead><tbody id="accountingPeriodTable"></tbody></table></div>
+            </article>
+            <article class="panel form-panel" id="accountingPeriodForm">
+              <div class="panel-head compact"><div><h3>Close Month</h3><p>Review the trial balance and daily closes before locking</p></div></div>
+              <label>Accounting month <input id="accountingPeriodMonth" type="month" /></label>
+              <button class="primary-button full" id="closeAccountingPeriod" type="button">Close Accounting Period</button>
+              <div id="platformReopenControls">
+                <hr />
+                <h3>Platform Reopen</h3>
+                <label>Reason <input id="accountingReopenReason" placeholder="Required for a platform administrator reopen" /></label>
+              </div>
+              <p class="system-note" id="accountingPeriodNote">Only a completed month can be closed. Reopening is restricted to the platform administrator.</p>
+            </article>
+          </div>
         </section>
 
         <section class="view" id="reports">
@@ -1392,7 +1410,7 @@
       </main>
     </div>
 
-    <script src="./backend.js?v=20260910-release-8"></script>
-    <script src="./app.js?v=20260910-release-8"></script>
+    <script src="./backend.js?v=20260910-release-9"></script>
+    <script src="./app.js?v=20260910-release-9"></script>
   </body>
 </html>

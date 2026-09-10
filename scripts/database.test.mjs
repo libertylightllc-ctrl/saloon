@@ -38,7 +38,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100007_supplier_refunds.sql',
       '202609100008_immutable_daily_close.sql',
       '202609100009_staff_payroll.sql',
-      '202609100010_appointment_deposits.sql'
+      '202609100010_appointment_deposits.sql',
+      '202609100011_accounting_period_lock.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -130,11 +131,28 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal((await db.query("select data->>'status' status from public.salon_records where record_type='cash_closing'")).rows[0].status,'Approved');
       await assert.rejects(db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,'duplicate-close',JSON.stringify({businessDate,actual:20,reason:''})]), /approved and locked/);
     });
+    await t.test('closed accounting periods reject changes until a platform reopen', async () => {
+      const previous = new Date();
+      previous.setUTCDate(1);
+      previous.setUTCMonth(previous.getUTCMonth()-1);
+      const period = previous.toISOString().slice(0,7);
+      await asUser(owner);
+      await db.query("update public.salon_records set data=$1 where shop_id=$2 and record_type='expense' and external_id='e1'", [JSON.stringify({amount:10,createdAt:`${period}-10T09:00:00.000Z`}),a]);
+      await assert.rejects(db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'accounting_period','forged','{}',$2)",[a,owner]), /controlled close workflow/);
+      await db.query('select public.salon_close_accounting_period($1,$2)',[a,period]);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"amount\":11}' where shop_id=$1 and external_id='e1'",[a]), /is closed/);
+      await assert.rejects(db.query('select public.salon_reopen_accounting_period($1,$2,$3)',[a,period,'Owner correction']), /platform administrator/);
+      await asUser(platform);
+      await assert.rejects(db.query('select public.salon_reopen_accounting_period($1,$2,$3)',[a,period,'no']), /reason is required/);
+      await db.query('select public.salon_reopen_accounting_period($1,$2,$3)',[a,period,'Approved correction request']);
+      await asUser(owner);
+      assert.equal((await db.query("update public.salon_records set data=data || '{\"amount\":11}' where shop_id=$1 and external_id='e1' returning id",[a])).rows.length,1);
+    });
     await t.test('platform admin can view all shops', async () => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,3);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,14);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,15);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {
