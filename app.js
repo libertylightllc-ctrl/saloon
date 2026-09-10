@@ -998,7 +998,7 @@ async function prepareCloudIdentity(identity, username = "Account") {
       enabled: shop.status === "active",
       status: shop.status
     }));
-    activeShopId = shops[0]?.id || "";
+    activeShopId = shops.find((shop) => shop.enabled !== false)?.id || "";
     if (activeShopId) await Promise.all([loadCloudShopState(activeShopId), loadCloudUsers(activeShopId)]);
   }
   return { ok: true, role, user: { name: username, username, role }, shopId: activeShopId };
@@ -1069,7 +1069,9 @@ function defaultShopUsers(ownerName = "Owner", ownerUsername = "owner.albarsha",
 }
 
 function currentShop() {
-  return shops.find((shop) => shop.id === activeShopId) || shops[0];
+  const selected = shops.find((shop) => shop.id === activeShopId);
+  if (selected) return selected;
+  return shops.find((shop) => shop.enabled !== false) || (currentRole === "Platform Admin" ? null : shops[0]);
 }
 
 function currentShopLabel() {
@@ -1079,7 +1081,7 @@ function currentShopLabel() {
 
 function currentShopLocation() {
   const shop = currentShop();
-  return shop ? shop.location : "Al Barsha";
+  return shop ? shop.location : "Create or restore a shop";
 }
 
 function currentShopCode() {
@@ -1097,6 +1099,7 @@ function currentCurrency(shop = currentShop()) {
 }
 
 function captureActiveShopState() {
+  if (!activeShopId) return;
   shopStates[activeShopId] = {
     services,
     purchases,
@@ -1127,8 +1130,8 @@ function captureActiveShopState() {
 }
 
 function hydrateActiveShop() {
-  activeShopState = shopStates[activeShopId] || createShopState();
-  shopStates[activeShopId] = activeShopState;
+  activeShopState = shopStates[activeShopId] || (currentRole === "Platform Admin" ? createProductionShopState("AE") : createShopState());
+  if (activeShopId) shopStates[activeShopId] = activeShopState;
   services = activeShopState.services || clone(defaultState.services);
   purchases = activeShopState.purchases || [];
   expenses = activeShopState.expenses || [];
@@ -1892,7 +1895,12 @@ function syncShopIdentity() {
   document.getElementById("userChip").textContent = currentRole === "Platform Admin"
     ? "Platform Admin · Network"
     : `${translate(currentRole)} · ${currentUser.name || currentUser.username || shop?.location || "Shop"}`;
-  if (!shop) return;
+  if (!shop) {
+    document.querySelectorAll(".branch-card strong").forEach((element) => {
+      element.textContent = "No active shop";
+    });
+    return;
+  }
   const profile = currentCountryProfile(shop);
   document.querySelectorAll(".branch-card strong").forEach((element) => {
     element.textContent = shop.name;
