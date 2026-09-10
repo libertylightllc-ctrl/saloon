@@ -82,7 +82,7 @@ test('sale RPC sends one tenant-scoped transaction with stock usage', async () =
   });
 });
 
-test('refund RPC sends a tenant-scoped full refund request', async () => {
+test('refund RPC sends a tenant-scoped controlled refund request', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
   const refund = { id: 'refund-1', saleId: 'sale-1', amount: 15, payment: 'Cash', reason: 'Customer complaint' };

@@ -1122,6 +1122,32 @@ label {
   margin: 16px 20px 0;
 }
 
+.split-payment-fields,
+.checkout-adjustments,
+.refund-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 20px 0;
+}
+
+.split-payment-fields {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: var(--soft);
+}
+
+.split-payment-fields label,
+.checkout-adjustments label,
+.refund-controls label {
+  margin: 0;
+}
+
+.refund-controls {
+  margin-bottom: 16px;
+}
+
 .inline-fields label,
 .translation-grid label {
   margin: 0;
@@ -2139,6 +2165,12 @@ tr:last-child td {
   .hygiene-form,
   .master-form,
   .tax-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .split-payment-fields,
+  .checkout-adjustments,
+  .refund-controls {
     grid-template-columns: 1fr;
   }
 

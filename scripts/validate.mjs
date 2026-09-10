@@ -65,7 +65,11 @@ const requiredHtml = [
   "id=\"shopStatusFilter\"",
   "id=\"accountSecurityForm\"",
   "id=\"changePasswordBtn\"",
-  "id=\"ownerControlSummary\""
+  "id=\"ownerControlSummary\"",
+  "id=\"splitPaymentFields\"",
+  "id=\"saleDiscountAmount\"",
+  "id=\"saleTipAmount\"",
+  "id=\"refundAmount\""
 ];
 
 const requiredJs = [

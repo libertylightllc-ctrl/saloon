@@ -1069,6 +1069,8 @@ function enterAuthenticatedApp(login) {
   const loginError = document.getElementById("loginError");
   loginError.hidden = true;
   loginError.textContent = "Unable to sign in. Check your shop ID, username and password.";
+  document.getElementById("saleNote").textContent = "This will update cash expected, staff performance and stock consumption.";
+  document.getElementById("refundNote").textContent = "Partial or full refunds reverse the original tender proportionally without restoring consumed service supplies.";
   document.getElementById("loginPin").value = "";
   hydrateActiveShop();
   if (isLocalDemo) {
@@ -1683,71 +1685,17 @@ function exportFilePrefix(kind) {
 }
 
 function accountingExportRows() {
-  const rows = [["Date", "Module", "Description", "Payment", "Debit", "Credit", "Staff", "Reference"]];
-  sales.forEach((sale) => rows.push([
-    sale.createdAt || "",
-    "Sale",
-    `${sale.customerName || "Walk-in"} · ${sale.service || (sale.services || []).join(" + ")}`,
-    sale.payment || "",
-    "",
-    Number(sale.amount || 0).toFixed(2),
-    sale.staff || "",
-    sale.id || ""
-  ]));
-  refunds.forEach((refund) => rows.push([
-    refund.createdAt || "",
-    "Refund",
-    `${refund.reason || "Approved refund"} · sale ${refund.saleId || ""}`,
-    refund.payment || "",
-    Number(refund.amount || 0).toFixed(2),
-    "",
-    refund.createdBy || "",
-    refund.id || ""
-  ]));
-  purchases.forEach((purchase) => rows.push([
-    purchase.createdAt || "",
-    "Purchase",
-    `${purchase.supplier || "Supplier"} · ${purchase.item || "Item"} · ${purchase.qty || 0} ${purchase.unit || ""}`.trim(),
-    purchase.payment || "",
-    purchase.status === "Reversed" ? "0.00" : purchaseTotal(purchase).toFixed(2),
-    "",
-    "",
-    purchase.invoiceNumber || purchase.type || ""
-  ]));
-  supplierPayments.forEach((payment) => {
-    const supplier = suppliers.find((candidate) => candidate.id === payment.supplierId);
-    rows.push([
-      payment.createdAt || "",
-      "Supplier payment",
-      `${supplier?.name || "Supplier"} · ${payment.reference || "Account payment"}`,
-      payment.payment || "",
-      Number(payment.amount || 0).toFixed(2),
-      "",
-      payment.createdBy || "",
-      payment.id || ""
-    ]);
-  });
-  expenses.forEach((expense) => rows.push([
-    expense.createdAt || "",
-    "Expense",
-    `${expense.category || "Expense"} · ${expense.note || ""}`.trim(),
-    expense.payment || "",
-    Number(expense.amount || 0).toFixed(2),
-    "",
-    "",
-    ""
-  ]));
-  cashClosings.forEach((closing) => rows.push([
-    closing.createdAt || "",
-    "Cash closing",
-    closing.reason || "Daily close",
-    "Cash",
-    Number(closing.difference < 0 ? Math.abs(closing.difference) : 0).toFixed(2),
-    Number(closing.difference > 0 ? closing.difference : 0).toFixed(2),
-    closing.approvedBy || "",
-    "closing"
-  ]));
-  return rows;
+  return [
+    ["Date", "Account", "Description", "Debit", "Credit", "Source"],
+    ...journalEntries().map((entry) => [
+      entry.date || "",
+      entry.account || "",
+      entry.description || "",
+      entry.debit ? entry.debit.toFixed(2) : "",
+      entry.credit ? entry.credit.toFixed(2) : "",
+      entry.source || ""
+    ])
+  ];
 }
 
 function stockMovementRows() {
@@ -1865,6 +1813,46 @@ function syncSelectedServiceLabel() {
       ? selected.map((service) => `<span>${escapeHtml(serviceName(service))} · ${money(service.price || 0)}</span>`).join("")
       : "<span>Tap one or more services to build the sale.</span>";
   }
+  syncCheckoutCalculation(true);
+}
+
+function currencyAmount(value) {
+  return Number((Number(value) || 0).toFixed(currentCountryProfile().decimals));
+}
+
+function checkoutTotals() {
+  const subtotal = currencyAmount(selectedSaleServices
+    .filter((service) => service && service.active !== false)
+    .reduce((sum, service) => sum + Math.max(Number(service.price) || 0, 0), 0));
+  const discount = currencyAmount(document.getElementById("saleDiscountAmount")?.value);
+  const tip = currencyAmount(document.getElementById("saleTipAmount")?.value);
+  const revenueAmount = currencyAmount(Math.max(subtotal - discount, 0));
+  const total = currencyAmount(revenueAmount + tip);
+  const booking = queueTickets.find((ticket) => ticket.id === document.getElementById("saleBooking")?.value);
+  const depositApplied = currencyAmount(Math.min(Number(booking?.deposit || 0), total));
+  return { subtotal, discount, tip, revenueAmount, total, booking, depositApplied, amountDue: currencyAmount(total - depositApplied) };
+}
+
+function syncCheckoutCalculation(resetSplit = false) {
+  const fields = document.getElementById("splitPaymentFields");
+  if (!fields) return;
+  const totals = checkoutTotals();
+  document.getElementById("checkoutSubtotal").textContent = moneyFixed(totals.subtotal);
+  document.getElementById("checkoutDiscount").textContent = moneyFixed(totals.discount);
+  document.getElementById("checkoutTip").textContent = moneyFixed(totals.tip);
+  document.getElementById("checkoutAmountDue").textContent = moneyFixed(totals.amountDue);
+  const split = document.getElementById("paymentMethod").value === "Split";
+  fields.hidden = !split;
+  const step = currentCountryProfile().decimals === 3 ? "0.001" : "0.01";
+  ["saleDiscountAmount", "saleTipAmount", "splitCashAmount", "splitCardAmount", "splitWalletAmount", "refundAmount"].forEach((id) => {
+    const input = document.getElementById(id);
+    if (input) input.step = step;
+  });
+  if (split && resetSplit) {
+    document.getElementById("splitCashAmount").value = "0";
+    document.getElementById("splitCardAmount").value = String(totals.amountDue);
+    document.getElementById("splitWalletAmount").value = "0";
+  }
 }
 
 function syncLanguageButtons() {
@@ -1900,8 +1888,8 @@ function shopExpenseTotal(shopState) {
 }
 
 function shopSalesTotal(shopState) {
-  const gross = (shopState.sales || []).reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0);
-  const returned = (shopState.refunds || []).reduce((sum, refund) => sum + (Number(refund.amount) || 0), 0);
+  const gross = (shopState.sales || []).reduce((sum, sale) => sum + Number(sale.revenueAmount ?? sale.amount ?? 0), 0);
+  const returned = (shopState.refunds || []).reduce((sum, refund) => sum + Number(refund.revenueAmount ?? refund.amount ?? 0), 0);
   return gross - returned;
 }
 
@@ -2107,7 +2095,7 @@ function totalPurchases() {
 }
 
 function totalRefunds() {
-  return refunds.reduce((sum, refund) => sum + (Number(refund.amount) || 0), 0);
+  return refunds.reduce((sum, refund) => sum + Number(refund.revenueAmount ?? refund.amount ?? 0), 0);
 }
 
 function totalSupplierPayments() {
@@ -2147,12 +2135,14 @@ function operatingPurchaseCost() {
 }
 
 function totalSales() {
-  return sales.reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0) - totalRefunds();
+  return sales.reduce((sum, sale) => sum + Number(sale.revenueAmount ?? sale.amount ?? 0), 0) - totalRefunds();
 }
 
 function totalServiceItemsSold() {
-  const refundedIds = new Set(refunds.map((refund) => refund.saleId));
-  return sales.reduce((sum, sale) => refundedIds.has(sale.id) ? sum : sum + (Array.isArray(sale.services) ? sale.services.length : 1), 0);
+  return sales.reduce((sum, sale) => {
+    const refunded = refunds.filter((refund) => refund.saleId === sale.id).reduce((amount, refund) => amount + Number(refund.amount || 0), 0);
+    return refunded >= Number(sale.amount || 0) ? sum : sum + (Array.isArray(sale.services) ? sale.services.length : 1);
+  }, 0);
 }
 
 function cashSalesTotal() {
@@ -2182,17 +2172,16 @@ function payrollSalaryCostTotal() {
 }
 
 function staffCommissionTotal() {
-  const refundedIds = new Set(refunds.map((refund) => refund.saleId));
   return sales.reduce((sum, sale) => {
-    if (refundedIds.has(sale.id)) return sum;
     const profile = staffProfiles.find((staff) => staff.name.toLowerCase() === String(sale.staff || "").toLowerCase());
-    return sum + Number(sale.amount || 0) * Number(profile?.commissionRate ?? 12) / 100;
+    const refundedRevenue = refunds.filter((refund) => refund.saleId === sale.id).reduce((amount, refund) => amount + Number(refund.revenueAmount ?? refund.amount ?? 0), 0);
+    return sum + Math.max(Number(sale.revenueAmount ?? sale.amount ?? 0) - refundedRevenue, 0) * Number(profile?.commissionRate ?? 12) / 100;
   }, 0);
 }
 
 function saleCommission(sale) {
   const profile = staffProfiles.find((staff) => staff.name.toLowerCase() === String(sale.staff || "").toLowerCase());
-  return Number(sale.amount || 0) * Number(profile?.commissionRate ?? 12) / 100;
+  return Number(sale.revenueAmount ?? sale.amount ?? 0) * Number(profile?.commissionRate ?? 12) / 100;
 }
 
 function cashOutTotal(records) {
@@ -2235,13 +2224,19 @@ function journalEntries() {
   });
   sales.forEach((sale) => {
     const amount = Number(sale.amount) || 0;
+    const revenueAmount = Number(sale.revenueAmount ?? amount - Number(sale.tip || 0)) || 0;
+    const tip = Number(sale.tip || 0);
     const depositApplied = Number(sale.depositApplied || 0);
     const amountPaid = Number(sale.amountPaid ?? amount);
     const date = sale.createdAt || "";
     const description = `${sale.customerName || "Walk-in"} · ${sale.service || (sale.services || []).join(" + ")} · ${sale.staff || "Staff"}`;
-    if (amountPaid) entries.push(journalLine(date, paymentAccount(sale.payment), description, amountPaid, 0, "sale"));
+    const paymentLines = Array.isArray(sale.paymentLines) && sale.paymentLines.length
+      ? sale.paymentLines
+      : amountPaid ? [{ method: sale.payment, amount: amountPaid }] : [];
+    paymentLines.forEach((line) => entries.push(journalLine(date, paymentAccount(line.method), description, Number(line.amount || 0), 0, "sale")));
     if (depositApplied) entries.push(journalLine(date, "2300 Customer deposits", `${description} · deposit applied`, depositApplied, 0, "sale-deposit"));
-    entries.push(journalLine(date, "4000 Service revenue", description, 0, amount, "sale"));
+    if (revenueAmount) entries.push(journalLine(date, "4000 Service revenue", description, 0, revenueAmount, "sale"));
+    if (tip) entries.push(journalLine(date, "2400 Staff tips payable", description, 0, tip, "sale-tip"));
     const commission = saleCommission(sale);
     if (commission) {
       entries.push(journalLine(date, "6300 Staff commission expense", description, commission, 0, "commission"));
@@ -2250,16 +2245,17 @@ function journalEntries() {
   });
   refunds.forEach((refund) => {
     const amount = Number(refund.amount) || 0;
+    const revenueAmount = Number(refund.revenueAmount ?? amount - Number(refund.tipAmount || 0)) || 0;
+    const tipAmount = Number(refund.tipAmount || 0);
     const sale = sales.find((candidate) => candidate.id === refund.saleId);
     const description = `Refund · ${sale?.service || "Sale"} · ${refund.reason || "Approved refund"}`;
-    entries.push(journalLine(refund.createdAt || "", "4000 Service revenue", description, amount, 0, "refund"));
-    const saleCash = Number(refund.cashAmount ?? (refund.payment === "Cash" ? amount : 0));
-    const saleDeposit = Number(sale?.depositApplied || 0);
-    const nonCashRefund = Math.max(amount - saleCash - (saleDeposit && sale?.depositPayment !== "Cash" ? saleDeposit : 0), 0);
-    if (saleCash) entries.push(journalLine(refund.createdAt || "", "1000 Cash on hand", description, 0, saleCash, "refund"));
-    if (saleDeposit && sale?.depositPayment !== "Cash") entries.push(journalLine(refund.createdAt || "", paymentAccount(sale.depositPayment), description, 0, saleDeposit, "refund"));
-    if (nonCashRefund) entries.push(journalLine(refund.createdAt || "", paymentAccount(refund.payment), description, 0, nonCashRefund, "refund"));
-    const commission = sale ? saleCommission(sale) : amount * 0.12;
+    if (revenueAmount) entries.push(journalLine(refund.createdAt || "", "4000 Service revenue", description, revenueAmount, 0, "refund"));
+    if (tipAmount) entries.push(journalLine(refund.createdAt || "", "2400 Staff tips payable", description, tipAmount, 0, "refund-tip"));
+    const refundLines = Array.isArray(refund.paymentLines) && refund.paymentLines.length
+      ? refund.paymentLines
+      : [{ method: refund.payment, amount }];
+    refundLines.forEach((line) => entries.push(journalLine(refund.createdAt || "", paymentAccount(line.method), description, 0, Number(line.amount || 0), "refund")));
+    const commission = sale ? revenueAmount * Number(staffProfiles.find((profile) => profile.name.toLowerCase() === String(sale.staff || "").toLowerCase())?.commissionRate ?? 12) / 100 : revenueAmount * 0.12;
     if (commission) {
       entries.push(journalLine(refund.createdAt || "", "7000 Staff commission payable", description, commission, 0, "refund-commission"));
       entries.push(journalLine(refund.createdAt || "", "6300 Staff commission expense", description, 0, commission, "refund-commission"));
@@ -3170,6 +3166,14 @@ function applyRoleAccess() {
   document.getElementById("serviceCatalogDescription").textContent = canManageServices
     ? "Add haircut, beard color, hair color, facial, massage or any custom service"
     : "Current services, prices and stock recipes";
+  const canDiscount = ["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
+  document.getElementById("saleDiscountAmount").disabled = !canDiscount;
+  document.getElementById("discountReason").disabled = !canDiscount;
+  if (!canDiscount) {
+    document.getElementById("saleDiscountAmount").value = "0";
+    document.getElementById("discountReason").value = "";
+  }
+  syncCheckoutCalculation(true);
   document.getElementById("approveClosing").textContent = currentRole === "Cashier" ? "Submit Closing" : "Approve Closing";
   document.getElementById("closingRoleDescription").textContent = currentRole === "Cashier"
     ? "Count the drawer and submit any variance to the owner"
@@ -3954,12 +3958,17 @@ function renderSaleHistory() {
   const body = document.getElementById("saleHistoryTable");
   if (!body) return;
   const canRefund = ["Platform Admin", "Owner", "Shop Admin", "Cashier"].includes(currentRole);
-  const refundedIds = new Set(refunds.map((refund) => refund.saleId));
-  document.getElementById("saleHistoryStatus").textContent = refunds.length ? `${refunds.length} refunded` : "No refunds";
-  document.getElementById("refundReason").closest("label").hidden = !canRefund;
+  document.getElementById("saleHistoryStatus").textContent = refunds.length ? `${refunds.length} refund entries` : "No refunds";
+  document.querySelector(".refund-controls").hidden = !canRefund;
   body.innerHTML = sales.length ? [...sales].reverse().slice(0, 50).map((sale) => {
-    const refunded = refundedIds.has(sale.id);
-    return `<tr><td>${escapeHtml(dateLabel(sale.createdAt))}</td><td>${escapeHtml(sale.service || (sale.services || []).join(" + "))}</td><td>${escapeHtml(sale.customerName || "Walk-in Guest")}</td><td>${escapeHtml(sale.staff || "-")}</td><td>${escapeHtml(sale.payment || "-")}${sale.depositApplied ? `<br><small>${moneyFixed(sale.depositApplied)} deposit</small>` : ""}</td><td>${moneyFixed(sale.amount)}</td><td><b class="${refunded ? "warn" : "ok"}">${refunded ? "Refunded" : "Completed"}</b></td><td>${canRefund ? `<button class="danger-button" data-refund-sale="${escapeHtml(sale.id)}" type="button" ${refunded ? "disabled" : ""}>${refunded ? "Refunded" : "Refund"}</button>` : "-"}</td></tr>`;
+    const refundedAmount = currencyAmount(refunds.filter((refund) => refund.saleId === sale.id).reduce((sum, refund) => sum + Number(refund.amount || 0), 0));
+    const remaining = currencyAmount(Math.max(Number(sale.amount || 0) - refundedAmount, 0));
+    const status = remaining <= 0 ? "Refunded" : refundedAmount > 0 ? "Partially refunded" : "Completed";
+    const paymentLabel = Array.isArray(sale.paymentLines) && sale.paymentLines.length
+      ? sale.paymentLines.map((line) => `${line.method} ${moneyFixed(line.amount)}`).join(" + ")
+      : sale.payment || "-";
+    const amountDetail = [sale.discount ? `${moneyFixed(sale.discount)} discount` : "", sale.tip ? `${moneyFixed(sale.tip)} tip` : "", refundedAmount ? `${moneyFixed(refundedAmount)} returned` : ""].filter(Boolean).join(" · ");
+    return `<tr><td>${escapeHtml(dateLabel(sale.createdAt))}</td><td>${escapeHtml(sale.service || (sale.services || []).join(" + "))}</td><td>${escapeHtml(sale.customerName || "Walk-in Guest")}</td><td>${escapeHtml(sale.staff || "-")}</td><td>${escapeHtml(paymentLabel)}${sale.depositApplied ? `<br><small>${moneyFixed(sale.depositApplied)} deposit</small>` : ""}</td><td>${moneyFixed(sale.amount)}${amountDetail ? `<br><small>${escapeHtml(amountDetail)}</small>` : ""}</td><td><b class="${refundedAmount ? "warn" : "ok"}">${status}</b></td><td>${canRefund ? `<button class="danger-button" data-refund-sale="${escapeHtml(sale.id)}" type="button" ${remaining <= 0 ? "disabled" : ""}>${remaining <= 0 ? "Refunded" : `Refund ${moneyFixed(remaining)}`}</button>` : "-"}</td></tr>`;
   }).join("") : '<tr><td colspan="8">No sales yet.</td></tr>';
   body.querySelectorAll("[data-refund-sale]").forEach((button) => button.addEventListener("click", async () => {
     const sale = sales.find((candidate) => candidate.id === button.dataset.refundSale);
@@ -3968,10 +3977,36 @@ function renderSaleHistory() {
       document.getElementById("refundNote").textContent = "Enter a refund reason before selecting Refund.";
       return;
     }
+    const previousRefunds = refunds.filter((refund) => refund.saleId === sale.id);
+    const refundedAmount = currencyAmount(previousRefunds.reduce((sum, refund) => sum + Number(refund.amount || 0), 0));
+    const remaining = currencyAmount(Math.max(Number(sale.amount || 0) - refundedAmount, 0));
+    const requested = currencyAmount(document.getElementById("refundAmount").value || remaining);
+    if (requested <= 0 || requested > remaining) {
+      document.getElementById("refundNote").textContent = `Enter a refund amount up to ${moneyFixed(remaining)}.`;
+      return;
+    }
     const booking = queueTickets.find((ticket) => ticket.id === sale.bookingId);
-    const cashAmount = Number(sale.cashAmount ?? (sale.payment === "Cash" ? sale.amount : 0))
-      + (sale.depositPayment === "Cash" ? Number(sale.depositApplied || 0) : 0);
-    const refund = { id: `refund-${crypto.randomUUID()}`, saleId: sale.id, amount: Number(sale.amount || 0), cashAmount, payment: sale.payment, reason, createdAt: new Date().toISOString(), createdBy: currentUser?.name || currentRole };
+    const revenueRemaining = currencyAmount(Math.max(Number(sale.revenueAmount ?? sale.amount ?? 0) - previousRefunds.reduce((sum, refund) => sum + Number(refund.revenueAmount ?? refund.amount ?? 0), 0), 0));
+    const tipRemaining = currencyAmount(Math.max(Number(sale.tip || 0) - previousRefunds.reduce((sum, refund) => sum + Number(refund.tipAmount || 0), 0), 0));
+    const ratio = remaining ? requested / remaining : 0;
+    const revenueAmount = requested === remaining ? revenueRemaining : currencyAmount(Math.min(revenueRemaining, revenueRemaining * ratio));
+    const tipAmount = currencyAmount(requested - revenueAmount);
+    const originalByMethod = [...(sale.paymentLines || [{ method: sale.payment, amount: sale.amountPaid ?? sale.amount }]),
+      ...(sale.depositApplied ? [{ method: sale.depositPayment || "Cash", amount: sale.depositApplied }] : [])]
+      .reduce((totals, line) => ({ ...totals, [line.method]: currencyAmount((totals[line.method] || 0) + Number(line.amount || 0)) }), {});
+    const originalLines = Object.entries(originalByMethod).map(([method, amount]) => ({ method, amount }));
+    const previousByMethod = previousRefunds.flatMap((refund) => refund.paymentLines || [{ method: refund.payment, amount: refund.amount }])
+      .reduce((totals, line) => ({ ...totals, [line.method]: currencyAmount((totals[line.method] || 0) + Number(line.amount || 0)) }), {});
+    let allocationLeft = requested;
+    const paymentLines = originalLines.map((line, index) => {
+      const available = currencyAmount(Math.max(Number(line.amount || 0) - Number(previousByMethod[line.method] || 0), 0));
+      const amount = index === originalLines.length - 1 ? allocationLeft : currencyAmount(Math.min(available, requested * (available / remaining)));
+      allocationLeft = currencyAmount(allocationLeft - amount);
+      return { method: line.method, amount };
+    }).filter((line) => line.amount > 0);
+    if (allocationLeft > 0 && paymentLines.length) paymentLines[paymentLines.length - 1].amount = currencyAmount(paymentLines[paymentLines.length - 1].amount + allocationLeft);
+    const cashAmount = currencyAmount(paymentLines.filter((line) => line.method === "Cash").reduce((sum, line) => sum + line.amount, 0));
+    const refund = { id: `refund-${crypto.randomUUID()}`, saleId: sale.id, amount: requested, revenueAmount, tipAmount, cashAmount, payment: sale.payment, paymentLines, reason, createdAt: new Date().toISOString(), createdBy: currentUser?.name || currentRole };
     button.disabled = true;
     if (!isLocalDemo) {
       try {
@@ -3983,15 +4018,17 @@ function renderSaleHistory() {
       }
     }
     refunds.push(refund);
-    sale.status = "Refunded";
+    sale.refundedAmount = currencyAmount(refundedAmount + requested);
+    sale.status = sale.refundedAmount >= Number(sale.amount || 0) ? "Refunded" : "Partially refunded";
     sale.refundedAt = refund.createdAt;
-    if (booking && Number(sale.depositApplied || 0) > 0) booking.depositStatus = "Refunded with sale";
+    if (booking && sale.status === "Refunded" && Number(sale.depositApplied || 0) > 0) booking.depositStatus = "Refunded with sale";
     addAudit("Sale refunded", `${currentRole} · ${sale.service} · ${moneyFixed(refund.amount)} · ${reason}`);
     saveState();
     renderSaleHistory();
     syncSummaryTotals();
     document.getElementById("refundReason").value = "";
-    document.getElementById("refundNote").textContent = "Refund saved. Revenue, payment and commission were reversed; consumed stock was not restored.";
+    document.getElementById("refundAmount").value = "";
+    document.getElementById("refundNote").textContent = `${moneyFixed(requested)} refunded. Revenue, tip liability, tender and commission were reversed proportionally; consumed stock was not restored.`;
   }));
 }
 
@@ -4440,6 +4477,12 @@ function renderExpenseTable() {
   });
 }
 
+document.getElementById("paymentMethod").addEventListener("change", () => syncCheckoutCalculation(true));
+document.getElementById("saleBooking").addEventListener("change", () => syncCheckoutCalculation(true));
+["saleDiscountAmount", "saleTipAmount"].forEach((id) => {
+  document.getElementById(id).addEventListener("input", () => syncCheckoutCalculation(true));
+});
+
 document.getElementById("saveSale").addEventListener("click", async () => {
   const selected = selectedSaleServices
     .map((service) => services.find((candidate) => candidate.id === service.id || candidate.name === service.name) || service)
@@ -4448,11 +4491,37 @@ document.getElementById("saveSale").addEventListener("click", async () => {
     document.getElementById("saleNote").textContent = "Select at least one service before saving.";
     return;
   }
-  const amount = selected.reduce((sum, service) => sum + Math.max(Number(service.price) || 0, 0), 0);
+  const totals = checkoutTotals();
+  const { subtotal, discount, tip, revenueAmount, total: amount, booking, depositApplied, amountDue: amountPaid } = totals;
   const payment = document.getElementById("paymentMethod").value;
-  const booking = queueTickets.find((ticket) => ticket.id === document.getElementById("saleBooking").value);
-  const depositApplied = booking ? Math.min(Number(booking.deposit || 0), amount) : 0;
-  const amountPaid = Math.max(amount - depositApplied, 0);
+  const discountReason = document.getElementById("discountReason").value.trim();
+  if (discount < 0 || discount > subtotal) {
+    document.getElementById("saleNote").textContent = `Discount cannot exceed the ${moneyFixed(subtotal)} service subtotal.`;
+    return;
+  }
+  if (discount > 0 && !["Platform Admin", "Owner", "Shop Admin"].includes(currentRole)) {
+    document.getElementById("saleNote").textContent = "A platform administrator, owner or shop administrator must approve discounts.";
+    return;
+  }
+  if (discount > 0 && !discountReason) {
+    document.getElementById("saleNote").textContent = "Enter the discount reason before saving.";
+    return;
+  }
+  let paymentLines = [];
+  if (amountPaid > 0 && payment === "Split") {
+    paymentLines = [
+      { method: "Cash", amount: currencyAmount(document.getElementById("splitCashAmount").value) },
+      { method: "Card", amount: currencyAmount(document.getElementById("splitCardAmount").value) },
+      { method: "Wallet", amount: currencyAmount(document.getElementById("splitWalletAmount").value) }
+    ].filter((line) => line.amount > 0);
+    const tendered = currencyAmount(paymentLines.reduce((sum, line) => sum + line.amount, 0));
+    if (Math.abs(tendered - amountPaid) >= 1 / (10 ** currentCountryProfile().decimals)) {
+      document.getElementById("saleNote").textContent = `Split payments must equal ${moneyFixed(amountPaid)}. Entered ${moneyFixed(tendered)}.`;
+      return;
+    }
+  } else if (amountPaid > 0) {
+    paymentLines = [{ method: payment, amount: amountPaid }];
+  }
   const staff = document.getElementById("saleStaff").value;
   const customer = selectedCustomer();
   const serviceList = selected.map((service) => service.name);
@@ -4469,17 +4538,23 @@ document.getElementById("saveSale").addEventListener("click", async () => {
     id: `sale-${crypto.randomUUID()}`,
     service: serviceList.join(" + "),
     services: serviceList,
+    serviceIds: selected.map((service) => service.id),
     customerId: customer.id,
     customerName: customer.name,
     staff,
     payment,
+    paymentLines,
+    subtotal,
+    discount,
+    revenueAmount,
+    tip,
     amount,
     amountPaid,
-    cashAmount: payment === "Cash" ? amountPaid : 0,
+    cashAmount: currencyAmount(paymentLines.filter((line) => line.method === "Cash").reduce((sum, line) => sum + line.amount, 0)),
     bookingId: booking?.id || "",
     depositApplied,
     depositPayment: booking?.depositPayment || "",
-    discountReason: document.getElementById("discountReason").value.trim(),
+    discountReason,
     createdAt: new Date().toISOString()
   };
   if (!isLocalDemo) {
@@ -4519,8 +4594,12 @@ document.getElementById("saveSale").addEventListener("click", async () => {
   renderClientsQueue();
   const taxText = vatEnabled ? "VAT invoice fields are active." : "No VAT was added.";
   document.getElementById("saleNote").textContent = activeLanguage === "en"
-    ? `${serviceList.join(" + ")} saved. Cash, staff performance and stock recipe were updated. ${taxText}`
+    ? `${serviceList.join(" + ")} saved for ${moneyFixed(amount)}. Tender, tip, staff performance and stock recipe were updated. ${taxText}`
     : `${selected.map((service) => serviceName(service)).join(" + ")} ${activeLanguage === "ar" ? "تم حفظها" : activeLanguage === "hi" ? "सेव हुई" : "محفوظ ہو گئی"}.`;
+  document.getElementById("saleDiscountAmount").value = "0";
+  document.getElementById("saleTipAmount").value = "0";
+  document.getElementById("discountReason").value = "";
+  syncCheckoutCalculation(true);
   applyTranslations();
 });
 

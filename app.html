@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-12" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-13" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -438,10 +438,19 @@
                   <option>Split</option>
                 </select>
               </label>
+              <div class="split-payment-fields" id="splitPaymentFields" hidden>
+                <label>Cash amount <input id="splitCashAmount" type="number" min="0" step="0.01" value="0" /></label>
+                <label>Card amount <input id="splitCardAmount" type="number" min="0" step="0.01" value="0" /></label>
+                <label>Wallet amount <input id="splitWalletAmount" type="number" min="0" step="0.01" value="0" /></label>
+              </div>
               <label>
                 Booking deposit
                 <select id="saleBooking"><option value="">No deposit applied</option></select>
               </label>
+              <div class="checkout-adjustments">
+                <label>Discount <input id="saleDiscountAmount" type="number" min="0" step="0.01" value="0" /></label>
+                <label>Tip <input id="saleTipAmount" type="number" min="0" step="0.01" value="0" /></label>
+              </div>
               <label>
                 Discount reason
                 <input id="discountReason" placeholder="Required only when price is changed" />
@@ -452,6 +461,10 @@
                 <div class="sale-basket" id="saleBasket" aria-live="polite"></div>
               </div>
               <div class="tax-summary">
+                <div><span>Subtotal</span><strong id="checkoutSubtotal">AED 0.00</strong></div>
+                <div><span>Discount</span><strong id="checkoutDiscount">AED 0.00</strong></div>
+                <div><span>Tip</span><strong id="checkoutTip">AED 0.00</strong></div>
+                <div><span>Amount due</span><strong id="checkoutAmountDue">AED 0.00</strong></div>
                 <div><span>Tax mode</span><strong id="checkoutTaxMode">VAT Off</strong></div>
                 <div><span>Receipt</span><strong id="checkoutReceiptMode">Optional Off</strong></div>
               </div>
@@ -467,8 +480,11 @@
             <div class="table-wrap">
               <table><thead><tr><th>Date</th><th>Services</th><th>Customer</th><th>Staff</th><th>Payment</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody id="saleHistoryTable"></tbody></table>
             </div>
-            <label class="table-reason-field">Refund reason <input id="refundReason" placeholder="Required before selecting Refund" /></label>
-            <p class="system-note" id="refundNote">Refunds reverse revenue and payment without restoring consumed service supplies.</p>
+            <div class="refund-controls">
+              <label>Refund amount <input id="refundAmount" type="number" min="0.01" step="0.01" placeholder="Blank refunds remaining balance" /></label>
+              <label>Refund reason <input id="refundReason" placeholder="Required before selecting Refund" /></label>
+            </div>
+            <p class="system-note" id="refundNote">Partial or full refunds reverse the original tender proportionally without restoring consumed service supplies.</p>
           </article>
         </section>
 
@@ -1440,7 +1456,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260910-release-12"></script>
-    <script src="./app.js?v=20260910-release-12"></script>
+    <script src="./backend.js?v=20260910-release-13"></script>
+    <script src="./app.js?v=20260910-release-13"></script>
   </body>
 </html>

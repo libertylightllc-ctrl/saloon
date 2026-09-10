@@ -40,7 +40,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100009_staff_payroll.sql',
       '202609100010_appointment_deposits.sql',
       '202609100011_accounting_period_lock.sql',
-      '202609100012_login_history.sql'
+      '202609100012_login_history.sql',
+      '202609100013_checkout_controls.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -89,14 +90,28 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal(Number((await db.query("select (data->>'quantity')::numeric quantity from public.salon_records where record_type='inventory_item' and external_id='inv-blades'")).rows[0].quantity),3);
       await assert.rejects(db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'sale-atomic-2',JSON.stringify({...sale,id:'sale-atomic-2'}),JSON.stringify([{itemId:'inv-blades',quantity:4}])]), /Insufficient stock/);
     });
-    await t.test('cashier can refund once while staff cannot refund', async () => {
-      const refund = {id:'refund-1',saleId:'sale-atomic-1',amount:15,payment:'Cash',reason:'Customer complaint',createdAt:new Date().toISOString()};
+    await t.test('cashier can post cumulative partial refunds while staff cannot refund', async () => {
+      const refund = {id:'refund-1',saleId:'sale-atomic-1',amount:5,revenueAmount:5,tipAmount:0,payment:'Cash',reason:'Customer complaint',createdAt:new Date().toISOString()};
       await asUser(staff);
       await assert.rejects(db.query('select public.salon_refund_sale($1,$2,$3,$4::jsonb)', [a,'refund-1','sale-atomic-1',JSON.stringify(refund)]), /Not authorized/);
       await asUser(cashier);
       await db.query('select public.salon_refund_sale($1,$2,$3,$4::jsonb)', [a,'refund-1','sale-atomic-1',JSON.stringify(refund)]);
+      assert.equal((await db.query("select data->>'status' status from public.salon_records where record_type='sale' and external_id='sale-atomic-1'")).rows[0].status,'Partially refunded');
+      await db.query('select public.salon_refund_sale($1,$2,$3,$4::jsonb)', [a,'refund-2','sale-atomic-1',JSON.stringify({...refund,id:'refund-2',amount:10,revenueAmount:10})]);
       assert.equal((await db.query("select data->>'status' status from public.salon_records where record_type='sale' and external_id='sale-atomic-1'")).rows[0].status,'Refunded');
-      await assert.rejects(db.query('select public.salon_refund_sale($1,$2,$3,$4::jsonb)', [a,'refund-2','sale-atomic-1',JSON.stringify({...refund,id:'refund-2'})]), /already been refunded/);
+      await assert.rejects(db.query('select public.salon_refund_sale($1,$2,$3,$4::jsonb)', [a,'refund-3','sale-atomic-1',JSON.stringify({...refund,id:'refund-3'})]), /remaining sale balance/);
+    });
+    await t.test('server validates split tender, tips and management discounts', async () => {
+      const discounted = {id:'discounted-sale',service:'Cut',payment:'Split',paymentLines:[{method:'Cash',amount:10},{method:'Card',amount:13}],subtotal:20,discount:2,discountReason:'Loyalty',revenueAmount:18,tip:5,amount:23,amountPaid:23,cashAmount:10,createdAt:'2025-01-01T09:00:00.000Z'};
+      await asUser(cashier);
+      await assert.rejects(db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'discounted-sale',JSON.stringify(discounted),'[]']), /Management approval/);
+      await asUser(owner);
+      await db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'discounted-sale',JSON.stringify(discounted),'[]']);
+      const saved = (await db.query("select data from public.salon_records where record_type='sale' and external_id='discounted-sale'")).rows[0].data;
+      assert.equal(Number(saved.revenueAmount),18);
+      assert.equal(Number(saved.tip),5);
+      assert.equal(Number(saved.cashAmount),10);
+      await assert.rejects(db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'bad-tender',JSON.stringify({...discounted,id:'bad-tender',discount:0,discountReason:'',revenueAmount:20,amount:25,paymentLines:[{method:'Cash',amount:24}],cashAmount:24}),'[]']), /Payment lines/);
     });
     await t.test('owner can save supplier account records', async () => {
       await asUser(owner);
@@ -166,7 +181,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,3);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,15);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,17);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {
