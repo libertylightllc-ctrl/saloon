@@ -1544,6 +1544,19 @@ td code {
   margin-bottom: 16px;
 }
 
+.staff-layout {
+  align-items: start;
+  margin-top: 16px;
+}
+
+#staff table {
+  min-width: 760px;
+}
+
+.staff-layout:has(> [hidden]) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .inventory-table {
   min-width: 920px;
 }

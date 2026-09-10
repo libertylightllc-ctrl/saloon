@@ -36,7 +36,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609090004_record_types.sql',
       '202609100006_inventory_transactions.sql',
       '202609100007_supplier_refunds.sql',
-      '202609100008_immutable_daily_close.sql'
+      '202609100008_immutable_daily_close.sql',
+      '202609100009_staff_payroll.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -99,6 +100,21 @@ test('tenant foundation enforces database permissions', async (t) => {
       await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'supplier','supplier-1','{\"name\":\"Vendor\"}',$2),($1,'supplier_payment','payment-1','{\"amount\":10}',$2)",[a,owner]);
       assert.equal((await db.query("select * from public.salon_records where record_type in ('supplier','supplier_payment')")).rows.length,2);
     });
+    await t.test('owner manages payroll while staff sees only their own employment records', async () => {
+      await asUser(owner);
+      await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'staff_profile','profile-1',$2,$3),($1,'attendance','attendance-1',$4,$3),($1,'payroll','payroll-1',$5,$3)",[
+        a,
+        JSON.stringify({name:'Team Member',subject_user_id:staff}),
+        owner,
+        JSON.stringify({staffId:'profile-1',subject_user_id:staff,status:'Present'}),
+        JSON.stringify({staffId:'profile-1',subject_user_id:staff,period:'2026-09',netPay:3000,status:'Generated'})
+      ]);
+      await asUser(staff);
+      assert.deepEqual((await db.query("select record_type from public.salon_records where record_type in ('staff_profile','attendance','payroll') order by record_type")).rows, [
+        {record_type:'attendance'}, {record_type:'payroll'}, {record_type:'staff_profile'}
+      ]);
+      await assert.rejects(db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'payroll','forged','{}',$2)",[a,staff]), /row-level security/);
+    });
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);
       await asUser(owner);
@@ -116,7 +132,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,3);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,10);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,13);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {

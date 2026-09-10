@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-6" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-7" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -133,6 +133,10 @@
           <button class="nav-item" data-view="inventory" type="button">
             <span class="nav-icon" data-icon="stock"></span>
             Inventory & Tools
+          </button>
+          <button class="nav-item" data-view="staff" type="button">
+            <span class="nav-icon" data-icon="services"></span>
+            Staff & Payroll
           </button>
           <button class="nav-item" data-view="compliance" type="button">
             <span class="nav-icon" data-icon="compliance"></span>
@@ -841,6 +845,71 @@
           </div>
         </section>
 
+        <section class="view" id="staff">
+          <div class="metric-grid">
+            <article class="metric-card highlight"><span>Active staff</span><strong id="staffActiveCount">0</strong><small>Current roster</small></article>
+            <article class="metric-card"><span>Present today</span><strong id="staffPresentCount">0</strong><small>Attendance records</small></article>
+            <article class="metric-card"><span>Payroll due</span><strong id="staffPayrollDue">AED 0.00</strong><small>Generated and unpaid</small></article>
+            <article class="metric-card"><span>WPS pending</span><strong id="staffWpsPending">0</strong><small>Salary payments awaiting proof</small></article>
+          </div>
+          <div class="split-layout staff-layout">
+            <article class="panel">
+              <div class="panel-head"><div><h3>Staff Roster</h3><p>Employment, salary and commission settings</p></div></div>
+              <div class="table-wrap"><table><thead><tr><th>Staff</th><th>Employee ID</th><th>Role</th><th>Base salary</th><th>Commission</th><th>WPS</th><th>Status</th></tr></thead><tbody id="staffRosterTable"></tbody></table></div>
+            </article>
+            <article class="panel form-panel" id="staffProfileForm">
+              <div class="panel-head compact"><div><h3>Add Staff Profile</h3><p>Link employment terms to an existing login when available</p></div></div>
+              <label>Login <select id="staffUserId"></select></label>
+              <label>Full name <input id="staffName" placeholder="Employee name" /></label>
+              <div class="inline-fields"><label>Employee ID <input id="staffEmployeeNo" placeholder="EMP-001" /></label><label>Job title <input id="staffJobTitle" value="Barber" /></label></div>
+              <label>Joining date <input id="staffJoinDate" type="date" /></label>
+              <div class="inline-fields"><label>Monthly base salary <input id="staffBaseSalary" type="number" min="0" step="0.01" value="0" /></label><label>Service commission % <input id="staffCommissionRate" type="number" min="0" max="100" step="0.1" value="12" /></label></div>
+              <label>WPS required <select id="staffWpsRequired"><option value="yes">Yes</option><option value="no">No</option></select></label>
+              <button class="primary-button full" id="saveStaffProfile" type="button">Save Staff Profile</button>
+              <p class="system-note" id="staffProfileNote">Salary and commission terms are used in payroll calculations.</p>
+            </article>
+          </div>
+          <div class="split-layout staff-layout">
+            <article class="panel">
+              <div class="panel-head"><div><h3>Attendance</h3><p>Daily shift, absence, leave and rest-day records</p></div></div>
+              <div class="table-wrap"><table><thead><tr><th>Date</th><th>Staff</th><th>Status</th><th>Clock in</th><th>Clock out</th><th>Hours</th><th>Note</th></tr></thead><tbody id="attendanceTable"></tbody></table></div>
+            </article>
+            <article class="panel form-panel" id="attendanceForm">
+              <div class="panel-head compact"><div><h3>Record Attendance</h3><p>One record per staff member per date</p></div></div>
+              <label>Staff <select id="attendanceStaff"></select></label>
+              <label>Date <input id="attendanceDate" type="date" /></label>
+              <label>Status <select id="attendanceStatus"><option>Present</option><option>Absent</option><option>Paid Leave</option><option>Unpaid Leave</option><option>Rest Day</option></select></label>
+              <div class="inline-fields"><label>Clock in <input id="attendanceClockIn" type="time" value="10:00" /></label><label>Clock out <input id="attendanceClockOut" type="time" value="20:00" /></label></div>
+              <label>Note <input id="attendanceNoteInput" placeholder="Reason or shift note" /></label>
+              <button class="primary-button full" id="saveAttendance" type="button">Save Attendance</button>
+              <p class="system-note" id="attendanceNote">Attendance drives salary proration and payroll review.</p>
+            </article>
+          </div>
+          <div class="split-layout staff-layout">
+            <article class="panel">
+              <div class="panel-head"><div><h3>Payroll Register</h3><p>Base salary, commission, adjustments and payment evidence</p></div></div>
+              <div class="table-wrap"><table><thead><tr><th>Period</th><th>Staff</th><th>Base</th><th>Commission</th><th>Adjustments</th><th>Net pay</th><th>WPS / status</th><th>Action</th></tr></thead><tbody id="payrollTable"></tbody></table></div>
+            </article>
+            <article class="panel form-panel" id="payrollControlForm">
+              <div class="panel-head compact"><div><h3>Payroll Control</h3><p>Generate a period, then record verified payment</p></div></div>
+              <label>Payroll month <input id="payrollMonth" type="month" /></label>
+              <button class="primary-button full" id="generatePayroll" type="button">Generate Payroll</button>
+              <hr />
+              <h3>Staff Adjustment</h3>
+              <label>Staff <select id="adjustmentStaff"></select></label>
+              <label>Type <select id="adjustmentType"><option>Allowance</option><option>Bonus</option><option>Advance</option><option>Deduction</option></select></label>
+              <label>Amount <input id="adjustmentAmount" type="number" min="0" step="0.01" value="0" /></label>
+              <label>Reason <input id="adjustmentReason" placeholder="Required" /></label>
+              <button class="ghost-button full" id="saveStaffAdjustment" type="button">Save Adjustment</button>
+              <hr />
+              <h3>Payment Evidence</h3>
+              <label>Method <select id="payrollPaymentMethod"><option>Bank</option><option>Cash</option><option>WPS</option></select></label>
+              <label>Reference <input id="payrollPaymentReference" placeholder="WPS file, transfer or receipt reference" /></label>
+              <p class="system-note" id="payrollNote">Select Pay on a payroll line after entering its payment reference.</p>
+            </article>
+          </div>
+        </section>
+
         <section class="view" id="compliance">
           <div class="metric-grid compliance-metrics">
             <article class="metric-card highlight">
@@ -1023,6 +1092,7 @@
               <label>Cash sales <input id="closingCashSales" type="number" min="0" step="0.01" value="0" readonly /></label>
               <label>Cash expenses <input id="closingCashExpenses" type="number" min="0" step="0.01" value="0" readonly /></label>
               <label>Supplier cash payments <input id="closingCashPurchases" type="number" min="0" step="0.01" value="0" readonly /></label>
+              <label>Cash payroll <input id="closingCashPayroll" type="number" min="0" step="0.01" value="0" readonly /></label>
               <label>Actual cash counted <input id="closingActualCash" type="number" min="0" step="0.01" value="0" /></label>
               <label>Shortage reason <input id="closingReason" placeholder="Required when counted cash does not match" /></label>
               <div class="calculation-box">
@@ -1312,7 +1382,7 @@
       </main>
     </div>
 
-    <script src="./backend.js?v=20260910-release-6"></script>
-    <script src="./app.js?v=20260910-release-6"></script>
+    <script src="./backend.js?v=20260910-release-7"></script>
+    <script src="./app.js?v=20260910-release-7"></script>
   </body>
 </html>
