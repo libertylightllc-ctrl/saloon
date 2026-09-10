@@ -2822,3 +2822,49 @@ th {
     min-width: 112px;
   }
 }
+
+.sale-history-panel,
+.supplier-layout {
+  margin-top: 16px;
+}
+
+.purchase-metrics {
+  margin-bottom: 16px;
+}
+
+.table-reason-field {
+  display: grid;
+  gap: 7px;
+  padding: 16px 20px 20px;
+  border-top: 1px solid var(--line);
+}
+
+.form-panel hr {
+  width: 100%;
+  margin: 22px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.subsection-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  padding: 22px 20px 12px;
+  border-top: 1px solid var(--line);
+}
+
+.subsection-head h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.subsection-head span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.purchase-table {
+  min-width: 860px;
+}

@@ -90,10 +90,14 @@ const chartOfAccounts = [
   { code: "1500", name: "Reusable tools and equipment", type: "Asset" },
   { code: "2000", name: "Supplier payable", type: "Liability" },
   { code: "2100", name: "VAT payable", type: "Liability" },
+  { code: "3000", name: "Owner capital", type: "Equity" },
+  { code: "3900", name: "Opening balance equity", type: "Equity" },
   { code: "4000", name: "Service revenue", type: "Income" },
   { code: "5000", name: "Consumable purchases", type: "Cost" },
+  { code: "5100", name: "Service material cost", type: "Cost" },
   { code: "6100", name: "Shop operating expenses", type: "Expense" },
   { code: "6200", name: "Cash shortage / overage", type: "Expense" },
+  { code: "6300", name: "Staff commission expense", type: "Expense" },
   { code: "7000", name: "Staff commission payable", type: "Liability" }
 ];
 
@@ -606,12 +610,17 @@ const defaultState = {
   ],
   inventoryItems: defaultInventoryItems(true),
   stockMovements: [],
+  suppliers: [
+    { id: "supplier-beauty-supply", name: "Beauty Supply LLC", phone: "+971 4 000 0000", contact: "Sales desk", termsDays: 30, openingBalance: 0, active: true, createdAt: new Date().toISOString() }
+  ],
+  supplierPayments: [],
   purchases: [],
   expenses: [],
   receiptEnabled: false,
   vatEnabled: false,
   openingCash: 200,
   sales: [],
+  refunds: [],
   customers: [
     { id: "walk-in-guest", name: "Walk-in Guest", phone: "", preference: "No saved preference", riskNote: "", visits: 0, noShows: 0, lastVisit: "" },
     { id: "ali-khan", name: "Ali Khan", phone: "+971 50 000 0000", preference: "Skin fade with beard line", riskNote: "Prefers Rafiq", visits: 3, noShows: 0, lastVisit: isoOffset(-10) },
@@ -664,12 +673,15 @@ const shopStateFields = [
   "services",
   "inventoryItems",
   "stockMovements",
+  "suppliers",
+  "supplierPayments",
   "purchases",
   "expenses",
   "receiptEnabled",
   "vatEnabled",
   "openingCash",
   "sales",
+  "refunds",
   "customers",
   "queueTickets",
   "appointments",
@@ -702,9 +714,12 @@ function createProductionShopState(country = "AE", overrides = {}) {
   return createShopState({
     inventoryItems: defaultInventoryItems(false),
     stockMovements: [],
+    suppliers: [],
+    supplierPayments: [],
     purchases: [],
     expenses: [],
     sales: [],
+    refunds: [],
     customers: [{ id: "walk-in-guest", name: "Walk-in Guest", phone: "", preference: "", riskNote: "", visits: 0, noShows: 0, lastVisit: "" }],
     queueTickets: [],
     appointments: [],
@@ -759,6 +774,8 @@ let purchases = activeShopState.purchases;
 let expenses = activeShopState.expenses;
 let inventoryItems = activeShopState.inventoryItems || clone(defaultState.inventoryItems);
 let stockMovements = activeShopState.stockMovements || [];
+let suppliers = activeShopState.suppliers || clone(defaultState.suppliers);
+let supplierPayments = activeShopState.supplierPayments || [];
 let selectedService = services[0];
 let selectedSaleServices = selectedService ? [selectedService] : [];
 let recipeDraft = clone(selectedService?.recipeItems || []);
@@ -767,6 +784,7 @@ let vatEnabled = activeShopState.vatEnabled;
 let openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
 let activeLanguage = state.activeLanguage || "en";
 let sales = activeShopState.sales || [];
+let refunds = activeShopState.refunds || [];
 let customers = activeShopState.customers?.length ? activeShopState.customers : clone(defaultState.customers);
 let queueTickets = activeShopState.queueTickets || clone(defaultState.queueTickets);
 let appointments = activeShopState.appointments || [];
@@ -819,6 +837,9 @@ const cloudCollections = [
   ["expenses", "expense"],
   ["inventoryItems", "inventory_item"],
   ["stockMovements", "stock_movement"],
+  ["suppliers", "supplier"],
+  ["supplierPayments", "supplier_payment"],
+  ["refunds", "refund"],
   ["cashClosings", "cash_closing"],
   ["staffPayments", "staff_payment"],
   ["inspectionRecords", "inspection"],
@@ -832,7 +853,7 @@ const cloudWritableTypes = {
   "Platform Admin": cloudCollections.map(([, type]) => type).concat("shop_setting"),
   Owner: cloudCollections.map(([, type]) => type).concat("shop_setting"),
   "Shop Admin": cloudCollections.map(([, type]) => type).concat("shop_setting"),
-  Cashier: ["customer", "appointment", "queue_ticket", "sale", "purchase", "expense", "inventory_item", "stock_movement", "cash_closing"],
+  Cashier: ["customer", "appointment", "queue_ticket", "sale", "refund", "purchase", "supplier_payment", "expense", "inventory_item", "stock_movement", "cash_closing"],
   Staff: ["queue_ticket", "sale"]
 };
 
@@ -996,6 +1017,7 @@ function enterAuthenticatedApp(login) {
   hydrateActiveShop();
   removeLegacyDemoRows();
   migrateServices();
+  migratePurchasing();
   window.scrollTo({ top: 0, left: 0 });
   document.body.classList.add("is-authenticated");
   const frontpage = document.getElementById("frontpage");
@@ -1011,6 +1033,7 @@ function enterAuthenticatedApp(login) {
   renderSaleServices();
   renderServiceTable();
   renderPurchaseTable();
+  renderSaleHistory();
   renderExpenseTable();
   renderInventory();
   renderClientsQueue();
@@ -1080,10 +1103,13 @@ function captureActiveShopState() {
     expenses,
     inventoryItems,
     stockMovements,
+    suppliers,
+    supplierPayments,
     receiptEnabled,
     vatEnabled,
     openingCash,
     sales,
+    refunds,
     customers,
     queueTickets,
     appointments,
@@ -1108,6 +1134,8 @@ function hydrateActiveShop() {
   expenses = activeShopState.expenses || [];
   inventoryItems = Array.isArray(activeShopState.inventoryItems) ? activeShopState.inventoryItems : clone(defaultState.inventoryItems);
   stockMovements = Array.isArray(activeShopState.stockMovements) ? activeShopState.stockMovements : [];
+  suppliers = Array.isArray(activeShopState.suppliers) ? activeShopState.suppliers : clone(defaultState.suppliers);
+  supplierPayments = Array.isArray(activeShopState.supplierPayments) ? activeShopState.supplierPayments : [];
   selectedService = services.find((service) => service.active) || services[0] || { name: "No service", price: 0, active: false };
   selectedSaleServices = selectedService.active === false ? [] : [selectedService];
   recipeDraft = clone(selectedService.recipeItems || []);
@@ -1115,6 +1143,7 @@ function hydrateActiveShop() {
   vatEnabled = !!activeShopState.vatEnabled;
   openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
   sales = activeShopState.sales || [];
+  refunds = activeShopState.refunds || [];
   customers = Array.isArray(activeShopState.customers) ? activeShopState.customers : clone(defaultState.customers);
   queueTickets = Array.isArray(activeShopState.queueTickets) ? activeShopState.queueTickets : clone(defaultState.queueTickets);
   appointments = activeShopState.appointments || [];
@@ -1240,6 +1269,40 @@ function migrateServices() {
   state.services = services;
 }
 
+function migratePurchasing() {
+  suppliers = suppliers.map((supplier) => ({
+    ...supplier,
+    id: supplier.id || `supplier-${crypto.randomUUID()}`,
+    termsDays: Math.max(Number(supplier.termsDays || 0), 0),
+    openingBalance: Math.max(Number(supplier.openingBalance || 0), 0),
+    active: supplier.active !== false
+  }));
+  purchases = purchases.map((purchase) => {
+    let supplier = suppliers.find((candidate) => candidate.id === purchase.supplierId || candidate.name.toLowerCase() === String(purchase.supplier || "").toLowerCase());
+    if (!supplier && purchase.supplier) {
+      supplier = { id: `supplier-${crypto.randomUUID()}`, name: purchase.supplier, phone: "", contact: "", termsDays: 30, openingBalance: 0, active: true, createdAt: purchase.createdAt || new Date().toISOString() };
+      suppliers.push(supplier);
+    }
+    const total = purchaseTotal(purchase);
+    return {
+      ...purchase,
+      id: purchase.id || `purchase-${crypto.randomUUID()}`,
+      supplierId: supplier?.id || "",
+      supplier: supplier?.name || purchase.supplier || "Supplier",
+      invoiceDate: purchase.invoiceDate || String(purchase.createdAt || "").slice(0, 10) || todayIso(),
+      dueDate: purchase.dueDate || purchase.invoiceDate || String(purchase.createdAt || "").slice(0, 10) || todayIso(),
+      amountPaid: purchase.amountPaid === undefined ? total : Math.min(Math.max(Number(purchase.amountPaid || 0), 0), total),
+      status: purchase.status || "Posted"
+    };
+  });
+  supplierPayments = supplierPayments.map((payment) => ({ ...payment, id: payment.id || `supplier-payment-${crypto.randomUUID()}`, status: payment.status || "Posted" }));
+  refunds = refunds.map((refund) => ({ ...refund, id: refund.id || `refund-${crypto.randomUUID()}` }));
+  activeShopState.suppliers = suppliers;
+  activeShopState.purchases = purchases;
+  activeShopState.supplierPayments = supplierPayments;
+  activeShopState.refunds = refunds;
+}
+
 function removeLegacyDemoRows() {
   // Preserve records: matching old demo values does not prove a row is disposable.
   inspectionRecords = inspectionRecords.map((record, index) => ({
@@ -1276,7 +1339,10 @@ function saveState() {
     expenses,
     inventoryItems,
     stockMovements,
+    suppliers,
+    supplierPayments,
     sales,
+    refunds,
     customers,
     queueTickets,
     appointments,
@@ -1479,16 +1545,39 @@ function accountingExportRows() {
     sale.staff || "",
     sale.id || ""
   ]));
+  refunds.forEach((refund) => rows.push([
+    refund.createdAt || "",
+    "Refund",
+    `${refund.reason || "Approved refund"} · sale ${refund.saleId || ""}`,
+    refund.payment || "",
+    Number(refund.amount || 0).toFixed(2),
+    "",
+    refund.createdBy || "",
+    refund.id || ""
+  ]));
   purchases.forEach((purchase) => rows.push([
     purchase.createdAt || "",
     "Purchase",
     `${purchase.supplier || "Supplier"} · ${purchase.item || "Item"} · ${purchase.qty || 0} ${purchase.unit || ""}`.trim(),
     purchase.payment || "",
-    purchaseTotal(purchase).toFixed(2),
+    purchase.status === "Reversed" ? "0.00" : purchaseTotal(purchase).toFixed(2),
     "",
     "",
-    purchase.type || ""
+    purchase.invoiceNumber || purchase.type || ""
   ]));
+  supplierPayments.forEach((payment) => {
+    const supplier = suppliers.find((candidate) => candidate.id === payment.supplierId);
+    rows.push([
+      payment.createdAt || "",
+      "Supplier payment",
+      `${supplier?.name || "Supplier"} · ${payment.reference || "Account payment"}`,
+      payment.payment || "",
+      Number(payment.amount || 0).toFixed(2),
+      "",
+      payment.createdBy || "",
+      payment.id || ""
+    ]);
+  });
   expenses.forEach((expense) => rows.push([
     expense.createdAt || "",
     "Expense",
@@ -1649,7 +1738,7 @@ function syncReportTotals() {
 }
 
 function shopPurchaseTotal(shopState) {
-  return (shopState.purchases || []).reduce((sum, purchase) => sum + purchaseTotal(purchase), 0);
+  return (shopState.purchases || []).reduce((sum, purchase) => purchase.status === "Reversed" ? sum : sum + purchaseTotal(purchase), 0);
 }
 
 function shopExpenseTotal(shopState) {
@@ -1657,16 +1746,19 @@ function shopExpenseTotal(shopState) {
 }
 
 function shopSalesTotal(shopState) {
-  return (shopState.sales || []).reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0);
+  const gross = (shopState.sales || []).reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0);
+  const returned = (shopState.refunds || []).reduce((sum, refund) => sum + (Number(refund.amount) || 0), 0);
+  return gross - returned;
 }
 
 function shopCashOutTotal(records) {
-  return (records || []).reduce((sum, record) => record.payment === "Cash" ? sum + (purchaseTotal(record) || Number(record.amount) || 0) : sum, 0);
+  return (records || []).reduce((sum, record) => record.status === "Reversed" ? sum : record.payment === "Cash" ? sum + (record.qty ? purchasePaidAmount(record) : Number(record.amount) || 0) : sum, 0);
 }
 
 function shopExpectedCash(shopState) {
   const cashSales = (shopState.sales || []).reduce((sum, sale) => sale.payment === "Cash" ? sum + (Number(sale.amount) || 0) : sum, 0);
-  return Number(shopState.openingCash || 0) + cashSales - shopCashOutTotal(shopState.purchases) - shopCashOutTotal(shopState.expenses);
+  const cashRefunds = (shopState.refunds || []).reduce((sum, refund) => refund.payment === "Cash" ? sum + (Number(refund.amount) || 0) : sum, 0);
+  return Number(shopState.openingCash || 0) + cashSales - cashRefunds - shopCashOutTotal(shopState.purchases) - shopCashOutTotal(shopState.expenses) - shopCashOutTotal(shopState.supplierPayments);
 }
 
 function shopAttentionCount(shopState) {
@@ -1833,28 +1925,76 @@ function purchaseTotal(purchase) {
   return Math.max((Number(purchase.qty) || 0) * (Number(purchase.unitCost) || 0) - (Number(purchase.discount) || 0), 0);
 }
 
+function purchasePaidAmount(purchase) {
+  if (purchase.status === "Reversed") return 0;
+  return Math.min(Math.max(Number(purchase.amountPaid ?? purchaseTotal(purchase)) || 0, 0), purchaseTotal(purchase));
+}
+
+function purchaseBalance(purchase) {
+  return purchase.status === "Reversed" ? 0 : Math.max(purchaseTotal(purchase) - purchasePaidAmount(purchase), 0);
+}
+
 function totalPurchases() {
-  return purchases.reduce((sum, purchase) => sum + purchaseTotal(purchase), 0);
+  return purchases.reduce((sum, purchase) => purchase.status === "Reversed" ? sum : sum + purchaseTotal(purchase), 0);
+}
+
+function totalRefunds() {
+  return refunds.reduce((sum, refund) => sum + (Number(refund.amount) || 0), 0);
+}
+
+function totalSupplierPayments() {
+  return supplierPayments.reduce((sum, payment) => payment.status === "Reversed" ? sum : sum + (Number(payment.amount) || 0), 0);
+}
+
+function totalPurchasePaid() {
+  return purchases.reduce((sum, purchase) => sum + purchasePaidAmount(purchase), 0) + totalSupplierPayments();
+}
+
+function supplierBalance(supplierId) {
+  const supplier = suppliers.find((candidate) => candidate.id === supplierId);
+  const bills = purchases.filter((purchase) => purchase.supplierId === supplierId && purchase.status !== "Reversed").reduce((sum, purchase) => sum + purchaseTotal(purchase), 0);
+  const paidOnBills = purchases.filter((purchase) => purchase.supplierId === supplierId).reduce((sum, purchase) => sum + purchasePaidAmount(purchase), 0);
+  const laterPayments = supplierPayments.filter((payment) => payment.supplierId === supplierId && payment.status !== "Reversed").reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0);
+  return Math.max(Number(supplier?.openingBalance || 0) + bills - paidOnBills - laterPayments, 0);
+}
+
+function totalSupplierPayable() {
+  return suppliers.reduce((sum, supplier) => sum + supplierBalance(supplier.id), 0);
 }
 
 function totalExpenses() {
   return expenses.reduce((sum, expense) => sum + (Number(expense.amount) || 0), 0);
 }
 
+function serviceMaterialCost() {
+  return stockMovements.reduce((sum, movement) => movement.type === "service_use"
+    ? sum + Math.abs(Number(movement.quantity || 0)) * Number(movement.unitCost || 0)
+    : sum, 0);
+}
+
+function operatingPurchaseCost() {
+  return purchases.reduce((sum, purchase) => purchase.status !== "Reversed" && purchase.type === "Operational supply"
+    ? sum + purchaseTotal(purchase)
+    : sum, 0);
+}
+
 function totalSales() {
-  return sales.reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0);
+  return sales.reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0) - totalRefunds();
 }
 
 function totalServiceItemsSold() {
-  return sales.reduce((sum, sale) => sum + (Array.isArray(sale.services) ? sale.services.length : 1), 0);
+  const refundedIds = new Set(refunds.map((refund) => refund.saleId));
+  return sales.reduce((sum, sale) => refundedIds.has(sale.id) ? sum : sum + (Array.isArray(sale.services) ? sale.services.length : 1), 0);
 }
 
 function cashSalesTotal() {
-  return sales.reduce((sum, sale) => sale.payment === "Cash" ? sum + (Number(sale.amount) || 0) : sum, 0);
+  const gross = sales.reduce((sum, sale) => sale.payment === "Cash" ? sum + (Number(sale.amount) || 0) : sum, 0);
+  const returned = refunds.reduce((sum, refund) => refund.payment === "Cash" ? sum + (Number(refund.amount) || 0) : sum, 0);
+  return gross - returned;
 }
 
 function expectedCashTotal() {
-  return openingCash + cashSalesTotal() - cashOutTotal(purchases) - cashOutTotal(expenses);
+  return openingCash + cashSalesTotal() - cashOutTotal(purchases) - cashOutTotal(expenses) - cashOutTotal(supplierPayments);
 }
 
 function staffCommissionTotal() {
@@ -1862,7 +2002,7 @@ function staffCommissionTotal() {
 }
 
 function cashOutTotal(records) {
-  return records.reduce((sum, record) => record.payment === "Cash" ? sum + (purchaseTotal(record) || Number(record.amount) || 0) : sum, 0);
+  return records.reduce((sum, record) => record.status === "Reversed" ? sum : record.payment === "Cash" ? sum + (record.qty ? purchasePaidAmount(record) : Number(record.amount) || 0) : sum, 0);
 }
 
 function paymentAccount(payment) {
@@ -1897,12 +2037,49 @@ function journalEntries() {
       entries.push(journalLine(date, "7000 Staff commission payable", description, 0, commission, "commission"));
     }
   });
+  refunds.forEach((refund) => {
+    const amount = Number(refund.amount) || 0;
+    const sale = sales.find((candidate) => candidate.id === refund.saleId);
+    const description = `Refund · ${sale?.service || "Sale"} · ${refund.reason || "Approved refund"}`;
+    entries.push(journalLine(refund.createdAt || "", "4000 Service revenue", description, amount, 0, "refund"));
+    entries.push(journalLine(refund.createdAt || "", paymentAccount(refund.payment), description, 0, amount, "refund"));
+    const commission = amount * 0.12;
+    if (commission) {
+      entries.push(journalLine(refund.createdAt || "", "7000 Staff commission payable", description, commission, 0, "refund-commission"));
+      entries.push(journalLine(refund.createdAt || "", "6300 Staff commission expense", description, 0, commission, "refund-commission"));
+    }
+  });
   purchases.forEach((purchase) => {
+    if (purchase.status === "Reversed") return;
     const amount = purchaseTotal(purchase);
+    const paid = purchasePaidAmount(purchase);
+    const balance = purchaseBalance(purchase);
     const date = purchase.createdAt || "";
     const description = `${purchase.supplier || "Supplier"} · ${purchase.item || "Purchase"}`;
     entries.push(journalLine(date, purchaseDebitAccount(purchase), description, amount, 0, "purchase"));
-    entries.push(journalLine(date, paymentAccount(purchase.payment), description, 0, amount, "purchase"));
+    if (paid) entries.push(journalLine(date, paymentAccount(purchase.payment), description, 0, paid, "purchase-payment"));
+    if (balance) entries.push(journalLine(date, "2000 Supplier payable", description, 0, balance, "purchase-credit"));
+  });
+  supplierPayments.forEach((payment) => {
+    if (payment.status === "Reversed") return;
+    const amount = Number(payment.amount) || 0;
+    const supplier = suppliers.find((candidate) => candidate.id === payment.supplierId);
+    const description = `${supplier?.name || "Supplier"} · ${payment.reference || "Account payment"}`;
+    entries.push(journalLine(payment.createdAt || "", "2000 Supplier payable", description, amount, 0, "supplier-payment"));
+    entries.push(journalLine(payment.createdAt || "", paymentAccount(payment.payment), description, 0, amount, "supplier-payment"));
+  });
+  suppliers.forEach((supplier) => {
+    const opening = Number(supplier.openingBalance || 0);
+    if (!opening) return;
+    entries.push(journalLine("Opening", "3900 Opening balance equity", `${supplier.name} · opening payable`, opening, 0, "supplier-opening"));
+    entries.push(journalLine("Opening", "2000 Supplier payable", `${supplier.name} · opening payable`, 0, opening, "supplier-opening"));
+  });
+  stockMovements.filter((movement) => movement.type === "service_use").forEach((movement) => {
+    const amount = Math.abs(Number(movement.quantity || 0)) * Number(movement.unitCost || 0);
+    if (!amount) return;
+    const description = `${movement.itemName || "Inventory"} · ${movement.reason || "Service consumption"}`;
+    entries.push(journalLine(movement.createdAt || "", "5100 Service material cost", description, amount, 0, "stock-use"));
+    entries.push(journalLine(movement.createdAt || "", "1200 Inventory and supplies", description, 0, amount, "stock-use"));
   });
   expenses.forEach((expense) => {
     const amount = Number(expense.amount) || 0;
@@ -1985,7 +2162,7 @@ function updateClosingCalculation() {
   openingCash = numberValue("closingOpeningCash");
   document.getElementById("closingCashSales").value = cashSalesTotal().toFixed(2);
   document.getElementById("closingCashExpenses").value = cashOutTotal(expenses).toFixed(2);
-  document.getElementById("closingCashPurchases").value = cashOutTotal(purchases).toFixed(2);
+  document.getElementById("closingCashPurchases").value = (cashOutTotal(purchases) + cashOutTotal(supplierPayments)).toFixed(2);
   const expected = expectedCashTotal();
   const difference = numberValue("closingActualCash") - expected;
   document.getElementById("closingExpectedCash").textContent = moneyFixed(expected);
@@ -2435,7 +2612,7 @@ function renderAccounting() {
 
   const entries = journalEntries();
   const shortageTotal = cashClosings.reduce((sum, closing) => sum + Math.abs(Number(closing.difference) || 0), 0);
-  const costTotal = totalPurchases() + totalExpenses() + shortageTotal + staffCommissionTotal();
+  const costTotal = operatingPurchaseCost() + serviceMaterialCost() + totalExpenses() + shortageTotal + staffCommissionTotal();
   document.getElementById("accountingCashBalance").textContent = moneyFixed(expectedCashTotal());
   document.getElementById("accountingRevenue").textContent = moneyFixed(totalSales());
   document.getElementById("accountingCosts").textContent = moneyFixed(costTotal);
@@ -2590,6 +2767,15 @@ function applyRoleAccess() {
   document.querySelectorAll(".shop-only-control").forEach((item) => {
     item.hidden = false;
   });
+  const supplierMasterForm = document.getElementById("supplierMasterForm");
+  if (supplierMasterForm) supplierMasterForm.hidden = !["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
+  const canManageServices = ["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
+  document.getElementById("serviceEditor").hidden = !canManageServices;
+  document.getElementById("addServiceBtn").hidden = !canManageServices;
+  document.getElementById("serviceCatalogTitle").textContent = canManageServices ? "Editable Service Catalog" : "Service Menu";
+  document.getElementById("serviceCatalogDescription").textContent = canManageServices
+    ? "Add haircut, beard color, hair color, facial, massage or any custom service"
+    : "Current services, prices and stock recipes";
   document.body.classList.remove("is-platform-admin");
   renderShopSwitcher();
   renderMobileViewSwitcher();
@@ -2613,11 +2799,13 @@ async function switchShop(shopId) {
   hydrateActiveShop();
   removeLegacyDemoRows();
   migrateServices();
+  migratePurchasing();
   document.getElementById("closingOpeningCash").value = openingCash.toFixed(2);
   renderSaleServices();
   renderClientsQueue();
   renderServiceTable();
   renderPurchaseTable();
+  renderSaleHistory();
   renderExpenseTable();
   renderInventory();
   renderCompliance();
@@ -2697,6 +2885,7 @@ async function createShopFromForm() {
   activeLanguage = language;
   hydrateActiveShop();
   migrateServices();
+  migratePurchasing();
   note.textContent = `${name} created. Hand over the owner credentials below.`;
   document.getElementById("handoverCard").hidden = false;
   document.getElementById("handoverShop").textContent = `${name} · ${location}`;
@@ -2712,6 +2901,7 @@ async function createShopFromForm() {
   renderSaleServices();
   renderServiceTable();
   renderPurchaseTable();
+  renderSaleHistory();
   renderExpenseTable();
   renderInventory();
   renderCompliance();
@@ -2974,6 +3164,7 @@ function updatePurchaseCalculation() {
   const unit = document.getElementById("purchaseUnit").value.trim() || "unit";
   const unitCost = Number(document.getElementById("purchaseUnitCost").value || 0);
   const discount = Number(document.getElementById("purchaseDiscount").value || 0);
+  const amountPaid = Number(document.getElementById("purchaseAmountPaid").value || 0);
   const subtotal = qty * unitCost;
   const total = Math.max(subtotal - discount, 0);
 
@@ -2981,6 +3172,7 @@ function updatePurchaseCalculation() {
   document.getElementById("calcUnitCost").textContent = moneyFixed(unitCost);
   document.getElementById("calcSubtotal").textContent = moneyFixed(subtotal);
   document.getElementById("calcPurchaseTotal").textContent = moneyFixed(total);
+  document.getElementById("calcPurchaseBalance").textContent = moneyFixed(Math.max(total - amountPaid, 0));
 }
 
 function inventoryTypeLabel(type) {
@@ -3161,6 +3353,7 @@ function renderSaleServices() {
 
 function renderServiceTable() {
   const body = document.getElementById("serviceTable");
+  const canEdit = ["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
   body.innerHTML = "";
   services.forEach((service, index) => {
     const row = document.createElement("tr");
@@ -3171,9 +3364,9 @@ function renderServiceTable() {
       <td>${money(service.price)}</td>
       <td>${escapeHtml(serviceRecipeLabel(service))}</td>
       <td>${translate(service.active ? "Active" : "Inactive")}</td>
-      <td><button class="danger-button" data-delete-service="${index}" type="button">${translate("Delete")}</button></td>
+      <td>${canEdit ? '<button class="danger-button" data-delete-service="' + index + '" type="button">' + translate("Delete") + '</button>' : "-"}</td>
     `;
-    row.addEventListener("click", () => {
+    if (canEdit) row.addEventListener("click", () => {
       document.getElementById("serviceName").value = service.name;
       document.getElementById("serviceNameAr").value = service.names?.ar || "";
       document.getElementById("serviceNameHi").value = service.names?.hi || "";
@@ -3206,43 +3399,167 @@ function renderServiceTable() {
   });
 }
 
+function renderSupplierSelects() {
+  const active = suppliers.filter((supplier) => supplier.active !== false);
+  ["purchaseSupplier", "supplierPaymentSupplier"].forEach((id) => {
+    const select = document.getElementById(id);
+    if (!select) return;
+    const current = select.value;
+    select.innerHTML = active.length
+      ? active.map((supplier) => `<option value="${escapeHtml(supplier.id)}">${escapeHtml(supplier.name)}</option>`).join("")
+      : '<option value="">Add a supplier first</option>';
+    if ([...select.options].some((option) => option.value === current)) select.value = current;
+  });
+}
+
+function renderSupplierAccounts() {
+  const body = document.getElementById("supplierTable");
+  if (!body) return;
+  const postedPurchases = purchases.filter((purchase) => purchase.status !== "Reversed");
+  const overdue = postedPurchases.filter((purchase) => purchaseBalance(purchase) > 0 && purchase.dueDate && purchase.dueDate < todayIso());
+  document.getElementById("supplierPayableTotal").textContent = moneyFixed(totalSupplierPayable());
+  document.getElementById("purchaseGrossTotal").textContent = moneyFixed(totalPurchases());
+  document.getElementById("purchasePaidTotal").textContent = moneyFixed(totalPurchasePaid());
+  document.getElementById("purchaseOverdueCount").textContent = String(overdue.length);
+  body.innerHTML = suppliers.length ? suppliers.map((supplier) => {
+    const bills = postedPurchases.filter((purchase) => purchase.supplierId === supplier.id).reduce((sum, purchase) => sum + purchaseTotal(purchase), 0);
+    const paid = postedPurchases.filter((purchase) => purchase.supplierId === supplier.id).reduce((sum, purchase) => sum + purchasePaidAmount(purchase), 0)
+      + supplierPayments.filter((payment) => payment.supplierId === supplier.id && payment.status !== "Reversed").reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+    const balance = supplierBalance(supplier.id);
+    return `<tr><td><strong>${escapeHtml(supplier.name)}</strong></td><td>${escapeHtml(supplier.contact || "-")}<br><small>${escapeHtml(supplier.phone || "-")}</small></td><td>${escapeHtml(supplier.termsDays)} days</td><td>${moneyFixed(bills + Number(supplier.openingBalance || 0))}</td><td>${moneyFixed(paid)}</td><td>${moneyFixed(balance)}</td><td><b class="${balance ? "warn" : "ok"}">${balance ? "Due" : "Clear"}</b></td></tr>`;
+  }).join("") : '<tr><td colspan="7">No suppliers yet. Add the first supplier to enter a purchase bill.</td></tr>';
+  renderSupplierSelects();
+  renderSupplierPayments();
+}
+
+function renderSupplierPayments() {
+  const body = document.getElementById("supplierPaymentTable");
+  if (!body) return;
+  body.innerHTML = supplierPayments.length ? [...supplierPayments].reverse().slice(0, 30).map((payment) => {
+    const supplier = suppliers.find((candidate) => candidate.id === payment.supplierId);
+    const reversed = payment.status === "Reversed";
+    return `<tr><td>${escapeHtml(dateLabel(payment.createdAt))}</td><td>${escapeHtml(supplier?.name || "Supplier")}</td><td>${escapeHtml(payment.payment || "-")}</td><td>${escapeHtml(payment.reference || "-")}</td><td>${moneyFixed(payment.amount)}</td><td><button class="danger-button" data-reverse-supplier-payment="${escapeHtml(payment.id)}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button></td></tr>`;
+  }).join("") : '<tr><td colspan="6">No supplier payments yet.</td></tr>';
+  body.querySelectorAll("[data-reverse-supplier-payment]").forEach((button) => button.addEventListener("click", () => {
+    const payment = supplierPayments.find((candidate) => candidate.id === button.dataset.reverseSupplierPayment);
+    const reason = document.getElementById("supplierPaymentReversalReason").value.trim();
+    if (!payment || !reason) {
+      document.getElementById("supplierPaymentNote").textContent = "Enter a payment reversal reason first.";
+      return;
+    }
+    payment.status = "Reversed";
+    payment.reversalReason = reason;
+    payment.reversedAt = new Date().toISOString();
+    payment.reversedBy = currentUser?.name || currentRole;
+    addAudit("Supplier payment reversed", `${currentRole} · ${moneyFixed(payment.amount)} · ${reason}`);
+    saveState();
+    renderSupplierAccounts();
+    syncSummaryTotals();
+    document.getElementById("supplierPaymentReversalReason").value = "";
+    document.getElementById("supplierPaymentNote").textContent = "Supplier payment reversed. Cash and payable were recalculated.";
+  }));
+}
+
 function renderPurchaseTable() {
   const body = document.getElementById("purchaseTable");
   body.innerHTML = "";
   purchases.forEach((purchase, index) => {
+    const balance = purchaseBalance(purchase);
+    const reversed = purchase.status === "Reversed";
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${escapeHtml(purchase.supplier)}</td>
+      <td><strong>${escapeHtml(purchase.supplier)}</strong></td>
       <td>${escapeHtml(translate(purchase.item))}<br><small>${escapeHtml(purchase.qty)} ${escapeHtml(translate(purchase.unit))} × ${moneyFixed(purchase.unitCost)}</small></td>
-      <td>${translate(purchase.payment || "Cash")}</td>
+      <td>${escapeHtml(purchase.invoiceNumber || "No reference")}<br><small>${escapeHtml(purchase.invoiceDate || "-")} · due ${escapeHtml(purchase.dueDate || "-")}</small></td>
+      <td>${moneyFixed(purchasePaidAmount(purchase))}<br><small>${reversed ? "Reversed" : `${moneyFixed(balance)} due`}</small></td>
       <td>${moneyFixed(purchaseTotal(purchase))}</td>
-      <td><button class="danger-button" data-delete-purchase="${index}" type="button">${translate("Delete")}</button></td>
+      <td><button class="danger-button" data-reverse-purchase="${index}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button></td>
     `;
     body.appendChild(row);
   });
+  if (!purchases.length) body.innerHTML = '<tr><td colspan="6">No purchase bills yet.</td></tr>';
 
-  body.querySelectorAll("[data-delete-purchase]").forEach((button) => {
+  body.querySelectorAll("[data-reverse-purchase]").forEach((button) => {
     button.addEventListener("click", async () => {
-      const index = Number(button.dataset.deletePurchase);
+      const index = Number(button.dataset.reversePurchase);
       const purchase = purchases[index];
-      if (!window.confirm("Delete this purchase? Expected cash will be recalculated.")) return;
-      const stockItem = inventoryItems.find((item) => item.id === purchase.inventoryItemId);
-      if (stockItem && Number(stockItem.quantity || 0) < Number(purchase.qty || 0)) {
-        document.getElementById("purchaseNote").textContent = `Cannot delete: only ${inventoryQuantity(stockItem)} remains. Post a supplier return or correction instead.`;
+      const reason = document.getElementById("purchaseReversalReason").value.trim();
+      if (!reason) {
+        document.getElementById("purchaseNote").textContent = "Enter a reversal reason before reversing a purchase bill.";
         return;
       }
-      if (!await deleteCloudRecord(purchase, "purchase", index)) return;
-      if (stockItem) addStockMovement(stockItem, -Number(purchase.qty || 0), "purchase_reversal", purchase.id || "purchase", "Purchase deleted");
-      purchases.splice(index, 1);
-      addAudit("Purchase entered", `${currentRole} · purchase deleted · ${purchase?.item || "purchase"} · ${moneyFixed(purchaseTotal(purchase || {}))}`);
+      const stockItem = inventoryItems.find((item) => item.id === purchase.inventoryItemId);
+      if (stockItem && Number(stockItem.quantity || 0) < Number(purchase.qty || 0)) {
+        document.getElementById("purchaseNote").textContent = `Cannot reverse: only ${inventoryQuantity(stockItem)} remains. Post a supplier return instead.`;
+        return;
+      }
+      const supplier = suppliers.find((candidate) => candidate.id === purchase.supplierId);
+      const otherBillBalance = purchases.filter((candidate) => candidate !== purchase && candidate.supplierId === purchase.supplierId && candidate.status !== "Reversed")
+        .reduce((sum, candidate) => sum + purchaseBalance(candidate), 0);
+      const accountPayments = supplierPayments.filter((payment) => payment.supplierId === purchase.supplierId && payment.status !== "Reversed")
+        .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+      if (Number(supplier?.openingBalance || 0) + otherBillBalance < accountPayments) {
+        document.getElementById("purchaseNote").textContent = "Cannot reverse this bill while later supplier payments are allocated to its balance. Reverse the affected supplier payment first.";
+        return;
+      }
+      if (stockItem) addStockMovement(stockItem, -Number(purchase.qty || 0), "purchase_reversal", purchase.id || "purchase", reason);
+      purchase.status = "Reversed";
+      purchase.reversalReason = reason;
+      purchase.reversedAt = new Date().toISOString();
+      purchase.reversedBy = currentUser?.name || currentRole;
+      addAudit("Purchase reversed", `${currentRole} · ${purchase.item} · ${moneyFixed(purchaseTotal(purchase))} · ${reason}`);
       saveState();
       renderPurchaseTable();
+      renderSupplierAccounts();
       renderInventory();
       syncSummaryTotals();
-      document.getElementById("purchaseNote").textContent = translate("Purchase deleted. Totals were recalculated.");
+      document.getElementById("purchaseReversalReason").value = "";
+      document.getElementById("purchaseNote").textContent = "Purchase reversed. Stock, payable and accounting were recalculated.";
       applyTranslations();
     });
   });
+  renderSupplierAccounts();
+}
+
+function renderSaleHistory() {
+  const body = document.getElementById("saleHistoryTable");
+  if (!body) return;
+  const canRefund = ["Platform Admin", "Owner", "Shop Admin", "Cashier"].includes(currentRole);
+  const refundedIds = new Set(refunds.map((refund) => refund.saleId));
+  document.getElementById("saleHistoryStatus").textContent = refunds.length ? `${refunds.length} refunded` : "No refunds";
+  document.getElementById("refundReason").closest("label").hidden = !canRefund;
+  body.innerHTML = sales.length ? [...sales].reverse().slice(0, 50).map((sale) => {
+    const refunded = refundedIds.has(sale.id);
+    return `<tr><td>${escapeHtml(dateLabel(sale.createdAt))}</td><td>${escapeHtml(sale.service || (sale.services || []).join(" + "))}</td><td>${escapeHtml(sale.customerName || "Walk-in Guest")}</td><td>${escapeHtml(sale.staff || "-")}</td><td>${escapeHtml(sale.payment || "-")}</td><td>${moneyFixed(sale.amount)}</td><td><b class="${refunded ? "warn" : "ok"}">${refunded ? "Refunded" : "Completed"}</b></td><td>${canRefund ? `<button class="danger-button" data-refund-sale="${escapeHtml(sale.id)}" type="button" ${refunded ? "disabled" : ""}>${refunded ? "Refunded" : "Refund"}</button>` : "-"}</td></tr>`;
+  }).join("") : '<tr><td colspan="8">No sales yet.</td></tr>';
+  body.querySelectorAll("[data-refund-sale]").forEach((button) => button.addEventListener("click", async () => {
+    const sale = sales.find((candidate) => candidate.id === button.dataset.refundSale);
+    const reason = document.getElementById("refundReason").value.trim();
+    if (!sale || !reason) {
+      document.getElementById("refundNote").textContent = "Enter a refund reason before selecting Refund.";
+      return;
+    }
+    const refund = { id: `refund-${crypto.randomUUID()}`, saleId: sale.id, amount: Number(sale.amount || 0), payment: sale.payment, reason, createdAt: new Date().toISOString(), createdBy: currentUser?.name || currentRole };
+    button.disabled = true;
+    if (!isLocalDemo) {
+      try {
+        await window.SalonBackend.refundSale(cloudTargetShopId(), refund);
+      } catch (error) {
+        document.getElementById("refundNote").textContent = error instanceof Error ? error.message : "Refund could not be saved.";
+        button.disabled = false;
+        return;
+      }
+    }
+    refunds.push(refund);
+    sale.status = "Refunded";
+    sale.refundedAt = refund.createdAt;
+    addAudit("Sale refunded", `${currentRole} · ${sale.service} · ${moneyFixed(refund.amount)} · ${reason}`);
+    saveState();
+    renderSaleHistory();
+    syncSummaryTotals();
+    document.getElementById("refundReason").value = "";
+    document.getElementById("refundNote").textContent = "Refund saved. Revenue, payment and commission were reversed; consumed stock was not restored.";
+  }));
 }
 
 function renderCustomerSelects() {
@@ -3524,6 +3841,7 @@ document.getElementById("saveSale").addEventListener("click", async () => {
   addAudit("Sale created", `${customer.name} · ${staff} · ${serviceList.join(" + ")} · ${payment} · ${moneyFixed(amount)}`);
   saveState();
   syncSummaryTotals();
+  renderSaleHistory();
   renderInventory();
   const taxText = vatEnabled ? "VAT invoice fields are active." : "No VAT was added.";
   document.getElementById("saleNote").textContent = activeLanguage === "en"
@@ -3718,20 +4036,29 @@ document.getElementById("printReport").addEventListener("click", () => {
 });
 
 document.getElementById("savePurchase").addEventListener("click", () => {
+  const supplierId = document.getElementById("purchaseSupplier").value;
+  const supplier = suppliers.find((candidate) => candidate.id === supplierId);
   const purchase = {
     id: `purchase-${crypto.randomUUID()}`,
-    supplier: document.getElementById("purchaseSupplier").value.trim(),
+    supplierId,
+    supplier: supplier?.name || "",
+    invoiceNumber: document.getElementById("purchaseInvoice").value.trim(),
+    invoiceDate: document.getElementById("purchaseDate").value || todayIso(),
+    dueDate: document.getElementById("purchaseDueDate").value || todayIso(),
     type: document.getElementById("purchaseType").value,
     item: document.getElementById("purchaseItem").value.trim(),
     qty: Number(document.getElementById("purchaseQty").value || 0),
     unit: document.getElementById("purchaseUnit").value.trim() || "unit",
     unitCost: Number(document.getElementById("purchaseUnitCost").value || 0),
     discount: Number(document.getElementById("purchaseDiscount").value || 0),
+    amountPaid: Number(document.getElementById("purchaseAmountPaid").value || 0),
     payment: document.getElementById("purchasePayment").value,
+    status: "Posted",
     createdAt: new Date().toISOString()
   };
-  if (!purchase.supplier || !purchase.item || ![purchase.qty, purchase.unitCost, purchase.discount].every(Number.isFinite) || purchase.qty <= 0 || purchase.unitCost < 0 || purchase.discount < 0 || purchase.discount > purchase.qty * purchase.unitCost) {
-    document.getElementById("purchaseNote").textContent = "Enter a valid item, quantity, unit cost and discount.";
+  const total = purchaseTotal(purchase);
+  if (!supplier || !purchase.item || ![purchase.qty, purchase.unitCost, purchase.discount, purchase.amountPaid].every(Number.isFinite) || purchase.qty <= 0 || purchase.unitCost < 0 || purchase.discount < 0 || purchase.discount > purchase.qty * purchase.unitCost || purchase.amountPaid < 0 || purchase.amountPaid > total) {
+    document.getElementById("purchaseNote").textContent = "Select a supplier and enter valid quantities, costs, discount and amount paid. Payment cannot exceed the bill total.";
     return;
   }
 
@@ -3756,15 +4083,94 @@ document.getElementById("savePurchase").addEventListener("click", () => {
   purchase.inventoryItemId = stockItem.id;
   addStockMovement(stockItem, purchase.qty, "purchase", purchase.id, purchase.supplier, purchaseTotal(purchase) / purchase.qty);
   purchases.push(purchase);
+  checklist.suppliersAdded = true;
   saveState();
   addAudit("Purchase entered", `${currentRole} · ${purchase.item} · ${purchase.qty} ${purchase.unit} · ${moneyFixed(purchaseTotal(purchase))}`);
   renderPurchaseTable();
   renderInventory();
   syncSummaryTotals();
   document.getElementById("purchaseNote").textContent = activeLanguage === "en"
-    ? `${purchase.item} saved. ${purchase.qty} ${purchase.unit} × ${moneyFixed(purchase.unitCost)} = ${moneyFixed(purchaseTotal(purchase))}.`
+    ? `${purchase.item} saved. Bill ${moneyFixed(total)}, paid ${moneyFixed(purchase.amountPaid)}, balance ${moneyFixed(purchaseBalance(purchase))}.`
     : `${purchase.item} ${activeLanguage === "ar" ? "تم حفظها" : activeLanguage === "hi" ? "सेव हुआ" : "محفوظ ہو گیا"}: ${purchase.qty} ${purchase.unit} × ${moneyFixed(purchase.unitCost)} = ${moneyFixed(purchaseTotal(purchase))}.`;
   applyTranslations();
+});
+
+document.getElementById("saveSupplier").addEventListener("click", () => {
+  const name = document.getElementById("supplierName").value.trim();
+  const termsDays = Number(document.getElementById("supplierTerms").value || 0);
+  const openingBalance = Number(document.getElementById("supplierOpeningBalance").value || 0);
+  if (!name || !Number.isFinite(termsDays) || termsDays < 0 || !Number.isFinite(openingBalance) || openingBalance < 0) {
+    document.getElementById("supplierNote").textContent = "Enter a supplier name, valid payment terms and a non-negative opening balance.";
+    return;
+  }
+  if (suppliers.some((supplier) => supplier.active !== false && supplier.name.toLowerCase() === name.toLowerCase())) {
+    document.getElementById("supplierNote").textContent = "That supplier already exists.";
+    return;
+  }
+  const supplier = {
+    id: `supplier-${crypto.randomUUID()}`,
+    name,
+    phone: document.getElementById("supplierPhone").value.trim(),
+    contact: document.getElementById("supplierContact").value.trim(),
+    termsDays,
+    openingBalance,
+    active: true,
+    createdAt: new Date().toISOString()
+  };
+  suppliers.push(supplier);
+  checklist.suppliersAdded = true;
+  addAudit("Supplier added", `${currentRole} · ${supplier.name} · ${termsDays} day terms`);
+  saveState();
+  renderSupplierAccounts();
+  document.getElementById("purchaseSupplier").value = supplier.id;
+  document.getElementById("supplierPaymentSupplier").value = supplier.id;
+  syncPurchaseDueDate();
+  document.getElementById("supplierName").value = "";
+  document.getElementById("supplierPhone").value = "";
+  document.getElementById("supplierContact").value = "";
+  document.getElementById("supplierOpeningBalance").value = "0";
+  document.getElementById("supplierNote").textContent = `${supplier.name} is ready for bills and payments.`;
+  syncSummaryTotals();
+});
+
+function syncPurchaseDueDate() {
+  const supplier = suppliers.find((candidate) => candidate.id === document.getElementById("purchaseSupplier").value);
+  const invoiceDate = document.getElementById("purchaseDate").value || todayIso();
+  const due = new Date(`${invoiceDate}T12:00:00`);
+  due.setDate(due.getDate() + Number(supplier?.termsDays || 0));
+  document.getElementById("purchaseDueDate").value = due.toISOString().slice(0, 10);
+}
+
+document.getElementById("purchaseSupplier").addEventListener("change", syncPurchaseDueDate);
+document.getElementById("purchaseDate").addEventListener("change", syncPurchaseDueDate);
+
+document.getElementById("saveSupplierPayment").addEventListener("click", () => {
+  const supplierId = document.getElementById("supplierPaymentSupplier").value;
+  const supplier = suppliers.find((candidate) => candidate.id === supplierId);
+  const amount = Number(document.getElementById("supplierPaymentAmount").value || 0);
+  const balance = supplierBalance(supplierId);
+  if (!supplier || !Number.isFinite(amount) || amount <= 0 || amount > balance) {
+    document.getElementById("supplierPaymentNote").textContent = `Select a supplier and enter an amount up to the current balance of ${moneyFixed(balance)}.`;
+    return;
+  }
+  const payment = {
+    id: `supplier-payment-${crypto.randomUUID()}`,
+    supplierId,
+    amount,
+    payment: document.getElementById("supplierPaymentMethod").value,
+    status: "Posted",
+    reference: document.getElementById("supplierPaymentReference").value.trim(),
+    createdBy: currentUser?.name || currentRole,
+    createdAt: new Date().toISOString()
+  };
+  supplierPayments.push(payment);
+  addAudit("Supplier payment", `${currentRole} · ${supplier.name} · ${moneyFixed(amount)} · ${payment.payment}`);
+  saveState();
+  renderSupplierAccounts();
+  syncSummaryTotals();
+  document.getElementById("supplierPaymentAmount").value = "0";
+  document.getElementById("supplierPaymentReference").value = "";
+  document.getElementById("supplierPaymentNote").textContent = `${moneyFixed(amount)} paid to ${supplier.name}. Remaining balance ${moneyFixed(supplierBalance(supplierId))}.`;
 });
 
 document.getElementById("saveExpense").addEventListener("click", () => {
@@ -3791,7 +4197,7 @@ document.getElementById("saveExpense").addEventListener("click", () => {
   applyTranslations();
 });
 
-["purchaseQty", "purchaseUnit", "purchaseUnitCost", "purchaseDiscount"].forEach((id) => {
+["purchaseQty", "purchaseUnit", "purchaseUnitCost", "purchaseDiscount", "purchaseAmountPaid"].forEach((id) => {
   document.getElementById(id).addEventListener("input", updatePurchaseCalculation);
 });
 
@@ -4038,13 +4444,17 @@ function syncTaxSettings() {
 }
 
 migrateServices();
+migratePurchasing();
 removeLegacyDemoRows();
 document.getElementById("closingOpeningCash").value = openingCash.toFixed(2);
+document.getElementById("purchaseDate").value = todayIso();
 saveState();
 renderSaleServices();
 renderClientsQueue();
 renderServiceTable();
 renderPurchaseTable();
+syncPurchaseDueDate();
+renderSaleHistory();
 renderExpenseTable();
 renderInventory();
 renderCompliance();

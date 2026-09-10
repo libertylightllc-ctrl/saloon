@@ -82,6 +82,17 @@ test('sale RPC sends one tenant-scoped transaction with stock usage', async () =
   });
 });
 
+test('refund RPC sends a tenant-scoped full refund request', async () => {
+  const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const refund = { id: 'refund-1', saleId: 'sale-1', amount: 15, payment: 'Cash', reason: 'Customer complaint' };
+  await fixture.backend.refundSale('shop-id', refund);
+  assert.match(fixture.calls[0].url, /rpc\/salon_refund_sale$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), {
+    target_shop: 'shop-id', refund_external_id: 'refund-1', sale_external_id: 'sale-1', refund_data: refund
+  });
+});
+
 test('expired API responses refresh the session once and retry', async () => {
   const fixture = backendFixture([
     { status: 401, body: { message: 'expired' } },

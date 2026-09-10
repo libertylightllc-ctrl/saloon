@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-3" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-4" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -450,6 +450,17 @@
               <p class="system-note" id="saleNote">This will update cash expected, staff performance and stock consumption.</p>
             </article>
           </div>
+          <article class="panel sale-history-panel">
+            <div class="panel-head">
+              <div><h3>Recent Sales</h3><p>Completed sales and controlled refunds</p></div>
+              <span class="status-pill" id="saleHistoryStatus">No refunds</span>
+            </div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Date</th><th>Services</th><th>Customer</th><th>Staff</th><th>Payment</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody id="saleHistoryTable"></tbody></table>
+            </div>
+            <label class="table-reason-field">Refund reason <input id="refundReason" placeholder="Required before selecting Refund" /></label>
+            <p class="system-note" id="refundNote">Refunds reverse revenue and payment without restoring consumed service supplies.</p>
+          </article>
         </section>
 
         <section class="view" id="clients">
@@ -558,8 +569,8 @@
             <article class="panel">
               <div class="panel-head">
                 <div>
-                  <h3>Editable Service Catalog</h3>
-                  <p>Add haircut, beard color, hair color, facial, massage or any custom service</p>
+                  <h3 id="serviceCatalogTitle">Editable Service Catalog</h3>
+                  <p id="serviceCatalogDescription">Add haircut, beard color, hair color, facial, massage or any custom service</p>
                 </div>
                 <button class="primary-button" id="addServiceBtn" type="button">
                   <span data-icon="plus"></span>
@@ -584,7 +595,7 @@
               </div>
             </article>
 
-            <article class="panel form-panel">
+            <article class="panel form-panel" id="serviceEditor">
               <div class="panel-head compact">
                 <div>
                   <h3 id="serviceFormTitle">Add / Edit Service</h3>
@@ -629,69 +640,67 @@
         </section>
 
         <section class="view" id="purchases">
+          <div class="metric-grid purchase-metrics">
+            <article class="metric-card highlight"><span>Supplier payable</span><strong id="supplierPayableTotal">AED 0.00</strong><small>Open supplier balances</small></article>
+            <article class="metric-card"><span>Purchases</span><strong id="purchaseGrossTotal">AED 0.00</strong><small>Posted supplier bills</small></article>
+            <article class="metric-card"><span>Paid</span><strong id="purchasePaidTotal">AED 0.00</strong><small>Bill payments recorded</small></article>
+            <article class="metric-card"><span>Overdue</span><strong id="purchaseOverdueCount">0</strong><small>Bills past due with balance</small></article>
+          </div>
           <div class="split-layout">
             <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3>Purchases</h3>
-                  <p>Supplier bills increase stock and affect cash/profit</p>
-                </div>
-                <span class="status-pill">Stock-in</span>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Supplier</th>
-                      <th>Items</th>
-                      <th>Payment</th>
-                      <th>Total</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="purchaseTable"></tbody>
-                </table>
-              </div>
+              <div class="panel-head"><div><h3>Purchase Bills</h3><p>Stock receiving, supplier credit and payment status</p></div><span class="status-pill">Stock-in</span></div>
+              <div class="table-wrap"><table class="purchase-table"><thead><tr><th>Supplier</th><th>Items</th><th>Invoice / due</th><th>Paid / balance</th><th>Total</th><th>Action</th></tr></thead><tbody id="purchaseTable"></tbody></table></div>
+              <label class="table-reason-field">Reversal reason <input id="purchaseReversalReason" placeholder="Required before reversing a bill" /></label>
             </article>
 
             <article class="panel form-panel">
-              <div class="panel-head compact">
-                <div>
-                  <h3>Add Purchase</h3>
-                  <p>Consumable, retail product or reusable tool</p>
-                </div>
-              </div>
-              <label>Supplier <input id="purchaseSupplier" value="Beauty Supply LLC" /></label>
-              <label>Item type
-                <select id="purchaseType">
-                  <option>Consumable stock</option>
-                  <option>Retail product</option>
-                  <option>Reusable tool / asset</option>
-                  <option>Operational supply</option>
-                </select>
-              </label>
+              <div class="panel-head compact"><div><h3>Add Purchase Bill</h3><p>Consumable, retail product or reusable tool</p></div></div>
+              <label>Supplier <select id="purchaseSupplier"></select></label>
+              <div class="inline-fields"><label>Invoice number <input id="purchaseInvoice" placeholder="Supplier invoice reference" /></label><label>Invoice date <input id="purchaseDate" type="date" /></label></div>
+              <label>Due date <input id="purchaseDueDate" type="date" /></label>
+              <label>Item type <select id="purchaseType"><option>Consumable stock</option><option>Retail product</option><option>Reusable tool / asset</option><option>Operational supply</option></select></label>
               <label>Item <input id="purchaseItem" value="Blades" /></label>
-              <div class="inline-fields">
-                <label>Qty <input id="purchaseQty" type="number" min="0" step="1" value="100" /></label>
-                <label>Unit <input id="purchaseUnit" value="pcs" /></label>
-              </div>
+              <div class="inline-fields"><label>Qty <input id="purchaseQty" type="number" min="0" step="1" value="100" /></label><label>Unit <input id="purchaseUnit" value="pcs" /></label></div>
               <label>Unit cost <input id="purchaseUnitCost" type="number" min="0" step="0.01" value="1.20" /></label>
               <label>Discount <input id="purchaseDiscount" type="number" min="0" step="0.01" value="0" /></label>
-              <label>Payment method
-                <select id="purchasePayment">
-                  <option>Cash</option>
-                  <option>Card</option>
-                  <option>Bank</option>
-                </select>
-              </label>
+              <label>Amount paid now <input id="purchaseAmountPaid" type="number" min="0" step="0.01" value="0" /></label>
+              <label>Payment method <select id="purchasePayment"><option>Cash</option><option>Card</option><option>Bank</option></select></label>
               <div class="calculation-box">
-                <div><span>Qty</span><strong id="calcQty">100 pcs</strong></div>
-                <div><span>Unit cost</span><strong id="calcUnitCost">AED 1.20</strong></div>
-                <div><span>Subtotal</span><strong id="calcSubtotal">AED 120.00</strong></div>
-                <div><span>Total</span><strong id="calcPurchaseTotal">AED 120.00</strong></div>
+                <div><span>Qty</span><strong id="calcQty">100 pcs</strong></div><div><span>Unit cost</span><strong id="calcUnitCost">AED 1.20</strong></div>
+                <div><span>Subtotal</span><strong id="calcSubtotal">AED 120.00</strong></div><div><span>Total</span><strong id="calcPurchaseTotal">AED 120.00</strong></div>
+                <div><span>Balance due</span><strong id="calcPurchaseBalance">AED 120.00</strong></div>
               </div>
               <button class="primary-button full" id="savePurchase" type="button">Save Purchase</button>
-              <p class="system-note" id="purchaseNote">Purchase will be saved, stock-in will be recorded, and cash/bank outflow will update.</p>
+              <p class="system-note" id="purchaseNote">The bill posts to stock, cash or bank, and supplier payable.</p>
+            </article>
+          </div>
+
+          <div class="split-layout supplier-layout">
+            <article class="panel">
+              <div class="panel-head"><div><h3>Supplier Accounts</h3><p>Terms, contact details and outstanding balances</p></div></div>
+              <div class="table-wrap"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Terms</th><th>Billed</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead><tbody id="supplierTable"></tbody></table></div>
+              <div class="subsection-head"><h3>Recent Supplier Payments</h3><span>Auditable cash and bank outflow</span></div>
+              <div class="table-wrap"><table><thead><tr><th>Date</th><th>Supplier</th><th>Method</th><th>Reference</th><th>Amount</th><th>Action</th></tr></thead><tbody id="supplierPaymentTable"></tbody></table></div>
+              <label class="table-reason-field">Payment reversal reason <input id="supplierPaymentReversalReason" placeholder="Required before reversing a supplier payment" /></label>
+            </article>
+            <article class="panel form-panel">
+              <div id="supplierMasterForm">
+                <div class="panel-head compact"><div><h3>Add Supplier</h3><p>Create once, then select on each bill</p></div></div>
+                <label>Supplier name <input id="supplierName" placeholder="Company or representative" /></label>
+                <div class="inline-fields"><label>Phone <input id="supplierPhone" placeholder="+971…" /></label><label>Contact person <input id="supplierContact" /></label></div>
+                <label>Payment terms (days) <input id="supplierTerms" type="number" min="0" step="1" value="30" /></label>
+                <label>Opening balance <input id="supplierOpeningBalance" type="number" min="0" step="0.01" value="0" /></label>
+                <button class="primary-button full" id="saveSupplier" type="button">Save supplier</button>
+                <p class="system-note" id="supplierNote">Opening balances are included in supplier payables.</p>
+                <hr />
+              </div>
+              <h3>Record Supplier Payment</h3>
+              <label>Supplier <select id="supplierPaymentSupplier"></select></label>
+              <label>Amount <input id="supplierPaymentAmount" type="number" min="0" step="0.01" value="0" /></label>
+              <label>Payment method <select id="supplierPaymentMethod"><option>Cash</option><option>Card</option><option>Bank</option></select></label>
+              <label>Reference <input id="supplierPaymentReference" placeholder="Transfer or receipt number" /></label>
+              <button class="ghost-button full" id="saveSupplierPayment" type="button">Record payment</button>
+              <p class="system-note" id="supplierPaymentNote">Payments reduce supplier payable and cash or bank.</p>
             </article>
           </div>
         </section>
@@ -1013,7 +1022,7 @@
               <label>Opening cash <input id="closingOpeningCash" type="number" min="0" step="0.01" value="200" /></label>
               <label>Cash sales <input id="closingCashSales" type="number" min="0" step="0.01" value="0" readonly /></label>
               <label>Cash expenses <input id="closingCashExpenses" type="number" min="0" step="0.01" value="0" readonly /></label>
-              <label>Cash purchases <input id="closingCashPurchases" type="number" min="0" step="0.01" value="0" readonly /></label>
+              <label>Supplier cash payments <input id="closingCashPurchases" type="number" min="0" step="0.01" value="0" readonly /></label>
               <label>Actual cash counted <input id="closingActualCash" type="number" min="0" step="0.01" value="0" /></label>
               <label>Shortage reason <input id="closingReason" placeholder="Required when counted cash does not match" /></label>
               <div class="calculation-box">
@@ -1293,7 +1302,7 @@
       </main>
     </div>
 
-    <script src="./backend.js?v=20260910-release-3"></script>
-    <script src="./app.js?v=20260910-release-3"></script>
+    <script src="./backend.js?v=20260910-release-4"></script>
+    <script src="./app.js?v=20260910-release-4"></script>
   </body>
 </html>
