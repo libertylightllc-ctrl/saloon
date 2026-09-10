@@ -71,7 +71,10 @@ const requiredHtml = [
   "id=\"saleTipAmount\"",
   "id=\"refundAmount\"",
   "id=\"purchaseEvidenceFile\"",
-  "id=\"expenseEvidenceFile\""
+  "id=\"expenseEvidenceFile\"",
+  "id=\"taxModeCard\"",
+  "id=\"inventoryItemForm\"",
+  "id=\"expenseReversalField\""
 ];
 
 const requiredJs = [
@@ -111,7 +114,9 @@ const requiredJs = [
   "\"Shop Admin\": \"9999\"",
   "openPasswordDialog",
   "changePassword",
-  "signEvidence"
+  "signEvidence",
+  "canManageShopOperations",
+  "data-reverse-expense"
 ];
 
 const forbiddenHtml = [

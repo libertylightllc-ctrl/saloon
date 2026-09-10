@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-14" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-15" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -160,7 +160,7 @@
           </button>
         </nav>
 
-        <div class="mode-card">
+        <div class="mode-card" id="taxModeCard">
           <div>
             <span>Business tax mode</span>
             <strong id="taxModeLabel">VAT Off</strong>
@@ -681,7 +681,7 @@
             <article class="panel">
               <div class="panel-head"><div><h3>Purchase Bills</h3><p>Stock receiving, supplier credit and payment status</p></div><span class="status-pill">Stock-in</span></div>
               <div class="table-wrap"><table class="purchase-table"><thead><tr><th>Supplier</th><th>Items</th><th>Invoice / due</th><th>Paid / balance</th><th>Total</th><th>Action</th></tr></thead><tbody id="purchaseTable"></tbody></table></div>
-              <label class="table-reason-field">Reversal reason <input id="purchaseReversalReason" placeholder="Required before reversing a bill" /></label>
+              <label class="table-reason-field" id="purchaseReversalField">Reversal reason <input id="purchaseReversalReason" placeholder="Required before reversing a bill" /></label>
             </article>
 
             <article class="panel form-panel">
@@ -713,7 +713,7 @@
               <div class="table-wrap"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Terms</th><th>Billed</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead><tbody id="supplierTable"></tbody></table></div>
               <div class="subsection-head"><h3>Recent Supplier Payments</h3><span>Auditable cash and bank outflow</span></div>
               <div class="table-wrap"><table><thead><tr><th>Date</th><th>Supplier</th><th>Method</th><th>Reference</th><th>Amount</th><th>Action</th></tr></thead><tbody id="supplierPaymentTable"></tbody></table></div>
-              <label class="table-reason-field">Payment reversal reason <input id="supplierPaymentReversalReason" placeholder="Required before reversing a supplier payment" /></label>
+              <label class="table-reason-field" id="supplierPaymentReversalField">Payment reversal reason <input id="supplierPaymentReversalReason" placeholder="Required before reversing a supplier payment" /></label>
             </article>
             <article class="panel form-panel">
               <div id="supplierMasterForm">
@@ -758,17 +758,12 @@
               <div class="table-wrap">
                 <table>
                   <thead>
-                    <tr>
-                      <th>Category</th>
-                      <th>Note</th>
-                      <th>Payment</th>
-                      <th>Amount</th>
-                      <th>Action</th>
-                    </tr>
+                    <tr><th>Category</th><th>Note</th><th>Payment</th><th>Amount</th><th>Status</th><th>Action</th></tr>
                   </thead>
                   <tbody id="expenseTable"></tbody>
                 </table>
               </div>
+              <label class="table-reason-field" id="expenseReversalField">Reversal reason <input id="expenseReversalReason" placeholder="Required before reversing an expense" /></label>
             </article>
 
             <article class="panel form-panel">
@@ -826,7 +821,7 @@
               </div>
             </article>
 
-            <article class="panel form-panel">
+            <article class="panel form-panel" id="inventoryItemForm">
               <div class="panel-head compact"><div><h3 id="inventoryFormTitle">Add inventory item</h3><p>Set stock or register a reusable tool</p></div></div>
               <input id="inventoryEditId" type="hidden" />
               <label>Item name <input id="inventoryName" placeholder="e.g. Shaving blades" /></label>
@@ -1458,7 +1453,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260910-release-14"></script>
-    <script src="./app.js?v=20260910-release-14"></script>
+    <script src="./backend.js?v=20260910-release-15"></script>
+    <script src="./app.js?v=20260910-release-15"></script>
   </body>
 </html>

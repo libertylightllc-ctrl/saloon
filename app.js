@@ -2131,7 +2131,7 @@ function totalSupplierPayable() {
 }
 
 function totalExpenses() {
-  return expenses.reduce((sum, expense) => sum + (Number(expense.amount) || 0), 0);
+  return expenses.reduce((sum, expense) => expense.status === "Reversed" ? sum : sum + (Number(expense.amount) || 0), 0);
 }
 
 function serviceMaterialCost() {
@@ -2306,6 +2306,7 @@ function journalEntries() {
     entries.push(journalLine(movement.createdAt || "", "1200 Inventory and supplies", description, 0, amount, "stock-use"));
   });
   expenses.forEach((expense) => {
+    if (expense.status === "Reversed") return;
     const amount = Number(expense.amount) || 0;
     const date = expense.createdAt || "";
     const description = `${expense.category || "Expense"} · ${expense.note || ""}`.trim();
@@ -3162,6 +3163,8 @@ function syncChecklist() {
 
 function applyRoleAccess() {
   const allowed = roleAccess[currentRole] || roleAccess.Owner;
+  const canManage = canManageShopOperations();
+  document.querySelector("#appShell aside nav")?.setAttribute("aria-label", `${currentRole} modules`);
   document.querySelectorAll("#appShell .nav-item[data-view]").forEach((item) => {
     const enabled = allowed.includes(item.dataset.view);
     item.hidden = !enabled;
@@ -3170,6 +3173,11 @@ function applyRoleAccess() {
   document.querySelectorAll(".shop-only-control").forEach((item) => {
     item.hidden = false;
   });
+  document.getElementById("taxModeCard").hidden = !canManage;
+  document.getElementById("purchaseReversalField").hidden = !canManage;
+  document.getElementById("supplierPaymentReversalField").hidden = !canManage;
+  document.getElementById("expenseReversalField").hidden = !canManage;
+  document.getElementById("inventoryItemForm").hidden = !canManage;
   const supplierMasterForm = document.getElementById("supplierMasterForm");
   if (supplierMasterForm) supplierMasterForm.hidden = !["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
   const canManageServices = ["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
@@ -3200,6 +3208,10 @@ function applyRoleAccess() {
   document.body.classList.remove("is-platform-admin");
   renderShopSwitcher();
   renderMobileViewSwitcher();
+}
+
+function canManageShopOperations() {
+  return ["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
 }
 
 async function switchShop(shopId) {
@@ -3719,11 +3731,13 @@ function renderInventory() {
   document.getElementById("inventoryItemCount").textContent = String(activeItems.length);
   document.getElementById("inventoryMovementCount").textContent = String(stockMovements.length);
   document.getElementById("inventoryHealth").textContent = lowItems.length ? `${lowItems.length} need reorder` : "Stock ready";
+  const canManage = canManageShopOperations();
   body.innerHTML = activeItems.length ? activeItems.map((item) => {
     const low = item.type !== "asset" && Number(item.quantity || 0) <= Number(item.reorderLevel || 0);
     const maintenance = item.maintenanceDate && item.maintenanceDate <= todayIso();
     const status = item.type === "asset" ? (maintenance ? "Service due" : item.condition || "Good") : (low ? "Low" : "Good");
-    return `<tr><td><strong>${escapeHtml(item.name)}</strong><br><small>${escapeHtml(item.assignedTo || "Unassigned")}</small></td><td>${escapeHtml(inventoryTypeLabel(item.type))}</td><td>${escapeHtml(inventoryQuantity(item))}</td><td>${escapeHtml(inventoryQuantity(item, item.reorderLevel))}</td><td>${moneyFixed(item.unitCost)}</td><td>${moneyFixed(Number(item.quantity || 0) * Number(item.unitCost || 0))}</td><td><b class="${low || maintenance ? "warn" : "ok"}">${escapeHtml(status)}</b></td><td><div class="action-cluster"><button class="mini-action" data-edit-inventory="${escapeHtml(item.id)}" type="button">Edit</button><button class="danger-button" data-archive-inventory="${escapeHtml(item.id)}" type="button">Archive</button></div></td></tr>`;
+    const actions = canManage ? `<div class="action-cluster"><button class="mini-action" data-edit-inventory="${escapeHtml(item.id)}" type="button">Edit</button><button class="danger-button" data-archive-inventory="${escapeHtml(item.id)}" type="button">Archive</button></div>` : "-";
+    return `<tr><td><strong>${escapeHtml(item.name)}</strong><br><small>${escapeHtml(item.assignedTo || "Unassigned")}</small></td><td>${escapeHtml(inventoryTypeLabel(item.type))}</td><td>${escapeHtml(inventoryQuantity(item))}</td><td>${escapeHtml(inventoryQuantity(item, item.reorderLevel))}</td><td>${moneyFixed(item.unitCost)}</td><td>${moneyFixed(Number(item.quantity || 0) * Number(item.unitCost || 0))}</td><td><b class="${low || maintenance ? "warn" : "ok"}">${escapeHtml(status)}</b></td><td>${actions}</td></tr>`;
   }).join("") : '<tr><td colspan="8">No inventory items yet.</td></tr>';
   movementBody.innerHTML = stockMovements.length ? stockMovements.slice(0, 100).map((movement) => {
     const item = inventoryItems.find((candidate) => candidate.id === movement.itemId);
@@ -3881,10 +3895,12 @@ function renderSupplierAccounts() {
 function renderSupplierPayments() {
   const body = document.getElementById("supplierPaymentTable");
   if (!body) return;
+  const canReverse = canManageShopOperations();
   body.innerHTML = supplierPayments.length ? [...supplierPayments].reverse().slice(0, 30).map((payment) => {
     const supplier = suppliers.find((candidate) => candidate.id === payment.supplierId);
     const reversed = payment.status === "Reversed";
-    return `<tr><td>${escapeHtml(dateLabel(payment.createdAt))}</td><td>${escapeHtml(supplier?.name || "Supplier")}</td><td>${escapeHtml(payment.payment || "-")}</td><td>${escapeHtml(payment.reference || "-")}</td><td>${moneyFixed(payment.amount)}</td><td><button class="danger-button" data-reverse-supplier-payment="${escapeHtml(payment.id)}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button></td></tr>`;
+    const action = canReverse ? `<button class="danger-button" data-reverse-supplier-payment="${escapeHtml(payment.id)}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button>` : "-";
+    return `<tr><td>${escapeHtml(dateLabel(payment.createdAt))}</td><td>${escapeHtml(supplier?.name || "Supplier")}</td><td>${escapeHtml(payment.payment || "-")}</td><td>${escapeHtml(payment.reference || "-")}</td><td>${moneyFixed(payment.amount)}</td><td>${action}</td></tr>`;
   }).join("") : '<tr><td colspan="6">No supplier payments yet.</td></tr>';
   body.querySelectorAll("[data-reverse-supplier-payment]").forEach((button) => button.addEventListener("click", () => {
     const payment = supplierPayments.find((candidate) => candidate.id === button.dataset.reverseSupplierPayment);
@@ -3908,6 +3924,7 @@ function renderSupplierPayments() {
 
 function renderPurchaseTable() {
   const body = document.getElementById("purchaseTable");
+  const canReverse = canManageShopOperations();
   body.innerHTML = "";
   purchases.forEach((purchase, index) => {
     const balance = purchaseBalance(purchase);
@@ -3919,7 +3936,7 @@ function renderPurchaseTable() {
       <td>${escapeHtml(purchase.invoiceNumber || "No reference")}<br><small>${escapeHtml(purchase.invoiceDate || "-")} · due ${escapeHtml(purchase.dueDate || "-")}</small>${purchase.evidenceFile ? `<br><small>${evidenceMarkup(purchase)}</small>` : ""}</td>
       <td>${moneyFixed(purchasePaidAmount(purchase))}<br><small>${reversed ? "Reversed" : `${moneyFixed(balance)} due`}</small></td>
       <td>${moneyFixed(purchaseTotal(purchase))}</td>
-      <td><button class="danger-button" data-reverse-purchase="${index}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button></td>
+      <td>${canReverse ? `<button class="danger-button" data-reverse-purchase="${index}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button>` : "-"}</td>
     `;
     body.appendChild(row);
   });
@@ -4460,31 +4477,42 @@ function updateQueueStatus(ticketId, status) {
 
 function renderExpenseTable() {
   const body = document.getElementById("expenseTable");
+  const canReverse = canManageShopOperations();
   body.innerHTML = "";
   expenses.forEach((expense, index) => {
+    const reversed = expense.status === "Reversed";
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${translate(expense.category)}</td>
       <td>${escapeHtml(translate(expense.note || "-"))}${expense.evidenceFile ? `<br><small>${evidenceMarkup(expense)}</small>` : ""}</td>
       <td>${translate(expense.payment)}</td>
       <td>${moneyFixed(Number(expense.amount) || 0)}</td>
-      <td><button class="danger-button" data-delete-expense="${index}" type="button">${translate("Delete")}</button></td>
+      <td><b class="${reversed ? "warn" : "ok"}">${reversed ? "Reversed" : "Posted"}</b></td>
+      <td>${canReverse ? `<button class="danger-button" data-reverse-expense="${index}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button>` : "-"}</td>
     `;
     body.appendChild(row);
   });
+  if (!expenses.length) body.innerHTML = '<tr><td colspan="6">No expenses yet.</td></tr>';
 
-  body.querySelectorAll("[data-delete-expense]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const index = Number(button.dataset.deleteExpense);
+  body.querySelectorAll("[data-reverse-expense]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const index = Number(button.dataset.reverseExpense);
       const expense = expenses[index];
-      if (!window.confirm("Delete this expense? Expected cash will be recalculated.")) return;
-      if (!await deleteCloudRecord(expense, "expense", index)) return;
-      expenses.splice(index, 1);
-      addAudit("Expense entered", `${currentRole} · expense deleted · ${expense?.category || "expense"} · ${moneyFixed(Number(expense?.amount) || 0)}`);
+      const reason = document.getElementById("expenseReversalReason").value.trim();
+      if (!expense || !reason) {
+        document.getElementById("expenseNote").textContent = "Enter a reversal reason before reversing an expense.";
+        return;
+      }
+      expense.status = "Reversed";
+      expense.reversalReason = reason;
+      expense.reversedAt = new Date().toISOString();
+      expense.reversedBy = currentUser?.name || currentRole;
+      addAudit("Expense reversed", `${currentRole} · ${expense.category} · ${moneyFixed(Number(expense.amount) || 0)} · ${reason}`);
       saveState();
       renderExpenseTable();
       syncSummaryTotals();
-      document.getElementById("expenseNote").textContent = translate("Expense deleted. Totals were recalculated.");
+      document.getElementById("expenseReversalReason").value = "";
+      document.getElementById("expenseNote").textContent = "Expense reversed. Cash and accounting totals were recalculated.";
       applyTranslations();
     });
   });
@@ -4716,31 +4744,37 @@ document.querySelectorAll("[data-checklist]").forEach((input) => {
 });
 
 document.getElementById("toggleReceipt").addEventListener("click", () => {
+  if (!canManageShopOperations()) return;
   receiptEnabled = !receiptEnabled;
   syncTaxSettings();
 });
 
 document.getElementById("toggleVat").addEventListener("click", () => {
+  if (!canManageShopOperations()) return;
   vatEnabled = !vatEnabled;
   syncTaxSettings();
 });
 
 document.getElementById("vatModeSelect").addEventListener("change", (event) => {
+  if (!canManageShopOperations()) return;
   vatEnabled = event.target.value === "on";
   syncTaxSettings();
 });
 
 document.getElementById("countrySelect").addEventListener("change", (event) => {
+  if (!canManageShopOperations()) return;
   applySelectedCountryProfile();
   syncTaxSettings();
 });
 
 document.getElementById("receiptModeSelect").addEventListener("change", (event) => {
+  if (!canManageShopOperations()) return;
   receiptEnabled = event.target.value !== "off";
   syncTaxSettings();
 });
 
 document.getElementById("saveSettings").addEventListener("click", () => {
+  if (!canManageShopOperations()) return;
   applySelectedCountryProfile();
   document.getElementById("settingsTaxPill").textContent = vatEnabled
     ? "VAT on"
@@ -4887,6 +4921,7 @@ document.getElementById("savePurchase").addEventListener("click", async (event) 
 });
 
 document.getElementById("saveSupplier").addEventListener("click", () => {
+  if (!canManageShopOperations()) return;
   const name = document.getElementById("supplierName").value.trim();
   const termsDays = Number(document.getElementById("supplierTerms").value || 0);
   const openingBalance = Number(document.getElementById("supplierOpeningBalance").value || 0);
@@ -4971,6 +5006,7 @@ document.getElementById("saveExpense").addEventListener("click", async (event) =
     amount: Number(document.getElementById("expenseAmount").value || 0),
     payment: document.getElementById("expensePayment").value,
     note: document.getElementById("expenseNoteInput").value.trim(),
+    status: "Posted",
     createdAt: new Date().toISOString()
   };
   if (!Number.isFinite(expense.amount) || expense.amount <= 0) {
@@ -5014,6 +5050,7 @@ document.getElementById("saveExpense").addEventListener("click", async (event) =
 });
 
 document.getElementById("saveInventoryItem").addEventListener("click", () => {
+  if (!canManageShopOperations()) return;
   const editId = document.getElementById("inventoryEditId").value;
   const name = document.getElementById("inventoryName").value.trim();
   const quantity = Number(document.getElementById("inventoryQty").value || 0);
