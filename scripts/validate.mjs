@@ -120,7 +120,9 @@ const requiredJs = [
   "recordExpense",
   "reverseExpense",
   "recordPurchase",
-  "reversePurchase"
+  "reversePurchase",
+  "recordSupplierPayment",
+  "reverseSupplierPayment"
 ];
 
 const forbiddenHtml = [

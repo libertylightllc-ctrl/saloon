@@ -130,6 +130,22 @@ test('purchase creation and reversal use controlled stock RPCs', async () => {
   });
 });
 
+test('supplier payment creation and reversal use controlled RPCs', async () => {
+  const fixture = backendFixture([{ status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const payment = { id: 'payment-1', supplierId: 'supplier-1', amount: 20, payment: 'Cash' };
+  await fixture.backend.recordSupplierPayment('shop-id', payment);
+  await fixture.backend.reverseSupplierPayment('shop-id', payment.id, 'Duplicate payment');
+  assert.match(fixture.calls[0].url, /rpc\/salon_record_supplier_payment$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), {
+    target_shop: 'shop-id', payment_external_id: 'payment-1', payment_data: payment
+  });
+  assert.match(fixture.calls[1].url, /rpc\/salon_reverse_supplier_payment$/);
+  assert.deepEqual(JSON.parse(fixture.calls[1].options.body), {
+    target_shop: 'shop-id', payment_external_id: 'payment-1', reversal_reason: 'Duplicate payment'
+  });
+});
+
 test('daily close RPC sends counted cash for server calculation', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));

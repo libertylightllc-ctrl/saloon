@@ -912,7 +912,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase"].includes(type)) return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -3906,17 +3906,29 @@ function renderSupplierPayments() {
     const action = canReverse ? `<button class="danger-button" data-reverse-supplier-payment="${escapeHtml(payment.id)}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button>` : "-";
     return `<tr><td>${escapeHtml(dateLabel(payment.createdAt))}</td><td>${escapeHtml(supplier?.name || "Supplier")}</td><td>${escapeHtml(payment.payment || "-")}</td><td>${escapeHtml(payment.reference || "-")}</td><td>${moneyFixed(payment.amount)}</td><td>${action}</td></tr>`;
   }).join("") : '<tr><td colspan="6">No supplier payments yet.</td></tr>';
-  body.querySelectorAll("[data-reverse-supplier-payment]").forEach((button) => button.addEventListener("click", () => {
+  body.querySelectorAll("[data-reverse-supplier-payment]").forEach((button) => button.addEventListener("click", async () => {
     const payment = supplierPayments.find((candidate) => candidate.id === button.dataset.reverseSupplierPayment);
     const reason = document.getElementById("supplierPaymentReversalReason").value.trim();
     if (!payment || !reason) {
       document.getElementById("supplierPaymentNote").textContent = "Enter a payment reversal reason first.";
       return;
     }
-    payment.status = "Reversed";
-    payment.reversalReason = reason;
-    payment.reversedAt = new Date().toISOString();
-    payment.reversedBy = currentUser?.name || currentRole;
+    if (!isLocalDemo) {
+      button.disabled = true;
+      try {
+        const result = await window.SalonBackend.reverseSupplierPayment(cloudTargetShopId(), payment.id, reason);
+        if (result?.payment) Object.assign(payment, result.payment);
+      } catch (error) {
+        document.getElementById("supplierPaymentNote").textContent = error.message;
+        button.disabled = false;
+        return;
+      }
+    } else {
+      Object.assign(payment, {
+        status: "Reversed", reversalReason: reason,
+        reversedAt: new Date().toISOString(), reversedBy: currentUser?.name || currentRole
+      });
+    }
     addAudit("Supplier payment reversed", `${currentRole} · ${moneyFixed(payment.amount)} · ${reason}`);
     saveState();
     renderSupplierAccounts();
@@ -5016,7 +5028,7 @@ function syncPurchaseDueDate() {
 document.getElementById("purchaseSupplier").addEventListener("change", syncPurchaseDueDate);
 document.getElementById("purchaseDate").addEventListener("change", syncPurchaseDueDate);
 
-document.getElementById("saveSupplierPayment").addEventListener("click", () => {
+document.getElementById("saveSupplierPayment").addEventListener("click", async (event) => {
   const supplierId = document.getElementById("supplierPaymentSupplier").value;
   const supplier = suppliers.find((candidate) => candidate.id === supplierId);
   const amount = Number(document.getElementById("supplierPaymentAmount").value || 0);
@@ -5035,6 +5047,19 @@ document.getElementById("saveSupplierPayment").addEventListener("click", () => {
     createdBy: currentUser?.name || currentRole,
     createdAt: new Date().toISOString()
   };
+  if (!isLocalDemo) {
+    const button = event.currentTarget;
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.recordSupplierPayment(cloudTargetShopId(), payment);
+      if (result?.payment) Object.assign(payment, result.payment);
+    } catch (error) {
+      document.getElementById("supplierPaymentNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
   supplierPayments.push(payment);
   addAudit("Supplier payment", `${currentRole} · ${supplier.name} · ${moneyFixed(amount)} · ${payment.payment}`);
   saveState();

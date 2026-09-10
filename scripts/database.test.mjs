@@ -45,7 +45,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100013_checkout_controls.sql',
       '202609100014_operational_documents.sql',
       '202609100015_controlled_expenses.sql',
-      '202609100016_controlled_purchases.sql'
+      '202609100016_controlled_purchases.sql',
+      '202609100017_controlled_supplier_payments.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -141,8 +142,8 @@ test('tenant foundation enforces database permissions', async (t) => {
     });
     await t.test('owner can save supplier account records', async () => {
       await asUser(owner);
-      await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'supplier','supplier-1','{\"name\":\"Vendor\"}',$2),($1,'supplier_payment','payment-1','{\"amount\":10}',$2)",[a,owner]);
-      assert.equal((await db.query("select * from public.salon_records where record_type in ('supplier','supplier_payment')")).rows.length,2);
+      await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'supplier','supplier-1','{\"name\":\"Vendor\"}',$2)",[a,owner]);
+      assert.equal((await db.query("select * from public.salon_records where record_type='supplier'")).rows.length,1);
     });
     await t.test('server posts and reverses purchases with stock atomically', async () => {
       const today = new Date().toISOString().slice(0,10);
@@ -170,6 +171,29 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal(reversed.status,'Reversed');
       assert.equal(Number(savedInventory.quantity),0);
       assert.equal((await db.query("select * from public.salon_records where shop_id=$1 and record_type='stock_movement' and external_id='movement-purchase-reversal-purchase-controlled'",[a])).rows.length,1);
+    });
+    await t.test('server limits supplier payments to payable and controls reversals', async () => {
+      const today = new Date().toISOString().slice(0,10);
+      const purchase = {
+        id:'payment-bill',supplierId:'supplier-1',inventoryItemId:'inv-payment-stock',invoiceNumber:'PAY-1',
+        invoiceDate:today,dueDate:today,type:'Operational supply',item:'Payment test stock',qty:5,unit:'pcs',
+        unitCost:10,discount:0,amountPaid:0,payment:'Bank'
+      };
+      const inventory = {id:'inv-payment-stock',name:'Payment test stock',unit:'pcs',reorderLevel:1,assignedTo:'Store room',condition:'Good'};
+      const payment = {id:'payment-controlled',supplierId:'supplier-1',amount:20,payment:'Cash',reference:'PAYMENT-1'};
+      await asUser(cashier);
+      await db.query('select public.salon_record_purchase($1,$2,$3::jsonb,$4::jsonb)',[a,purchase.id,JSON.stringify(purchase),JSON.stringify(inventory)]);
+      await assert.rejects(db.query('select public.salon_record_supplier_payment($1,$2,$3::jsonb)',[a,'payment-too-large',JSON.stringify({...payment,id:'payment-too-large',amount:51})]), /exceeds the current payable balance/);
+      await db.query('select public.salon_record_supplier_payment($1,$2,$3::jsonb)',[a,payment.id,JSON.stringify(payment)]);
+      await db.query('select public.salon_record_supplier_payment($1,$2,$3::jsonb)',[a,payment.id,JSON.stringify(payment)]);
+      assert.equal((await db.query("select * from public.salon_records where shop_id=$1 and record_type='supplier_payment' and external_id=$2",[a,payment.id])).rows.length,1);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"amount\":1}' where shop_id=$1 and record_type='supplier_payment' and external_id=$2",[a,payment.id]), /controlled payment workflow/);
+      await assert.rejects(db.query('select public.salon_reverse_supplier_payment($1,$2,$3)',[a,payment.id,'Duplicate payment']), /Management authorization/);
+      await asUser(owner);
+      await db.query('select public.salon_reverse_supplier_payment($1,$2,$3)',[a,payment.id,'Duplicate payment']);
+      const reversed = (await db.query("select data from public.salon_records where shop_id=$1 and record_type='supplier_payment' and external_id=$2",[a,payment.id])).rows[0].data;
+      assert.equal(reversed.status,'Reversed');
+      assert.equal(Number(reversed.amount),20);
     });
     await t.test('owner manages payroll while staff sees only their own employment records', async () => {
       await asUser(owner);
@@ -237,7 +261,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,4);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,22);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,25);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {
