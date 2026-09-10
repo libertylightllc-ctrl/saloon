@@ -93,9 +93,11 @@ const chartOfAccounts = [
   { code: "2000", name: "Supplier payable", type: "Liability" },
   { code: "2100", name: "VAT payable", type: "Liability" },
   { code: "2200", name: "Payroll payable", type: "Liability" },
+  { code: "2300", name: "Customer deposits", type: "Liability" },
   { code: "3000", name: "Owner capital", type: "Equity" },
   { code: "3900", name: "Opening balance equity", type: "Equity" },
   { code: "4000", name: "Service revenue", type: "Income" },
+  { code: "4100", name: "Forfeited deposit income", type: "Income" },
   { code: "5000", name: "Consumable purchases", type: "Cost" },
   { code: "5100", name: "Service material cost", type: "Cost" },
   { code: "6100", name: "Shop operating expenses", type: "Expense" },
@@ -1526,6 +1528,14 @@ document.getElementById("shopSearch")?.addEventListener("input", renderMasterDas
 document.getElementById("shopStatusFilter")?.addEventListener("change", renderMasterDashboard);
 document.getElementById("saveCustomer")?.addEventListener("click", saveCustomerFromForm);
 document.getElementById("saveBooking")?.addEventListener("click", saveBookingFromForm);
+document.getElementById("saleCustomer")?.addEventListener("change", () => renderBookingDepositOptions());
+document.getElementById("bookingType")?.addEventListener("change", (event) => {
+  const isAppointment = event.target.value === "Appointment";
+  document.getElementById("bookingDeposit").disabled = !isAppointment;
+  document.getElementById("bookingDepositPayment").disabled = !isAppointment;
+  document.getElementById("bookingCancellationPolicy").disabled = !isAppointment;
+  if (!isAppointment) document.getElementById("bookingDeposit").value = "0";
+});
 document.getElementById("runLaunchAudit")?.addEventListener("click", () => {
   renderLaunchAudit();
   addAudit("Stock adjusted", `${currentRole} · launch audit checked · ${new Date().toLocaleTimeString("en-AE", { hour: "2-digit", minute: "2-digit" })}`);
@@ -1800,12 +1810,18 @@ function shopCashOutTotal(records) {
 }
 
 function shopExpectedCash(shopState) {
-  const cashSales = (shopState.sales || []).reduce((sum, sale) => sale.payment === "Cash" ? sum + (Number(sale.amount) || 0) : sum, 0);
-  const cashRefunds = (shopState.refunds || []).reduce((sum, refund) => refund.payment === "Cash" ? sum + (Number(refund.amount) || 0) : sum, 0);
+  const cashSales = (shopState.sales || []).reduce((sum, sale) => sum + Number(sale.cashAmount ?? (sale.payment === "Cash" ? sale.amount : 0)), 0);
+  const cashDeposits = (shopState.queueTickets || []).reduce((sum, ticket) => (ticket.depositPayment === "Cash" || (!ticket.depositPayment && Number(ticket.deposit || 0) > 0))
+    ? sum + Number(ticket.deposit || 0)
+    : sum, 0);
+  const cashDepositRefunds = (shopState.queueTickets || []).reduce((sum, ticket) => ticket.depositStatus === "Refunded" && (ticket.depositPayment === "Cash" || !ticket.depositPayment)
+    ? sum + Number(ticket.deposit || 0)
+    : sum, 0);
+  const cashRefunds = (shopState.refunds || []).reduce((sum, refund) => sum + Number(refund.cashAmount ?? (refund.payment === "Cash" ? refund.amount : 0)), 0);
   const cashPayroll = (shopState.payrollRuns || []).reduce((sum, run) => run.status === "Paid" && run.paymentMethod === "Cash"
     ? sum + Number(run.netPay || 0)
     : sum, 0);
-  return Number(shopState.openingCash || 0) + cashSales - cashRefunds - shopCashOutTotal(shopState.purchases) - shopCashOutTotal(shopState.expenses) - shopCashOutTotal(shopState.supplierPayments) - cashPayroll;
+  return Number(shopState.openingCash || 0) + cashSales + cashDeposits - cashDepositRefunds - cashRefunds - shopCashOutTotal(shopState.purchases) - shopCashOutTotal(shopState.expenses) - shopCashOutTotal(shopState.supplierPayments) - cashPayroll;
 }
 
 function shopAttentionCount(shopState) {
@@ -2040,9 +2056,15 @@ function totalServiceItemsSold() {
 }
 
 function cashSalesTotal() {
-  const gross = sales.reduce((sum, sale) => sale.payment === "Cash" ? sum + (Number(sale.amount) || 0) : sum, 0);
-  const returned = refunds.reduce((sum, refund) => refund.payment === "Cash" ? sum + (Number(refund.amount) || 0) : sum, 0);
-  return gross - returned;
+  const saleCash = sales.reduce((sum, sale) => sum + Number(sale.cashAmount ?? (sale.payment === "Cash" ? sale.amount : 0)), 0);
+  const depositCash = queueTickets.reduce((sum, ticket) => ticket.depositPayment === "Cash" || (!ticket.depositPayment && Number(ticket.deposit || 0) > 0)
+    ? sum + Number(ticket.deposit || 0)
+    : sum, 0);
+  const cancelledDepositCash = queueTickets.reduce((sum, ticket) => ticket.depositStatus === "Refunded" && (ticket.depositPayment === "Cash" || !ticket.depositPayment)
+    ? sum + Number(ticket.deposit || 0)
+    : sum, 0);
+  const returned = refunds.reduce((sum, refund) => sum + Number(refund.cashAmount ?? (refund.payment === "Cash" ? refund.amount : 0)), 0);
+  return saleCash + depositCash - cancelledDepositCash - returned;
 }
 
 function expectedCashTotal() {
@@ -2097,11 +2119,28 @@ function journalEntries() {
     entries.push(journalLine("Opening", "1000 Cash on hand", "Opening cash float", openingCash, 0, "opening"));
     entries.push(journalLine("Opening", "3000 Owner capital", "Opening cash float", 0, openingCash, "opening"));
   }
+  queueTickets.filter((ticket) => Number(ticket.deposit || 0) > 0).forEach((ticket) => {
+    const amount = Number(ticket.deposit || 0);
+    const payment = ticket.depositPayment || "Cash";
+    const description = `${customerById(ticket.customerId).name} · booking deposit · ${ticket.service}`;
+    entries.push(journalLine(ticket.createdAt || "", paymentAccount(payment), description, amount, 0, "booking-deposit"));
+    entries.push(journalLine(ticket.createdAt || "", "2300 Customer deposits", description, 0, amount, "booking-deposit"));
+    if (ticket.depositStatus === "Refunded") {
+      entries.push(journalLine(ticket.cancelledAt || "", "2300 Customer deposits", `${description} · cancelled refund`, amount, 0, "deposit-refund"));
+      entries.push(journalLine(ticket.cancelledAt || "", paymentAccount(payment), `${description} · cancelled refund`, 0, amount, "deposit-refund"));
+    } else if (ticket.depositStatus === "Forfeited") {
+      entries.push(journalLine(ticket.cancelledAt || "", "2300 Customer deposits", `${description} · forfeited`, amount, 0, "deposit-forfeit"));
+      entries.push(journalLine(ticket.cancelledAt || "", "4100 Forfeited deposit income", `${description} · forfeited`, 0, amount, "deposit-forfeit"));
+    }
+  });
   sales.forEach((sale) => {
     const amount = Number(sale.amount) || 0;
+    const depositApplied = Number(sale.depositApplied || 0);
+    const amountPaid = Number(sale.amountPaid ?? amount);
     const date = sale.createdAt || "";
     const description = `${sale.customerName || "Walk-in"} · ${sale.service || (sale.services || []).join(" + ")} · ${sale.staff || "Staff"}`;
-    entries.push(journalLine(date, paymentAccount(sale.payment), description, amount, 0, "sale"));
+    if (amountPaid) entries.push(journalLine(date, paymentAccount(sale.payment), description, amountPaid, 0, "sale"));
+    if (depositApplied) entries.push(journalLine(date, "2300 Customer deposits", `${description} · deposit applied`, depositApplied, 0, "sale-deposit"));
     entries.push(journalLine(date, "4000 Service revenue", description, 0, amount, "sale"));
     const commission = saleCommission(sale);
     if (commission) {
@@ -2114,7 +2153,12 @@ function journalEntries() {
     const sale = sales.find((candidate) => candidate.id === refund.saleId);
     const description = `Refund · ${sale?.service || "Sale"} · ${refund.reason || "Approved refund"}`;
     entries.push(journalLine(refund.createdAt || "", "4000 Service revenue", description, amount, 0, "refund"));
-    entries.push(journalLine(refund.createdAt || "", paymentAccount(refund.payment), description, 0, amount, "refund"));
+    const saleCash = Number(refund.cashAmount ?? (refund.payment === "Cash" ? amount : 0));
+    const saleDeposit = Number(sale?.depositApplied || 0);
+    const nonCashRefund = Math.max(amount - saleCash - (saleDeposit && sale?.depositPayment !== "Cash" ? saleDeposit : 0), 0);
+    if (saleCash) entries.push(journalLine(refund.createdAt || "", "1000 Cash on hand", description, 0, saleCash, "refund"));
+    if (saleDeposit && sale?.depositPayment !== "Cash") entries.push(journalLine(refund.createdAt || "", paymentAccount(sale.depositPayment), description, 0, saleDeposit, "refund"));
+    if (nonCashRefund) entries.push(journalLine(refund.createdAt || "", paymentAccount(refund.payment), description, 0, nonCashRefund, "refund"));
     const commission = sale ? saleCommission(sale) : amount * 0.12;
     if (commission) {
       entries.push(journalLine(refund.createdAt || "", "7000 Staff commission payable", description, commission, 0, "refund-commission"));
@@ -3669,7 +3713,7 @@ function renderSaleHistory() {
   document.getElementById("refundReason").closest("label").hidden = !canRefund;
   body.innerHTML = sales.length ? [...sales].reverse().slice(0, 50).map((sale) => {
     const refunded = refundedIds.has(sale.id);
-    return `<tr><td>${escapeHtml(dateLabel(sale.createdAt))}</td><td>${escapeHtml(sale.service || (sale.services || []).join(" + "))}</td><td>${escapeHtml(sale.customerName || "Walk-in Guest")}</td><td>${escapeHtml(sale.staff || "-")}</td><td>${escapeHtml(sale.payment || "-")}</td><td>${moneyFixed(sale.amount)}</td><td><b class="${refunded ? "warn" : "ok"}">${refunded ? "Refunded" : "Completed"}</b></td><td>${canRefund ? `<button class="danger-button" data-refund-sale="${escapeHtml(sale.id)}" type="button" ${refunded ? "disabled" : ""}>${refunded ? "Refunded" : "Refund"}</button>` : "-"}</td></tr>`;
+    return `<tr><td>${escapeHtml(dateLabel(sale.createdAt))}</td><td>${escapeHtml(sale.service || (sale.services || []).join(" + "))}</td><td>${escapeHtml(sale.customerName || "Walk-in Guest")}</td><td>${escapeHtml(sale.staff || "-")}</td><td>${escapeHtml(sale.payment || "-")}${sale.depositApplied ? `<br><small>${moneyFixed(sale.depositApplied)} deposit</small>` : ""}</td><td>${moneyFixed(sale.amount)}</td><td><b class="${refunded ? "warn" : "ok"}">${refunded ? "Refunded" : "Completed"}</b></td><td>${canRefund ? `<button class="danger-button" data-refund-sale="${escapeHtml(sale.id)}" type="button" ${refunded ? "disabled" : ""}>${refunded ? "Refunded" : "Refund"}</button>` : "-"}</td></tr>`;
   }).join("") : '<tr><td colspan="8">No sales yet.</td></tr>';
   body.querySelectorAll("[data-refund-sale]").forEach((button) => button.addEventListener("click", async () => {
     const sale = sales.find((candidate) => candidate.id === button.dataset.refundSale);
@@ -3678,7 +3722,10 @@ function renderSaleHistory() {
       document.getElementById("refundNote").textContent = "Enter a refund reason before selecting Refund.";
       return;
     }
-    const refund = { id: `refund-${crypto.randomUUID()}`, saleId: sale.id, amount: Number(sale.amount || 0), payment: sale.payment, reason, createdAt: new Date().toISOString(), createdBy: currentUser?.name || currentRole };
+    const booking = queueTickets.find((ticket) => ticket.id === sale.bookingId);
+    const cashAmount = Number(sale.cashAmount ?? (sale.payment === "Cash" ? sale.amount : 0))
+      + (sale.depositPayment === "Cash" ? Number(sale.depositApplied || 0) : 0);
+    const refund = { id: `refund-${crypto.randomUUID()}`, saleId: sale.id, amount: Number(sale.amount || 0), cashAmount, payment: sale.payment, reason, createdAt: new Date().toISOString(), createdBy: currentUser?.name || currentRole };
     button.disabled = true;
     if (!isLocalDemo) {
       try {
@@ -3692,6 +3739,7 @@ function renderSaleHistory() {
     refunds.push(refund);
     sale.status = "Refunded";
     sale.refundedAt = refund.createdAt;
+    if (booking && Number(sale.depositApplied || 0) > 0) booking.depositStatus = "Refunded with sale";
     addAudit("Sale refunded", `${currentRole} · ${sale.service} · ${moneyFixed(refund.amount)} · ${reason}`);
     saveState();
     renderSaleHistory();
@@ -3848,13 +3896,31 @@ function renderCustomerSelects() {
   }
   const dateInput = document.getElementById("bookingDate");
   if (dateInput && !dateInput.value) dateInput.value = todayIso();
+  renderBookingDepositOptions();
+}
+
+function renderBookingDepositOptions(preferredTicketId = "") {
+  const select = document.getElementById("saleBooking");
+  if (!select) return;
+  const customerId = document.getElementById("saleCustomer")?.value;
+  const current = preferredTicketId || select.value;
+  const eligible = queueTickets.filter((ticket) => ticket.customerId === customerId
+    && Number(ticket.deposit || 0) > 0
+    && !["Redeemed", "Refunded", "Refunded with sale", "Forfeited"].includes(ticket.depositStatus)
+    && ["Booked", "Waiting", "In chair"].includes(ticket.status));
+  select.innerHTML = '<option value="">No deposit applied</option>' + eligible.map((ticket) =>
+    `<option value="${escapeHtml(ticket.id)}">${escapeHtml(ticket.date)} · ${escapeHtml(ticket.service)} · ${moneyFixed(ticket.deposit)}</option>`
+  ).join("");
+  if ([...select.options].some((option) => option.value === current)) select.value = current;
 }
 
 function renderClientMetrics() {
   const today = todayIso();
   const waiting = queueTickets.filter((ticket) => ["Waiting", "Booked", "In chair"].includes(ticket.status)).length;
   const todaysAppointments = queueTickets.filter((ticket) => ticket.type === "Appointment" && ticket.date === today).length;
-  const deposits = queueTickets.reduce((sum, ticket) => sum + (Number(ticket.deposit) || 0), 0);
+  const deposits = queueTickets.reduce((sum, ticket) => !["Redeemed", "Refunded", "Refunded with sale", "Forfeited"].includes(ticket.depositStatus)
+    ? sum + (Number(ticket.deposit) || 0)
+    : sum, 0);
   document.getElementById("queueWaitingCount").textContent = String(waiting);
   document.getElementById("appointmentTodayCount").textContent = String(todaysAppointments);
   document.getElementById("customerProfileCount").textContent = String(customers.length);
@@ -3888,15 +3954,64 @@ function renderCustomerTable() {
 function queueStatusAction(status) {
   if (status === "Booked") return "Check in";
   if (status === "Waiting") return "Start";
-  if (status === "In chair") return "Complete";
+  if (status === "In chair") return "Checkout";
   return "Archive";
 }
 
 function nextQueueStatus(status) {
   if (status === "Booked") return "Waiting";
   if (status === "Waiting") return "In chair";
-  if (status === "In chair") return "Completed";
   return "Archived";
+}
+
+function depositStatusLabel(ticket) {
+  if (!Number(ticket.deposit || 0)) return "No deposit";
+  return `${moneyFixed(ticket.deposit)} · ${ticket.depositStatus || "Held"}`;
+}
+
+function prepareTicketCheckout(ticket) {
+  if (!ticket) return;
+  document.getElementById("saleCustomer").value = ticket.customerId;
+  const service = services.find((candidate) => candidate.name === ticket.service && candidate.active !== false);
+  if (service) {
+    selectedService = service;
+    selectedSaleServices = [service];
+  }
+  if ([...document.getElementById("saleStaff").options].some((option) => option.value === ticket.staff)) {
+    document.getElementById("saleStaff").value = ticket.staff;
+  }
+  renderBookingDepositOptions(ticket.id);
+  renderSaleServices();
+  syncSelectedServiceLabel();
+  showView("quick-sale");
+  document.getElementById("saleNote").textContent = `${customerById(ticket.customerId).name}'s ${moneyFixed(ticket.deposit)} booking deposit is ready to apply.`;
+}
+
+function cancelTicket(ticket) {
+  if (!ticket || !["Booked", "Waiting"].includes(ticket.status)) return;
+  const reason = document.getElementById("bookingActionReason").value.trim();
+  if (!reason) {
+    document.getElementById("queueActionNote").textContent = "Enter a cancellation reason first.";
+    return;
+  }
+  const refund = Number(ticket.deposit || 0) > 0 && (ticket.cancellationPolicy || "refund") === "refund";
+  ticket.status = "Cancelled";
+  ticket.depositStatus = Number(ticket.deposit || 0) ? (refund ? "Refunded" : "Forfeited") : "None";
+  ticket.cancelledAt = new Date().toISOString();
+  ticket.cancelledBy = currentUser?.name || currentRole;
+  ticket.cancellationReason = reason;
+  syncAppointmentFromTicket(ticket);
+  addAudit("Booking cancelled", `${currentRole} · ${customerById(ticket.customerId).name} · ${ticket.depositStatus}`);
+  saveState();
+  renderClientsQueue();
+  syncSummaryTotals();
+  document.getElementById("bookingActionReason").value = "";
+  document.getElementById("queueActionNote").textContent = `Booking cancelled. Deposit ${ticket.depositStatus.toLowerCase()}.`;
+}
+
+function syncAppointmentFromTicket(ticket) {
+  const appointment = appointments.find((candidate) => candidate.id === ticket.id);
+  if (appointment) Object.assign(appointment, ticket);
 }
 
 function renderQueueTable() {
@@ -3913,11 +4028,13 @@ function renderQueueTable() {
         <td>${escapeHtml(ticket.service)}</td>
         <td>${escapeHtml(ticket.date)} · ${escapeHtml(ticket.time || "Now")}</td>
         <td>${escapeHtml(ticket.staff || "-")}</td>
+        <td>${escapeHtml(depositStatusLabel(ticket))}</td>
         <td><span class="status-pill ${ticket.status === "Completed" ? "ok" : ticket.status === "No-show" ? "danger" : "warning"}">${escapeHtml(ticket.status)}</span></td>
         <td>
           <div class="action-cluster">
             <button class="mini-action" data-queue-next="${escapeHtml(ticket.id)}" type="button">${queueStatusAction(ticket.status)}</button>
-            <button class="danger-button" data-queue-noshow="${escapeHtml(ticket.id)}" type="button">No-show</button>
+            ${["Booked", "Waiting"].includes(ticket.status) ? `<button class="danger-button" data-queue-cancel="${escapeHtml(ticket.id)}" type="button">${(ticket.cancellationPolicy || "refund") === "refund" ? "Cancel & refund" : "Cancel & forfeit"}</button>` : ""}
+            ${["Booked", "Waiting"].includes(ticket.status) ? `<button class="danger-button" data-queue-noshow="${escapeHtml(ticket.id)}" type="button">No-show</button>` : ""}
           </div>
         </td>
       `;
@@ -3926,11 +4043,26 @@ function renderQueueTable() {
   body.querySelectorAll("[data-queue-next]").forEach((button) => {
     button.addEventListener("click", () => {
       const ticket = queueTickets.find((item) => item.id === button.dataset.queueNext);
-      updateQueueStatus(button.dataset.queueNext, nextQueueStatus(ticket?.status));
+      if (ticket?.status === "In chair") prepareTicketCheckout(ticket);
+      else updateQueueStatus(button.dataset.queueNext, nextQueueStatus(ticket?.status));
     });
   });
   body.querySelectorAll("[data-queue-noshow]").forEach((button) => {
-    button.addEventListener("click", () => updateQueueStatus(button.dataset.queueNoshow, "No-show"));
+    button.addEventListener("click", () => {
+      const reason = document.getElementById("bookingActionReason").value.trim();
+      if (!reason) {
+        document.getElementById("queueActionNote").textContent = "Enter a no-show reason first.";
+        return;
+      }
+      const ticket = queueTickets.find((candidate) => candidate.id === button.dataset.queueNoshow);
+      if (ticket) ticket.cancellationReason = reason;
+      updateQueueStatus(button.dataset.queueNoshow, "No-show");
+      document.getElementById("bookingActionReason").value = "";
+      document.getElementById("queueActionNote").textContent = "No-show recorded; any held deposit was forfeited.";
+    });
+  });
+  body.querySelectorAll("[data-queue-cancel]").forEach((button) => {
+    button.addEventListener("click", () => cancelTicket(queueTickets.find((ticket) => ticket.id === button.dataset.queueCancel)));
   });
 }
 
@@ -3979,7 +4111,14 @@ function saveBookingFromForm() {
   const time = document.getElementById("bookingTime").value || new Intl.DateTimeFormat("en-AE", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
   const deposit = numberValue("bookingDeposit");
   const customer = customerById(customerId);
-  queueTickets.push({
+  const servicePrice = Number(services.find((candidate) => candidate.name === service)?.price || 0);
+  if (!customerId || !service || deposit < 0 || (type !== "Appointment" && deposit > 0) || deposit > servicePrice) {
+    document.getElementById("bookingNote").textContent = type !== "Appointment" && deposit > 0
+      ? "Deposits can only be collected for appointments."
+      : `Select a customer and service, and keep the deposit between ${moneyFixed(0)} and ${moneyFixed(servicePrice)}.`;
+    return;
+  }
+  const ticket = {
     id: `q-${Date.now()}`,
     customerId,
     service,
@@ -3988,14 +4127,18 @@ function saveBookingFromForm() {
     date,
     time,
     deposit,
+    depositPayment: deposit ? document.getElementById("bookingDepositPayment").value : "",
+    depositStatus: deposit ? "Held" : "None",
+    cancellationPolicy: document.getElementById("bookingCancellationPolicy").value,
     status: type === "Appointment" ? "Booked" : "Waiting",
     createdAt: new Date().toISOString()
-  });
-  if (type === "Appointment") appointments.push({ customerId, service, staff, date, time, deposit, status: "Booked" });
+  };
+  queueTickets.push(ticket);
+  if (type === "Appointment") appointments.push({ ...ticket });
   document.getElementById("bookingNote").textContent = `${customer.name} added as ${type.toLowerCase()} for ${service}.`;
   addAudit("Stock adjusted", `${currentRole} · ${type.toLowerCase()} added · ${customer.name} · ${service}`);
   saveState();
-  renderClientsQueue();
+  syncSummaryTotals();
   renderLaunchAudit();
 }
 
@@ -4010,7 +4153,10 @@ function updateQueueStatus(ticketId, status) {
   }
   if (status === "No-show") {
     customer.noShows = Number(customer.noShows || 0) + 1;
+    if (Number(ticket.deposit || 0) > 0 && !["Redeemed", "Refunded"].includes(ticket.depositStatus)) ticket.depositStatus = "Forfeited";
+    ticket.cancelledAt = new Date().toISOString();
   }
+  syncAppointmentFromTicket(ticket);
   addAudit("Stock adjusted", `${currentRole} · queue ${status.toLowerCase()} · ${customer.name}`);
   saveState();
   renderClientsQueue();
@@ -4058,6 +4204,9 @@ document.getElementById("saveSale").addEventListener("click", async () => {
   }
   const amount = selected.reduce((sum, service) => sum + Math.max(Number(service.price) || 0, 0), 0);
   const payment = document.getElementById("paymentMethod").value;
+  const booking = queueTickets.find((ticket) => ticket.id === document.getElementById("saleBooking").value);
+  const depositApplied = booking ? Math.min(Number(booking.deposit || 0), amount) : 0;
+  const amountPaid = Math.max(amount - depositApplied, 0);
   const staff = document.getElementById("saleStaff").value;
   const customer = selectedCustomer();
   const serviceList = selected.map((service) => service.name);
@@ -4079,6 +4228,11 @@ document.getElementById("saveSale").addEventListener("click", async () => {
     staff,
     payment,
     amount,
+    amountPaid,
+    cashAmount: payment === "Cash" ? amountPaid : 0,
+    bookingId: booking?.id || "",
+    depositApplied,
+    depositPayment: booking?.depositPayment || "",
     discountReason: document.getElementById("discountReason").value.trim(),
     createdAt: new Date().toISOString()
   };
@@ -4100,15 +4254,23 @@ document.getElementById("saveSale").addEventListener("click", async () => {
     addStockMovement(item, -line.quantity, "service_use", sale.id, serviceList.join(" + "), item.unitCost, `${sale.id}:${line.itemId}`);
   });
   sales.push(sale);
+  if (booking) {
+    booking.status = "Completed";
+    booking.depositStatus = "Redeemed";
+    booking.saleId = sale.id;
+    booking.completedAt = sale.createdAt;
+    syncAppointmentFromTicket(booking);
+  }
   if (customer?.id && customer.id !== "walk-in-guest") {
     customer.visits = Number(customer.visits || 0) + 1;
     customer.lastVisit = todayIso();
   }
-  addAudit("Sale created", `${customer.name} · ${staff} · ${serviceList.join(" + ")} · ${payment} · ${moneyFixed(amount)}`);
+  addAudit("Sale created", `${customer.name} · ${staff} · ${serviceList.join(" + ")} · ${payment} · ${moneyFixed(amount)}${depositApplied ? ` · ${moneyFixed(depositApplied)} deposit applied` : ""}`);
   saveState();
   syncSummaryTotals();
   renderSaleHistory();
   renderInventory();
+  renderClientsQueue();
   const taxText = vatEnabled ? "VAT invoice fields are active." : "No VAT was added.";
   document.getElementById("saleNote").textContent = activeLanguage === "en"
     ? `${serviceList.join(" + ")} saved. Cash, staff performance and stock recipe were updated. ${taxText}`
@@ -4888,6 +5050,7 @@ document.getElementById("purchaseDate").value = todayIso();
 document.getElementById("staffJoinDate").value = todayIso();
 document.getElementById("attendanceDate").value = todayIso();
 document.getElementById("payrollMonth").value = new Date().toISOString().slice(0, 7);
+document.getElementById("bookingType").dispatchEvent(new Event("change"));
 saveState();
 renderSaleServices();
 renderClientsQueue();

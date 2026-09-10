@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260910-release-7" />
+    <link rel="stylesheet" href="./styles.css?v=20260910-release-8" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -438,6 +438,10 @@
                 </select>
               </label>
               <label>
+                Booking deposit
+                <select id="saleBooking"><option value="">No deposit applied</option></select>
+              </label>
+              <label>
                 Discount reason
                 <input id="discountReason" placeholder="Required only when price is changed" />
               </label>
@@ -526,6 +530,10 @@
               <label>Service <select id="bookingService"></select></label>
               <label>Staff <input id="bookingStaff" value="Rafiq" /></label>
               <label>Deposit <input id="bookingDeposit" type="number" min="0" step="0.01" value="0" /></label>
+              <div class="inline-fields">
+                <label>Deposit payment <select id="bookingDepositPayment"><option>Cash</option><option>Card</option><option>Wallet</option></select></label>
+                <label>Cancellation policy <select id="bookingCancellationPolicy"><option value="refund">Refund deposit</option><option value="forfeit">Forfeit deposit</option></select></label>
+              </div>
               <button class="primary-button full" id="saveBooking" type="button">Add to queue</button>
               <p class="system-note" id="bookingNote">Walk-ins appear immediately; appointments stay scheduled until checked in.</p>
             </article>
@@ -542,11 +550,13 @@
               <div class="table-wrap">
                 <table>
                   <thead>
-                    <tr><th>Customer</th><th>Service</th><th>Time</th><th>Staff</th><th>Status</th><th>Action</th></tr>
+                    <tr><th>Customer</th><th>Service</th><th>Time</th><th>Staff</th><th>Deposit</th><th>Status</th><th>Action</th></tr>
                   </thead>
                   <tbody id="queueTable"></tbody>
                 </table>
               </div>
+              <label class="table-reason-field">Cancellation / no-show reason <input id="bookingActionReason" placeholder="Required before cancelling or marking no-show" /></label>
+              <p class="system-note" id="queueActionNote">Deposit treatment follows the appointment policy and is logged.</p>
             </article>
 
             <article class="panel">
@@ -1089,7 +1099,7 @@
                 </div>
               </div>
               <label>Opening cash <input id="closingOpeningCash" type="number" min="0" step="0.01" value="200" /></label>
-              <label>Cash sales <input id="closingCashSales" type="number" min="0" step="0.01" value="0" readonly /></label>
+              <label>Cash sales & deposits <input id="closingCashSales" type="number" min="0" step="0.01" value="0" readonly /></label>
               <label>Cash expenses <input id="closingCashExpenses" type="number" min="0" step="0.01" value="0" readonly /></label>
               <label>Supplier cash payments <input id="closingCashPurchases" type="number" min="0" step="0.01" value="0" readonly /></label>
               <label>Cash payroll <input id="closingCashPayroll" type="number" min="0" step="0.01" value="0" readonly /></label>
@@ -1382,7 +1392,7 @@
       </main>
     </div>
 
-    <script src="./backend.js?v=20260910-release-7"></script>
-    <script src="./app.js?v=20260910-release-7"></script>
+    <script src="./backend.js?v=20260910-release-8"></script>
+    <script src="./app.js?v=20260910-release-8"></script>
   </body>
 </html>
