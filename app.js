@@ -785,6 +785,7 @@ let currentUser = { ...platformAccount };
 let cloudIdentity = null;
 let cloudSaveTimer = null;
 let cloudHydrating = false;
+let cloudRestorePromise = Promise.resolve();
 const isLocalDemo = ["localhost", "127.0.0.1"].includes(window.location.hostname) && !new URLSearchParams(window.location.search).has("cloud");
 const backendRoleLabels = {
   platform_admin: "Platform Admin",
@@ -3674,6 +3675,10 @@ document.getElementById("loginForm").addEventListener("submit", async (event) =>
   loginError.hidden = true;
   let login;
   try {
+    if (!isLocalDemo) {
+      await cloudRestorePromise;
+      if (document.body.classList.contains("is-authenticated")) return;
+    }
     login = isLocalDemo
       ? authenticateLogin({ shopCode, username, password })
       : await authenticateCloudLogin({ shopCode, username, password });
@@ -4054,4 +4059,4 @@ syncTaxSettings();
 syncReportTotals();
 syncSummaryTotals();
 updatePurchaseCalculation();
-void restoreCloudLogin();
+cloudRestorePromise = restoreCloudLogin();
