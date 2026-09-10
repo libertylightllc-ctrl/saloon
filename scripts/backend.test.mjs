@@ -113,6 +113,23 @@ test('expense creation and reversal use controlled RPCs', async () => {
   assert.deepEqual(JSON.parse(fixture.calls[1].options.body), { target_shop: 'shop-id', expense_external_id: 'expense-1', reversal_reason: 'Duplicate entry' });
 });
 
+test('purchase creation and reversal use controlled stock RPCs', async () => {
+  const fixture = backendFixture([{ status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const purchase = { id: 'purchase-1', supplierId: 'supplier-1', item: 'Tissues', qty: 10, unitCost: 2 };
+  const inventory = { id: 'inv-tissues', name: 'Tissues', unit: 'pcs' };
+  await fixture.backend.recordPurchase('shop-id', purchase, inventory);
+  await fixture.backend.reversePurchase('shop-id', purchase.id, 'Duplicate bill');
+  assert.match(fixture.calls[0].url, /rpc\/salon_record_purchase$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), {
+    target_shop: 'shop-id', purchase_external_id: 'purchase-1', purchase_data: purchase, inventory_data: inventory
+  });
+  assert.match(fixture.calls[1].url, /rpc\/salon_reverse_purchase$/);
+  assert.deepEqual(JSON.parse(fixture.calls[1].options.body), {
+    target_shop: 'shop-id', purchase_external_id: 'purchase-1', reversal_reason: 'Duplicate bill'
+  });
+});
+
 test('daily close RPC sends counted cash for server calculation', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));

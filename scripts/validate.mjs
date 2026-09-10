@@ -118,7 +118,9 @@ const requiredJs = [
   "canManageShopOperations",
   "data-reverse-expense",
   "recordExpense",
-  "reverseExpense"
+  "reverseExpense",
+  "recordPurchase",
+  "reversePurchase"
 ];
 
 const forbiddenHtml = [

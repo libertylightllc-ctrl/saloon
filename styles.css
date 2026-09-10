@@ -3001,6 +3001,62 @@ th {
   min-width: 860px;
 }
 
+@media (max-width: 720px) {
+  .purchase-table {
+    display: block;
+    min-width: 0;
+  }
+
+  .purchase-table thead {
+    display: none;
+  }
+
+  .purchase-table tbody,
+  .purchase-table tr {
+    display: block;
+  }
+
+  .purchase-table tr {
+    border-bottom: 1px solid var(--line);
+    padding: 8px 16px;
+  }
+
+  .purchase-table tr:last-child {
+    border-bottom: 0;
+  }
+
+  .purchase-table td {
+    display: grid;
+    grid-template-columns: minmax(96px, 0.42fr) minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    border: 0;
+    padding: 9px 0;
+    text-align: start;
+  }
+
+  .purchase-table td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 850;
+    text-transform: uppercase;
+  }
+
+  .purchase-table td[colspan] {
+    display: block;
+    padding: 18px 0;
+  }
+
+  .purchase-table td[colspan]::before {
+    content: none;
+  }
+
+  .purchase-table .danger-button {
+    justify-self: start;
+  }
+}
+
 @media (max-width: 520px) {
   .security-summary {
     grid-template-columns: 1fr;

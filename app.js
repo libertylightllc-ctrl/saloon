@@ -912,7 +912,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense"].includes(type)) return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -3935,12 +3935,12 @@ function renderPurchaseTable() {
     const reversed = purchase.status === "Reversed";
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td><strong>${escapeHtml(purchase.supplier)}</strong></td>
-      <td>${escapeHtml(translate(purchase.item))}<br><small>${escapeHtml(purchase.qty)} ${escapeHtml(translate(purchase.unit))} × ${moneyFixed(purchase.unitCost)}</small></td>
-      <td>${escapeHtml(purchase.invoiceNumber || "No reference")}<br><small>${escapeHtml(purchase.invoiceDate || "-")} · due ${escapeHtml(purchase.dueDate || "-")}</small>${purchase.evidenceFile ? `<br><small>${evidenceMarkup(purchase)}</small>` : ""}</td>
-      <td>${moneyFixed(purchasePaidAmount(purchase))}<br><small>${reversed ? "Reversed" : `${moneyFixed(balance)} due`}</small></td>
-      <td>${moneyFixed(purchaseTotal(purchase))}</td>
-      <td>${canReverse ? `<button class="danger-button" data-reverse-purchase="${index}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button>` : "-"}</td>
+      <td data-label="Supplier"><strong>${escapeHtml(purchase.supplier)}</strong></td>
+      <td data-label="Item">${escapeHtml(translate(purchase.item))}<br><small>${escapeHtml(purchase.qty)} ${escapeHtml(translate(purchase.unit))} × ${moneyFixed(purchase.unitCost)}</small></td>
+      <td data-label="Invoice / due">${escapeHtml(purchase.invoiceNumber || "No reference")}<br><small>${escapeHtml(purchase.invoiceDate || "-")} · due ${escapeHtml(purchase.dueDate || "-")}</small>${purchase.evidenceFile ? `<br><small>${evidenceMarkup(purchase)}</small>` : ""}</td>
+      <td data-label="Paid / balance">${moneyFixed(purchasePaidAmount(purchase))}<br><small>${reversed ? "Reversed" : `${moneyFixed(balance)} due`}</small></td>
+      <td data-label="Total">${moneyFixed(purchaseTotal(purchase))}</td>
+      <td data-label="Action">${canReverse ? `<button class="danger-button" data-reverse-purchase="${index}" type="button" ${reversed ? "disabled" : ""}>${reversed ? "Reversed" : "Reverse"}</button>` : "-"}</td>
     `;
     body.appendChild(row);
   });
@@ -3956,24 +3956,38 @@ function renderPurchaseTable() {
         return;
       }
       const stockItem = inventoryItems.find((item) => item.id === purchase.inventoryItemId);
-      if (stockItem && Number(stockItem.quantity || 0) < Number(purchase.qty || 0)) {
-        document.getElementById("purchaseNote").textContent = `Cannot reverse: only ${inventoryQuantity(stockItem)} remains. Post a supplier return instead.`;
-        return;
+      if (!isLocalDemo) {
+        button.disabled = true;
+        try {
+          const result = await window.SalonBackend.reversePurchase(cloudTargetShopId(), purchase.id, reason);
+          if (result?.purchase) Object.assign(purchase, result.purchase);
+          if (stockItem && result?.inventoryItem) Object.assign(stockItem, result.inventoryItem);
+          if (result?.movement && !stockMovements.some((movement) => movement.id === result.movement.id)) stockMovements.unshift(result.movement);
+        } catch (error) {
+          document.getElementById("purchaseNote").textContent = error.message;
+          button.disabled = false;
+          return;
+        }
+      } else {
+        if (stockItem && Number(stockItem.quantity || 0) < Number(purchase.qty || 0)) {
+          document.getElementById("purchaseNote").textContent = `Cannot reverse: only ${inventoryQuantity(stockItem)} remains. Post a supplier return instead.`;
+          return;
+        }
+        const supplier = suppliers.find((candidate) => candidate.id === purchase.supplierId);
+        const otherBillBalance = purchases.filter((candidate) => candidate !== purchase && candidate.supplierId === purchase.supplierId && candidate.status !== "Reversed")
+          .reduce((sum, candidate) => sum + purchaseBalance(candidate), 0);
+        const accountPayments = supplierPayments.filter((payment) => payment.supplierId === purchase.supplierId && payment.status !== "Reversed")
+          .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+        if (Number(supplier?.openingBalance || 0) + otherBillBalance < accountPayments) {
+          document.getElementById("purchaseNote").textContent = "Cannot reverse this bill while later supplier payments are allocated to its balance. Reverse the affected supplier payment first.";
+          return;
+        }
+        if (stockItem) addStockMovement(stockItem, -Number(purchase.qty || 0), "purchase_reversal", purchase.id || "purchase", reason);
+        Object.assign(purchase, {
+          status: "Reversed", reversalReason: reason,
+          reversedAt: new Date().toISOString(), reversedBy: currentUser?.name || currentRole
+        });
       }
-      const supplier = suppliers.find((candidate) => candidate.id === purchase.supplierId);
-      const otherBillBalance = purchases.filter((candidate) => candidate !== purchase && candidate.supplierId === purchase.supplierId && candidate.status !== "Reversed")
-        .reduce((sum, candidate) => sum + purchaseBalance(candidate), 0);
-      const accountPayments = supplierPayments.filter((payment) => payment.supplierId === purchase.supplierId && payment.status !== "Reversed")
-        .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
-      if (Number(supplier?.openingBalance || 0) + otherBillBalance < accountPayments) {
-        document.getElementById("purchaseNote").textContent = "Cannot reverse this bill while later supplier payments are allocated to its balance. Reverse the affected supplier payment first.";
-        return;
-      }
-      if (stockItem) addStockMovement(stockItem, -Number(purchase.qty || 0), "purchase_reversal", purchase.id || "purchase", reason);
-      purchase.status = "Reversed";
-      purchase.reversalReason = reason;
-      purchase.reversedAt = new Date().toISOString();
-      purchase.reversedBy = currentUser?.name || currentRole;
       addAudit("Purchase reversed", `${currentRole} · ${purchase.item} · ${moneyFixed(purchaseTotal(purchase))} · ${reason}`);
       saveState();
       renderPurchaseTable();
@@ -4903,6 +4917,7 @@ document.getElementById("savePurchase").addEventListener("click", async (event) 
 
   const typeMap = { "Consumable stock": "consumable", "Retail product": "retail", "Reusable tool / asset": "asset", "Operational supply": "operational" };
   let stockItem = inventoryItems.find((item) => item.active !== false && item.name.toLowerCase() === purchase.item.toLowerCase() && item.unit.toLowerCase() === purchase.unit.toLowerCase());
+  const stockItemIsNew = !stockItem;
   if (!stockItem) {
     stockItem = {
       id: `inv-${crypto.randomUUID()}`,
@@ -4917,10 +4932,26 @@ document.getElementById("savePurchase").addEventListener("click", async (event) 
       maintenanceDate: "",
       active: true
     };
-    inventoryItems.push(stockItem);
   }
   purchase.inventoryItemId = stockItem.id;
-  addStockMovement(stockItem, purchase.qty, "purchase", purchase.id, purchase.supplier, purchaseTotal(purchase) / purchase.qty);
+  if (!isLocalDemo) {
+    saveButton.disabled = true;
+    try {
+      const result = await window.SalonBackend.recordPurchase(cloudTargetShopId(), purchase, stockItem);
+      if (result?.purchase) Object.assign(purchase, result.purchase);
+      if (result?.inventoryItem) Object.assign(stockItem, result.inventoryItem);
+      if (result?.movement && !stockMovements.some((movement) => movement.id === result.movement.id)) stockMovements.unshift(result.movement);
+    } catch (error) {
+      document.getElementById("purchaseNote").textContent = error.message;
+      return;
+    } finally {
+      saveButton.disabled = false;
+    }
+    if (stockItemIsNew) inventoryItems.push(stockItem);
+  } else {
+    if (stockItemIsNew) inventoryItems.push(stockItem);
+    addStockMovement(stockItem, purchase.qty, "purchase", purchase.id, purchase.supplier, purchaseTotal(purchase) / purchase.qty);
+  }
   purchases.push(purchase);
   checklist.suppliersAdded = true;
   saveState();
