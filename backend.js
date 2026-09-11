@@ -408,6 +408,27 @@
     });
   }
 
+  async function createBackup(shopId, label = "Manual snapshot") {
+    return request("/rest/v1/rpc/salon_create_backup", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, backup_label: label })
+    });
+  }
+
+  async function listBackups(shopId) {
+    return request("/rest/v1/rpc/salon_list_backups", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId })
+    });
+  }
+
+  async function getBackup(shopId, backupId) {
+    return request("/rest/v1/rpc/salon_get_backup", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, backup_id: backupId })
+    });
+  }
+
   async function closeDay(shopId, closing) {
     return request("/rest/v1/rpc/salon_close_day", {
       method: "POST",
@@ -471,5 +492,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, saveCustomer, recordBooking, updateBookingStatus, saveStaffProfile, archiveStaffProfile, saveAttendance, recordStaffAdjustment, generatePayroll, payPayroll, saveComplianceDocument, archiveComplianceDocument, signInspection, recordHygieneLog, saveProductRegistration, archiveProductRegistration, loadAccountingSnapshot, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, saveCustomer, recordBooking, updateBookingStatus, saveStaffProfile, archiveStaffProfile, saveAttendance, recordStaffAdjustment, generatePayroll, payPayroll, saveComplianceDocument, archiveComplianceDocument, signInspection, recordHygieneLog, saveProductRegistration, archiveProductRegistration, loadAccountingSnapshot, createBackup, listBackups, getBackup, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();

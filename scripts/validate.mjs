@@ -95,6 +95,8 @@ const requiredHtml = [
   "id=\"productEvidenceFile\"",
   "id=\"saveProductRegistration\""
   ,"id=\"accountingSourceStatus\""
+  ,"id=\"createCloudBackup\""
+  ,"id=\"backupTable\""
 ];
 
 const requiredJs = [
@@ -166,6 +168,9 @@ const requiredJs = [
   "saveProductRegistration",
   "archiveProductRegistration"
   ,"loadAccountingSnapshot"
+  ,"createBackup"
+  ,"listBackups"
+  ,"getBackup"
 ];
 
 const forbiddenHtml = [

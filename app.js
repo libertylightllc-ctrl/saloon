@@ -121,7 +121,7 @@ const launchAuditItems = [
   { id: "reports", area: "Reporting", title: "Daily close and owner reports", priority: "P0", launchRequired: true, marketReason: "Owners need cash, purchases, expenses, commission and shortage output.", test: () => !!document.getElementById("reportOutputTable") && !!document.getElementById("approveClosing"), next: "Add accountant exports and immutable close periods." },
   { id: "accounting", area: "Accounting", title: "Real accounting ledger", priority: "P0", launchRequired: true, marketReason: "A market product cannot rely on dashboard totals only.", test: () => !!document.querySelector("#accountingJournalTable tr") && !!document.querySelector("#accountingTrialTable tr"), next: "Move journals to backend storage, add supplier balances and locked accounting periods." },
   { id: "backend", area: "Backend", title: "Database, APIs and cloud persistence", priority: "P0", launchRequired: true, marketReason: "Active users need data available across devices and protected from browser clearing.", test: () => false, next: "Add Supabase/Firebase/Postgres backend with migrations and APIs." },
-  { id: "files", area: "Storage", title: "Production file storage and backups", priority: "P0", launchRequired: true, marketReason: "PDFs and images must be backed up, previewable and recoverable.", test: () => false, next: "Add object storage, malware checks, size limits, retention and restore." },
+  { id: "files", area: "Storage", title: "Production file storage and backups", priority: "P0", launchRequired: true, marketReason: "PDFs and images must be backed up, previewable and recoverable.", test: () => !!document.getElementById("backupTable") && typeof window.SalonBackend?.createBackup === "function", next: "Add malware checks, retention automation and controlled restore." },
   { id: "security", area: "Security", title: "Secure auth, password reset and audit logs", priority: "P0", launchRequired: true, marketReason: "Demo passwords are not acceptable for paying users.", test: () => false, next: "Hash passwords, add sessions, MFA option, lockout and login history." },
   { id: "customers", area: "CRM", title: "Customers, appointments and walk-in queue", priority: "P1", launchRequired: true, marketReason: "Professional salon systems include booking, queue, customer history and reminders.", test: () => !!document.getElementById("customerTable") && !!document.getElementById("queueTable") && customers.length > 0, next: "Add online booking links, SMS/WhatsApp reminders and deposit redemption." },
   { id: "payroll", area: "Staff", title: "Attendance, salary, commission and WPS", priority: "P1", launchRequired: true, marketReason: "Owners need accurate barber payout and payroll control.", test: () => !!document.getElementById("staff") && Array.isArray(staffProfiles) && Array.isArray(payrollRuns), next: "Add country-specific bank file exports and payroll approval levels." },
@@ -275,6 +275,14 @@ const uiTranslations = {
   "Cash Closing": { ar: "إغلاق النقدية", hi: "कैश क्लोजिंग", ur: "کیش کلوزنگ" },
   Reports: { ar: "التقارير", hi: "रिपोर्ट्स", ur: "رپورٹس" },
   Settings: { ar: "الإعدادات", hi: "सेटिंग्स", ur: "ترتیبات" },
+  "Cloud Backup & Recovery": { ar: "النسخ الاحتياطي والاسترداد السحابي", hi: "क्लाउड बैकअप और रिकवरी", ur: "کلاؤڈ بیک اپ اور ریکوری" },
+  "Create snapshot": { ar: "إنشاء نسخة", hi: "स्नैपशॉट बनाएं", ur: "اسنیپ شاٹ بنائیں" },
+  "Not checked": { ar: "لم يتم الفحص", hi: "जाँचा नहीं गया", ur: "جانچ نہیں ہوئی" },
+  Created: { ar: "تاريخ الإنشاء", hi: "बनाया गया", ur: "بنایا گیا" },
+  Label: { ar: "التسمية", hi: "लेबल", ur: "لیبل" },
+  Documents: { ar: "المستندات", hi: "दस्तावेज़", ur: "دستاویزات" },
+  Checksum: { ar: "بصمة التحقق", hi: "चेकसम", ur: "چیک سم" },
+  Download: { ar: "تنزيل", hi: "डाउनलोड", ur: "ڈاؤن لوڈ" },
   "Monday, 31 Aug · AED · VAT Off": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة متوقفة", hi: "सोमवार, 31 अगस्त · AED · VAT बंद", ur: "پیر، 31 اگست · AED · VAT بند" },
   "Monday, 31 Aug · AED · VAT On": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة مفعلة", hi: "सोमवार, 31 अगस्त · AED · VAT चालू", ur: "پیر، 31 اگست · AED · VAT آن" },
   "Monday, 31 Aug · AED · VAT optional": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة اختيارية", hi: "सोमवार, 31 अगस्त · AED · VAT वैकल्पिक", ur: "پیر، 31 اگست · AED · VAT اختیاری" },
@@ -854,6 +862,8 @@ let documentChain = activeShopState.documentChain || defaultState.documentChain;
 let montajiItems = activeShopState.montajiItems || defaultState.montajiItems;
 let serverAccountingSnapshot = null;
 let accountingRefreshPending = false;
+let cloudBackups = [];
+let backupRefreshPending = false;
 let activeSaleCategory = "All";
 let currentRole = "Owner";
 let currentUser = { ...platformAccount };
@@ -1651,6 +1661,7 @@ function showView(viewId) {
     renderAccounting();
     refreshServerAccounting();
   }
+  if (viewId === "settings") refreshCloudBackups();
   if (viewId === "launch-audit") renderLaunchAudit();
   document.getElementById("viewTitle").textContent = translate(titles[viewId] || "Salon Control");
   applyTranslations();
@@ -3177,6 +3188,79 @@ async function refreshServerAccounting() {
     renderAccounting();
   }
 }
+
+function renderBackupCenter() {
+  const body = document.getElementById("backupTable");
+  const status = document.getElementById("backupStatus");
+  if (!body || !status) return;
+  if (isLocalDemo) {
+    status.textContent = "Local demo";
+    body.innerHTML = '<tr><td colspan="6">Sign in to a cloud shop to create immutable snapshots.</td></tr>';
+    return;
+  }
+  status.textContent = backupRefreshPending ? "Checking…" : cloudBackups.length ? `${cloudBackups.length} snapshots` : "No snapshots";
+  body.innerHTML = cloudBackups.length ? cloudBackups.map((backup) => `
+    <tr>
+      <td>${escapeHtml(new Date(backup.created_at).toLocaleString(currentCountryProfile().locale, { dateStyle:"medium", timeStyle:"short" }))}</td>
+      <td><strong>${escapeHtml(backup.label)}</strong></td>
+      <td>${Number(backup.record_count || 0)}</td>
+      <td>${Number(backup.document_count || 0)}</td>
+      <td><code>${escapeHtml(String(backup.checksum || "").slice(0, 12))}</code></td>
+      <td><button class="mini-action" data-download-backup="${escapeHtml(backup.id)}" type="button">Download</button></td>
+    </tr>`).join("") : '<tr><td colspan="6">No cloud snapshots have been created for this shop.</td></tr>';
+  body.querySelectorAll("[data-download-backup]").forEach((button) => button.addEventListener("click", async () => {
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.getBackup(cloudTargetShopId(), button.dataset.downloadBackup);
+      const backup = result?.snapshot ? result : { snapshot: result };
+      downloadTextFile(`${exportFilePrefix("cloud-backup")}.json`, JSON.stringify(backup, null, 2), "application/json");
+      document.getElementById("backupNote").textContent = "Verified cloud snapshot downloaded with its checksum and recovery manifest.";
+    } catch (error) {
+      document.getElementById("backupNote").textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
+  }));
+}
+
+async function refreshCloudBackups() {
+  if (isLocalDemo || backupRefreshPending || !cloudTargetShopId()) {
+    renderBackupCenter();
+    return;
+  }
+  backupRefreshPending = true;
+  renderBackupCenter();
+  try {
+    cloudBackups = await window.SalonBackend.listBackups(cloudTargetShopId());
+  } catch (error) {
+    cloudBackups = [];
+    document.getElementById("backupNote").textContent = error.message;
+  } finally {
+    backupRefreshPending = false;
+    renderBackupCenter();
+  }
+}
+
+document.getElementById("createCloudBackup").addEventListener("click", async () => {
+  const button = document.getElementById("createCloudBackup");
+  const note = document.getElementById("backupNote");
+  if (isLocalDemo || !cloudTargetShopId()) {
+    note.textContent = "Cloud snapshots are available after signing in to a provisioned shop.";
+    renderBackupCenter();
+    return;
+  }
+  button.disabled = true;
+  note.textContent = "Creating an immutable recovery snapshot…";
+  try {
+    await window.SalonBackend.createBackup(cloudTargetShopId(), "Manual pre-launch snapshot");
+    note.textContent = "Cloud snapshot created. Existing shop data was not changed.";
+    await refreshCloudBackups();
+  } catch (error) {
+    note.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
 
 function previousCompletedMonth() {
   const date = new Date();

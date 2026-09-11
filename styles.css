@@ -1584,6 +1584,16 @@ td code {
   margin-top: 16px;
 }
 
+.backup-center-panel {
+  margin-top: 16px;
+}
+
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .security-summary {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2160,6 +2170,12 @@ tr:last-child td {
 }
 
 @media (max-width: 600px) {
+  .backup-center-panel .panel-head,
+  .backup-center-panel .panel-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .metric-grid,
   .service-tile-grid,
   .expense-category-grid,

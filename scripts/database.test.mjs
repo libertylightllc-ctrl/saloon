@@ -55,7 +55,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609110023_controlled_compliance.sql',
       '202609110024_controlled_products.sql',
       '202609110025_accounting_snapshot.sql',
-      '202609110026_complete_accounting_snapshot.sql'
+      '202609110026_complete_accounting_snapshot.sql',
+      '202609110027_immutable_backups.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -376,6 +377,25 @@ test('tenant foundation enforces database permissions', async (t) => {
       await assert.rejects(db.query('select public.salon_accounting_snapshot($1)',[a]), /Management authorization/);
       await asUser(platform);
       assert.equal((await db.query('select public.salon_accounting_snapshot($1) result',[a])).rows[0].result.balanced,true);
+    });
+    await t.test('cloud backups are immutable, tenant scoped and include recovery manifests', async () => {
+      await asUser(owner);
+      const liveRecordCount = Number((await db.query('select count(*) count from public.salon_records where shop_id=$1',[a])).rows[0].count);
+      const created = (await db.query('select public.salon_create_backup($1,$2) result',[a,'Pre-launch recovery point'])).rows[0].result.backup;
+      assert.equal(created.recordCount,liveRecordCount);
+      const listed = (await db.query('select * from public.salon_list_backups($1)',[a])).rows;
+      assert.equal(listed.length,1);
+      assert.equal(listed[0].id,created.id);
+      const downloaded = (await db.query('select public.salon_get_backup($1,$2) result',[a,created.id])).rows[0].result;
+      assert.equal(downloaded.snapshot.format,'salon-control-cloud-backup');
+      assert.equal(downloaded.snapshot.records.length,created.recordCount);
+      assert.equal(downloaded.snapshot.documents.length,created.documentCount);
+      assert.match(downloaded.checksum,/^[a-f0-9]{32}$/);
+      await assert.rejects(db.query('select public.salon_get_backup($1,$2)',[b,created.id]), /Management authorization|not found/);
+      await asUser(cashier);
+      await assert.rejects(db.query('select public.salon_create_backup($1,$2)',[a,'Cashier snapshot']), /Management authorization/);
+      await db.exec('reset role');
+      await assert.rejects(db.query("update public.salon_backups set label='Tampered' where id=$1",[created.id]), /immutable/);
     });
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);
