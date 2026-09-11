@@ -30,6 +30,49 @@ function authEmail(shopCode: string, username: string) {
   return `${normalize(shopCode)}.${normalize(username)}@auth.saloncontrol.app`;
 }
 
+function starterCatalog(shopId: string, country: string, actor: string) {
+  const services = [
+    ["svc-haircut", "Haircut", "Hair", 25, [{ itemId: "inv-neck-strips", quantity: 1 }]],
+    ["svc-shave", "Shave", "Beard", 15, [{ itemId: "inv-blades", quantity: 1 }, { itemId: "inv-foam", quantity: 8 }, { itemId: "inv-tissues", quantity: 2 }]],
+    ["svc-beard-trim", "Beard Trim", "Beard", 10, [{ itemId: "inv-tissues", quantity: 1 }]],
+    ["svc-beard-color", "Beard Color", "Color", 45, [{ itemId: "inv-beard-color", quantity: 20 }, { itemId: "inv-developer", quantity: 20 }, { itemId: "inv-gloves", quantity: 1 }]],
+    ["svc-hair-color", "Hair Color", "Color", 80, [{ itemId: "inv-hair-color", quantity: 60 }, { itemId: "inv-developer", quantity: 60 }, { itemId: "inv-gloves", quantity: 1 }]],
+    ["svc-facial", "Facial", "Face", 60, [{ itemId: "inv-facial-cream", quantity: 10 }]],
+    ["svc-head-massage", "Head Massage", "Massage", 35, [{ itemId: "inv-oil", quantity: 15 }]]
+  ];
+  const inventory = [
+    ["inv-blades", "Blades", "consumable", "pcs", 80, 1.2],
+    ["inv-foam", "Shaving Foam", "consumable", "ml", 2500, 0.03],
+    ["inv-oil", "Hair Oil", "consumable", "ml", 1000, 0.05],
+    ["inv-developer", "Developer 20 Vol", "consumable", "ml", 1000, 0.04],
+    ["inv-beard-color", "Beard Color", "consumable", "ml", 300, 0.18],
+    ["inv-hair-color", "Hair Color", "consumable", "ml", 600, 0.2],
+    ["inv-gloves", "Gloves", "consumable", "pairs", 30, 0.7],
+    ["inv-tissues", "Tissues", "consumable", "pcs", 150, 0.05],
+    ["inv-neck-strips", "Neck Strips", "consumable", "pcs", 80, 0.15],
+    ["inv-facial-cream", "Facial Cream", "consumable", "ml", 200, 0.16],
+    ["inv-machine", "Trimming Machine", "asset", "pcs", 1, 450],
+    ["inv-scissors", "Scissors", "asset", "pcs", 2, 120]
+  ];
+  const tenancy = country === "AE" ? "Ejari / tenancy contract" : "Commercial lease / tenancy contract";
+  const health = country === "AE" ? "Occupational health card" : "Municipal health certificate";
+  const requirements = [tenancy, "Trade licence", "Pest control certificate", health, "Staff visa / residence permit", "Staff vaccination record"];
+  return [
+    ...services.map(([id, name, category, price, recipeItems]) => ({
+      shop_id: shopId, record_type: "service", external_id: id, created_by: actor,
+      data: { id, name, category, price, recipeItems, active: true }
+    })),
+    ...inventory.map(([id, name, type, unit, reorderLevel, unitCost]) => ({
+      shop_id: shopId, record_type: "inventory_item", external_id: id, created_by: actor,
+      data: { id, name, type, unit, quantity: 0, reorderLevel, unitCost, assignedTo: "Store room", condition: "Good", maintenanceDate: "", active: true }
+    })),
+    ...requirements.map((type, index) => ({
+      shop_id: shopId, record_type: "compliance_document", external_id: `requirement-${index + 1}`, created_by: actor,
+      data: { id: `requirement-${index + 1}`, type, holder: index === 0 || index === 2 ? "Shop premises" : index === 1 ? "Company" : "Staff file", number: "", issueDate: "", expiryDate: "", renewalCost: 0, evidence: "", reminderDays: 30, status: "Not set", active: true }
+    }))
+  ];
+}
+
 Deno.serve(async (request) => {
   const origin = request.headers.get("origin") || "";
   if (request.method === "OPTIONS") return response(origin, {}, 204);
@@ -81,7 +124,8 @@ Deno.serve(async (request) => {
         await admin.from("salon_shops").delete().eq("id", shop.id);
         throw memberError;
       }
-      await admin.from("salon_records").insert({
+      const initializedAt = new Date().toISOString();
+      const { error: recordsError } = await admin.from("salon_records").insert([{
         shop_id: shop.id,
         record_type: "shop_setting",
         external_id: "operations",
@@ -91,15 +135,43 @@ Deno.serve(async (request) => {
           openingCash: Number(payload.openingCash || 0),
           activeLanguage: String(payload.language || "en"),
           vatEnabled: Boolean(payload.vatEnabled),
-          receiptEnabled: false
+          receiptEnabled: false,
+          catalogInitializedAt: initializedAt
         }
-      });
-      return response(origin, { shop, username, userId: created.user.id });
+      }, ...starterCatalog(shop.id, country, callerId)]);
+      if (recordsError) {
+        await admin.auth.admin.deleteUser(created.user.id);
+        await admin.from("salon_shops").delete().eq("id", shop.id);
+        throw recordsError;
+      }
+      return response(origin, { shop, username, userId: created.user.id, catalogInitializedAt: initializedAt });
     }
 
     const shopId = clean(payload.shopId, /^[0-9a-f-]{36}$/i, "shop");
     const role = await callerRole(shopId);
     if (!["platform_admin", "owner", "shop_admin"].includes(String(role))) return response(origin, { error: "Forbidden" }, 403);
+
+    if (action === "initialize_shop") {
+      const { data: shop, error: shopError } = await admin.from("salon_shops").select("country").eq("id", shopId).single();
+      if (shopError) throw shopError;
+      const { data: settings, error: settingsError } = await admin.from("salon_records")
+        .select("id,data").eq("shop_id", shopId).eq("record_type", "shop_setting").eq("external_id", "operations").maybeSingle();
+      if (settingsError) throw settingsError;
+      if (settings?.data?.catalogInitializedAt) return response(origin, { initialized: true, idempotent: true });
+      const { error: catalogError } = await admin.from("salon_records").upsert(starterCatalog(shopId, shop.country, callerId), {
+        onConflict: "shop_id,record_type,external_id",
+        ignoreDuplicates: true
+      });
+      if (catalogError) throw catalogError;
+      const initializedAt = new Date().toISOString();
+      const settingsData = { ...(settings?.data || {}), catalogInitializedAt: initializedAt };
+      const settingsWrite = settings
+        ? admin.from("salon_records").update({ data: settingsData }).eq("id", settings.id)
+        : admin.from("salon_records").insert({ shop_id: shopId, record_type: "shop_setting", external_id: "operations", created_by: callerId, data: settingsData });
+      const { error: settingsWriteError } = await settingsWrite;
+      if (settingsWriteError) throw settingsWriteError;
+      return response(origin, { initialized: true, initializedAt });
+    }
 
     if (action === "list_users") {
       const { data: memberships, error } = await admin.from("salon_memberships").select("user_id,role,active,created_at").eq("shop_id", shopId);

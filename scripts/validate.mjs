@@ -177,6 +177,7 @@ const requiredJs = [
   ,"createBackup"
   ,"listBackups"
   ,"getBackup"
+  ,"initialize_shop"
 ];
 
 const forbiddenHtml = [

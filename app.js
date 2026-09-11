@@ -959,7 +959,7 @@ async function reportOperationalError(error, category = "javascript", context = 
       context: {
         operation: context.operation || "",
         status: context.status || "",
-        release: "20260911-release-29",
+        release: "20260911-release-31",
         online: navigator.onLine,
         viewport: `${window.innerWidth}x${window.innerHeight}`
       },
@@ -1054,7 +1054,7 @@ function buildCloudRecords() {
       shop_id: targetShopId,
       record_type: "shop_setting",
       external_id: "operations",
-      data: { receiptEnabled, vatEnabled, openingCash, checklist },
+      data: { receiptEnabled, vatEnabled, openingCash, checklist, catalogInitializedAt: activeShopState.catalogInitializedAt || "" },
       deleted_at: null
     });
   }
@@ -1147,9 +1147,19 @@ async function loadCloudShopState(shopId) {
       }
     }));
     shopStates[shopId] = target;
+    return { initialized: Boolean(settings?.catalogInitializedAt), recordCount: rows.length };
   } finally {
     cloudHydrating = false;
   }
+}
+
+async function ensureCloudShopInitialized(shopId, role = currentRole) {
+  let result = await loadCloudShopState(shopId);
+  if (!result.initialized && ["Platform Admin", "Owner", "Shop Admin"].includes(role)) {
+    await window.SalonBackend.provision({ action: "initialize_shop", shopId });
+    result = await loadCloudShopState(shopId);
+  }
+  return result;
 }
 
 async function prepareCloudIdentity(identity, username = "Account", mustChangePassword = false) {
@@ -1172,7 +1182,7 @@ async function prepareCloudIdentity(identity, username = "Account", mustChangePa
       shopStates[shop.id] = createProductionShopState(shop.country || "AE");
     }
     activeShopId = shop.id;
-    await loadCloudShopState(shop.id);
+    await ensureCloudShopInitialized(shop.id, role);
     if (["Platform Admin", "Owner", "Shop Admin"].includes(role)) await Promise.all([loadCloudUsers(shop.id), loadCloudLoginEvents(shop.id)]);
   } else {
     const remoteShops = await window.SalonBackend.loadShops();
@@ -1187,7 +1197,7 @@ async function prepareCloudIdentity(identity, username = "Account", mustChangePa
       status: shop.status
     }));
     activeShopId = shops.find((shop) => shop.enabled !== false)?.id || "";
-    if (activeShopId) await Promise.all([loadCloudShopState(activeShopId), loadCloudUsers(activeShopId), loadCloudLoginEvents(activeShopId)]);
+    if (activeShopId) await Promise.all([ensureCloudShopInitialized(activeShopId, role), loadCloudUsers(activeShopId), loadCloudLoginEvents(activeShopId)]);
     else await loadCloudLoginEvents(null);
   }
   return { ok: true, role, user: { id: identity.user_id, name: username, username, role, mustChangePassword }, shopId: activeShopId };
@@ -1333,7 +1343,8 @@ function captureActiveShopState() {
     hygieneLogs,
     complianceDocuments,
     documentChain,
-    montajiItems
+    montajiItems,
+    catalogInitializedAt: activeShopState.catalogInitializedAt || ""
   };
 }
 
@@ -3770,7 +3781,7 @@ async function switchShop(shopId) {
   if (!isLocalDemo) {
     setSyncStatus("Loading…", "saving");
     try {
-      await Promise.all([loadCloudShopState(shopId), loadCloudUsers(shopId), loadCloudLoginEvents(shopId)]);
+      await Promise.all([ensureCloudShopInitialized(shopId), loadCloudUsers(shopId), loadCloudLoginEvents(shopId)]);
       setSyncStatus("Cloud connected", "connected");
     } catch (error) {
       console.error("Cloud shop load failed", error);
@@ -3836,6 +3847,7 @@ async function createShopFromForm() {
   }
   let id = slugify(name);
   let ownerUserId = null;
+  let catalogInitializedAt = "";
   if (!isLocalDemo) {
     const button = document.getElementById("createShopBtn");
     button.disabled = true;
@@ -3848,6 +3860,7 @@ async function createShopFromForm() {
       });
       id = result.shop.id;
       ownerUserId = result.userId;
+      catalogInitializedAt = result.catalogInitializedAt || new Date().toISOString();
     } catch (error) {
       note.textContent = error instanceof Error ? error.message : "Shop could not be created.";
       button.disabled = false;
@@ -3860,7 +3873,7 @@ async function createShopFromForm() {
     openingCash: opening,
     vatEnabled: vat,
     receiptEnabled: false,
-    complianceDocuments: defaultComplianceDocuments(country),
+    catalogInitializedAt,
     users: isLocalDemo
       ? defaultShopUsers(owner, ownerUsername, ownerPassword)
       : [{ id: ownerUserId, name: owner, username: ownerUsername, role: "Owner", active: true, createdAt: new Date().toISOString() }]

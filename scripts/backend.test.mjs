@@ -4,6 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 const source = await readFile(new URL('../backend.js', import.meta.url), 'utf8');
+const provisionSource = await readFile(new URL('../supabase/functions/provision-user/index.ts', import.meta.url), 'utf8');
 
 function backendFixture(responses = []) {
   const values = new Map();
@@ -35,6 +36,15 @@ function backendFixture(responses = []) {
 test('browser bundle contains only the publishable key', () => {
   assert.match(source, /sb_publishable_/);
   assert.doesNotMatch(source, /sb_secret_|service_role/);
+});
+
+test('shop provisioning creates an idempotent server starter catalog', () => {
+  assert.match(provisionSource, /action === "initialize_shop"/);
+  assert.match(provisionSource, /catalogInitializedAt/);
+  assert.match(provisionSource, /"svc-haircut"/);
+  assert.match(provisionSource, /"inv-blades"/);
+  assert.match(provisionSource, /"compliance_document"/);
+  assert.match(provisionSource, /ignoreDuplicates: true/);
 });
 
 test('login ID maps to a private auth email and role comes from the server', async () => {
