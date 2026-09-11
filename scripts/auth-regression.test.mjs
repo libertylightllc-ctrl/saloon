@@ -49,7 +49,7 @@ test('login normalization preserves records that resemble demo transactions', ()
     expenses: [{ category: 'Tea & Food', amount: 35, note: 'Tea and water for staff' }],
     auditLog: [{ detail: 'Owner · Tea & Food · AED 35 · Cash' }],
     hygieneLogs: [{ cycle: '44 blades counted' }],
-    inspectionRecords: [], documentChain: [], complianceDocuments: [],
+    inspectionRecords: [], documentChain: [], complianceDocuments: [], montajiItems: [],
     ensureComplianceDocumentsForCountry() {}
   };
   const before = JSON.stringify(data);

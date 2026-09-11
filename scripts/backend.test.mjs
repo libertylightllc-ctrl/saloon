@@ -231,15 +231,18 @@ test('staff, attendance and payroll lifecycle use controlled RPCs', async () => 
 });
 
 test('compliance lifecycle uses controlled document, inspection and hygiene RPCs', async () => {
-  const fixture = backendFixture(Array.from({ length: 4 }, () => ({ status: 200, body: { ok: true } })));
+  const fixture = backendFixture(Array.from({ length: 6 }, () => ({ status: 200, body: { ok: true } })));
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
   const document = { id:'compliance-1', type:'Trade licence', holder:'Company', expiryDate:'2027-09-11' };
   const inspection = { id:'inspection-1', record:'Sterilizer cycle', evidence:'photo.jpg' };
   const log = { id:'hygiene-1', device:'Sterilizer', cycle:'Full cycle', evidence:'photo.jpg' };
+  const product = { id:'product-1', name:'Hair Color', sku:'COLOR-01', status:'Verified', authorityReference:'MONT-01' };
   await fixture.backend.saveComplianceDocument('shop-id', document, 'Annual renewal');
   await fixture.backend.archiveComplianceDocument('shop-id', document.id, 'Replaced licence');
   await fixture.backend.signInspection('shop-id', inspection, 'Corrected evidence');
   await fixture.backend.recordHygieneLog('shop-id', log);
+  await fixture.backend.saveProductRegistration('shop-id', product, 'Verification renewed');
+  await fixture.backend.archiveProductRegistration('shop-id', product.id, 'Product discontinued');
   assert.match(fixture.calls[0].url, /rpc\/salon_save_compliance_document$/);
   assert.deepEqual(JSON.parse(fixture.calls[0].options.body), { target_shop:'shop-id', document_external_id:'compliance-1', document_data:document, change_reason:'Annual renewal' });
   assert.match(fixture.calls[1].url, /rpc\/salon_archive_compliance_document$/);
@@ -248,6 +251,10 @@ test('compliance lifecycle uses controlled document, inspection and hygiene RPCs
   assert.deepEqual(JSON.parse(fixture.calls[2].options.body), { target_shop:'shop-id', inspection_external_id:'inspection-1', inspection_data:inspection, change_reason:'Corrected evidence' });
   assert.match(fixture.calls[3].url, /rpc\/salon_record_hygiene_log$/);
   assert.deepEqual(JSON.parse(fixture.calls[3].options.body), { target_shop:'shop-id', log_external_id:'hygiene-1', log_data:log });
+  assert.match(fixture.calls[4].url, /rpc\/salon_save_product_registration$/);
+  assert.deepEqual(JSON.parse(fixture.calls[4].options.body), { target_shop:'shop-id', product_external_id:'product-1', product_data:product, change_reason:'Verification renewed' });
+  assert.match(fixture.calls[5].url, /rpc\/salon_archive_product_registration$/);
+  assert.deepEqual(JSON.parse(fixture.calls[5].options.body), { target_shop:'shop-id', product_external_id:'product-1', archive_reason:'Product discontinued' });
 });
 
 test('daily close RPC sends counted cash for server calculation', async () => {

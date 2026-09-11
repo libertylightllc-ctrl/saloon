@@ -24,12 +24,12 @@ const platformAccount = {
 };
 
 const countryProfiles = {
-  AE: { name: "United Arab Emirates", currency: "AED", locale: "en-AE", decimals: 2, taxLabel: "VAT", tenancyName: "Ejari / tenancy contract", healthName: "Occupational health card" },
-  QA: { name: "Qatar", currency: "QAR", locale: "en-QA", decimals: 2, taxLabel: "VAT", tenancyName: "Lease contract", healthName: "Health certificate" },
-  SA: { name: "Saudi Arabia", currency: "SAR", locale: "en-SA", decimals: 2, taxLabel: "VAT", tenancyName: "Lease / deed proof", healthName: "Balady health certificate" },
-  KW: { name: "Kuwait", currency: "KWD", locale: "en-KW", decimals: 3, taxLabel: "VAT", tenancyName: "Lease contract", healthName: "Worker health fitness record" },
-  BH: { name: "Bahrain", currency: "BHD", locale: "en-BH", decimals: 3, taxLabel: "VAT", tenancyName: "Lease contract / address card", healthName: "MOH health certificate" },
-  OM: { name: "Oman", currency: "OMR", locale: "en-OM", decimals: 3, taxLabel: "VAT", tenancyName: "Municipal lease / location approval", healthName: "Annual medical fitness" }
+  AE: { name: "United Arab Emirates", currency: "AED", locale: "en-AE", decimals: 2, taxLabel: "VAT", tenancyName: "Ejari / tenancy contract", healthName: "Occupational health card", productAuthority: "Dubai Municipality / Montaji" },
+  QA: { name: "Qatar", currency: "QAR", locale: "en-QA", decimals: 2, taxLabel: "VAT", tenancyName: "Lease contract", healthName: "Health certificate", productAuthority: "Ministry of Public Health product registration" },
+  SA: { name: "Saudi Arabia", currency: "SAR", locale: "en-SA", decimals: 2, taxLabel: "VAT", tenancyName: "Lease / deed proof", healthName: "Balady health certificate", productAuthority: "Saudi Food and Drug Authority (SFDA)" },
+  KW: { name: "Kuwait", currency: "KWD", locale: "en-KW", decimals: 3, taxLabel: "VAT", tenancyName: "Lease contract", healthName: "Worker health fitness record", productAuthority: "Kuwait health and import compliance" },
+  BH: { name: "Bahrain", currency: "BHD", locale: "en-BH", decimals: 3, taxLabel: "VAT", tenancyName: "Lease contract / address card", healthName: "MOH health certificate", productAuthority: "Ministry of Health consumer-product approval" },
+  OM: { name: "Oman", currency: "OMR", locale: "en-OM", decimals: 3, taxLabel: "VAT", tenancyName: "Municipal lease / location approval", healthName: "Annual medical fitness", productAuthority: "Standards and Metrology import compliance" }
 };
 
 const currencyToCountry = Object.fromEntries(
@@ -178,6 +178,26 @@ const uiTranslations = {
   "Salary transfer countdown": { ar: "عد تنازلي لتحويل الراتب", hi: "सैलरी ट्रांसफर काउंटडाउन", ur: "تنخواہ ٹرانسفر کاؤنٹ ڈاؤن" },
   "Montaji watch": { ar: "متابعة منتجي", hi: "Montaji निगरानी", ur: "منتجی نگرانی" },
   "Product registration warning": { ar: "تحذير تسجيل المنتج", hi: "उत्पाद पंजीकरण चेतावनी", ur: "مصنوعات رجسٹریشن وارننگ" },
+  "Product compliance": { ar: "امتثال المنتجات", hi: "उत्पाद अनुपालन", ur: "مصنوعات کی تعمیل" },
+  "Montaji / product compliance": { ar: "منتجي / امتثال المنتجات", hi: "Montaji / उत्पाद अनुपालन", ur: "منتجی / مصنوعات کی تعمیل" },
+  Product: { ar: "المنتج", hi: "उत्पाद", ur: "مصنوعات" },
+  "Authority / reference": { ar: "الجهة / المرجع", hi: "प्राधिकरण / संदर्भ", ur: "اتھارٹی / حوالہ" },
+  Expiry: { ar: "انتهاء الصلاحية", hi: "समाप्ति", ur: "میعاد" },
+  Proof: { ar: "الإثبات", hi: "प्रमाण", ur: "ثبوت" },
+  Brand: { ar: "العلامة التجارية", hi: "ब्रांड", ur: "برانڈ" },
+  "Barcode / SKU": { ar: "الباركود / رمز المنتج", hi: "बारकोड / SKU", ur: "بارکوڈ / SKU" },
+  "Authority reference": { ar: "مرجع الجهة", hi: "प्राधिकरण संदर्भ", ur: "اتھارٹی حوالہ" },
+  "Product expiry": { ar: "انتهاء صلاحية المنتج", hi: "उत्पाद समाप्ति", ur: "مصنوعات کی میعاد" },
+  "Evidence note": { ar: "ملاحظة الإثبات", hi: "प्रमाण नोट", ur: "ثبوت نوٹ" },
+  "Upload PDF/image": { ar: "رفع PDF/صورة", hi: "PDF/चित्र अपलोड करें", ur: "PDF/تصویر اپ لوڈ کریں" },
+  "Change / archive reason": { ar: "سبب التغيير / الأرشفة", hi: "बदलाव / संग्रह कारण", ur: "تبدیلی / آرکائیو وجہ" },
+  "Save product record": { ar: "حفظ سجل المنتج", hi: "उत्पाद रिकॉर्ड सेव करें", ur: "مصنوعات ریکارڈ محفوظ کریں" },
+  "Update product record": { ar: "تحديث سجل المنتج", hi: "उत्पाद रिकॉर्ड अपडेट करें", ur: "مصنوعات ریکارڈ اپ ڈیٹ کریں" },
+  Verified: { ar: "تم التحقق", hi: "सत्यापित", ur: "تصدیق شدہ" },
+  Blocked: { ar: "محظور", hi: "अवरुद्ध", ur: "مسدود" },
+  "Not required": { ar: "غير مطلوب", hi: "आवश्यक नहीं", ur: "ضروری نہیں" },
+  Edit: { ar: "تعديل", hi: "संपादित करें", ur: "ترمیم" },
+  Archive: { ar: "أرشفة", hi: "संग्रह करें", ur: "آرکائیو" },
   "Inspection Binder": { ar: "ملف التفتيش", hi: "निरीक्षण बाइंडर", ur: "معائنہ بائنڈر" },
   "Dubai Municipality records, due dates, signer and evidence slot": { ar: "سجلات بلدية دبي وتواريخ الاستحقاق والموقع وخانة الإثبات", hi: "दुबई नगरपालिका रिकॉर्ड, देय तारीख, हस्ताक्षर और प्रमाण स्लॉट", ur: "دبئی میونسپلٹی ریکارڈ، due dates، signer اور evidence slot" },
   "Complete round": { ar: "إكمال الجولة", hi: "राउंड पूरा करें", ur: "راؤنڈ مکمل کریں" },
@@ -912,7 +932,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement", "service", "supplier", "customer", "appointment", "queue_ticket", "staff_profile", "attendance", "staff_adjustment", "payroll", "inspection", "hygiene_log", "compliance_document", "document_chain"].includes(type)) return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement", "service", "supplier", "customer", "appointment", "queue_ticket", "staff_profile", "attendance", "staff_adjustment", "payroll", "inspection", "hygiene_log", "compliance_document", "document_chain", "product_registration"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -1476,6 +1496,20 @@ function removeLegacyDemoRows() {
     reminderDays: Number(document.reminderDays || 30),
     active: document.active !== false,
     history: Array.isArray(document.history) ? document.history : []
+  }));
+  montajiItems = montajiItems.map((item, index) => ({
+    ...item,
+    id: item.id || `product-${String(item.sku || item.name || index).toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index}`,
+    name: item.name || item.sku || "Product",
+    sku: item.sku || "",
+    brand: item.brand || "",
+    authorityReference: item.authorityReference || "",
+    expiryDate: item.expiryDate || "",
+    supplier: item.supplier || "",
+    evidence: item.evidence || "",
+    status: item.status === "Registered" ? "Verified" : item.status === "Needs ref" || item.status === "Unknown" ? "Pending" : item.status || "Pending",
+    active: item.active !== false,
+    history: Array.isArray(item.history) ? item.history : []
   }));
 }
 
@@ -2835,25 +2869,85 @@ function renderHygieneLogs() {
   });
 }
 
+function productRegistrationStatus(item) {
+  if (item.active === false) return "Archived";
+  if (item.expiryDate && daysUntil(item.expiryDate) < 0) return "Expired";
+  return item.status || "Pending";
+}
+
 function renderMontajiItems() {
   const body = document.getElementById("montajiTable");
   if (!body) return;
+  const authority = currentCountryProfile().productAuthority;
+  document.getElementById("productWatchLabel").textContent = currentShop()?.country === "AE" ? "Montaji / product compliance" : "Product compliance";
+  document.getElementById("productWatchTitle").textContent = `WPS & ${authority}`;
+  document.getElementById("productAuthorityNote").textContent = `${currentCountryProfile().name} profile · verify professional-use cosmetics before use`;
+  document.getElementById("productAuthorityMetricNote").textContent = `${authority} records needing action`;
   body.innerHTML = "";
-  montajiItems.forEach((item) => {
+  montajiItems.slice().sort((first, second) => Number(first.active === false) - Number(second.active === false)).forEach((item) => {
+    const status = productRegistrationStatus(item);
+    const originalIndex = montajiItems.indexOf(item);
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${escapeHtml(translate(item.sku))}</td>
-      <td><span class="status-pill ${statusClass(item.status)}">${escapeHtml(translate(item.status))}</span></td>
-      <td>${escapeHtml(translate(item.action))}</td>
+      <td><strong>${escapeHtml(item.name || item.sku)}</strong><br><small>${escapeHtml([item.brand,item.sku].filter(Boolean).join(" · ") || "No barcode")}${item.history?.length ? ` · ${item.history.length} previous version${item.history.length === 1 ? "" : "s"}` : ""}</small></td>
+      <td>${escapeHtml(authority)}<br><small>${escapeHtml(item.authorityReference || "Reference pending")}</small></td>
+      <td>${escapeHtml(dateLabel(item.expiryDate))}</td>
+      <td>${evidenceMarkup(item)}</td>
+      <td><span class="status-pill ${statusClass(status)}">${escapeHtml(status)}</span></td>
+      <td><div class="action-cluster"><button class="mini-action" data-edit-product="${originalIndex}" type="button" ${item.active === false ? "disabled" : ""}>Edit</button><button class="danger-button" data-archive-product="${originalIndex}" type="button" ${item.active === false ? "disabled" : ""}>${item.active === false ? "Archived" : "Archive"}</button></div></td>
     `;
     body.appendChild(row);
   });
+  if (!montajiItems.length) body.innerHTML = '<tr><td colspan="6">No product compliance records yet.</td></tr>';
+
+  body.querySelectorAll("[data-edit-product]").forEach((button) => button.addEventListener("click", () => {
+    const item = montajiItems[Number(button.dataset.editProduct)];
+    if (!item || item.active === false) return;
+    document.getElementById("productEditId").value = item.id;
+    document.getElementById("productName").value = item.name || "";
+    document.getElementById("productBrand").value = item.brand || "";
+    document.getElementById("productSku").value = item.sku || "";
+    document.getElementById("productAuthorityReference").value = item.authorityReference || "";
+    document.getElementById("productExpiryDate").value = item.expiryDate || "";
+    document.getElementById("productStatus").value = item.status || "Pending";
+    document.getElementById("productSupplier").value = item.supplier || "";
+    document.getElementById("productEvidence").value = item.evidence || "";
+    document.getElementById("productChangeReason").value = "";
+    document.getElementById("saveProductRegistration").textContent = "Update product record";
+    document.getElementById("productRegistrationNote").textContent = "Update the verification details and enter a change reason.";
+  }));
+
+  body.querySelectorAll("[data-archive-product]").forEach((button) => button.addEventListener("click", async () => {
+    const item = montajiItems[Number(button.dataset.archiveProduct)];
+    const reason = document.getElementById("productChangeReason").value.trim();
+    if (!item || !reason) {
+      document.getElementById("productRegistrationNote").textContent = "Enter an archive reason before archiving this product.";
+      return;
+    }
+    if (!window.confirm(`Archive ${item.name}? Verification history will remain.`)) return;
+    if (!isLocalDemo) {
+      button.disabled = true;
+      try {
+        const result = await window.SalonBackend.archiveProductRegistration(cloudTargetShopId(), item.id, reason);
+        Object.assign(item, result?.product || {});
+      } catch (error) {
+        document.getElementById("productRegistrationNote").textContent = error.message;
+        button.disabled = false;
+        return;
+      }
+    } else Object.assign(item, { active:false, archiveReason:reason, archivedAt:new Date().toISOString(), archivedBy:currentRole });
+    addAudit("Product archived", `${currentRole} · ${item.name} · ${reason}`);
+    saveState();
+    renderCompliance();
+    document.getElementById("productChangeReason").value = "";
+    document.getElementById("productRegistrationNote").textContent = "Product record archived. Verification history remains available.";
+  }));
 }
 
 function syncComplianceMetrics() {
   const notReadyRecords = inspectionRecords.filter((record) => computedRecordStatus(record) !== "Ready").length;
   const expiryProblems = complianceDocuments.filter((document) => document.active !== false && computedExpiryStatus(document) !== "Ready").length;
-  const montajiProblems = montajiItems.filter((item) => item.status !== "Registered").length;
+  const montajiProblems = montajiItems.filter((item) => item.active !== false && !["Verified","Not required"].includes(productRegistrationStatus(item))).length;
   const readiness = Math.max(0, Math.round(100 - ((notReadyRecords + expiryProblems + montajiProblems) * 7)));
   const period = new Date().toISOString().slice(0, 7);
   const wpsRuns = payrollRuns.filter((run) => run.period === period && run.wpsRequired);
@@ -2931,11 +3025,11 @@ function renderOwnerChecks() {
       action: "Renew"
     });
   }
-  const montajiProblems = montajiItems.filter((item) => item.status !== "Registered").length;
+  const montajiProblems = montajiItems.filter((item) => item.active !== false && !["Verified","Not required"].includes(productRegistrationStatus(item))).length;
   if (montajiProblems) {
     checks.push({
       level: "warning",
-      title: "Montaji watch",
+      title: currentShop()?.country === "AE" ? "Montaji watch" : "Product compliance",
       detail: `${montajiProblems} ${translate("Product registration warning")}`,
       action: "Check"
     });
@@ -5975,6 +6069,87 @@ document.getElementById("addHygieneLog").addEventListener("click", async () => {
   renderCompliance();
   document.getElementById("hygieneNote").textContent = translate("Hygiene log saved with evidence.");
   document.getElementById("hygieneEvidenceFile").value = "";
+});
+
+document.getElementById("saveProductRegistration").addEventListener("click", async () => {
+  const editId = document.getElementById("productEditId").value;
+  const name = document.getElementById("productName").value.trim();
+  const brand = document.getElementById("productBrand").value.trim();
+  const sku = document.getElementById("productSku").value.trim();
+  const authorityReference = document.getElementById("productAuthorityReference").value.trim();
+  const expiryDate = document.getElementById("productExpiryDate").value;
+  const status = document.getElementById("productStatus").value;
+  const supplier = document.getElementById("productSupplier").value.trim();
+  const evidence = document.getElementById("productEvidence").value.trim();
+  const reason = document.getElementById("productChangeReason").value.trim();
+  const note = document.getElementById("productRegistrationNote");
+  const selectedFile = document.getElementById("productEvidenceFile")?.files?.[0];
+  if (!name || !sku) {
+    note.textContent = "Product name and barcode / SKU are required.";
+    return;
+  }
+  const existing = editId
+    ? montajiItems.find((item) => item.id === editId)
+    : montajiItems.find((item) => item.active !== false && String(item.sku || "").toLowerCase() === sku.toLowerCase());
+  if (existing && !reason) {
+    note.textContent = "Enter a change reason before updating this product.";
+    return;
+  }
+  const existingProof = existing?.evidence || existing?.evidenceFile?.storagePath;
+  if (status === "Verified" && !authorityReference && !evidence && !selectedFile && !existingProof) {
+    note.textContent = "Verified products require an authority reference or evidence.";
+    return;
+  }
+  let evidenceFile = null;
+  try {
+    evidenceFile = await readEvidenceFile("productEvidenceFile");
+    if (evidenceFile?.storagePath) {
+      await window.SalonBackend.saveDocumentMetadata({
+        shop_id: cloudTargetShopId(), title: `Product compliance · ${name}`,
+        category: "Product compliance", issue_date: todayIso(), expiry_date: expiryDate || null,
+        reminder_days: 30, object_path: evidenceFile.storagePath
+      });
+    }
+  } catch (error) {
+    note.textContent = error.message;
+    return;
+  }
+  const nextProduct = {
+    id: existing?.id || `product-${crypto.randomUUID()}`,
+    name, brand, sku, authorityReference, expiryDate, supplier, status,
+    evidence: evidence || evidenceFile?.name || existing?.evidence || "",
+    evidenceFile: evidenceFile || existing?.evidenceFile || null,
+    active: true,
+    history: existing?.history || []
+  };
+  const button = document.getElementById("saveProductRegistration");
+  if (!isLocalDemo) {
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.saveProductRegistration(cloudTargetShopId(), nextProduct, reason);
+      Object.assign(nextProduct, result?.product || {});
+    } catch (error) {
+      note.textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
+  if (existing) {
+    if (isLocalDemo) {
+      nextProduct.history = [...(existing.history || []), { ...existing, history: undefined, supersededAt: new Date().toISOString(), changeReason: reason }];
+    }
+    Object.assign(existing, nextProduct);
+  } else montajiItems.unshift(nextProduct);
+  addAudit("Product compliance saved", `${currentRole} · ${name} · ${sku} · ${status}`);
+  saveState();
+  renderCompliance();
+  note.textContent = `${name} saved against ${currentCountryProfile().productAuthority}.`;
+  ["productName","productBrand","productSku","productAuthorityReference","productExpiryDate","productSupplier","productEvidence","productEvidenceFile","productEditId","productChangeReason"].forEach((id) => {
+    document.getElementById(id).value = "";
+  });
+  document.getElementById("productStatus").value = "Pending";
+  button.textContent = "Save product record";
 });
 
 document.querySelectorAll("[data-export]").forEach((button) => {

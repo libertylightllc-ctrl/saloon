@@ -52,7 +52,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609110020_controlled_crm_bookings.sql',
       '202609110021_controlled_staff_payroll.sql',
       '202609110022_staff_sale_identity.sql',
-      '202609110023_controlled_compliance.sql'
+      '202609110023_controlled_compliance.sql',
+      '202609110024_controlled_products.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -339,6 +340,22 @@ test('tenant foundation enforces database permissions', async (t) => {
       await db.query('select public.salon_archive_compliance_document($1,$2,$3)',[a,compliance.id,'Replaced by new licence category']);
       assert.equal((await db.query("select data->>'active' active from public.salon_records where record_type='compliance_document' and external_id=$1",[compliance.id])).rows[0].active,'false');
     });
+    await t.test('product compliance preserves verification history and management control', async () => {
+      const product = {id:'product-controlled',name:'Professional Hair Color',brand:'Color Pro',sku:'COLOR-001',status:'Pending',supplier:'Salon Supply'};
+      await asUser(owner);
+      await db.query('select public.salon_save_product_registration($1,$2,$3::jsonb,$4)',[a,product.id,JSON.stringify(product),'']);
+      await assert.rejects(db.query('select public.salon_save_product_registration($1,$2,$3::jsonb,$4)',[a,product.id,JSON.stringify({...product,status:'Verified',authorityReference:'MONT-001'}),'']), /change reason/);
+      const verified = (await db.query('select public.salon_save_product_registration($1,$2,$3::jsonb,$4) result',[a,product.id,JSON.stringify({...product,status:'Verified',authorityReference:'MONT-001',expiryDate:'2028-09-01'}),'Authority verification completed'])).rows[0].result.product;
+      assert.equal(verified.status,'Verified');
+      assert.equal(verified.history.length,1);
+      await assert.rejects(db.query('select public.salon_save_product_registration($1,$2,$3::jsonb,$4)',[a,'product-unverified',JSON.stringify({...product,id:'product-unverified',sku:'COLOR-002',status:'Verified'}),'']), /authority reference or evidence/);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"status\":\"Blocked\"}' where record_type='product_registration'"), /controlled compliance workflow/);
+      await asUser(cashier);
+      await assert.rejects(db.query('select public.salon_archive_product_registration($1,$2,$3)',[a,product.id,'Product discontinued']), /Management authorization/);
+      await asUser(owner);
+      await db.query('select public.salon_archive_product_registration($1,$2,$3)',[a,product.id,'Product discontinued']);
+      assert.equal((await db.query("select data->>'active' active from public.salon_records where record_type='product_registration' and external_id=$1",[product.id])).rows[0].active,'false');
+    });
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);
       await asUser(owner);
@@ -390,7 +407,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,4);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,47);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,48);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {

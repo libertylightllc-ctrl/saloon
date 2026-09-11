@@ -90,7 +90,10 @@ const requiredHtml = [
   "id=\"payrollEvidenceFile\"",
   "id=\"inspectionChangeReason\"",
   "id=\"expiryEditId\"",
-  "id=\"expiryChangeReason\""
+  "id=\"expiryChangeReason\"",
+  "id=\"productEditId\"",
+  "id=\"productEvidenceFile\"",
+  "id=\"saveProductRegistration\""
 ];
 
 const requiredJs = [
@@ -158,7 +161,9 @@ const requiredJs = [
   "saveComplianceDocument",
   "archiveComplianceDocument",
   "signInspection",
-  "recordHygieneLog"
+  "recordHygieneLog",
+  "saveProductRegistration",
+  "archiveProductRegistration"
 ];
 
 const forbiddenHtml = [

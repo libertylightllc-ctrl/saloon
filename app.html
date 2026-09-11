@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260911-release-23" />
+    <link rel="stylesheet" href="./styles.css?v=20260911-release-24" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -962,9 +962,9 @@
               <small>Salary transfer countdown</small>
             </article>
             <article class="metric-card">
-              <span>Montaji watch</span>
+              <span id="productWatchLabel">Product compliance</span>
               <strong id="montajiMetric">1</strong>
-              <small>Product registration warning</small>
+              <small id="productAuthorityMetricNote">Registration and supplier-proof warnings</small>
             </article>
           </div>
 
@@ -1093,8 +1093,8 @@
             <aside class="panel">
               <div class="panel-head compact">
                 <div>
-                  <h3>WPS & Product Watch</h3>
-                  <p>Salary deadline and cosmetic registration controls</p>
+                  <h3 id="productWatchTitle">WPS & Product Compliance</h3>
+                  <p id="productAuthorityNote">Country profile controls the product authority</p>
                 </div>
               </div>
               <div class="watch-stack">
@@ -1106,11 +1106,26 @@
                 <div class="table-wrap mini-table">
                   <table>
                     <thead>
-                      <tr><th>SKU</th><th>Status</th><th>Action</th></tr>
+                      <tr><th>Product</th><th>Authority / reference</th><th>Expiry</th><th>Proof</th><th>Status</th><th>Action</th></tr>
                     </thead>
                     <tbody id="montajiTable"></tbody>
                   </table>
                 </div>
+                <div class="hygiene-form product-compliance-form">
+                  <input id="productEditId" type="hidden" />
+                  <label>Product <input id="productName" placeholder="Hair dye, beard color, facial product" /></label>
+                  <label>Brand <input id="productBrand" placeholder="Brand or manufacturer" /></label>
+                  <label>Barcode / SKU <input id="productSku" placeholder="Barcode or stock code" /></label>
+                  <label>Authority reference <input id="productAuthorityReference" placeholder="Registration, listing or permit number" /></label>
+                  <label>Product expiry <input id="productExpiryDate" type="date" /></label>
+                  <label>Status <select id="productStatus"><option>Verified</option><option>Pending</option><option>Blocked</option><option>Not required</option></select></label>
+                  <label>Supplier <input id="productSupplier" placeholder="Supplier name" /></label>
+                  <label>Evidence note <input id="productEvidence" placeholder="Certificate, invoice or verification note" /></label>
+                  <label>Upload PDF/image <input id="productEvidenceFile" type="file" accept="image/*,.pdf,application/pdf" /></label>
+                  <label>Change / archive reason <input id="productChangeReason" placeholder="Required when editing or archiving" /></label>
+                </div>
+                <button class="primary-button table-action" id="saveProductRegistration" type="button">Save product record</button>
+                <p class="system-note" id="productRegistrationNote">Record professional-use colors, cosmetics and personal-care products with supplier proof.</p>
               </div>
             </aside>
           </div>
@@ -1466,7 +1481,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260911-release-23"></script>
-    <script src="./app.js?v=20260911-release-23"></script>
+    <script src="./backend.js?v=20260911-release-24"></script>
+    <script src="./app.js?v=20260911-release-24"></script>
   </body>
 </html>

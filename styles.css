@@ -1803,6 +1803,11 @@ tr:last-child td {
 
 .compliance-layout.lower {
   align-items: start;
+  grid-template-columns: 1fr;
+}
+
+.product-compliance-form {
+  margin-top: 16px;
 }
 
 .compliance-binder table {
@@ -1904,7 +1909,7 @@ tr:last-child td {
 }
 
 .mini-table table {
-  min-width: 0;
+  min-width: 820px;
 }
 
 .mini-table th,
