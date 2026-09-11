@@ -203,6 +203,33 @@ test('customer and booking lifecycle use controlled RPCs', async () => {
   assert.deepEqual(JSON.parse(fixture.calls[2].options.body), { target_shop:'shop-id', ticket_external_id:'ticket-1', next_status:'Cancelled', action_reason:'Customer requested' });
 });
 
+test('staff, attendance and payroll lifecycle use controlled RPCs', async () => {
+  const fixture = backendFixture(Array.from({ length: 6 }, () => ({ status: 200, body: { ok: true } })));
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  const profile = { id:'profile-1', name:'Sameer', employeeNo:'EMP-001', baseSalary:3000 };
+  const attendance = { id:'attendance-1', staffId:profile.id, date:'2026-09-11', status:'Present' };
+  const adjustment = { id:'adjustment-1', staffId:profile.id, period:'2026-09', type:'Allowance', amount:100, reason:'Transport' };
+  const payment = { method:'WPS', reference:'WPS-001', evidencePath:'shop-id/payroll/wps.pdf', evidenceName:'wps.pdf' };
+  await fixture.backend.saveStaffProfile('shop-id', profile, 'Salary review');
+  await fixture.backend.archiveStaffProfile('shop-id', profile.id, 'Employment ended');
+  await fixture.backend.saveAttendance('shop-id', attendance, 'Clock-out correction');
+  await fixture.backend.recordStaffAdjustment('shop-id', adjustment);
+  await fixture.backend.generatePayroll('shop-id', '2026-09');
+  await fixture.backend.payPayroll('shop-id', 'payroll-1', payment);
+  assert.match(fixture.calls[0].url, /rpc\/salon_save_staff_profile$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), { target_shop:'shop-id', profile_external_id:'profile-1', profile_data:profile, change_reason:'Salary review' });
+  assert.match(fixture.calls[1].url, /rpc\/salon_archive_staff_profile$/);
+  assert.deepEqual(JSON.parse(fixture.calls[1].options.body), { target_shop:'shop-id', profile_external_id:'profile-1', archive_reason:'Employment ended' });
+  assert.match(fixture.calls[2].url, /rpc\/salon_save_attendance$/);
+  assert.deepEqual(JSON.parse(fixture.calls[2].options.body), { target_shop:'shop-id', attendance_external_id:'attendance-1', attendance_data:attendance, change_reason:'Clock-out correction' });
+  assert.match(fixture.calls[3].url, /rpc\/salon_record_staff_adjustment$/);
+  assert.deepEqual(JSON.parse(fixture.calls[3].options.body), { target_shop:'shop-id', adjustment_external_id:'adjustment-1', adjustment_data:adjustment });
+  assert.match(fixture.calls[4].url, /rpc\/salon_generate_payroll$/);
+  assert.deepEqual(JSON.parse(fixture.calls[4].options.body), { target_shop:'shop-id', target_period:'2026-09' });
+  assert.match(fixture.calls[5].url, /rpc\/salon_pay_payroll$/);
+  assert.deepEqual(JSON.parse(fixture.calls[5].options.body), { target_shop:'shop-id', payroll_external_id:'payroll-1', payment_data:payment });
+});
+
 test('daily close RPC sends counted cash for server calculation', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));

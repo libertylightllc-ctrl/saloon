@@ -912,7 +912,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement", "service", "supplier", "customer", "appointment", "queue_ticket"].includes(type)) return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement", "service", "supplier", "customer", "appointment", "queue_ticket", "staff_profile", "attendance", "staff_adjustment", "payroll"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -4179,10 +4179,9 @@ function renderSaleHistory() {
 }
 
 function visibleStaffProfiles() {
-  const active = staffProfiles.filter((profile) => profile.active !== false);
-  if (currentRole !== "Staff") return active;
+  if (currentRole !== "Staff") return staffProfiles;
   const identity = String(currentUser?.id || currentUser?.username || "").toLowerCase();
-  return active.filter((profile) => String(profile.userId || "").toLowerCase() === identity);
+  return staffProfiles.filter((profile) => profile.active !== false && String(profile.userId || "").toLowerCase() === identity);
 }
 
 function hoursBetween(start, end) {
@@ -4199,12 +4198,12 @@ function payrollPeriod() {
 }
 
 function staffPeriodCommission(profile, period) {
-  const refundedIds = new Set(refunds.map((refund) => refund.saleId));
-  return sales.reduce((sum, sale) => !refundedIds.has(sale.id)
-    && String(sale.createdAt || "").startsWith(period)
-    && String(sale.staff || "").toLowerCase() === profile.name.toLowerCase()
-    ? sum + Number(sale.amount || 0) * Number(profile.commissionRate || 0) / 100
-    : sum, 0);
+  return sales.reduce((sum, sale) => {
+    if (!String(sale.createdAt || "").startsWith(period) || String(sale.staff || "").toLowerCase() !== profile.name.toLowerCase()) return sum;
+    const refundedRevenue = refunds.filter((refund) => refund.saleId === sale.id)
+      .reduce((amount, refund) => amount + Number(refund.revenueAmount ?? refund.amount ?? 0), 0);
+    return sum + Math.max(Number(sale.revenueAmount ?? sale.amount ?? 0) - refundedRevenue, 0) * Number(profile.commissionRate || 0) / 100;
+  }, 0);
 }
 
 function staffPeriodAdjustments(profileId, period) {
@@ -4237,10 +4236,14 @@ function renderStaffSelects() {
     if ([...select.options].some((option) => option.value === current)) select.value = current;
   });
   const saleStaff = document.getElementById("saleStaff");
-  if (saleStaff && profiles.length) {
+  if (saleStaff) {
+    const saleProfiles = currentRole === "Staff" ? visibleStaffProfiles() : profiles;
     const current = saleStaff.value;
-    saleStaff.innerHTML = profiles.map((profile) => `<option>${escapeHtml(profile.name)}</option>`).join("");
+    saleStaff.innerHTML = saleProfiles.length
+      ? saleProfiles.map((profile) => `<option>${escapeHtml(profile.name)}</option>`).join("")
+      : '<option value="">No linked staff profile</option>';
     if ([...saleStaff.options].some((option) => option.value === current)) saleStaff.value = current;
+    saleStaff.disabled = currentRole === "Staff";
   }
   const loginSelect = document.getElementById("staffUserId");
   if (loginSelect) {
@@ -4254,9 +4257,61 @@ function renderStaffModule() {
   const rosterBody = document.getElementById("staffRosterTable");
   if (!rosterBody) return;
   const visible = visibleStaffProfiles();
-  rosterBody.innerHTML = visible.length ? visible.map((profile) =>
-    `<tr><td><strong>${escapeHtml(profile.name)}</strong></td><td>${escapeHtml(profile.employeeNo || "-")}</td><td>${escapeHtml(profile.jobTitle || "Staff")}</td><td>${moneyFixed(profile.baseSalary)}</td><td>${Number(profile.commissionRate || 0).toLocaleString()}%</td><td>${profile.wpsRequired ? "Required" : "Not required"}</td><td><b class="ok">Active</b></td></tr>`
-  ).join("") : '<tr><td colspan="7">No staff profile is linked to this account.</td></tr>';
+  const canManage = ["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
+  rosterBody.innerHTML = visible.length ? visible.map((profile) => {
+    const archived = profile.active === false;
+    const actions = canManage ? `<div class="action-cluster"><button class="mini-action" data-edit-staff="${escapeHtml(profile.id)}" type="button" ${archived ? "disabled" : ""}>Edit</button><button class="danger-button" data-archive-staff="${escapeHtml(profile.id)}" type="button" ${archived ? "disabled" : ""}>${archived ? "Archived" : "Archive"}</button></div>` : "-";
+    return `<tr><td><strong>${escapeHtml(profile.name)}</strong></td><td>${escapeHtml(profile.employeeNo || "-")}</td><td>${escapeHtml(profile.jobTitle || "Staff")}</td><td>${moneyFixed(profile.baseSalary)}</td><td>${Number(profile.commissionRate || 0).toLocaleString()}%</td><td>${profile.wpsRequired ? "Required" : "Not required"}</td><td><b class="${archived ? "warn" : "ok"}">${archived ? "Archived" : "Active"}</b></td><td>${actions}</td></tr>`;
+  }).join("") : '<tr><td colspan="8">No staff profile is linked to this account.</td></tr>';
+
+  rosterBody.querySelectorAll("[data-edit-staff]").forEach((button) => button.addEventListener("click", () => {
+    const profile = staffProfiles.find((candidate) => candidate.id === button.dataset.editStaff);
+    if (!profile) return;
+    document.getElementById("staffProfileEditId").value = profile.id;
+    document.getElementById("staffUserId").value = profile.userId || "";
+    document.getElementById("staffName").value = profile.name;
+    document.getElementById("staffEmployeeNo").value = profile.employeeNo || "";
+    document.getElementById("staffJobTitle").value = profile.jobTitle || "Staff";
+    document.getElementById("staffJoinDate").value = profile.joinDate || "";
+    document.getElementById("staffBaseSalary").value = profile.baseSalary || 0;
+    document.getElementById("staffCommissionRate").value = profile.commissionRate || 0;
+    document.getElementById("staffWpsRequired").value = profile.wpsRequired ? "yes" : "no";
+    document.getElementById("staffProfileChangeReason").value = "";
+    document.getElementById("staffProfileFormTitle").textContent = `Edit ${profile.name}`;
+    document.getElementById("saveStaffProfile").textContent = "Update Staff Profile";
+    document.getElementById("staffProfileNote").textContent = "Update employment terms and enter a change reason.";
+  }));
+  rosterBody.querySelectorAll("[data-archive-staff]").forEach((button) => button.addEventListener("click", async () => {
+    const profile = staffProfiles.find((candidate) => candidate.id === button.dataset.archiveStaff);
+    const reason = document.getElementById("staffProfileChangeReason").value.trim();
+    if (!profile || !reason) {
+      document.getElementById("staffProfileNote").textContent = "Enter an archive reason before archiving staff.";
+      return;
+    }
+    if (!isLocalDemo) {
+      button.disabled = true;
+      try {
+        const result = await window.SalonBackend.archiveStaffProfile(cloudTargetShopId(), profile.id, reason);
+        if (result?.profile) Object.assign(profile, result.profile);
+      } catch (error) {
+        document.getElementById("staffProfileNote").textContent = error.message;
+        button.disabled = false;
+        return;
+      }
+    } else {
+      if (payrollRuns.some((run) => run.staffId === profile.id && run.status !== "Paid")) {
+        document.getElementById("staffProfileNote").textContent = "Complete unpaid payroll before archiving this staff profile.";
+        return;
+      }
+      Object.assign(profile, { active:false, archiveReason:reason, archivedAt:new Date().toISOString(), archivedBy:currentUser?.name || currentRole });
+    }
+    addAudit("Staff profile archived", `${currentRole} · ${profile.name} · ${reason}`);
+    saveState();
+    renderStaffModule();
+    document.getElementById("staffProfileEditId").value = "";
+    document.getElementById("staffProfileChangeReason").value = "";
+    document.getElementById("staffProfileNote").textContent = `${profile.name} archived. Payroll history remains available.`;
+  }));
 
   const attendanceBody = document.getElementById("attendanceTable");
   const visibleIds = new Set(visible.map((profile) => profile.id));
@@ -4271,18 +4326,19 @@ function renderStaffModule() {
   payrollBody.innerHTML = visiblePayroll.length ? [...visiblePayroll].sort((a, b) => b.period.localeCompare(a.period)).map((run) => {
     const profile = staffProfiles.find((candidate) => candidate.id === run.staffId);
     const adjustment = Number(run.additions || 0) - Number(run.deductions || 0);
-    const wpsLabel = run.status === "Paid" && run.wpsStatus === "Completed" ? "WPS complete" : run.status === "Paid" ? "Paid · WPS pending" : run.status;
+    const wpsLabel = (run.status === "Paid" && run.wpsStatus === "Completed" ? "WPS complete" : run.status === "Paid" ? "Paid · WPS pending" : run.status)
+      + (run.evidenceName || run.evidenceFile?.name ? " · proof attached" : "");
     const canPay = run.status !== "Paid" && ["Platform Admin", "Owner", "Shop Admin"].includes(currentRole);
     return `<tr><td>${escapeHtml(run.period)}</td><td>${escapeHtml(profile?.name || "Staff")}</td><td>${moneyFixed(run.basePay)}</td><td>${moneyFixed(run.commission)}</td><td>${moneyFixed(adjustment)}</td><td><strong>${moneyFixed(run.netPay)}</strong></td><td><b class="${run.status === "Paid" ? "ok" : "warn"}">${escapeHtml(wpsLabel)}</b></td><td>${canPay ? `<button class="primary-button" data-pay-payroll="${escapeHtml(run.id)}" type="button">Pay</button>` : "-"}</td></tr>`;
   }).join("") : '<tr><td colspan="8">Generate payroll for the first period.</td></tr>';
 
-  document.getElementById("staffActiveCount").textContent = String(visible.length);
+  document.getElementById("staffActiveCount").textContent = String(visible.filter((profile) => profile.active !== false).length);
   document.getElementById("staffPresentCount").textContent = String(attendanceRecords.filter((record) => visibleIds.has(record.staffId) && record.date === todayIso() && record.status === "Present").length);
   document.getElementById("staffPayrollDue").textContent = moneyFixed(visiblePayroll.filter((run) => run.status !== "Paid").reduce((sum, run) => sum + Number(run.netPay || 0), 0));
   document.getElementById("staffWpsPending").textContent = String(visiblePayroll.filter((run) => run.wpsRequired && run.wpsStatus !== "Completed").length);
   renderStaffSelects();
 
-  payrollBody.querySelectorAll("[data-pay-payroll]").forEach((button) => button.addEventListener("click", () => {
+  payrollBody.querySelectorAll("[data-pay-payroll]").forEach((button) => button.addEventListener("click", async () => {
     const run = payrollRuns.find((candidate) => candidate.id === button.dataset.payPayroll);
     const reference = document.getElementById("payrollPaymentReference").value.trim();
     const method = document.getElementById("payrollPaymentMethod").value;
@@ -4290,17 +4346,35 @@ function renderStaffModule() {
       document.getElementById("payrollNote").textContent = "Enter a payment or WPS reference before marking payroll paid.";
       return;
     }
-    run.status = "Paid";
-    run.paymentMethod = method;
-    run.paymentReference = reference;
-    run.paidAt = new Date().toISOString();
-    run.paidBy = currentUser?.name || currentRole;
-    run.wpsStatus = run.wpsRequired && method !== "WPS" ? "Pending" : "Completed";
+    let evidenceFile = null;
+    try {
+      evidenceFile = await readEvidenceFile("payrollEvidenceFile");
+      if (run.wpsRequired && method === "WPS" && !evidenceFile) throw new Error("Upload WPS payment evidence before marking this payroll paid.");
+      if (!isLocalDemo && evidenceFile?.storagePath) await window.SalonBackend.saveDocumentMetadata({
+        shop_id:cloudTargetShopId(), title:`Payroll ${run.period}`, category:"WPS / payroll file",
+        subject_user_id:run.subject_user_id || null, object_path:evidenceFile.storagePath
+      });
+      if (!isLocalDemo) {
+        const result = await window.SalonBackend.payPayroll(cloudTargetShopId(), run.id, {
+          method, reference, evidencePath:evidenceFile?.storagePath || "", evidenceName:evidenceFile?.name || ""
+        });
+        if (result?.payroll) Object.assign(run, result.payroll);
+      } else Object.assign(run, {
+        status:"Paid", paymentMethod:method, paymentReference:reference, evidenceFile,
+        paidAt:new Date().toISOString(), paidBy:currentUser?.name || currentRole,
+        wpsStatus:run.wpsRequired && method !== "WPS" ? "Pending" : run.wpsRequired ? "Completed" : "Not required"
+      });
+    } catch (error) {
+      document.getElementById("payrollNote").textContent = error.message;
+      return;
+    }
     addAudit("Payroll paid", `${currentRole} · ${run.period} · ${moneyFixed(run.netPay)} · ${reference}`);
     saveState();
     syncSummaryTotals();
+    renderStaffModule();
     renderCompliance();
     document.getElementById("payrollPaymentReference").value = "";
+    document.getElementById("payrollEvidenceFile").value = "";
     document.getElementById("payrollNote").textContent = run.wpsStatus === "Completed" ? "Payroll paid with completed evidence." : "Payment saved; WPS evidence remains pending.";
   }));
 }
@@ -5423,7 +5497,8 @@ document.getElementById("saveStockMovement").addEventListener("click", async (ev
   document.getElementById("movementNote").textContent = `${item.name} is now ${inventoryQuantity(item)}.`;
 });
 
-document.getElementById("saveStaffProfile").addEventListener("click", () => {
+document.getElementById("saveStaffProfile").addEventListener("click", async () => {
+  const editId = document.getElementById("staffProfileEditId").value;
   const name = document.getElementById("staffName").value.trim();
   const employeeNo = document.getElementById("staffEmployeeNo").value.trim();
   const baseSalary = Number(document.getElementById("staffBaseSalary").value || 0);
@@ -5432,12 +5507,18 @@ document.getElementById("saveStaffProfile").addEventListener("click", () => {
     document.getElementById("staffProfileNote").textContent = "Name, unique employee ID, valid salary and commission from 0 to 100% are required.";
     return;
   }
-  if (staffProfiles.some((profile) => profile.active !== false && profile.employeeNo.toLowerCase() === employeeNo.toLowerCase())) {
+  const existing = staffProfiles.find((profile) => profile.id === editId);
+  const reason = document.getElementById("staffProfileChangeReason").value.trim();
+  if (existing && !reason) {
+    document.getElementById("staffProfileNote").textContent = "Enter a reason for changing this staff profile.";
+    return;
+  }
+  if (staffProfiles.some((profile) => profile !== existing && profile.active !== false && profile.employeeNo.toLowerCase() === employeeNo.toLowerCase())) {
     document.getElementById("staffProfileNote").textContent = "That employee ID already exists.";
     return;
   }
   const profile = {
-    id: `staff-${crypto.randomUUID()}`,
+    id: existing?.id || `staff-${crypto.randomUUID()}`,
     userId: document.getElementById("staffUserId").value,
     subject_user_id: document.getElementById("staffUserId").value,
     name,
@@ -5448,19 +5529,36 @@ document.getElementById("saveStaffProfile").addEventListener("click", () => {
     commissionRate,
     wpsRequired: document.getElementById("staffWpsRequired").value === "yes",
     active: true,
-    createdAt: new Date().toISOString()
+    createdAt: existing?.createdAt || new Date().toISOString()
   };
-  staffProfiles.push(profile);
-  addAudit("Staff profile added", `${currentRole} · ${name} · ${employeeNo}`);
+  if (!isLocalDemo) {
+    const button = document.getElementById("saveStaffProfile");
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.saveStaffProfile(cloudTargetShopId(), profile, reason);
+      if (result?.profile) Object.assign(profile, result.profile);
+    } catch (error) {
+      document.getElementById("staffProfileNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
+  if (existing) Object.assign(existing, profile); else staffProfiles.push(profile);
+  addAudit(existing ? "Staff profile updated" : "Staff profile added", `${currentRole} · ${name} · ${employeeNo}${reason ? ` · ${reason}` : ""}`);
   saveState();
   renderStaffModule();
   document.getElementById("staffName").value = "";
   document.getElementById("staffEmployeeNo").value = "";
   document.getElementById("staffBaseSalary").value = "0";
-  document.getElementById("staffProfileNote").textContent = `${name} added to the active roster.`;
+  document.getElementById("staffProfileEditId").value = "";
+  document.getElementById("staffProfileChangeReason").value = "";
+  document.getElementById("staffProfileFormTitle").textContent = "Add Staff Profile";
+  document.getElementById("saveStaffProfile").textContent = "Save Staff Profile";
+  document.getElementById("staffProfileNote").textContent = `${name} ${existing ? "updated" : "added to the active roster"}.`;
 });
 
-document.getElementById("saveAttendance").addEventListener("click", () => {
+document.getElementById("saveAttendance").addEventListener("click", async () => {
   const staffId = document.getElementById("attendanceStaff").value;
   const profile = staffProfiles.find((candidate) => candidate.id === staffId);
   const date = document.getElementById("attendanceDate").value || todayIso();
@@ -5485,15 +5583,35 @@ document.getElementById("saveAttendance").addEventListener("click", () => {
     createdAt: new Date().toISOString()
   };
   const existing = attendanceRecords.find((candidate) => candidate.id === record.id);
+  const reason = document.getElementById("attendanceChangeReason").value.trim();
+  if (existing && !reason) {
+    document.getElementById("attendanceNote").textContent = "Enter a correction reason before changing an existing attendance day.";
+    return;
+  }
+  if (existing) record.createdAt = existing.createdAt;
+  if (!isLocalDemo) {
+    const button = document.getElementById("saveAttendance");
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.saveAttendance(cloudTargetShopId(), record, reason);
+      if (result?.attendance) Object.assign(record, result.attendance);
+    } catch (error) {
+      document.getElementById("attendanceNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
   if (existing) Object.assign(existing, record);
   else attendanceRecords.push(record);
   addAudit("Attendance saved", `${currentRole} · ${profile.name} · ${date} · ${status}`);
   saveState();
   renderStaffModule();
+  document.getElementById("attendanceChangeReason").value = "";
   document.getElementById("attendanceNote").textContent = `${profile.name}: ${status}, ${record.hours} hours.`;
 });
 
-document.getElementById("saveStaffAdjustment").addEventListener("click", () => {
+document.getElementById("saveStaffAdjustment").addEventListener("click", async () => {
   const staffId = document.getElementById("adjustmentStaff").value;
   const profile = staffProfiles.find((candidate) => candidate.id === staffId);
   const amount = Number(document.getElementById("adjustmentAmount").value || 0);
@@ -5507,7 +5625,7 @@ document.getElementById("saveStaffAdjustment").addEventListener("click", () => {
     document.getElementById("payrollNote").textContent = "This payroll period is already generated. Reverse or reopen it before adding adjustments.";
     return;
   }
-  staffAdjustments.push({
+  const adjustment = {
     id: `adjustment-${crypto.randomUUID()}`,
     staffId,
     subject_user_id: profile.userId || "",
@@ -5517,7 +5635,21 @@ document.getElementById("saveStaffAdjustment").addEventListener("click", () => {
     reason,
     createdBy: currentUser?.name || currentRole,
     createdAt: new Date().toISOString()
-  });
+  };
+  if (!isLocalDemo) {
+    const button = document.getElementById("saveStaffAdjustment");
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.recordStaffAdjustment(cloudTargetShopId(), adjustment);
+      if (result?.adjustment) Object.assign(adjustment, result.adjustment);
+    } catch (error) {
+      document.getElementById("payrollNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
+  staffAdjustments.push(adjustment);
   addAudit("Staff adjustment", `${currentRole} · ${profile.name} · ${moneyFixed(amount)} · ${reason}`);
   saveState();
   document.getElementById("adjustmentAmount").value = "0";
@@ -5525,7 +5657,7 @@ document.getElementById("saveStaffAdjustment").addEventListener("click", () => {
   document.getElementById("payrollNote").textContent = "Adjustment saved for the selected payroll month.";
 });
 
-document.getElementById("generatePayroll").addEventListener("click", () => {
+document.getElementById("generatePayroll").addEventListener("click", async () => {
   const period = payrollPeriod();
   const activeProfiles = staffProfiles.filter((profile) => profile.active !== false);
   if (!activeProfiles.length) {
@@ -5536,27 +5668,29 @@ document.getElementById("generatePayroll").addEventListener("click", () => {
     document.getElementById("payrollNote").textContent = "Payroll already exists for this month.";
     return;
   }
-  activeProfiles.forEach((profile) => {
-    const basePay = staffBasePay(profile, period);
-    const commission = staffPeriodCommission(profile, period);
-    const { additions, deductions } = staffPeriodAdjustments(profile.id, period);
-    payrollRuns.push({
-      id: `payroll-${profile.id}-${period}`,
-      staffId: profile.id,
-      subject_user_id: profile.userId || "",
-      period,
-      basePay,
-      commission,
-      additions,
-      deductions,
-      netPay: Math.max(basePay + commission + additions - deductions, 0),
-      wpsRequired: profile.wpsRequired,
-      wpsStatus: profile.wpsRequired ? "Pending" : "Not required",
-      status: "Generated",
-      generatedBy: currentUser?.name || currentRole,
-      createdAt: new Date().toISOString()
+  if (!isLocalDemo) {
+    const button = document.getElementById("generatePayroll");
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.generatePayroll(cloudTargetShopId(), period);
+      payrollRuns.push(...(result?.payroll || []));
+    } catch (error) {
+      document.getElementById("payrollNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  } else activeProfiles.forEach((profile) => {
+      const basePay = staffBasePay(profile, period);
+      const commission = staffPeriodCommission(profile, period);
+      const { additions, deductions } = staffPeriodAdjustments(profile.id, period);
+      payrollRuns.push({
+        id:`payroll-${profile.id}-${period}`, staffId:profile.id, subject_user_id:profile.userId || "", period,
+        basePay, commission, additions, deductions, netPay:Math.max(basePay+commission+additions-deductions,0),
+        wpsRequired:profile.wpsRequired, wpsStatus:profile.wpsRequired ? "Pending" : "Not required",
+        status:"Generated", generatedBy:currentUser?.name || currentRole, createdAt:new Date().toISOString()
+      });
     });
-  });
   addAudit("Payroll generated", `${currentRole} · ${period} · ${activeProfiles.length} staff`);
   saveState();
   renderStaffModule();

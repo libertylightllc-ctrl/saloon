@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260911-release-21" />
+    <link rel="stylesheet" href="./styles.css?v=20260911-release-22" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -885,16 +885,18 @@
           <div class="split-layout staff-layout">
             <article class="panel">
               <div class="panel-head"><div><h3>Staff Roster</h3><p>Employment, salary and commission settings</p></div></div>
-              <div class="table-wrap"><table><thead><tr><th>Staff</th><th>Employee ID</th><th>Role</th><th>Base salary</th><th>Commission</th><th>WPS</th><th>Status</th></tr></thead><tbody id="staffRosterTable"></tbody></table></div>
+              <div class="table-wrap"><table><thead><tr><th>Staff</th><th>Employee ID</th><th>Role</th><th>Base salary</th><th>Commission</th><th>WPS</th><th>Status</th><th>Action</th></tr></thead><tbody id="staffRosterTable"></tbody></table></div>
             </article>
             <article class="panel form-panel" id="staffProfileForm">
-              <div class="panel-head compact"><div><h3>Add Staff Profile</h3><p>Link employment terms to an existing login when available</p></div></div>
+              <div class="panel-head compact"><div><h3 id="staffProfileFormTitle">Add Staff Profile</h3><p>Link employment terms to an existing login when available</p></div></div>
+              <input id="staffProfileEditId" type="hidden" />
               <label>Login <select id="staffUserId"></select></label>
               <label>Full name <input id="staffName" placeholder="Employee name" /></label>
               <div class="inline-fields"><label>Employee ID <input id="staffEmployeeNo" placeholder="EMP-001" /></label><label>Job title <input id="staffJobTitle" value="Barber" /></label></div>
               <label>Joining date <input id="staffJoinDate" type="date" /></label>
               <div class="inline-fields"><label>Monthly base salary <input id="staffBaseSalary" type="number" min="0" step="0.01" value="0" /></label><label>Service commission % <input id="staffCommissionRate" type="number" min="0" max="100" step="0.1" value="12" /></label></div>
               <label>WPS required <select id="staffWpsRequired"><option value="yes">Yes</option><option value="no">No</option></select></label>
+              <label>Change / archive reason <input id="staffProfileChangeReason" placeholder="Required when editing or archiving staff" /></label>
               <button class="primary-button full" id="saveStaffProfile" type="button">Save Staff Profile</button>
               <p class="system-note" id="staffProfileNote">Salary and commission terms are used in payroll calculations.</p>
             </article>
@@ -911,6 +913,7 @@
               <label>Status <select id="attendanceStatus"><option>Present</option><option>Absent</option><option>Paid Leave</option><option>Unpaid Leave</option><option>Rest Day</option></select></label>
               <div class="inline-fields"><label>Clock in <input id="attendanceClockIn" type="time" value="10:00" /></label><label>Clock out <input id="attendanceClockOut" type="time" value="20:00" /></label></div>
               <label>Note <input id="attendanceNoteInput" placeholder="Reason or shift note" /></label>
+              <label>Correction reason <input id="attendanceChangeReason" placeholder="Required when changing an existing day" /></label>
               <button class="primary-button full" id="saveAttendance" type="button">Save Attendance</button>
               <p class="system-note" id="attendanceNote">Attendance drives salary proration and payroll review.</p>
             </article>
@@ -935,6 +938,7 @@
               <h3>Payment Evidence</h3>
               <label>Method <select id="payrollPaymentMethod"><option>Bank</option><option>Cash</option><option>WPS</option></select></label>
               <label>Reference <input id="payrollPaymentReference" placeholder="WPS file, transfer or receipt reference" /></label>
+              <label>WPS / salary proof (PDF or image) <input id="payrollEvidenceFile" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" /></label>
               <p class="system-note" id="payrollNote">Select Pay on a payroll line after entering its payment reference.</p>
             </article>
           </div>
@@ -1459,7 +1463,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260911-release-21"></script>
-    <script src="./app.js?v=20260911-release-21"></script>
+    <script src="./backend.js?v=20260911-release-22"></script>
+    <script src="./app.js?v=20260911-release-22"></script>
   </body>
 </html>

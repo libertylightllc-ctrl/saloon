@@ -49,7 +49,9 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609100017_controlled_supplier_payments.sql',
       '202609110018_controlled_inventory.sql',
       '202609110019_controlled_master_data.sql',
-      '202609110020_controlled_crm_bookings.sql'
+      '202609110020_controlled_crm_bookings.sql',
+      '202609110021_controlled_staff_payroll.sql',
+      '202609110022_staff_sale_identity.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -58,7 +60,7 @@ test('tenant foundation enforces database permissions', async (t) => {
     await db.query("insert into public.salon_memberships(shop_id,user_id,role) values ($1,$2,'owner'),($1,$3,'staff'),($1,$4,'cashier')", [a,owner,staff,cashier]);
     await db.query('insert into public.salon_platform_admins(user_id) values ($1)',[platform]);
     await db.query("insert into public.salon_documents(shop_id,title,category,subject_user_id) values ($1,'Lease','lease',null),($1,'Staff health','health',$3),($2,'Other shop','lease',null)", [a,b,staff]);
-    await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'service','s1','{}',$2),($1,'expense','e1','{}',$2),($3,'service','s2','{}',$2)",[a,owner,b]);
+    await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'service','s1','{}',$2),($1,'expense','e1','{}',$2),($3,'service','s2','{}',$2),($1,'staff_profile','profile-1',$4,$2)",[a,owner,b,JSON.stringify({id:'profile-1',userId:staff,subject_user_id:staff,name:'Team Member',employeeNo:'EMP-001',jobTitle:'Barber',joinDate:'2026-01-01',baseSalary:3000,commissionRate:10,wpsRequired:true,active:true})]);
     async function asUser(id) {
       await db.exec('reset role');
       await db.query("select set_config('request.jwt.claim.sub',$1,false)",[id]);
@@ -68,7 +70,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(owner);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,1);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,2);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,2);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,3);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'SHOP_A',role:'owner'}]);
     });
     await t.test('owner cannot insert documents into another shop', async () => {
@@ -82,7 +84,7 @@ test('tenant foundation enforces database permissions', async (t) => {
     await t.test('staff sees only their own documents, cannot edit them', async () => {
       await asUser(staff);
       assert.deepEqual((await db.query('select title from public.salon_documents')).rows, [{title:'Staff health'}]);
-      assert.deepEqual((await db.query('select record_type from public.salon_records')).rows, [{record_type:'service'}]);
+      assert.deepEqual((await db.query('select record_type from public.salon_records order by record_type')).rows, [{record_type:'service'},{record_type:'staff_profile'}]);
       assert.equal((await db.query("update public.salon_documents set title='tampered' returning id")).rows.length,0);
       await assert.rejects(db.query("insert into public.salon_documents(shop_id,title,category) values ($1,'New','health')",[a]), /row-level security/);
     });
@@ -102,6 +104,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       const sale = {id:'sale-atomic-1',service:'Shave',payment:'Cash',amount:15,createdAt:new Date().toISOString()};
       const usage = [{itemId:'inv-blades',quantity:2}];
       await db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'sale-atomic-1',JSON.stringify(sale),JSON.stringify(usage)]);
+      assert.equal((await db.query("select data->>'staff' staff from public.salon_records where record_type='sale' and external_id='sale-atomic-1'")).rows[0].staff,'Team Member');
       assert.equal(Number((await db.query("select (data->>'quantity')::numeric quantity from public.salon_records where record_type='inventory_item' and external_id='inv-blades'")).rows[0].quantity),3);
       await db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)', [a,'sale-atomic-1',JSON.stringify(sale),JSON.stringify(usage)]);
       assert.equal(Number((await db.query("select (data->>'quantity')::numeric quantity from public.salon_records where record_type='inventory_item' and external_id='inv-blades'")).rows[0].quantity),3);
@@ -287,19 +290,32 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal(Number(archived.quantity),4);
     });
     await t.test('owner manages payroll while staff sees only their own employment records', async () => {
+      const period = new Date().toISOString().slice(0,7);
+      const profile = {id:'profile-1',userId:staff,subject_user_id:staff,name:'Team Member',employeeNo:'EMP-001',jobTitle:'Barber',joinDate:`${period}-01`,baseSalary:3000,commissionRate:10,wpsRequired:true};
       await asUser(owner);
-      await db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'staff_profile','profile-1',$2,$3),($1,'attendance','attendance-1',$4,$3),($1,'payroll','payroll-1',$5,$3)",[
-        a,
-        JSON.stringify({name:'Team Member',subject_user_id:staff}),
-        owner,
-        JSON.stringify({staffId:'profile-1',subject_user_id:staff,status:'Present'}),
-        JSON.stringify({staffId:'profile-1',subject_user_id:staff,period:'2026-09',netPay:3000,status:'Generated'})
-      ]);
+      await db.query('select public.salon_save_staff_profile($1,$2,$3::jsonb,$4)',[a,profile.id,JSON.stringify(profile),'Initial payroll terms']);
+      await assert.rejects(db.query('select public.salon_save_staff_profile($1,$2,$3::jsonb,$4)',[a,profile.id,JSON.stringify({...profile,baseSalary:3200}),'']), /change reason/);
+      await db.query('select public.salon_save_attendance($1,$2,$3::jsonb,$4)',[a,'attendance-1',JSON.stringify({id:'attendance-1',staffId:profile.id,date:`${period}-02`,status:'Absent',clockIn:'',clockOut:'',note:'Unpaid absence'}),'']);
+      await db.query('select public.salon_record_staff_adjustment($1,$2,$3::jsonb)',[a,'adjustment-1',JSON.stringify({id:'adjustment-1',staffId:profile.id,period,type:'Allowance',amount:100,reason:'Transport allowance'})]);
+      await db.query('select public.salon_record_sale($1,$2,$3::jsonb,$4::jsonb)',[a,'payroll-sale',JSON.stringify({id:'payroll-sale',staff:profile.name,payment:'Card',subtotal:100,discount:0,tip:0,amount:100,createdAt:`${period}-05T09:00:00.000Z`}),'[]']);
+      const generated = (await db.query('select public.salon_generate_payroll($1,$2) result',[a,period])).rows[0].result.payroll[0];
+      const days = new Date(Number(period.slice(0,4)),Number(period.slice(5,7)),0).getDate();
+      assert.equal(Number(generated.basePay),Math.round((3000-3000/days)*100)/100);
+      assert.equal(Number(generated.commission),10);
+      assert.equal(Number(generated.additions),100);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"netPay\":1}' where shop_id=$1 and record_type='payroll'",[a]), /controlled payroll workflow/);
+      await assert.rejects(db.query('select public.salon_pay_payroll($1,$2,$3::jsonb)',[a,generated.id,JSON.stringify({method:'WPS',reference:'WPS-001'})]), /evidence is required/);
+      await db.query('select public.salon_pay_payroll($1,$2,$3::jsonb)',[a,generated.id,JSON.stringify({method:'WPS',reference:'WPS-001',evidencePath:`${a}/wps-proof.pdf`,evidenceName:'wps-proof.pdf'})]);
+      await db.query('select public.salon_pay_payroll($1,$2,$3::jsonb)',[a,generated.id,JSON.stringify({method:'WPS',reference:'WPS-001',evidencePath:`${a}/wps-proof.pdf`,evidenceName:'wps-proof.pdf'})]);
       await asUser(staff);
+      await assert.rejects(db.query('select public.salon_generate_payroll($1,$2)',[a,period]), /Management authorization/);
       assert.deepEqual((await db.query("select record_type from public.salon_records where record_type in ('staff_profile','attendance','payroll') order by record_type")).rows, [
         {record_type:'attendance'}, {record_type:'payroll'}, {record_type:'staff_profile'}
       ]);
-      await assert.rejects(db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'payroll','forged','{}',$2)",[a,staff]), /row-level security/);
+      await assert.rejects(db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'payroll','forged','{}',$2)",[a,staff]), /controlled payroll workflow/);
+      await asUser(owner);
+      await db.query('select public.salon_archive_staff_profile($1,$2,$3)',[a,profile.id,'Employment ended']);
+      assert.equal((await db.query("select data->>'active' active from public.salon_records where shop_id=$1 and record_type='staff_profile' and external_id=$2",[a,profile.id])).rows[0].active,'false');
     });
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);
@@ -308,7 +324,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await assert.rejects(db.query("insert into public.salon_records(shop_id,record_type,external_id,data,created_by) values ($1,'cash_closing','forged','{}',$2)",[a,owner]), /controlled close workflow/);
       await asUser(cashier);
       await assert.rejects(db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,`closing-${businessDate}`,JSON.stringify({businessDate,actual:5,reason:''})]), /variance reason/);
-      await db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,`closing-${businessDate}`,JSON.stringify({businessDate,actual:20,reason:''})]);
+      await db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,`closing-${businessDate}`,JSON.stringify({businessDate,actual:20,reason:'Verified test variance'})]);
       assert.equal((await db.query("select data->>'status' status from public.salon_records where record_type='cash_closing'")).rows[0].status,'Submitted');
       await asUser(owner);
       await db.query('select public.salon_close_day($1,$2,$3::jsonb)', [a,`closing-${businessDate}`,JSON.stringify({businessDate,actual:20,reason:''})]);
@@ -352,7 +368,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,4);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,42);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,44);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {

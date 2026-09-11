@@ -82,7 +82,12 @@ const requiredHtml = [
   "id=\"serviceChangeReason\"",
   "id=\"supplierEditId\"",
   "id=\"supplierChangeReason\"",
-  "id=\"expenseReversalField\""
+  "id=\"expenseReversalField\"",
+  "id=\"staffProfileFormTitle\"",
+  "id=\"staffProfileEditId\"",
+  "id=\"staffProfileChangeReason\"",
+  "id=\"attendanceChangeReason\"",
+  "id=\"payrollEvidenceFile\""
 ];
 
 const requiredJs = [
@@ -140,7 +145,13 @@ const requiredJs = [
   "archiveSupplier",
   "saveCustomer",
   "recordBooking",
-  "updateBookingStatus"
+  "updateBookingStatus",
+  "saveStaffProfile",
+  "archiveStaffProfile",
+  "saveAttendance",
+  "recordStaffAdjustment",
+  "generatePayroll",
+  "payPayroll"
 ];
 
 const forbiddenHtml = [

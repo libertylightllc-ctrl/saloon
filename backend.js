@@ -317,6 +317,48 @@
     });
   }
 
+  async function saveStaffProfile(shopId, profile, reason = "") {
+    return request("/rest/v1/rpc/salon_save_staff_profile", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, profile_external_id: profile.id, profile_data: profile, change_reason: reason })
+    });
+  }
+
+  async function archiveStaffProfile(shopId, profileId, reason) {
+    return request("/rest/v1/rpc/salon_archive_staff_profile", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, profile_external_id: profileId, archive_reason: reason })
+    });
+  }
+
+  async function saveAttendance(shopId, attendance, reason = "") {
+    return request("/rest/v1/rpc/salon_save_attendance", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, attendance_external_id: attendance.id, attendance_data: attendance, change_reason: reason })
+    });
+  }
+
+  async function recordStaffAdjustment(shopId, adjustment) {
+    return request("/rest/v1/rpc/salon_record_staff_adjustment", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, adjustment_external_id: adjustment.id, adjustment_data: adjustment })
+    });
+  }
+
+  async function generatePayroll(shopId, period) {
+    return request("/rest/v1/rpc/salon_generate_payroll", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, target_period: period })
+    });
+  }
+
+  async function payPayroll(shopId, payrollId, payment) {
+    return request("/rest/v1/rpc/salon_pay_payroll", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, payroll_external_id: payrollId, payment_data: payment })
+    });
+  }
+
   async function closeDay(shopId, closing) {
     return request("/rest/v1/rpc/salon_close_day", {
       method: "POST",
@@ -380,5 +422,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, saveCustomer, recordBooking, updateBookingStatus, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, saveCustomer, recordBooking, updateBookingStatus, saveStaffProfile, archiveStaffProfile, saveAttendance, recordStaffAdjustment, generatePayroll, payPayroll, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();
