@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260911-release-30" />
+    <link rel="stylesheet" href="./styles.css?v=20260911-release-34" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -56,6 +56,12 @@
         </section>
 
         <section class="login-access-panel">
+          <div class="language-switch login-language-switch" aria-label="Login language">
+            <button class="active" data-lang="en" type="button">EN</button>
+            <button data-lang="ar" type="button">AR</button>
+            <button data-lang="hi" type="button">HI</button>
+            <button data-lang="ur" type="button">UR</button>
+          </div>
           <a class="login-back-link" href="./">Product site</a>
           <form class="login-card" id="loginForm">
             <span class="status-pill">Demo access</span>
@@ -1546,7 +1552,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260911-release-33"></script>
-    <script src="./app.js?v=20260911-release-33"></script>
+    <script src="./backend.js?v=20260911-release-34"></script>
+    <script src="./app.js?v=20260911-release-34"></script>
   </body>
 </html>

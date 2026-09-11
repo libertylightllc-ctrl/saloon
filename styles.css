@@ -263,6 +263,12 @@ button {
   background: rgba(8, 23, 31, 0.52);
 }
 
+.login-language-switch {
+  align-self: flex-end;
+  background: rgba(7, 27, 24, 0.72);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
 .login-back-link {
   align-self: flex-end;
   color: rgba(255, 255, 255, 0.68);

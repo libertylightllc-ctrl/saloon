@@ -31,6 +31,7 @@ const requiredHtml = [
   "id=\"loginUsername\"",
   "id=\"loginPin\"",
   "id=\"loginError\"",
+  "aria-label=\"Login language\"",
   "id=\"purchaseTable\"",
   "id=\"dashboardPurchasesTotal\"",
   "id=\"dashboardExpensesTotal\"",

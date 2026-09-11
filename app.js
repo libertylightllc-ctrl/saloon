@@ -156,6 +156,19 @@ const languageLabels = {
 };
 
 const uiTranslations = {
+  "Built in Dubai · gents salon control": { ar: "صُمم في دبي · لإدارة صالونات الرجال", hi: "दुबई में निर्मित · जेंट्स सैलून नियंत्रण", ur: "دبئی میں تیار کردہ · مردانہ سیلون کنٹرول" },
+  "One command room for every shop.": { ar: "غرفة تحكم واحدة لكل صالون.", hi: "हर सैलून के लिए एक कंट्रोल रूम।", ur: "ہر سیلون کے لیے ایک کنٹرول روم۔" },
+  "Sales, purchases, expenses, reusable tools, stock, cash closing and owner reports stay separated by branch and visible from one master dashboard.": { ar: "تبقى المبيعات والمشتريات والمصروفات والأدوات القابلة لإعادة الاستخدام والمخزون وإغلاق النقد وتقارير المالك منفصلة حسب الفرع ومرئية من لوحة تحكم رئيسية واحدة.", hi: "बिक्री, खरीद, खर्च, दोबारा उपयोग होने वाले औजार, स्टॉक, कैश क्लोजिंग और मालिक की रिपोर्ट हर शाखा के लिए अलग और एक मुख्य डैशबोर्ड पर दिखाई देती हैं।", ur: "فروخت، خریداری، اخراجات، دوبارہ استعمال ہونے والے اوزار، اسٹاک، کیش کلوزنگ اور مالک کی رپورٹس ہر برانچ کے لیے الگ اور ایک مرکزی ڈیش بورڈ پر نظر آتی ہیں۔" },
+  "0 VAT": { ar: "0 ضريبة", hi: "0 VAT", ur: "0 VAT" },
+  "optional by shop": { ar: "اختيارية لكل صالون", hi: "सैलून के अनुसार वैकल्पिक", ur: "ہر سیلون کے لیے اختیاری" },
+  "5 roles": { ar: "5 أدوار", hi: "5 भूमिकाएं", ur: "5 کردار" },
+  "platform, owner, shop admin, cashier, staff": { ar: "المنصة، المالك، مدير الصالون، أمين الصندوق، الموظف", hi: "प्लेटफ़ॉर्म, मालिक, सैलून एडमिन, कैशियर, कर्मचारी", ur: "پلیٹ فارم، مالک، سیلون ایڈمن، کیشیئر، عملہ" },
+  "cash-first reports": { ar: "تقارير تركز على النقد", hi: "कैश-केंद्रित रिपोर्ट", ur: "کیش پر مبنی رپورٹس" },
+  "Secure cloud access": { ar: "دخول سحابي آمن", hi: "सुरक्षित क्लाउड एक्सेस", ur: "محفوظ کلاؤڈ رسائی" },
+  Login: { ar: "تسجيل الدخول", hi: "लॉगिन", ur: "لاگ اِن" },
+  "Shop ID": { ar: "معرّف الصالون", hi: "सैलून आईडी", ur: "سیلون آئی ڈی" },
+  Username: { ar: "اسم المستخدم", hi: "उपयोगकर्ता नाम", ur: "صارف نام" },
+  Password: { ar: "كلمة المرور", hi: "पासवर्ड", ur: "پاس ورڈ" },
   "Barber shop mode": { ar: "وضع صالون الحلاقة", hi: "बारबर शॉप मोड", ur: "حجام کی دکان موڈ" },
   "Active branch": { ar: "الفرع النشط", hi: "सक्रिय शाखा", ur: "فعال برانچ" },
   "VAT optional · currently off": { ar: "ضريبة القيمة المضافة اختيارية · متوقفة حالياً", hi: "VAT वैकल्पिक · अभी बंद", ur: "VAT اختیاری · فی الحال بند" },
@@ -974,7 +987,7 @@ async function reportOperationalError(error, category = "javascript", context = 
       context: {
         operation: context.operation || "",
         status: context.status || "",
-        release: "20260911-release-33",
+        release: "20260911-release-34",
         online: navigator.onLine,
         viewport: `${window.innerWidth}x${window.innerHeight}`
       },
