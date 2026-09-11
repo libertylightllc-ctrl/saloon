@@ -1649,6 +1649,74 @@ td code {
   margin-top: 20px;
 }
 
+.recovery-dialog {
+  width: min(560px, 100%);
+}
+
+.recovery-dialog > label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.recovery-dialog input {
+  width: 100%;
+}
+
+.recovery-impact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 20px 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.recovery-impact div {
+  padding: 14px;
+  background: var(--panel);
+}
+
+.recovery-impact span,
+.recovery-impact small {
+  display: block;
+  color: var(--muted);
+}
+
+.recovery-impact strong {
+  display: block;
+  margin: 5px 0;
+  font-size: 1.2rem;
+}
+
+.danger-button {
+  min-height: 44px;
+  border: 1px solid #a92f2f;
+  background: #a92f2f;
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.danger-button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.danger-outline {
+  border-color: var(--short);
+  color: var(--short);
+}
+
 .account-security-dialog label {
   display: grid;
   gap: 7px;
@@ -3092,5 +3160,9 @@ th {
     width: 100%;
     padding: 20px 16px;
     border-radius: var(--r-surface) var(--r-surface) 0 0;
+  }
+
+  .recovery-impact {
+    grid-template-columns: 1fr;
   }
 }

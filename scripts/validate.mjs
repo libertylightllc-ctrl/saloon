@@ -97,6 +97,7 @@ const requiredHtml = [
   ,"id=\"accountingSourceStatus\""
   ,"id=\"createCloudBackup\""
   ,"id=\"backupTable\""
+  ,"id=\"restoreBackupBackdrop\""
 ];
 
 const requiredJs = [

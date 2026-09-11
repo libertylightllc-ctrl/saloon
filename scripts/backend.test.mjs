@@ -277,17 +277,23 @@ test('accounting screen loads a server-generated tenant snapshot', async () => {
 });
 
 test('cloud backup lifecycle uses tenant-scoped immutable snapshot RPCs', async () => {
-  const fixture = backendFixture(Array.from({ length:3 }, () => ({ status:200, body:[] })));
+  const fixture = backendFixture(Array.from({ length:5 }, () => ({ status:200, body:[] })));
   fixture.values.set('salon-control-session', JSON.stringify({ access_token:'session-token' }));
   await fixture.backend.createBackup('shop-id','Pre-launch snapshot');
   await fixture.backend.listBackups('shop-id');
   await fixture.backend.getBackup('shop-id','backup-id');
+  await fixture.backend.previewRestore('shop-id','backup-id');
+  await fixture.backend.restoreBackup('shop-id','backup-id','RESTORE SHOP_A');
   assert.match(fixture.calls[0].url,/rpc\/salon_create_backup$/);
   assert.deepEqual(JSON.parse(fixture.calls[0].options.body),{ target_shop:'shop-id',backup_label:'Pre-launch snapshot' });
   assert.match(fixture.calls[1].url,/rpc\/salon_list_backups$/);
   assert.deepEqual(JSON.parse(fixture.calls[1].options.body),{ target_shop:'shop-id' });
   assert.match(fixture.calls[2].url,/rpc\/salon_get_backup$/);
   assert.deepEqual(JSON.parse(fixture.calls[2].options.body),{ target_shop:'shop-id',backup_id:'backup-id' });
+  assert.match(fixture.calls[3].url,/rpc\/salon_preview_restore$/);
+  assert.deepEqual(JSON.parse(fixture.calls[3].options.body),{ target_shop:'shop-id',backup_id:'backup-id' });
+  assert.match(fixture.calls[4].url,/rpc\/salon_restore_backup$/);
+  assert.deepEqual(JSON.parse(fixture.calls[4].options.body),{ target_shop:'shop-id',backup_id:'backup-id',confirmation_text:'RESTORE SHOP_A' });
 });
 
 test('accounting period close and reopen use controlled RPCs', async () => {

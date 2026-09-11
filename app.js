@@ -283,6 +283,15 @@ const uiTranslations = {
   Documents: { ar: "المستندات", hi: "दस्तावेज़", ur: "دستاویزات" },
   Checksum: { ar: "بصمة التحقق", hi: "चेकसम", ur: "چیک سم" },
   Download: { ar: "تنزيل", hi: "डाउनलोड", ur: "ڈاؤن لوڈ" },
+  Restore: { ar: "استعادة", hi: "रीस्टोर", ur: "بحال کریں" },
+  "Platform recovery": { ar: "استعادة المنصة", hi: "प्लेटफ़ॉर्म रिकवरी", ur: "پلیٹ فارم ریکوری" },
+  "Review recovery point": { ar: "مراجعة نقطة الاستعادة", hi: "रिकवरी पॉइंट की समीक्षा", ur: "ریکوری پوائنٹ کا جائزہ" },
+  "Restore snapshot": { ar: "استعادة النسخة", hi: "स्नैपशॉट रीस्टोर करें", ur: "اسنیپ شاٹ بحال کریں" },
+  "Operational records": { ar: "السجلات التشغيلية", hi: "ऑपरेशनल रिकॉर्ड", ur: "آپریشنل ریکارڈز" },
+  "Document records": { ar: "سجلات المستندات", hi: "दस्तावेज़ रिकॉर्ड", ur: "دستاویزی ریکارڈز" },
+  "File check": { ar: "فحص الملفات", hi: "फ़ाइल जाँच", ur: "فائل جانچ" },
+  Preserved: { ar: "محفوظ", hi: "सुरक्षित", ur: "محفوظ" },
+  "Access & audit": { ar: "الوصول والتدقيق", hi: "एक्सेस और ऑडिट", ur: "رسائی اور آڈٹ" },
   "Monday, 31 Aug · AED · VAT Off": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة متوقفة", hi: "सोमवार, 31 अगस्त · AED · VAT बंद", ur: "پیر، 31 اگست · AED · VAT بند" },
   "Monday, 31 Aug · AED · VAT On": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة مفعلة", hi: "सोमवार, 31 अगस्त · AED · VAT चालू", ur: "پیر، 31 اگست · AED · VAT آن" },
   "Monday, 31 Aug · AED · VAT optional": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة اختيارية", hi: "सोमवार, 31 अगस्त · AED · VAT वैकल्पिक", ur: "پیر، 31 اگست · AED · VAT اختیاری" },
@@ -864,6 +873,7 @@ let serverAccountingSnapshot = null;
 let accountingRefreshPending = false;
 let cloudBackups = [];
 let backupRefreshPending = false;
+let activeRestorePreview = null;
 let activeSaleCategory = "All";
 let currentRole = "Owner";
 let currentUser = { ...platformAccount };
@@ -3206,7 +3216,7 @@ function renderBackupCenter() {
       <td>${Number(backup.record_count || 0)}</td>
       <td>${Number(backup.document_count || 0)}</td>
       <td><code>${escapeHtml(String(backup.checksum || "").slice(0, 12))}</code></td>
-      <td><button class="mini-action" data-download-backup="${escapeHtml(backup.id)}" type="button">Download</button></td>
+      <td><div class="table-actions"><button class="mini-action" data-download-backup="${escapeHtml(backup.id)}" type="button">${translate("Download")}</button>${currentRole === "Platform Admin" ? `<button class="mini-action danger-outline" data-restore-backup="${escapeHtml(backup.id)}" type="button">${translate("Restore")}</button>` : ""}</div></td>
     </tr>`).join("") : '<tr><td colspan="6">No cloud snapshots have been created for this shop.</td></tr>';
   body.querySelectorAll("[data-download-backup]").forEach((button) => button.addEventListener("click", async () => {
     button.disabled = true;
@@ -3221,7 +3231,70 @@ function renderBackupCenter() {
       button.disabled = false;
     }
   }));
+  body.querySelectorAll("[data-restore-backup]").forEach((button) => button.addEventListener("click", () => openRestorePreview(button.dataset.restoreBackup)));
 }
+
+function closeRestoreDialog() {
+  activeRestorePreview = null;
+  document.getElementById("restoreBackupBackdrop").hidden = true;
+  document.getElementById("restoreConfirmation").value = "";
+  document.getElementById("confirmBackupRestore").disabled = true;
+}
+
+async function openRestorePreview(backupId) {
+  if (currentRole !== "Platform Admin" || isLocalDemo || !cloudTargetShopId()) return;
+  const backdrop = document.getElementById("restoreBackupBackdrop");
+  const intro = document.getElementById("restoreBackupIntro");
+  const impact = document.getElementById("restoreBackupImpact");
+  const note = document.getElementById("restoreBackupNote");
+  backdrop.hidden = false;
+  intro.textContent = "Verifying snapshot integrity and impact…";
+  impact.innerHTML = '<div><span>Status</span><strong>Checking…</strong><small>Server verification</small></div>';
+  note.textContent = "No data changes are made during this preview.";
+  try {
+    activeRestorePreview = await window.SalonBackend.previewRestore(cloudTargetShopId(), backupId);
+    const preview = activeRestorePreview;
+    intro.textContent = `${preview.label} · ${new Date(preview.createdAt).toLocaleString(currentCountryProfile().locale, { dateStyle:"medium", timeStyle:"short" })}`;
+    impact.innerHTML = `
+      <div><span>${translate("Operational records")}</span><strong>${Number(preview.currentRecordCount)} → ${Number(preview.snapshotRecordCount)}</strong><small>Current to snapshot</small></div>
+      <div><span>${translate("Document records")}</span><strong>${Number(preview.currentDocumentCount)} → ${Number(preview.snapshotDocumentCount)}</strong><small>File metadata only</small></div>
+      <div><span>${translate("File check")}</span><strong>${Number(preview.missingFileCount) ? `${Number(preview.missingFileCount)} missing` : "All referenced"}</strong><small>Stored files are not overwritten</small></div>
+      <div><span>${translate("Preserved")}</span><strong>${translate("Access & audit")}</strong><small>Users, shop identity and history</small></div>`;
+    document.getElementById("restoreConfirmationLabel").firstChild.nodeValue = `Type ${preview.confirmationText} to continue `;
+    note.textContent = "Recovery is transactional. A fresh safety snapshot is created automatically before any records change.";
+    document.getElementById("restoreConfirmation").focus();
+  } catch (error) {
+    activeRestorePreview = null;
+    intro.textContent = "Recovery preview unavailable";
+    impact.innerHTML = '<div><span>Status</span><strong>Blocked</strong><small>Nothing was changed</small></div>';
+    note.textContent = error.message;
+  }
+}
+
+document.getElementById("cancelBackupRestore").addEventListener("click", closeRestoreDialog);
+document.getElementById("restoreBackupBackdrop").addEventListener("click", (event) => {
+  if (event.target === event.currentTarget) closeRestoreDialog();
+});
+document.getElementById("restoreConfirmation").addEventListener("input", (event) => {
+  document.getElementById("confirmBackupRestore").disabled = !activeRestorePreview || event.target.value !== activeRestorePreview.confirmationText;
+});
+document.getElementById("confirmBackupRestore").addEventListener("click", async () => {
+  if (!activeRestorePreview) return;
+  const button = document.getElementById("confirmBackupRestore");
+  const note = document.getElementById("restoreBackupNote");
+  const confirmation = document.getElementById("restoreConfirmation").value;
+  button.disabled = true;
+  note.textContent = "Creating safety snapshot and restoring records… Keep this window open.";
+  try {
+    await window.SalonBackend.restoreBackup(cloudTargetShopId(), activeRestorePreview.backupId, confirmation);
+    note.textContent = "Recovery completed. Reloading the verified shop state…";
+    setSyncStatus("Recovered", "connected");
+    window.setTimeout(() => window.location.reload(), 700);
+  } catch (error) {
+    note.textContent = error.message;
+    button.disabled = confirmation !== activeRestorePreview.confirmationText;
+  }
+});
 
 async function refreshCloudBackups() {
   if (isLocalDemo || backupRefreshPending || !cloudTargetShopId()) {

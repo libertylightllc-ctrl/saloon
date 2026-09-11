@@ -57,6 +57,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609110025_accounting_snapshot.sql',
       '202609110026_complete_accounting_snapshot.sql',
       '202609110027_immutable_backups.sql'
+      ,'202609110028_controlled_recovery.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -396,6 +397,23 @@ test('tenant foundation enforces database permissions', async (t) => {
       await assert.rejects(db.query('select public.salon_create_backup($1,$2)',[a,'Cashier snapshot']), /Management authorization/);
       await db.exec('reset role');
       await assert.rejects(db.query("update public.salon_backups set label='Tampered' where id=$1",[created.id]), /immutable/);
+    });
+    await t.test('platform recovery previews impact, snapshots current state and restores atomically', async () => {
+      await asUser(owner);
+      const created = (await db.query('select public.salon_create_backup($1,$2) result',[a,'Recovery baseline'])).rows[0].result.backup;
+      await db.query('select public.salon_save_service($1,$2,$3::jsonb,$4)',[a,'after-backup-service',JSON.stringify({id:'after-backup-service',name:'Temporary service',category:'Custom',price:99,recipeItems:[]}), '']);
+      await assert.rejects(db.query('select public.salon_preview_restore($1,$2)',[a,created.id]), /Platform Admin authorization/);
+      await asUser(platform);
+      const preview = (await db.query('select public.salon_preview_restore($1,$2) result',[a,created.id])).rows[0].result;
+      assert.equal(preview.shopCode,'SHOP_A');
+      assert.equal(Number(preview.currentRecordCount),Number(preview.snapshotRecordCount)+1);
+      await assert.rejects(db.query('select public.salon_restore_backup($1,$2,$3)',[a,created.id,'RESTORE WRONG']), /confirmation does not match/);
+      const restored = (await db.query('select public.salon_restore_backup($1,$2,$3) result',[a,created.id,'RESTORE SHOP_A'])).rows[0].result;
+      assert.equal(restored.backupId,created.id);
+      assert.equal((await db.query("select count(*) count from public.salon_records where shop_id=$1 and external_id='after-backup-service'",[a])).rows[0].count,0);
+      assert.equal((await db.query('select count(*) count from public.salon_backups where shop_id=$1',[a])).rows[0].count,3);
+      assert.equal((await db.query("select count(*) count from public.salon_audit_events where shop_id=$1 and action='backup.restored'",[a])).rows[0].count,1);
+      assert.equal((await db.query('select count(*) count from public.salon_memberships where shop_id=$1',[a])).rows[0].count,3);
     });
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);

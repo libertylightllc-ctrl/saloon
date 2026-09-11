@@ -1458,7 +1458,7 @@
           </article>
           <article class="panel backup-center-panel">
             <div class="panel-head">
-              <div><h3>Cloud Backup & Recovery</h3><p>Immutable shop snapshots with record, document and storage-reference manifests</p></div>
+              <div><h3>Cloud Backup & Recovery</h3><p>Immutable shop snapshots with verified, controlled recovery</p></div>
               <div class="panel-actions"><span class="status-pill" id="backupStatus">Not checked</span><button class="primary-button" id="createCloudBackup" type="button">Create snapshot</button></div>
             </div>
             <div class="table-wrap"><table><thead><tr><th>Created</th><th>Label</th><th>Records</th><th>Documents</th><th>Checksum</th><th>Action</th></tr></thead><tbody id="backupTable"></tbody></table></div>
@@ -1489,7 +1489,28 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260911-release-27"></script>
-    <script src="./app.js?v=20260911-release-27"></script>
+    <div class="account-security-backdrop" id="restoreBackupBackdrop" hidden>
+      <section class="account-security-dialog recovery-dialog" role="dialog" aria-modal="true" aria-labelledby="restoreBackupTitle">
+        <div class="panel-head compact">
+          <div>
+            <span class="status-pill">Platform recovery</span>
+            <h3 id="restoreBackupTitle">Review recovery point</h3>
+            <p id="restoreBackupIntro">Verifying snapshot integrity and impact…</p>
+          </div>
+        </div>
+        <div class="recovery-impact" id="restoreBackupImpact"></div>
+        <label id="restoreConfirmationLabel">Type the confirmation shown below
+          <input id="restoreConfirmation" type="text" autocomplete="off" spellcheck="false" />
+        </label>
+        <p class="system-note" id="restoreBackupNote">A fresh safety snapshot is created automatically before recovery.</p>
+        <div class="account-security-actions">
+          <button class="ghost-button" id="cancelBackupRestore" type="button">Cancel</button>
+          <button class="danger-button" id="confirmBackupRestore" type="button" disabled>Restore snapshot</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="./backend.js?v=20260911-release-28"></script>
+    <script src="./app.js?v=20260911-release-28"></script>
   </body>
 </html>
