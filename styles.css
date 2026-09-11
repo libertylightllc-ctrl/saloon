@@ -1588,6 +1588,27 @@ td code {
   margin-top: 16px;
 }
 
+.access-request-panel {
+  margin-top: 16px;
+}
+
+.login-help-button {
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.recovery-honeypot {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+
 .operations-center-panel {
   margin-top: 16px;
 }

@@ -71,6 +71,7 @@
             </label>
             <p class="system-note danger-note" id="loginError" role="alert" hidden>Unable to sign in. Check your shop ID, username and password.</p>
             <button class="primary-button full login-submit" type="submit">Enter Salon Control</button>
+            <button class="login-help-button" id="openAccessHelp" type="button">Trouble signing in?</button>
             <small>Demo platform: Shop ID PLATFORM · username admin · password 9999</small>
           </form>
           <div class="login-preview" aria-hidden="true">
@@ -1462,6 +1463,14 @@
               </div>
             </article>
           </div>
+          <article class="panel access-request-panel">
+            <div class="panel-head">
+              <div><h3>Access Recovery</h3><p>Locked-out users waiting for an owner or administrator</p></div>
+              <span class="status-pill" id="accessRequestStatus">No open requests</span>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>Requested</th><th>User</th><th>Role</th><th>Attempts</th><th>Status</th><th>Action</th></tr></thead><tbody id="accessRequestTable"></tbody></table></div>
+            <p class="system-note" id="accessRequestNote">Resetting creates a temporary password that the user must replace after login.</p>
+          </article>
           <article class="panel security-history-panel">
             <div class="panel-head"><div><h3>Access History</h3><p>Successful authenticated sessions for the active shop</p></div><span class="status-pill" id="securitySessionMode">Server verified</span></div>
             <div class="security-summary">
@@ -1480,6 +1489,19 @@
           </article>
         </section>
       </main>
+    </div>
+
+    <div class="account-security-backdrop" id="accessHelpBackdrop" hidden>
+      <section class="account-security-dialog" role="dialog" aria-modal="true" aria-labelledby="accessHelpTitle">
+        <div class="panel-head compact"><div><span class="status-pill">Account recovery</span><h3 id="accessHelpTitle">Request sign-in help</h3><p>Your shop owner or administrator will issue a temporary password.</p></div></div>
+        <form id="accessHelpForm">
+          <label>Shop ID <input id="accessHelpShopId" autocomplete="organization" maxlength="32" required /></label>
+          <label>Username <input id="accessHelpUsername" autocomplete="username" maxlength="64" required /></label>
+          <label class="recovery-honeypot" aria-hidden="true">Website <input id="accessHelpWebsite" tabindex="-1" autocomplete="off" /></label>
+          <p class="system-note" id="accessHelpNote">For security, the response is the same whether or not an account exists.</p>
+          <div class="account-security-actions"><button class="ghost-button" id="cancelAccessHelp" type="button">Cancel</button><button class="primary-button" type="submit">Send request</button></div>
+        </form>
+      </section>
     </div>
 
     <div class="account-security-backdrop" id="accountSecurityBackdrop" hidden>
@@ -1524,7 +1546,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260911-release-29"></script>
-    <script src="./app.js?v=20260911-release-29"></script>
+    <script src="./backend.js?v=20260911-release-30"></script>
+    <script src="./app.js?v=20260911-release-30"></script>
   </body>
 </html>

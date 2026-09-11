@@ -100,6 +100,9 @@ const requiredHtml = [
   ,"id=\"restoreBackupBackdrop\""
   ,"id=\"platformIncidentTable\""
   ,"id=\"platformHealthStatus\""
+  ,"id=\"openAccessHelp\""
+  ,"id=\"accessHelpForm\""
+  ,"id=\"accessRequestTable\""
 ];
 
 const requiredJs = [

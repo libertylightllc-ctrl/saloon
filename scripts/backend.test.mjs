@@ -60,6 +60,20 @@ test('login rejects a valid account assigned to another shop', async () => {
   assert.equal(fixture.values.has('salon-control-session'), false);
 });
 
+test('access recovery request and management queue use controlled RPCs', async () => {
+  const fixture = backendFixture(Array.from({ length:3 }, () => ({ status:200, body:[] })));
+  await fixture.backend.requestAccessHelp('SHOP_A','cashier.one');
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token:'session-token' }));
+  await fixture.backend.listAccessRequests('shop-id');
+  await fixture.backend.resolveAccessRequest('shop-id','request-id','fulfilled','Temporary password issued');
+  assert.match(fixture.calls[0].url,/rpc\/salon_request_access_help$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body),{ shop_code:'SHOP_A',login_username:'cashier.one' });
+  assert.match(fixture.calls[1].url,/rpc\/salon_list_access_requests$/);
+  assert.deepEqual(JSON.parse(fixture.calls[1].options.body),{ target_shop:'shop-id' });
+  assert.match(fixture.calls[2].url,/rpc\/salon_resolve_access_request$/);
+  assert.deepEqual(JSON.parse(fixture.calls[2].options.body),{ target_shop:'shop-id',request_id:'request-id',resolution_status:'fulfilled',resolution_note:'Temporary password issued' });
+});
+
 test('cloud deletions use a tenant-scoped soft delete', async () => {
   const fixture = backendFixture([{ status: 204, body: null }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));

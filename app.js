@@ -315,6 +315,14 @@ const uiTranslations = {
   Open: { ar: "مفتوح", hi: "खुला", ur: "کھلا" },
   Resolved: { ar: "تم الحل", hi: "समाधान हुआ", ur: "حل شدہ" },
   None: { ar: "لا يوجد", hi: "कोई नहीं", ur: "کوئی نہیں" },
+  "Trouble signing in?": { ar: "هل تواجه مشكلة في تسجيل الدخول؟", hi: "साइन इन में परेशानी?", ur: "سائن ان میں مشکل؟" },
+  "Account recovery": { ar: "استعادة الحساب", hi: "खाता रिकवरी", ur: "اکاؤنٹ ریکوری" },
+  "Request sign-in help": { ar: "طلب مساعدة تسجيل الدخول", hi: "साइन-इन सहायता माँगें", ur: "سائن ان مدد کی درخواست" },
+  "Send request": { ar: "إرسال الطلب", hi: "अनुरोध भेजें", ur: "درخواست بھیجیں" },
+  "Access Recovery": { ar: "استعادة الوصول", hi: "एक्सेस रिकवरी", ur: "رسائی کی بحالی" },
+  Requested: { ar: "تاريخ الطلب", hi: "अनुरोधित", ur: "درخواست" },
+  Attempts: { ar: "المحاولات", hi: "प्रयास", ur: "کوششیں" },
+  Dismiss: { ar: "تجاهل", hi: "खारिज करें", ur: "خارج کریں" },
   "Monday, 31 Aug · AED · VAT Off": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة متوقفة", hi: "सोमवार, 31 अगस्त · AED · VAT बंद", ur: "پیر، 31 اگست · AED · VAT بند" },
   "Monday, 31 Aug · AED · VAT On": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة مفعلة", hi: "सोमवार, 31 अगस्त · AED · VAT चालू", ur: "پیر، 31 اگست · AED · VAT آن" },
   "Monday, 31 Aug · AED · VAT optional": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة اختيارية", hi: "सोमवार, 31 अगस्त · AED · VAT वैकल्पिक", ur: "پیر، 31 اگست · AED · VAT اختیاری" },
@@ -900,6 +908,8 @@ let activeRestorePreview = null;
 let platformHealth = null;
 let platformIncidents = [];
 let platformHealthPending = false;
+let accessRequests = [];
+let accessRequestPending = false;
 const telemetryFingerprints = new Map();
 let activeSaleCategory = "All";
 let currentRole = "Owner";
@@ -1456,6 +1466,47 @@ function authenticateLogin({ shopCode, username, password }) {
   return { ok: true, role: user.role, user, shopId: shop.id };
 }
 
+function openAccessHelpDialog() {
+  document.getElementById("accessHelpShopId").value = document.getElementById("loginShopId").value.trim();
+  document.getElementById("accessHelpUsername").value = document.getElementById("loginUsername").value.trim();
+  document.getElementById("accessHelpWebsite").value = "";
+  document.getElementById("accessHelpNote").textContent = "For security, the response is the same whether or not an account exists.";
+  document.getElementById("accessHelpBackdrop").hidden = false;
+  (document.getElementById("accessHelpShopId").value ? document.getElementById("accessHelpUsername") : document.getElementById("accessHelpShopId")).focus();
+}
+
+function closeAccessHelpDialog() {
+  document.getElementById("accessHelpBackdrop").hidden = true;
+}
+
+async function submitAccessHelp(event) {
+  event.preventDefault();
+  const shopCode = document.getElementById("accessHelpShopId").value.trim().toUpperCase();
+  const username = document.getElementById("accessHelpUsername").value.trim().toLowerCase();
+  const honeypot = document.getElementById("accessHelpWebsite").value;
+  const note = document.getElementById("accessHelpNote");
+  const button = event.submitter;
+  if (!shopCode || !username || honeypot) return;
+  button.disabled = true;
+  note.textContent = "Sending a secure request…";
+  try {
+    if (!isLocalDemo) await window.SalonBackend.requestAccessHelp(shopCode, username);
+    note.textContent = "Request received. Contact your shop owner or administrator for the temporary password.";
+    window.setTimeout(closeAccessHelpDialog, 1800);
+  } catch {
+    note.textContent = "Request received. Contact your shop owner or administrator for the temporary password.";
+  } finally {
+    button.disabled = false;
+  }
+}
+
+document.getElementById("openAccessHelp").addEventListener("click", openAccessHelpDialog);
+document.getElementById("cancelAccessHelp").addEventListener("click", closeAccessHelpDialog);
+document.getElementById("accessHelpBackdrop").addEventListener("click", (event) => {
+  if (event.target === event.currentTarget) closeAccessHelpDialog();
+});
+document.getElementById("accessHelpForm").addEventListener("submit", submitAccessHelp);
+
 function openPasswordDialog(required = false) {
   const backdrop = document.getElementById("accountSecurityBackdrop");
   const cancel = document.getElementById("cancelPasswordChange");
@@ -1745,6 +1796,7 @@ function showView(viewId) {
     refreshServerAccounting();
   }
   if (viewId === "settings") refreshCloudBackups();
+  if (viewId === "settings") refreshAccessRequests();
   if (viewId === "master-admin") refreshPlatformOperations();
   if (viewId === "launch-audit") renderLaunchAudit();
   document.getElementById("viewTitle").textContent = translate(titles[viewId] || "Salon Control");
@@ -4042,6 +4094,75 @@ function renderUserManagement() {
       renderUserManagement();
     });
   });
+}
+
+function renderAccessRequests() {
+  const body = document.getElementById("accessRequestTable");
+  const status = document.getElementById("accessRequestStatus");
+  if (!body || !status) return;
+  const openCount = accessRequests.filter((request) => request.status === "open").length;
+  status.textContent = accessRequestPending ? "Checking…" : openCount ? `${openCount} open` : "No open requests";
+  status.className = `status-pill ${openCount ? "warning" : "ok"}`;
+  body.innerHTML = accessRequests.length ? accessRequests.map((request) => {
+    const isOpen = request.status === "open";
+    return `<tr>
+      <td>${escapeHtml(platformDateTime(request.last_requested_at))}</td>
+      <td><strong>${escapeHtml(request.display_name)}</strong><br><code>${escapeHtml(request.username)}</code></td>
+      <td>${escapeHtml(backendRoleLabels[request.role] || request.role)}</td>
+      <td>${Number(request.request_count || 1)}</td>
+      <td><span class="status-pill ${isOpen ? "warning" : "ok"}">${isOpen ? "Open" : request.status === "fulfilled" ? "Reset issued" : "Dismissed"}</span></td>
+      <td>${isOpen ? `<div class="table-actions"><button class="mini-action" data-reset-request="${escapeHtml(request.id)}" type="button">Reset</button><button class="mini-action" data-dismiss-request="${escapeHtml(request.id)}" type="button">${translate("Dismiss")}</button></div>` : `<small>${escapeHtml(request.resolution || "Closed")}</small>`}</td>
+    </tr>`;
+  }).join("") : `<tr><td colspan="6">${isLocalDemo ? "Cloud recovery requests appear after secure login." : "No access recovery requests for this shop."}</td></tr>`;
+
+  body.querySelectorAll("[data-reset-request]").forEach((button) => button.addEventListener("click", async () => {
+    const request = accessRequests.find((item) => item.id === button.dataset.resetRequest);
+    if (!request) return;
+    const password = generatedPassword(request.role === "owner" ? "Owner" : "User");
+    button.disabled = true;
+    try {
+      await window.SalonBackend.provision({ action: "reset_password", shopId: cloudTargetShopId(), userId: request.user_id, password });
+      await window.SalonBackend.resolveAccessRequest(cloudTargetShopId(), request.id, "fulfilled", "Temporary password issued by management");
+      document.getElementById("accessRequestNote").textContent = `Temporary credentials: Shop ID ${currentShopCode()} · Username ${request.username} · Password ${password}`;
+      await Promise.all([refreshAccessRequests(), loadCloudUsers(cloudTargetShopId())]);
+      renderUserManagement();
+    } catch (error) {
+      document.getElementById("accessRequestNote").textContent = error.message;
+      button.disabled = false;
+    }
+  }));
+  body.querySelectorAll("[data-dismiss-request]").forEach((button) => button.addEventListener("click", async () => {
+    const reason = window.prompt("Why is this request being dismissed?", "Duplicate or already resolved");
+    if (!reason?.trim()) return;
+    button.disabled = true;
+    try {
+      await window.SalonBackend.resolveAccessRequest(cloudTargetShopId(), button.dataset.dismissRequest, "dismissed", reason.trim());
+      document.getElementById("accessRequestNote").textContent = "Access request dismissed with an audit record.";
+      await refreshAccessRequests();
+    } catch (error) {
+      document.getElementById("accessRequestNote").textContent = error.message;
+      button.disabled = false;
+    }
+  }));
+}
+
+async function refreshAccessRequests() {
+  if (isLocalDemo || accessRequestPending || !cloudTargetShopId() || !["Platform Admin", "Owner", "Shop Admin"].includes(currentRole)) {
+    if (isLocalDemo) accessRequests = [];
+    renderAccessRequests();
+    return;
+  }
+  accessRequestPending = true;
+  renderAccessRequests();
+  try {
+    accessRequests = await window.SalonBackend.listAccessRequests(cloudTargetShopId());
+  } catch (error) {
+    accessRequests = [];
+    document.getElementById("accessRequestNote").textContent = error.message;
+  } finally {
+    accessRequestPending = false;
+    renderAccessRequests();
+  }
 }
 
 function renderSecurityHistory() {

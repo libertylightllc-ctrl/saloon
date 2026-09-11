@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 const source = readFileSync(new URL('../app.js', import.meta.url), 'utf8');
-const auth = source.slice(source.indexOf('function authenticateLogin('), source.indexOf('function migrateServices('));
+const auth = source.slice(source.indexOf('function authenticateLogin('), source.indexOf('function openAccessHelpDialog('));
 const normalizer = source.slice(source.indexOf('function removeLegacyDemoRows('), source.indexOf('function saveState('));
 function fixture() {
   const context = vm.createContext({

@@ -17,7 +17,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       create role authenticated;
       create role service_role bypassrls;
       create schema auth;
-      create table auth.users(id uuid primary key);
+      create table auth.users(id uuid primary key,email text,raw_user_meta_data jsonb not null default '{}'::jsonb);
       create function auth.uid() returns uuid language sql stable as
       $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
       create schema storage;
@@ -59,10 +59,11 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609110027_immutable_backups.sql'
       ,'202609110028_controlled_recovery.sql'
       ,'202609110029_operational_monitoring.sql'
+      ,'202609110030_access_recovery.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
-    await db.query('insert into auth.users(id) values ($1),($2),($3),($4)', [owner,staff,platform,cashier]);
+    await db.query("insert into auth.users(id,email,raw_user_meta_data) values ($1,'shop_a.owner@auth.saloncontrol.app','{\"display_name\":\"Owner\"}'),($2,'shop_a.staff@auth.saloncontrol.app','{\"display_name\":\"Team Member\"}'),($3,'platform.admin@auth.saloncontrol.app','{\"display_name\":\"Platform Admin\"}'),($4,'shop_a.cashier@auth.saloncontrol.app','{\"display_name\":\"Cashier\"}')", [owner,staff,platform,cashier]);
     await db.query("insert into public.salon_shops(id,code,name,country) values ($1,'SHOP_A','A','AE'),($2,'SHOP_B','B','QA')", [a,b]);
     await db.query("insert into public.salon_memberships(shop_id,user_id,role) values ($1,$2,'owner'),($1,$3,'staff'),($1,$4,'cashier')", [a,owner,staff,cashier]);
     await db.query('insert into public.salon_platform_admins(user_id) values ($1)',[platform]);
@@ -440,6 +441,25 @@ test('tenant foundation enforces database permissions', async (t) => {
       await assert.rejects(db.query("update public.salon_client_events set message='Tampered' where id=$1",[events[0].id]),/permission denied/);
       await db.exec('reset role; set role service_role');
       await assert.rejects(db.query("update public.salon_client_events set message='Tampered' where id=$1",[events[0].id]),/append-only/);
+    });
+    await t.test('locked-out users can request non-enumerating owner-mediated recovery', async () => {
+      await db.exec('reset role; set role anon');
+      const accepted = (await db.query('select public.salon_request_access_help($1,$2) result',['SHOP_A','cashier'])).rows[0].result;
+      assert.equal(accepted.accepted,true);
+      const unknown = (await db.query('select public.salon_request_access_help($1,$2) result',['SHOP_A','does.not.exist'])).rows[0].result;
+      assert.deepEqual(unknown,accepted);
+      await db.query('select public.salon_request_access_help($1,$2)',['SHOP_A','cashier']);
+      await asUser(cashier);
+      await assert.rejects(db.query('select * from public.salon_list_access_requests($1)',[a]),/Management authorization/);
+      await asUser(owner);
+      const requests = (await db.query('select * from public.salon_list_access_requests($1)',[a])).rows;
+      assert.equal(requests.length,1);
+      assert.equal(requests[0].username,'cashier');
+      assert.equal(requests[0].request_count,1);
+      await assert.rejects(db.query("update public.salon_access_requests set status='dismissed' where id=$1",[requests[0].id]),/permission denied/);
+      await db.query('select public.salon_resolve_access_request($1,$2,$3,$4)',[a,requests[0].id,'fulfilled','Temporary password issued']);
+      assert.equal((await db.query('select * from public.salon_list_access_requests($1)',[a])).rows[0].status,'fulfilled');
+      assert.equal((await db.query("select count(*) count from public.salon_audit_events where shop_id=$1 and action='access_request.fulfilled'",[a])).rows[0].count,1);
     });
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);
