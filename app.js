@@ -292,6 +292,29 @@ const uiTranslations = {
   "File check": { ar: "فحص الملفات", hi: "फ़ाइल जाँच", ur: "فائل جانچ" },
   Preserved: { ar: "محفوظ", hi: "सुरक्षित", ur: "محفوظ" },
   "Access & audit": { ar: "الوصول والتدقيق", hi: "एक्सेस और ऑडिट", ur: "رسائی اور آڈٹ" },
+  "Platform Operations": { ar: "عمليات المنصة", hi: "प्लेटफ़ॉर्म ऑपरेशंस", ur: "پلیٹ فارم آپریشنز" },
+  "Open incidents": { ar: "الحوادث المفتوحة", hi: "खुले इंसिडेंट", ur: "کھلے واقعات" },
+  "Backup gaps": { ar: "نواقص النسخ الاحتياطي", hi: "बैकअप अंतर", ur: "بیک اپ خلا" },
+  "Latest backup": { ar: "أحدث نسخة احتياطية", hi: "नवीनतम बैकअप", ur: "تازہ ترین بیک اپ" },
+  Refresh: { ar: "تحديث", hi: "रीफ़्रेश", ur: "تازہ کریں" },
+  Resolve: { ar: "حل", hi: "समाधान", ur: "حل کریں" },
+  "Application health, cloud recovery coverage and unresolved errors": { ar: "صحة التطبيق وتغطية الاستعادة السحابية والأخطاء غير المحلولة", hi: "ऐप स्वास्थ्य, क्लाउड रिकवरी कवरेज और अनसुलझी त्रुटियाँ", ur: "ایپ صحت، کلاؤڈ ریکوری کوریج اور غیر حل شدہ خرابیاں" },
+  "Errors · 24 hours": { ar: "الأخطاء · 24 ساعة", hi: "त्रुटियाँ · 24 घंटे", ur: "خرابیاں · 24 گھنٹے" },
+  "Server and browser failures": { ar: "أعطال الخادم والمتصفح", hi: "सर्वर और ब्राउज़र विफलताएँ", ur: "سرور اور براؤزر کی خرابیاں" },
+  "Awaiting resolution": { ar: "بانتظار الحل", hi: "समाधान की प्रतीक्षा", ur: "حل کا منتظر" },
+  "Active shops without a snapshot": { ar: "المتاجر النشطة دون نسخة", hi: "बिना स्नैपशॉट सक्रिय दुकानें", ur: "بغیر اسنیپ شاٹ فعال دکانیں" },
+  "Cloud check runs after secure login": { ar: "يعمل فحص السحابة بعد تسجيل الدخول الآمن", hi: "सुरक्षित लॉगिन के बाद क्लाउड जाँच चलती है", ur: "محفوظ لاگ ان کے بعد کلاؤڈ جانچ چلتی ہے" },
+  "Only privacy-safe technical details are collected. Passwords, tokens and business records are excluded.": { ar: "يتم جمع تفاصيل تقنية آمنة للخصوصية فقط. تُستبعد كلمات المرور والرموز وسجلات العمل.", hi: "केवल गोपनीयता-सुरक्षित तकनीकी विवरण एकत्र होते हैं। पासवर्ड, टोकन और व्यावसायिक रिकॉर्ड शामिल नहीं हैं।", ur: "صرف رازداری سے محفوظ تکنیکی تفصیلات جمع ہوتی ہیں۔ پاس ورڈ، ٹوکن اور کاروباری ریکارڈ شامل نہیں ہیں۔" },
+  "Cloud incident history appears after secure Platform Admin login.": { ar: "يظهر سجل الحوادث السحابية بعد دخول مدير المنصة الآمن.", hi: "सुरक्षित प्लेटफ़ॉर्म एडमिन लॉगिन के बाद क्लाउड घटना इतिहास दिखाई देता है।", ur: "محفوظ پلیٹ فارم ایڈمن لاگ ان کے بعد کلاؤڈ واقعات کی تاریخ ظاہر ہوتی ہے۔" },
+  "Demo preview": { ar: "معاينة تجريبية", hi: "डेमो पूर्वावलोकन", ur: "ڈیمو پیش منظر" },
+  Healthy: { ar: "سليم", hi: "स्वस्थ", ur: "درست" },
+  "Needs attention": { ar: "يحتاج إلى متابعة", hi: "ध्यान आवश्यक", ur: "توجہ درکار" },
+  Occurred: { ar: "وقت الحدوث", hi: "घटित", ur: "واقع ہوا" },
+  Area: { ar: "المجال", hi: "क्षेत्र", ur: "شعبہ" },
+  Message: { ar: "الرسالة", hi: "संदेश", ur: "پیغام" },
+  Open: { ar: "مفتوح", hi: "खुला", ur: "کھلا" },
+  Resolved: { ar: "تم الحل", hi: "समाधान हुआ", ur: "حل شدہ" },
+  None: { ar: "لا يوجد", hi: "कोई नहीं", ur: "کوئی نہیں" },
   "Monday, 31 Aug · AED · VAT Off": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة متوقفة", hi: "सोमवार, 31 अगस्त · AED · VAT बंद", ur: "پیر، 31 اگست · AED · VAT بند" },
   "Monday, 31 Aug · AED · VAT On": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة مفعلة", hi: "सोमवार, 31 अगस्त · AED · VAT चालू", ur: "پیر، 31 اگست · AED · VAT آن" },
   "Monday, 31 Aug · AED · VAT optional": { ar: "الاثنين، 31 أغسطس · درهم · الضريبة اختيارية", hi: "सोमवार, 31 अगस्त · AED · VAT वैकल्पिक", ur: "پیر، 31 اگست · AED · VAT اختیاری" },
@@ -874,6 +897,10 @@ let accountingRefreshPending = false;
 let cloudBackups = [];
 let backupRefreshPending = false;
 let activeRestorePreview = null;
+let platformHealth = null;
+let platformIncidents = [];
+let platformHealthPending = false;
+const telemetryFingerprints = new Map();
 let activeSaleCategory = "All";
 let currentRole = "Owner";
 let currentUser = { ...platformAccount };
@@ -890,6 +917,52 @@ const backendRoleLabels = {
   staff: "Staff"
 };
 const backendRoleValues = Object.fromEntries(Object.entries(backendRoleLabels).map(([key, value]) => [value, key]));
+
+function telemetryFingerprint(category, message, operation = "") {
+  const source = `${category}|${message}|${operation}`;
+  let hash = 2166136261;
+  for (let index = 0; index < source.length; index += 1) hash = Math.imul(hash ^ source.charCodeAt(index), 16777619);
+  return `sc-${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}
+
+function telemetryMessage(error) {
+  return String(error?.message || error || "Unknown application error")
+    .replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, "[email]")
+    .replace(/(bearer|token|password)[ :=]+\S+/gi, "$1 [redacted]")
+    .slice(0, 500);
+}
+
+async function reportOperationalError(error, category = "javascript", context = {}) {
+  if (isLocalDemo || !cloudIdentity || !window.SalonBackend?.reportClientEvent) return;
+  const message = telemetryMessage(error);
+  const fingerprint = telemetryFingerprint(category, message, context.operation);
+  const lastSent = telemetryFingerprints.get(fingerprint) || 0;
+  if (Date.now() - lastSent < 60000) return;
+  telemetryFingerprints.set(fingerprint, Date.now());
+  try {
+    await window.SalonBackend.reportClientEvent(cloudTargetShopId(), {
+      severity: "error",
+      category,
+      fingerprint,
+      message,
+      route: `${window.location.pathname}${window.location.hash}`,
+      context: {
+        operation: context.operation || "",
+        status: context.status || "",
+        release: "20260911-release-29",
+        online: navigator.onLine,
+        viewport: `${window.innerWidth}x${window.innerHeight}`
+      },
+      occurredAt: new Date().toISOString()
+    });
+  } catch {
+    // Telemetry must never interrupt the salon workflow or recursively report itself.
+  }
+}
+
+window.SalonTelemetry = { capture: reportOperationalError };
+window.addEventListener("error", (event) => reportOperationalError(event.error || event.message, "javascript", { operation: event.filename || "window" }));
+window.addEventListener("unhandledrejection", (event) => reportOperationalError(event.reason, "promise", { operation: "unhandledrejection" }));
 
 if (!isLocalDemo) {
   document.querySelector(".login-card .status-pill").textContent = "Secure cloud access";
@@ -1672,6 +1745,7 @@ function showView(viewId) {
     refreshServerAccounting();
   }
   if (viewId === "settings") refreshCloudBackups();
+  if (viewId === "master-admin") refreshPlatformOperations();
   if (viewId === "launch-audit") renderLaunchAudit();
   document.getElementById("viewTitle").textContent = translate(titles[viewId] || "Salon Control");
   applyTranslations();
@@ -2115,6 +2189,75 @@ function renderMasterDashboard() {
     button.addEventListener("click", () => deleteShop(button.dataset.deleteShop));
   });
 }
+
+function platformDateTime(value, fallback = "None") {
+  if (!value) return fallback;
+  return new Date(value).toLocaleString(currentCountryProfile().locale, { dateStyle: "medium", timeStyle: "short" });
+}
+
+function renderPlatformOperations() {
+  const status = document.getElementById("platformHealthStatus");
+  const body = document.getElementById("platformIncidentTable");
+  if (!status || !body) return;
+  if (currentRole !== "Platform Admin") return;
+  const health = platformHealth || {};
+  status.textContent = translate(platformHealthPending ? "Checking…" : isLocalDemo ? "Demo preview" : health.status === "healthy" ? "Healthy" : health.status === "attention" ? "Needs attention" : "Unavailable");
+  status.className = `status-pill ${health.status === "healthy" ? "ok" : health.status === "attention" ? "warning" : ""}`;
+  document.getElementById("platformErrors24h").textContent = String(health.errors24h || 0);
+  document.getElementById("platformOpenIncidents").textContent = String(health.unresolvedEvents || 0);
+  document.getElementById("platformBackupGaps").textContent = String(health.shopsWithoutBackup ?? (isLocalDemo ? shops.filter((shop) => shop.enabled !== false).length : 0));
+  document.getElementById("platformLatestBackup").textContent = platformDateTime(health.latestBackupAt);
+  document.getElementById("platformHealthChecked").textContent = health.checkedAt ? `Checked ${platformDateTime(health.checkedAt)}` : translate(isLocalDemo ? "Cloud check runs after secure login" : "Not checked");
+  body.innerHTML = platformIncidents.length ? platformIncidents.map((incident) => `
+    <tr>
+      <td>${escapeHtml(platformDateTime(incident.occurred_at))}</td>
+      <td>${escapeHtml(incident.shop_code || "Platform")}</td>
+      <td><strong>${escapeHtml(incident.category)}</strong><br><small>${escapeHtml(incident.context?.operation || incident.route || "Application")}</small></td>
+      <td>${escapeHtml(incident.message)}</td>
+      <td><span class="status-pill ${incident.resolved_at ? "ok" : "warning"}">${incident.resolved_at ? "Resolved" : "Open"}</span></td>
+      <td>${incident.resolved_at ? `<small>${escapeHtml(incident.resolution || "Resolved")}</small>` : `<button class="mini-action" data-resolve-incident="${Number(incident.id)}" type="button">${translate("Resolve")}</button>`}</td>
+    </tr>`).join("") : `<tr><td colspan="6">${translate(isLocalDemo ? "Cloud incident history appears after secure Platform Admin login." : "No operational incidents recorded.")}</td></tr>`;
+  body.querySelectorAll("[data-resolve-incident]").forEach((button) => button.addEventListener("click", async () => {
+    const resolution = window.prompt("Resolution note (required)", "Verified and resolved");
+    if (!resolution?.trim()) return;
+    button.disabled = true;
+    try {
+      await window.SalonBackend.resolveClientEvent(Number(button.dataset.resolveIncident), resolution.trim());
+      await refreshPlatformOperations();
+    } catch (error) {
+      document.getElementById("platformOperationsNote").textContent = error.message;
+      button.disabled = false;
+    }
+  }));
+}
+
+async function refreshPlatformOperations() {
+  if (currentRole !== "Platform Admin" || platformHealthPending) return;
+  if (isLocalDemo) {
+    platformHealth = { status: "healthy", errors24h: 0, unresolvedEvents: 0, shopsWithoutBackup: shops.filter((shop) => shop.enabled !== false).length };
+    platformIncidents = [];
+    renderPlatformOperations();
+    return;
+  }
+  platformHealthPending = true;
+  renderPlatformOperations();
+  try {
+    [platformHealth, platformIncidents] = await Promise.all([
+      window.SalonBackend.loadPlatformHealth(),
+      window.SalonBackend.loadClientEvents(50)
+    ]);
+    document.getElementById("platformOperationsNote").textContent = "Live health check completed. Technical events contain no passwords, tokens or business records.";
+  } catch (error) {
+    platformHealth = null;
+    platformIncidents = [];
+    document.getElementById("platformOperationsNote").textContent = error.message;
+  } finally {
+    platformHealthPending = false;
+    renderPlatformOperations();
+  }
+}
+
+document.getElementById("refreshPlatformHealth").addEventListener("click", refreshPlatformOperations);
 
 function syncShopIdentity() {
   const shop = currentShop();

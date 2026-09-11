@@ -58,6 +58,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609110026_complete_accounting_snapshot.sql',
       '202609110027_immutable_backups.sql'
       ,'202609110028_controlled_recovery.sql'
+      ,'202609110029_operational_monitoring.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -414,6 +415,31 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal((await db.query('select count(*) count from public.salon_backups where shop_id=$1',[a])).rows[0].count,3);
       assert.equal((await db.query("select count(*) count from public.salon_audit_events where shop_id=$1 and action='backup.restored'",[a])).rows[0].count,1);
       assert.equal((await db.query('select count(*) count from public.salon_memberships where shop_id=$1',[a])).rows[0].count,3);
+    });
+    await t.test('operational monitoring is rate-limited, redacted and platform controlled', async () => {
+      await asUser(cashier);
+      const reported = (await db.query('select public.salon_report_client_event($1,$2,$3,$4,$5,$6,$7::jsonb,$8) result',[
+        a,'error','api','sc-12345678','Failure for person@example.com bearer secret-token','/app.html?private=yes',JSON.stringify({operation:'/rpc/test',release:'release-29',online:true,ignored:'business data'}),new Date().toISOString()
+      ])).rows[0].result;
+      assert.equal(reported.accepted,true);
+      await assert.rejects(db.query('select public.salon_report_client_event($1,$2,$3,$4,$5,$6,$7::jsonb,$8)',[b,'error','api','sc-87654321','Other shop','/app','{}',new Date().toISOString()]),/not active/);
+      assert.equal((await db.query('select * from public.salon_client_events')).rows.length,0);
+      await asUser(owner);
+      await assert.rejects(db.query('select public.salon_platform_health()'),/Platform Admin/);
+      await asUser(platform);
+      const health = (await db.query('select public.salon_platform_health() result')).rows[0].result;
+      assert.equal(Number(health.errors24h),1);
+      const events = (await db.query('select * from public.salon_list_client_events($1)',[50])).rows;
+      assert.equal(events.length,1);
+      assert.match(events[0].message,/\[email\]/);
+      assert.match(events[0].message,/\[redacted\]/);
+      assert.equal(events[0].route,'/app.html');
+      assert.equal(events[0].context.ignored,undefined);
+      await db.query('select public.salon_resolve_client_event($1,$2)',[events[0].id,'Transient upstream failure verified']);
+      assert.equal((await db.query('select * from public.salon_list_client_events($1)',[50])).rows[0].resolution,'Transient upstream failure verified');
+      await assert.rejects(db.query("update public.salon_client_events set message='Tampered' where id=$1",[events[0].id]),/permission denied/);
+      await db.exec('reset role; set role service_role');
+      await assert.rejects(db.query("update public.salon_client_events set message='Tampered' where id=$1",[events[0].id]),/append-only/);
     });
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);

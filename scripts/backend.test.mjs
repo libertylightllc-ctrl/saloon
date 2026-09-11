@@ -296,6 +296,23 @@ test('cloud backup lifecycle uses tenant-scoped immutable snapshot RPCs', async 
   assert.deepEqual(JSON.parse(fixture.calls[4].options.body),{ target_shop:'shop-id',backup_id:'backup-id',confirmation_text:'RESTORE SHOP_A' });
 });
 
+test('operational monitoring reports failures and exposes platform controls', async () => {
+  const fixture = backendFixture(Array.from({ length:4 }, () => ({ status:200, body:[] })));
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token:'session-token' }));
+  const event = { severity:'error',category:'api',fingerprint:'sc-12345678',message:'Network failed',route:'/app.html',context:{operation:'/rpc/test'},occurredAt:'2026-09-11T12:00:00.000Z' };
+  await fixture.backend.reportClientEvent('shop-id',event);
+  await fixture.backend.loadPlatformHealth();
+  await fixture.backend.loadClientEvents(25);
+  await fixture.backend.resolveClientEvent(7,'Verified and resolved');
+  assert.match(fixture.calls[0].url,/rpc\/salon_report_client_event$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body),{ target_shop:'shop-id',event_severity:'error',event_category:'api',event_fingerprint:'sc-12345678',event_message:'Network failed',event_route:'/app.html',event_context:{operation:'/rpc/test'},event_occurred_at:'2026-09-11T12:00:00.000Z' });
+  assert.match(fixture.calls[1].url,/rpc\/salon_platform_health$/);
+  assert.match(fixture.calls[2].url,/rpc\/salon_list_client_events$/);
+  assert.deepEqual(JSON.parse(fixture.calls[2].options.body),{ event_limit:25 });
+  assert.match(fixture.calls[3].url,/rpc\/salon_resolve_client_event$/);
+  assert.deepEqual(JSON.parse(fixture.calls[3].options.body),{ event_id:7,resolution_note:'Verified and resolved' });
+});
+
 test('accounting period close and reopen use controlled RPCs', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));

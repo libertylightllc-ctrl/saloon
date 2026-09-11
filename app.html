@@ -310,6 +310,20 @@
               </div>
             </article>
           </div>
+          <article class="panel operations-center-panel">
+            <div class="panel-head">
+              <div><h3>Platform Operations</h3><p>Application health, cloud recovery coverage and unresolved errors</p></div>
+              <div class="panel-actions"><span class="status-pill" id="platformHealthStatus">Not checked</span><button class="ghost-button" id="refreshPlatformHealth" type="button">Refresh</button></div>
+            </div>
+            <div class="operations-metrics">
+              <div><span>Errors · 24 hours</span><strong id="platformErrors24h">0</strong><small>Server and browser failures</small></div>
+              <div><span>Open incidents</span><strong id="platformOpenIncidents">0</strong><small>Awaiting resolution</small></div>
+              <div><span>Backup gaps</span><strong id="platformBackupGaps">0</strong><small>Active shops without a snapshot</small></div>
+              <div><span>Latest backup</span><strong id="platformLatestBackup">None</strong><small id="platformHealthChecked">Not checked</small></div>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>Occurred</th><th>Shop</th><th>Area</th><th>Message</th><th>Status</th><th>Action</th></tr></thead><tbody id="platformIncidentTable"></tbody></table></div>
+            <p class="system-note" id="platformOperationsNote">Only privacy-safe technical details are collected. Passwords, tokens and business records are excluded.</p>
+          </article>
         </section>
 
         <section class="view active" id="dashboard">
@@ -1510,7 +1524,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260911-release-28"></script>
-    <script src="./app.js?v=20260911-release-28"></script>
+    <script src="./backend.js?v=20260911-release-29"></script>
+    <script src="./app.js?v=20260911-release-29"></script>
   </body>
 </html>

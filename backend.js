@@ -17,6 +17,11 @@
     else sessionStorage.removeItem(sessionKey);
   }
 
+  function notifyOperationalFailure(path, message, status = "network") {
+    if (path.includes("salon_report_client_event")) return;
+    window.SalonTelemetry?.capture?.(new Error(message), "api", { operation: path.split("?")[0], status: String(status) });
+  }
+
   async function refreshSession() {
     const current = readSession();
     if (!current?.refresh_token) throw new Error("Your session has expired. Please sign in again.");
@@ -39,22 +44,30 @@
     if (session?.expires_at && session.expires_at * 1000 < Date.now() + 30000 && session.refresh_token) {
       session = await refreshSession();
     }
-    const response = await fetch(`${projectUrl}${path}`, {
-      ...options,
-      headers: {
-        apikey: publishableKey,
-        "Content-Type": "application/json",
-        ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
-        ...(options.headers || {})
-      }
-    });
+    let response;
+    try {
+      response = await fetch(`${projectUrl}${path}`, {
+        ...options,
+        headers: {
+          apikey: publishableKey,
+          "Content-Type": "application/json",
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+          ...(options.headers || {})
+        }
+      });
+    } catch (error) {
+      notifyOperationalFailure(path, "Network request failed", "network");
+      throw error;
+    }
     if (response.status === 401 && retry && session?.refresh_token && !path.startsWith("/auth/v1/token")) {
       await refreshSession();
       return request(path, options, false);
     }
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      throw new Error(body.msg || body.message || body.error_description || "Cloud request failed");
+      const message = body.msg || body.message || body.error_description || "Cloud request failed";
+      if (response.status >= 500) notifyOperationalFailure(path, message, response.status);
+      throw new Error(message);
     }
     if (response.status === 204) return null;
     return response.json();
@@ -429,6 +442,34 @@
     });
   }
 
+  async function reportClientEvent(shopId, event) {
+    return request("/rest/v1/rpc/salon_report_client_event", {
+      method: "POST",
+      body: JSON.stringify({
+        target_shop: shopId || null,
+        event_severity: event.severity,
+        event_category: event.category,
+        event_fingerprint: event.fingerprint,
+        event_message: event.message,
+        event_route: event.route,
+        event_context: event.context || {},
+        event_occurred_at: event.occurredAt
+      })
+    });
+  }
+
+  async function loadPlatformHealth() {
+    return request("/rest/v1/rpc/salon_platform_health", { method: "POST", body: "{}" });
+  }
+
+  async function loadClientEvents(limit = 50) {
+    return request("/rest/v1/rpc/salon_list_client_events", { method: "POST", body: JSON.stringify({ event_limit: limit }) });
+  }
+
+  async function resolveClientEvent(eventId, resolution) {
+    return request("/rest/v1/rpc/salon_resolve_client_event", { method: "POST", body: JSON.stringify({ event_id: eventId, resolution_note: resolution }) });
+  }
+
   async function previewRestore(shopId, backupId) {
     return request("/rest/v1/rpc/salon_preview_restore", {
       method: "POST",
@@ -506,5 +547,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, saveCustomer, recordBooking, updateBookingStatus, saveStaffProfile, archiveStaffProfile, saveAttendance, recordStaffAdjustment, generatePayroll, payPayroll, saveComplianceDocument, archiveComplianceDocument, signInspection, recordHygieneLog, saveProductRegistration, archiveProductRegistration, loadAccountingSnapshot, createBackup, listBackups, getBackup, previewRestore, restoreBackup, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, saveCustomer, recordBooking, updateBookingStatus, saveStaffProfile, archiveStaffProfile, saveAttendance, recordStaffAdjustment, generatePayroll, payPayroll, saveComplianceDocument, archiveComplianceDocument, signInspection, recordHygieneLog, saveProductRegistration, archiveProductRegistration, loadAccountingSnapshot, createBackup, listBackups, getBackup, previewRestore, restoreBackup, reportClientEvent, loadPlatformHealth, loadClientEvents, resolveClientEvent, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();

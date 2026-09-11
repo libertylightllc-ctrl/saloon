@@ -98,6 +98,8 @@ const requiredHtml = [
   ,"id=\"createCloudBackup\""
   ,"id=\"backupTable\""
   ,"id=\"restoreBackupBackdrop\""
+  ,"id=\"platformIncidentTable\""
+  ,"id=\"platformHealthStatus\""
 ];
 
 const requiredJs = [
