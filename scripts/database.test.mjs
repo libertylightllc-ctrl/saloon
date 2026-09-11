@@ -54,7 +54,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609110022_staff_sale_identity.sql',
       '202609110023_controlled_compliance.sql',
       '202609110024_controlled_products.sql',
-      '202609110025_accounting_snapshot.sql'
+      '202609110025_accounting_snapshot.sql',
+      '202609110026_complete_accounting_snapshot.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -152,7 +153,7 @@ test('tenant foundation enforces database permissions', async (t) => {
     });
     await t.test('owner can save supplier account records', async () => {
       await asUser(owner);
-      await db.query('select public.salon_save_supplier($1,$2,$3::jsonb,$4)',[a,'supplier-1',JSON.stringify({name:'Vendor',termsDays:30,openingBalance:0}),'']);
+      await db.query('select public.salon_save_supplier($1,$2,$3::jsonb,$4)',[a,'supplier-1',JSON.stringify({name:'Vendor',termsDays:30,openingBalance:50}),'']);
       assert.equal((await db.query("select * from public.salon_records where record_type='supplier'")).rows.length,1);
     });
     await t.test('server controls service and supplier master data', async () => {
@@ -258,7 +259,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       const payment = {id:'payment-controlled',supplierId:'supplier-1',amount:20,payment:'Cash',reference:'PAYMENT-1'};
       await asUser(cashier);
       await db.query('select public.salon_record_purchase($1,$2,$3::jsonb,$4::jsonb)',[a,purchase.id,JSON.stringify(purchase),JSON.stringify(inventory)]);
-      await assert.rejects(db.query('select public.salon_record_supplier_payment($1,$2,$3::jsonb)',[a,'payment-too-large',JSON.stringify({...payment,id:'payment-too-large',amount:51})]), /exceeds the current payable balance/);
+      await assert.rejects(db.query('select public.salon_record_supplier_payment($1,$2,$3::jsonb)',[a,'payment-too-large',JSON.stringify({...payment,id:'payment-too-large',amount:101})]), /exceeds the current payable balance/);
       await db.query('select public.salon_record_supplier_payment($1,$2,$3::jsonb)',[a,payment.id,JSON.stringify(payment)]);
       await db.query('select public.salon_record_supplier_payment($1,$2,$3::jsonb)',[a,payment.id,JSON.stringify(payment)]);
       assert.equal((await db.query("select * from public.salon_records where shop_id=$1 and record_type='supplier_payment' and external_id=$2",[a,payment.id])).rows.length,1);
@@ -364,6 +365,12 @@ test('tenant foundation enforces database permissions', async (t) => {
       assert.equal(Number(snapshot.totalDebit),Number(snapshot.totalCredit));
       assert.ok(snapshot.entries.length>0);
       assert.ok(snapshot.entries.every((entry) => entry.sourceId));
+      const sources = new Set(snapshot.entries.map((entry) => entry.source));
+      assert.ok(sources.has('booking-deposit'));
+      assert.ok(sources.has('supplier-opening'));
+      assert.ok(sources.has('payroll-accrual'));
+      assert.ok(sources.has('commission-accrual'));
+      assert.ok(sources.has('payroll-payment'));
       await assert.rejects(db.query('select public.salon_accounting_snapshot($1)',[b]), /Shop is not active|Management authorization/);
       await asUser(cashier);
       await assert.rejects(db.query('select public.salon_accounting_snapshot($1)',[a]), /Management authorization/);
