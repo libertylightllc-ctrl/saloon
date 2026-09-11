@@ -55,6 +55,11 @@ test('cloud tenants never hydrate empty operational collections from demo data',
   assert.match(appSource, /expiryDate: document\.expiryDate \|\| document\.dueDate \|\| ""/);
 });
 
+test('logout completes remote session revocation before reopening login', () => {
+  assert.match(appSource, /logoutBtn"\)\.addEventListener\("click", async/);
+  assert.match(appSource, /await window\.SalonBackend\.signOut\(\)/);
+});
+
 test('login ID maps to a private auth email and role comes from the server', async () => {
   const fixture = backendFixture([
     { status: 200, body: { access_token: 'session-token', refresh_token: 'refresh-token' } },

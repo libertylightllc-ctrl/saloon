@@ -974,7 +974,7 @@ async function reportOperationalError(error, category = "javascript", context = 
       context: {
         operation: context.operation || "",
         status: context.status || "",
-        release: "20260911-release-32",
+        release: "20260911-release-33",
         online: navigator.onLine,
         viewport: `${window.innerWidth}x${window.innerHeight}`
       },
@@ -5742,8 +5742,17 @@ document.getElementById("changePasswordBtn").addEventListener("click", () => ope
 document.getElementById("cancelPasswordChange").addEventListener("click", closePasswordDialog);
 document.getElementById("accountSecurityForm").addEventListener("submit", updateAccountPassword);
 
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  if (!isLocalDemo) void window.SalonBackend.signOut();
+document.getElementById("logoutBtn").addEventListener("click", async (event) => {
+  const button = event.currentTarget;
+  button.disabled = true;
+  if (!isLocalDemo) {
+    setSyncStatus("Signing out...");
+    try {
+      await window.SalonBackend.signOut();
+    } catch (error) {
+      console.error("Sign out failed", error);
+    }
+  }
   cloudIdentity = null;
   setSyncStatus("");
   window.scrollTo({ top: 0, left: 0 });
@@ -5757,6 +5766,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   appShell.classList.add("app-hidden");
   frontpage.classList.remove("front-hidden");
   document.getElementById("loginCurrencySignal").textContent = "GCC";
+  button.disabled = false;
 });
 
 document.getElementById("printReport").addEventListener("click", () => {
