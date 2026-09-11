@@ -359,6 +359,34 @@
     });
   }
 
+  async function saveComplianceDocument(shopId, document, reason = "") {
+    return request("/rest/v1/rpc/salon_save_compliance_document", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, document_external_id: document.id, document_data: document, change_reason: reason })
+    });
+  }
+
+  async function archiveComplianceDocument(shopId, documentId, reason) {
+    return request("/rest/v1/rpc/salon_archive_compliance_document", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, document_external_id: documentId, archive_reason: reason })
+    });
+  }
+
+  async function signInspection(shopId, inspection, reason = "") {
+    return request("/rest/v1/rpc/salon_sign_inspection", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, inspection_external_id: inspection.id, inspection_data: inspection, change_reason: reason })
+    });
+  }
+
+  async function recordHygieneLog(shopId, log) {
+    return request("/rest/v1/rpc/salon_record_hygiene_log", {
+      method: "POST",
+      body: JSON.stringify({ target_shop: shopId, log_external_id: log.id, log_data: log })
+    });
+  }
+
   async function closeDay(shopId, closing) {
     return request("/rest/v1/rpc/salon_close_day", {
       method: "POST",
@@ -422,5 +450,5 @@
     return provision({ action: "list_users", shopId });
   }
 
-  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, saveCustomer, recordBooking, updateBookingStatus, saveStaffProfile, archiveStaffProfile, saveAttendance, recordStaffAdjustment, generatePayroll, payPayroll, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
+  window.SalonBackend = { authEmail, signIn, signOut, restore, loadShops, loadRecords, upsertRecords, softDeleteRecord, uploadEvidence, signEvidence, saveDocumentMetadata, recordSale, refundSale, recordExpense, reverseExpense, recordPurchase, reversePurchase, recordSupplierPayment, reverseSupplierPayment, saveInventoryItem, recordStockMovement, archiveInventoryItem, saveService, archiveService, saveSupplier, archiveSupplier, saveCustomer, recordBooking, updateBookingStatus, saveStaffProfile, archiveStaffProfile, saveAttendance, recordStaffAdjustment, generatePayroll, payPayroll, saveComplianceDocument, archiveComplianceDocument, signInspection, recordHygieneLog, closeDay, closeAccountingPeriod, reopenAccountingPeriod, recordLogin, loadLoginHistory, changePassword, provision, loadUsers, isConfigured: true };
 })();

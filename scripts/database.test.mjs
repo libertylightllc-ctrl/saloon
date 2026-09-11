@@ -51,7 +51,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609110019_controlled_master_data.sql',
       '202609110020_controlled_crm_bookings.sql',
       '202609110021_controlled_staff_payroll.sql',
-      '202609110022_staff_sale_identity.sql'
+      '202609110022_staff_sale_identity.sql',
+      '202609110023_controlled_compliance.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -317,6 +318,27 @@ test('tenant foundation enforces database permissions', async (t) => {
       await db.query('select public.salon_archive_staff_profile($1,$2,$3)',[a,profile.id,'Employment ended']);
       assert.equal((await db.query("select data->>'active' active from public.salon_records where shop_id=$1 and record_type='staff_profile' and external_id=$2",[a,profile.id])).rows[0].active,'false');
     });
+    await t.test('compliance renewals preserve history while hygiene and inspections are controlled', async () => {
+      const compliance = {id:'compliance-lease',type:'Trade licence',holder:'Company',number:'TL-001',issueDate:'2026-01-01',expiryDate:'2026-12-31',renewalCost:1500,reminderDays:45,evidence:'licence.pdf'};
+      await asUser(owner);
+      await db.query('select public.salon_save_compliance_document($1,$2,$3::jsonb,$4)',[a,compliance.id,JSON.stringify(compliance),'']);
+      await assert.rejects(db.query('select public.salon_save_compliance_document($1,$2,$3::jsonb,$4)',[a,compliance.id,JSON.stringify({...compliance,expiryDate:'2027-12-31'}),'']), /change reason/);
+      const renewed = (await db.query('select public.salon_save_compliance_document($1,$2,$3::jsonb,$4) result',[a,compliance.id,JSON.stringify({...compliance,expiryDate:'2027-12-31'}),'Annual renewal completed'])).rows[0].result.document;
+      assert.equal(renewed.expiryDate,'2027-12-31');
+      assert.equal(renewed.history.length,1);
+      await assert.rejects(db.query("update public.salon_records set data=data || '{\"expiryDate\":\"2030-01-01\"}' where record_type='compliance_document'"), /controlled compliance workflow/);
+      const inspection = {id:'inspection-daily',record:'Sterilizer cycle',cadence:'Daily',dueDate:'2026-09-11',evidence:'cycle-photo.jpg'};
+      await db.query('select public.salon_sign_inspection($1,$2,$3::jsonb,$4)',[a,inspection.id,JSON.stringify(inspection),'']);
+      await assert.rejects(db.query('select public.salon_sign_inspection($1,$2,$3::jsonb,$4)',[a,inspection.id,JSON.stringify(inspection),'']), /correction reason/);
+      await db.query('select public.salon_record_hygiene_log($1,$2,$3::jsonb)',[a,'hygiene-1',JSON.stringify({id:'hygiene-1',device:'Sterilizer',cycle:'Full cycle',operator:'Owner',solution:'Changed',singleUse:'Blades checked',evidence:'photo.jpg'})]);
+      await db.query('select public.salon_record_hygiene_log($1,$2,$3::jsonb)',[a,'hygiene-1',JSON.stringify({id:'hygiene-1',device:'Forged',cycle:'Forged',evidence:'forged.jpg'})]);
+      assert.equal((await db.query("select data->>'device' device from public.salon_records where record_type='hygiene_log' and external_id='hygiene-1'")).rows[0].device,'Sterilizer');
+      await asUser(cashier);
+      await assert.rejects(db.query('select public.salon_archive_compliance_document($1,$2,$3)',[a,compliance.id,'No longer required']), /Management authorization/);
+      await asUser(owner);
+      await db.query('select public.salon_archive_compliance_document($1,$2,$3)',[a,compliance.id,'Replaced by new licence category']);
+      assert.equal((await db.query("select data->>'active' active from public.salon_records where record_type='compliance_document' and external_id=$1",[compliance.id])).rows[0].active,'false');
+    });
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);
       await asUser(owner);
@@ -368,7 +390,7 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(platform);
       assert.equal((await db.query('select * from public.salon_shops')).rows.length,2);
       assert.equal((await db.query('select * from public.salon_documents')).rows.length,4);
-      assert.equal((await db.query('select * from public.salon_records')).rows.length,44);
+      assert.equal((await db.query('select * from public.salon_records')).rows.length,47);
       assert.deepEqual((await db.query('select shop_code,role from public.salon_session()')).rows, [{shop_code:'PLATFORM',role:'platform_admin'}]);
     });
     await t.test('suspension revokes existing sessions at query time', async () => {

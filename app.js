@@ -912,7 +912,7 @@ function buildCloudRecords() {
   const allowed = new Set(cloudWritableTypes[currentRole] || []);
   const records = [];
   cloudCollections.forEach(([field, type]) => {
-    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement", "service", "supplier", "customer", "appointment", "queue_ticket", "staff_profile", "attendance", "staff_adjustment", "payroll"].includes(type)) return;
+    if (!allowed.has(type) || ["cash_closing", "accounting_period", "expense", "purchase", "supplier_payment", "inventory_item", "stock_movement", "service", "supplier", "customer", "appointment", "queue_ticket", "staff_profile", "attendance", "staff_adjustment", "payroll", "inspection", "hygiene_log", "compliance_document", "document_chain"].includes(type)) return;
     (activeShopState[field] || []).forEach((item, index) => {
       records.push({
         shop_id: targetShopId,
@@ -1245,7 +1245,7 @@ function hydrateActiveShop() {
     ? activeShopState.users
     : (isLocalDemo ? defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha") : []);
   checklist = { ...defaultState.checklist, ...(activeShopState.checklist || {}) };
-  inspectionRecords = activeShopState.inspectionRecords || clone(defaultState.inspectionRecords);
+  inspectionRecords = activeShopState.inspectionRecords?.length ? activeShopState.inspectionRecords : clone(defaultState.inspectionRecords);
   hygieneLogs = activeShopState.hygieneLogs || [];
   complianceDocuments = activeShopState.complianceDocuments || defaultComplianceDocuments(currentShop()?.country || "AE");
   ensureComplianceDocumentsForCountry();
@@ -1454,6 +1454,7 @@ function removeLegacyDemoRows() {
   // Preserve records: matching old demo values does not prove a row is disposable.
   inspectionRecords = inspectionRecords.map((record, index) => ({
     ...record,
+    id: record.id || `inspection-${String(record.record || index).toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${record.dueDate || index}`,
     dueDate: record.dueDate || defaultState.inspectionRecords[index]?.dueDate || isoOffset(0),
     signedBy: record.evidence && !["Pending", "PDF missing"].includes(record.evidence) ? record.signedBy : "",
     signedAt: record.evidence && !["Pending", "PDF missing"].includes(record.evidence) ? record.signedAt || "" : "",
@@ -1464,14 +1465,17 @@ function removeLegacyDemoRows() {
     dueDate: document.dueDate || defaultState.documentChain[index]?.dueDate || isoOffset(30)
   }));
   ensureComplianceDocumentsForCountry();
-  complianceDocuments = complianceDocuments.map((document) => ({
+  complianceDocuments = complianceDocuments.map((document, index) => ({
     ...document,
+    id: document.id || `compliance-${String(document.type || "document").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${String(document.holder || "shop").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index}`,
     holder: document.holder || "Shop",
     issueDate: document.issueDate || "",
     expiryDate: document.expiryDate || document.dueDate || isoOffset(30),
     renewalCost: Number(document.renewalCost || 0),
     evidence: document.evidence || "",
-    reminderDays: Number(document.reminderDays || 30)
+    reminderDays: Number(document.reminderDays || 30),
+    active: document.active !== false,
+    history: Array.isArray(document.history) ? document.history : []
   }));
 }
 
@@ -2533,6 +2537,7 @@ function computedRecordStatus(record) {
 }
 
 function computedExpiryStatus(document) {
+  if (document.active === false) return "Archived";
   if (!document.expiryDate) return "Missing";
   const days = daysUntil(document.expiryDate);
   if (days < 0) return "Expired";
@@ -2655,13 +2660,39 @@ function renderInspectionRecords() {
         document.getElementById("inspectionNote").textContent = translate("Evidence required before signing.");
         return;
       }
-      record.signedBy = currentRole;
-      record.evidence = evidence || record.evidence || evidenceFile?.name || "";
-      if (evidenceFile) record.evidenceFile = evidenceFile;
-      record.signedAt = new Date().toISOString();
+      const reason = document.getElementById("inspectionChangeReason").value.trim();
+      if (record.signedAt && !reason) {
+        document.getElementById("inspectionNote").textContent = "Enter a correction reason before replacing a signed inspection.";
+        return;
+      }
+      const nextRecord = {
+        ...record,
+        id: record.id || cloudExternalId(record, "inspection", Number(button.dataset.signRecord)),
+        signedBy: currentRole,
+        evidence: evidence || record.evidence || evidenceFile?.name || "",
+        evidenceFile: evidenceFile || record.evidenceFile || null,
+        signedAt: new Date().toISOString()
+      };
+      if (!isLocalDemo) {
+        button.disabled = true;
+        try {
+          const result = await window.SalonBackend.signInspection(cloudTargetShopId(), nextRecord, reason);
+          Object.assign(record, result?.inspection || nextRecord);
+        } catch (error) {
+          document.getElementById("inspectionNote").textContent = error.message;
+          button.disabled = false;
+          return;
+        }
+      } else {
+        if (record.signedAt) {
+          nextRecord.history = [...(record.history || []), { ...record, history: undefined, supersededAt: new Date().toISOString(), correctionReason: reason }];
+        }
+        Object.assign(record, nextRecord);
+      }
       addAudit("Stock adjusted", `${currentRole} · inspection signed · ${record.record}`);
       saveState();
       renderCompliance();
+      document.getElementById("inspectionChangeReason").value = "";
       document.getElementById("inspectionNote").textContent = translate("Inspection signed with evidence.");
     });
   });
@@ -2671,14 +2702,20 @@ function renderDocumentChain() {
   const container = document.getElementById("documentChain");
   if (!container) return;
   container.innerHTML = "";
-  documentChain.forEach((docItem, index) => {
-    const status = computedRecordStatus(docItem);
+  const chain = complianceDocuments.filter((document) => document.active !== false)
+    .slice().sort((first, second) => daysUntil(first.expiryDate) - daysUntil(second.expiryDate)).slice(0, 4);
+  if (!chain.length) {
+    container.innerHTML = "<small>No active expiry records yet.</small>";
+    return;
+  }
+  chain.forEach((docItem, index) => {
+    const status = computedExpiryStatus(docItem);
     const item = document.createElement("div");
     item.className = statusClass(status);
     item.innerHTML = `
       <span>${index + 1}</span>
-      <div><strong>${escapeHtml(translate(docItem.name))}</strong><small>${escapeHtml(translate("Due"))}: ${escapeHtml(dateLabel(docItem.dueDate))}</small></div>
-      <b>${escapeHtml(translate(status))}</b>
+      <div><strong>${escapeHtml(translate(docItem.type))}</strong><small>${escapeHtml(translate("Due"))}: ${escapeHtml(dateLabel(docItem.expiryDate))}</small></div>
+      <b>${escapeHtml(expiryStatusLabel(status))}</b>
     `;
     container.appendChild(item);
   });
@@ -2706,39 +2743,74 @@ function renderExpiryDocuments() {
   renderExpiryTypeOptions();
   const profile = currentCountryProfile();
   document.getElementById("expiryCountryNote").textContent = `${profile.name} profile · ${profile.currency} renewal costs · ${profile.healthName}`;
-  const openCount = complianceDocuments.filter((expiryDocument) => computedExpiryStatus(expiryDocument) !== "Ready").length;
+  const openCount = complianceDocuments.filter((expiryDocument) => expiryDocument.active !== false && computedExpiryStatus(expiryDocument) !== "Ready").length;
   document.getElementById("expiryOpenCount").textContent = `${openCount} expiring`;
   body.innerHTML = "";
   complianceDocuments
     .slice()
-    .sort((first, second) => daysUntil(first.expiryDate) - daysUntil(second.expiryDate))
+    .sort((first, second) => Number(first.active === false) - Number(second.active === false) || daysUntil(first.expiryDate) - daysUntil(second.expiryDate))
     .forEach((expiryDocument) => {
       const originalIndex = complianceDocuments.indexOf(expiryDocument);
       const status = computedExpiryStatus(expiryDocument);
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td><strong>${escapeHtml(expiryDocument.type)}</strong><br><small>Reminder ${escapeHtml(expiryDocument.reminderDays || 30)} days before</small></td>
+        <td><strong>${escapeHtml(expiryDocument.type)}</strong><br><small>Reminder ${escapeHtml(expiryDocument.reminderDays || 30)} days before${expiryDocument.history?.length ? ` · ${expiryDocument.history.length} previous version${expiryDocument.history.length === 1 ? "" : "s"}` : ""}</small></td>
         <td>${escapeHtml(expiryDocument.holder || "Shop")}</td>
         <td>${escapeHtml(expiryDocument.number || "Pending")}</td>
         <td>${escapeHtml(dateLabel(expiryDocument.expiryDate))}</td>
         <td>${moneyFixed(expiryDocument.renewalCost || 0)}</td>
         <td>${evidenceMarkup(expiryDocument)}</td>
         <td><span class="status-pill ${statusClass(status)}">${escapeHtml(expiryStatusLabel(status))}</span></td>
-        <td><button class="mini-action danger" data-delete-expiry="${originalIndex}" type="button">Delete</button></td>
+        <td><div class="action-cluster"><button class="mini-action" data-edit-expiry="${originalIndex}" type="button" ${expiryDocument.active === false ? "disabled" : ""}>Edit</button><button class="danger-button" data-archive-expiry="${originalIndex}" type="button" ${expiryDocument.active === false ? "disabled" : ""}>${expiryDocument.active === false ? "Archived" : "Archive"}</button></div></td>
       `;
       body.appendChild(row);
     });
 
-  body.querySelectorAll("[data-delete-expiry]").forEach((button) => {
+  body.querySelectorAll("[data-edit-expiry]").forEach((button) => button.addEventListener("click", () => {
+    const expiryDocument = complianceDocuments[Number(button.dataset.editExpiry)];
+    if (!expiryDocument || expiryDocument.active === false) return;
+    document.getElementById("expiryEditId").value = expiryDocument.id || "";
+    document.getElementById("expiryType").value = expiryDocument.type;
+    document.getElementById("expiryHolder").value = expiryDocument.holder || "";
+    document.getElementById("expiryNumber").value = expiryDocument.number || "";
+    document.getElementById("expiryIssueDate").value = expiryDocument.issueDate || "";
+    document.getElementById("expiryDate").value = expiryDocument.expiryDate || "";
+    document.getElementById("expiryRenewalCost").value = expiryDocument.renewalCost || 0;
+    document.getElementById("expiryReminderDays").value = expiryDocument.reminderDays || 30;
+    document.getElementById("expiryEvidence").value = expiryDocument.evidence || "";
+    document.getElementById("expiryChangeReason").value = "";
+    document.getElementById("saveExpiryDocument").textContent = "Update expiry record";
+    document.getElementById("expiryNote").textContent = "Update the renewal details and enter a change reason.";
+  }));
+
+  body.querySelectorAll("[data-archive-expiry]").forEach((button) => {
     button.addEventListener("click", async () => {
-      const index = Number(button.dataset.deleteExpiry);
-      if (!window.confirm("Delete this expiry record? The audit history will be retained.")) return;
-      if (!await deleteCloudRecord(complianceDocuments[index], "compliance_document", index)) return;
-      const removed = complianceDocuments.splice(index, 1)[0];
-      addAudit("Stock adjusted", `${currentRole} · expiry deleted · ${removed?.type || "document"}`);
+      const index = Number(button.dataset.archiveExpiry);
+      const expiryDocument = complianceDocuments[index];
+      const reason = document.getElementById("expiryChangeReason").value.trim();
+      if (!expiryDocument || !reason) {
+        document.getElementById("expiryNote").textContent = "Enter an archive reason before archiving this record.";
+        return;
+      }
+      if (!window.confirm(`Archive ${expiryDocument.type} for ${expiryDocument.holder}? Renewal history will remain.`)) return;
+      if (!isLocalDemo) {
+        button.disabled = true;
+        try {
+          const result = await window.SalonBackend.archiveComplianceDocument(cloudTargetShopId(), expiryDocument.id, reason);
+          Object.assign(expiryDocument, result?.document || {});
+        } catch (error) {
+          document.getElementById("expiryNote").textContent = error.message;
+          button.disabled = false;
+          return;
+        }
+      } else {
+        Object.assign(expiryDocument, { active:false, archiveReason:reason, archivedAt:new Date().toISOString(), archivedBy:currentRole });
+      }
+      addAudit("Stock adjusted", `${currentRole} · expiry archived · ${expiryDocument.type}`);
       saveState();
       renderCompliance();
-      document.getElementById("expiryNote").textContent = "Expiry record deleted.";
+      document.getElementById("expiryChangeReason").value = "";
+      document.getElementById("expiryNote").textContent = "Expiry record archived. Renewal history remains available.";
     });
   });
 }
@@ -2780,16 +2852,15 @@ function renderMontajiItems() {
 
 function syncComplianceMetrics() {
   const notReadyRecords = inspectionRecords.filter((record) => computedRecordStatus(record) !== "Ready").length;
-  const documentProblems = documentChain.filter((document) => computedRecordStatus(document) !== "Ready").length;
-  const expiryProblems = complianceDocuments.filter((document) => computedExpiryStatus(document) !== "Ready").length;
+  const expiryProblems = complianceDocuments.filter((document) => document.active !== false && computedExpiryStatus(document) !== "Ready").length;
   const montajiProblems = montajiItems.filter((item) => item.status !== "Registered").length;
-  const readiness = Math.max(0, Math.round(100 - ((notReadyRecords + documentProblems + expiryProblems + montajiProblems) * 7)));
+  const readiness = Math.max(0, Math.round(100 - ((notReadyRecords + expiryProblems + montajiProblems) * 7)));
   const period = new Date().toISOString().slice(0, 7);
   const wpsRuns = payrollRuns.filter((run) => run.period === period && run.wpsRequired);
   const completedWps = wpsRuns.filter((run) => run.wpsStatus === "Completed").length;
   const paidPercent = wpsRuns.length ? Math.round((completedWps / wpsRuns.length) * 100) : 0;
   document.getElementById("inspectionReadiness").textContent = `${readiness}%`;
-  document.getElementById("overdueRecordCount").textContent = String(notReadyRecords + documentProblems + expiryProblems);
+  document.getElementById("overdueRecordCount").textContent = String(notReadyRecords + expiryProblems);
   document.getElementById("wpsMetric").textContent = wpsRuns.length ? `${paidPercent}%` : "Not generated";
   document.getElementById("montajiMetric").textContent = String(montajiProblems);
   document.getElementById("wpsDetail").textContent = wpsRuns.length
@@ -2851,7 +2922,7 @@ function renderOwnerChecks() {
       action: "Review"
     });
   }
-  const expiringDocuments = complianceDocuments.filter((document) => computedExpiryStatus(document) !== "Ready").length;
+  const expiringDocuments = complianceDocuments.filter((document) => document.active !== false && computedExpiryStatus(document) !== "Ready").length;
   if (expiringDocuments) {
     checks.push({
       level: "danger",
@@ -5763,6 +5834,7 @@ document.getElementById("approveClosing").addEventListener("click", async () => 
 });
 
 document.getElementById("saveExpiryDocument").addEventListener("click", async () => {
+  const editId = document.getElementById("expiryEditId").value;
   const type = document.getElementById("expiryType").value;
   const holder = document.getElementById("expiryHolder").value.trim() || "Shop";
   const number = document.getElementById("expiryNumber").value.trim();
@@ -5771,10 +5843,18 @@ document.getElementById("saveExpiryDocument").addEventListener("click", async ()
   const renewalCost = numberValue("expiryRenewalCost");
   const reminderDays = Math.max(Number(document.getElementById("expiryReminderDays").value || 30), 1);
   const evidence = document.getElementById("expiryEvidence").value.trim();
+  const reason = document.getElementById("expiryChangeReason").value.trim();
   const note = document.getElementById("expiryNote");
   let evidenceFile = null;
   if (!type || !expiryDate) {
     note.textContent = "Document type and expiry date are required.";
+    return;
+  }
+  const existing = editId
+    ? complianceDocuments.find((document) => document.id === editId)
+    : complianceDocuments.find((document) => document.active !== false && document.type === type && document.holder.toLowerCase() === holder.toLowerCase());
+  if (existing && !reason) {
+    note.textContent = "Enter a change reason for this renewal or correction.";
     return;
   }
   try {
@@ -5790,10 +5870,31 @@ document.getElementById("saveExpiryDocument").addEventListener("click", async ()
     note.textContent = error.message;
     return;
   }
-  const existing = complianceDocuments.find((document) => document.type === type && document.holder.toLowerCase() === holder.toLowerCase());
-  const nextRecord = { type, holder, number, issueDate, expiryDate, renewalCost, reminderDays, evidence: evidence || evidenceFile?.name || existing?.evidence || "" };
-  if (evidenceFile) nextRecord.evidenceFile = evidenceFile;
+  const nextRecord = {
+    id: existing?.id || `compliance-${crypto.randomUUID()}`,
+    type, holder, number, issueDate, expiryDate, renewalCost, reminderDays,
+    evidence: evidence || evidenceFile?.name || existing?.evidence || "",
+    evidenceFile: evidenceFile || existing?.evidenceFile || null,
+    active: true,
+    history: existing?.history || []
+  };
+  if (!isLocalDemo) {
+    const button = document.getElementById("saveExpiryDocument");
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.saveComplianceDocument(cloudTargetShopId(), nextRecord, reason);
+      Object.assign(nextRecord, result?.document || {});
+    } catch (error) {
+      note.textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
   if (existing) {
+    if (isLocalDemo) {
+      nextRecord.history = [...(existing.history || []), { ...existing, history: undefined, supersededAt: new Date().toISOString(), changeReason: reason }];
+    }
     Object.assign(existing, nextRecord);
   } else {
     complianceDocuments.unshift(nextRecord);
@@ -5809,6 +5910,9 @@ document.getElementById("saveExpiryDocument").addEventListener("click", async ()
   document.getElementById("expiryReminderDays").value = "30";
   document.getElementById("expiryEvidence").value = "";
   document.getElementById("expiryEvidenceFile").value = "";
+  document.getElementById("expiryEditId").value = "";
+  document.getElementById("expiryChangeReason").value = "";
+  document.getElementById("saveExpiryDocument").textContent = "Save expiry record";
 });
 
 document.getElementById("addHygieneLog").addEventListener("click", async () => {
@@ -5838,8 +5942,10 @@ document.getElementById("addHygieneLog").addEventListener("click", async () => {
     document.getElementById("hygieneNote").textContent = error.message;
     return;
   }
-  hygieneLogs.unshift({
+  const log = {
+    id: `hygiene-${crypto.randomUUID()}`,
     time,
+    loggedAt: new Date().toISOString(),
     device,
     operator,
     cycle,
@@ -5848,7 +5954,21 @@ document.getElementById("addHygieneLog").addEventListener("click", async () => {
     evidence: evidence || evidenceFile?.name || "",
     evidenceFile,
     status: "Ready"
-  });
+  };
+  if (!isLocalDemo) {
+    const button = document.getElementById("addHygieneLog");
+    button.disabled = true;
+    try {
+      const result = await window.SalonBackend.recordHygieneLog(cloudTargetShopId(), log);
+      Object.assign(log, result?.log || {});
+    } catch (error) {
+      document.getElementById("hygieneNote").textContent = error.message;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+  }
+  hygieneLogs.unshift(log);
   hygieneLogs = hygieneLogs.slice(0, 12);
   addAudit("Stock adjusted", `${currentRole} · hygiene log added · ${device} · ${time}`);
   saveState();

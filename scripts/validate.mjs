@@ -87,7 +87,10 @@ const requiredHtml = [
   "id=\"staffProfileEditId\"",
   "id=\"staffProfileChangeReason\"",
   "id=\"attendanceChangeReason\"",
-  "id=\"payrollEvidenceFile\""
+  "id=\"payrollEvidenceFile\"",
+  "id=\"inspectionChangeReason\"",
+  "id=\"expiryEditId\"",
+  "id=\"expiryChangeReason\""
 ];
 
 const requiredJs = [
@@ -151,7 +154,11 @@ const requiredJs = [
   "saveAttendance",
   "recordStaffAdjustment",
   "generatePayroll",
-  "payPayroll"
+  "payPayroll",
+  "saveComplianceDocument",
+  "archiveComplianceDocument",
+  "signInspection",
+  "recordHygieneLog"
 ];
 
 const forbiddenHtml = [

@@ -17,7 +17,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260911-release-22" />
+    <link rel="stylesheet" href="./styles.css?v=20260911-release-23" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -977,6 +977,7 @@
                 </div>
               </div>
               <p class="system-note" id="inspectionNote">Evidence is required before an inspection record can be signed.</p>
+              <label class="table-reason-field">Inspection correction reason <input id="inspectionChangeReason" placeholder="Required when replacing a signed record" /></label>
               <div class="table-wrap">
                 <table>
                   <thead>
@@ -1015,6 +1016,7 @@
               <span class="status-pill warning" id="expiryOpenCount">0 expiring</span>
             </div>
             <div class="hygiene-form">
+              <input id="expiryEditId" type="hidden" />
               <label>Document type
                 <select id="expiryType"></select>
               </label>
@@ -1026,8 +1028,9 @@
               <label>Reminder days <input id="expiryReminderDays" type="number" min="1" step="1" value="30" /></label>
               <label>Evidence note <input id="expiryEvidence" placeholder="Photo, file name, receipt or reference" /></label>
               <label>Upload PDF/image <input id="expiryEvidenceFile" type="file" accept="image/*,.pdf,application/pdf" /></label>
+              <label>Change / archive reason <input id="expiryChangeReason" placeholder="Required for renewals, corrections and archiving" /></label>
             </div>
-            <button class="primary-button table-action" id="saveExpiryDocument" type="button">Save expiry</button>
+            <button class="primary-button table-action" id="saveExpiryDocument" type="button">Save expiry record</button>
             <p class="system-note" id="expiryNote">Enter every lease, visa, health card, vaccination, pest control and licence renewal here.</p>
             <div class="table-wrap">
               <table>
@@ -1463,7 +1466,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260911-release-22"></script>
-    <script src="./app.js?v=20260911-release-22"></script>
+    <script src="./backend.js?v=20260911-release-23"></script>
+    <script src="./app.js?v=20260911-release-23"></script>
   </body>
 </html>
