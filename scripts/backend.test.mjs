@@ -4,6 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 const source = await readFile(new URL('../backend.js', import.meta.url), 'utf8');
+const appSource = await readFile(new URL('../app.js', import.meta.url), 'utf8');
 const provisionSource = await readFile(new URL('../supabase/functions/provision-user/index.ts', import.meta.url), 'utf8');
 
 function backendFixture(responses = []) {
@@ -45,6 +46,13 @@ test('shop provisioning creates an idempotent server starter catalog', () => {
   assert.match(provisionSource, /"inv-blades"/);
   assert.match(provisionSource, /"compliance_document"/);
   assert.match(provisionSource, /ignoreDuplicates: true/);
+});
+
+test('cloud tenants never hydrate empty operational collections from demo data', () => {
+  assert.match(appSource, /inspectionRecords = Array\.isArray\(activeShopState\.inspectionRecords\)/);
+  assert.doesNotMatch(appSource, /inspectionRecords = activeShopState\.inspectionRecords\?\.length/);
+  assert.match(appSource, /const requiredDocs = isLocalDemo \? defaultComplianceDocuments\(country\) : emptyComplianceRequirements\(country\)/);
+  assert.match(appSource, /expiryDate: document\.expiryDate \|\| document\.dueDate \|\| ""/);
 });
 
 test('login ID maps to a private auth email and role comes from the server', async () => {

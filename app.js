@@ -159,14 +159,20 @@ const uiTranslations = {
   "Barber shop mode": { ar: "وضع صالون الحلاقة", hi: "बारबर शॉप मोड", ur: "حجام کی دکان موڈ" },
   "Active branch": { ar: "الفرع النشط", hi: "सक्रिय शाखा", ur: "فعال برانچ" },
   "VAT optional · currently off": { ar: "ضريبة القيمة المضافة اختيارية · متوقفة حالياً", hi: "VAT वैकल्पिक · अभी बंद", ur: "VAT اختیاری · فی الحال بند" },
+  "Super Admin": { ar: "المسؤول الأعلى", hi: "सुपर एडमिन", ur: "سپر ایڈمن" },
+  "Super Admin Console": { ar: "لوحة تحكم المسؤول الأعلى", hi: "सुपर एडमिन कंसोल", ur: "سپر ایڈمن کنسول" },
   Dashboard: { ar: "لوحة التحكم", hi: "डैशबोर्ड", ur: "ڈیش بورڈ" },
   Setup: { ar: "الإعداد", hi: "सेटअप", ur: "سیٹ اپ" },
   "Quick Sale": { ar: "بيع سريع", hi: "त्वरित बिक्री", ur: "فوری فروخت" },
+  "Clients & Queue": { ar: "العملاء وقائمة الانتظار", hi: "ग्राहक और कतार", ur: "صارفین اور قطار" },
   All: { ar: "الكل", hi: "सभी", ur: "سب" },
   Services: { ar: "الخدمات", hi: "सेवाएं", ur: "خدمات" },
   Purchases: { ar: "المشتريات", hi: "खरीदारी", ur: "خریداری" },
   Expenses: { ar: "المصروفات", hi: "खर्चे", ur: "اخراجات" },
   "Inventory & Tools": { ar: "المخزون والأدوات", hi: "इन्वेंटरी और टूल्स", ur: "اسٹاک اور اوزار" },
+  "Staff & Payroll": { ar: "الموظفون والرواتب", hi: "कर्मचारी और पेरोल", ur: "عملہ اور تنخواہیں" },
+  Accounting: { ar: "المحاسبة", hi: "लेखांकन", ur: "اکاؤنٹنگ" },
+  "Accounting Ledger": { ar: "دفتر الأستاذ المحاسبي", hi: "लेखा बही", ur: "اکاؤنٹنگ لیجر" },
   Inventory: { ar: "المخزون", hi: "इन्वेंटरी", ur: "اسٹاک" },
   Compliance: { ar: "الامتثال", hi: "अनुपालन", ur: "تعمیل" },
   "Compliance Control": { ar: "تحكم الامتثال", hi: "अनुपालन कंट्रोल", ur: "تعمیل کنٹرول" },
@@ -650,6 +656,15 @@ function defaultComplianceDocuments(country = "AE") {
   ];
 }
 
+function emptyComplianceRequirements(country = "AE") {
+  return defaultComplianceDocuments(country).map((document) => ({
+    ...document,
+    issueDate: "",
+    expiryDate: "",
+    status: "Not set"
+  }));
+}
+
 function defaultInventoryItems(openingQuantity = true) {
   const quantity = (value) => openingQuantity ? value : 0;
   return [
@@ -824,7 +839,7 @@ function createProductionShopState(country = "AE", overrides = {}) {
     accountingPeriods: [],
     loginEvents: [],
     hygieneLogs: [],
-    complianceDocuments: defaultComplianceDocuments(country).map((document) => ({ ...document, issueDate: "", expiryDate: "", status: "Not set" })),
+    complianceDocuments: emptyComplianceRequirements(country),
     documentChain: [],
     montajiItems: [],
     inspectionRecords: [],
@@ -959,7 +974,7 @@ async function reportOperationalError(error, category = "javascript", context = 
       context: {
         operation: context.operation || "",
         status: context.status || "",
-        release: "20260911-release-31",
+        release: "20260911-release-32",
         online: navigator.onLine,
         viewport: `${window.innerWidth}x${window.innerHeight}`
       },
@@ -1352,7 +1367,7 @@ function hydrateActiveShop() {
   serverAccountingSnapshot = null;
   activeShopState = shopStates[activeShopId] || (currentRole === "Platform Admin" ? createProductionShopState("AE") : createShopState());
   if (activeShopId) shopStates[activeShopId] = activeShopState;
-  services = activeShopState.services || clone(defaultState.services);
+  services = Array.isArray(activeShopState.services) ? activeShopState.services : (isLocalDemo ? clone(defaultState.services) : []);
   purchases = activeShopState.purchases || [];
   expenses = activeShopState.expenses || [];
   inventoryItems = Array.isArray(activeShopState.inventoryItems) ? activeShopState.inventoryItems : clone(defaultState.inventoryItems);
@@ -1367,13 +1382,13 @@ function hydrateActiveShop() {
   openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
   sales = activeShopState.sales || [];
   refunds = activeShopState.refunds || [];
-  customers = Array.isArray(activeShopState.customers) ? activeShopState.customers : clone(defaultState.customers);
-  queueTickets = Array.isArray(activeShopState.queueTickets) ? activeShopState.queueTickets : clone(defaultState.queueTickets);
+  customers = Array.isArray(activeShopState.customers) ? activeShopState.customers : (isLocalDemo ? clone(defaultState.customers) : []);
+  queueTickets = Array.isArray(activeShopState.queueTickets) ? activeShopState.queueTickets : (isLocalDemo ? clone(defaultState.queueTickets) : []);
   appointments = activeShopState.appointments || [];
   auditLog = activeShopState.auditLog || [];
   cashClosings = activeShopState.cashClosings || [];
-  staffPayments = activeShopState.staffPayments || clone(defaultState.staffPayments);
-  staffProfiles = activeShopState.staffProfiles || clone(defaultState.staffProfiles);
+  staffPayments = Array.isArray(activeShopState.staffPayments) ? activeShopState.staffPayments : (isLocalDemo ? clone(defaultState.staffPayments) : []);
+  staffProfiles = Array.isArray(activeShopState.staffProfiles) ? activeShopState.staffProfiles : (isLocalDemo ? clone(defaultState.staffProfiles) : []);
   attendanceRecords = activeShopState.attendanceRecords || [];
   staffAdjustments = activeShopState.staffAdjustments || [];
   payrollRuns = activeShopState.payrollRuns || [];
@@ -1383,12 +1398,14 @@ function hydrateActiveShop() {
     ? activeShopState.users
     : (isLocalDemo ? defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha") : []);
   checklist = { ...defaultState.checklist, ...(activeShopState.checklist || {}) };
-  inspectionRecords = activeShopState.inspectionRecords?.length ? activeShopState.inspectionRecords : clone(defaultState.inspectionRecords);
+  inspectionRecords = Array.isArray(activeShopState.inspectionRecords) ? activeShopState.inspectionRecords : (isLocalDemo ? clone(defaultState.inspectionRecords) : []);
   hygieneLogs = activeShopState.hygieneLogs || [];
-  complianceDocuments = activeShopState.complianceDocuments || defaultComplianceDocuments(currentShop()?.country || "AE");
+  complianceDocuments = Array.isArray(activeShopState.complianceDocuments)
+    ? activeShopState.complianceDocuments
+    : (isLocalDemo ? defaultComplianceDocuments(currentShop()?.country || "AE") : []);
   ensureComplianceDocumentsForCountry();
-  documentChain = activeShopState.documentChain || clone(defaultState.documentChain);
-  montajiItems = activeShopState.montajiItems || clone(defaultState.montajiItems);
+  documentChain = Array.isArray(activeShopState.documentChain) ? activeShopState.documentChain : (isLocalDemo ? clone(defaultState.documentChain) : []);
+  montajiItems = Array.isArray(activeShopState.montajiItems) ? activeShopState.montajiItems : (isLocalDemo ? clone(defaultState.montajiItems) : []);
   activeSaleCategory = "All";
 }
 
@@ -1649,7 +1666,7 @@ function removeLegacyDemoRows() {
     id: document.id || `compliance-${String(document.type || "document").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${String(document.holder || "shop").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index}`,
     holder: document.holder || "Shop",
     issueDate: document.issueDate || "",
-    expiryDate: document.expiryDate || document.dueDate || isoOffset(30),
+    expiryDate: document.expiryDate || document.dueDate || "",
     renewalCost: Number(document.renewalCost || 0),
     evidence: document.evidence || "",
     reminderDays: Number(document.reminderDays || 30),
@@ -2856,7 +2873,8 @@ async function readEvidenceFile(inputId) {
 }
 
 function ensureComplianceDocumentsForCountry() {
-  const requiredDocs = defaultComplianceDocuments(currentShop()?.country || "AE");
+  const country = currentShop()?.country || "AE";
+  const requiredDocs = isLocalDemo ? defaultComplianceDocuments(country) : emptyComplianceRequirements(country);
   complianceDocuments = Array.isArray(complianceDocuments) ? complianceDocuments : [];
   const currentNames = new Set(requiredDocs.map((documentItem) => documentItem.type));
   const countrySpecificNames = new Set(
