@@ -94,6 +94,7 @@ const chartOfAccounts = [
   { code: "2100", name: "VAT payable", type: "Liability" },
   { code: "2200", name: "Payroll payable", type: "Liability" },
   { code: "2300", name: "Customer deposits", type: "Liability" },
+  { code: "2400", name: "Staff tips payable", type: "Liability" },
   { code: "3000", name: "Owner capital", type: "Equity" },
   { code: "3900", name: "Opening balance equity", type: "Equity" },
   { code: "4000", name: "Service revenue", type: "Income" },
@@ -851,6 +852,8 @@ let hygieneLogs = activeShopState.hygieneLogs || defaultState.hygieneLogs;
 let complianceDocuments = activeShopState.complianceDocuments || defaultComplianceDocuments(currentShop()?.country || "AE");
 let documentChain = activeShopState.documentChain || defaultState.documentChain;
 let montajiItems = activeShopState.montajiItems || defaultState.montajiItems;
+let serverAccountingSnapshot = null;
+let accountingRefreshPending = false;
 let activeSaleCategory = "All";
 let currentRole = "Owner";
 let currentUser = { ...platformAccount };
@@ -1232,6 +1235,7 @@ function captureActiveShopState() {
 }
 
 function hydrateActiveShop() {
+  serverAccountingSnapshot = null;
   activeShopState = shopStates[activeShopId] || (currentRole === "Platform Admin" ? createProductionShopState("AE") : createShopState());
   if (activeShopId) shopStates[activeShopId] = activeShopState;
   services = activeShopState.services || clone(defaultState.services);
@@ -1643,7 +1647,10 @@ function showView(viewId) {
   document.querySelector(`[data-view="${viewId}"]`)?.classList.add("active");
   syncMobileViewSwitcher();
   if (viewId === "clients") renderClientsQueue();
-  if (viewId === "accounting") renderAccounting();
+  if (viewId === "accounting") {
+    renderAccounting();
+    refreshServerAccounting();
+  }
   if (viewId === "launch-audit") renderLaunchAudit();
   document.getElementById("viewTitle").textContent = translate(titles[viewId] || "Salon Control");
   applyTranslations();
@@ -2391,9 +2398,9 @@ function journalEntries() {
   return entries;
 }
 
-function trialBalanceRows() {
+function trialBalanceRows(entries = journalEntries()) {
   const balances = new Map();
-  journalEntries().forEach((entry) => {
+  entries.forEach((entry) => {
     const current = balances.get(entry.account) || { account: entry.account, debit: 0, credit: 0 };
     current.debit += entry.debit;
     current.credit += entry.credit;
@@ -3086,13 +3093,17 @@ function renderAccounting() {
   const trialBody = document.getElementById("accountingTrialTable");
   if (!journalBody || !chartBody || !trialBody) return;
 
-  const entries = journalEntries();
+  const snapshot = !isLocalDemo ? serverAccountingSnapshot : null;
+  const entries = Array.isArray(snapshot?.entries) ? snapshot.entries : journalEntries();
   const shortageTotal = cashClosings.reduce((sum, closing) => sum + Math.abs(Number(closing.difference) || 0), 0);
   const costTotal = operatingPurchaseCost() + serviceMaterialCost() + totalExpenses() + shortageTotal + staffCommissionTotal() + payrollSalaryCostTotal();
-  document.getElementById("accountingCashBalance").textContent = moneyFixed(expectedCashTotal());
-  document.getElementById("accountingRevenue").textContent = moneyFixed(totalSales());
-  document.getElementById("accountingCosts").textContent = moneyFixed(costTotal);
-  document.getElementById("accountingResult").textContent = moneyFixed(totalSales() - costTotal);
+  document.getElementById("accountingCashBalance").textContent = moneyFixed(snapshot?.cashBalance ?? expectedCashTotal());
+  document.getElementById("accountingRevenue").textContent = moneyFixed(snapshot?.revenue ?? totalSales());
+  document.getElementById("accountingCosts").textContent = moneyFixed(snapshot?.costs ?? costTotal);
+  document.getElementById("accountingResult").textContent = moneyFixed(snapshot?.result ?? totalSales() - costTotal);
+  const sourceStatus = document.getElementById("accountingSourceStatus");
+  sourceStatus.textContent = snapshot ? "Server verified" : isLocalDemo ? "Local demo" : accountingRefreshPending ? "Verifying…" : "Browser preview";
+  sourceStatus.className = `status-pill ${snapshot ? "ok" : ""}`;
 
   chartBody.innerHTML = "";
   chartOfAccounts.forEach((account) => {
@@ -3123,7 +3134,7 @@ function renderAccounting() {
     });
   }
 
-  const trialRows = trialBalanceRows();
+  const trialRows = trialBalanceRows(entries);
   const totalDebit = trialRows.reduce((sum, row) => sum + row.debit, 0);
   const totalCredit = trialRows.reduce((sum, row) => sum + row.credit, 0);
   trialBody.innerHTML = "";
@@ -3149,6 +3160,22 @@ function renderAccounting() {
   status.textContent = balanced ? "Balanced" : "Review needed";
   status.className = `status-pill ${balanced ? "ok" : "danger"}`;
   renderAccountingPeriods();
+}
+
+async function refreshServerAccounting() {
+  if (isLocalDemo || accountingRefreshPending || !cloudTargetShopId()) return;
+  accountingRefreshPending = true;
+  renderAccounting();
+  try {
+    serverAccountingSnapshot = await window.SalonBackend.loadAccountingSnapshot(cloudTargetShopId());
+  } catch (error) {
+    serverAccountingSnapshot = null;
+    document.getElementById("accountingSourceStatus").textContent = "Verification unavailable";
+    console.error("Accounting verification failed", error);
+  } finally {
+    accountingRefreshPending = false;
+    renderAccounting();
+  }
 }
 
 function previousCompletedMonth() {

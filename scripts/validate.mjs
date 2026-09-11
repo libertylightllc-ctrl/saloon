@@ -94,6 +94,7 @@ const requiredHtml = [
   "id=\"productEditId\"",
   "id=\"productEvidenceFile\"",
   "id=\"saveProductRegistration\""
+  ,"id=\"accountingSourceStatus\""
 ];
 
 const requiredJs = [
@@ -164,6 +165,7 @@ const requiredJs = [
   "recordHygieneLog",
   "saveProductRegistration",
   "archiveProductRegistration"
+  ,"loadAccountingSnapshot"
 ];
 
 const forbiddenHtml = [

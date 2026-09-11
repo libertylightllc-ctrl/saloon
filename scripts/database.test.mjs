@@ -53,7 +53,8 @@ test('tenant foundation enforces database permissions', async (t) => {
       '202609110021_controlled_staff_payroll.sql',
       '202609110022_staff_sale_identity.sql',
       '202609110023_controlled_compliance.sql',
-      '202609110024_controlled_products.sql'
+      '202609110024_controlled_products.sql',
+      '202609110025_accounting_snapshot.sql'
     ]) {
       await db.exec(await readFile(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8'));
     }
@@ -355,6 +356,19 @@ test('tenant foundation enforces database permissions', async (t) => {
       await asUser(owner);
       await db.query('select public.salon_archive_product_registration($1,$2,$3)',[a,product.id,'Product discontinued']);
       assert.equal((await db.query("select data->>'active' active from public.salon_records where record_type='product_registration' and external_id=$1",[product.id])).rows[0].active,'false');
+    });
+    await t.test('server accounting snapshot is balanced, tenant scoped and management only', async () => {
+      await asUser(owner);
+      const snapshot = (await db.query('select public.salon_accounting_snapshot($1) result',[a])).rows[0].result;
+      assert.equal(snapshot.balanced,true);
+      assert.equal(Number(snapshot.totalDebit),Number(snapshot.totalCredit));
+      assert.ok(snapshot.entries.length>0);
+      assert.ok(snapshot.entries.every((entry) => entry.sourceId));
+      await assert.rejects(db.query('select public.salon_accounting_snapshot($1)',[b]), /Shop is not active|Management authorization/);
+      await asUser(cashier);
+      await assert.rejects(db.query('select public.salon_accounting_snapshot($1)',[a]), /Management authorization/);
+      await asUser(platform);
+      assert.equal((await db.query('select public.salon_accounting_snapshot($1) result',[a])).rows[0].result.balanced,true);
     });
     await t.test('daily close is server-calculated, cashier-submitted and owner-locked', async () => {
       const businessDate = new Date().toISOString().slice(0,10);

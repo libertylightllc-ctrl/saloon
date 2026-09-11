@@ -268,6 +268,14 @@ test('daily close RPC sends counted cash for server calculation', async () => {
   });
 });
 
+test('accounting screen loads a server-generated tenant snapshot', async () => {
+  const fixture = backendFixture([{ status: 200, body: { balanced: true, entries: [] } }]);
+  fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
+  await fixture.backend.loadAccountingSnapshot('shop-id');
+  assert.match(fixture.calls[0].url, /rpc\/salon_accounting_snapshot$/);
+  assert.deepEqual(JSON.parse(fixture.calls[0].options.body), { target_shop:'shop-id' });
+});
+
 test('accounting period close and reopen use controlled RPCs', async () => {
   const fixture = backendFixture([{ status: 200, body: { ok: true } }, { status: 200, body: { ok: true } }]);
   fixture.values.set('salon-control-session', JSON.stringify({ access_token: 'session-token' }));
