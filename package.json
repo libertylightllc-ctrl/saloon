@@ -7,12 +7,23 @@
   "scripts": {
     "dev": "python3 -m http.server 5182 --bind 127.0.0.1",
     "build": "node scripts/build.mjs",
+    "build:mobile": "node scripts/build.mjs --mobile",
     "preview": "python3 -m http.server 5183 --bind 127.0.0.1 --directory dist",
     "validate": "node scripts/validate.mjs",
     "test": "node --test scripts/*.test.mjs",
-    "db:push": "supabase db push"
+    "db:push": "supabase db push",
+    "mobile:sync": "npm run build:mobile && cap sync",
+    "mobile:android": "npm run mobile:sync && cap open android",
+    "mobile:ios": "npm run mobile:sync && cap open ios",
+    "mobile:doctor": "cap doctor"
   },
   "devDependencies": {
+    "@capacitor/cli": "^7.6.9",
     "@electric-sql/pglite": "^0.5.8"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.6.9",
+    "@capacitor/core": "^7.6.9",
+    "@capacitor/ios": "^7.6.9"
   }
 }

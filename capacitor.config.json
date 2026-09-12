@@ -1,0 +1,13 @@
+{
+  "appId": "com.saloncontrol.app",
+  "appName": "Salon Control",
+  "webDir": "dist",
+  "backgroundColor": "#07130f",
+  "android": {
+    "backgroundColor": "#07130f"
+  },
+  "ios": {
+    "backgroundColor": "#07130f",
+    "contentInset": "automatic"
+  }
+}

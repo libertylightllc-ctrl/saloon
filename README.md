@@ -24,3 +24,8 @@ python3 -m http.server 5182 --bind 127.0.0.1
 Then open `http://127.0.0.1:5182/`.
 
 Demo PIN: `1234`
+
+## Android and iOS
+
+The app includes Capacitor projects for Android and iOS. See [MOBILE.md](MOBILE.md)
+for the one-codebase update, build and signing workflow.

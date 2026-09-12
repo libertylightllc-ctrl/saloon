@@ -3,3 +3,8 @@ node_modules/
 supabase/.temp/
 dist/
 build/
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+android/key.properties

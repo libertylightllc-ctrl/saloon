@@ -13,7 +13,12 @@ for (const file of files) {
   await cp(join(root, file), join(dist, file));
 }
 
+if (process.argv.includes("--mobile")) {
+  await cp(join(root, "app.html"), join(dist, "index.html"));
+}
+
 await cp(join(root, "assets"), join(dist, "assets"), { recursive: true });
+await cp(join(root, "icons"), join(dist, "icons"), { recursive: true });
 await writeFile(join(dist, ".nojekyll"), "");
 
 console.log("Built Salon Control into dist/");
