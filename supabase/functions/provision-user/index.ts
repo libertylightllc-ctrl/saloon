@@ -1,7 +1,12 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 function allowedOrigin(origin: string) {
-  if (origin === "https://libertylightllc-ctrl.github.io") return origin;
+  if ([
+    "https://libertylightllc-ctrl.github.io",
+    "https://salon-mvp-three.vercel.app",
+    "capacitor://localhost",
+    "https://localhost"
+  ].includes(origin)) return origin;
   if (/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) return origin;
   return "https://libertylightllc-ctrl.github.io";
 }

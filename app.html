@@ -23,7 +23,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260912-release-35" />
+    <link rel="stylesheet" href="./styles.css?v=20260913-release-36" />
   </head>
   <body>
     <noscript>Salon Control needs JavaScript enabled to run the app.</noscript>
@@ -1439,7 +1439,7 @@
               <div class="panel-head compact">
                 <div>
                   <h3>User Access</h3>
-                  <p>Owner creates logins for this shop only</p>
+                  <p id="userAccessIntro">Create and manage logins for the active shop</p>
                 </div>
                 <span class="status-pill" id="userAccessPill">Shop users</span>
               </div>
@@ -1557,6 +1557,33 @@
       </section>
     </div>
 
+    <div class="account-security-backdrop" id="managedPasswordBackdrop" hidden>
+      <section class="account-security-dialog" role="dialog" aria-modal="true" aria-labelledby="managedPasswordTitle">
+        <div class="panel-head compact">
+          <div>
+            <span class="status-pill">Temporary access</span>
+            <h3 id="managedPasswordTitle">Reset user password</h3>
+            <p id="managedPasswordIntro">Review the account and set a temporary password.</p>
+          </div>
+        </div>
+        <div class="credential-summary" id="managedPasswordCredential"></div>
+        <form id="managedPasswordForm">
+          <label>Temporary password
+            <div class="password-generator-row">
+              <input id="managedNewPassword" type="text" minlength="10" maxlength="128" autocomplete="new-password" required />
+              <button class="ghost-button" id="generateManagedPassword" type="button">Generate</button>
+            </div>
+          </label>
+          <label>Confirm password <input id="managedConfirmPassword" type="text" minlength="10" maxlength="128" autocomplete="new-password" required /></label>
+          <p class="system-note" id="managedPasswordNote">The user must replace this temporary password after login.</p>
+          <div class="account-security-actions">
+            <button class="ghost-button" id="cancelManagedPassword" type="button">Cancel</button>
+            <button class="primary-button" type="submit">Reset password</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
     <div class="account-security-backdrop" id="restoreBackupBackdrop" hidden>
       <section class="account-security-dialog recovery-dialog" role="dialog" aria-modal="true" aria-labelledby="restoreBackupTitle">
         <div class="panel-head compact">
@@ -1578,7 +1605,7 @@
       </section>
     </div>
 
-    <script src="./backend.js?v=20260912-release-35"></script>
-    <script src="./app.js?v=20260912-release-35"></script>
+    <script src="./backend.js?v=20260913-release-36"></script>
+    <script src="./app.js?v=20260913-release-36"></script>
   </body>
 </html>

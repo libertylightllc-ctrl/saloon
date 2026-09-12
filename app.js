@@ -174,6 +174,16 @@ const uiTranslations = {
   "Shop ID": { ar: "معرّف الصالون", hi: "सैलून आईडी", ur: "سیلون آئی ڈی" },
   Username: { ar: "اسم المستخدم", hi: "उपयोगकर्ता नाम", ur: "صارف نام" },
   Password: { ar: "كلمة المرور", hi: "पासवर्ड", ur: "پاس ورڈ" },
+  Users: { ar: "المستخدمون", hi: "उपयोगकर्ता", ur: "صارفین" },
+  "Temporary access": { ar: "دخول مؤقت", hi: "अस्थायी एक्सेस", ur: "عارضی رسائی" },
+  "Reset user password": { ar: "إعادة تعيين كلمة مرور المستخدم", hi: "उपयोगकर्ता पासवर्ड रीसेट करें", ur: "صارف کا پاس ورڈ ری سیٹ کریں" },
+  "Review the account and set a temporary password.": { ar: "راجع الحساب وحدد كلمة مرور مؤقتة.", hi: "खाते की समीक्षा करें और अस्थायी पासवर्ड सेट करें।", ur: "اکاؤنٹ کا جائزہ لیں اور عارضی پاس ورڈ مقرر کریں۔" },
+  "Temporary password": { ar: "كلمة مرور مؤقتة", hi: "अस्थायी पासवर्ड", ur: "عارضی پاس ورڈ" },
+  Generate: { ar: "إنشاء", hi: "बनाएं", ur: "بنائیں" },
+  "Confirm password": { ar: "تأكيد كلمة المرور", hi: "पासवर्ड की पुष्टि करें", ur: "پاس ورڈ کی تصدیق" },
+  "The user must replace this temporary password after login.": { ar: "يجب على المستخدم استبدال كلمة المرور المؤقتة بعد تسجيل الدخول.", hi: "लॉगिन के बाद उपयोगकर्ता को यह अस्थायी पासवर्ड बदलना होगा।", ur: "لاگ اِن کے بعد صارف کو یہ عارضی پاس ورڈ تبدیل کرنا ہوگا۔" },
+  Cancel: { ar: "إلغاء", hi: "रद्द करें", ur: "منسوخ کریں" },
+  "Reset password": { ar: "إعادة تعيين كلمة المرور", hi: "पासवर्ड रीसेट करें", ur: "پاس ورڈ ری سیٹ کریں" },
   Find: { ar: "بحث", hi: "खोजें", ur: "تلاش" },
   "Find a page or action": { ar: "ابحث عن صفحة أو إجراء", hi: "पेज या कार्रवाई खोजें", ur: "صفحہ یا کارروائی تلاش کریں" },
   "Command menu": { ar: "قائمة الأوامر", hi: "कमांड मेनू", ur: "کمانڈ مینو" },
@@ -920,6 +930,7 @@ let vatEnabled = activeShopState.vatEnabled;
 let openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
 let activeLanguage = state.activeLanguage || "en";
 let activeTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+let managedPasswordTarget = null;
 let sales = activeShopState.sales || [];
 let refunds = activeShopState.refunds || [];
 let customers = activeShopState.customers?.length ? activeShopState.customers : clone(defaultState.customers);
@@ -999,7 +1010,7 @@ async function reportOperationalError(error, category = "javascript", context = 
       context: {
         operation: context.operation || "",
         status: context.status || "",
-        release: "20260912-release-35",
+        release: "20260913-release-36",
         online: navigator.onLine,
         viewport: `${window.innerWidth}x${window.innerHeight}`
       },
@@ -2363,6 +2374,7 @@ function renderMasterDashboard() {
       <td>
         <div class="action-cluster">
           <button class="mini-action" data-open-shop="${escapeHtml(shop.id)}" type="button" ${isSuspended ? "disabled" : ""}>Open</button>
+          <button class="mini-action" data-manage-users="${escapeHtml(shop.id)}" type="button" ${isSuspended ? "disabled" : ""}>Users</button>
           <button class="mini-action" data-reset-owner="${escapeHtml(shop.id)}" type="button">Reset</button>
           <button class="mini-action" data-toggle-shop="${escapeHtml(shop.id)}" type="button">${isSuspended ? "Restore" : "Suspend"}</button>
           <button class="danger-button" data-delete-shop="${escapeHtml(shop.id)}" type="button">Delete</button>
@@ -2380,6 +2392,13 @@ function renderMasterDashboard() {
   });
   body.querySelectorAll("[data-reset-owner]").forEach((button) => {
     button.addEventListener("click", () => resetOwnerPassword(button.dataset.resetOwner));
+  });
+  body.querySelectorAll("[data-manage-users]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      await switchShop(button.dataset.manageUsers);
+      showView("settings");
+      document.querySelector(".user-access-layout")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   });
   body.querySelectorAll("[data-toggle-shop]").forEach((button) => {
     button.addEventListener("click", () => toggleShopStatus(button.dataset.toggleShop));
@@ -4056,6 +4075,85 @@ function generatedPassword(prefix = "Temp") {
   return `${prefix.slice(0, 3)}!${Array.from(bytes, (byte) => alphabet[byte % alphabet.length]).join("")}`;
 }
 
+function fillManagedPassword() {
+  const password = generatedPassword(managedPasswordTarget?.role === "Owner" ? "Owner" : "User");
+  document.getElementById("managedNewPassword").value = password;
+  document.getElementById("managedConfirmPassword").value = password;
+}
+
+function canResetManagedUser(user) {
+  if (!user) return false;
+  if (["Platform Admin", "Owner"].includes(currentRole)) return true;
+  return currentRole === "Shop Admin" && ["Cashier", "Staff"].includes(user.role);
+}
+
+function openManagedPasswordDialog(user) {
+  if (!canResetManagedUser(user)) return;
+  managedPasswordTarget = user;
+  document.getElementById("managedPasswordIntro").textContent = `Set temporary access for ${user.name}.`;
+  document.getElementById("managedPasswordCredential").innerHTML = `
+    <div><span>Shop ID</span><strong>${escapeHtml(currentShopCode())}</strong></div>
+    <div><span>Username</span><strong>${escapeHtml(user.username)}</strong></div>
+    <div><span>Role</span><strong>${escapeHtml(user.role)}</strong></div>
+    <div><span>Status</span><strong>${user.active === false ? "Disabled" : "Active"}</strong></div>
+  `;
+  document.getElementById("managedPasswordNote").textContent = "The user must replace this temporary password after login.";
+  fillManagedPassword();
+  document.getElementById("managedPasswordBackdrop").hidden = false;
+  document.getElementById("managedNewPassword").focus();
+  document.getElementById("managedNewPassword").select();
+}
+
+function closeManagedPasswordDialog() {
+  document.getElementById("managedPasswordBackdrop").hidden = true;
+  document.getElementById("managedPasswordForm").reset();
+  managedPasswordTarget = null;
+}
+
+async function submitManagedPassword(event) {
+  event.preventDefault();
+  const user = managedPasswordTarget;
+  if (!canResetManagedUser(user)) return;
+  const password = document.getElementById("managedNewPassword").value;
+  const confirmation = document.getElementById("managedConfirmPassword").value;
+  const note = document.getElementById("managedPasswordNote");
+  const submit = event.submitter;
+  if (password.length < 10 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+    note.textContent = "Password must contain at least 10 characters, including a letter and a number.";
+    return;
+  }
+  if (password !== confirmation) {
+    note.textContent = "The passwords do not match.";
+    return;
+  }
+  submit.disabled = true;
+  note.textContent = "Resetting secure access...";
+  try {
+    if (!isLocalDemo) {
+      await window.SalonBackend.provision({ action: "reset_password", shopId: cloudTargetShopId(), userId: user.id, password });
+    }
+    user.password = password;
+    user.active = true;
+    document.getElementById("userAccessNote").textContent = `${user.name} password reset. Shop ID ${currentShopCode()}, username ${user.username}, temporary password ${password}.`;
+    addAudit("Stock adjusted", `${currentRole} · reset ${user.role} password · ${user.username}`);
+    saveState();
+    renderUserManagement();
+    note.textContent = "Password reset. Hand over the credentials shown in User Access.";
+    window.setTimeout(closeManagedPasswordDialog, 700);
+  } catch (error) {
+    note.textContent = error instanceof Error ? error.message : "Password reset failed.";
+  } finally {
+    submit.disabled = false;
+  }
+}
+
+document.getElementById("generateManagedPassword").addEventListener("click", fillManagedPassword);
+document.getElementById("cancelManagedPassword").addEventListener("click", closeManagedPasswordDialog);
+document.getElementById("managedPasswordBackdrop").addEventListener("click", (event) => {
+  if (event.target === event.currentTarget) closeManagedPasswordDialog();
+});
+document.getElementById("managedPasswordForm").addEventListener("submit", submitManagedPassword);
+
 async function resetOwnerPassword(shopId) {
   const shop = shops.find((candidate) => candidate.id === shopId);
   if (!shop) return;
@@ -4153,8 +4251,17 @@ function renderUserManagement() {
   activeShopState.users = Array.isArray(activeShopState.users)
     ? activeShopState.users
     : (isLocalDemo ? defaultShopUsers(currentShop()?.owner || "Owner", currentShop()?.ownerUsername || "owner.albarsha") : []);
+  document.getElementById("userAccessIntro").textContent = currentRole === "Platform Admin"
+    ? "Platform Admin can create, disable and reset every login in the active shop"
+    : currentRole === "Owner"
+      ? "Create and manage logins for this shop"
+      : "Manage cashier and staff access for this shop";
   table.innerHTML = "";
   activeShopState.users.forEach((user, index) => {
+    const canReset = canResetManagedUser(user);
+    const canChangeStatus = currentRole === "Platform Admin"
+      || (currentRole === "Owner" && user.role !== "Owner")
+      || (currentRole === "Shop Admin" && ["Cashier", "Staff"].includes(user.role));
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><strong>${escapeHtml(user.name)}</strong></td>
@@ -4163,9 +4270,9 @@ function renderUserManagement() {
       <td><span class="status-pill ${user.active === false ? "warning" : "ok"}">${user.active === false ? "Disabled" : "Active"}</span></td>
       <td>
         <div class="action-cluster">
-          <button class="mini-action" data-reset-user="${index}" type="button">Reset</button>
-          <button class="mini-action" data-toggle-user="${index}" type="button">${user.active === false ? "Enable" : "Disable"}</button>
-          <button class="danger-button" data-delete-user="${index}" type="button">Archive</button>
+          <button class="mini-action" data-reset-user="${index}" type="button" ${canReset ? "" : "disabled"}>Reset</button>
+          <button class="mini-action" data-toggle-user="${index}" type="button" ${canChangeStatus ? "" : "disabled"}>${user.active === false ? "Enable" : "Disable"}</button>
+          <button class="danger-button" data-delete-user="${index}" type="button" ${canChangeStatus ? "" : "disabled"}>Archive</button>
         </div>
       </td>
     `;
@@ -4173,25 +4280,9 @@ function renderUserManagement() {
   });
 
   table.querySelectorAll("[data-reset-user]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      if (!["Owner", "Shop Admin", "Platform Admin"].includes(currentRole)) return;
+    button.addEventListener("click", () => {
       const user = activeShopState.users[Number(button.dataset.resetUser)];
-      if (!user) return;
-      const password = generatedPassword(user.role === "Owner" ? "Owner" : "User");
-      if (!isLocalDemo) {
-        try {
-          await window.SalonBackend.provision({ action: "reset_password", shopId: cloudTargetShopId(), userId: user.id, password });
-        } catch (error) {
-          document.getElementById("userAccessNote").textContent = error instanceof Error ? error.message : "Password reset failed.";
-          return;
-        }
-      }
-      user.password = password;
-      user.active = true;
-      document.getElementById("userAccessNote").textContent = `${user.name} password reset. Shop ID ${currentShopCode()}, username ${user.username}, password ${password}.`;
-      addAudit("Stock adjusted", `${currentRole} · reset ${user.role} password · ${user.username}`);
-      saveState();
-      renderUserManagement();
+      openManagedPasswordDialog(user);
     });
   });
 
