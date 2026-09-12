@@ -10,10 +10,15 @@ const icons = {
   cash: '<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01"/><path d="M18 14h.01"/></svg>',
   report: '<svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 14h2v3H7z"/><path d="M12 10h2v7h-2z"/><path d="M17 7h2v10h-2z"/></svg>',
   settings: '<svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 0 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 0 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 0 1 4 0v.1A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.2.36.56.6 1 .6h.6a2 2 0 0 1 0 4h-.6a1.7 1.7 0 0 0-1 .6Z"/></svg>',
-  plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>'
+  plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
+  search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
+  sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></svg>',
+  moon: '<svg viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></svg>',
+  close: '<svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>'
 };
 
 const storageKey = "salon-control-mvp";
+const themeKey = "salon-control-theme";
 let memoryState = null;
 const platformAccount = {
   shopCode: "PLATFORM",
@@ -169,6 +174,12 @@ const uiTranslations = {
   "Shop ID": { ar: "معرّف الصالون", hi: "सैलून आईडी", ur: "سیلون آئی ڈی" },
   Username: { ar: "اسم المستخدم", hi: "उपयोगकर्ता नाम", ur: "صارف نام" },
   Password: { ar: "كلمة المرور", hi: "पासवर्ड", ur: "پاس ورڈ" },
+  Find: { ar: "بحث", hi: "खोजें", ur: "تلاش" },
+  "Find a page or action": { ar: "ابحث عن صفحة أو إجراء", hi: "पेज या कार्रवाई खोजें", ur: "صفحہ یا کارروائی تلاش کریں" },
+  "Command menu": { ar: "قائمة الأوامر", hi: "कमांड मेनू", ur: "کمانڈ مینو" },
+  "No matching action": { ar: "لا يوجد إجراء مطابق", hi: "कोई मिलती कार्रवाई नहीं", ur: "کوئی مماثل کارروائی نہیں" },
+  "Switch to dark theme": { ar: "التبديل إلى الوضع الداكن", hi: "डार्क थीम पर जाएं", ur: "ڈارک تھیم پر جائیں" },
+  "Switch to light theme": { ar: "التبديل إلى الوضع الفاتح", hi: "लाइट थीम पर जाएं", ur: "لائٹ تھیم پر جائیں" },
   "Barber shop mode": { ar: "وضع صالون الحلاقة", hi: "बारबर शॉप मोड", ur: "حجام کی دکان موڈ" },
   "Active branch": { ar: "الفرع النشط", hi: "सक्रिय शाखा", ur: "فعال برانچ" },
   "VAT optional · currently off": { ar: "ضريبة القيمة المضافة اختيارية · متوقفة حالياً", hi: "VAT वैकल्पिक · अभी बंद", ur: "VAT اختیاری · فی الحال بند" },
@@ -908,6 +919,7 @@ let receiptEnabled = activeShopState.receiptEnabled;
 let vatEnabled = activeShopState.vatEnabled;
 let openingCash = Number(activeShopState.openingCash ?? defaultState.openingCash);
 let activeLanguage = state.activeLanguage || "en";
+let activeTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 let sales = activeShopState.sales || [];
 let refunds = activeShopState.refunds || [];
 let customers = activeShopState.customers?.length ? activeShopState.customers : clone(defaultState.customers);
@@ -987,7 +999,7 @@ async function reportOperationalError(error, category = "javascript", context = 
       context: {
         operation: context.operation || "",
         status: context.status || "",
-        release: "20260911-release-34",
+        release: "20260912-release-35",
         online: navigator.onLine,
         viewport: `${window.innerWidth}x${window.innerHeight}`
       },
@@ -1854,6 +1866,81 @@ document.querySelectorAll("[data-jump]").forEach((button) => {
   button.addEventListener("click", () => showView(button.dataset.jump));
 });
 
+const commandKeywords = {
+  "master-admin": "shops branches users platform suspend backup",
+  dashboard: "today totals overview cash sales",
+  setup: "onboarding opening checklist",
+  "quick-sale": "sale checkout haircut beard facial payment",
+  clients: "customer appointment booking queue walk in",
+  services: "service price recipe catalog",
+  purchases: "supplier bill quantity unit cost payable",
+  expenses: "tea food laundry repair money out",
+  inventory: "stock tools blades foam oil machine scissors",
+  staff: "employee attendance salary commission payroll wps",
+  compliance: "expiry ejari visa health card pest control evidence",
+  cash: "drawer count close shortage variance",
+  accounting: "ledger journal trial balance period",
+  reports: "export pdf csv performance",
+  settings: "country vat receipt users backup security"
+};
+
+function commandMenuItems() {
+  const allowed = roleAccess[currentRole] || roleAccess.Owner;
+  return [
+    ...allowed.map((viewId) => ({ id: viewId, label: translate(viewLabels[viewId] || titles[viewId] || viewId), detail: commandKeywords[viewId] || "", viewId })),
+    { id: "theme", label: translate(activeTheme === "dark" ? "Switch to light theme" : "Switch to dark theme"), detail: "theme appearance light dark", action: toggleTheme }
+  ];
+}
+
+function closeCommandMenu() {
+  document.getElementById("commandBackdrop").hidden = true;
+}
+
+function renderCommandMenu(query = "") {
+  const results = document.getElementById("commandResults");
+  const normalized = query.trim().toLowerCase();
+  const items = commandMenuItems().filter((item) => `${item.label} ${item.detail}`.toLowerCase().includes(normalized));
+  results.innerHTML = items.length
+    ? items.map((item, index) => `<button class="command-result${index === 0 ? " active" : ""}" data-command-id="${escapeHtml(item.id)}" type="button"><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.detail.split(" ").slice(0, 5).join(" · "))}</small></button>`).join("")
+    : `<div class="command-empty">${escapeHtml(translate("No matching action"))}</div>`;
+  results.querySelectorAll("[data-command-id]").forEach((button) => button.addEventListener("click", () => {
+    const item = commandMenuItems().find((candidate) => candidate.id === button.dataset.commandId);
+    closeCommandMenu();
+    if (item?.viewId) showView(item.viewId);
+    else item?.action?.();
+  }));
+}
+
+function openCommandMenu() {
+  if (!document.body.classList.contains("is-authenticated")) return;
+  const backdrop = document.getElementById("commandBackdrop");
+  const search = document.getElementById("commandSearch");
+  backdrop.hidden = false;
+  search.value = "";
+  renderCommandMenu();
+  search.focus();
+}
+
+document.getElementById("commandMenuBtn").addEventListener("click", openCommandMenu);
+document.getElementById("closeCommandMenu").addEventListener("click", closeCommandMenu);
+document.getElementById("commandBackdrop").addEventListener("click", (event) => {
+  if (event.target === event.currentTarget) closeCommandMenu();
+});
+document.getElementById("commandSearch").addEventListener("input", (event) => renderCommandMenu(event.target.value));
+document.getElementById("commandSearch").addEventListener("keydown", (event) => {
+  if (event.key === "Enter") document.querySelector("#commandResults .command-result")?.click();
+});
+document.addEventListener("keydown", (event) => {
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+    event.preventDefault();
+    document.getElementById("commandBackdrop").hidden ? openCommandMenu() : closeCommandMenu();
+  } else if (event.key === "Escape" && !document.getElementById("commandBackdrop").hidden) {
+    closeCommandMenu();
+  }
+});
+
+document.querySelectorAll("[data-theme-toggle]").forEach((button) => button.addEventListener("click", toggleTheme));
+
 document.getElementById("shopSwitcher")?.addEventListener("change", (event) => {
   switchShop(event.target.value);
   renderMasterDashboard();
@@ -2111,6 +2198,25 @@ function syncLanguageButtons() {
   document.getElementById("languageStatus").textContent = translate(`Language: ${languageLabels[activeLanguage] || "English"}`);
   document.getElementById("viewTitle").textContent = translate(titles[activeViewId] || "Salon Control");
   applyTranslations();
+  applyTheme(activeTheme);
+}
+
+function applyTheme(theme = activeTheme) {
+  activeTheme = theme === "dark" ? "dark" : "light";
+  document.documentElement.dataset.theme = activeTheme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", activeTheme === "dark" ? "#07130f" : "#17362f");
+  const nextLabel = activeTheme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.setAttribute("aria-label", translate(nextLabel));
+    button.setAttribute("title", translate(nextLabel));
+    const icon = button.querySelector("[data-theme-icon]");
+    if (icon) icon.innerHTML = activeTheme === "dark" ? icons.sun : icons.moon;
+  });
+  try { localStorage.setItem(themeKey, activeTheme); } catch {}
+}
+
+function toggleTheme() {
+  applyTheme(activeTheme === "dark" ? "light" : "dark");
 }
 
 function syncReportTotals() {

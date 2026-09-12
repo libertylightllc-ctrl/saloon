@@ -48,6 +48,37 @@
   --touch: 56px;
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --green: #123f34;
+  --green-deep: #071c16;
+  --deep: #092a22;
+  --deep-2: #164a3d;
+  --live: #39a47f;
+  --brass: #e3c26f;
+  --brass-lt: #efd892;
+  --ink: #eef5f1;
+  --ink-2: #c2d0c8;
+  --ink-3: #9eafa6;
+  --muted: #b3c2ba;
+  --subtle: #91a299;
+  --on-green: #f3f8f5;
+  --bg: #07130f;
+  --bone: #07130f;
+  --panel: #10211b;
+  --surface: #10211b;
+  --soft: #142921;
+  --surface-2: #142921;
+  --surface-3: #1a3028;
+  --line: #294238;
+  --line-strong: #3b574b;
+  --green-2: #d9eee5;
+  --short-bg: #351b19;
+  --low-bg: #342a15;
+  --ok-bg: #123528;
+  --shadow-float: 0 10px 34px rgba(0, 0, 0, 0.36);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -59,6 +90,16 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body,
+.main,
+.panel,
+.metric-card,
+input,
+select,
+button {
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 button,
@@ -263,10 +304,39 @@ button {
   background: rgba(8, 23, 31, 0.52);
 }
 
+.login-utility-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .login-language-switch {
-  align-self: flex-end;
   background: rgba(7, 27, 24, 0.72);
   border-color: rgba(255, 255, 255, 0.15);
+}
+
+:root[data-theme="dark"] .login-brand-panel {
+  background: #10251f;
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .login-brand-copy h1 {
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .login-brand-copy p:last-child,
+:root[data-theme="dark"] .login-proof-grid span {
+  color: var(--ink-2);
+}
+
+:root[data-theme="dark"] .login-proof-grid div {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+:root[data-theme="dark"] .login-proof-grid strong {
+  color: var(--brass-lt);
 }
 
 .login-back-link {
@@ -2605,6 +2675,166 @@ label {
   background: var(--brass-lt);
 }
 
+.icon-button {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-control);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.icon-button:hover,
+.icon-button:focus-visible {
+  border-color: var(--live);
+  color: var(--live);
+}
+
+.icon-button svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.login-theme-toggle {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(7, 27, 24, 0.72);
+  color: #ffffff;
+}
+
+.command-menu-button {
+  gap: 8px;
+}
+
+.command-menu-button kbd {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surface-3);
+  padding: 2px 5px;
+  color: var(--ink-3);
+  font: 700 10px var(--font-num);
+}
+
+.command-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  display: grid;
+  place-items: start center;
+  padding: min(14vh, 120px) 18px 18px;
+  background: rgba(3, 14, 11, 0.68);
+  backdrop-filter: blur(8px);
+}
+
+.command-dialog {
+  width: min(620px, 100%);
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-surface);
+  background: var(--surface);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.command-search-row {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.command-search-row > [data-icon] {
+  color: var(--ink-3);
+}
+
+.command-search-row input {
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 17px;
+  outline: none;
+}
+
+.command-results {
+  max-height: min(52vh, 440px);
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.command-result {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border: 0;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--ink);
+  padding: 10px 12px;
+  text-align: start;
+}
+
+.command-result:hover,
+.command-result.active {
+  background: var(--surface-3);
+}
+
+.command-result small,
+.command-hint,
+.command-empty {
+  color: var(--ink-3);
+}
+
+.command-result small {
+  text-align: end;
+}
+
+.command-hint {
+  display: block;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+}
+
+.command-empty {
+  padding: 24px 12px;
+  text-align: center;
+}
+
+:root[data-theme="dark"] .status-pill {
+  border-color: var(--line-strong);
+  background: var(--surface-3);
+}
+
+:root[data-theme="dark"] .service-tile.active {
+  background: rgba(231, 200, 122, 0.12);
+}
+
+:root[data-theme="dark"] .service-tile span,
+:root[data-theme="dark"] .selected-sale strong,
+:root[data-theme="dark"] .tax-summary strong,
+:root[data-theme="dark"] .calculation-box strong,
+:root[data-theme="dark"] .statement-grid strong,
+:root[data-theme="dark"] .report-card strong,
+:root[data-theme="dark"] .watch-card strong {
+  color: var(--brass-lt);
+}
+
+:root[data-theme="dark"] .primary-button {
+  color: #081713;
+}
+
 .status-pill {
   border-radius: var(--r-control);
   border-color: rgba(143, 101, 15, 0.28);
@@ -2751,58 +2981,6 @@ th:nth-child(n + 3) {
 
 th {
   background: var(--surface-2);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bone: #0d1714;
-    --bg: #0d1714;
-    --surface: #13231e;
-    --panel: #13231e;
-    --soft: #172a24;
-    --surface-2: #172a24;
-    --surface-3: #21352f;
-    --line: #294139;
-    --line-strong: #36564b;
-    --ink: #eef4f0;
-    --ink-2: #c0cdc7;
-    --ink-3: #a1b0aa;
-    --muted: #c0cdc7;
-    --subtle: #a1b0aa;
-    --green: #0f3d33;
-    --deep: #0a2a24;
-    --deep-2: #10382f;
-    --live: #3f9a7d;
-    --brass: #e7c87a;
-    --short-bg: rgba(168, 38, 29, 0.18);
-    --low-bg: rgba(138, 96, 17, 0.2);
-    --ok-bg: rgba(23, 121, 95, 0.18);
-  }
-
-  .status-pill,
-  .service-tile.active {
-    background: rgba(231, 200, 122, 0.12);
-  }
-
-  .service-tile span,
-  .selected-sale strong,
-  .tax-summary strong,
-  .calculation-box strong,
-  .statement-grid strong,
-  .report-card strong,
-  .watch-card strong {
-    color: var(--brass-lt);
-  }
-
-  .metric-card:not(.highlight) strong,
-  .service-tile strong,
-  .panel-head h3 {
-    color: var(--ink);
-  }
-
-  .primary-button {
-    color: #081713;
-  }
 }
 
 @media (max-width: 720px) {
@@ -3015,6 +3193,10 @@ th {
   .ghost-button,
   .shop-switcher {
     min-width: 0;
+    width: 100%;
+  }
+
+  .top-actions > .icon-button {
     width: 100%;
   }
 

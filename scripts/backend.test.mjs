@@ -60,6 +60,13 @@ test('logout completes remote session revocation before reopening login', () => 
   assert.match(appSource, /await window\.SalonBackend\.signOut\(\)/);
 });
 
+test('theme and command navigation remain available without bypassing roles', () => {
+  assert.match(appSource, /document\.documentElement\.dataset\.theme = activeTheme/);
+  assert.match(appSource, /localStorage\.setItem\(themeKey, activeTheme\)/);
+  assert.match(appSource, /const allowed = roleAccess\[currentRole\]/);
+  assert.match(appSource, /commandMenuBtn"\)\.addEventListener\("click", openCommandMenu\)/);
+});
+
 test('login ID maps to a private auth email and role comes from the server', async () => {
   const fixture = backendFixture([
     { status: 200, body: { access_token: 'session-token', refresh_token: 'refresh-token' } },
