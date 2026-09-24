@@ -8,6 +8,7 @@ import {
   minutesBetween,
   monthKey,
   shiftBusinessDate,
+  shiftMonth,
 } from './dates';
 
 describe('businessDate', () => {
@@ -69,6 +70,13 @@ describe('validation and formatting', () => {
     expect(isBusinessDate('2026-02-29')).toBe(false);
     expect(isBusinessDate('2028-02-29')).toBe(true);
     expect(isBusinessDate('22/09/2026')).toBe(false);
+  });
+
+  it('shifts months across years', () => {
+    expect(shiftMonth('2026-09', 1)).toBe('2026-10');
+    expect(shiftMonth('2026-12', 1)).toBe('2027-01');
+    expect(shiftMonth('2026-01', -1)).toBe('2025-12');
+    expect(shiftMonth('2026-09', -21)).toBe('2024-12');
   });
 
   it('gives month keys', () => {

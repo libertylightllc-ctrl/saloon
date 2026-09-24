@@ -1,19 +1,306 @@
 {
   "_review": "TODO review: machine-drafted translation",
-  "placeholder": {
-    "heading": "تم إعداد التطبيق",
-    "body": "هذه شاشة مؤقتة. ستأتي الشاشات الحقيقية في المراحل القادمة.",
-    "directionTitle": "فحص الاتجاه",
-    "start": "البداية",
-    "end": "النهاية",
-    "directionNow": "الاتجاه الحالي: {{direction}}",
-    "sampleDate": "تاريخ العمل اليوم: {{date}}",
-    "sampleAmount": "مبلغ تجريبي: {{amount}}"
+  "common": {
+    "add": "إضافة",
+    "addItem": "إضافة {{item}}",
+    "back": "رجوع",
+    "decrease": "واحد أقل من {{item}}",
+    "increase": "واحد إضافي من {{item}}",
+    "done": "تم",
+    "filter": "تصفية",
+    "invalidAmount": "أدخل مبلغًا مثل 25 أو 25.50.",
+    "minutes": "{{n}} دقيقة",
+    "more": "المزيد",
+    "nextMonth": "الشهر التالي",
+    "previousMonth": "الشهر السابق",
+    "notifications": "الإشعارات",
+    "search": "بحث",
+    "days": {
+      "mon": "الإثنين",
+      "tue": "الثلاثاء",
+      "wed": "الأربعاء",
+      "thu": "الخميس",
+      "fri": "الجمعة",
+      "sat": "السبت",
+      "sun": "الأحد"
+    }
+  },
+  "status": {
+    "booked": "محجوز",
+    "waiting": "في الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "cancelled": "ملغى",
+    "no_show": "لم يحضر",
+    "paid": "مدفوع",
+    "approved": "معتمد",
+    "valid": "ساري",
+    "overdue": "متأخر",
+    "expired": "منتهي",
+    "out_of_stock": "نفد من المخزون",
+    "pending_approval": "بانتظار الاعتماد",
+    "due_soon": "يستحق قريبًا",
+    "low": "منخفض",
+    "reversed": "معكوس",
+    "archived": "مؤرشف"
+  },
+  "terms": {
+    "staff": { "gents": "حلاق", "ladies": "مصففة" },
+    "staffPlural": { "gents": "حلاقون", "ladies": "مصففات" },
+    "station": { "gents": "كرسي", "ladies": "محطة" },
+    "shop": { "gents": "صالون حلاقة", "ladies": "صالون وسبا" },
+    "anyStaff": { "gents": "أي حلاق", "ladies": "أي مصففة" }
+  },
+  "categories": {
+    "hair": "الشعر",
+    "beard": "اللحية",
+    "color": "الصبغة",
+    "face": "الوجه",
+    "massage": "المساج",
+    "nails": "الأظافر",
+    "facial": "تنظيف البشرة",
+    "makeup": "المكياج",
+    "waxing": "الشمع والخيط",
+    "spa": "السبا والمساج",
+    "bridal": "العرائس"
+  },
+  "tabs": {
+    "home": "الرئيسية",
+    "queue": "الطابور",
+    "sale": "البيع",
+    "customers": "العملاء",
+    "more": "المزيد"
   },
   "language": {
     "title": "اللغة",
-    "ltr": "من اليسار إلى اليمين",
-    "rtl": "من اليمين إلى اليسار",
     "restartNote": "التبديل بين الإنجليزية أو الهندية والعربية أو الأردية يعيد تشغيل التطبيق لقلب الاتجاه."
+  },
+  "dev": {
+    "gents": "رجالي",
+    "ladies": "نسائي",
+    "ltr": "يسار←يمين",
+    "rtl": "يمين←يسار",
+    "gallery": "المعرض",
+    "demo": "العرض",
+    "laterPhase": "تأتي هذه الميزة في مرحلة لاحقة.",
+    "demoOnly": "افتح تبويب الطابور لتجربة الإجراءات."
+  },
+  "home": {
+    "greeting": {
+      "morning": "صباح الخير، {{name}}",
+      "afternoon": "مساء الخير، {{name}}",
+      "evening": "مساء الخير، {{name}}"
+    },
+    "subline": "{{queue}} في الطابور · {{approvals}} للاعتماد",
+    "searchPlaceholder": "ابحث عن العملاء والخدمات والمبيعات",
+    "expectedCash": "النقد المتوقع اليوم",
+    "vsYesterday": "مقارنة بالأمس",
+    "closeDay": "إغلاق اليوم",
+    "salesToday": "مبيعات اليوم",
+    "salesSub": "{{services}} خدمة · {{sales}} عملية بيع",
+    "appointmentsToday": "مواعيد اليوم",
+    "doneCount": "{{n}} مكتمل",
+    "appointmentsSub": "{{waiting}} في الانتظار · {{noShow}} لم يحضر",
+    "moneyOut": "المصروف اليوم",
+    "moneyOutSub": "المشتريات {{purchases}} · المصاريف {{expenses}}",
+    "setup": {
+      "title": "أكمل الإعداد",
+      "body": "تم {{done}} من {{total}} خطوات. التالي: جرد المخزون الافتتاحي.",
+      "action": "متابعة الإعداد"
+    },
+    "quickActions": "إجراءات سريعة",
+    "quick": {
+      "walkIn": "زبون حضوري",
+      "book": "حجز",
+      "newSale": "بيع جديد",
+      "expense": "مصروف",
+      "stock": "المخزون"
+    },
+    "needsAttention": "يحتاج إلى انتباه",
+    "attentionActions": {
+      "review": "مراجعة",
+      "renew": "تجديد",
+      "order": "طلب",
+      "pay": "دفع"
+    },
+    "todaysQueue": "طابور اليوم",
+    "openQueue": "فتح الطابور",
+    "revenue7d": "الإيرادات · آخر 7 أيام",
+    "paymentMix": "طرق الدفع اليوم",
+    "mix": {
+      "cash": "نقدًا",
+      "card": "بطاقة",
+      "wallet": "محفظة",
+      "deposits": "عربون مستخدم"
+    },
+    "staffToday": "الموظفون اليوم",
+    "staffLine": "{{services}} خدمة · {{sales}}",
+    "staffState": {
+      "on_shift": "في المناوبة",
+      "with_client": "مع عميل",
+      "off": "إجازة"
+    },
+    "topServices": "أفضل الخدمات هذا الأسبوع",
+    "timesCount": "{{n}}×",
+    "recentActivity": "النشاط الأخير",
+    "viewAuditTrail": "عرض سجل التدقيق"
+  },
+  "queue": {
+    "title": "الطابور",
+    "new": "جديد",
+    "guest": "ضيف",
+    "waitingFor": "ينتظر منذ {{minutes}} دقيقة",
+    "inMinutes": "بعد {{minutes}} دقيقة",
+    "startedAt": "بدأ {{time}}",
+    "days": {
+      "today": "اليوم",
+      "tomorrow": "غدًا",
+      "week": "هذا الأسبوع"
+    },
+    "filters": { "all": "الكل" },
+    "summary": {
+      "waiting": "في الانتظار {{n}} · الأطول {{minutes}} دقيقة",
+      "booked": "محجوز {{n}}",
+      "completed": "مكتمل {{n}}",
+      "deposits": "عربون محتجز {{amount}}"
+    },
+    "badges": {
+      "walk_in": "حضوري",
+      "preferred": "مفضل",
+      "patch_test": "اختبار حساسية قبل الصبغة",
+      "second_no_show": "عدم حضور للمرة الثانية",
+      "deposit": "عربون محتجز"
+    },
+    "visits": "{{n}} زيارات",
+    "actions": {
+      "checkIn": "تسجيل الحضور",
+      "start": "بدء",
+      "complete": "إنهاء",
+      "rebook": "إعادة الحجز"
+    },
+    "toast": {
+      "checkIn": "تم تسجيل حضور {{name}}",
+      "start": "بدأت خدمة {{name}}",
+      "complete": "اكتملت خدمة {{name}}",
+      "rebook": "إعادة حجز {{name}} تأتي في المرحلة 4"
+    },
+    "moreActions": "إجراءات أخرى لـ {{name}}",
+    "empty": "لا أحد في الانتظار. أضف زبونًا حضوريًا.",
+    "addWalkIn": "إضافة زبون حضوري"
+  },
+  "sale": {
+    "title": "بيع سريع",
+    "subtitle": "اضغط على الخدمات لبدء عملية بيع.",
+    "all": "الكل",
+    "basketCount": "{{n}} في السلة",
+    "basketEmpty": "لم تتم إضافة شيء بعد",
+    "checkout": "الدفع",
+    "customer": "العميل",
+    "guest": "ضيف لمرة واحدة",
+    "findCustomer": "البحث عن عميل",
+    "newCustomer": "عميل جديد",
+    "discount": "خصم",
+    "tip": "إكرامية",
+    "payment": "الدفع",
+    "methods": {
+      "cash": "نقدًا",
+      "card": "بطاقة",
+      "wallet": "محفظة",
+      "split": "تقسيم"
+    },
+    "subtotal": "المجموع الفرعي",
+    "vat": "ضريبة القيمة المضافة",
+    "vatNotApplied": "غير مطبقة",
+    "vatIncluded": "{{amount}} مشمولة",
+    "amountDue": "المبلغ المستحق",
+    "willUpdate": "الحفظ يحدّث النقد المتوقع وعمولة {{staff}} والمخزون ({{stock}}).",
+    "save": "حفظ البيع · {{amount}}",
+    "saved": "تم حفظ البيع",
+    "doneTitle": "تم حفظ البيع #{{number}}",
+    "doneBody": "شارك الإيصال أو ابدأ البيع التالي.",
+    "shareReceipt": "مشاركة الإيصال",
+    "print": "طباعة",
+    "newSale": "بيع جديد"
+  },
+  "customers": {
+    "subtitle": "الملفات والزيارات والملاحظات.",
+    "search": "ابحث بالاسم أو الهاتف",
+    "empty": "لا يوجد عملاء بعد. أضف أول عميل.",
+    "add": "إضافة عميل"
+  },
+  "more": {
+    "roleAtBranch": "المالك · {{branch}}",
+    "groups": {
+      "catalogue": "الخدمات والمخزون",
+      "people": "الموظفون والامتثال",
+      "money": "المال والتقارير",
+      "system": "النظام",
+      "device": "هذا الجهاز"
+    },
+    "rows": {
+      "services": "الخدمات",
+      "inventory": "المخزون والأدوات",
+      "purchases": "المشتريات والموردون",
+      "expenses": "المصاريف",
+      "staff": "الموظفون والرواتب",
+      "attendance": "الحضور",
+      "compliance": "الامتثال",
+      "cashClosing": "إغلاق النقدية",
+      "accounting": "المحاسبة",
+      "reports": "التقارير",
+      "setup": "الإعداد",
+      "settings": "الإعدادات",
+      "notifications": "الإشعارات"
+    },
+    "logOut": "تسجيل الخروج"
+  },
+  "gallery": {
+    "title": "معرض التصميم",
+    "subtitle": "كل المكونات بالمظهر الحالي.",
+    "sections": {
+      "colours": "الألوان",
+      "type": "الخطوط",
+      "buttons": "الأزرار",
+      "inputs": "حقول الإدخال",
+      "tabs": "التبويبات والعداد",
+      "cards": "البطاقات والصفوف",
+      "identity": "الفئات والحالات والصور الرمزية",
+      "banners": "اللافتات والتقدم",
+      "dates": "التاريخ والوقت",
+      "feedback": "النوافذ والتنبيهات والحالات الفارغة"
+    },
+    "buttonContrast": "الأبيض على الزر المعبأ: {{ratio}}:1 (الهدف 4.5:1)",
+    "typeSample": "مساء الخير، تحسين",
+    "variants": {
+      "primary": "أساسي",
+      "secondary": "ثانوي",
+      "outline": "محدد",
+      "ghost": "شفاف",
+      "danger": "خطر"
+    },
+    "saveSale": "حفظ البيع",
+    "saving": "جارٍ الحفظ",
+    "disabled": "غير متاح",
+    "bookNow": "احجز الآن",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "أدخل الاسم الكامل",
+    "phone": "الهاتف",
+    "phoneError": "أدخل رقمًا إماراتيًا كاملًا، مثل 050 123 4567.",
+    "cashCounted": "النقد المعدود فعليًا",
+    "cashHint": "اعدد النقد والدرج مغلق أمام البيع.",
+    "sampleService": "قص الشعر",
+    "tabs": {
+      "popular": "الأكثر طلبًا",
+      "about": "نبذة",
+      "services": "الخدمات",
+      "gallery": "الصور",
+      "reviews": "التقييمات"
+    },
+    "moneyOutSub": "المشتريات والمصاريف",
+    "myProfile": "ملفي الشخصي",
+    "bookingHistory": "سجل الحجوزات",
+    "openSheet": "فتح النافذة",
+    "showToast": "إظهار تنبيه",
+    "sheetTitle": "نافذة سفلية"
   }
 }

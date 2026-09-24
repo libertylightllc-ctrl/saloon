@@ -1,0 +1,62 @@
+/** Gents — violet "Barber" booking kit (docs/reference/gents-style.jpeg). */
+import { neutrals, radius, type Theme } from './tokens';
+
+const violet = {
+  primary50: '#F4F1FF',
+  primary100: '#E8E1FF',
+  primary200: '#CFC2FF',
+  primary300: '#AE97FF',
+  primary400: '#8C6CFA',
+  primary500: '#6C45F2',
+  primary600: '#5A32DE',
+  primary700: '#4724B5',
+};
+
+export const gents: Theme = {
+  mode: 'gents',
+  colors: {
+    ...violet,
+    primaryAction: violet.primary500,
+    primaryActionPressed: violet.primary600,
+    onPrimary: neutrals.white,
+    primaryText: violet.primary500,
+    background: '#F7F5FF',
+    headerArea: '#F7F5FF',
+    surface: neutrals.white,
+    text: neutrals.n100,
+    textSecondary: neutrals.n70,
+    textOnTint: neutrals.n80,
+    textDisabled: neutrals.n60,
+    border: neutrals.n40,
+    divider: neutrals.n30,
+    inputFill: neutrals.n20,
+    accent: '#1E90D6',
+    categoryFills: ['#FFE4EC', '#EDE7FF', '#FFEBD9', '#FFF6D6', '#E0F4FF'],
+    categoryIcons: ['#F0507A', '#6C45F2', '#F28A2E', '#E0A800', '#1E90D6'],
+    thumbFills: ['#EDE7FF', '#FFE4EC', '#E0F4FF', '#FFEBD9'],
+    thumbIcons: ['#6C45F2', '#F0507A', '#1E90D6', '#F28A2E'],
+    scrim: 'rgba(34, 34, 34, 0.45)',
+    neutral: neutrals,
+  },
+  backgroundGradient: null,
+  radius: { ...radius, button: 12, thumb: radius.md, sheet: radius.xl },
+  shadow: {
+    shadowColor: violet.primary500,
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
+  },
+  sizes: { buttonLg: 52, buttonMd: 44, buttonSm: 32, category: 56 },
+  variants: {
+    header: 'band',
+    segmentTabs: 'band',
+    listAction: 'tinted',
+    iconButton: 'circle',
+    promo: 'band',
+    homeTop: 'profile',
+    listRow: 'card',
+    sectionTitle: 'semibold',
+    tabBarIndicator: true,
+  },
+};

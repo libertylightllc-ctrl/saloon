@@ -73,6 +73,13 @@ export function monthKey(date: BusinessDate): MonthKey {
   return date.slice(0, 7);
 }
 
+/** Month arithmetic: shiftMonth('2026-01', -1) → '2025-12'. */
+export function shiftMonth(month: MonthKey, delta: number): MonthKey {
+  const [y, m] = parts(`${month}-01`);
+  const index = y * 12 + (m - 1) + delta;
+  return `${Math.floor(index / 12)}-${String((index % 12) + 1).padStart(2, '0')}`;
+}
+
 export function businessMonth(at: Date = new Date(), timeZone = DEFAULT_TIMEZONE): MonthKey {
   return monthKey(businessDate(at, timeZone));
 }

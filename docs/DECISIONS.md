@@ -24,3 +24,13 @@ One line per decision. Newest at the bottom. Claude Code adds to this when a doc
 - 2026-09-24 · Lint guards: no left/right styles (use start/end), no hardcoded colours outside `src/theme/`, no raw text in JSX (use `t()`).
 - 2026-09-24 · Supabase client is created on first use, so the app opens without a `.env` until phase 2. Auth session in AsyncStorage (Supabase tokens exceed SecureStore's 2 KB limit) — revisit in phase 2.
 - 2026-09-24 · The app name is repeated in app.json until phase 13 moves the Expo config to app.config.ts reading `src/config/brand.ts`.
+- 2026-09-24 · Phase 1 header pattern follows the reference images where the doc's wording differs: in both kits the body sits on a white sheet with rounded top corners laid over the header; gents titles are dark on lavender above the violet band (Barber kit Profile / Sign Up), not white on the band.
+- 2026-09-24 · Ladies filled buttons keep `#E0606A` as the spec chose. White on it is 3.5:1 (below 4.5:1); flagged for owner sign-off, and a test pins the compromise. Coral text uses primary700 (5.2:1).
+- 2026-09-24 · Secondary text on tinted backgrounds uses n80 (`textOnTint`); n70 drops below 4.5:1 on lavender/blush. A contrast test covers every text/background pair.
+- 2026-09-24 · Quick sale tiles put the price on its own line with a full-width Add/stepper: two-column tiles are too narrow for "AED 150.00" and a button side by side, and a wider button is easier to hit one-handed.
+- 2026-09-24 · Until phase 2 the app opens on `/dev/demo` with a dev strip (Gents/Ladies, LTR/RTL, Gallery). The mode is a dev toggle stored on the device; phase 2 takes it from the branch and gates `/dev` to dev builds.
+- 2026-09-24 · The gallery's RTL toggle overrides direction for the whole app without changing language (Yoga `direction` on native, `dir` on web). Real RTL still comes from choosing Arabic or Urdu.
+- 2026-09-24 · Charts stay left-to-right in RTL (`DirectionView`). The Home demo draws its 7-day bars with Views; react-native-gifted-charts arrives with the real dashboard in phase 10.
+- 2026-09-24 · Icons are chosen by name through `src/ui/Icon.tsx` so config and data can pick them; arrows and chevrons mirror in RTL.
+- 2026-09-24 · UI copy uses British spelling ("Colour"); service names are data and stay as the salon types them. Mode-specific phrases are whole terms ("Any barber" / "Any stylist") to keep sentence case.
+- 2026-09-24 · Tests: React Native Testing Library 14 (async render). Jest maps lucide-react-native to its CommonJS build and transforms `standard-navigation`.

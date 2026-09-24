@@ -1,19 +1,306 @@
 {
   "_review": "TODO review: machine-drafted translation",
-  "placeholder": {
-    "heading": "ایپ تیار ہے",
-    "body": "یہ ایک عارضی اسکرین ہے۔ اصل اسکرینیں اگلے مراحل میں آئیں گی۔",
-    "directionTitle": "لے آؤٹ کی جانچ",
-    "start": "شروع",
-    "end": "آخر",
-    "directionNow": "موجودہ لے آؤٹ: {{direction}}",
-    "sampleDate": "آج کی کاروباری تاریخ: {{date}}",
-    "sampleAmount": "مثالی رقم: {{amount}}"
+  "common": {
+    "add": "شامل کریں",
+    "addItem": "{{item}} شامل کریں",
+    "back": "واپس",
+    "decrease": "{{item}} ایک کم",
+    "increase": "{{item}} ایک اور",
+    "done": "ہو گیا",
+    "filter": "فلٹر",
+    "invalidAmount": "25 یا 25.50 جیسی رقم درج کریں۔",
+    "minutes": "{{n}} منٹ",
+    "more": "مزید",
+    "nextMonth": "اگلا مہینہ",
+    "previousMonth": "پچھلا مہینہ",
+    "notifications": "اطلاعات",
+    "search": "تلاش کریں",
+    "days": {
+      "mon": "پیر",
+      "tue": "منگل",
+      "wed": "بدھ",
+      "thu": "جمعرات",
+      "fri": "جمعہ",
+      "sat": "ہفتہ",
+      "sun": "اتوار"
+    }
+  },
+  "status": {
+    "booked": "بک شدہ",
+    "waiting": "انتظار میں",
+    "in_progress": "جاری",
+    "completed": "مکمل",
+    "cancelled": "منسوخ",
+    "no_show": "نہیں آئے",
+    "paid": "ادا شدہ",
+    "approved": "منظور شدہ",
+    "valid": "درست",
+    "overdue": "واجب الادا",
+    "expired": "میعاد ختم",
+    "out_of_stock": "اسٹاک ختم",
+    "pending_approval": "منظوری باقی",
+    "due_soon": "جلد واجب",
+    "low": "کم",
+    "reversed": "واپس لیا گیا",
+    "archived": "محفوظ شدہ"
+  },
+  "terms": {
+    "staff": { "gents": "حجام", "ladies": "اسٹائلسٹ" },
+    "staffPlural": { "gents": "حجام", "ladies": "اسٹائلسٹ" },
+    "station": { "gents": "کرسی", "ladies": "اسٹیشن" },
+    "shop": { "gents": "حجام کی دکان", "ladies": "سیلون اور اسپا" },
+    "anyStaff": { "gents": "کوئی بھی حجام", "ladies": "کوئی بھی اسٹائلسٹ" }
+  },
+  "categories": {
+    "hair": "بال",
+    "beard": "داڑھی",
+    "color": "رنگ",
+    "face": "چہرہ",
+    "massage": "مالش",
+    "nails": "ناخن",
+    "facial": "فیشل",
+    "makeup": "میک اپ",
+    "waxing": "ویکسنگ اور تھریڈنگ",
+    "spa": "اسپا اور مالش",
+    "bridal": "دلہن"
+  },
+  "tabs": {
+    "home": "ہوم",
+    "queue": "قطار",
+    "sale": "فروخت",
+    "customers": "گاہک",
+    "more": "مزید"
   },
   "language": {
     "title": "زبان",
-    "ltr": "بائیں سے دائیں",
-    "rtl": "دائیں سے بائیں",
     "restartNote": "انگریزی یا ہندی اور عربی یا اردو کے درمیان تبدیلی پر لے آؤٹ پلٹنے کے لیے ایپ دوبارہ شروع ہوتی ہے۔"
+  },
+  "dev": {
+    "gents": "مردانہ",
+    "ladies": "زنانہ",
+    "ltr": "بائیں→دائیں",
+    "rtl": "دائیں→بائیں",
+    "gallery": "گیلری",
+    "demo": "ڈیمو",
+    "laterPhase": "یہ بعد کے مرحلے میں آئے گا۔",
+    "demoOnly": "کارروائیاں آزمانے کے لیے قطار کا ٹیب کھولیں۔"
+  },
+  "home": {
+    "greeting": {
+      "morning": "صبح بخیر، {{name}}",
+      "afternoon": "سلام، {{name}}",
+      "evening": "شام بخیر، {{name}}"
+    },
+    "subline": "قطار میں {{queue}} · منظوری کے لیے {{approvals}}",
+    "searchPlaceholder": "گاہک، خدمات، فروخت تلاش کریں",
+    "expectedCash": "آج متوقع نقد",
+    "vsYesterday": "کل کے مقابلے میں",
+    "closeDay": "دن بند کریں",
+    "salesToday": "آج کی فروخت",
+    "salesSub": "{{services}} خدمات · {{sales}} فروخت",
+    "appointmentsToday": "آج کی ملاقاتیں",
+    "doneCount": "{{n}} مکمل",
+    "appointmentsSub": "{{waiting}} انتظار میں · {{noShow}} نہیں آئے",
+    "moneyOut": "آج کا خرچ",
+    "moneyOutSub": "خریداری {{purchases}} · اخراجات {{expenses}}",
+    "setup": {
+      "title": "سیٹ اپ مکمل کریں",
+      "body": "{{total}} میں سے {{done}} مراحل مکمل۔ اگلا: ابتدائی اسٹاک گنیں۔",
+      "action": "سیٹ اپ جاری رکھیں"
+    },
+    "quickActions": "فوری کام",
+    "quick": {
+      "walkIn": "واک اِن",
+      "book": "بک کریں",
+      "newSale": "نئی فروخت",
+      "expense": "خرچ",
+      "stock": "اسٹاک"
+    },
+    "needsAttention": "توجہ درکار",
+    "attentionActions": {
+      "review": "دیکھیں",
+      "renew": "تجدید",
+      "order": "آرڈر",
+      "pay": "ادائیگی"
+    },
+    "todaysQueue": "آج کی قطار",
+    "openQueue": "قطار کھولیں",
+    "revenue7d": "آمدنی · پچھلے 7 دن",
+    "paymentMix": "آج ادائیگی کے طریقے",
+    "mix": {
+      "cash": "نقد",
+      "card": "کارڈ",
+      "wallet": "والیٹ",
+      "deposits": "استعمال شدہ ڈپازٹ"
+    },
+    "staffToday": "آج کا عملہ",
+    "staffLine": "{{services}} خدمات · {{sales}}",
+    "staffState": {
+      "on_shift": "ڈیوٹی پر",
+      "with_client": "گاہک کے ساتھ",
+      "off": "چھٹی"
+    },
+    "topServices": "اس ہفتے کی بہترین خدمات",
+    "timesCount": "{{n}}×",
+    "recentActivity": "حالیہ سرگرمی",
+    "viewAuditTrail": "آڈٹ ٹریل دیکھیں"
+  },
+  "queue": {
+    "title": "قطار",
+    "new": "نیا",
+    "guest": "مہمان",
+    "waitingFor": "{{minutes}} منٹ سے انتظار",
+    "inMinutes": "{{minutes}} منٹ میں",
+    "startedAt": "{{time}} پر شروع",
+    "days": {
+      "today": "آج",
+      "tomorrow": "کل",
+      "week": "اس ہفتے"
+    },
+    "filters": { "all": "سب" },
+    "summary": {
+      "waiting": "انتظار {{n}} · سب سے طویل {{minutes}} منٹ",
+      "booked": "بک شدہ {{n}}",
+      "completed": "مکمل {{n}}",
+      "deposits": "رکھے گئے ڈپازٹ {{amount}}"
+    },
+    "badges": {
+      "walk_in": "واک اِن",
+      "preferred": "پسندیدہ",
+      "patch_test": "رنگ سے پہلے پیچ ٹیسٹ",
+      "second_no_show": "دوسری بار نہیں آئے",
+      "deposit": "ڈپازٹ رکھا گیا"
+    },
+    "visits": "{{n}} دورے",
+    "actions": {
+      "checkIn": "چیک اِن",
+      "start": "شروع کریں",
+      "complete": "مکمل کریں",
+      "rebook": "دوبارہ بک کریں"
+    },
+    "toast": {
+      "checkIn": "{{name}} کا چیک اِن ہو گیا",
+      "start": "{{name}} کی سروس شروع",
+      "complete": "{{name}} کی سروس مکمل",
+      "rebook": "{{name}} کی دوبارہ بکنگ مرحلہ 4 میں آئے گی"
+    },
+    "moreActions": "{{name}} کے لیے مزید کام",
+    "empty": "کوئی انتظار میں نہیں۔ واک اِن شامل کریں۔",
+    "addWalkIn": "واک اِن شامل کریں"
+  },
+  "sale": {
+    "title": "فوری فروخت",
+    "subtitle": "فروخت شروع کرنے کے لیے خدمات پر ٹیپ کریں۔",
+    "all": "سب",
+    "basketCount": "ٹوکری میں {{n}}",
+    "basketEmpty": "ابھی کچھ شامل نہیں",
+    "checkout": "چیک آؤٹ",
+    "customer": "گاہک",
+    "guest": "ایک بار کا مہمان",
+    "findCustomer": "گاہک تلاش کریں",
+    "newCustomer": "نیا گاہک",
+    "discount": "رعایت",
+    "tip": "ٹپ",
+    "payment": "ادائیگی",
+    "methods": {
+      "cash": "نقد",
+      "card": "کارڈ",
+      "wallet": "والیٹ",
+      "split": "تقسیم"
+    },
+    "subtotal": "ذیلی کل",
+    "vat": "وی اے ٹی",
+    "vatNotApplied": "لاگو نہیں",
+    "vatIncluded": "{{amount}} شامل",
+    "amountDue": "واجب رقم",
+    "willUpdate": "محفوظ کرنے سے متوقع نقد، {{staff}} کا کمیشن اور اسٹاک ({{stock}}) اپڈیٹ ہوں گے۔",
+    "save": "فروخت محفوظ کریں · {{amount}}",
+    "saved": "فروخت محفوظ ہو گئی",
+    "doneTitle": "فروخت #{{number}} محفوظ ہو گئی",
+    "doneBody": "رسید بھیجیں یا اگلی فروخت شروع کریں۔",
+    "shareReceipt": "رسید بھیجیں",
+    "print": "پرنٹ",
+    "newSale": "نئی فروخت"
+  },
+  "customers": {
+    "subtitle": "پروفائل، دورے اور نوٹس۔",
+    "search": "نام یا فون سے تلاش کریں",
+    "empty": "ابھی کوئی گاہک نہیں۔ پہلا گاہک شامل کریں۔",
+    "add": "گاہک شامل کریں"
+  },
+  "more": {
+    "roleAtBranch": "مالک · {{branch}}",
+    "groups": {
+      "catalogue": "خدمات اور اسٹاک",
+      "people": "لوگ اور تعمیل",
+      "money": "پیسہ اور رپورٹس",
+      "system": "سسٹم",
+      "device": "یہ ڈیوائس"
+    },
+    "rows": {
+      "services": "خدمات",
+      "inventory": "انوینٹری اور اوزار",
+      "purchases": "خریداری اور سپلائرز",
+      "expenses": "اخراجات",
+      "staff": "عملہ اور تنخواہ",
+      "attendance": "حاضری",
+      "compliance": "تعمیل",
+      "cashClosing": "کیش کلوزنگ",
+      "accounting": "اکاؤنٹنگ",
+      "reports": "رپورٹس",
+      "setup": "سیٹ اپ",
+      "settings": "ترتیبات",
+      "notifications": "اطلاعات"
+    },
+    "logOut": "لاگ آؤٹ"
+  },
+  "gallery": {
+    "title": "تھیم گیلری",
+    "subtitle": "موجودہ انداز میں ہر جزو۔",
+    "sections": {
+      "colours": "رنگ",
+      "type": "حروف",
+      "buttons": "بٹن",
+      "inputs": "ان پٹ",
+      "tabs": "ٹیب اور اسٹیپر",
+      "cards": "کارڈ اور قطاریں",
+      "identity": "زمرے، حالت اور اوتار",
+      "banners": "بینر اور پیش رفت",
+      "dates": "تاریخ اور وقت",
+      "feedback": "شیٹس، اطلاعات اور خالی حالتیں"
+    },
+    "buttonContrast": "بھرے ہوئے بٹن پر سفید: {{ratio}}:1 (ہدف 4.5:1)",
+    "typeSample": "سلام، تحسین",
+    "variants": {
+      "primary": "بنیادی",
+      "secondary": "ثانوی",
+      "outline": "خاکہ",
+      "ghost": "سادہ",
+      "danger": "خطرہ"
+    },
+    "saveSale": "فروخت محفوظ کریں",
+    "saving": "محفوظ ہو رہا ہے",
+    "disabled": "دستیاب نہیں",
+    "bookNow": "ابھی بک کریں",
+    "fullName": "پورا نام",
+    "fullNamePlaceholder": "پورا نام لکھیں",
+    "phone": "فون",
+    "phoneError": "مکمل یو اے ای نمبر درج کریں، جیسے 050 123 4567۔",
+    "cashCounted": "اصل گنا ہوا نقد",
+    "cashHint": "فروخت کے لیے دراز بند کر کے گنیں۔",
+    "sampleService": "ہیئر کٹ",
+    "tabs": {
+      "popular": "مقبول",
+      "about": "تعارف",
+      "services": "خدمات",
+      "gallery": "گیلری",
+      "reviews": "جائزے"
+    },
+    "moneyOutSub": "خریداری اور اخراجات",
+    "myProfile": "میرا پروفائل",
+    "bookingHistory": "بکنگ کی تاریخ",
+    "openSheet": "شیٹ کھولیں",
+    "showToast": "اطلاع دکھائیں",
+    "sheetTitle": "نیچے کی شیٹ"
   }
 }

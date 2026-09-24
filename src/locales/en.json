@@ -1,18 +1,305 @@
 {
-  "placeholder": {
-    "heading": "The app is set up",
-    "body": "This is a placeholder. The real screens arrive in the next phases.",
-    "directionTitle": "Layout check",
-    "start": "Start",
-    "end": "End",
-    "directionNow": "Current layout: {{direction}}",
-    "sampleDate": "Business date today: {{date}}",
-    "sampleAmount": "Sample amount: {{amount}}"
+  "common": {
+    "add": "Add",
+    "addItem": "Add {{item}}",
+    "back": "Back",
+    "decrease": "One less {{item}}",
+    "increase": "One more {{item}}",
+    "done": "Done",
+    "filter": "Filter",
+    "invalidAmount": "Enter an amount like 25 or 25.50.",
+    "minutes": "{{n}} min",
+    "more": "More",
+    "nextMonth": "Next month",
+    "previousMonth": "Previous month",
+    "notifications": "Notifications",
+    "search": "Search",
+    "days": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    }
+  },
+  "status": {
+    "booked": "Booked",
+    "waiting": "Waiting",
+    "in_progress": "In progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "no_show": "No-show",
+    "paid": "Paid",
+    "approved": "Approved",
+    "valid": "Valid",
+    "overdue": "Overdue",
+    "expired": "Expired",
+    "out_of_stock": "Out of stock",
+    "pending_approval": "Pending approval",
+    "due_soon": "Due soon",
+    "low": "Low",
+    "reversed": "Reversed",
+    "archived": "Archived"
+  },
+  "terms": {
+    "staff": { "gents": "Barber", "ladies": "Stylist" },
+    "staffPlural": { "gents": "Barbers", "ladies": "Stylists" },
+    "station": { "gents": "Chair", "ladies": "Station" },
+    "shop": { "gents": "Barber shop", "ladies": "Salon & spa" },
+    "anyStaff": { "gents": "Any barber", "ladies": "Any stylist" }
+  },
+  "categories": {
+    "hair": "Hair",
+    "beard": "Beard",
+    "color": "Colour",
+    "face": "Face",
+    "massage": "Massage",
+    "nails": "Nails",
+    "facial": "Facial",
+    "makeup": "Makeup",
+    "waxing": "Waxing & threading",
+    "spa": "Spa & massage",
+    "bridal": "Bridal"
+  },
+  "tabs": {
+    "home": "Home",
+    "queue": "Queue",
+    "sale": "Sale",
+    "customers": "Customers",
+    "more": "More"
   },
   "language": {
     "title": "Language",
-    "ltr": "Left to right",
-    "rtl": "Right to left",
     "restartNote": "Switching between English or Hindi and Arabic or Urdu restarts the app to flip the layout."
+  },
+  "dev": {
+    "gents": "Gents",
+    "ladies": "Ladies",
+    "ltr": "LTR",
+    "rtl": "RTL",
+    "gallery": "Gallery",
+    "demo": "Demo",
+    "laterPhase": "This arrives in a later phase.",
+    "demoOnly": "Open the Queue tab to try the actions."
+  },
+  "home": {
+    "greeting": {
+      "morning": "Good morning, {{name}}",
+      "afternoon": "Good afternoon, {{name}}",
+      "evening": "Good evening, {{name}}"
+    },
+    "subline": "{{queue}} in the queue · {{approvals}} to approve",
+    "searchPlaceholder": "Search customers, services, sales",
+    "expectedCash": "Expected cash today",
+    "vsYesterday": "vs yesterday",
+    "closeDay": "Close day",
+    "salesToday": "Sales today",
+    "salesSub": "{{services}} services · {{sales}} sales",
+    "appointmentsToday": "Appointments today",
+    "doneCount": "{{n}} done",
+    "appointmentsSub": "{{waiting}} waiting · {{noShow}} no-show",
+    "moneyOut": "Money out today",
+    "moneyOutSub": "Purchases {{purchases}} · Expenses {{expenses}}",
+    "setup": {
+      "title": "Finish setting up",
+      "body": "{{done}} of {{total}} steps done. Next: count your opening stock.",
+      "action": "Continue setup"
+    },
+    "quickActions": "Quick actions",
+    "quick": {
+      "walkIn": "Walk-in",
+      "book": "Book",
+      "newSale": "New sale",
+      "expense": "Expense",
+      "stock": "Stock"
+    },
+    "needsAttention": "Needs attention",
+    "attentionActions": {
+      "review": "Review",
+      "renew": "Renew",
+      "order": "Order",
+      "pay": "Pay"
+    },
+    "todaysQueue": "Today's queue",
+    "openQueue": "Open queue",
+    "revenue7d": "Revenue · last 7 days",
+    "paymentMix": "Payment mix today",
+    "mix": {
+      "cash": "Cash",
+      "card": "Card",
+      "wallet": "Wallet",
+      "deposits": "Deposits used"
+    },
+    "staffToday": "Staff today",
+    "staffLine": "{{services}} services · {{sales}}",
+    "staffState": {
+      "on_shift": "On shift",
+      "with_client": "With client",
+      "off": "Off"
+    },
+    "topServices": "Top services this week",
+    "timesCount": "{{n}}×",
+    "recentActivity": "Recent activity",
+    "viewAuditTrail": "View audit trail"
+  },
+  "queue": {
+    "title": "Queue",
+    "new": "New",
+    "guest": "Guest",
+    "waitingFor": "waiting {{minutes}} min",
+    "inMinutes": "in {{minutes}} min",
+    "startedAt": "Started {{time}}",
+    "days": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "week": "This week"
+    },
+    "filters": { "all": "All" },
+    "summary": {
+      "waiting": "Waiting {{n}} · longest {{minutes}} min",
+      "booked": "Booked {{n}}",
+      "completed": "Completed {{n}}",
+      "deposits": "Deposits held {{amount}}"
+    },
+    "badges": {
+      "walk_in": "Walk-in",
+      "preferred": "Preferred",
+      "patch_test": "Patch test before colour",
+      "second_no_show": "2nd no-show",
+      "deposit": "Deposit held"
+    },
+    "visits": "{{n}} visits",
+    "actions": {
+      "checkIn": "Check in",
+      "start": "Start",
+      "complete": "Complete",
+      "rebook": "Rebook"
+    },
+    "toast": {
+      "checkIn": "Checked in {{name}}",
+      "start": "Started {{name}}",
+      "complete": "Completed {{name}}",
+      "rebook": "Rebooking {{name}} arrives in phase 4"
+    },
+    "moreActions": "More actions for {{name}}",
+    "empty": "No one is waiting. Add a walk-in.",
+    "addWalkIn": "Add walk-in"
+  },
+  "sale": {
+    "title": "Quick sale",
+    "subtitle": "Tap services to start a sale.",
+    "all": "All",
+    "basketCount": "{{n}} in the basket",
+    "basketEmpty": "Nothing added yet",
+    "checkout": "Checkout",
+    "customer": "Customer",
+    "guest": "One-time guest",
+    "findCustomer": "Find customer",
+    "newCustomer": "New customer",
+    "discount": "Discount",
+    "tip": "Tip",
+    "payment": "Payment",
+    "methods": {
+      "cash": "Cash",
+      "card": "Card",
+      "wallet": "Wallet",
+      "split": "Split"
+    },
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "vatNotApplied": "Not applied",
+    "vatIncluded": "{{amount}} included",
+    "amountDue": "Amount due",
+    "willUpdate": "Saving updates expected cash, {{staff}}'s commission and stock ({{stock}}).",
+    "save": "Save sale · {{amount}}",
+    "saved": "Sale saved",
+    "doneTitle": "Sale #{{number}} saved",
+    "doneBody": "Share the receipt or start the next sale.",
+    "shareReceipt": "Share receipt",
+    "print": "Print",
+    "newSale": "New sale"
+  },
+  "customers": {
+    "subtitle": "Profiles, visits and notes.",
+    "search": "Search by name or phone",
+    "empty": "No customers yet. Add your first customer.",
+    "add": "Add customer"
+  },
+  "more": {
+    "roleAtBranch": "Owner · {{branch}}",
+    "groups": {
+      "catalogue": "Catalogue & stock",
+      "people": "People & compliance",
+      "money": "Money & reports",
+      "system": "System",
+      "device": "This device"
+    },
+    "rows": {
+      "services": "Services",
+      "inventory": "Inventory & tools",
+      "purchases": "Purchases & suppliers",
+      "expenses": "Expenses",
+      "staff": "Staff & payroll",
+      "attendance": "Attendance",
+      "compliance": "Compliance",
+      "cashClosing": "Cash closing",
+      "accounting": "Accounting",
+      "reports": "Reports",
+      "setup": "Setup",
+      "settings": "Settings",
+      "notifications": "Notifications"
+    },
+    "logOut": "Log out"
+  },
+  "gallery": {
+    "title": "Theme gallery",
+    "subtitle": "Every component in the current look.",
+    "sections": {
+      "colours": "Colours",
+      "type": "Type",
+      "buttons": "Buttons",
+      "inputs": "Inputs",
+      "tabs": "Tabs and stepper",
+      "cards": "Cards and rows",
+      "identity": "Categories, status and avatars",
+      "banners": "Banners and progress",
+      "dates": "Date and time",
+      "feedback": "Sheets, toasts and empty states"
+    },
+    "buttonContrast": "White on the filled button: {{ratio}}:1 (target 4.5:1)",
+    "typeSample": "Good afternoon, Tehseem",
+    "variants": {
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "outline": "Outline",
+      "ghost": "Ghost",
+      "danger": "Danger"
+    },
+    "saveSale": "Save sale",
+    "saving": "Saving",
+    "disabled": "Not available",
+    "bookNow": "Book now",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Enter full name",
+    "phone": "Phone",
+    "phoneError": "Enter a full UAE number, like 050 123 4567.",
+    "cashCounted": "Actual cash counted",
+    "cashHint": "Count with the drawer closed to sales.",
+    "sampleService": "Haircut",
+    "tabs": {
+      "popular": "Popular",
+      "about": "About",
+      "services": "Services",
+      "gallery": "Gallery",
+      "reviews": "Reviews"
+    },
+    "moneyOutSub": "Purchases and expenses",
+    "myProfile": "My profile",
+    "bookingHistory": "Booking history",
+    "openSheet": "Open sheet",
+    "showToast": "Show toast",
+    "sheetTitle": "Bottom sheet"
   }
 }

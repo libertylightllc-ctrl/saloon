@@ -1,19 +1,306 @@
 {
   "_review": "TODO review: machine-drafted translation",
-  "placeholder": {
-    "heading": "ऐप तैयार है",
-    "body": "यह एक अस्थायी स्क्रीन है। असली स्क्रीन अगले चरणों में आएँगी।",
-    "directionTitle": "लेआउट जाँच",
-    "start": "शुरुआत",
-    "end": "अंत",
-    "directionNow": "मौजूदा लेआउट: {{direction}}",
-    "sampleDate": "आज की कारोबारी तारीख: {{date}}",
-    "sampleAmount": "उदाहरण राशि: {{amount}}"
+  "common": {
+    "add": "जोड़ें",
+    "addItem": "{{item}} जोड़ें",
+    "back": "वापस",
+    "decrease": "{{item}} एक कम",
+    "increase": "{{item}} एक और",
+    "done": "हो गया",
+    "filter": "फ़िल्टर",
+    "invalidAmount": "25 या 25.50 जैसी राशि डालें।",
+    "minutes": "{{n}} मिनट",
+    "more": "और",
+    "nextMonth": "अगला महीना",
+    "previousMonth": "पिछला महीना",
+    "notifications": "सूचनाएँ",
+    "search": "खोजें",
+    "days": {
+      "mon": "सोम",
+      "tue": "मंगल",
+      "wed": "बुध",
+      "thu": "गुरु",
+      "fri": "शुक्र",
+      "sat": "शनि",
+      "sun": "रवि"
+    }
+  },
+  "status": {
+    "booked": "बुक",
+    "waiting": "प्रतीक्षा में",
+    "in_progress": "चल रहा है",
+    "completed": "पूरा",
+    "cancelled": "रद्द",
+    "no_show": "नहीं आए",
+    "paid": "भुगतान हुआ",
+    "approved": "स्वीकृत",
+    "valid": "मान्य",
+    "overdue": "बकाया",
+    "expired": "समाप्त",
+    "out_of_stock": "स्टॉक ख़त्म",
+    "pending_approval": "स्वीकृति बाकी",
+    "due_soon": "जल्द देय",
+    "low": "कम",
+    "reversed": "उलटा गया",
+    "archived": "संग्रहीत"
+  },
+  "terms": {
+    "staff": { "gents": "नाई", "ladies": "स्टाइलिस्ट" },
+    "staffPlural": { "gents": "नाई", "ladies": "स्टाइलिस्ट" },
+    "station": { "gents": "कुर्सी", "ladies": "स्टेशन" },
+    "shop": { "gents": "नाई की दुकान", "ladies": "सैलून और स्पा" },
+    "anyStaff": { "gents": "कोई भी नाई", "ladies": "कोई भी स्टाइलिस्ट" }
+  },
+  "categories": {
+    "hair": "बाल",
+    "beard": "दाढ़ी",
+    "color": "रंग",
+    "face": "चेहरा",
+    "massage": "मालिश",
+    "nails": "नाखून",
+    "facial": "फ़ेशियल",
+    "makeup": "मेकअप",
+    "waxing": "वैक्सिंग और थ्रेडिंग",
+    "spa": "स्पा और मालिश",
+    "bridal": "दुल्हन"
+  },
+  "tabs": {
+    "home": "होम",
+    "queue": "कतार",
+    "sale": "बिक्री",
+    "customers": "ग्राहक",
+    "more": "और"
   },
   "language": {
     "title": "भाषा",
-    "ltr": "बाएँ से दाएँ",
-    "rtl": "दाएँ से बाएँ",
     "restartNote": "अंग्रेज़ी या हिंदी और अरबी या उर्दू के बीच बदलने पर लेआउट पलटने के लिए ऐप फिर से शुरू होता है।"
+  },
+  "dev": {
+    "gents": "पुरुष",
+    "ladies": "महिला",
+    "ltr": "बाएँ→दाएँ",
+    "rtl": "दाएँ→बाएँ",
+    "gallery": "गैलरी",
+    "demo": "डेमो",
+    "laterPhase": "यह बाद के चरण में आएगा।",
+    "demoOnly": "कार्रवाइयाँ आज़माने के लिए कतार टैब खोलें।"
+  },
+  "home": {
+    "greeting": {
+      "morning": "सुप्रभात, {{name}}",
+      "afternoon": "नमस्ते, {{name}}",
+      "evening": "शुभ संध्या, {{name}}"
+    },
+    "subline": "कतार में {{queue}} · स्वीकृति के लिए {{approvals}}",
+    "searchPlaceholder": "ग्राहक, सेवाएँ, बिक्री खोजें",
+    "expectedCash": "आज अपेक्षित नकद",
+    "vsYesterday": "कल की तुलना में",
+    "closeDay": "दिन बंद करें",
+    "salesToday": "आज की बिक्री",
+    "salesSub": "{{services}} सेवाएँ · {{sales}} बिक्री",
+    "appointmentsToday": "आज की अपॉइंटमेंट",
+    "doneCount": "{{n}} पूरे",
+    "appointmentsSub": "{{waiting}} प्रतीक्षा में · {{noShow}} नहीं आए",
+    "moneyOut": "आज का ख़र्च",
+    "moneyOutSub": "ख़रीद {{purchases}} · ख़र्च {{expenses}}",
+    "setup": {
+      "title": "सेटअप पूरा करें",
+      "body": "{{total}} में से {{done}} चरण पूरे। अगला: शुरुआती स्टॉक गिनें।",
+      "action": "सेटअप जारी रखें"
+    },
+    "quickActions": "त्वरित कार्य",
+    "quick": {
+      "walkIn": "वॉक-इन",
+      "book": "बुक करें",
+      "newSale": "नई बिक्री",
+      "expense": "ख़र्च",
+      "stock": "स्टॉक"
+    },
+    "needsAttention": "ध्यान दें",
+    "attentionActions": {
+      "review": "देखें",
+      "renew": "नवीनीकरण",
+      "order": "ऑर्डर",
+      "pay": "भुगतान"
+    },
+    "todaysQueue": "आज की कतार",
+    "openQueue": "कतार खोलें",
+    "revenue7d": "आय · पिछले 7 दिन",
+    "paymentMix": "आज भुगतान के तरीके",
+    "mix": {
+      "cash": "नकद",
+      "card": "कार्ड",
+      "wallet": "वॉलेट",
+      "deposits": "जमा राशि उपयोग"
+    },
+    "staffToday": "आज का स्टाफ़",
+    "staffLine": "{{services}} सेवाएँ · {{sales}}",
+    "staffState": {
+      "on_shift": "ड्यूटी पर",
+      "with_client": "ग्राहक के साथ",
+      "off": "छुट्टी"
+    },
+    "topServices": "इस हफ़्ते की शीर्ष सेवाएँ",
+    "timesCount": "{{n}}×",
+    "recentActivity": "हाल की गतिविधि",
+    "viewAuditTrail": "ऑडिट ट्रेल देखें"
+  },
+  "queue": {
+    "title": "कतार",
+    "new": "नया",
+    "guest": "मेहमान",
+    "waitingFor": "{{minutes}} मिनट से प्रतीक्षा",
+    "inMinutes": "{{minutes}} मिनट में",
+    "startedAt": "{{time}} पर शुरू",
+    "days": {
+      "today": "आज",
+      "tomorrow": "कल",
+      "week": "इस हफ़्ते"
+    },
+    "filters": { "all": "सभी" },
+    "summary": {
+      "waiting": "प्रतीक्षा {{n}} · सबसे लंबी {{minutes}} मिनट",
+      "booked": "बुक {{n}}",
+      "completed": "पूरे {{n}}",
+      "deposits": "जमा राशि {{amount}}"
+    },
+    "badges": {
+      "walk_in": "वॉक-इन",
+      "preferred": "पसंदीदा",
+      "patch_test": "रंग से पहले पैच टेस्ट",
+      "second_no_show": "दूसरी बार नहीं आए",
+      "deposit": "जमा राशि रखी"
+    },
+    "visits": "{{n}} विज़िट",
+    "actions": {
+      "checkIn": "चेक इन",
+      "start": "शुरू करें",
+      "complete": "पूरा करें",
+      "rebook": "फिर से बुक करें"
+    },
+    "toast": {
+      "checkIn": "{{name}} चेक इन हुए",
+      "start": "{{name}} की सेवा शुरू",
+      "complete": "{{name}} की सेवा पूरी",
+      "rebook": "{{name}} की दोबारा बुकिंग चरण 4 में आएगी"
+    },
+    "moreActions": "{{name}} के लिए और कार्य",
+    "empty": "कोई प्रतीक्षा में नहीं है। वॉक-इन जोड़ें।",
+    "addWalkIn": "वॉक-इन जोड़ें"
+  },
+  "sale": {
+    "title": "त्वरित बिक्री",
+    "subtitle": "बिक्री शुरू करने के लिए सेवाओं पर टैप करें।",
+    "all": "सभी",
+    "basketCount": "टोकरी में {{n}}",
+    "basketEmpty": "अभी कुछ नहीं जोड़ा",
+    "checkout": "चेकआउट",
+    "customer": "ग्राहक",
+    "guest": "एक बार का मेहमान",
+    "findCustomer": "ग्राहक खोजें",
+    "newCustomer": "नया ग्राहक",
+    "discount": "छूट",
+    "tip": "टिप",
+    "payment": "भुगतान",
+    "methods": {
+      "cash": "नकद",
+      "card": "कार्ड",
+      "wallet": "वॉलेट",
+      "split": "बाँटें"
+    },
+    "subtotal": "उप-योग",
+    "vat": "वैट",
+    "vatNotApplied": "लागू नहीं",
+    "vatIncluded": "{{amount}} शामिल",
+    "amountDue": "देय राशि",
+    "willUpdate": "सहेजने से अपेक्षित नकद, {{staff}} का कमीशन और स्टॉक ({{stock}}) अपडेट होंगे।",
+    "save": "बिक्री सहेजें · {{amount}}",
+    "saved": "बिक्री सहेजी गई",
+    "doneTitle": "बिक्री #{{number}} सहेजी गई",
+    "doneBody": "रसीद भेजें या अगली बिक्री शुरू करें।",
+    "shareReceipt": "रसीद भेजें",
+    "print": "प्रिंट",
+    "newSale": "नई बिक्री"
+  },
+  "customers": {
+    "subtitle": "प्रोफ़ाइल, विज़िट और नोट्स।",
+    "search": "नाम या फ़ोन से खोजें",
+    "empty": "अभी कोई ग्राहक नहीं। पहला ग्राहक जोड़ें।",
+    "add": "ग्राहक जोड़ें"
+  },
+  "more": {
+    "roleAtBranch": "मालिक · {{branch}}",
+    "groups": {
+      "catalogue": "सेवाएँ और स्टॉक",
+      "people": "लोग और अनुपालन",
+      "money": "पैसा और रिपोर्ट",
+      "system": "सिस्टम",
+      "device": "यह डिवाइस"
+    },
+    "rows": {
+      "services": "सेवाएँ",
+      "inventory": "इन्वेंटरी और औज़ार",
+      "purchases": "ख़रीद और सप्लायर",
+      "expenses": "ख़र्च",
+      "staff": "स्टाफ़ और वेतन",
+      "attendance": "हाज़िरी",
+      "compliance": "अनुपालन",
+      "cashClosing": "कैश क्लोज़िंग",
+      "accounting": "लेखा",
+      "reports": "रिपोर्ट",
+      "setup": "सेटअप",
+      "settings": "सेटिंग्स",
+      "notifications": "सूचनाएँ"
+    },
+    "logOut": "लॉग आउट"
+  },
+  "gallery": {
+    "title": "थीम गैलरी",
+    "subtitle": "मौजूदा रूप में हर कंपोनेंट।",
+    "sections": {
+      "colours": "रंग",
+      "type": "अक्षर",
+      "buttons": "बटन",
+      "inputs": "इनपुट",
+      "tabs": "टैब और स्टेपर",
+      "cards": "कार्ड और पंक्तियाँ",
+      "identity": "श्रेणियाँ, स्थिति और अवतार",
+      "banners": "बैनर और प्रगति",
+      "dates": "तारीख़ और समय",
+      "feedback": "शीट, सूचनाएँ और ख़ाली स्थितियाँ"
+    },
+    "buttonContrast": "भरे बटन पर सफ़ेद: {{ratio}}:1 (लक्ष्य 4.5:1)",
+    "typeSample": "नमस्ते, तहसीम",
+    "variants": {
+      "primary": "प्राथमिक",
+      "secondary": "द्वितीयक",
+      "outline": "आउटलाइन",
+      "ghost": "सादा",
+      "danger": "ख़तरा"
+    },
+    "saveSale": "बिक्री सहेजें",
+    "saving": "सहेजा जा रहा है",
+    "disabled": "उपलब्ध नहीं",
+    "bookNow": "अभी बुक करें",
+    "fullName": "पूरा नाम",
+    "fullNamePlaceholder": "पूरा नाम लिखें",
+    "phone": "फ़ोन",
+    "phoneError": "पूरा यूएई नंबर डालें, जैसे 050 123 4567।",
+    "cashCounted": "वास्तव में गिना गया नकद",
+    "cashHint": "बिक्री के लिए दराज़ बंद करके गिनें।",
+    "sampleService": "हेयरकट",
+    "tabs": {
+      "popular": "लोकप्रिय",
+      "about": "परिचय",
+      "services": "सेवाएँ",
+      "gallery": "गैलरी",
+      "reviews": "समीक्षाएँ"
+    },
+    "moneyOutSub": "ख़रीद और ख़र्च",
+    "myProfile": "मेरी प्रोफ़ाइल",
+    "bookingHistory": "बुकिंग इतिहास",
+    "openSheet": "शीट खोलें",
+    "showToast": "सूचना दिखाएँ",
+    "sheetTitle": "नीचे की शीट"
   }
 }

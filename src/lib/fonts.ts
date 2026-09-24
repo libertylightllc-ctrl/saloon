@@ -16,6 +16,8 @@ import {
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
 
+import type { FontWeightName } from '@/theme/tokens';
+
 import { isRtlLanguage, type Language } from './i18n';
 
 export const fontAssets = {
@@ -28,8 +30,6 @@ export const fontAssets = {
   IBMPlexSansArabic_600SemiBold,
   IBMPlexSansArabic_700Bold,
 };
-
-export type FontWeightName = 'regular' | 'medium' | 'semibold' | 'bold';
 
 type FontFamily = keyof typeof fontAssets;
 

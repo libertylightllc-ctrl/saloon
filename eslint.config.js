@@ -7,7 +7,7 @@ const prettierConfig = require('eslint-config-prettier/flat');
 const rtlGuards = [
   {
     selector:
-      'Property[key.name=/^(marginLeft|marginRight|paddingLeft|paddingRight|left|right|borderLeftWidth|borderRightWidth|borderLeftColor|borderRightColor|borderTopLeftRadius|borderTopRightRadius|borderBottomLeftRadius|borderBottomRightRadius)$/]',
+      'ObjectExpression > Property[key.name=/^(marginLeft|marginRight|paddingLeft|paddingRight|left|right|borderLeftWidth|borderRightWidth|borderLeftColor|borderRightColor|borderTopLeftRadius|borderTopRightRadius|borderBottomLeftRadius|borderBottomRightRadius)$/]',
     message:
       'Use start/end (marginStart, paddingEnd, start, borderTopStartRadius…) so RTL mirrors.',
   },
@@ -24,7 +24,7 @@ const colourGuards = [
     message: 'No hardcoded colours. Read them from useTheme().',
   },
   {
-    selector: "Property[key.name=/(^c|C)olor$/] > Literal[value!='transparent']",
+    selector: "ObjectExpression > Property[key.name=/(^c|C)olor$/] > Literal[value!='transparent']",
     message: 'No hardcoded colours. Read them from useTheme().',
   },
 ];
@@ -57,9 +57,17 @@ module.exports = defineConfig([
     },
   },
   {
+    // Employee colours in demo data are data (they come from the database later), not styling.
+    files: ['src/features/demo/data.ts'],
+    rules: {
+      'no-restricted-syntax': ['error', ...rtlGuards, ...textGuards],
+    },
+  },
+  {
     files: ['**/*.test.{ts,tsx}', 'jest.setup.ts'],
     rules: {
       'no-restricted-syntax': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
 ]);
