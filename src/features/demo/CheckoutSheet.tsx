@@ -12,10 +12,10 @@ import {
   Card,
   Chip,
   Icon,
-  Illustration,
   MoneyInput,
   SegmentTabs,
   Stepper,
+  SuccessCheck,
   Text,
   useToast,
 } from '@/ui';
@@ -23,7 +23,13 @@ import {
 import type { DemoService } from './data';
 import { useDemoBranch } from './useDemo';
 
-type Method = 'cash' | 'card' | 'wallet' | 'split';
+export type Method = 'cash' | 'card' | 'wallet' | 'split';
+
+export interface SavedSale {
+  number: number;
+  totalMinor: Minor;
+  method: Method;
+}
 
 export interface CheckoutLine {
   service: DemoService;
@@ -44,7 +50,7 @@ export function CheckoutSheet({
   onClose: () => void;
   lines: CheckoutLine[];
   onQtyChange: (serviceId: string, qty: number) => void;
-  onSaved: () => void;
+  onSaved: (totalMinor: Minor, method: Method) => void;
 }) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -168,27 +174,32 @@ export function CheckoutSheet({
           toast(t('sale.saved'));
           setDiscount(null);
           setTip(null);
-          onSaved();
+          onSaved(due, method);
         }}
       />
     </BottomSheet>
   );
 }
 
-export function SaleDoneSheet({ number, onClose }: { number: number | null; onClose: () => void }) {
+export function SaleDoneSheet({ sale, onClose }: { sale: SavedSale | null; onClose: () => void }) {
   const { t } = useTranslation();
   const toast = useToast();
   return (
-    <BottomSheet open={number !== null} onClose={onClose}>
-      <View style={styles.done}>
-        <Illustration name="sale-done" size={120} />
-        <Text variant="h2" align="center">
-          {t('sale.doneTitle', { number: number ?? 0 })}
-        </Text>
-        <Text align="center" color="textSecondary">
-          {t('sale.doneBody')}
-        </Text>
-      </View>
+    <BottomSheet open={sale !== null} onClose={onClose}>
+      {sale ? (
+        <View style={styles.done}>
+          <SuccessCheck />
+          <Text variant="h3" align="center">
+            {t('sale.doneTitle', { number: `#${sale.number}` })}
+          </Text>
+          <Text variant="display" align="center" tabular>
+            {formatMoney(sale.totalMinor)}
+          </Text>
+          <Text align="center" color="textSecondary">
+            {`${t('sale.paidWith', { method: t(`sale.methods.${sale.method}`) })} · ${t('sale.doneBody')}`}
+          </Text>
+        </View>
+      ) : null}
       <Button
         label={t('sale.shareReceipt')}
         icon="share"

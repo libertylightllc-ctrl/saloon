@@ -6,7 +6,7 @@ import {
   type TextStyle,
 } from 'react-native';
 
-import { fontFamily } from '@/lib/fonts';
+import { fontFamily, lineHeightFor, numericFontFamily } from '@/lib/fonts';
 import { DEFAULT_LANGUAGE, isLanguage } from '@/lib/i18n';
 import {
   tabularNums,
@@ -41,9 +41,13 @@ const ALIGN: Record<NonNullable<TextProps['align']>, TextStyle['textAlign']> = {
 
 export const START_ALIGN = ALIGN.start;
 
-export function useFontFamily() {
+function useLanguage() {
   const { i18n } = useTranslation();
-  const language = isLanguage(i18n.language) ? i18n.language : DEFAULT_LANGUAGE;
+  return isLanguage(i18n.language) ? i18n.language : DEFAULT_LANGUAGE;
+}
+
+export function useFontFamily() {
+  const language = useLanguage();
   return (weight: FontWeightName) => fontFamily(language, weight);
 }
 
@@ -57,15 +61,16 @@ export function Text({
   ...rest
 }: TextProps) {
   const theme = useTheme();
-  const font = useFontFamily();
+  const language = useLanguage();
   const type = typeScale[variant];
+  const w = weight ?? type.weight;
   return (
     <RNText
       style={[
         {
-          fontFamily: font(weight ?? type.weight),
+          fontFamily: tabular ? numericFontFamily(w) : fontFamily(language, w),
           fontSize: type.fontSize,
-          lineHeight: type.lineHeight,
+          lineHeight: lineHeightFor(language, type.fontSize, type.lineHeight),
           color: theme.colors[color],
           textAlign: ALIGN[align],
         },

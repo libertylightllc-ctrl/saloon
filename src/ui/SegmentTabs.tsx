@@ -2,7 +2,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { spacing, useTheme } from '@/theme';
 
-import { useOnBand } from './HeaderBand';
+import { useOnBand } from './layoutContext';
 import { Text } from './Text';
 
 export interface TabItem<K extends string> {
@@ -63,6 +63,7 @@ export function SegmentTabs<K extends string>({
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
             accessibilityLabel={label}
+            hitSlop={pill ? 4 : 0}
             style={[
               pill ? styles.pill : styles.line,
               pill && {

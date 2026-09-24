@@ -34,3 +34,12 @@ One line per decision. Newest at the bottom. Claude Code adds to this when a doc
 - 2026-09-24 · Icons are chosen by name through `src/ui/Icon.tsx` so config and data can pick them; arrows and chevrons mirror in RTL.
 - 2026-09-24 · UI copy uses British spelling ("Colour"); service names are data and stay as the salon types them. Mode-specific phrases are whole terms ("Any barber" / "Any stylist") to keep sentence case.
 - 2026-09-24 · Tests: React Native Testing Library 14 (async render). Jest maps lucide-react-native to its CommonJS build and transforms `standard-navigation`.
+- 2026-09-24 · Phase 1 review (owner's checklist): gents header now follows 02-DESIGN-SYSTEM §2 exactly — violet band from the top of the screen, white title and back arrow, 28-px rounded bottom corners; this replaces the earlier reference-image reading (dark title above the band). Gents body sits on lavender with white cards; ladies keeps the white sheet. Home's hero card overlaps the band.
+- 2026-09-24 · Poppins has no tabular figures (digit widths 320–677), so money and counts render in IBM Plex Sans Arabic's Latin, whose digits are all 600 units wide. Letterforms stay close to Poppins at display sizes.
+- 2026-09-24 · Arabic/Urdu line height is at least 1.55 × font size (IBM Plex Sans Arabic needs ~1.5 em), so marks above and below letters are never clipped.
+- 2026-09-24 · In Arabic and Urdu every interpolated value is wrapped in Unicode isolates (FSI…PDI) by an i18next formatter module, so names, amounts and "#1043" keep their own direction. Sale numbers are passed with their "#".
+- 2026-09-24 · List-row actions use `Button variant="row"`: tinted pill in gents, outlined coral in ladies.
+- 2026-09-24 · Ladies gradient only on home and onboarding (`<Screen background="gradient">`); lists and forms are flat #FFF7F5.
+- 2026-09-24 · Shadows use `boxShadow` with the tinted values from the spec so the tint shows on iOS, Android and web (plain `elevation` is grey on Android).
+- 2026-09-24 · Employee colours come from a `staffColours` token palette; no colour literals outside `src/theme/`. A lint rule also blocks literal text in title/label/placeholder-style props.
+- 2026-09-24 · The "Save sale" success sheet shows the sale number, total and payment method with a spring check animation; with Reduce Motion on it appears in its final state.

@@ -45,11 +45,26 @@
     "archived": "مؤرشف"
   },
   "terms": {
-    "staff": { "gents": "حلاق", "ladies": "مصففة" },
-    "staffPlural": { "gents": "حلاقون", "ladies": "مصففات" },
-    "station": { "gents": "كرسي", "ladies": "محطة" },
-    "shop": { "gents": "صالون حلاقة", "ladies": "صالون وسبا" },
-    "anyStaff": { "gents": "أي حلاق", "ladies": "أي مصففة" }
+    "staff": {
+      "gents": "حلاق",
+      "ladies": "مصففة"
+    },
+    "staffPlural": {
+      "gents": "حلاقون",
+      "ladies": "مصففات"
+    },
+    "station": {
+      "gents": "كرسي",
+      "ladies": "محطة"
+    },
+    "shop": {
+      "gents": "صالون حلاقة",
+      "ladies": "صالون وسبا"
+    },
+    "anyStaff": {
+      "gents": "أي حلاق",
+      "ladies": "أي مصففة"
+    }
   },
   "categories": {
     "hair": "الشعر",
@@ -78,8 +93,8 @@
   "dev": {
     "gents": "رجالي",
     "ladies": "نسائي",
-    "ltr": "يسار←يمين",
-    "rtl": "يمين←يسار",
+    "ltr": "LTR",
+    "rtl": "RTL",
     "gallery": "المعرض",
     "demo": "العرض",
     "laterPhase": "تأتي هذه الميزة في مرحلة لاحقة.",
@@ -157,7 +172,9 @@
       "tomorrow": "غدًا",
       "week": "هذا الأسبوع"
     },
-    "filters": { "all": "الكل" },
+    "filters": {
+      "all": "الكل"
+    },
     "summary": {
       "waiting": "في الانتظار {{n}} · الأطول {{minutes}} دقيقة",
       "booked": "محجوز {{n}}",
@@ -216,7 +233,8 @@
     "willUpdate": "الحفظ يحدّث النقد المتوقع وعمولة {{staff}} والمخزون ({{stock}}).",
     "save": "حفظ البيع · {{amount}}",
     "saved": "تم حفظ البيع",
-    "doneTitle": "تم حفظ البيع #{{number}}",
+    "doneTitle": "تم حفظ البيع {{number}}",
+    "paidWith": "الدفع: {{method}}",
     "doneBody": "شارك الإيصال أو ابدأ البيع التالي.",
     "shareReceipt": "مشاركة الإيصال",
     "print": "طباعة",

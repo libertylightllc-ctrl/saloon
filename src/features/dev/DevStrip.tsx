@@ -30,6 +30,7 @@ function Toggle<K extends string>({
             onPress={() => onChange(o.key)}
             accessibilityRole="button"
             accessibilityState={{ selected: active }}
+            hitSlop={8}
             style={[styles.option, active && { backgroundColor: colors.surface }]}
           >
             <Text

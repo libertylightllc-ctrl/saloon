@@ -45,11 +45,26 @@
     "archived": "संग्रहीत"
   },
   "terms": {
-    "staff": { "gents": "नाई", "ladies": "स्टाइलिस्ट" },
-    "staffPlural": { "gents": "नाई", "ladies": "स्टाइलिस्ट" },
-    "station": { "gents": "कुर्सी", "ladies": "स्टेशन" },
-    "shop": { "gents": "नाई की दुकान", "ladies": "सैलून और स्पा" },
-    "anyStaff": { "gents": "कोई भी नाई", "ladies": "कोई भी स्टाइलिस्ट" }
+    "staff": {
+      "gents": "नाई",
+      "ladies": "स्टाइलिस्ट"
+    },
+    "staffPlural": {
+      "gents": "नाई",
+      "ladies": "स्टाइलिस्ट"
+    },
+    "station": {
+      "gents": "कुर्सी",
+      "ladies": "स्टेशन"
+    },
+    "shop": {
+      "gents": "नाई की दुकान",
+      "ladies": "सैलून और स्पा"
+    },
+    "anyStaff": {
+      "gents": "कोई भी नाई",
+      "ladies": "कोई भी स्टाइलिस्ट"
+    }
   },
   "categories": {
     "hair": "बाल",
@@ -78,8 +93,8 @@
   "dev": {
     "gents": "पुरुष",
     "ladies": "महिला",
-    "ltr": "बाएँ→दाएँ",
-    "rtl": "दाएँ→बाएँ",
+    "ltr": "LTR",
+    "rtl": "RTL",
     "gallery": "गैलरी",
     "demo": "डेमो",
     "laterPhase": "यह बाद के चरण में आएगा।",
@@ -157,7 +172,9 @@
       "tomorrow": "कल",
       "week": "इस हफ़्ते"
     },
-    "filters": { "all": "सभी" },
+    "filters": {
+      "all": "सभी"
+    },
     "summary": {
       "waiting": "प्रतीक्षा {{n}} · सबसे लंबी {{minutes}} मिनट",
       "booked": "बुक {{n}}",
@@ -216,7 +233,8 @@
     "willUpdate": "सहेजने से अपेक्षित नकद, {{staff}} का कमीशन और स्टॉक ({{stock}}) अपडेट होंगे।",
     "save": "बिक्री सहेजें · {{amount}}",
     "saved": "बिक्री सहेजी गई",
-    "doneTitle": "बिक्री #{{number}} सहेजी गई",
+    "doneTitle": "बिक्री {{number}} सहेजी गई",
+    "paidWith": "{{method}} से भुगतान",
     "doneBody": "रसीद भेजें या अगली बिक्री शुरू करें।",
     "shareReceipt": "रसीद भेजें",
     "print": "प्रिंट",

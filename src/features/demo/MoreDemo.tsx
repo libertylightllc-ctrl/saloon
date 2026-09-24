@@ -10,6 +10,7 @@ import {
   Avatar,
   BottomSheet,
   HeaderBand,
+  MenuGroup,
   MenuRow,
   Screen,
   Text,
@@ -94,10 +95,7 @@ export function MoreDemo() {
     >
       <View style={styles.groups}>
         {GROUPS.map((group, g) => (
-          <View key={group.key}>
-            <Text variant="small" color="textSecondary">
-              {t(`more.groups.${group.key}`)}
-            </Text>
+          <MenuGroup key={group.key} title={t(`more.groups.${group.key}`)}>
             {group.rows.map((row, i) => (
               <MenuRow
                 key={row.key}
@@ -108,12 +106,9 @@ export function MoreDemo() {
                 last={i === group.rows.length - 1}
               />
             ))}
-          </View>
+          </MenuGroup>
         ))}
-        <View>
-          <Text variant="small" color="textSecondary">
-            {t('more.groups.device')}
-          </Text>
+        <MenuGroup title={t('more.groups.device')}>
           <MenuRow
             icon="languages"
             index={1}
@@ -128,7 +123,7 @@ export function MoreDemo() {
             onPress={() => router.push('/dev/gallery')}
           />
           <MenuRow icon="logOut" label={t('more.logOut')} danger last onPress={later} />
-        </View>
+        </MenuGroup>
       </View>
       <BottomSheet
         open={languageOpen}

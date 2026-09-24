@@ -85,12 +85,12 @@ export function HomeDemo() {
 
   const top = profileTop ? (
     <View style={styles.profileTop}>
-      <Avatar name={demo.owner} size={48} />
+      <Avatar name={demo.owner} size={48} ring />
       <View style={styles.flex}>
-        <Text variant="h4" numberOfLines={1}>
+        <Text variant="h4" color="onPrimary" numberOfLines={1}>
           {greeting}
         </Text>
-        <Text variant="small" color="textOnTint" numberOfLines={1}>
+        <Text variant="small" color="onPrimary" numberOfLines={1}>
           {place}
         </Text>
       </View>
@@ -115,6 +115,8 @@ export function HomeDemo() {
   return (
     <Screen
       insetBottom={false}
+      background="gradient"
+      overlapHeader
       header={
         <HeaderBand top={top}>
           {profileTop ? (
@@ -218,15 +220,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    paddingHorizontal: 20,
-    paddingVertical: spacing.lg,
+    paddingTop: spacing.md,
   },
   wordmarkTop: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
-    paddingHorizontal: 20,
-    paddingVertical: spacing.md,
+    paddingTop: spacing.md,
   },
   circles: { flexDirection: 'row', justifyContent: 'space-between' },
   sections: { gap: spacing['2xl'] },

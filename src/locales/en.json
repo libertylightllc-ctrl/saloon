@@ -44,11 +44,26 @@
     "archived": "Archived"
   },
   "terms": {
-    "staff": { "gents": "Barber", "ladies": "Stylist" },
-    "staffPlural": { "gents": "Barbers", "ladies": "Stylists" },
-    "station": { "gents": "Chair", "ladies": "Station" },
-    "shop": { "gents": "Barber shop", "ladies": "Salon & spa" },
-    "anyStaff": { "gents": "Any barber", "ladies": "Any stylist" }
+    "staff": {
+      "gents": "Barber",
+      "ladies": "Stylist"
+    },
+    "staffPlural": {
+      "gents": "Barbers",
+      "ladies": "Stylists"
+    },
+    "station": {
+      "gents": "Chair",
+      "ladies": "Station"
+    },
+    "shop": {
+      "gents": "Barber shop",
+      "ladies": "Salon & spa"
+    },
+    "anyStaff": {
+      "gents": "Any barber",
+      "ladies": "Any stylist"
+    }
   },
   "categories": {
     "hair": "Hair",
@@ -156,7 +171,9 @@
       "tomorrow": "Tomorrow",
       "week": "This week"
     },
-    "filters": { "all": "All" },
+    "filters": {
+      "all": "All"
+    },
     "summary": {
       "waiting": "Waiting {{n}} · longest {{minutes}} min",
       "booked": "Booked {{n}}",
@@ -215,7 +232,8 @@
     "willUpdate": "Saving updates expected cash, {{staff}}'s commission and stock ({{stock}}).",
     "save": "Save sale · {{amount}}",
     "saved": "Sale saved",
-    "doneTitle": "Sale #{{number}} saved",
+    "doneTitle": "Sale {{number}} saved",
+    "paidWith": "Paid by {{method}}",
     "doneBody": "Share the receipt or start the next sale.",
     "shareReceipt": "Share receipt",
     "print": "Print",

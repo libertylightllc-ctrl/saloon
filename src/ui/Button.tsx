@@ -1,11 +1,19 @@
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
-import { semantic, spacing, useTheme, type TypeVariant } from '@/theme';
+import { semantic, spacing, tapTarget, useTheme, type TypeVariant } from '@/theme';
 
 import { Icon, type IconName } from './Icon';
 import { Text } from './Text';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'inverse';
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'ghost'
+  | 'danger'
+  | 'inverse'
+  /** The action at the end of a list row: tinted pill (gents "Book now"), outlined coral (ladies "Add"). */
+  | 'row';
 
 export interface ButtonProps {
   label: string;
@@ -33,6 +41,12 @@ export function Button({
   const theme = useTheme();
   const { colors } = theme;
   const inactive = disabled || loading;
+  const look: Exclude<ButtonVariant, 'row'> =
+    variant === 'row'
+      ? theme.variants.listAction === 'tinted'
+        ? 'secondary'
+        : 'outline'
+      : variant;
 
   const palette = {
     primary: {
@@ -45,7 +59,7 @@ export function Button({
     ghost: { bg: 'transparent', pressed: colors.primary50, fg: colors.primaryText },
     danger: { bg: semantic.error.hover, pressed: semantic.error.pressed, fg: colors.onPrimary },
     inverse: { bg: colors.surface, pressed: colors.primary50, fg: colors.primaryText },
-  }[variant];
+  }[look];
 
   const height = { lg: theme.sizes.buttonLg, md: theme.sizes.buttonMd, sm: theme.sizes.buttonSm }[
     size
@@ -68,6 +82,7 @@ export function Button({
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: inactive, busy: loading }}
+      hitSlop={Math.max(0, Math.ceil((tapTarget - height) / 2))}
       style={({ pressed }) => [
         styles.base,
         {
@@ -75,7 +90,7 @@ export function Button({
           borderRadius: radius,
           paddingHorizontal: size === 'sm' ? spacing.md : spacing.xl,
           backgroundColor: inactive
-            ? variant === 'ghost' || variant === 'outline'
+            ? look === 'ghost' || look === 'outline'
               ? 'transparent'
               : colors.inputFill
             : pressed
@@ -83,7 +98,7 @@ export function Button({
               : palette.bg,
         },
         size === 'lg' && styles.full,
-        variant === 'outline' && {
+        look === 'outline' && {
           borderWidth: 1,
           borderColor: inactive ? colors.neutral.n50 : colors.primary500,
         },

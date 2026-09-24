@@ -32,6 +32,11 @@ const colourGuards = [
 // CLAUDE.md rule 7: user-facing text goes through i18n keys.
 const textGuards = [
   {
+    selector:
+      'JSXAttribute[name.name=/^(title|subtitle|label|placeholder|message|actionLabel|body|itemLabel|accessibilityLabel|accessibilityHint)$/] > Literal[value=/[A-Za-z\\u0600-\\u06FF\\u0900-\\u097F]/]',
+    message: 'User-facing text must use t("key") from react-i18next.',
+  },
+  {
     selector: 'JSXText[value=/[A-Za-z\\u0600-\\u06FF\\u0900-\\u097F]/]',
     message: 'User-facing text must use t("key") from react-i18next.',
   },
@@ -52,13 +57,6 @@ module.exports = defineConfig([
   {
     // The theme is where colours are defined.
     files: ['src/theme/**/*.{ts,tsx}'],
-    rules: {
-      'no-restricted-syntax': ['error', ...rtlGuards, ...textGuards],
-    },
-  },
-  {
-    // Employee colours in demo data are data (they come from the database later), not styling.
-    files: ['src/features/demo/data.ts'],
     rules: {
       'no-restricted-syntax': ['error', ...rtlGuards, ...textGuards],
     },

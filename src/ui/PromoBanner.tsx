@@ -69,6 +69,7 @@ export function PromoBanner({
               onPress={onAction}
               accessibilityRole="button"
               accessibilityLabel={actionLabel}
+              hitSlop={4}
               style={({ pressed }) => [
                 styles.rectButton,
                 { backgroundColor: theme.colors.surface, borderRadius: 4 },

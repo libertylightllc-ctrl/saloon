@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { numericFontFamily } from '@/lib/fonts';
 import {
   DEFAULT_CURRENCY,
   formatAmount,
@@ -62,7 +63,7 @@ export function MoneyInput({
         const parsed = parseMoney(text, currency);
         if (parsed !== null) setText(toText(parsed, currency));
       }}
-      style={{ fontVariant: ['tabular-nums'] }}
+      style={{ fontFamily: numericFontFamily('medium') }}
     />
   );
 }

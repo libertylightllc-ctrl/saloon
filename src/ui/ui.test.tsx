@@ -1,15 +1,17 @@
-import { fireEvent, screen } from '@testing-library/react-native';
-import { Text as RNText } from 'react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { AccessibilityInfo, Animated, Text as RNText } from 'react-native';
 
 import { useTerms } from '@/features/mode/useTerms';
 import type { Mode } from '@/theme';
 
 import { initials } from './Avatar';
 import { Button } from './Button';
-import { HeaderBand, useOnBand } from './HeaderBand';
+import { HeaderBand } from './HeaderBand';
+import { useOnBand } from './layoutContext';
 import { MoneyInput } from './MoneyInput';
 import { StatusPill } from './StatusPill';
 import { Stepper } from './Stepper';
+import { SuccessCheck } from './SuccessCheck';
 import { renderInApp } from './testUtils';
 
 describe('Stepper', () => {
@@ -102,5 +104,28 @@ describe('initials', () => {
     expect(initials('Fatima Al Mansoori')).toBe('FM');
     expect(initials('Rafiq')).toBe('R');
     expect(initials('  ')).toBe('');
+  });
+});
+
+describe('SuccessCheck', () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  it('shows the finished check without animating when Reduce Motion is on', async () => {
+    jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(true);
+    const spring = jest.spyOn(Animated, 'spring');
+    await renderInApp(<SuccessCheck />);
+    await waitFor(() =>
+      expect(screen.getByTestId('success-check', { includeHiddenElements: true })).toHaveStyle({
+        opacity: 1,
+      }),
+    );
+    expect(spring).not.toHaveBeenCalled();
+  });
+
+  it('animates the check when Reduce Motion is off', async () => {
+    jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(false);
+    const spring = jest.spyOn(Animated, 'spring');
+    await renderInApp(<SuccessCheck />);
+    await waitFor(() => expect(spring).toHaveBeenCalledTimes(2));
   });
 });

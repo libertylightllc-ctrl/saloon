@@ -41,7 +41,7 @@ export function AttentionList({ items }: { items: DemoAttention[] }) {
               <Button
                 label={t(`home.attentionActions.${item.action}`)}
                 size="sm"
-                variant="secondary"
+                variant="row"
                 onPress={() => toast(t('dev.laterPhase'), 'info')}
               />
             }
@@ -136,13 +136,13 @@ export function RevenueCards({
         <Text variant="small" color="textSecondary">
           {t('home.paymentMix')}
         </Text>
-        <View style={[styles.stack, { borderRadius: theme.radius.pill }]}>
+        <DirectionView direction="ltr" style={[styles.stack, { borderRadius: theme.radius.pill }]}>
           {segments.map((s) =>
             s.value > 0 ? (
               <View key={s.key} style={{ flex: s.value, backgroundColor: s.colour }} />
             ) : null,
           )}
-        </View>
+        </DirectionView>
         <View style={styles.legend}>
           {segments.map((s) => (
             <View key={s.key} style={styles.legendItem}>

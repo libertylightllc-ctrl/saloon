@@ -1,5 +1,5 @@
 import 'intl-pluralrules'; // Hermes lacks full Intl.PluralRules; Arabic has six plural forms.
-import { createInstance } from 'i18next';
+import { createInstance, type FormatterModule } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import ar from '@/locales/ar.json';
@@ -37,17 +37,47 @@ export function isRtlLanguage(language: Language): boolean {
   return LANGUAGES.find((l) => l.code === language)?.rtl ?? false;
 }
 
+const FIRST_STRONG_ISOLATE = '\u2068';
+const POP_DIRECTIONAL_ISOLATE = '\u2069';
+
+/**
+ * In Arabic and Urdu, wrap each inserted value (names, amounts, "#1043", stock lists) in a
+ * Unicode isolate so Latin text and numbers keep their own direction inside the RTL sentence.
+ * Without it "(Neck strips 1, …)" and "#1043" come out scrambled.
+ */
+export function isolateForRtl<T>(value: T, language?: string): T | string {
+  if (value === undefined || value === null || typeof value === 'object') return value;
+  if (!isLanguage(language) || !isRtlLanguage(language)) return value;
+  return `${FIRST_STRONG_ISOLATE}${String(value)}${POP_DIRECTIONAL_ISOLATE}`;
+}
+
+/** Replaces i18next's built-in formatter (we use no named formats) to isolate RTL values. */
+const rtlIsolation: FormatterModule = {
+  type: 'formatter',
+  init: () => {},
+  // Non-string values (undefined = missing variable) pass through untouched.
+  format: (value, _format, lng) => isolateForRtl(value, lng) as string,
+  add: () => {},
+  addCached: () => {},
+};
+
 export async function initI18n(language: Language): Promise<typeof i18n> {
   if (i18n.isInitialized) {
     await i18n.changeLanguage(language);
     return i18n;
   }
-  await i18n.use(initReactI18next).init({
-    resources,
-    lng: language,
-    fallbackLng: DEFAULT_LANGUAGE,
-    interpolation: { escapeValue: false }, // React already escapes
-    returnNull: false,
-  });
+  await i18n
+    .use(initReactI18next)
+    .use(rtlIsolation)
+    .init({
+      resources,
+      lng: language,
+      fallbackLng: DEFAULT_LANGUAGE,
+      interpolation: {
+        escapeValue: false, // React already escapes
+        alwaysFormat: true, // run every value through rtlIsolation
+      },
+      returnNull: false,
+    });
   return i18n;
 }

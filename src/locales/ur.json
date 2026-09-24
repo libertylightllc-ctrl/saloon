@@ -45,11 +45,26 @@
     "archived": "محفوظ شدہ"
   },
   "terms": {
-    "staff": { "gents": "حجام", "ladies": "اسٹائلسٹ" },
-    "staffPlural": { "gents": "حجام", "ladies": "اسٹائلسٹ" },
-    "station": { "gents": "کرسی", "ladies": "اسٹیشن" },
-    "shop": { "gents": "حجام کی دکان", "ladies": "سیلون اور اسپا" },
-    "anyStaff": { "gents": "کوئی بھی حجام", "ladies": "کوئی بھی اسٹائلسٹ" }
+    "staff": {
+      "gents": "حجام",
+      "ladies": "اسٹائلسٹ"
+    },
+    "staffPlural": {
+      "gents": "حجام",
+      "ladies": "اسٹائلسٹ"
+    },
+    "station": {
+      "gents": "کرسی",
+      "ladies": "اسٹیشن"
+    },
+    "shop": {
+      "gents": "حجام کی دکان",
+      "ladies": "سیلون اور اسپا"
+    },
+    "anyStaff": {
+      "gents": "کوئی بھی حجام",
+      "ladies": "کوئی بھی اسٹائلسٹ"
+    }
   },
   "categories": {
     "hair": "بال",
@@ -78,8 +93,8 @@
   "dev": {
     "gents": "مردانہ",
     "ladies": "زنانہ",
-    "ltr": "بائیں→دائیں",
-    "rtl": "دائیں→بائیں",
+    "ltr": "LTR",
+    "rtl": "RTL",
     "gallery": "گیلری",
     "demo": "ڈیمو",
     "laterPhase": "یہ بعد کے مرحلے میں آئے گا۔",
@@ -157,7 +172,9 @@
       "tomorrow": "کل",
       "week": "اس ہفتے"
     },
-    "filters": { "all": "سب" },
+    "filters": {
+      "all": "سب"
+    },
     "summary": {
       "waiting": "انتظار {{n}} · سب سے طویل {{minutes}} منٹ",
       "booked": "بک شدہ {{n}}",
@@ -216,7 +233,8 @@
     "willUpdate": "محفوظ کرنے سے متوقع نقد، {{staff}} کا کمیشن اور اسٹاک ({{stock}}) اپڈیٹ ہوں گے۔",
     "save": "فروخت محفوظ کریں · {{amount}}",
     "saved": "فروخت محفوظ ہو گئی",
-    "doneTitle": "فروخت #{{number}} محفوظ ہو گئی",
+    "doneTitle": "فروخت {{number}} محفوظ ہو گئی",
+    "paidWith": "{{method}} سے ادائیگی",
     "doneBody": "رسید بھیجیں یا اگلی فروخت شروع کریں۔",
     "shareReceipt": "رسید بھیجیں",
     "print": "پرنٹ",

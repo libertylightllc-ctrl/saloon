@@ -95,3 +95,20 @@ describe('bootstrapLanguage', () => {
     expect(await AsyncStorage.getItem('settings.directionReload')).toBeNull();
   });
 });
+
+describe('RTL isolation of inserted values', () => {
+  it('wraps values in Arabic and Urdu so Latin text and numbers keep their direction', async () => {
+    await changeLanguage('ar');
+    const text = i18n.t('sale.doneTitle', { number: '#1043' });
+    expect(text).toContain('⁨#1043⁩');
+    await changeLanguage('ur');
+    expect(i18n.t('queue.startedAt', { time: '10:40' })).toContain('⁨10:40⁩');
+  });
+
+  it('leaves English and Hindi untouched', async () => {
+    await changeLanguage('en');
+    expect(i18n.t('sale.doneTitle', { number: '#1043' })).toBe('Sale #1043 saved');
+    await changeLanguage('hi');
+    expect(i18n.t('sale.doneTitle', { number: '#1043' })).not.toContain('⁨');
+  });
+});

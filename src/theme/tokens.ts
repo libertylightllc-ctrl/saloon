@@ -85,6 +85,18 @@ export const semantic: Record<'success' | 'info' | 'warning' | 'error', Semantic
 
 export type Tone = keyof typeof semantic | 'primary' | 'neutral';
 
+/** Colours an owner can give each employee (timeline columns, avatars). Stored per employee. */
+export const staffColours = [
+  '#6C45F2',
+  '#F28A2E',
+  '#1E90D6',
+  '#F2777A',
+  '#B892DB',
+  '#E0A800',
+  '#00A862',
+  '#D14F5A',
+] as const;
+
 /** Initials avatars when no employee colour or photo exists: pastel fill + dark ink (≥ 4.5:1). */
 export const avatarPalette = [
   { fill: '#FFE4EC', ink: '#A3264D' },
@@ -164,17 +176,15 @@ export interface Theme {
   /** Ladies screens sit on a blush→lavender gradient; gents are flat. */
   backgroundGradient: readonly [string, string, ...string[]] | null;
   radius: typeof radius & { button: number; thumb: number; sheet: number };
-  shadow: {
-    shadowColor: string;
-    shadowOpacity: number;
-    shadowRadius: number;
-    shadowOffset: { width: number; height: number };
-    elevation: number;
-  };
+  /** Tinted, never grey (02-DESIGN-SYSTEM §1.6). boxShadow renders the tint on iOS, Android and web. */
+  shadow: { boxShadow: string };
   sizes: { buttonLg: number; buttonMd: number; buttonSm: number; category: number };
   /** Signature differences between the two kits (02-DESIGN-SYSTEM §2). */
   variants: {
+    /** band = violet band, white title, rounded bottom corners · light = dark title on blush */
     header: 'band' | 'light';
+    /** plain = content on the screen background · sheet = white sheet with rounded top corners */
+    body: 'plain' | 'sheet';
     segmentTabs: 'band' | 'pill';
     listAction: 'tinted' | 'outlined';
     iconButton: 'circle' | 'square';

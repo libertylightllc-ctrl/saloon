@@ -42,15 +42,10 @@ export const ladies: Theme = {
   },
   backgroundGradient: ['#FBE7E1', '#F6EAF1', '#ECDDF3'],
   radius: { ...radius, button: 10, thumb: radius.sm, sheet: radius.xl },
-  shadow: {
-    shadowColor: coral.primary500,
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 3,
-  },
+  shadow: { boxShadow: '0px 6px 16px rgba(242, 119, 122, 0.1)' },
   sizes: { buttonLg: 48, buttonMd: 40, buttonSm: 32, category: 56 },
   variants: {
+    body: 'sheet',
     header: 'light',
     segmentTabs: 'pill',
     listAction: 'outlined',

@@ -1,4 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 import type { ReactNode } from 'react';
 import {
   KeyboardAvoidingView,
@@ -14,40 +15,49 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { screenPadding, spacing, useTheme } from '@/theme';
 
+import { HeaderOverlapContext } from './layoutContext';
+
 export interface ScreenProps {
   header?: ReactNode;
   children: ReactNode;
-  /** Body on a white sheet with rounded top corners, as in both reference kits. Default true. */
-  sheet?: boolean;
   scroll?: boolean;
   /** Sticky bar at the bottom (checkout, save…). */
   footer?: ReactNode;
   refreshing?: boolean;
   onRefresh?: () => void;
-  /** 'flat' drops the ladies gradient on busy list/form screens. */
-  background?: 'theme' | 'flat';
+  /**
+   * Ladies: 'gradient' (peach → pink → lavender) for home and onboarding, 'flat' (#FFF7F5) for
+   * lists and forms. Gents are always flat lavender.
+   */
+  background?: 'gradient' | 'flat';
+  /** Pull the first card up over the gents band (Home's "Expected cash" card). */
+  overlapHeader?: boolean;
   /** Pad for the home indicator. Off inside tabs, where the tab bar does it. */
   insetBottom?: boolean;
   bodyStyle?: StyleProp<ViewStyle>;
 }
 
+/** Distance the body overlaps the band when `overlapHeader` is on. */
+const OVERLAP = spacing['3xl'];
+
 export function Screen({
   header,
   children,
-  sheet = true,
   scroll = true,
   footer,
   refreshing = false,
   onRefresh,
-  background = 'theme',
+  background = 'flat',
+  overlapHeader,
   insetBottom = true,
   bodyStyle,
 }: ScreenProps) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const gradient = background === 'theme' ? theme.backgroundGradient : null;
-  // The gents band leaves room at its bottom for the sheet to overlap it.
-  const overlap = header && sheet && theme.variants.header === 'band' ? theme.radius.sheet : 0;
+  const gradient = background === 'gradient' ? theme.backgroundGradient : null;
+  const band = Boolean(header) && theme.variants.header === 'band';
+  const sheet = theme.variants.body === 'sheet';
+  const overlap = band && overlapHeader ? OVERLAP : 0;
   const bottomPad = insetBottom && !footer ? insets.bottom : 0;
 
   const body = (
@@ -58,8 +68,8 @@ export function Screen({
           backgroundColor: theme.colors.surface,
           borderTopStartRadius: theme.radius.sheet,
           borderTopEndRadius: theme.radius.sheet,
-          marginTop: -overlap,
         },
+        { marginTop: -overlap, paddingTop: overlap ? 0 : spacing['2xl'] },
         { paddingBottom: spacing['2xl'] + bottomPad },
         bodyStyle,
       ]}
@@ -69,14 +79,15 @@ export function Screen({
   );
 
   const content = (
-    <>
+    <HeaderOverlapContext.Provider value={overlap}>
       {header}
       {body}
-    </>
+    </HeaderOverlapContext.Provider>
   );
 
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+      <StatusBar style={band ? 'light' : 'dark'} />
       {gradient ? (
         <LinearGradient
           colors={gradient}
@@ -85,7 +96,13 @@ export function Screen({
           style={StyleSheet.absoluteFill}
         />
       ) : null}
-      <View style={{ height: insets.top, backgroundColor: theme.colors.headerArea }} />
+      {/* The gents band continues under the status bar. */}
+      <View
+        style={{
+          height: insets.top,
+          backgroundColor: band ? theme.colors.primary500 : theme.colors.headerArea,
+        }}
+      />
       <KeyboardAvoidingView
         style={styles.root}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -132,7 +149,7 @@ export function Screen({
 const styles = StyleSheet.create({
   root: { flex: 1 },
   grow: { flexGrow: 1 },
-  body: { flexGrow: 1, paddingTop: spacing['2xl'], paddingHorizontal: screenPadding },
+  body: { flexGrow: 1, paddingHorizontal: screenPadding },
   footer: {
     paddingHorizontal: screenPadding,
     paddingTop: spacing.md,

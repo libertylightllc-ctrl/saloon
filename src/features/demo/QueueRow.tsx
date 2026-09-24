@@ -53,7 +53,7 @@ export function QueueRow({
     <Button
       label={t(`queue.actions.${action}`)}
       size="sm"
-      variant={action === 'rebook' ? 'outline' : 'primary'}
+      variant="row"
       onPress={() => onAction?.(item, action)}
     />
   );

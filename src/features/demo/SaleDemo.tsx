@@ -18,7 +18,7 @@ import {
   type IconName,
 } from '@/ui';
 
-import { CheckoutSheet, SaleDoneSheet } from './CheckoutSheet';
+import { CheckoutSheet, SaleDoneSheet, type SavedSale } from './CheckoutSheet';
 import type { DemoService } from './data';
 import { useDemoBranch } from './useDemo';
 
@@ -32,7 +32,7 @@ export function SaleDemo() {
   const [category, setCategory] = useState('all');
   const [qty, setQty] = useState<Record<string, number>>({});
   const [checkout, setCheckout] = useState(false);
-  const [done, setDone] = useState<number | null>(null);
+  const [done, setDone] = useState<SavedSale | null>(null);
 
   // Mode switch = different branch: clear the basket.
   const [source, setSource] = useState(demo);
@@ -111,13 +111,13 @@ export function SaleDemo() {
         onClose={() => setCheckout(false)}
         lines={lines}
         onQtyChange={(id, n) => setQty((all) => ({ ...all, [id]: n }))}
-        onSaved={() => {
+        onSaved={(totalMinor, method) => {
           setCheckout(false);
           setQty({});
-          setDone(demo.nextSaleNumber);
+          setDone({ number: demo.nextSaleNumber, totalMinor, method });
         }}
       />
-      <SaleDoneSheet number={done} onClose={() => setDone(null)} />
+      <SaleDoneSheet sale={done} onClose={() => setDone(null)} />
     </>
   );
 }

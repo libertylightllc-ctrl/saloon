@@ -67,7 +67,7 @@ export function ListRow({
                 <Text
                   variant="small"
                   color={item.tone === 'primary' ? 'primaryText' : 'textSecondary'}
-                  numberOfLines={1}
+                  numberOfLines={2}
                   style={styles.flex}
                 >
                   {item.text}

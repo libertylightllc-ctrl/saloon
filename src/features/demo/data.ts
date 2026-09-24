@@ -3,7 +3,7 @@
  * Mirrors the seed branches in 04-DATA-MODEL §9. Names and service names are data, not UI copy.
  */
 import type { Minor } from '@/lib/money';
-import type { Mode } from '@/theme';
+import { staffColours, type Mode } from '@/theme';
 import type { IconName, StatusKey } from '@/ui';
 
 export interface DemoService {
@@ -157,7 +157,7 @@ const gents: DemoBranch = {
     {
       id: 'e1',
       name: 'Rafiq',
-      colour: '#6C45F2',
+      colour: staffColours[0],
       services: 9,
       salesMinor: aed(420),
       commissionMinor: aed(50.4),
@@ -166,7 +166,7 @@ const gents: DemoBranch = {
     {
       id: 'e2',
       name: 'Sameer',
-      colour: '#F28A2E',
+      colour: staffColours[1],
       services: 7,
       salesMinor: aed(380),
       commissionMinor: aed(45.6),
@@ -175,7 +175,7 @@ const gents: DemoBranch = {
     {
       id: 'e3',
       name: 'Imran',
-      colour: '#1E90D6',
+      colour: staffColours[2],
       services: 5,
       salesMinor: aed(210),
       commissionMinor: aed(21),
@@ -410,7 +410,7 @@ const ladies: DemoBranch = {
     {
       id: 'm1',
       name: 'Aisha',
-      colour: '#F2777A',
+      colour: staffColours[3],
       services: 6,
       salesMinor: aed(1180),
       commissionMinor: aed(141.6),
@@ -419,7 +419,7 @@ const ladies: DemoBranch = {
     {
       id: 'm2',
       name: 'Priya',
-      colour: '#B892DB',
+      colour: staffColours[4],
       services: 8,
       salesMinor: aed(760),
       commissionMinor: aed(76),
@@ -428,7 +428,7 @@ const ladies: DemoBranch = {
     {
       id: 'm3',
       name: 'Leila',
-      colour: '#E0A800',
+      colour: staffColours[5],
       services: 4,
       salesMinor: aed(1040),
       commissionMinor: aed(124.8),
@@ -437,7 +437,7 @@ const ladies: DemoBranch = {
     {
       id: 'm4',
       name: 'Grace',
-      colour: '#1E90D6',
+      colour: staffColours[2],
       services: 3,
       salesMinor: aed(520),
       commissionMinor: aed(52),

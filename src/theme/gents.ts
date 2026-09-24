@@ -40,15 +40,10 @@ export const gents: Theme = {
   },
   backgroundGradient: null,
   radius: { ...radius, button: 12, thumb: radius.md, sheet: radius.xl },
-  shadow: {
-    shadowColor: violet.primary500,
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 3,
-  },
+  shadow: { boxShadow: '0px 6px 16px rgba(108, 69, 242, 0.08)' },
   sizes: { buttonLg: 52, buttonMd: 44, buttonSm: 32, category: 56 },
   variants: {
+    body: 'plain',
     header: 'band',
     segmentTabs: 'band',
     listAction: 'tinted',

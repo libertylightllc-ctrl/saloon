@@ -6,7 +6,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { shiftMonth, type BusinessDate, type MonthKey } from '@/lib/dates';
 import { spacing, useTheme } from '@/theme';
 
-import { useOnBand } from './HeaderBand';
+import { useOnBand } from './layoutContext';
 import { IconButton } from './IconButton';
 import { Text } from './Text';
 

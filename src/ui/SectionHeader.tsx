@@ -24,7 +24,7 @@ export function SectionHeader({ title, actionLabel, onAction }: SectionHeaderPro
         {title}
       </Text>
       {actionLabel ? (
-        <Pressable onPress={onAction} accessibilityRole="button" hitSlop={10}>
+        <Pressable onPress={onAction} accessibilityRole="button" hitSlop={14}>
           <Text variant="small" color="textSecondary">
             {actionLabel}
           </Text>

@@ -18,6 +18,7 @@ import {
   Illustration,
   KpiCard,
   ListRow,
+  MenuGroup,
   MenuRow,
   MonthSwitcher,
   ProgressDashes,
@@ -39,6 +40,10 @@ export function CardSection() {
   const { t } = useTranslation();
   const terms = useTerms();
   const [qty, setQty] = useState(1);
+  const sample = demoBranches.gents;
+  const service = sample.services[0]!;
+  const customer = sample.queue[0]!.customer ?? t('queue.guest');
+  const barber = sample.staff[0]!.name;
   return (
     <Section title={t('gallery.sections.cards')}>
       <KpiCard
@@ -65,26 +70,29 @@ export function CardSection() {
         />
       </View>
       <ListRow
-        title="Haircut"
+        title={service.name}
         leading={<Thumb icon="scissors" />}
-        meta={['Neck strip 1', { icon: 'clock', text: t('common.minutes', { n: 30 }) }]}
-        trailing={<Stepper value={qty} onChange={setQty} itemLabel="Haircut" />}
+        meta={[
+          service.recipe ?? '',
+          { icon: 'clock', text: t('common.minutes', { n: service.durationMin }) },
+        ]}
+        trailing={<Stepper value={qty} onChange={setQty} itemLabel={service.name} />}
       />
       <ListRow
-        title="Ahmed Khan"
-        leading={<Avatar name="Ahmed Khan" size={44} />}
-        meta={[{ icon: 'mapPin', text: `${terms.station} 2 · Rafiq` }]}
+        title={customer}
+        leading={<Avatar name={customer} size={44} />}
+        meta={[{ icon: 'mapPin', text: `${terms.station} 2 · ${barber}` }]}
         badges={<StatusPill tone="warning" label={t('queue.badges.patch_test')} />}
         trailing={<StatusPill status="waiting" />}
         chevron
         onPress={() => {}}
       />
-      <View>
+      <MenuGroup>
         <MenuRow icon="user" label={t('gallery.myProfile')} index={0} />
         <MenuRow icon="receipt" label={t('gallery.bookingHistory')} index={1} value="12" />
         <MenuRow icon="bell" label={t('common.notifications')} index={3} />
         <MenuRow icon="logOut" label={t('more.logOut')} danger last />
-      </View>
+      </MenuGroup>
     </Section>
   );
 }
@@ -115,12 +123,13 @@ export function IdentitySection() {
         ))}
       </View>
       <View style={galleryStyles.row}>
-        <Avatar name="Rafiq Hussain" size={56} />
+        <Avatar name={demoBranches.gents.owner} size={56} />
         {demoBranches.gents.staff.map((person) => (
           <Avatar key={person.id} name={person.name} color={person.colour} />
         ))}
-        <Avatar name="فاطمة" />
-        <Avatar name="Priya Nair" size={32} />
+        {demoBranches.ladies.staff.slice(0, 2).map((person) => (
+          <Avatar key={person.id} name={person.name} size={32} />
+        ))}
       </View>
     </Section>
   );
