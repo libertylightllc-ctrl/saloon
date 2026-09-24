@@ -1,0 +1,19 @@
+{
+  "_review": "TODO review: machine-drafted translation",
+  "placeholder": {
+    "heading": "تم إعداد التطبيق",
+    "body": "هذه شاشة مؤقتة. ستأتي الشاشات الحقيقية في المراحل القادمة.",
+    "directionTitle": "فحص الاتجاه",
+    "start": "البداية",
+    "end": "النهاية",
+    "directionNow": "الاتجاه الحالي: {{direction}}",
+    "sampleDate": "تاريخ العمل اليوم: {{date}}",
+    "sampleAmount": "مبلغ تجريبي: {{amount}}"
+  },
+  "language": {
+    "title": "اللغة",
+    "ltr": "من اليسار إلى اليمين",
+    "rtl": "من اليمين إلى اليسار",
+    "restartNote": "التبديل بين الإنجليزية أو الهندية والعربية أو الأردية يعيد تشغيل التطبيق لقلب الاتجاه."
+  }
+}

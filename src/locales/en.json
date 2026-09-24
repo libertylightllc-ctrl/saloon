@@ -1,0 +1,18 @@
+{
+  "placeholder": {
+    "heading": "The app is set up",
+    "body": "This is a placeholder. The real screens arrive in the next phases.",
+    "directionTitle": "Layout check",
+    "start": "Start",
+    "end": "End",
+    "directionNow": "Current layout: {{direction}}",
+    "sampleDate": "Business date today: {{date}}",
+    "sampleAmount": "Sample amount: {{amount}}"
+  },
+  "language": {
+    "title": "Language",
+    "ltr": "Left to right",
+    "rtl": "Right to left",
+    "restartNote": "Switching between English or Hindi and Arabic or Urdu restarts the app to flip the layout."
+  }
+}

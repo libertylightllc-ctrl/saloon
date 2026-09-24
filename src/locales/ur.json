@@ -1,0 +1,19 @@
+{
+  "_review": "TODO review: machine-drafted translation",
+  "placeholder": {
+    "heading": "ایپ تیار ہے",
+    "body": "یہ ایک عارضی اسکرین ہے۔ اصل اسکرینیں اگلے مراحل میں آئیں گی۔",
+    "directionTitle": "لے آؤٹ کی جانچ",
+    "start": "شروع",
+    "end": "آخر",
+    "directionNow": "موجودہ لے آؤٹ: {{direction}}",
+    "sampleDate": "آج کی کاروباری تاریخ: {{date}}",
+    "sampleAmount": "مثالی رقم: {{amount}}"
+  },
+  "language": {
+    "title": "زبان",
+    "ltr": "بائیں سے دائیں",
+    "rtl": "دائیں سے بائیں",
+    "restartNote": "انگریزی یا ہندی اور عربی یا اردو کے درمیان تبدیلی پر لے آؤٹ پلٹنے کے لیے ایپ دوبارہ شروع ہوتی ہے۔"
+  }
+}

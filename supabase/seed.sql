@@ -1,0 +1,3 @@
+-- Demo data for local development (`npx supabase db reset`).
+-- Filled from phase 2 onwards: "Al Barsha Gents" (gents) and
+-- "Jumeirah Ladies Salon & Spa" (ladies) — see docs/04-DATA-MODEL.md §9.

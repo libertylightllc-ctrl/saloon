@@ -1,0 +1,19 @@
+{
+  "_review": "TODO review: machine-drafted translation",
+  "placeholder": {
+    "heading": "ऐप तैयार है",
+    "body": "यह एक अस्थायी स्क्रीन है। असली स्क्रीन अगले चरणों में आएँगी।",
+    "directionTitle": "लेआउट जाँच",
+    "start": "शुरुआत",
+    "end": "अंत",
+    "directionNow": "मौजूदा लेआउट: {{direction}}",
+    "sampleDate": "आज की कारोबारी तारीख: {{date}}",
+    "sampleAmount": "उदाहरण राशि: {{amount}}"
+  },
+  "language": {
+    "title": "भाषा",
+    "ltr": "बाएँ से दाएँ",
+    "rtl": "दाएँ से बाएँ",
+    "restartNote": "अंग्रेज़ी या हिंदी और अरबी या उर्दू के बीच बदलने पर लेआउट पलटने के लिए ऐप फिर से शुरू होता है।"
+  }
+}

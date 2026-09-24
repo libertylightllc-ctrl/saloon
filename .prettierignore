@@ -1,0 +1,12 @@
+node_modules
+.expo
+dist
+web-build
+coverage
+package-lock.json
+docs/reference
+supabase/.temp
+# Owner-authored specs: keep their formatting as written
+docs
+CLAUDE.md
+START-HERE.md

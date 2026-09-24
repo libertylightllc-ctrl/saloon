@@ -1,0 +1,1209 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Salon Control Redesign</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --green-50:#E6F4EF;--green-100:#CDE9DF;--green-200:#9DD3C0;--green-400:#3FA684;--green-600:#0F6E56;--green-700:#0B5A46;--green-800:#123A2F;--green-900:#0B2620;--mint-400:#5FD3A5;
+  --gold-50:#FBF3DF;--gold-500:#C9A24D;--gold-700:#8A6A22;
+  --n0:#FFFFFF;--n50:#F6F7F5;--n100:#EEF0EE;--n200:#E3E7E4;--n300:#CFD5D1;--n400:#A3ACA7;--n500:#7F8A85;--n600:#5B6862;--n800:#2A3530;--n900:#16211C;
+  --red-50:#FCE9E9;--red-600:#C23A3A;--amber-50:#FBF1DC;--amber-600:#B7791F;--blue-50:#E8F0FE;--blue-600:#2F6FE4;
+  --bg:var(--n50);--surface:var(--n0);--subtle:var(--n100);--hover:var(--n50);
+  --sidebar:var(--green-900);--sidebar-active:var(--green-800);
+  --primary:var(--green-600);--primary-hover:var(--green-700);--primary-subtle:var(--green-50);--accent:var(--mint-400);
+  --text:var(--n900);--text2:var(--n600);--text3:var(--n500);--textdis:var(--n400);--inverse:#fff;--on-sidebar:var(--green-100);--on-sidebar-muted:var(--green-200);
+  --border:var(--n200);--border-strong:var(--n300);
+  --success:var(--green-600);--success-bg:var(--green-50);--warning:var(--amber-600);--warning-bg:var(--amber-50);--error:var(--red-600);--error-bg:var(--red-50);--info:var(--blue-600);--info-bg:var(--blue-50);
+  --r-sm:6px;--r-md:10px;--r-lg:16px;
+  --sh-sm:0 1px 2px rgba(16,24,40,.06);--sh-md:0 4px 12px -2px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.04);--sh-lg:0 16px 40px -8px rgba(16,24,40,.14);--focus:0 0 0 4px rgba(15,110,86,.25);
+  --sb-w:256px;--sb-collapsed:72px;--ease:cubic-bezier(.2,.8,.2,1);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-size:14px;line-height:20px;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+a{color:inherit;text-decoration:none}
+svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.i16{width:16px;height:16px;stroke-width:2}
+.i14{width:14px;height:14px;stroke-width:2}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* ---------- Shell ---------- */
+.app{display:grid;grid-template-columns:var(--sb-w) 1fr;min-height:100vh;transition:grid-template-columns .25s var(--ease)}
+.app.collapsed{grid-template-columns:var(--sb-collapsed) 1fr}
+.sidebar{background:var(--sidebar);color:var(--on-sidebar);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden;z-index:30;transition:width .25s var(--ease)}
+.sb-top{display:flex;align-items:center;gap:12px;padding:20px 16px 16px;min-height:76px}
+.logo{width:36px;height:36px;border-radius:10px;background:var(--accent);color:var(--green-900);display:grid;place-items:center;font-weight:600;font-size:13px;flex:none}
+.sb-brand{overflow:hidden;white-space:nowrap;transition:opacity .2s}
+.sb-brand b{display:block;font-weight:600;font-size:14px;color:#fff}
+.sb-brand span{font-size:12px;color:var(--on-sidebar-muted)}
+.sb-toggle{margin-left:auto;width:32px;height:32px;border-radius:8px;color:var(--on-sidebar-muted);display:grid;place-items:center;flex:none;transition:background .15s,transform .25s var(--ease)}
+.sb-toggle:hover{background:var(--sidebar-active);color:#fff}
+.collapsed .sb-toggle{transform:rotate(180deg);margin-left:0}
+.branch{margin:0 12px 4px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:10px;white-space:nowrap;overflow:hidden}
+.branch .store{width:32px;height:32px;border-radius:8px;background:var(--sidebar-active);display:grid;place-items:center;color:var(--accent);flex:none}
+.branch b{display:block;font-weight:600;font-size:13px;color:#fff}
+.branch span{font-size:12px;color:var(--on-sidebar-muted)}
+.sb-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 12px 8px}
+.sb-nav::-webkit-scrollbar{width:0}
+.nav-group{margin-top:10px}
+.nav-group h6{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--on-sidebar-muted);opacity:.7;padding:0 12px;margin-bottom:6px;white-space:nowrap;height:16px;transition:opacity .2s}
+.nav-item{display:flex;align-items:center;gap:12px;height:38px;padding:0 12px;border-radius:8px;color:var(--on-sidebar);font-weight:500;width:100%;position:relative;white-space:nowrap;transition:background .15s,color .15s;text-align:left}
+.nav-item .lbl{overflow:hidden;transition:opacity .2s}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:var(--sidebar-active);color:#fff}
+.nav-item.active::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--accent)}
+.nav-item .cnt{margin-left:auto;font-size:11px;font-weight:600;background:var(--accent);color:var(--green-900);border-radius:999px;padding:1px 7px}
+.nav-item[disabled]{opacity:.4;cursor:not-allowed}
+.collapsed .sb-brand,.collapsed .nav-item .lbl,.collapsed .nav-item .cnt,.collapsed .branch b,.collapsed .branch span,.collapsed .nav-group h6,.collapsed .sb-foot .txt{opacity:0;width:0;pointer-events:none}
+.collapsed .nav-item{padding:0 14px}
+.collapsed .branch{padding:8px 8px}
+.sb-foot{padding:12px;border-top:1px solid rgba(255,255,255,.08)}
+.vat{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;white-space:nowrap;overflow:hidden}
+.vat .txt{flex:1}
+.vat b{display:block;font-size:13px;color:#fff;font-weight:500}
+.vat span{font-size:12px;color:var(--on-sidebar-muted)}
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(246,247,245,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:14px 32px;min-height:72px}
+.topbar .ttl h1{font-size:20px;line-height:28px;font-weight:600;letter-spacing:-.2px}
+.topbar .ttl p{font-size:12px;color:var(--text3)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.search{position:relative;width:320px}
+.search input{width:100%;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--surface);padding:0 36px 0 38px;transition:box-shadow .15s,border-color .15s}
+.search input::placeholder{color:var(--text3)}
+.search .ic{position:absolute;left:12px;top:10px;color:var(--text3)}
+.search kbd{position:absolute;right:10px;top:11px;font:11px/18px Inter;color:var(--text3);border:1px solid var(--border);border-radius:5px;padding:0 5px;background:var(--subtle)}
+.search input:focus{outline:0;border-color:var(--primary);box-shadow:var(--focus)}
+.search.open .results{opacity:1;transform:translateY(0);pointer-events:auto}
+.results{position:absolute;top:46px;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--sh-lg);padding:6px;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s var(--ease),transform .18s var(--ease);z-index:40}
+.results h6{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:8px 10px 4px}
+.res{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;width:100%;text-align:left}
+.res:hover,.res.sel{background:var(--subtle)}
+.res .t b{font-weight:500;display:block}.res .t span{font-size:12px;color:var(--text3)}
+.res .k{margin-left:auto;font-size:11px;color:var(--text3)}
+.res mark{background:var(--gold-50);color:inherit;border-radius:3px}
+.iconbtn{width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;color:var(--text);position:relative;transition:background .15s,transform .1s}
+.iconbtn:hover{background:var(--subtle)}.iconbtn:active{transform:scale(.96)}
+.iconbtn .dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--error);border:2px solid var(--surface)}
+.iconbtn.ghost{border-color:transparent;background:transparent}
+.profile{display:flex;align-items:center;gap:10px;height:40px;padding:0 6px 0 4px;border-radius:10px;border:1px solid var(--border);background:var(--surface);transition:background .15s}
+.profile:hover{background:var(--subtle)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--primary-subtle);color:var(--primary);font-size:11px;font-weight:600;display:grid;place-items:center;flex:none;letter-spacing:.3px}
+.avatar.sm{width:24px;height:24px;font-size:10px}.avatar.lg{width:40px;height:40px;font-size:13px}
+.avatar.gold{background:var(--gold-50);color:var(--gold-700)}.avatar.blue{background:var(--blue-50);color:var(--blue-600)}.avatar.warn{background:var(--amber-50);color:var(--amber-600)}
+.profile .t{text-align:left;line-height:16px}.profile .t b{font-size:13px;font-weight:500;display:block}.profile .t span{font-size:11px;color:var(--text3)}
+/* dropdown menus */
+.menu{position:absolute;right:0;top:48px;min-width:240px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--sh-lg);padding:6px;opacity:0;transform:translateY(-6px) scale(.98);transform-origin:top right;pointer-events:none;transition:opacity .18s var(--ease),transform .18s var(--ease);z-index:50}
+.menu.open{opacity:1;transform:none;pointer-events:auto}
+.mi{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:8px;text-align:left;color:var(--text)}
+.mi:hover{background:var(--subtle)}.mi.danger{color:var(--error)}
+.mi .k{margin-left:auto;font-size:11px;color:var(--text3)}
+.msep{height:1px;background:var(--border);margin:6px 4px}
+.mhead{padding:10px 10px 6px;display:flex;align-items:center;gap:10px}
+.mhead .t b{display:block;font-weight:600}.mhead .t span{font-size:12px;color:var(--text3)}
+.rel{position:relative}
+/* notifications panel */
+.notif{width:380px;padding:0;overflow:hidden}
+.notif .nh{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)}
+.notif .nh b{font-weight:600}.notif .nh .pill{margin-left:8px}
+.notif .nh button{margin-left:auto;font-size:12px;color:var(--primary);font-weight:500}
+.nitem{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);position:relative;transition:background .2s;width:100%;text-align:left}
+.nitem:last-child{border-bottom:0}
+.nitem:hover{background:var(--hover)}
+.nitem .ni{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;flex:none}
+.nitem .nt b{display:block;font-weight:500}.nitem .nt span{font-size:12px;color:var(--text3)}
+.nitem .nt p{font-size:13px;color:var(--text2)}
+.nitem.unread{background:rgba(15,110,86,.04)}
+.nitem.unread::after{content:"";position:absolute;right:16px;top:18px;width:8px;height:8px;border-radius:50%;background:var(--primary);transition:transform .2s,opacity .2s}
+.nitem:not(.unread)::after{transform:scale(0);opacity:0}
+.ni.s{background:var(--success-bg);color:var(--success)}.ni.w{background:var(--warning-bg);color:var(--warning)}.ni.e{background:var(--error-bg);color:var(--error)}.ni.i{background:var(--info-bg);color:var(--info)}
+/* ---------- Content ---------- */
+.content{padding:24px 32px 48px;display:flex;flex-direction:column;gap:24px;flex:1}
+.screen{display:none;flex-direction:column;gap:24px;animation:pageIn .22s var(--ease)}
+.screen.active{display:flex}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.page-head h2{font-size:28px;line-height:36px;font-weight:600;letter-spacing:-.4px}
+.page-head p{color:var(--text2)}
+.page-head .actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.grid{display:grid;gap:24px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g21{grid-template-columns:minmax(0,2.3fr) minmax(0,1fr)}
+.g12{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+.g32{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--sh-sm);display:flex;flex-direction:column;min-width:0}
+.card-h{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.card-h h3{font-size:16px;font-weight:600;line-height:24px}
+.card-h p{font-size:12px;color:var(--text3)}
+.card-h .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.card-b{padding:20px}
+.card-f{padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text3)}
+.link{color:var(--primary);font-weight:500;font-size:13px;display:inline-flex;align-items:center;gap:4px}
+.link:hover{text-decoration:underline}
+/* KPI */
+.kpi{padding:20px;gap:12px;cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--sh-md);border-color:var(--border-strong)}
+.kpi .kh{display:flex;align-items:center;gap:10px;color:var(--text2);font-size:13px;font-weight:500}
+.kpi .kh .ki{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:var(--primary-subtle);color:var(--primary);transition:transform .2s var(--ease)}
+.kpi:hover .kh .ki{transform:scale(1.06)}
+.kpi .kv{font-size:26px;line-height:34px;font-weight:600;letter-spacing:-.6px;white-space:nowrap}
+.kpi .kd{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3)}
+.kpi .kh .more{margin-left:auto;opacity:0;transition:opacity .2s;color:var(--text3)}
+.kpi:hover .kh .more{opacity:1}
+.delta{white-space:nowrap;display:inline-flex;align-items:center;gap:3px;font-weight:600;font-size:12px;padding:1px 6px;border-radius:999px}
+.delta.up{color:var(--success);background:var(--success-bg)}.delta.down{color:var(--error);background:var(--error-bg)}.delta.flat{color:var(--text2);background:var(--subtle)}
+.ki.gold{background:var(--gold-50)!important;color:var(--gold-700)!important}.ki.blue{background:var(--info-bg)!important;color:var(--info)!important}.ki.warn{background:var(--warning-bg)!important;color:var(--warning)!important}
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:500;line-height:16px;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge.s{background:var(--success-bg);color:var(--success)}.badge.w{background:var(--warning-bg);color:var(--warning)}.badge.e{background:var(--error-bg);color:var(--error)}.badge.i{background:var(--info-bg);color:var(--info)}.badge.n{background:var(--subtle);color:var(--text2)}.badge.g{background:var(--gold-50);color:var(--gold-700)}
+.badge.nodot::before{display:none}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;background:var(--subtle);color:var(--text2)}
+.pill.p{background:var(--primary-subtle);color:var(--primary)}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:8px;font-weight:600;font-size:14px;transition:background .15s,transform .1s,box-shadow .15s,color .15s;white-space:nowrap;position:relative}
+.btn:active{transform:scale(.98)}
+.btn.p{background:var(--primary);color:#fff}.btn.p:hover{background:var(--primary-hover)}.btn.p:focus-visible{box-shadow:var(--focus);outline:0}
+.btn.s{background:var(--surface);color:var(--text);border:1px solid var(--border)}.btn.s:hover{background:var(--subtle)}
+.btn.g{background:transparent;color:var(--text2)}.btn.g:hover{background:var(--subtle);color:var(--text)}
+.btn.d{background:var(--error);color:#fff}.btn.d:hover{background:#A83232}
+.btn.sub{background:var(--primary-subtle);color:var(--primary)}.btn.sub:hover{background:var(--green-100)}
+.btn.sm{height:32px;padding:0 12px;font-size:13px;border-radius:6px}
+.btn.lg{height:44px;padding:0 20px}
+.btn:disabled{background:var(--subtle);color:var(--textdis);border-color:transparent;cursor:not-allowed;transform:none}
+.btn.loading{pointer-events:none;color:transparent!important}
+.btn.loading::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
+.btn.s.loading::after,.btn.g.loading::after{border-color:var(--border-strong);border-top-color:var(--text)}
+.btn.success{background:var(--success)!important;color:#fff!important}
+.btn.success .chk{animation:pop .3s var(--ease)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+.btn.w100{width:100%}
+/* forms */
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label{font-size:13px;font-weight:500;color:var(--text)}
+.field label .optl{color:var(--text3);font-weight:400}
+.field .help{font-size:12px;color:var(--text3)}
+.field .err{font-size:12px;color:var(--error);display:none;align-items:center;gap:4px}
+.field.invalid .err{display:flex}
+.field.invalid .ctl{border-color:var(--error);box-shadow:0 0 0 4px rgba(194,58,58,.15)}
+.ctl{height:40px;border:1px solid var(--border);border-radius:8px;background:var(--surface);padding:0 12px;width:100%;transition:border-color .15s,box-shadow .15s;color:var(--text)}
+.ctl::placeholder{color:var(--text3)}
+.ctl:focus{outline:0;border-color:var(--primary);box-shadow:var(--focus)}
+.ctl:disabled{background:var(--subtle);color:var(--textdis);cursor:not-allowed}
+textarea.ctl{height:auto;padding:10px 12px;resize:vertical;min-height:72px}
+.ctl.icon{padding-left:38px}
+.wrap-ic{position:relative}.wrap-ic .ic{position:absolute;left:12px;top:10px;color:var(--text3)}
+.wrap-ic .suf{position:absolute;right:12px;top:10px;color:var(--text3);font-size:13px}
+.sel{position:relative}
+.sel .ctl{display:flex;align-items:center;justify-content:space-between;text-align:left;cursor:pointer;gap:8px}
+.sel .ctl > span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px}
+.sel .ctl .chev{color:var(--text3);transition:transform .2s var(--ease)}
+.sel.open .ctl{border-color:var(--primary);box-shadow:var(--focus)}
+.sel.open .ctl .chev{transform:rotate(180deg)}
+.sel .opts{position:absolute;left:0;right:0;top:44px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh-lg);padding:6px;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s var(--ease),transform .18s var(--ease);z-index:30;max-height:240px;overflow:auto}
+.sel.open .opts{opacity:1;transform:none;pointer-events:auto}
+.opt{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:6px;text-align:left}
+.opt:hover{background:var(--subtle)}.opt.selected{background:var(--primary-subtle);color:var(--primary);font-weight:500}
+.opt .chk{margin-left:auto;opacity:0}.opt.selected .chk{opacity:1}
+.frow{display:grid;gap:16px}.frow.c2{grid-template-columns:1fr 1fr}.frow.c3{grid-template-columns:1fr 1fr 1fr}
+.check{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.check .box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border-strong);background:var(--surface);display:grid;place-items:center;transition:background .15s,border-color .15s}
+.check .box svg{opacity:0;transform:scale(.5);transition:opacity .15s,transform .15s var(--ease);stroke:#fff}
+.check:hover .box{border-color:var(--primary)}
+.check.on .box{background:var(--primary);border-color:var(--primary)}
+.check.on .box svg{opacity:1;transform:scale(1)}
+.check.dis{opacity:.5;cursor:not-allowed}
+.toggle{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+.toggle .tr{width:40px;height:22px;border-radius:999px;background:var(--border-strong);position:relative;transition:background .2s;flex:none}
+.toggle .tr::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:var(--sh-sm);transition:transform .2s var(--ease)}
+.toggle:hover .tr{background:var(--n400)}
+.toggle.on .tr{background:var(--primary)}.toggle.on:hover .tr{background:var(--primary-hover)}
+.toggle.on .tr::after{transform:translateX(18px)}
+.toggle.dis{opacity:.5;cursor:not-allowed}
+.toggle .tt b{display:block;font-weight:500}.toggle .tt span{font-size:12px;color:var(--text3)}
+.radio-row{display:flex;gap:8px}
+.chipbtn{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);font-weight:500;font-size:13px;color:var(--text2);transition:all .15s}
+.chipbtn:hover{border-color:var(--border-strong);color:var(--text)}
+.chipbtn.on{background:var(--primary-subtle);border-color:var(--primary);color:var(--primary)}
+/* tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border)}
+.tab{height:40px;padding:0 12px;font-weight:500;color:var(--text2);position:relative;transition:color .15s;border-radius:6px 6px 0 0}
+.tab:hover{color:var(--text);background:var(--subtle)}
+.tab.active{color:var(--primary)}
+.tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--primary);border-radius:2px;animation:grow .2s var(--ease)}
+.tab .cnt{margin-left:6px;font-size:11px;padding:1px 6px;border-radius:999px;background:var(--subtle);color:var(--text2)}
+.tab.active .cnt{background:var(--primary-subtle);color:var(--primary)}
+@keyframes grow{from{transform:scaleX(.4)}to{transform:scaleX(1)}}
+.seg{display:inline-flex;background:var(--subtle);border-radius:8px;padding:3px;gap:2px}
+.seg button{height:30px;padding:0 12px;border-radius:6px;font-weight:500;font-size:13px;color:var(--text2);transition:all .15s}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:var(--sh-sm)}
+/* toolbar */
+.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.toolbar .search{width:280px}.toolbar .search input{height:36px;border-radius:8px}
+.toolbar .search .ic{top:8px}.toolbar .search kbd{display:none}
+.toolbar .sp{flex:1}
+.fbtn{white-space:nowrap;height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:13px;color:var(--text);transition:background .15s}
+.fbtn:hover{background:var(--subtle)}
+.fbtn .chev{color:var(--text3)}
+.fbtn.on{border-color:var(--primary);color:var(--primary);background:var(--primary-subtle)}
+/* tables */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:12px;font-weight:500;color:var(--text3);letter-spacing:.2px;text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);background:var(--n50);white-space:nowrap}
+.tbl th:first-child{padding-left:20px}.tbl td:first-child{padding-left:20px}
+.tbl th.r,.tbl td.r{text-align:right}
+.tbl td{white-space:nowrap;padding:12px 12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;line-height:20px}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr{transition:background .15s,box-shadow .15s;cursor:pointer}
+.tbl tbody tr:hover{background:var(--hover)}
+.tbl tbody tr.sel{background:var(--primary-subtle)}
+.tbl .who{display:flex;align-items:center;gap:10px}
+.tbl .who b{font-weight:500;display:block;white-space:nowrap}.tbl .who span{font-size:12px;color:var(--text3);white-space:nowrap}
+.tbl .muted{color:var(--text3)}
+.tbl td:has(> .rowact){position:relative;padding:0;width:1px}
+.rowact{position:absolute;right:12px;top:50%;transform:translateY(-50%) translateX(4px);display:flex;gap:4px;align-items:center;opacity:0;transition:opacity .15s,transform .15s var(--ease);padding-left:32px;background:linear-gradient(90deg,rgba(246,247,245,0),var(--hover) 30%)}
+.tbl tr:hover .rowact{opacity:1;transform:translateY(-50%)}
+.tbl tr.sel .rowact{opacity:1;transform:translateY(-50%);background:linear-gradient(90deg,rgba(230,244,239,0),var(--primary-subtle) 30%)}
+.rowact .iconbtn{width:32px;height:32px;border-radius:6px}
+.rowact .btn.sm{height:30px}
+.tbl .time{font-weight:500;white-space:nowrap}
+.tbl .time span{display:block;font-size:12px;color:var(--text3);font-weight:400}
+.pagin{display:flex;align-items:center;gap:8px;padding:12px 20px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)}
+.pagin .pages{margin-left:auto;display:flex;gap:4px}
+.pagin .pages button{min-width:32px;height:32px;border-radius:6px;padding:0 8px;font-weight:500;color:var(--text2);transition:background .15s}
+.pagin .pages button:hover{background:var(--subtle)}
+.pagin .pages button.on{background:var(--primary);color:#fff}
+.pagin .pages button:disabled{color:var(--textdis);cursor:not-allowed;background:none}
+.empty{padding:48px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty .ei{width:56px;height:56px;border-radius:16px;background:var(--subtle);display:grid;place-items:center;color:var(--text3);margin-bottom:8px}
+.empty b{font-weight:600;font-size:16px}.empty p{color:var(--text2);max-width:360px}
+/* skeleton */
+.sk{background:linear-gradient(90deg,var(--subtle) 25%,#f6f7f5 50%,var(--subtle) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:6px}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+.sk.t{height:12px}.sk.t.w{width:60%}.sk.v{height:28px;width:45%}.sk.c{height:36px;width:36px;border-radius:50%}
+.sk-row{display:flex;gap:16px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border)}
+/* chart */
+.chart{position:relative;height:220px;display:flex;align-items:flex-end;gap:12px;padding:8px 0 0}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+.bar .b{width:100%;max-width:44px;border-radius:6px 6px 3px 3px;background:var(--green-200);transform-origin:bottom;transform:scaleY(0);transition:transform .6s var(--ease),background .2s;position:relative}
+.bar .b.today{background:var(--primary)}
+.chart.in .bar .b{transform:scaleY(1)}
+.bar:hover .b{background:var(--green-400)}.bar:hover .b.today{background:var(--primary-hover)}
+.bar .b .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--n900);color:#fff;font-size:12px;padding:4px 8px;border-radius:6px;white-space:nowrap;opacity:0;transition:opacity .15s,transform .15s;pointer-events:none}
+.bar:hover .b .tip{opacity:1;transform:translateX(-50%)}
+.bar .lb{font-size:12px;color:var(--text3)}
+.gridlines{position:absolute;inset:8px 0 28px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.gridlines i{border-top:1px dashed var(--border);height:0;display:block}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--text2)}.legend span{white-space:nowrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.donut{display:flex;align-items:center;gap:20px}
+.donut svg circle{fill:none;stroke-width:12;transition:stroke-dashoffset 1s var(--ease)}
+.dl{display:flex;flex-direction:column;gap:8px;font-size:13px}
+.dl div{display:flex;justify-content:space-between;gap:16px}
+.dl i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px}
+/* lists */
+.alist{display:flex;flex-direction:column}
+.aitem{display:flex;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:flex-start;transition:background .15s}
+.aitem:last-child{border-bottom:0}.aitem:hover{background:var(--hover)}
+.aitem .ai{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none}
+.aitem .at{flex:1;min-width:0}.aitem .at b{font-weight:500;display:block}.aitem .at span{font-size:12px;color:var(--text3)}
+.aitem .btn{flex:none}
+.feed{position:relative;padding:4px 0}
+.fitem{display:flex;gap:12px;padding:10px 20px;align-items:flex-start}
+.fitem .fd{width:8px;height:8px;border-radius:50%;background:var(--primary);margin-top:6px;flex:none;box-shadow:0 0 0 3px var(--primary-subtle)}
+.fitem .fd.g{background:var(--n400);box-shadow:0 0 0 3px var(--subtle)}
+.fitem p{font-size:13px}.fitem p b{font-weight:500}.fitem span{font-size:12px;color:var(--text3);display:block}
+/* tiles (quick sale) */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tile{border:1px solid var(--border);border-radius:12px;padding:14px;text-align:left;background:var(--surface);transition:all .15s var(--ease);display:flex;flex-direction:column;gap:6px;position:relative}
+.tile:hover{border-color:var(--border-strong);box-shadow:var(--sh-md);transform:translateY(-1px)}
+.tile.on{border-color:var(--primary);background:var(--primary-subtle);box-shadow:var(--focus)}
+.tile b{font-weight:600}.tile span{font-size:12px;color:var(--text3)}.tile .pr{font-weight:600;font-size:16px;margin-top:4px}
+.tile .cat{position:absolute;top:12px;right:12px}
+.tile .qty{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-size:11px;font-weight:600;display:none;place-items:center}
+.tile.on .qty{display:grid}.tile.on .cat{display:none}
+.sumrow{display:flex;justify-content:space-between;font-size:13px;color:var(--text2);padding:4px 0}
+.sumrow.total{font-size:16px;font-weight:600;color:var(--text);border-top:1px solid var(--border);margin-top:8px;padding-top:12px}
+.lineitem{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--border);font-size:13px}
+.lineitem .iconbtn{width:28px;height:28px;border-radius:6px;border:0}
+.paymeth{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.paymeth button{height:56px;border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:500;color:var(--text2);background:var(--surface);transition:all .15s}
+.paymeth button:hover{border-color:var(--border-strong)}
+.paymeth button.on{border-color:var(--primary);background:var(--primary-subtle);color:var(--primary)}
+details.disc summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--primary);font-weight:500;font-size:13px}
+details.disc summary::-webkit-details-marker{display:none}
+details.disc summary svg{transition:transform .2s}details.disc[open] summary svg{transform:rotate(180deg)}
+details.disc .frow{margin-top:12px}
+/* stat rows */
+.stat{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.stat:last-child{border-bottom:0}
+.stat b{font-weight:600;font-size:14px}
+.stat.hi{font-size:14px}.stat.hi b{font-size:20px;letter-spacing:-.3px}
+.callout{display:flex;gap:12px;padding:12px 14px;border-radius:10px;font-size:13px;align-items:flex-start}
+.callout.w{background:var(--warning-bg);color:var(--gold-700)}.callout.e{background:var(--error-bg);color:var(--error)}.callout.i{background:var(--info-bg);color:var(--info)}.callout.s{background:var(--success-bg);color:var(--success)}
+.callout b{font-weight:600}
+.progress{height:8px;border-radius:999px;background:var(--subtle);overflow:hidden}
+.progress i{display:block;height:100%;border-radius:999px;background:var(--primary);transition:width 1s var(--ease)}
+.progress i.w{background:var(--warning)}.progress i.e{background:var(--error)}
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--border);border-radius:10px;transition:background .15s}
+.step:hover{background:var(--hover)}
+.step .n{width:28px;height:28px;border-radius:50%;background:var(--subtle);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--text2);flex:none}
+.step.done .n{background:var(--success-bg);color:var(--success)}
+.step .st b{display:block;font-weight:500}.step .st span{font-size:12px;color:var(--text3)}
+.step .btn{margin-left:auto}
+/* modals */
+.overlay{position:fixed;inset:0;background:rgba(11,38,32,.45);backdrop-filter:blur(2px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s var(--ease)}
+.overlay.open{opacity:1;pointer-events:auto}
+.modal{width:560px;max-width:calc(100vw - 32px);max-height:calc(100vh - 48px);background:var(--surface);border-radius:16px;box-shadow:var(--sh-lg);display:flex;flex-direction:column;transform:translateY(12px) scale(.98);transition:transform .22s var(--ease);overflow:hidden}
+.overlay.open .modal{transform:none}
+.modal.lg{width:720px}.modal.sm{width:440px}
+.mh{display:flex;align-items:center;gap:12px;padding:20px 24px 16px;border-bottom:1px solid var(--border)}
+.mh h3{font-size:18px;font-weight:600;line-height:24px}.mh p{font-size:13px;color:var(--text3)}
+.mh .x{margin-left:auto}
+.mb{padding:20px 24px;overflow:auto;display:flex;flex-direction:column;gap:16px}
+.mf{display:flex;gap:8px;padding:16px 24px;border-top:1px solid var(--border);background:var(--n50);justify-content:flex-end;align-items:center}
+.mf .left{margin-right:auto;font-size:13px;color:var(--text3)}
+.overlay.side{justify-content:flex-end;align-items:stretch}
+.overlay.side .modal{border-radius:0;height:100vh;max-height:none;width:480px;transform:translateX(24px)}
+.overlay.side.open .modal{transform:none}
+.dbox{display:flex;flex-direction:column;gap:12px}
+.dbox .drow{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border)}
+.dbox .drow span{color:var(--text3)}.dbox .drow b{font-weight:500}
+.warnicon{width:48px;height:48px;border-radius:12px;background:var(--error-bg);color:var(--error);display:grid;place-items:center;flex:none}
+/* toast */
+.toasts{position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:200}
+.toast{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--n900);color:#fff;border-radius:12px;box-shadow:var(--sh-lg);min-width:300px;max-width:420px;animation:tin .25s var(--ease);font-size:13px}
+.toast.out{animation:tout .25s var(--ease) forwards}
+.toast .ti{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none}
+.toast .ti.s{background:rgba(95,211,165,.2);color:var(--accent)}.toast .ti.e{background:rgba(194,58,58,.3);color:#F5A3A3}.toast .ti.i{background:rgba(47,111,228,.3);color:#9CBBF3}.toast .ti.w{background:rgba(201,162,77,.3);color:#F0D48A}
+.toast b{font-weight:600;display:block}.toast span{color:rgba(255,255,255,.7)}
+.toast .ta{margin-left:auto;color:var(--accent);font-weight:600}
+.toast .tx{color:rgba(255,255,255,.6);width:28px;height:28px;display:grid;place-items:center;border-radius:6px}
+.toast .tx:hover{background:rgba(255,255,255,.1);color:#fff}
+@keyframes tin{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes tout{to{opacity:0;transform:translateX(12px)}}
+/* date picker */
+.dp{width:280px;padding:12px}
+.dp .dph{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-weight:600}
+.dp .dph .iconbtn{width:28px;height:28px;border:0;border-radius:6px}
+.dp .dow,.dp .days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.dp .dow span{font-size:11px;color:var(--text3);padding:4px 0;font-weight:500}
+.dp .days button{height:32px;border-radius:6px;font-size:13px;transition:background .15s}
+.dp .days button:hover{background:var(--subtle)}
+.dp .days button.o{color:var(--textdis)}
+.dp .days button.t{color:var(--primary);font-weight:600}
+.dp .days button.on{background:var(--primary);color:#fff}
+.dp .days button.has::after{content:"";display:block;width:4px;height:4px;border-radius:50%;background:var(--primary);margin:-2px auto 0}
+.dp .days button.on.has::after{background:#fff}
+/* misc */
+.two{display:flex;gap:24px;align-items:flex-start}
+.divider{height:1px;background:var(--border)}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:13px}
+.kv span{color:var(--text3)}
+.hint{font-size:12px;color:var(--text3)}
+.bottomnav{display:none}
+.mobile-only{display:none}
+.slot{display:inline-flex;gap:6px}
+/* ---------- Responsive ---------- */
+@media (max-width:1280px){.content{padding:20px 24px 40px}.topbar{padding:12px 24px}.search{width:260px}.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:1100px){.tbl td{white-space:normal}.tbl td.time,.tbl .who b,.tbl .badgecell{white-space:nowrap}.topbar .ttl p{display:none}.search{width:220px}.app{grid-template-columns:var(--sb-collapsed) 1fr}.sb-brand,.nav-item .lbl,.nav-item .cnt,.branch b,.branch span,.nav-group h6,.sb-foot .txt{opacity:0;width:0;pointer-events:none}.nav-item{padding:0 14px}.sb-toggle{display:none}.g21,.g32,.g12{grid-template-columns:1fr}.profile .t{display:none}}
+@media (max-width:820px){
+  .app,.app.collapsed{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;z-index:90;transform:translateX(-100%);transition:transform .25s var(--ease);box-shadow:var(--sh-lg)}
+  .sidebar.open{transform:none}
+  .sidebar .sb-brand,.sidebar .nav-item .lbl,.sidebar .nav-item .cnt,.sidebar .branch b,.sidebar .branch span,.sidebar .nav-group h6,.sidebar .sb-foot .txt{opacity:1;width:auto;pointer-events:auto}
+  .sidebar .nav-item{padding:0 12px}.sb-toggle{display:none}
+  .mobile-only{display:inline-grid}
+  .topbar{padding:10px 16px;min-height:60px;gap:8px}
+  .topbar .ttl h1{font-size:17px;line-height:24px}.topbar .ttl p{display:none}
+  .search{display:none}
+  .tb-right .btn .lbl{display:none}.tb-right .btn{padding:0 10px}
+  .profile{border:0;padding:0;background:none}.profile .t,.profile > svg{display:none}
+  .content{padding:16px 16px 96px;gap:16px}
+  .page-head h2{font-size:22px;line-height:28px}.page-head .actions{margin-left:0;width:100%;flex-wrap:wrap}
+  .grid{gap:12px}.g4,.g3,.g2{grid-template-columns:1fr 1fr}
+  .kpi{padding:14px;gap:8px}.kpi .kv{font-size:22px;line-height:28px}.kpi .kh .ki{width:28px;height:28px}.kpi .kh{font-size:12px}
+  .card-h{padding:14px 16px;flex-wrap:wrap;gap:10px}.card-h .r{margin-left:0;width:100%;flex-wrap:wrap}.card-h .toolbar .search{display:block;width:100%}.card-h .tabs{width:100%;overflow-x:auto}
+  .card-b{padding:16px}.card-f{padding:12px 16px;flex-wrap:wrap}
+  .tbl th{display:none}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block}
+  .tbl tr{padding:12px 16px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center}
+  .tbl tr:last-child{border-bottom:0}
+  .tbl td{padding:0;border:0;grid-column:1/-1;white-space:normal;font-size:13px}
+  .tbl td:first-child{grid-column:1;grid-row:1;font-size:12px;color:var(--text3)}
+  .tbl td.time{font-weight:600;color:var(--text)}.tbl td.time span{display:inline;margin-left:6px;font-weight:400}
+  .tbl td.badgecell{grid-column:2;grid-row:1;justify-self:end}
+  .tbl td.r{text-align:left}
+  .tbl td[data-hide]{display:none}
+  .tbl .who{margin:4px 0}
+  .tbl td:has(> .rowact){position:static;width:auto;grid-column:1/-1;margin-top:4px}.tbl .rowact{position:static;opacity:1;transform:none;justify-content:flex-start;margin-top:4px;padding-left:0;background:none}
+  .tiles{grid-template-columns:1fr 1fr}.frow.c2,.frow.c3{grid-template-columns:1fr}
+  .paymeth{grid-template-columns:repeat(4,1fr)}
+  .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;height:64px;background:var(--surface);border-top:1px solid var(--border);z-index:80;padding:6px 8px;gap:4px;box-shadow:0 -4px 20px rgba(16,24,40,.06)}
+  .bottomnav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:500;color:var(--text3);border-radius:10px;transition:color .15s}
+  .bottomnav button.active{color:var(--primary)}.bottomnav button.active svg{stroke:var(--primary)}
+  .bottomnav .fab{flex:none;width:52px;height:52px;border-radius:50%;background:var(--primary);color:#fff;margin-top:-22px;box-shadow:var(--sh-md)}
+  .modal,.modal.lg,.modal.sm{width:100%;max-width:100%;border-radius:16px 16px 0 0;max-height:92vh;align-self:flex-end}
+  .overlay{align-items:flex-end}
+  .overlay.side .modal{width:100%;height:auto;max-height:92vh;border-radius:16px 16px 0 0}
+  .mh{padding:16px 20px 12px}.mb{padding:16px 20px}.mf{padding:12px 20px;flex-wrap:wrap}
+  .toasts{left:16px;right:16px;bottom:80px}.toast{min-width:0}
+  .two{flex-direction:column}
+  .seg{flex-wrap:wrap}
+  .chart{height:180px;gap:6px}.donut{flex-direction:column;align-items:flex-start}
+  .scrim{position:fixed;inset:0;background:rgba(11,38,32,.4);z-index:85;opacity:0;pointer-events:none;transition:opacity .2s}
+  .scrim.open{opacity:1;pointer-events:auto}
+}
+@media (max-width:480px){.g4,.g3,.g2{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}}
+
+/* ---------- Glass dashboard (only while the Dashboard screen is active) ---------- */
+body.glass{--glass:rgba(255,255,255,.5);--glass-strong:rgba(255,255,255,.74);--glass-line:rgba(255,255,255,.75);--glass-edge:rgba(22,33,28,.08);--glass-sh:0 8px 32px -8px rgba(11,38,32,.16),0 1px 0 rgba(255,255,255,.6) inset}
+body.glass .main{position:relative;isolation:isolate}
+body.glass .main::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(48% 38% at 24% 6%,rgba(95,211,165,.62) 0%,rgba(95,211,165,0) 70%),
+  radial-gradient(38% 34% at 90% 16%,rgba(201,162,77,.50) 0%,rgba(201,162,77,0) 70%),
+  radial-gradient(44% 40% at 68% 90%,rgba(15,110,86,.42) 0%,rgba(15,110,86,0) 70%),
+  radial-gradient(36% 30% at 10% 80%,rgba(47,111,228,.26) 0%,rgba(47,111,228,0) 70%),
+  linear-gradient(180deg,#EEF4F0 0%,#F3F5F2 60%,#F7F6F1 100%)}
+body.glass .main::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;background-image:radial-gradient(rgba(22,33,28,.06) .6px,transparent .6px);background-size:22px 22px;mask-image:linear-gradient(180deg,rgba(0,0,0,.7),rgba(0,0,0,.15))}
+body.glass .topbar{background:rgba(255,255,255,.42);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5);border-bottom:1px solid var(--glass-line);box-shadow:0 1px 0 var(--glass-edge)}
+body.glass .search input,body.glass .iconbtn,body.glass .profile,body.glass .fbtn,body.glass .btn.s{background:rgba(255,255,255,.5);border-color:rgba(255,255,255,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 1px 2px rgba(11,38,32,.06)}
+body.glass .search input:hover,body.glass .iconbtn:hover,body.glass .profile:hover,body.glass .fbtn:hover,body.glass .btn.s:hover{background:rgba(255,255,255,.72)}
+body.glass .btn.p{box-shadow:0 8px 20px -8px rgba(15,110,86,.55),0 1px 0 rgba(255,255,255,.25) inset}
+body.glass .screen .card{background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--glass-sh);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);outline:1px solid var(--glass-edge);outline-offset:-1px;position:relative;overflow:hidden}
+body.glass .screen .card::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 42%);z-index:0}
+body.glass .screen .card > *{position:relative;z-index:1}
+body.glass .screen .card-h,body.glass .screen .card-f,body.glass .screen .aitem,body.glass .screen .tbl td{border-color:rgba(22,33,28,.07)}
+body.glass .screen .tbl th{background:rgba(255,255,255,.34);border-color:rgba(22,33,28,.08)}
+body.glass .screen .tbl tbody tr:hover,body.glass .screen .aitem:hover{background:rgba(255,255,255,.45)}
+body.glass .screen .tbl tbody tr.sel{background:rgba(15,110,86,.10)}
+body.glass .screen .rowact{background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.85) 30%)}
+body.glass .screen .kpi:hover{background:var(--glass-strong);transform:translateY(-3px);box-shadow:0 16px 40px -12px rgba(11,38,32,.24),0 1px 0 rgba(255,255,255,.7) inset;border-color:#fff}
+body.glass .screen .kpi .kh .ki{background:rgba(15,110,86,.12);box-shadow:0 1px 0 rgba(255,255,255,.6) inset}
+body.glass .screen .kpi .kh .ki.gold{background:rgba(201,162,77,.18)!important}
+body.glass .screen .kpi .kh .ki.blue{background:rgba(47,111,228,.14)!important}
+body.glass .screen .kpi .kh .ki.warn{background:rgba(183,121,31,.16)!important}
+body.glass .screen .seg{background:rgba(22,33,28,.06)}
+body.glass .screen .seg button.on{background:rgba(255,255,255,.9)}
+body.glass .screen .delta.flat,body.glass .screen .pill,body.glass .screen .badge.n{background:rgba(22,33,28,.07)}
+body.glass .screen .aitem .ai,body.glass .screen .avatar{box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 1px 2px rgba(11,38,32,.06)}
+body.glass .screen .gridlines i{border-top-color:rgba(22,33,28,.10)}
+body.glass .screen .bar .b{background:linear-gradient(180deg,rgba(63,166,132,.75),rgba(157,211,192,.55));box-shadow:0 1px 0 rgba(255,255,255,.5) inset}
+body.glass .screen .bar .b.today{background:linear-gradient(180deg,#128a6a,#0F6E56);box-shadow:0 8px 18px -8px rgba(15,110,86,.6)}
+body.glass .screen .progress{background:rgba(22,33,28,.07)}
+body.glass .screen .progress i{background:linear-gradient(90deg,#0F6E56,#3FA684)}
+body.glass .screen .sk{background:linear-gradient(90deg,rgba(255,255,255,.35) 25%,rgba(255,255,255,.8) 50%,rgba(255,255,255,.35) 75%);background-size:200% 100%}
+body.glass .screen .fitem .fd{box-shadow:0 0 0 3px rgba(15,110,86,.14)}
+body.glass .menu{background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);border-color:rgba(255,255,255,.85)}
+body.glass .screen .page-head p{color:var(--n600)}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+</style>
+
+<div class="scrim" id="scrim"></div>
+<div class="app" id="app">
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar" id="sidebar" aria-label="Main navigation">
+  <div class="sb-top">
+    <div class="logo">SC</div>
+    <div class="sb-brand"><b>Salon Control</b><span>Barber shop mode</span></div>
+    <button class="sb-toggle" id="sbToggle" title="Collapse sidebar" aria-label="Collapse sidebar"><i data-i="chevronLeft"></i></button>
+  </div>
+  <div class="branch"><div class="store"><i data-i="store"></i></div><div><b>Al Barsha Gents</b><span>AED · VAT off</span></div></div>
+  <nav class="sb-nav">
+    <div class="nav-group"><h6>Overview</h6>
+      <button class="nav-item active" data-nav="dashboard"><i data-i="grid"></i><span class="lbl">Dashboard</span></button>
+    </div>
+    <div class="nav-group"><h6>Daily operations</h6>
+      <button class="nav-item" data-nav="quick-sale"><i data-i="scissors"></i><span class="lbl">Quick Sale</span></button>
+      <button class="nav-item" data-nav="appointments"><i data-i="calendar"></i><span class="lbl">Appointments</span><span class="cnt">4</span></button>
+      <button class="nav-item" data-nav="customers"><i data-i="users"></i><span class="lbl">Customers</span></button>
+    </div>
+    <div class="nav-group"><h6>Catalogue & stock</h6>
+      <button class="nav-item" data-nav="services"><i data-i="tag"></i><span class="lbl">Services</span></button>
+      <button class="nav-item" data-nav="inventory"><i data-i="box"></i><span class="lbl">Inventory & Tools</span></button>
+      <button class="nav-item" data-nav="purchases"><i data-i="bag"></i><span class="lbl">Purchases</span></button>
+      <button class="nav-item" data-nav="expenses"><i data-i="receipt"></i><span class="lbl">Expenses</span></button>
+    </div>
+    <div class="nav-group"><h6>People & compliance</h6>
+      <button class="nav-item" data-nav="staff"><i data-i="briefcase"></i><span class="lbl">Staff & Payroll</span></button>
+      <button class="nav-item" data-nav="compliance"><i data-i="shield"></i><span class="lbl">Compliance</span></button>
+    </div>
+    <div class="nav-group"><h6>Money & reports</h6>
+      <button class="nav-item" data-nav="cash"><i data-i="lock"></i><span class="lbl">Cash Closing</span></button>
+      <button class="nav-item" data-nav="accounting"><i data-i="book"></i><span class="lbl">Accounting</span></button>
+      <button class="nav-item" data-nav="reports"><i data-i="chart"></i><span class="lbl">Reports</span></button>
+    </div>
+    <div class="nav-group"><h6>System</h6>
+      <button class="nav-item" data-nav="setup"><i data-i="checkCircle"></i><span class="lbl">Setup</span></button>
+      <button class="nav-item" data-nav="settings"><i data-i="settings"></i><span class="lbl">Settings</span></button>
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <div class="vat"><i data-i="receipt"></i><div class="txt"><b>VAT off</b><span>Internal records only</span></div><label class="toggle txt" style="gap:0"><span class="tr"></span></label></div>
+  </div>
+</aside>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+  <header class="topbar">
+    <button class="iconbtn ghost mobile-only" id="menuBtn" aria-label="Open menu"><i data-i="menu"></i></button>
+    <div class="ttl"><h1 id="pageTitle">Dashboard</h1><p id="pageSub">Tuesday, 22 Sep 2026 · Al Barsha Gents · AED · VAT off</p></div>
+    <div class="tb-right">
+      <div class="search rel" id="gsearch">
+        <i data-i="search" class="ic"></i>
+        <input id="gsearchInput" placeholder="Search customers, sales, services…" aria-label="Global search" autocomplete="off">
+        <kbd>⌘K</kbd>
+        <div class="results" id="gresults"></div>
+      </div>
+      <button class="btn p" id="newSaleBtn"><i data-i="plus" class="i16"></i><span class="lbl">New sale</span></button>
+      <div class="rel">
+        <button class="iconbtn" id="notifBtn" aria-label="Notifications"><i data-i="bell"></i><span class="dot" id="notifDot"></span></button>
+        <div class="menu notif" id="notifMenu">
+          <div class="nh"><b>Notifications</b><span class="pill p" id="unreadCount">3 new</span><button id="markAll">Mark all as read</button></div>
+          <div id="notifList">
+            <button class="nitem unread"><div class="ni w"><i data-i="alert"></i></div><div class="nt"><b>Cash shortage pending</b><p>18 Sep close: counted AED 20.00 vs expected AED 15.00 (+AED 5.00). Needs your approval.</p><span>12 min ago</span></div></button>
+            <button class="nitem unread"><div class="ni e"><i data-i="box"></i></div><div class="nt"><b>10 items below reorder level</b><p>Blades, Shaving Foam, Hair Oil and 7 more need a purchase bill.</p><span>1 h ago</span></div></button>
+            <button class="nitem unread"><div class="ni i"><i data-i="calendar"></i></div><div class="nt"><b>Bilal Ahmed booked 11:30</b><p>Hair Color with Sameer · AED 20.00 deposit held.</p><span>2 h ago</span></div></button>
+            <button class="nitem"><div class="ni s"><i data-i="check"></i></div><div class="nt"><b>Payroll generated for September</b><p>1 staff · AED 1,000.00 · WPS pending.</p><span>Yesterday</span></div></button>
+          </div>
+        </div>
+      </div>
+      <div class="rel">
+        <button class="profile" id="profileBtn" aria-haspopup="menu"><span class="avatar">TK</span><span class="t"><b>Tehseem Khan</b><span>Owner</span></span><i data-i="chevronDown" class="i16" style="color:var(--text3)"></i></button>
+        <div class="menu" id="profileMenu">
+          <div class="mhead"><span class="avatar lg">TK</span><div class="t"><b>Tehseem Khan</b><span>Owner · DEMOTM222</span></div></div>
+          <div class="msep"></div>
+          <button class="mi"><i data-i="user"></i>My profile</button>
+          <button class="mi"><i data-i="globe"></i>Language<span class="k">English</span></button>
+          <button class="mi"><i data-i="sun"></i>Appearance<span class="k">Light</span></button>
+          <button class="mi" data-open="passwordModal"><i data-i="lock"></i>Change password</button>
+          <div class="msep"></div>
+          <button class="mi danger"><i data-i="logout"></i>Log out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="content" id="content">
+
+  <!-- ================= DASHBOARD ================= -->
+  <section class="screen active" data-screen="dashboard">
+    <div class="page-head">
+      <div><h2>Good afternoon, Tehseem</h2><p>Here's how Al Barsha Gents is doing today. 4 customers in the queue, 1 item needs your approval.</p></div>
+      <div class="actions"><button class="fbtn" id="dateBtn"><i data-i="calendar" class="i16"></i>Today, 22 Sep<i data-i="chevronDown" class="i16 chev"></i></button><button class="btn s" data-nav="cash"><i data-i="lock" class="i16"></i>Close day</button></div>
+    </div>
+    <div id="dashSkeleton" class="grid g4" style="display:none">
+      <div class="card kpi"><div class="sk c"></div><div class="sk v"></div><div class="sk t w"></div></div><div class="card kpi"><div class="sk c"></div><div class="sk v"></div><div class="sk t w"></div></div><div class="card kpi"><div class="sk c"></div><div class="sk v"></div><div class="sk t w"></div></div><div class="card kpi"><div class="sk c"></div><div class="sk v"></div><div class="sk t w"></div></div>
+    </div>
+    <div class="grid g4" id="kpis">
+      <div class="card kpi" data-nav="cash"><div class="kh"><span class="ki"><i data-i="wallet"></i></span>Expected cash today<i data-i="arrowUpRight" class="i16 more"></i></div><div class="kv num">AED 1,240.00</div><div class="kd"><span class="delta up"><i data-i="trendUp" class="i14"></i>12%</span>vs yesterday · cash sales − cash out</div></div>
+      <div class="card kpi" data-nav="reports"><div class="kh"><span class="ki gold"><i data-i="scissors"></i></span>Sales today<i data-i="arrowUpRight" class="i16 more"></i></div><div class="kv num">AED 1,385.00</div><div class="kd"><span class="delta up"><i data-i="trendUp" class="i14"></i>8%</span>23 services · 9 sales</div></div>
+      <div class="card kpi" data-nav="appointments"><div class="kh"><span class="ki blue"><i data-i="calendar"></i></span>Appointments today<i data-i="arrowUpRight" class="i16 more"></i></div><div class="kv num">12</div><div class="kd"><span class="delta flat">4 done</span><span class="delta up">4 waiting</span><span class="delta down">1 no-show</span></div></div>
+      <div class="card kpi" data-nav="expenses"><div class="kh"><span class="ki warn"><i data-i="receipt"></i></span>Money out today<i data-i="arrowUpRight" class="i16 more"></i></div><div class="kv num">AED 155.00</div><div class="kd"><span class="delta down"><i data-i="trendDown" class="i14"></i>3%</span>1 purchase · 1 expense</div></div>
+    </div>
+    <div class="grid g21">
+      <div class="card">
+        <div class="card-h"><div><h3>Today's queue & appointments</h3><p>Live · updates as customers check in</p></div><div class="r"><div class="seg"><button class="on">All 7</button><button>Waiting 2</button><button>Booked 3</button></div><button class="btn sm p" data-open="apptModal"><i data-i="plus" class="i14"></i>New</button></div></div>
+        <table class="tbl" id="queueTable">
+          <thead><tr><th>Time</th><th>Customer</th><th>Service</th><th>Barber</th><th>Status</th><th class="r"></th></tr></thead>
+          <tbody>
+            <tr data-appt="1"><td class="time num">10:15<span>started 10:18</span></td><td><div class="who"><span class="avatar sm">HR</span><div><b>Hassan Raza</b><span>Walk-in</span></div></div></td><td>Shave + Beard Trim<div class="hint">AED 25</div></td><td>Imran</td><td class="badgecell"><span class="badge i">In progress</span></td><td class="r"><div class="rowact"><button class="btn sm p" data-toast="Sale completed · AED 25.00 recorded">Complete</button><button class="iconbtn" title="More"><i data-i="more" class="i16"></i></button></div></td></tr>
+            <tr data-appt="2"><td class="time num">10:45<span>waiting 6 min</span></td><td><div class="who"><span class="avatar sm gold">OS</span><div><b>Omar Saeed</b><span>Walk-in · prefers Sameer</span></div></div></td><td>Beard Color<div class="hint">AED 45</div></td><td>Sameer</td><td class="badgecell"><span class="badge w">Waiting</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Omar Saeed started with Sameer">Start</button><button class="iconbtn" title="More"><i data-i="more" class="i16"></i></button></div></td></tr>
+            <tr data-appt="3"><td class="time num">11:00<span>waiting 2 min</span></td><td><div class="who"><span class="avatar sm blue">FI</span><div><b>Faisal Iqbal</b><span>Walk-in</span></div></div></td><td>Haircut<div class="hint">AED 25</div></td><td><span class="muted">Any</span></td><td class="badgecell"><span class="badge w">Waiting</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Faisal Iqbal started with Rafiq">Start</button><button class="iconbtn" title="More"><i data-i="more" class="i16"></i></button></div></td></tr>
+            <tr data-appt="4"><td class="time num">11:30<span>in 25 min</span></td><td><div class="who"><span class="avatar sm">BA</span><div><b>Bilal Ahmed</b><span>Appointment · AED 20 deposit</span></div></div></td><td>Hair Color<div class="hint">AED 80</div></td><td>Sameer</td><td class="badgecell"><span class="badge n">Booked</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Bilal Ahmed checked in">Check in</button><button class="iconbtn" title="More"><i data-i="more" class="i16"></i></button></div></td></tr>
+            <tr data-appt="5"><td class="time num">12:00<span>in 55 min</span></td><td><div class="who"><span class="avatar sm warn">YM</span><div><b>Yousuf Malik</b><span>Appointment</span></div></div></td><td>Facial<div class="hint">AED 60</div></td><td>Rafiq</td><td class="badgecell"><span class="badge n">Booked</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Yousuf Malik checked in">Check in</button><button class="iconbtn" title="More"><i data-i="more" class="i16"></i></button></div></td></tr>
+            <tr data-appt="6"><td class="time num">13:15<span>in 2 h</span></td><td><div class="who"><span class="avatar sm">KN</span><div><b>Kareem Nasser</b><span>Appointment</span></div></div></td><td>Haircut + Head Massage<div class="hint">AED 60</div></td><td>Imran</td><td class="badgecell"><span class="badge n">Booked</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Kareem Nasser checked in">Check in</button><button class="iconbtn" title="More"><i data-i="more" class="i16"></i></button></div></td></tr>
+            <tr data-appt="7" style="opacity:.7"><td class="time num">09:00<span>no-show</span></td><td><div class="who"><span class="avatar sm">ZA</span><div><b>Zain Abbas</b><span>Appointment · 2nd no-show</span></div></div></td><td>Haircut<div class="hint">AED 25</div></td><td>Rafiq</td><td class="badgecell"><span class="badge e">No-show</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-toast="Rebooking Zain Abbas…">Rebook</button></div></td></tr>
+          </tbody>
+        </table>
+        <div class="card-f">Showing 7 of 12 today · 4 completed earlier<a class="link" data-nav="appointments" style="margin-left:auto">Open queue <i data-i="arrowRight" class="i14"></i></a></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+        <div class="card">
+          <div class="card-h"><div><h3>Needs attention</h3><p>Before you close the day</p></div><span class="pill" style="margin-left:auto">4</span></div>
+          <div class="alist">
+            <div class="aitem"><div class="ai" style="background:var(--warning-bg);color:var(--warning)"><i data-i="alert"></i></div><div class="at"><b>Cash shortage pending approval</b><span>18 Sep · counted AED 20.00 vs expected AED 15.00 · over by AED 5.00</span></div><button class="btn sm s" data-nav="cash">Review</button></div>
+            <div class="aitem"><div class="ai" style="background:var(--error-bg);color:var(--error)"><i data-i="shield"></i></div><div class="at"><b>6 documents expiring</b><span>Trade licence due 5 May · Ejari, health cards, visa missing dates</span></div><button class="btn sm s" data-nav="compliance">Renew</button></div>
+            <div class="aitem"><div class="ai" style="background:var(--warning-bg);color:var(--warning)"><i data-i="box"></i></div><div class="at"><b>10 items below reorder level</b><span>Blades 0 / 80 pcs · Shaving Foam 0 / 2,500 ml · +8 more</span></div><button class="btn sm s" data-nav="purchases">Order</button></div>
+            <div class="aitem"><div class="ai" style="background:var(--info-bg);color:var(--info)"><i data-i="bag"></i></div><div class="at"><b>Supplier balance due</b><span>Supplier 2 · AED 620.00 · 30-day terms · due 18 Oct</span></div><button class="btn sm s" data-nav="purchases">Pay</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid g32">
+      <div class="card">
+        <div class="card-h"><div><h3>Revenue · last 7 days</h3><p>Net service revenue · AED 10,585.00 this week · <span class="delta up" style="vertical-align:middle"><i data-i="trendUp" class="i14"></i>14%</span></p></div><div class="r"><div class="legend"><span><i style="background:var(--green-200)"></i>Previous days</span><span><i style="background:var(--primary)"></i>Today</span></div><button class="fbtn">7 days<i data-i="chevronDown" class="i16 chev"></i></button></div></div>
+        <div class="card-b">
+          <div class="chart" id="revChart">
+            <div class="gridlines"><i></i><i></i><i></i><i></i></div>
+            <div class="bar"><div class="b" style="height:44%"><span class="tip">Tue · AED 980</span></div><span class="lb">Tue</span></div>
+            <div class="bar"><div class="b" style="height:51%"><span class="tip">Wed · AED 1,120</span></div><span class="lb">Wed</span></div>
+            <div class="bar"><div class="b" style="height:66%"><span class="tip">Thu · AED 1,460</span></div><span class="lb">Thu</span></div>
+            <div class="bar"><div class="b" style="height:86%"><span class="tip">Fri · AED 1,890</span></div><span class="lb">Fri</span></div>
+            <div class="bar"><div class="b" style="height:97%"><span class="tip">Sat · AED 2,140</span></div><span class="lb">Sat</span></div>
+            <div class="bar"><div class="b" style="height:73%"><span class="tip">Sun · AED 1,610</span></div><span class="lb">Sun</span></div>
+            <div class="bar"><div class="b today" style="height:63%"><span class="tip">Today · AED 1,385 so far</span></div><span class="lb">Today</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Payment mix · today</h3><p>AED 1,385.00 across 9 sales</p></div></div>
+        <div class="card-b">
+          <div class="donut">
+            <svg width="140" height="140" viewBox="0 0 140 140" id="donut"><circle cx="70" cy="70" r="56" stroke="var(--subtle)"/><circle cx="70" cy="70" r="56" stroke="var(--primary)" stroke-dasharray="351.9" stroke-dashoffset="351.9" data-to="98.5" transform="rotate(-90 70 70)" stroke-linecap="round"/><circle cx="70" cy="70" r="56" stroke="var(--gold-500)" stroke-dasharray="351.9" stroke-dashoffset="351.9" data-to="267.4" transform="rotate(169 70 70)" stroke-linecap="round"/><circle cx="70" cy="70" r="56" stroke="var(--blue-600)" stroke-dasharray="351.9" stroke-dashoffset="351.9" data-to="323.7" transform="rotate(256 70 70)" stroke-linecap="round"/><text x="70" y="66" text-anchor="middle" font-size="20" font-weight="600" fill="var(--text)">72%</text><text x="70" y="84" text-anchor="middle" font-size="11" fill="var(--text3)">cash</text></svg>
+            <div class="dl"><div><span><i style="background:var(--primary)"></i>Cash</span><b class="num">AED 997.00</b></div><div><span><i style="background:var(--gold-500)"></i>Card</span><b class="num">AED 332.00</b></div><div><span><i style="background:var(--blue-600)"></i>Wallet</span><b class="num">AED 56.00</b></div><div><span><i style="background:var(--subtle)"></i>Deposits used</span><b class="num">AED 20.00</b></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid g3">
+      <div class="card">
+        <div class="card-h"><div><h3>Recent activity</h3><p>Everything is logged for the audit trail</p></div></div>
+        <div class="feed">
+          <div class="fitem"><span class="fd"></span><div><p><b>Rafiq</b> completed Haircut for Ali Khan · AED 25.00 cash</p><span>2 min ago</span></div></div>
+          <div class="fitem"><span class="fd"></span><div><p><b>Omar Saeed</b> joined the queue (walk-in)</p><span>14 min ago</span></div></div>
+          <div class="fitem"><span class="fd g"></span><div><p>Purchase bill from <b>Supplier 2</b> · Blades 100 pcs · AED 120.00</p><span>1 h ago</span></div></div>
+          <div class="fitem"><span class="fd g"></span><div><p>Expense · Tea & Food · AED 35.00 cash by <b>Faisal (cashier)</b></p><span>2 h ago</span></div></div>
+          <div class="fitem"><span class="fd g"></span><div><p><b>Sameer</b> clocked in at 08:00</p><span>3 h ago</span></div></div>
+        </div>
+        <div class="card-f"><a class="link" data-nav="accounting">View audit trail <i data-i="arrowRight" class="i14"></i></a></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Barbers today</h3><p>Sales & commission so far</p></div></div>
+        <div class="alist">
+          <div class="aitem"><span class="avatar">RF</span><div class="at"><b>Rafiq <span class="badge g nodot" style="margin-left:6px">Top today</span></b><span>9 services · AED 545.00 · commission AED 65.40</span></div><span class="badge s">On shift</span></div>
+          <div class="aitem"><span class="avatar gold">SM</span><div class="at"><b>Sameer</b><span>7 services · AED 480.00 · commission AED 57.60</span></div><span class="badge s">On shift</span></div>
+          <div class="aitem"><span class="avatar blue">IM</span><div class="at"><b>Imran</b><span>7 services · AED 360.00 · commission AED 43.20</span></div><span class="badge i">With client</span></div>
+        </div>
+        <div class="card-f"><a class="link" data-nav="staff">Staff & payroll <i data-i="arrowRight" class="i14"></i></a></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Top services · this week</h3><p>By revenue</p></div></div>
+        <div class="card-b" style="display:flex;flex-direction:column;gap:14px">
+          <div><div class="sumrow" style="padding:0 0 6px"><b style="color:var(--text)">Hair Color</b><b class="num" style="color:var(--text)">AED 2,640</b></div><div class="progress"><i style="width:88%"></i></div></div>
+          <div><div class="sumrow" style="padding:0 0 6px"><b style="color:var(--text)">Haircut</b><b class="num" style="color:var(--text)">AED 2,275</b></div><div class="progress"><i style="width:76%"></i></div></div>
+          <div><div class="sumrow" style="padding:0 0 6px"><b style="color:var(--text)">Facial</b><b class="num" style="color:var(--text)">AED 1,920</b></div><div class="progress"><i style="width:64%"></i></div></div>
+          <div><div class="sumrow" style="padding:0 0 6px"><b style="color:var(--text)">Beard Color</b><b class="num" style="color:var(--text)">AED 1,485</b></div><div class="progress"><i style="width:50%"></i></div></div>
+          <div><div class="sumrow" style="padding:0 0 6px"><b style="color:var(--text)">Shave</b><b class="num" style="color:var(--text)">AED 915</b></div><div class="progress"><i style="width:31%"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= QUICK SALE ================= -->
+  <section class="screen" data-screen="quick-sale">
+    <div class="page-head"><div><h2>Quick Sale</h2><p>Tap services, choose the customer and barber, take payment. Stock recipes are deducted automatically.</p></div><div class="actions"><span class="badge s">Register open · Faisal</span></div></div>
+    <div class="grid g32">
+      <div class="card">
+        <div class="card-h"><div><h3>Services</h3><p>7 active · prices include no VAT</p></div><div class="r radio-row" id="catChips"><button class="chipbtn on">All</button><button class="chipbtn">Hair</button><button class="chipbtn">Beard</button><button class="chipbtn">Color</button><button class="chipbtn">Face</button><button class="chipbtn">Massage</button></div></div>
+        <div class="card-b"><div class="tiles" id="tiles">
+          <button class="tile on" data-price="25" data-name="Haircut"><span class="badge n nodot cat">Hair</span><span class="qty">1</span><b>Haircut</b><span>Neck strips 1 pc · 30 min</span><span class="pr num">AED 25</span></button>
+          <button class="tile" data-price="15" data-name="Shave"><span class="badge n nodot cat">Beard</span><span class="qty">1</span><b>Shave</b><span>Blade, foam 8 ml, tissues · 15 min</span><span class="pr num">AED 15</span></button>
+          <button class="tile" data-price="10" data-name="Beard Trim"><span class="badge n nodot cat">Beard</span><span class="qty">1</span><b>Beard Trim</b><span>Tissues 1 pc · 10 min</span><span class="pr num">AED 10</span></button>
+          <button class="tile on" data-price="45" data-name="Beard Color"><span class="badge n nodot cat">Color</span><span class="qty">1</span><b>Beard Color</b><span>Color 20 ml, developer, gloves · 30 min</span><span class="pr num">AED 45</span></button>
+          <button class="tile" data-price="80" data-name="Hair Color"><span class="badge n nodot cat">Color</span><span class="qty">1</span><b>Hair Color</b><span>Color 60 ml, developer, gloves · 45 min</span><span class="pr num">AED 80</span></button>
+          <button class="tile" data-price="60" data-name="Facial"><span class="badge n nodot cat">Face</span><span class="qty">1</span><b>Facial</b><span>Facial cream 10 ml · 30 min</span><span class="pr num">AED 60</span></button>
+          <button class="tile" data-price="35" data-name="Head Massage"><span class="badge n nodot cat">Massage</span><span class="qty">1</span><b>Head Massage</b><span>Hair oil 15 ml · 20 min</span><span class="pr num">AED 35</span></button>
+          <button class="tile" style="border-style:dashed;align-items:center;justify-content:center;color:var(--text3)" data-open="serviceModal"><i data-i="plus"></i><b style="font-weight:500;color:var(--text2)">Custom service</b></button>
+        </div></div>
+      </div>
+      <div class="card" id="checkout">
+        <div class="card-h"><div><h3>Checkout</h3><p>Sale #1042 · VAT off · internal record</p></div></div>
+        <div class="card-b" style="display:flex;flex-direction:column;gap:16px">
+          <div class="frow c2">
+            <div class="field"><label>Customer</label><div class="sel" data-sel><button class="ctl"><span class="slot"><span class="avatar sm">OS</span> Omar Saeed</span><i data-i="chevronDown" class="i16 chev"></i></button><div class="opts"><button class="opt">One-time guest</button><button class="opt selected">Omar Saeed<i data-i="check" class="i16 chk"></i></button><button class="opt">Ali Khan</button><button class="opt">Hassan Raza</button><button class="opt" style="color:var(--primary)"><i data-i="plus" class="i16"></i>Add new customer</button></div></div></div>
+            <div class="field"><label>Barber</label><div class="sel" data-sel><button class="ctl"><span>Sameer</span><i data-i="chevronDown" class="i16 chev"></i></button><div class="opts"><button class="opt">Rafiq</button><button class="opt selected">Sameer<i data-i="check" class="i16 chk"></i></button><button class="opt">Imran</button></div></div></div>
+          </div>
+          <div class="field"><label>Payment</label><div class="paymeth" id="paymeth"><button class="on"><i data-i="wallet"></i>Cash</button><button><i data-i="card"></i>Card</button><button><i data-i="phone"></i>Wallet</button><button><i data-i="minus"></i>Split</button></div></div>
+          <div id="lines">
+            <div class="lineitem"><span>Haircut <span class="hint">× 1</span></span><span class="slot" style="align-items:center;gap:8px"><b class="num">AED 25.00</b><button class="iconbtn" data-remove="Haircut"><i data-i="x" class="i14"></i></button></span></div>
+            <div class="lineitem"><span>Beard Color <span class="hint">× 1</span></span><span class="slot" style="align-items:center;gap:8px"><b class="num">AED 45.00</b><button class="iconbtn" data-remove="Beard Color"><i data-i="x" class="i14"></i></button></span></div>
+          </div>
+          <details class="disc"><summary><i data-i="chevronDown" class="i16"></i>Discount, tip or deposit</summary><div class="frow c3"><div class="field"><label>Discount <span class="optl">AED</span></label><input class="ctl num" value="0"></div><div class="field"><label>Tip <span class="optl">AED</span></label><input class="ctl num" value="0"></div><div class="field"><label>Deposit</label><div class="sel" data-sel><button class="ctl"><span>None</span><i data-i="chevronDown" class="i16 chev"></i></button><div class="opts"><button class="opt selected">None<i data-i="check" class="i16 chk"></i></button><button class="opt">AED 20.00 · Bilal Ahmed</button></div></div></div></div></details>
+          <div>
+            <div class="sumrow"><span>Subtotal</span><span class="num" id="subtotal">AED 70.00</span></div>
+            <div class="sumrow"><span>Discount</span><span class="num">AED 0.00</span></div>
+            <div class="sumrow"><span>VAT</span><span class="num">Not applied</span></div>
+            <div class="sumrow total"><span>Amount due</span><span class="num" id="due">AED 70.00</span></div>
+          </div>
+          <button class="btn p lg w100" id="saveSale" data-loading="Save sale · AED 70.00"><i data-i="check" class="i16 chk"></i>Save sale · AED 70.00</button>
+          <p class="hint" style="text-align:center">Updates expected cash, Sameer's commission and stock (Beard Color 20 ml, Developer 20 ml, Gloves 1 pair, Neck strips 1 pc).</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><h3>Recent sales</h3><p>Today · 9 sales · AED 1,385.00</p></div><div class="r"><div class="toolbar"><div class="search"><i data-i="search" class="ic"></i><input placeholder="Search sales"></div><button class="fbtn"><i data-i="filter" class="i16"></i>Filters</button></div></div></div>
+      <table class="tbl"><thead><tr><th>Time</th><th>Services</th><th>Customer</th><th>Barber</th><th>Payment</th><th class="r">Amount</th><th>Status</th><th class="r"></th></tr></thead><tbody>
+        <tr><td class="time num">10:52</td><td>Facial + Head Massage</td><td>Ali Khan</td><td>Rafiq</td><td>Cash</td><td class="r num"><b>AED 95.00</b></td><td class="badgecell"><span class="badge s">Completed</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="refundModal">Refund</button><button class="btn sm g"><i data-i="printer" class="i14"></i>Receipt</button></div></td></tr>
+        <tr><td class="time num">10:31</td><td>Haircut</td><td>Ali Hassan</td><td>Imran</td><td>Card</td><td class="r num"><b>AED 25.00</b></td><td class="badgecell"><span class="badge s">Completed</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="refundModal">Refund</button><button class="btn sm g"><i data-i="printer" class="i14"></i>Receipt</button></div></td></tr>
+        <tr><td class="time num">10:05</td><td>Hair Color</td><td>Guest</td><td>Sameer</td><td>Cash · AED 20 deposit</td><td class="r num"><b>AED 80.00</b></td><td class="badgecell"><span class="badge s">Completed</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="refundModal">Refund</button><button class="btn sm g"><i data-i="printer" class="i14"></i>Receipt</button></div></td></tr>
+        <tr><td class="time num">09:40</td><td>Shave</td><td>Guest</td><td>Rafiq</td><td>Cash</td><td class="r num"><b>AED 15.00</b></td><td class="badgecell"><span class="badge e">Refunded</span></td><td class="r"><span class="hint">Reason: customer left early</span></td></tr>
+      </tbody></table>
+      <div class="pagin"><span>1–4 of 9 sales</span><div class="pages"><button disabled><i data-i="chevronLeft" class="i16"></i></button><button class="on">1</button><button>2</button><button>3</button><button><i data-i="chevronRight" class="i16"></i></button></div></div>
+    </div>
+  </section>
+
+  <!-- ================= APPOINTMENTS & QUEUE ================= -->
+  <section class="screen" data-screen="appointments">
+    <div class="page-head"><div><h2>Appointments & Queue</h2><p>Walk-ins appear instantly; appointments stay scheduled until checked in. Deposits follow the cancellation policy.</p></div><div class="actions"><button class="btn s"><i data-i="download" class="i16"></i>Export</button><button class="btn p" data-open="apptModal"><i data-i="plus" class="i16"></i>New appointment</button></div></div>
+    <div class="grid g4">
+      <div class="card kpi"><div class="kh"><span class="ki warn"><i data-i="clock"></i></span>Waiting now</div><div class="kv num">2</div><div class="kd">Longest wait 6 min · target &lt; 10</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki blue"><i data-i="calendar"></i></span>Booked today</div><div class="kv num">7</div><div class="kd">3 still to arrive · next 11:30</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="checkCircle"></i></span>Completed</div><div class="kv num">4</div><div class="kd"><span class="delta up">On pace</span> for 12 today</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki gold"><i data-i="wallet"></i></span>Deposits held</div><div class="kv num">AED 40.00</div><div class="kd">2 bookings · applied at checkout</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h" style="flex-wrap:wrap;gap:12px">
+        <div class="tabs" style="border:0"><button class="tab active">Today<span class="cnt">12</span></button><button class="tab">Tomorrow<span class="cnt">5</span></button><button class="tab">This week<span class="cnt">31</span></button><button class="tab">No-shows<span class="cnt">2</span></button></div>
+        <div class="r toolbar"><div class="search"><i data-i="search" class="ic"></i><input placeholder="Search customer or phone"></div><div class="rel"><button class="fbtn on" id="staffFilter">Barber: All<i data-i="chevronDown" class="i16 chev"></i></button><div class="menu" id="staffFilterMenu" style="min-width:200px"><button class="mi"><i data-i="check" class="i16" style="color:var(--primary)"></i>All barbers</button><button class="mi"><span class="avatar sm">RF</span>Rafiq</button><button class="mi"><span class="avatar sm gold">SM</span>Sameer</button><button class="mi"><span class="avatar sm blue">IM</span>Imran</button></div></div><div class="rel"><button class="fbtn" id="statusFilter">Status<i data-i="chevronDown" class="i16 chev"></i></button><div class="menu" id="statusFilterMenu" style="min-width:200px"><label class="mi check on"><span class="box"><i data-i="check" class="i14"></i></span>Waiting</label><label class="mi check on"><span class="box"><i data-i="check" class="i14"></i></span>In progress</label><label class="mi check on"><span class="box"><i data-i="check" class="i14"></i></span>Booked</label><label class="mi check"><span class="box"><i data-i="check" class="i14"></i></span>Completed</label><label class="mi check"><span class="box"><i data-i="check" class="i14"></i></span>No-show</label></div></div><div class="seg"><button class="on">List</button><button>Timeline</button></div></div>
+      </div>
+      <table class="tbl" id="apptTable"><thead><tr><th>Time</th><th>Customer</th><th>Service</th><th>Barber</th><th>Deposit</th><th>Status</th><th class="r"></th></tr></thead><tbody>
+        <tr data-appt="1"><td class="time num">09:00</td><td><div class="who"><span class="avatar sm">ZA</span><div><b>Zain Abbas</b><span>+971 50 ··· 4411 · 2nd no-show</span></div></div></td><td>Haircut</td><td>Rafiq</td><td class="muted">—</td><td class="badgecell"><span class="badge e">No-show</span></td><td class="r"><div class="rowact"><button class="btn sm g">Rebook</button></div></td></tr>
+        <tr data-appt="1"><td class="time num">09:30</td><td><div class="who"><span class="avatar sm">AK</span><div><b>Ali Khan</b><span>+971 50 ··· 0000 · 6 visits</span></div></div></td><td>Haircut</td><td>Rafiq</td><td class="muted">—</td><td class="badgecell"><span class="badge s">Completed</span></td><td class="r"><div class="rowact"><button class="btn sm g"><i data-i="printer" class="i14"></i>Receipt</button></div></td></tr>
+        <tr data-appt="1"><td class="time num">10:15<span>started 10:18</span></td><td><div class="who"><span class="avatar sm">HR</span><div><b>Hassan Raza</b><span>Walk-in</span></div></div></td><td>Shave + Beard Trim</td><td>Imran</td><td class="muted">—</td><td class="badgecell"><span class="badge i">In progress</span></td><td class="r"><div class="rowact"><button class="btn sm p" data-toast="Sale completed · AED 25.00 recorded">Complete</button><button class="btn sm g" data-open="cancelModal">Cancel</button></div></td></tr>
+        <tr data-appt="2" class="sel"><td class="time num">10:45<span>waiting 6 min</span></td><td><div class="who"><span class="avatar sm gold">OS</span><div><b>Omar Saeed</b><span>Walk-in · prefers Sameer · patch test before colour</span></div></div></td><td>Beard Color</td><td>Sameer</td><td class="muted">—</td><td class="badgecell"><span class="badge w">Waiting</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Omar Saeed started with Sameer">Start</button><button class="btn sm g" data-open="cancelModal">No-show</button></div></td></tr>
+        <tr data-appt="3"><td class="time num">11:00<span>waiting 2 min</span></td><td><div class="who"><span class="avatar sm blue">FI</span><div><b>Faisal Iqbal</b><span>Walk-in</span></div></div></td><td>Haircut</td><td class="muted">Any</td><td class="muted">—</td><td class="badgecell"><span class="badge w">Waiting</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Faisal Iqbal started with Rafiq">Start</button><button class="btn sm g" data-open="cancelModal">No-show</button></div></td></tr>
+        <tr data-appt="4"><td class="time num">11:30</td><td><div class="who"><span class="avatar sm">BA</span><div><b>Bilal Ahmed</b><span>+971 55 ··· 2222 · 3 visits</span></div></div></td><td>Hair Color</td><td>Sameer</td><td class="num">AED 20.00 <span class="hint">held</span></td><td class="badgecell"><span class="badge n">Booked</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Bilal Ahmed checked in">Check in</button><button class="btn sm g" data-open="cancelModal">Cancel</button></div></td></tr>
+        <tr data-appt="5"><td class="time num">12:00</td><td><div class="who"><span class="avatar sm warn">YM</span><div><b>Yousuf Malik</b><span>+971 52 ··· 8890 · 1 visit</span></div></div></td><td>Facial</td><td>Rafiq</td><td class="num">AED 20.00 <span class="hint">held</span></td><td class="badgecell"><span class="badge n">Booked</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Yousuf Malik checked in">Check in</button><button class="btn sm g" data-open="cancelModal">Cancel</button></div></td></tr>
+        <tr data-appt="6"><td class="time num">13:15</td><td><div class="who"><span class="avatar sm">KN</span><div><b>Kareem Nasser</b><span>+971 56 ··· 1010 · 4 visits</span></div></div></td><td>Haircut + Head Massage</td><td>Imran</td><td class="muted">—</td><td class="badgecell"><span class="badge n">Booked</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-toast="Kareem Nasser checked in">Check in</button><button class="btn sm g" data-open="cancelModal">Cancel</button></div></td></tr>
+      </tbody></table>
+      <div class="pagin"><span>1–8 of 12 today</span><div class="pages"><button disabled><i data-i="chevronLeft" class="i16"></i></button><button class="on">1</button><button>2</button><button><i data-i="chevronRight" class="i16"></i></button></div></div>
+    </div>
+  </section>
+
+  <!-- ================= CUSTOMERS ================= -->
+  <section class="screen" data-screen="customers">
+    <div class="page-head"><div><h2>Customers</h2><p>Profiles with visit history, preferences and risk notes. Walk-ins never need to register.</p></div><div class="actions"><button class="btn s"><i data-i="download" class="i16"></i>Export CSV</button><button class="btn p" data-open="customerModal"><i data-i="plus" class="i16"></i>Add customer</button></div></div>
+    <div class="grid g4">
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="users"></i></span>Profiles</div><div class="kv num">184</div><div class="kd"><span class="delta up"><i data-i="trendUp" class="i14"></i>9</span>new this month</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki gold"><i data-i="star"></i></span>Regulars</div><div class="kv num">61</div><div class="kd">3+ visits in 90 days</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki warn"><i data-i="alert"></i></span>Risk notes</div><div class="kv num">7</div><div class="kd">No-shows, allergies, patch tests</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki blue"><i data-i="clock"></i></span>Avg. return</div><div class="kv num">18 days</div><div class="kd">Between visits</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="toolbar" style="flex:1"><div class="search"><i data-i="search" class="ic"></i><input placeholder="Search name or phone"></div><button class="fbtn"><i data-i="filter" class="i16"></i>Filters</button><button class="fbtn">Sort: Last visit<i data-i="chevronDown" class="i16 chev"></i></button></div></div>
+      <table class="tbl"><thead><tr><th>Customer</th><th>Phone</th><th>Visits</th><th>Last visit</th><th>Preference</th><th>Risk note</th><th class="r"></th></tr></thead><tbody id="custTable">
+        <tr data-cust><td><div class="who"><span class="avatar sm">AK</span><div><b>Ali Khan</b><span>Regular · prefers Rafiq</span></div></div></td><td class="num">+971 50 000 0000</td><td class="num">6</td><td>Today, 09:30</td><td>Skin fade, beard line</td><td class="muted">—</td><td class="r"><div class="rowact"><button class="btn sm s" data-open="apptModal">Book</button><button class="btn sm g" data-nav="quick-sale">New sale</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+        <tr data-cust><td><div class="who"><span class="avatar sm gold">OS</span><div><b>Omar Saeed</b><span>Prefers Sameer</span></div></div></td><td class="num">+971 55 111 2222</td><td class="num">4</td><td>Fri, 21 Aug</td><td>Hair colour touch-up</td><td><span class="badge w">Patch test</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="apptModal">Book</button><button class="btn sm g" data-nav="quick-sale">New sale</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+        <tr data-cust><td><div class="who"><span class="avatar sm">BA</span><div><b>Bilal Ahmed</b><span></span></div></div></td><td class="num">+971 55 222 3333</td><td class="num">3</td><td>Wed, 9 Sep</td><td>Hair colour, low fade</td><td class="muted">—</td><td class="r"><div class="rowact"><button class="btn sm s" data-open="apptModal">Book</button><button class="btn sm g" data-nav="quick-sale">New sale</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+        <tr data-cust><td><div class="who"><span class="avatar sm">ZA</span><div><b>Zain Abbas</b><span></span></div></div></td><td class="num">+971 50 444 4411</td><td class="num">2</td><td>Tue, 1 Sep</td><td class="muted">—</td><td><span class="badge e">2 no-shows</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="apptModal">Book</button><button class="btn sm g" data-nav="quick-sale">New sale</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+        <tr data-cust><td><div class="who"><span class="avatar sm warn">YM</span><div><b>Yousuf Malik</b><span></span></div></div></td><td class="num">+971 52 888 8890</td><td class="num">1</td><td>Sat, 12 Sep</td><td class="muted">—</td><td><span class="badge w">Fragrance allergy</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="apptModal">Book</button><button class="btn sm g" data-nav="quick-sale">New sale</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+        <tr data-cust><td><div class="who"><span class="avatar sm">KN</span><div><b>Kareem Nasser</b><span>Regular</span></div></div></td><td class="num">+971 56 101 1010</td><td class="num">4</td><td>Thu, 3 Sep</td><td>Head massage after cut</td><td class="muted">—</td><td class="r"><div class="rowact"><button class="btn sm s" data-open="apptModal">Book</button><button class="btn sm g" data-nav="quick-sale">New sale</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+      </tbody></table>
+      <div class="pagin"><span>1–6 of 184 customers</span><div class="pages"><button disabled><i data-i="chevronLeft" class="i16"></i></button><button class="on">1</button><button>2</button><button>3</button><span style="padding:6px 4px">…</span><button>31</button><button><i data-i="chevronRight" class="i16"></i></button></div></div>
+    </div>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section class="screen" data-screen="services">
+    <div class="page-head"><div><h2>Services</h2><p>Menu, prices, translations and stock recipes. Recipe quantities are deducted when a service is sold.</p></div><div class="actions"><button class="btn s">Manage categories</button><button class="btn p" data-open="serviceModal"><i data-i="plus" class="i16"></i>Add service</button></div></div>
+    <div class="grid g12">
+      <div class="card">
+        <div class="card-h"><div><h3>Categories</h3><p>5 categories</p></div></div>
+        <div class="alist">
+          <div class="aitem" style="align-items:center"><div class="at"><b>All services</b><span>7 active</span></div><span class="pill p">7</span></div>
+          <div class="aitem" style="align-items:center"><div class="at"><b>Hair</b><span>Haircut</span></div><span class="pill">1</span></div>
+          <div class="aitem" style="align-items:center"><div class="at"><b>Beard</b><span>Shave, Beard Trim</span></div><span class="pill">2</span></div>
+          <div class="aitem" style="align-items:center"><div class="at"><b>Color</b><span>Beard Color, Hair Color</span></div><span class="pill">2</span></div>
+          <div class="aitem" style="align-items:center"><div class="at"><b>Face</b><span>Facial</span></div><span class="pill">1</span></div>
+          <div class="aitem" style="align-items:center"><div class="at"><b>Massage</b><span>Head Massage</span></div><span class="pill">1</span></div>
+        </div>
+        <div class="card-f"><a class="link"><i data-i="plus" class="i14"></i>Add category</a></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div class="toolbar" style="flex:1"><div class="search"><i data-i="search" class="ic"></i><input placeholder="Search services"></div><div class="seg"><button class="on">Active 7</button><button>Archived 1</button></div></div></div>
+        <table class="tbl"><thead><tr><th>Service</th><th>Category</th><th class="r">Price</th><th>Stock recipe</th><th>Translations</th><th>Status</th><th class="r"></th></tr></thead><tbody>
+          <tr><td><b>Haircut</b></td><td>Hair</td><td class="r num">AED 25</td><td class="muted">Neck strips 1 pc</td><td><span class="pill">AR</span> <span class="pill">HI</span> <span class="pill">UR</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="serviceModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn" data-open="deleteModal"><i data-i="trash" class="i16"></i></button></div></td></tr>
+          <tr><td><b>Shave</b></td><td>Beard</td><td class="r num">AED 15</td><td class="muted">Blades 1 · Foam 8 ml · Tissues 2</td><td><span class="pill">AR</span> <span class="pill">HI</span> <span class="pill">UR</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="serviceModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn" data-open="deleteModal"><i data-i="trash" class="i16"></i></button></div></td></tr>
+          <tr><td><b>Beard Trim</b></td><td>Beard</td><td class="r num">AED 10</td><td class="muted">Tissues 1 pc</td><td><span class="pill">AR</span> <span class="pill" style="opacity:.4">HI</span> <span class="pill" style="opacity:.4">UR</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="serviceModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn" data-open="deleteModal"><i data-i="trash" class="i16"></i></button></div></td></tr>
+          <tr><td><b>Beard Color</b></td><td>Color</td><td class="r num">AED 45</td><td class="muted">Color 20 ml · Developer 20 ml · Gloves 1</td><td><span class="pill">AR</span> <span class="pill">HI</span> <span class="pill">UR</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="serviceModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn" data-open="deleteModal"><i data-i="trash" class="i16"></i></button></div></td></tr>
+          <tr><td><b>Hair Color</b></td><td>Color</td><td class="r num">AED 80</td><td class="muted">Color 60 ml · Developer 60 ml · Gloves 1</td><td><span class="pill">AR</span> <span class="pill">HI</span> <span class="pill">UR</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="serviceModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn" data-open="deleteModal"><i data-i="trash" class="i16"></i></button></div></td></tr>
+          <tr><td><b>Facial</b></td><td>Face</td><td class="r num">AED 60</td><td class="muted">Facial cream 10 ml</td><td><span class="pill">AR</span> <span class="pill">HI</span> <span class="pill">UR</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="serviceModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn" data-open="deleteModal"><i data-i="trash" class="i16"></i></button></div></td></tr>
+          <tr><td><b>Head Massage</b></td><td>Massage</td><td class="r num">AED 35</td><td class="muted">Hair oil 15 ml</td><td><span class="pill">AR</span> <span class="pill">HI</span> <span class="pill">UR</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="serviceModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn" data-open="deleteModal"><i data-i="trash" class="i16"></i></button></div></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INVENTORY ================= -->
+  <section class="screen" data-screen="inventory">
+    <div class="page-head"><div><h2>Inventory & Tools</h2><p>Live quantities, reorder levels and reusable tools. Every change creates an auditable stock movement.</p></div><div class="actions"><button class="btn s" data-open="adjustModal"><i data-i="refresh" class="i16"></i>Stock adjustment</button><button class="btn p" data-open="itemModal"><i data-i="plus" class="i16"></i>Add item</button></div></div>
+    <div class="grid g4">
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="box"></i></span>Stock value</div><div class="kv num">AED 3,199.20</div><div class="kd">Quantity × weighted unit cost</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki warn"><i data-i="alert"></i></span>Low stock</div><div class="kv num">10</div><div class="kd"><span class="delta down">Action needed</span> at or below reorder</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki blue"><i data-i="tag"></i></span>Active items</div><div class="kv num">12</div><div class="kd">10 consumables · 2 tools</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki gold"><i data-i="refresh"></i></span>Movements · 30 days</div><div class="kv num">30</div><div class="kd">18 purchases · 12 service use</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="tabs" style="border:0"><button class="tab active">All<span class="cnt">12</span></button><button class="tab">Low stock<span class="cnt">10</span></button><button class="tab">Consumables</button><button class="tab">Tools & assets</button><button class="tab">Movement history</button></div><div class="r toolbar"><div class="search"><i data-i="search" class="ic"></i><input placeholder="Search items"></div><button class="fbtn">Location: All<i data-i="chevronDown" class="i16 chev"></i></button></div></div>
+      <table class="tbl"><thead><tr><th>Item</th><th>Type</th><th class="r">On hand</th><th class="r">Reorder at</th><th class="r">Unit cost</th><th class="r">Value</th><th>Status</th><th class="r"></th></tr></thead><tbody>
+        <tr><td><b>Blades</b><div class="hint">Store room</div></td><td>Consumable</td><td class="r num">0 pcs</td><td class="r num">80 pcs</td><td class="r num">AED 1.20</td><td class="r num">AED 0.00</td><td class="badgecell"><span class="badge e">Out of stock</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-nav="purchases">Order</button><button class="btn sm g" data-open="adjustModal">Adjust</button></div></td></tr>
+        <tr><td><b>Shaving Foam</b><div class="hint">Store room</div></td><td>Consumable</td><td class="r num">1,200 ml</td><td class="r num">2,500 ml</td><td class="r num">AED 0.03</td><td class="r num">AED 36.00</td><td class="badgecell"><span class="badge w">Low</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-nav="purchases">Order</button><button class="btn sm g" data-open="adjustModal">Adjust</button></div></td></tr>
+        <tr><td><b>Hair Oil</b><div class="hint">Store room</div></td><td>Consumable</td><td class="r num">1,500 ml</td><td class="r num">1,000 ml</td><td class="r num">AED 0.05</td><td class="r num">AED 75.00</td><td class="badgecell"><span class="badge s">Good</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="adjustModal">Adjust</button></div></td></tr>
+        <tr><td><b>Developer 20 Vol</b><div class="hint">Color station</div></td><td>Consumable</td><td class="r num">900 ml</td><td class="r num">1,000 ml</td><td class="r num">AED 0.04</td><td class="r num">AED 36.00</td><td class="badgecell"><span class="badge w">Low</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-nav="purchases">Order</button><button class="btn sm g" data-open="adjustModal">Adjust</button></div></td></tr>
+        <tr><td><b>Beard Color</b><div class="hint">Color station</div></td><td>Consumable</td><td class="r num">800 ml</td><td class="r num">300 ml</td><td class="r num">AED 0.18</td><td class="r num">AED 144.00</td><td class="badgecell"><span class="badge s">Good</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="adjustModal">Adjust</button></div></td></tr>
+        <tr><td><b>Hair Color</b><div class="hint">Color station</div></td><td>Consumable</td><td class="r num">1,800 ml</td><td class="r num">600 ml</td><td class="r num">AED 0.20</td><td class="r num">AED 360.00</td><td class="badgecell"><span class="badge s">Good</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="adjustModal">Adjust</button></div></td></tr>
+        <tr><td><b>Gloves</b><div class="hint">Store room</div></td><td>Consumable</td><td class="r num">80 pairs</td><td class="r num">30 pairs</td><td class="r num">AED 0.70</td><td class="r num">AED 56.00</td><td class="badgecell"><span class="badge s">Good</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="adjustModal">Adjust</button></div></td></tr>
+        <tr><td><b>Trimming Machine</b><div class="hint">Chair 2 · next service 14 Oct</div></td><td>Reusable tool</td><td class="r num">3 pcs</td><td class="r num">1 pc</td><td class="r num">AED 450.00</td><td class="r num">AED 1,350.00</td><td class="badgecell"><span class="badge s">Good</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="itemModal">Edit</button></div></td></tr>
+        <tr><td><b>Scissors</b><div class="hint">Barber team</div></td><td>Reusable tool</td><td class="r num">6 pcs</td><td class="r num">2 pcs</td><td class="r num">AED 120.00</td><td class="r num">AED 720.00</td><td class="badgecell"><span class="badge i">Needs service</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="itemModal">Edit</button></div></td></tr>
+      </tbody></table>
+      <div class="pagin"><span>1–9 of 12 items</span><div class="pages"><button disabled><i data-i="chevronLeft" class="i16"></i></button><button class="on">1</button><button>2</button><button><i data-i="chevronRight" class="i16"></i></button></div></div>
+    </div>
+  </section>
+
+  <!-- ================= PURCHASES ================= -->
+  <section class="screen" data-screen="purchases">
+    <div class="page-head"><div><h2>Purchases</h2><p>Supplier bills, stock receiving and payments. Bills always update supplier balances; stock tracking is optional.</p></div><div class="actions"><button class="btn s" data-open="supplierModal"><i data-i="plus" class="i16"></i>Supplier</button><button class="btn s" data-open="payModal"><i data-i="wallet" class="i16"></i>Record payment</button><button class="btn p" data-open="billModal"><i data-i="plus" class="i16"></i>Add purchase bill</button></div></div>
+    <div class="grid g4">
+      <div class="card kpi"><div class="kh"><span class="ki warn"><i data-i="bag"></i></span>Supplier payable</div><div class="kv num">AED 720.00</div><div class="kd">2 suppliers with balance</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="receipt"></i></span>Purchases · Sep</div><div class="kv num">AED 120.00</div><div class="kd">1 bill posted</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki blue"><i data-i="checkCircle"></i></span>Paid · Sep</div><div class="kv num">AED 200.00</div><div class="kd">1 payment recorded</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="clock"></i></span>Overdue</div><div class="kv num">0</div><div class="kd"><span class="delta up">All within terms</span></div></div>
+    </div>
+    <div class="grid g32">
+      <div class="card">
+        <div class="card-h"><div><h3>Purchase bills</h3><p>Stock-in · this month</p></div><div class="r toolbar"><div class="search"><i data-i="search" class="ic"></i><input placeholder="Search invoice"></div></div></div>
+        <table class="tbl"><thead><tr><th>Supplier</th><th>Items</th><th>Invoice · due</th><th class="r">Paid / balance</th><th class="r">Total</th><th>Status</th><th class="r"></th></tr></thead><tbody>
+          <tr><td><b>Supplier 2</b></td><td>Blades · 100 pcs × AED 1.20</td><td>No ref<div class="hint">18 Sep · due 18 Oct</div></td><td class="r num">AED 0.00<div class="hint">AED 120.00 due</div></td><td class="r num"><b>AED 120.00</b></td><td class="badgecell"><span class="badge w">Unpaid</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="payModal">Pay</button><button class="btn sm g" data-open="deleteModal">Reverse</button></div></td></tr>
+          <tr><td><b>Supplier 1</b></td><td>Shaving Foam · 4,000 ml</td><td>INV-2291<div class="hint">3 Sep · due 18 Sep</div></td><td class="r num">AED 200.00<div class="hint">settled</div></td><td class="r num"><b>AED 200.00</b></td><td class="badgecell"><span class="badge s">Paid</span></td><td class="r"><div class="rowact"><button class="btn sm g"><i data-i="eye" class="i14"></i>Invoice</button></div></td></tr>
+        </tbody></table>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Supplier accounts</h3><p>Terms and balances</p></div></div>
+        <div class="alist">
+          <div class="aitem" style="align-items:center"><span class="avatar">S2</span><div class="at"><b>Supplier 2</b><span>30-day terms · billed AED 620.00</span></div><div style="text-align:right"><b class="num">AED 620.00</b><div><span class="badge w">Due</span></div></div></div>
+          <div class="aitem" style="align-items:center"><span class="avatar gold">UN</span><div class="at"><b>Unknown</b><span>10-day terms · billed AED 100.00</span></div><div style="text-align:right"><b class="num">AED 100.00</b><div><span class="badge w">Due</span></div></div></div>
+          <div class="aitem" style="align-items:center"><span class="avatar blue">S1</span><div class="at"><b>Supplier 1</b><span>15-day terms · billed AED 200.00</span></div><div style="text-align:right"><b class="num">AED 0.00</b><div><span class="badge s">Clear</span></div></div></div>
+        </div>
+        <div class="card-f"><span>Recent payment · Fri 18 Sep · Supplier 1 · Cash · AED 200.00</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EXPENSES ================= -->
+  <section class="screen" data-screen="expenses">
+    <div class="page-head"><div><h2>Expenses</h2><p>Money spent that does not become stock. Cash expenses reduce expected cash for the day.</p></div><div class="actions"><button class="btn p" data-open="expenseModal"><i data-i="plus" class="i16"></i>Add expense</button></div></div>
+    <div class="grid g3">
+      <div class="card kpi"><div class="kh"><span class="ki warn"><i data-i="receipt"></i></span>Expenses · today</div><div class="kv num">AED 35.00</div><div class="kd">1 entry · Tea & Food</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="chart"></i></span>Expenses · September</div><div class="kv num">AED 1,004.20</div><div class="kd"><span class="delta down"><i data-i="trendDown" class="i14"></i>6%</span>vs August</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki blue"><i data-i="tag"></i></span>Biggest category</div><div class="kv">Rent & Utilities</div><div class="kd">AED 780.00 · 78% of month</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="radio-row"><button class="chipbtn on">All</button><button class="chipbtn">Tea & Food</button><button class="chipbtn">Dry Cleaning</button><button class="chipbtn">Rent & Utilities</button><button class="chipbtn">Repairs</button><button class="chipbtn">Staff</button><button class="chipbtn">Other</button></div><div class="r toolbar"><button class="fbtn"><i data-i="calendar" class="i16"></i>September<i data-i="chevronDown" class="i16 chev"></i></button></div></div>
+      <table class="tbl"><thead><tr><th>Date</th><th>Category</th><th>Note</th><th>Paid by</th><th>Payment</th><th class="r">Amount</th><th>Status</th><th class="r"></th></tr></thead><tbody>
+        <tr><td class="num">Today</td><td>Tea & Food</td><td>Tea and water for staff</td><td>Faisal</td><td>Cash</td><td class="r num"><b>AED 35.00</b></td><td class="badgecell"><span class="badge s">Posted</span></td><td class="r"><div class="rowact"><button class="btn sm g"><i data-i="eye" class="i14"></i>Receipt</button><button class="btn sm g" data-open="deleteModal">Reverse</button></div></td></tr>
+        <tr><td class="num">18 Sep</td><td>Repairs</td><td>Chair 2 hydraulic pump</td><td>Tehseem</td><td>Card</td><td class="r num"><b>AED 154.20</b></td><td class="badgecell"><span class="badge s">Posted</span></td><td class="r"><div class="rowact"><button class="btn sm g"><i data-i="eye" class="i14"></i>Receipt</button><button class="btn sm g" data-open="deleteModal">Reverse</button></div></td></tr>
+        <tr><td class="num">15 Sep</td><td>Dry Cleaning</td><td>Towels & capes · weekly</td><td>Faisal</td><td>Cash</td><td class="r num"><b>AED 35.00</b></td><td class="badgecell"><span class="badge s">Posted</span></td><td class="r"><div class="rowact"><button class="btn sm g"><i data-i="eye" class="i14"></i>Receipt</button><button class="btn sm g" data-open="deleteModal">Reverse</button></div></td></tr>
+        <tr><td class="num">1 Sep</td><td>Rent & Utilities</td><td>September rent · Al Barsha</td><td>Tehseem</td><td>Bank</td><td class="r num"><b>AED 780.00</b></td><td class="badgecell"><span class="badge s">Posted</span></td><td class="r"><div class="rowact"><button class="btn sm g"><i data-i="eye" class="i14"></i>Receipt</button></div></td></tr>
+        <tr style="opacity:.6"><td class="num">18 Sep</td><td>Tea & Food</td><td>Duplicate entry</td><td>Faisal</td><td>Cash</td><td class="r num"><b>AED 35.00</b></td><td class="badgecell"><span class="badge n">Reversed</span></td><td class="r"><span class="hint">Reason: entered twice</span></td></tr>
+      </tbody></table>
+    </div>
+  </section>
+
+  <!-- ================= STAFF & PAYROLL ================= -->
+  <section class="screen" data-screen="staff">
+    <div class="page-head"><div><h2>Staff & Payroll</h2><p>Roster, attendance, commission and WPS salary evidence.</p></div><div class="actions"><button class="btn s" data-open="attendanceModal"><i data-i="clock" class="i16"></i>Record attendance</button><button class="btn p" data-open="staffModal"><i data-i="plus" class="i16"></i>Add barber</button></div></div>
+    <div class="grid g4">
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="users"></i></span>Active staff</div><div class="kv num">4</div><div class="kd">3 barbers · 1 cashier</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki blue"><i data-i="checkCircle"></i></span>Present today</div><div class="kv num">4 / 4</div><div class="kd">All clocked in by 08:10</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki gold"><i data-i="wallet"></i></span>Payroll due · Sep</div><div class="kv num">AED 9,400.00</div><div class="kd">Generated · unpaid</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki warn"><i data-i="alert"></i></span>WPS pending</div><div class="kv num">4</div><div class="kd"><span class="delta down">0% paid</span> target 85% by day 5</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="tabs" style="border:0"><button class="tab active">Roster<span class="cnt">4</span></button><button class="tab">Attendance</button><button class="tab">Payroll · September</button><button class="tab">Adjustments</button></div></div>
+      <table class="tbl"><thead><tr><th>Staff</th><th>Employee ID</th><th>Role</th><th class="r">Base salary</th><th class="r">Commission</th><th class="r">Sales · Sep</th><th>WPS</th><th>Status</th><th class="r"></th></tr></thead><tbody>
+        <tr><td><div class="who"><span class="avatar sm">RF</span><div><b>Rafiq Ahmed</b><span>rafiq · Barber login</span></div></div></td><td class="num">EMP-111</td><td>Barber</td><td class="r num">AED 2,800.00</td><td class="r num">12%</td><td class="r num">AED 4,120.00</td><td><span class="badge w">Required</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="staffModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+        <tr><td><div class="who"><span class="avatar sm gold">SM</span><div><b>Sameer Khan</b><span>sameer · Barber login</span></div></div></td><td class="num">EMP-112</td><td>Barber</td><td class="r num">AED 2,600.00</td><td class="r num">12%</td><td class="r num">AED 3,860.00</td><td><span class="badge w">Required</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="staffModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+        <tr><td><div class="who"><span class="avatar sm blue">IM</span><div><b>Imran Ali</b><span>imran · Barber login</span></div></div></td><td class="num">EMP-113</td><td>Barber</td><td class="r num">AED 2,400.00</td><td class="r num">10%</td><td class="r num">AED 2,910.00</td><td><span class="badge w">Required</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="staffModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+        <tr><td><div class="who"><span class="avatar sm warn">FS</span><div><b>Faisal Saeed</b><span>cashier111 · Cashier login</span></div></div></td><td class="num">EMP-114</td><td>Cashier</td><td class="r num">AED 1,600.00</td><td class="r num">—</td><td class="r num">—</td><td><span class="badge w">Required</span></td><td class="badgecell"><span class="badge s">Active</span></td><td class="r"><div class="rowact"><button class="btn sm g" data-open="staffModal"><i data-i="edit" class="i14"></i>Edit</button><button class="iconbtn"><i data-i="more" class="i16"></i></button></div></td></tr>
+      </tbody></table>
+    </div>
+  </section>
+
+  <!-- ================= COMPLIANCE ================= -->
+  <section class="screen" data-screen="compliance">
+    <div class="page-head"><div><h2>Compliance</h2><p>Dubai Municipality inspection binder, document expiries, hygiene log and WPS / Montaji records.</p></div><div class="actions"><button class="btn s" data-open="hygieneModal"><i data-i="plus" class="i16"></i>Hygiene log</button><button class="btn p" data-open="expiryModal"><i data-i="plus" class="i16"></i>Add expiry record</button></div></div>
+    <div class="grid g4">
+      <div class="card kpi"><div class="kh"><span class="ki warn"><i data-i="shield"></i></span>Inspection readiness</div><div class="kv num">58%</div><div class="progress" style="margin-top:4px"><i class="w" style="width:58%"></i></div></div>
+      <div class="card kpi"><div class="kh"><span class="ki" style="background:var(--error-bg);color:var(--error)"><i data-i="alert"></i></span>Overdue records</div><div class="kv num">6</div><div class="kd">Amber & red need owner action</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki blue"><i data-i="wallet"></i></span>WPS status · Sep</div><div class="kv num">0%</div><div class="kd">0 of 4 salary transfers proven</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="checkCircle"></i></span>Montaji products</div><div class="kv num">0</div><div class="kd">No product records needing action</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="tabs" style="border:0"><button class="tab active">Expiry register<span class="cnt">6</span></button><button class="tab">Inspection binder</button><button class="tab">Hygiene log</button><button class="tab">WPS & Montaji</button></div><div class="r"><span class="hint">United Arab Emirates profile · AED renewal costs</span></div></div>
+      <table class="tbl"><thead><tr><th>Document</th><th>Holder</th><th>Number</th><th>Expiry</th><th class="r">Renewal cost</th><th>Evidence</th><th>Status</th><th class="r"></th></tr></thead><tbody>
+        <tr><td><b>Trade licence</b><div class="hint">Reminder 30 days before · 1 previous version</div></td><td>Company</td><td class="muted">Pending</td><td class="num">Sun, 5 May</td><td class="r num">AED 0.00</td><td><span class="badge n nodot">None</span></td><td class="badgecell"><span class="badge e">Evidence missing</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="expiryModal">Upload</button><button class="btn sm g" data-open="expiryModal">Edit</button></div></td></tr>
+        <tr><td><b>Ejari / tenancy contract</b><div class="hint">Reminder 30 days before</div></td><td>Shop premises</td><td class="muted">Pending</td><td class="muted">Not set</td><td class="r num">AED 0.00</td><td><span class="badge n nodot">None</span></td><td class="badgecell"><span class="badge w">Missing date</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="expiryModal">Complete</button></div></td></tr>
+        <tr><td><b>Pest control certificate</b><div class="hint">Reminder 30 days before</div></td><td>Shop premises</td><td class="muted">Pending</td><td class="muted">Not set</td><td class="r num">AED 0.00</td><td><span class="badge n nodot">None</span></td><td class="badgecell"><span class="badge w">Missing date</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="expiryModal">Complete</button></div></td></tr>
+        <tr><td><b>Occupational health card</b><div class="hint">Reminder 30 days before</div></td><td>Rafiq Ahmed</td><td class="muted">Pending</td><td class="muted">Not set</td><td class="r num">AED 0.00</td><td><span class="badge n nodot">None</span></td><td class="badgecell"><span class="badge w">Missing date</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="expiryModal">Complete</button></div></td></tr>
+        <tr><td><b>Staff visa / residence permit</b><div class="hint">Reminder 30 days before</div></td><td>Sameer Khan</td><td class="muted">Pending</td><td class="muted">Not set</td><td class="r num">AED 0.00</td><td><span class="badge n nodot">None</span></td><td class="badgecell"><span class="badge w">Missing date</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="expiryModal">Complete</button></div></td></tr>
+        <tr><td><b>Staff vaccination record</b><div class="hint">Reminder 30 days before</div></td><td>Imran Ali</td><td class="muted">Pending</td><td class="muted">Not set</td><td class="r num">AED 0.00</td><td><span class="badge n nodot">None</span></td><td class="badgecell"><span class="badge w">Missing date</span></td><td class="r"><div class="rowact"><button class="btn sm s" data-open="expiryModal">Complete</button></div></td></tr>
+      </tbody></table>
+    </div>
+  </section>
+
+  <!-- ================= CASH CLOSING ================= -->
+  <section class="screen" data-screen="cash">
+    <div class="page-head"><div><h2>Cash Closing</h2><p>Count the drawer, explain any variance and approve the day. One controlled close per business date.</p></div><div class="actions"><span class="badge w">Today not closed</span></div></div>
+    <div class="grid g12">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div class="card">
+          <div class="card-h"><div><h3>Expected cash · Tue 22 Sep</h3><p>Calculated from today's records</p></div></div>
+          <div class="card-b" style="padding-top:8px">
+            <div class="stat"><span>Opening cash</span><b class="num">AED 200.00</b></div>
+            <div class="stat"><span>+ Cash sales & deposits</span><b class="num">AED 1,017.00</b></div>
+            <div class="stat"><span>− Cash expenses</span><b class="num">AED 35.00</b></div>
+            <div class="stat"><span>− Supplier cash payments</span><b class="num">AED 0.00</b></div>
+            <div class="stat"><span>− Cash payroll & advances</span><b class="num">AED 0.00</b></div>
+            <div class="stat hi"><span>Expected in drawer</span><b class="num">AED 1,182.00</b></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><div><h3>Close history</h3><p>Locked variances</p></div></div>
+          <table class="tbl"><thead><tr><th>Date</th><th class="r">Expected</th><th class="r">Counted</th><th class="r">Variance</th><th>Status</th></tr></thead><tbody>
+            <tr><td class="num">18 Sep</td><td class="r num">AED 15.00</td><td class="r num">AED 20.00</td><td class="r num" style="color:var(--warning)">+AED 5.00</td><td class="badgecell"><span class="badge w">Pending approval</span></td></tr>
+            <tr><td class="num">17 Sep</td><td class="r num">AED 1,340.00</td><td class="r num">AED 1,340.00</td><td class="r num">AED 0.00</td><td class="badgecell"><span class="badge s">Approved</span></td></tr>
+            <tr><td class="num">16 Sep</td><td class="r num">AED 1,105.00</td><td class="r num">AED 1,100.00</td><td class="r num" style="color:var(--error)">−AED 5.00</td><td class="badgecell"><span class="badge s">Approved</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Count & approve</h3><p>Enter what is physically in the drawer</p></div></div>
+        <div class="card-b" style="display:flex;flex-direction:column;gap:16px">
+          <div class="frow c2">
+            <div class="field"><label>Actual cash counted</label><div class="wrap-ic"><input class="ctl num" id="counted" value="1,177.00" style="padding-right:48px;font-size:18px;font-weight:600;height:48px"><span class="suf">AED</span></div><span class="help">Count notes and coins separately, then enter the total.</span></div>
+            <div class="field"><label>Counted by</label><div class="sel" data-sel><button class="ctl" style="height:48px"><span class="slot"><span class="avatar sm warn">FS</span> Faisal (cashier)</span><i data-i="chevronDown" class="i16 chev"></i></button><div class="opts"><button class="opt selected">Faisal (cashier)<i data-i="check" class="i16 chk"></i></button><button class="opt">Tehseem (owner)</button></div></div></div>
+          </div>
+          <div class="callout e"><i data-i="alert"></i><div><b>Short by AED 5.00</b><br>Counted AED 1,177.00 vs expected AED 1,182.00. A reason is required before approval and will be locked with the record.</div></div>
+          <div class="field invalid"><label>Shortage reason</label><textarea class="ctl" placeholder="e.g. AED 5 given as change error at 14:20 — see sale #1039"></textarea><span class="err"><i data-i="alert" class="i14"></i>Enter a reason for the AED 5.00 variance.</span></div>
+          <label class="check on"><span class="box"><i data-i="check" class="i14"></i></span>I confirm the count was done with the drawer closed to sales</label>
+          <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn s">Save draft</button><button class="btn p" data-open="approveModal"><i data-i="lock" class="i16"></i>Approve closing</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ACCOUNTING ================= -->
+  <section class="screen" data-screen="accounting">
+    <div class="page-head"><div><h2>Accounting</h2><p>Business position from the ledger — every sale, purchase, expense and stock movement is journaled.</p></div><div class="actions"><button class="btn s"><i data-i="download" class="i16"></i>Export ledger CSV</button><button class="btn s"><i data-i="lock" class="i16"></i>Close period</button></div></div>
+    <div class="grid g4">
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="wallet"></i></span>Cash balance</div><div class="kv num">AED 1,412.00</div><div class="kd">Opening cash + cash movement</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki gold"><i data-i="trendUp"></i></span>Revenue posted · Sep</div><div class="kv num">AED 10,890.00</div><div class="kd">Service revenue, net of refunds</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki warn"><i data-i="receipt"></i></span>Cost & expenses · Sep</div><div class="kv num">AED 1,124.20</div><div class="kd">Tap to see the breakdown</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki blue"><i data-i="chart"></i></span>Operating result</div><div class="kv num" style="color:var(--success)">+AED 9,765.80</div><div class="kd"><span class="delta up"><i data-i="trendUp" class="i14"></i>11%</span>vs August</div></div>
+    </div>
+    <div class="grid g32">
+      <div class="card">
+        <div class="card-h"><div><h3>Journal</h3><p>Latest entries · server verified</p></div><div class="r"><span class="badge s">Verified</span></div></div>
+        <table class="tbl"><thead><tr><th>Date</th><th>Entry</th><th>Account</th><th class="r">Debit</th><th class="r">Credit</th></tr></thead><tbody>
+          <tr><td class="num">22 Sep 10:52</td><td>Sale #1041 · Ali Khan</td><td>Cash → Service revenue</td><td class="r num">AED 95.00</td><td class="r num">AED 95.00</td></tr>
+          <tr><td class="num">22 Sep 10:05</td><td>Sale #1040 · deposit applied</td><td>Deposits held → Service revenue</td><td class="r num">AED 20.00</td><td class="r num">AED 20.00</td></tr>
+          <tr><td class="num">22 Sep 09:10</td><td>Expense · Tea & Food</td><td>Operating expense → Cash</td><td class="r num">AED 35.00</td><td class="r num">AED 35.00</td></tr>
+          <tr><td class="num">18 Sep 14:39</td><td>Purchase bill · Supplier 2</td><td>Inventory → Supplier payable</td><td class="r num">AED 120.00</td><td class="r num">AED 120.00</td></tr>
+        </tbody></table>
+      </div>
+      <div class="card"><div class="card-h"><div><h3>Trial balance</h3><p>September · unclosed</p></div></div><div class="card-b" style="padding-top:8px">
+        <div class="stat"><span>Cash</span><b class="num">AED 1,412.00</b></div><div class="stat"><span>Inventory</span><b class="num">AED 3,199.20</b></div><div class="stat"><span>Supplier payable</span><b class="num">(AED 720.00)</b></div><div class="stat"><span>Deposits held</span><b class="num">(AED 40.00)</b></div><div class="stat"><span>Service revenue</span><b class="num">(AED 10,890.00)</b></div><div class="stat"><span>Operating expenses</span><b class="num">AED 1,124.20</b></div><div class="stat hi"><span>Balanced</span><b><span class="badge s">Yes</span></b></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ================= REPORTS ================= -->
+  <section class="screen" data-screen="reports">
+    <div class="page-head"><div><h2>Reports</h2><p>Owner and accountant output — print, PDF, Excel/CSV.</p></div><div class="actions"><button class="fbtn"><i data-i="calendar" class="i16"></i>September 2026<i data-i="chevronDown" class="i16 chev"></i></button><button class="btn s"><i data-i="printer" class="i16"></i>Print</button><button class="btn p"><i data-i="download" class="i16"></i>Export</button></div></div>
+    <div class="tabs"><button class="tab active">Monthly business</button><button class="tab">Staff sales</button><button class="tab">Daily closing</button><button class="tab">Stock movement</button><button class="tab">Cash shortage</button></div>
+    <div class="grid g4">
+      <div class="card kpi"><div class="kh"><span class="ki"><i data-i="trendUp"></i></span>Net service revenue</div><div class="kv num">AED 10,890.00</div><div class="kd"><span class="delta up"><i data-i="trendUp" class="i14"></i>11%</span>vs August</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki warn"><i data-i="receipt"></i></span>Operating costs</div><div class="kv num">AED 1,124.20</div><div class="kd">10% of revenue</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki gold"><i data-i="star"></i></span>Top service</div><div class="kv">Hair Color</div><div class="kd">AED 2,640.00 · 33 sold</div></div>
+      <div class="card kpi"><div class="kh"><span class="ki blue"><i data-i="user"></i></span>Top barber</div><div class="kv">Rafiq</div><div class="kd">AED 4,120.00 · 12% commission</div></div>
+    </div>
+    <div class="grid g32">
+      <div class="card"><div class="card-h"><div><h3>Revenue by day · September</h3><p>Net of refunds</p></div></div><div class="card-b"><div class="chart in" style="height:200px;gap:6px"><div class="gridlines"><i></i><i></i><i></i><i></i></div>
+        <div class="bar"><div class="b" style="height:40%"></div><span class="lb">1</span></div><div class="bar"><div class="b" style="height:55%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:48%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:70%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:88%"></div><span class="lb">5</span></div><div class="bar"><div class="b" style="height:60%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:35%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:52%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:58%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:76%"></div><span class="lb">10</span></div><div class="bar"><div class="b" style="height:92%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:66%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:38%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:50%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:44%"></div><span class="lb">15</span></div><div class="bar"><div class="b" style="height:62%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:80%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:95%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:72%"></div><span class="lb"></span></div><div class="bar"><div class="b" style="height:56%"></div><span class="lb">20</span></div><div class="bar"><div class="b" style="height:63%"></div><span class="lb"></span></div><div class="bar"><div class="b today" style="height:57%"></div><span class="lb">22</span></div>
+      </div></div></div>
+      <div class="card"><div class="card-h"><div><h3>Staff sales · September</h3><p>Sales, services, revenue, commission</p></div></div>
+        <table class="tbl"><thead><tr><th>Barber</th><th class="r">Sales</th><th class="r">Revenue</th><th class="r">Commission</th></tr></thead><tbody>
+          <tr><td><div class="who"><span class="avatar sm">RF</span><b>Rafiq</b></div></td><td class="r num">92</td><td class="r num">AED 4,120.00</td><td class="r num">AED 494.40</td></tr>
+          <tr><td><div class="who"><span class="avatar sm gold">SM</span><b>Sameer</b></div></td><td class="r num">71</td><td class="r num">AED 3,860.00</td><td class="r num">AED 463.20</td></tr>
+          <tr><td><div class="who"><span class="avatar sm blue">IM</span><b>Imran</b></div></td><td class="r num">78</td><td class="r num">AED 2,910.00</td><td class="r num">AED 291.00</td></tr>
+        </tbody></table>
+        <div class="card-f"><span>Owner control summary: latest close over by AED 5.00 · supplier balances AED 720.00 · 10 items low · 6 compliance records need attention.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section class="screen" data-screen="settings">
+    <div class="page-head"><div><h2>Settings</h2><p>Tax & receipts, users and access, backup & recovery.</p></div></div>
+    <div class="tabs"><button class="tab active">Tax & receipt</button><button class="tab">Users & access<span class="cnt">3</span></button><button class="tab">Access history</button><button class="tab">Backup & recovery</button></div>
+    <div class="grid g12">
+      <div class="card"><div class="card-h"><div><h3>How it works</h3></div></div><div class="card-b" style="display:flex;flex-direction:column;gap:12px;font-size:13px;color:var(--text2)"><p><b style="color:var(--text)">VAT off</b> — sales are internal business records. No TRN, VAT amount or tax invoice fields.</p><p><b style="color:var(--text)">Simple receipt</b> — optional customer receipt with salon name, service, amount, barber and payment method.</p><p><b style="color:var(--text)">VAT on</b> — for registered salons only. TRN, VAT, invoice numbering and tax reports become active.</p></div></div>
+      <div class="card">
+        <div class="card-h"><div><h3>Tax & receipt</h3><p>Al Barsha Gents · United Arab Emirates · AED</p></div></div>
+        <div class="card-b" style="display:flex;flex-direction:column;gap:20px">
+          <div class="field"><label>Business tax mode</label><div class="radio-row"><button class="chipbtn on">VAT off · internal records</button><button class="chipbtn">VAT on · tax invoice mode</button></div><span class="help">Service prices currently use inclusive tax display.</span></div>
+          <div class="field"><label>Customer receipt</label><div class="sel" data-sel><button class="ctl"><span>Simple receipt · optional at checkout</span><i data-i="chevronDown" class="i16 chev"></i></button><div class="opts"><button class="opt">Receipt disabled</button><button class="opt selected">Simple receipt · optional<i data-i="check" class="i16 chk"></i></button><button class="opt">WhatsApp receipt · optional</button></div></div></div>
+          <div class="divider"></div>
+          <label class="toggle on"><span class="tr"></span><span class="tt"><b>Track service inventory</b><span>Deduct recipe stock when a service is sold</span></span></label>
+          <label class="toggle"><span class="tr"></span><span class="tt"><b>Block sales when recipe stock is insufficient</b><span>Cashier sees a warning instead of completing the sale</span></span></label>
+          <label class="toggle"><span class="tr"></span><span class="tt"><b>Require evidence before signing compliance logs</b><span>Photo or PDF must be attached to hygiene and inspection entries</span></span></label>
+          <label class="toggle dis"><span class="tr"></span><span class="tt"><b>WhatsApp receipts</b><span>Available once a WhatsApp Business number is connected</span></span></label>
+          <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn s">Discard</button><button class="btn p" data-loading="Save settings">Save settings</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SETUP ================= -->
+  <section class="screen" data-screen="setup">
+    <div class="page-head"><div><h2>Setup</h2><p>Everything needed before the shop uses the app live. 4 of 6 steps complete.</p></div><div class="actions"><div class="progress" style="width:200px"><i style="width:66%"></i></div></div></div>
+    <div class="grid g12">
+      <div class="card"><div class="card-h"><div><h3>Launch checklist</h3></div></div><div class="card-b" style="display:flex;flex-direction:column;gap:14px">
+        <label class="check on"><span class="box"><i data-i="check" class="i14"></i></span>Services and prices approved</label><label class="check on"><span class="box"><i data-i="check" class="i14"></i></span>Staff logins created</label><label class="check on"><span class="box"><i data-i="check" class="i14"></i></span>VAT off confirmed</label><label class="check on"><span class="box"><i data-i="check" class="i14"></i></span>Cash drawer opening balance set</label><label class="check"><span class="box"><i data-i="check" class="i14"></i></span>Opening stock counted</label><label class="check"><span class="box"><i data-i="check" class="i14"></i></span>Suppliers added</label>
+      </div></div>
+      <div class="card"><div class="card-h"><div><h3>Setup steps</h3><p>Open each area to complete it</p></div></div><div class="card-b steps">
+        <div class="step done"><span class="n"><i data-i="check" class="i14"></i></span><div class="st"><b>Business</b><span>Al Barsha Gents Barber · owner account</span></div><button class="btn sm g" data-nav="settings">Open settings</button></div>
+        <div class="step done"><span class="n"><i data-i="check" class="i14"></i></span><div class="st"><b>Branch</b><span>United Arab Emirates · AED · VAT optional</span></div><button class="btn sm g" data-nav="settings">Open settings</button></div>
+        <div class="step done"><span class="n"><i data-i="check" class="i14"></i></span><div class="st"><b>Staff</b><span>Owner, cashier and 3 barber logins</span></div><button class="btn sm g" data-nav="staff">Open staff</button></div>
+        <div class="step done"><span class="n"><i data-i="check" class="i14"></i></span><div class="st"><b>Services</b><span>7 services in 5 categories with stock recipes</span></div><button class="btn sm g" data-nav="services">Open services</button></div>
+        <div class="step"><span class="n">5</span><div class="st"><b>Products</b><span>Consumables, retail and tools — 12 items, 10 below reorder</span></div><button class="btn sm p" data-nav="inventory">Continue</button></div>
+        <div class="step"><span class="n">6</span><div class="st"><b>Opening stock</b><span>Count stock before launch</span></div><button class="btn sm s" data-nav="inventory">Start count</button></div>
+      </div></div>
+    </div>
+  </section>
+
+  </main>
+</div>
+</div>
+
+<!-- ================= BOTTOM NAV (mobile) ================= -->
+<nav class="bottomnav" id="bottomnav">
+  <button class="active" data-nav="dashboard"><i data-i="grid"></i>Home</button>
+  <button data-nav="appointments"><i data-i="calendar"></i>Queue</button>
+  <button class="fab" id="fabSale" data-nav="quick-sale" aria-label="New sale"><i data-i="plus"></i></button>
+  <button data-nav="customers"><i data-i="users"></i>Customers</button>
+  <button id="moreNav"><i data-i="menu"></i>More</button>
+</nav>
+
+<div class="toasts" id="toasts"></div>
+<script>
+/* ===== Salon Control redesign — prototype behaviour ===== */
+const ICONS={grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',scissors:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9"/><path d="M14.5 14.5 20 20"/><path d="M8.1 8.1 12 12"/>',calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',tag:'<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5"/>',bag:'<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',receipt:'<path d="M4 2v20l3-2 3 2 3-2 3 2 3-2 3 2V2l-3 2-3-2-3 2-3-2-3 2z"/><path d="M8 8h8M8 12h8M8 16h5"/>',box:'<path d="M16.5 9.4 7.5 4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/>',briefcase:'<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>',lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',chart:'<path d="M3 3v18h18"/><path d="M8 17v-6M13 17V7M18 17v-3"/>',settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',bell:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',chevronDown:'<path d="m6 9 6 6 6-6"/>',chevronRight:'<path d="m9 18 6-6-6-6"/>',chevronLeft:'<path d="m15 18-6-6 6-6"/>',plus:'<path d="M12 5v14M5 12h14"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',check:'<path d="M20 6 9 17l-5-5"/>',alert:'<path d="m10.29 3.86-8.6 14.86A2 2 0 0 0 3.4 21.7h17.2a2 2 0 0 0 1.71-2.98l-8.6-14.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>',info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',filter:'<path d="M22 3H2l8 9.46V19l4 2v-8.54z"/>',download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/>',clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',trendUp:'<path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>',trendDown:'<path d="m22 17-8.5-8.5-5 5L2 7"/><path d="M16 17h6v-6"/>',logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/>',user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',wallet:'<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>',card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',edit:'<path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>',trash:'<path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>',star:'<path d="m12 2 2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z"/>',refresh:'<path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/>',eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',store:'<path d="M3 9l1-5h16l1 5"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v9h14v-9"/><path d="M10 21v-6h4v6"/>',arrowRight:'<path d="M5 12h14M12 5l7 7-7 7"/>',arrowUpRight:'<path d="M7 17 17 7M7 7h10v10"/>',checkCircle:'<circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/>',phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/>',minus:'<path d="M5 12h14"/>',printer:'<path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5M12 3v12"/>'};
+const svg=(n,c='')=>`<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||ICONS.info}</svg>`;
+function hydrateIcons(root=document){root.querySelectorAll('i[data-i]').forEach(el=>{const s=document.createElement('span');s.innerHTML=svg(el.dataset.i,el.className);const n=s.firstChild;el.replaceWith(n);});}
+hydrateIcons();
+
+const $=(s,r=document)=>r.querySelector(s);const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const TITLES={dashboard:['Dashboard','Tuesday, 22 Sep 2026 · Al Barsha Gents · AED · VAT off'],'quick-sale':['Quick Sale','Register open · Faisal · Sale #1042'],appointments:['Appointments & Queue','Tuesday, 22 Sep · 12 booked · 2 waiting'],customers:['Customers','184 profiles · 61 regulars'],services:['Services','7 active · 5 categories'],inventory:['Inventory & Tools','12 items · 10 below reorder level'],purchases:['Purchases','AED 720.00 payable · 2 suppliers'],expenses:['Expenses','September · AED 1,004.20'],staff:['Staff & Payroll','4 active · payroll September generated'],compliance:['Compliance','58% inspection ready · 6 overdue'],cash:['Cash Closing','Tuesday, 22 Sep · not closed'],accounting:['Accounting','September · unclosed period · server verified'],reports:['Reports','September 2026'],settings:['Settings','Al Barsha Gents · DEMOTM222'],setup:['Setup','4 of 6 steps complete']};
+
+/* ---------- navigation ---------- */
+function go(id){$$('.screen').forEach(s=>s.classList.toggle('active',s.dataset.screen===id));$$('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.nav===id));$$('.bottomnav button').forEach(b=>b.classList.toggle('active',b.dataset.nav===id));const t=TITLES[id]||[id,''];$('#pageTitle').textContent=t[0];$('#pageSub').textContent=t[1];window.scrollTo({top:0});closeAllMenus();$('#sidebar').classList.remove('open');$('#scrim').classList.remove('open');if(id==='dashboard')animateDashboard();}
+document.addEventListener('click',e=>{const n=e.target.closest('[data-nav]');if(n&&!n.classList.contains('nav-item-noop')){e.preventDefault();go(n.dataset.nav);}});
+$('#sbToggle').addEventListener('click',()=>{$('#app').classList.toggle('collapsed');const c=$('#app').classList.contains('collapsed');$('#sbToggle').title=c?'Expand sidebar':'Collapse sidebar';});
+$('#menuBtn').addEventListener('click',()=>{$('#sidebar').classList.add('open');$('#scrim').classList.add('open');});
+$('#scrim').addEventListener('click',()=>{$('#sidebar').classList.remove('open');$('#scrim').classList.remove('open');});
+$('#moreNav').addEventListener('click',()=>{$('#sidebar').classList.add('open');$('#scrim').classList.add('open');});
+$('#newSaleBtn').addEventListener('click',()=>go('quick-sale'));
+
+/* ---------- dashboard animations ---------- */
+function animateDashboard(){const ch=$('#revChart');ch.classList.remove('in');$$('#donut circle[data-to]').forEach(c=>c.style.strokeDashoffset='351.9');$$('.progress i').forEach(i=>{const w=i.style.width;i.style.width='0';i.dataset.w=w;});requestAnimationFrame(()=>setTimeout(()=>{ch.classList.add('in');$$('#donut circle[data-to]').forEach(c=>c.style.strokeDashoffset=c.dataset.to);$$('.progress i').forEach(i=>i.style.width=i.dataset.w);},60));}
+function showSkeleton(ms=900){const sk=$('#dashSkeleton'),k=$('#kpis');sk.style.display='grid';k.style.display='none';setTimeout(()=>{sk.style.display='none';k.style.display='grid';},ms);}
+
+/* ---------- menus & dropdowns ---------- */
+function closeAllMenus(except){$$('.menu.open').forEach(m=>{if(m!==except)m.classList.remove('open');});$$('.sel.open').forEach(s=>{if(s!==except)s.classList.remove('open');});$('#gsearch').classList.remove('open');}
+function bindMenu(btn,menu){btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.contains('open');closeAllMenus(menu);menu.classList.toggle('open',!o);});menu.addEventListener('click',e=>e.stopPropagation());}
+bindMenu($('#notifBtn'),$('#notifMenu'));bindMenu($('#profileBtn'),$('#profileMenu'));
+bindMenu($('#staffFilter'),$('#staffFilterMenu'));bindMenu($('#statusFilter'),$('#statusFilterMenu'));
+document.addEventListener('click',()=>closeAllMenus());
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAllMenus();closeModal();}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#gsearchInput').focus();}});
+$$('.sel[data-sel]').forEach(s=>{const ctl=$('.ctl',s);ctl.addEventListener('click',e=>{e.stopPropagation();const o=s.classList.contains('open');closeAllMenus(s);s.classList.toggle('open',!o);});$$('.opt',s).forEach(o=>o.addEventListener('click',e=>{e.stopPropagation();$$('.opt',s).forEach(x=>{x.classList.remove('selected');const c=$('.chk',x);if(c)c.remove();});o.classList.add('selected');const lbl=$('.ctl > span',s);if(lbl)lbl.textContent=o.textContent.trim();s.classList.remove('open');}));});
+/* notifications */
+$$('#notifList .nitem').forEach(n=>n.addEventListener('click',()=>{n.classList.remove('unread');updateUnread();}));
+$('#markAll').addEventListener('click',()=>{$$('#notifList .nitem').forEach(n=>n.classList.remove('unread'));updateUnread();});
+function updateUnread(){const c=$$('#notifList .unread').length;$('#unreadCount').textContent=c?c+' new':'All read';$('#notifDot').style.display=c?'':'none';}
+/* segmented / chips / tabs / checks / toggles */
+document.addEventListener('click',e=>{const seg=e.target.closest('.seg button');if(seg){$$('button',seg.parentElement).forEach(b=>b.classList.remove('on'));seg.classList.add('on');}
+const chip=e.target.closest('.chipbtn');if(chip){const grp=chip.parentElement;if(grp.classList.contains('radio-row')||grp.id==='catChips'){$$('.chipbtn',grp).forEach(b=>b.classList.remove('on'));chip.classList.add('on');}else chip.classList.toggle('on');}
+const tab=e.target.closest('.tab');if(tab){$$('.tab',tab.parentElement).forEach(b=>b.classList.remove('active'));tab.classList.add('active');}
+const chk=e.target.closest('.check');if(chk&&!chk.classList.contains('dis')){e.preventDefault();chk.classList.toggle('on');}
+const tg=e.target.closest('.toggle');if(tg&&!tg.classList.contains('dis')){e.preventDefault();tg.classList.toggle('on');}
+const pm=e.target.closest('.paymeth button');if(pm){$$('button',pm.parentElement).forEach(b=>b.classList.remove('on'));pm.classList.add('on');}
+});
+
+/* ---------- global search ---------- */
+const SEARCH=[{t:'Ali Khan',s:'+971 50 000 0000 · 6 visits',g:'Customers',ini:'AK',nav:'customers'},{t:'Ali Hassan',s:'+971 55 222 1212 · 2 visits',g:'Customers',ini:'AH',nav:'customers'},{t:'Sale #1041 · Ali Khan',s:'Today 10:52 · Facial + Head Massage · AED 95.00',g:'Sales',ini:'#',nav:'quick-sale'},{t:'Beard Color',s:'Service · AED 45 · Color',g:'Services',ini:'BC',nav:'services'},{t:'New sale for Ali Khan',s:'Action · Quick Sale',g:'Actions',ini:'→',nav:'quick-sale'},{t:'Book appointment for Ali Khan',s:'Action · Appointments',g:'Actions',ini:'→',nav:'appointments'}];
+const gs=$('#gsearch'),gi=$('#gsearchInput'),gr=$('#gresults');
+function renderSearch(q){const ql=q.trim().toLowerCase();let items=ql?SEARCH.filter(i=>i.t.toLowerCase().includes(ql)||i.s.toLowerCase().includes(ql)):[{t:'Quick Sale',s:'Record a sale',g:'Go to',ini:'→',nav:'quick-sale'},{t:'Appointments & Queue',s:'Today · 2 waiting',g:'Go to',ini:'→',nav:'appointments'},{t:'Cash Closing',s:'Close today',g:'Go to',ini:'→',nav:'cash'}];let html='';let last='';if(!items.length)html='<div class="empty" style="padding:24px"><b>No results for “'+q+'”</b><p>Try a customer name, phone number or service.</p></div>';items.slice(0,6).forEach((i,ix)=>{if(i.g!==last){html+=`<h6>${i.g}</h6>`;last=i.g;}const t=ql?i.t.replace(new RegExp('('+ql.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>'):i.t;html+=`<button class="res ${ix===0?'sel':''}" data-nav="${i.nav}"><span class="avatar sm">${i.ini}</span><span class="t"><b>${t}</b><span>${i.s}</span></span><span class="k">${ix===0?'↵':''}</span></button>`;});gr.innerHTML=html;}
+gi.addEventListener('focus',()=>{closeAllMenus();renderSearch(gi.value);gs.classList.add('open');});
+gi.addEventListener('input',()=>renderSearch(gi.value));
+gs.addEventListener('click',e=>e.stopPropagation());
+gi.addEventListener('keydown',e=>{if(e.key==='Enter'){const f=$('.res',gr);if(f){go(f.dataset.nav);gi.value='';gi.blur();}}});
+
+/* ---------- toasts ---------- */
+function toast(title,sub='',tone='s',action){const t=document.createElement('div');t.className='toast';t.innerHTML=`<span class="ti ${tone}">${svg(tone==='s'?'check':tone==='e'?'alert':tone==='w'?'alert':'info','i16')}</span><div><b>${title}</b>${sub?`<span>${sub}</span>`:''}</div>${action?`<button class="ta">${action}</button>`:''}<button class="tx" aria-label="Dismiss">${svg('x','i16')}</button>`;$('#toasts').appendChild(t);const rm=()=>{t.classList.add('out');setTimeout(()=>t.remove(),260);};$('.tx',t).addEventListener('click',rm);setTimeout(rm,4200);return t;}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-toast]');if(b){e.stopPropagation();toast(b.dataset.toast,'Logged to audit trail · just now');const tr=b.closest('tr');if(tr&&b.textContent.trim()==='Complete'){$('.badge',tr).className='badge s';$('.badge',tr).textContent='Completed';$('.rowact',tr).innerHTML='<button class="btn sm g">'+svg('printer','i14')+'Receipt</button>';}else if(tr&&b.textContent.trim()==='Start'){$('.badge',tr).className='badge i';$('.badge',tr).textContent='In progress';b.textContent='Complete';b.className='btn sm p';b.dataset.toast='Sale completed · recorded';}else if(tr&&b.textContent.trim()==='Check in'){$('.badge',tr).className='badge w';$('.badge',tr).textContent='Waiting';b.textContent='Start';b.dataset.toast=b.dataset.toast.replace('checked in','started');}}});
+/* loading buttons */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-loading]');if(!b||b.classList.contains('loading'))return;const lbl=b.innerHTML;b.classList.add('loading');setTimeout(()=>{b.classList.remove('loading');b.classList.add('success');b.innerHTML=svg('check','i16 chk')+' Saved';setTimeout(()=>{b.classList.remove('success');b.innerHTML=lbl;},1400);if(b.id==='saveSale'){toast('Sale saved · AED 70.00','Sameer · cash · stock deducted','s','Print receipt');}else{toast('Settings saved','Applies to all logins of this shop');}},1100);});
+
+/* ---------- quick sale ---------- */
+function recalc(){const on=$$('#tiles .tile.on');let sum=0;let html='';on.forEach(t=>{const p=+t.dataset.price;sum+=p;html+=`<div class="lineitem"><span>${t.dataset.name} <span class="hint">× 1</span></span><span class="slot" style="align-items:center;gap:8px"><b class="num">AED ${p.toFixed(2)}</b><button class="iconbtn" data-remove="${t.dataset.name}">${svg('x','i14')}</button></span></div>`;});if(!on.length)html='<div class="empty" style="padding:20px"><b>No services selected</b><p>Tap a service tile to add it to this sale.</p></div>';$('#lines').innerHTML=html;$('#subtotal').textContent='AED '+sum.toFixed(2);$('#due').textContent='AED '+sum.toFixed(2);$('#saveSale').lastChild.textContent=` Save sale · AED ${sum.toFixed(2)}`;$('#saveSale').dataset.loading='1';}
+$('#tiles').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t||t.dataset.open)return;t.classList.toggle('on');recalc();});
+document.addEventListener('click',e=>{const r=e.target.closest('[data-remove]');if(r){const t=$$('#tiles .tile').find(x=>x.dataset.name===r.dataset.remove);if(t)t.classList.remove('on');recalc();}});
+
+/* ---------- modals ---------- */
+const M={};
+const field=(l,ctl,help,o={})=>`<div class="field ${o.cls||''}"><label>${l}${o.opt?' <span class="optl">optional</span>':''}</label>${ctl}${help?`<span class="help">${help}</span>`:''}${o.err?`<span class="err">${svg('alert','i14')}${o.err}</span>`:''}</div>`;
+const input=(v='',ph='',type='text')=>`<input class="ctl" type="${type}" value="${v}" placeholder="${ph}">`;
+const select=(opts,sel)=>`<div class="sel" data-sel><button class="ctl"><span>${sel||opts[0]}</span>${svg('chevronDown','i16 chev')}</button><div class="opts">${opts.map(o=>`<button class="opt ${o===(sel||opts[0])?'selected':''}">${o}${o===(sel||opts[0])?svg('check','i16 chk'):''}</button>`).join('')}</div></div>`;
+const upload=()=>`<div style="border:1.5px dashed var(--border-strong);border-radius:10px;padding:16px;text-align:center;color:var(--text3);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px">${svg('upload')}<span><b style="color:var(--primary);font-weight:500">Upload</b> PDF or image · max 10 MB</span></div>`;
+M.apptModal={title:'New appointment',sub:'Walk-ins appear instantly; appointments stay scheduled until checked in.',size:'lg',body:`<div class="frow c2">${field('Customer',`<div class="sel" data-sel><button class="ctl"><span>Omar Saeed · +971 55 111 2222</span>${svg('chevronDown','i16 chev')}</button><div class="opts"><button class="opt">One-time guest (no registration)</button><button class="opt selected">Omar Saeed · +971 55 111 2222${svg('check','i16 chk')}</button><button class="opt">Ali Khan · +971 50 000 0000</button><button class="opt" style="color:var(--primary)">${svg('plus','i16')}Add new customer</button></div></div>`)}${field('Visit type',`<div class="seg" style="width:100%"><button style="flex:1">Walk-in</button><button class="on" style="flex:1">Appointment</button></div>`)}</div><div class="frow c3">${field('Date',`<div class="wrap-ic"><input class="ctl icon" value="Tue, 22 Sep" id="dpTrigger">${svg('calendar','ic i16')}</div>`)}${field('Time','<input class="ctl" value="11:30">','',{cls:'invalid',err:'Sameer is booked at 11:30 — next free 12:15.'})}${field('Barber',select(['Sameer','Rafiq','Imran','Any available'],'Sameer'))}</div><div class="frow c2">${field('Service',select(['Beard Color · AED 45','Haircut · AED 25','Hair Color · AED 80','Facial · AED 60'],'Beard Color · AED 45'))}${field('Deposit',`<div class="wrap-ic"><input class="ctl num" value="20.00" style="padding-right:48px"><span class="suf">AED</span></div>`,'Held until checkout · refund on cancel',{opt:true})}</div><div class="callout w">${svg('alert')}<div><b>Risk note:</b> patch test before colour (added 21 Aug).</div></div>`,foot:`<span class="left">Deposit policy: refund</span><button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Appointment saved · Omar Saeed, 12:15 with Sameer">Save appointment</button>`};
+M.customerModal={title:'Add customer',sub:'Profile used for the queue, bookings and visit history.',body:`<div class="frow c2">${field('Full name',input('','e.g. Hassan Raza'))}${field('Phone',input('+971 ','+971 50 000 0000','tel'),'Used to find the customer at checkout')}</div>${field('Preference',input('','Skin fade, beard line, preferred barber…'),'',{opt:true})}${field('Risk note','<textarea class="ctl" placeholder="No-show history, allergy, colour formula or special care"></textarea>','Shown as a warning when booking',{opt:true})}<label class="check on"><span class="box">${svg('check','i14')}</span>Allow WhatsApp receipts and reminders</label>`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Customer added · can be selected in Quick Sale">Save customer</button>`};
+M.serviceModal={title:'Edit service · Haircut',sub:'Owner controls price, recipe and availability. A change reason is kept in the audit trail.',size:'lg',body:`<div class="frow c3">${field('Service name',input('Haircut'))}${field('Category',select(['Hair','Beard','Color','Face','Massage','+ New category…'],'Hair'))}${field('Price',`<div class="wrap-ic"><input class="ctl num" value="25.00" style="padding-right:48px"><span class="suf">AED</span></div>`)}</div><div class="frow c3">${field('Arabic',input('قص شعر'),'',{opt:true})}${field('Hindi',input('बाल कटवाना'),'',{opt:true})}${field('Urdu',input('بال کٹوانا'),'',{opt:true})}</div><div class="divider"></div><div><b style="font-weight:600">Stock recipe</b><p class="hint">Deducted automatically when this service is sold.</p></div><div class="lineitem"><span>Neck Strips <span class="hint">· 1 pc</span></span><button class="iconbtn" style="width:28px;height:28px;border:0">${svg('x','i14')}</button></div><div class="frow c3" style="align-items:end">${field('Inventory item',select(['Neck Strips · pcs','Blades · pcs','Shaving Foam · ml','Tissues · pcs'],'Blades · pcs'))}${field('Quantity',input('1','','number'))}<button class="btn s" style="height:40px">${svg('plus','i16')}Add recipe line</button></div>${field('Change reason','<input class="ctl" placeholder="Required when editing or archiving">','',{cls:'invalid',err:'A reason is required to save changes to an existing service.'})}`,foot:`<button class="btn g" data-open="deleteModal" style="margin-right:auto;color:var(--error)">${svg('trash','i16')}Archive service</button><button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Service updated · Haircut">Save service</button>`};
+M.deleteModal={title:'Archive this record?',size:'sm',body:`<div style="display:flex;gap:16px"><div class="warnicon">${svg('trash')}</div><div><p style="color:var(--text2)">Archived records are hidden from daily use but stay in reports and the audit trail. Active sales are not affected.</p></div></div>${field('Reason','<input class="ctl" placeholder="Required for the audit trail">')}`,foot:`<button class="btn s" data-close>Keep</button><button class="btn d" data-submit="Record archived" data-tone="i">Archive</button>`};
+M.cancelModal={title:'Cancel appointment · Bilal Ahmed',size:'sm',body:`<div class="dbox"><div class="drow"><span>Service</span><b>Hair Color · Sameer · 11:30</b></div><div class="drow"><span>Deposit held</span><b>AED 20.00</b></div><div class="drow"><span>Policy</span><b>Refund deposit</b></div></div>${field('Outcome',`<div class="radio-row"><button class="chipbtn on">Cancelled by customer</button><button class="chipbtn">No-show</button><button class="chipbtn">Salon cancelled</button></div>`)}${field('Reason','<input class="ctl" placeholder="Required before cancelling or marking no-show">')}<div class="callout i">${svg('info')}<div>Deposit treatment follows the appointment policy and is logged.</div></div>`,foot:`<button class="btn s" data-close>Back</button><button class="btn d" data-submit="Appointment cancelled · AED 20.00 deposit refunded" data-tone="i">Cancel & refund deposit</button>`};
+M.approveModal={title:'Approve today\'s closing?',size:'sm',body:`<div class="dbox"><div class="drow"><span>Expected</span><b class="num">AED 1,182.00</b></div><div class="drow"><span>Counted</span><b class="num">AED 1,177.00</b></div><div class="drow"><span>Variance</span><b class="num" style="color:var(--error)">−AED 5.00 · short</b></div><div class="drow"><span>Reason</span><b>Change error at 14:20, sale #1039</b></div></div><div class="callout w">${svg('lock')}<div>Once approved, the day is locked. Sales, expenses and stock changes for 22 Sep can no longer be edited without a reversal.</div></div>`,foot:`<button class="btn s" data-close>Back</button><button class="btn p" data-submit="Day closed · 22 Sep approved and locked">${svg('lock','i16')}Approve & lock</button>`};
+M.refundModal={title:'Refund sale #1041',size:'sm',body:`<div class="dbox"><div class="drow"><span>Customer</span><b>Ali Khan · Rafiq</b></div><div class="drow"><span>Paid</span><b class="num">AED 95.00 cash</b></div></div><div class="frow c2">${field('Refund amount',`<div class="wrap-ic"><input class="ctl num" value="95.00" style="padding-right:48px"><span class="suf">AED</span></div>`,'Blank refunds the remaining balance')}${field('Method',select(['Cash','Card','Wallet'],'Cash'))}</div>${field('Reason','<input class="ctl" placeholder="Required before refunding">')}<p class="hint">Partial or full refunds reverse the original tender proportionally. Consumed supplies are not restored.</p>`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn d" data-submit="Refund recorded · AED 95.00 cash" data-tone="i">Refund AED 95.00</button>`};
+M.passwordModal={title:'Change password',size:'sm',body:`${field('Current password',input('','','password'))}${field('New password',input('','At least 10 characters','password'),'Use a passphrase you don\'t use elsewhere')}${field('Confirm new password',input('','','password'))}`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Password updated">Update password</button>`};
+M.expenseModal={title:'Add expense',sub:'Cash expenses reduce expected cash for today.',body:`<div class="frow c2">${field('Category',select(['Tea & Food','Dry Cleaning','Rent & Utilities','Repairs','Staff advance','Other'],'Tea & Food'))}${field('Date',`<div class="wrap-ic"><input class="ctl icon" value="Tue, 22 Sep">${svg('calendar','ic i16')}</div>`)}</div><div class="frow c2">${field('Amount',`<div class="wrap-ic"><input class="ctl num" value="35.00" style="padding-right:48px"><span class="suf">AED</span></div>`)}${field('Payment method',select(['Cash','Card','Bank'],'Cash'))}</div>${field('Note',input('Tea and water for staff'),'',{opt:true})}${field('Receipt',upload(),'',{opt:true})}`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Expense saved · AED 35.00 · cash closing updated">Save expense</button>`};
+M.billModal={title:'Add purchase bill',sub:'Bills always update supplier balances; adding to inventory is optional.',size:'lg',body:`<div class="frow c3">${field('Supplier',select(['Supplier 2','Supplier 1','Unknown','+ New supplier…'],'Supplier 2'))}${field('Invoice number',input('','Supplier reference'))}${field('Invoice date',`<div class="wrap-ic"><input class="ctl icon" value="Tue, 22 Sep">${svg('calendar','ic i16')}</div>`)}</div><div class="frow c3">${field('Item type',select(['Consumable stock','Retail product','Reusable tool / asset','Operational supply'],'Consumable stock'))}${field('Item',select(['Blades · pcs','Shaving Foam · ml','Hair Oil · ml'],'Blades · pcs'))}${field('Due date',`<div class="wrap-ic"><input class="ctl icon" value="Wed, 22 Oct">${svg('calendar','ic i16')}</div>`,'30-day terms')}</div><div class="frow c3">${field('Quantity',input('100','','number'))}${field('Unit cost',`<div class="wrap-ic"><input class="ctl num" value="1.20" style="padding-right:48px"><span class="suf">AED</span></div>`)}${field('Amount paid now',`<div class="wrap-ic"><input class="ctl num" value="0.00" style="padding-right:48px"><span class="suf">AED</span></div>`)}</div><label class="check on"><span class="box">${svg('check','i14')}</span>Add quantity to inventory (creates a stock-in movement)</label><div class="dbox"><div class="drow"><span>Subtotal</span><b class="num">AED 120.00</b></div><div class="drow"><span>Balance due</span><b class="num">AED 120.00</b></div></div>`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Purchase bill saved · Supplier 2 · AED 120.00">Save purchase</button>`};
+M.payModal={title:'Record supplier payment',size:'sm',body:`${field('Supplier',select(['Supplier 2 · AED 620.00 due','Unknown · AED 100.00 due'],'Supplier 2 · AED 620.00 due'))}<div class="frow c2">${field('Amount',`<div class="wrap-ic"><input class="ctl num" value="620.00" style="padding-right:48px"><span class="suf">AED</span></div>`)}${field('Method',select(['Bank','Cash','Card'],'Bank'))}</div>${field('Reference',input('','Transfer or receipt number'))}`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Payment recorded · Supplier 2 · AED 620.00">Record payment</button>`};
+M.supplierModal={title:'Add supplier',size:'sm',body:`${field('Supplier name',input('','Company or representative'))}<div class="frow c2">${field('Phone',input('+971 ','','tel'))}${field('Payment terms',select(['30 days','15 days','10 days','On delivery'],'30 days'))}</div>${field('Opening balance',`<div class="wrap-ic"><input class="ctl num" value="0.00" style="padding-right:48px"><span class="suf">AED</span></div>`,'Included in supplier payables')}`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Supplier saved">Save supplier</button>`};
+M.itemModal={title:'Add inventory item',sub:'Set stock or register a reusable tool.',body:`<div class="frow c2">${field('Item name',input('','e.g. Shaving blades'))}${field('Item type',select(['Consumable','Retail product','Reusable tool / asset','Operational supply'],'Consumable'))}</div><div class="frow c3">${field('Quantity',input('0','','number'))}${field('Unit',select(['pcs','ml','pairs','g'],'pcs'))}${field('Reorder at',input('0','','number'))}</div><div class="frow c2">${field('Unit cost',`<div class="wrap-ic"><input class="ctl num" value="0.00" style="padding-right:48px"><span class="suf">AED</span></div>`)}${field('Location',input('','Store room, Chair 2 or staff name'))}</div>`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Item saved · stock movement created">Save item</button>`};
+M.adjustModal={title:'Stock adjustment',sub:'Count, waste, return or correction — with a reason for the audit trail.',size:'sm',body:`${field('Item',select(['Blades · 0 pcs','Shaving Foam · 1,200 ml','Developer 20 Vol · 900 ml'],'Blades · 0 pcs'))}<div class="frow c2">${field('Movement',select(['Stock in','Stock out','Waste / damaged','Supplier return','Physical count'],'Physical count'))}${field('Quantity',input('80','','number'))}</div>${field('Reason',input('','Required for audit trail'))}<p class="hint">Stock-out cannot reduce an item below zero.</p>`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Movement posted · Blades +80 pcs">Post movement</button>`};
+M.staffModal={title:'Add barber',sub:'Choose the login, enter the name, then save. A linked barber can sign in and record sales immediately.',body:`<div class="frow c2">${field('Staff login',select(['Create new login','staff111 · Staff','No login (sales recorded by cashier)'],'Create new login'))}${field('Barber name',input('','Full name'))}</div><div class="frow c3">${field('Employee ID',input('EMP-115'))}${field('Base salary',`<div class="wrap-ic"><input class="ctl num" value="2,400.00" style="padding-right:48px"><span class="suf">AED</span></div>`)}${field('Commission',`<div class="wrap-ic"><input class="ctl num" value="10" style="padding-right:36px"><span class="suf">%</span></div>`)}</div><label class="toggle on"><span class="tr"></span><span class="tt"><b>WPS salary transfer required</b><span>Payroll line will wait for a WPS proof file</span></span></label>`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Barber added · login sent">Save barber</button>`};
+M.attendanceModal={title:'Record attendance',size:'sm',body:`<div class="frow c2">${field('Staff',select(['Rafiq Ahmed','Sameer Khan','Imran Ali','Faisal Saeed'],'Rafiq Ahmed'))}${field('Date',`<div class="wrap-ic"><input class="ctl icon" value="Tue, 22 Sep">${svg('calendar','ic i16')}</div>`)}</div>${field('Status',`<div class="radio-row" style="flex-wrap:wrap"><button class="chipbtn on">Present</button><button class="chipbtn">Absent</button><button class="chipbtn">Paid leave</button><button class="chipbtn">Unpaid leave</button><button class="chipbtn">Rest day</button></div>`)}<div class="frow c2">${field('Clock in',input('08:00'))}${field('Clock out',input('18:00'))}</div>`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Attendance saved · Rafiq · 10 h">Save attendance</button>`};
+M.hygieneModal={title:'Add hygiene log',sub:'Every entry needs a real sterilisation cycle.',body:`<div class="frow c2">${field('Device',select(['UV steriliser · Chair 1','Autoclave · Store room'],'UV steriliser · Chair 1'))}${field('Operator',select(['Rafiq Ahmed','Sameer Khan','Imran Ali'],'Rafiq Ahmed'))}</div><div class="frow c2">${field('Cycle',input('','e.g. 20 min at 121 °C'))}${field('Solution',input('','Barbicide, 10 min'))}</div><label class="check on"><span class="box">${svg('check','i14')}</span>Single-use items (blades, neck strips, towels) checked</label>${field('Evidence',upload(),'Optional unless strict evidence is enabled in Settings',{opt:true})}`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Hygiene log added">Add log</button>`};
+M.expiryModal={title:'Expiry record · Trade licence',sub:'United Arab Emirates profile · AED renewal costs',body:`<div class="frow c2">${field('Document type',select(['Trade licence','Ejari / tenancy contract','Pest control certificate','Occupational health card','Staff visa / residence permit'],'Trade licence'))}${field('Holder',select(['Company','Shop premises','Rafiq Ahmed','Sameer Khan'],'Company'))}</div><div class="frow c3">${field('Document number',input('','e.g. 123456'))}${field('Issue date',`<div class="wrap-ic"><input class="ctl icon" value="6 May 2025">${svg('calendar','ic i16')}</div>`)}${field('Expiry date',`<div class="wrap-ic"><input class="ctl icon" value="5 May 2027">${svg('calendar','ic i16')}</div>`)}</div><div class="frow c2">${field('Renewal cost',`<div class="wrap-ic"><input class="ctl num" value="12,000.00" style="padding-right:48px"><span class="suf">AED</span></div>`)}${field('Reminder',select(['30 days before','60 days before','90 days before'],'30 days before'))}</div>${field('Evidence',upload())}`,foot:`<button class="btn s" data-close>Cancel</button><button class="btn p" data-submit="Expiry record saved · Trade licence">Save record</button>`};
+const APPTS={1:{n:'Hassan Raza',ini:'HR',s:'Shave + Beard Trim',b:'Imran',t:'10:15 · started 10:18',st:['i','In progress'],ph:'Walk-in · no phone',dep:'—',note:'None',hist:'First visit'},2:{n:'Omar Saeed',ini:'OS',s:'Beard Color',b:'Sameer',t:'10:45 · waiting 6 min',st:['w','Waiting'],ph:'+971 55 111 2222',dep:'—',note:'Patch test before colour',hist:'4 visits · last Fri, 21 Aug'},3:{n:'Faisal Iqbal',ini:'FI',s:'Haircut',b:'Any available',t:'11:00 · waiting 2 min',st:['w','Waiting'],ph:'Walk-in',dep:'—',note:'None',hist:'First visit'},4:{n:'Bilal Ahmed',ini:'BA',s:'Hair Color',b:'Sameer',t:'11:30 · in 25 min',st:['n','Booked'],ph:'+971 55 222 3333',dep:'AED 20.00 · held',note:'None',hist:'3 visits · last Wed, 9 Sep'},5:{n:'Yousuf Malik',ini:'YM',s:'Facial',b:'Rafiq',t:'12:00',st:['n','Booked'],ph:'+971 52 888 8890',dep:'AED 20.00 · held',note:'Fragrance allergy',hist:'1 visit · Sat, 12 Sep'},6:{n:'Kareem Nasser',ini:'KN',s:'Haircut + Head Massage',b:'Imran',t:'13:15',st:['n','Booked'],ph:'+971 56 101 1010',dep:'—',note:'None',hist:'4 visits · last Thu, 3 Sep'},7:{n:'Zain Abbas',ini:'ZA',s:'Haircut',b:'Rafiq',t:'09:00 · no-show',st:['e','No-show'],ph:'+971 50 444 4411',dep:'—',note:'2nd no-show — consider deposit next time',hist:'2 visits'}};
+function apptDetail(id){const a=APPTS[id]||APPTS[2];return{title:a.n,sub:`${a.s} · ${a.b}`,side:true,body:`<div style="display:flex;align-items:center;gap:12px"><span class="avatar lg">${a.ini}</span><div><b style="font-weight:600;font-size:16px">${a.n}</b><div class="hint">${a.ph} · ${a.hist}</div></div><span class="badge ${a.st[0]}" style="margin-left:auto">${a.st[1]}</span></div><div class="dbox"><div class="drow"><span>Time</span><b>${a.t}</b></div><div class="drow"><span>Service</span><b>${a.s}</b></div><div class="drow"><span>Barber</span><b>${a.b}</b></div><div class="drow"><span>Deposit</span><b>${a.dep}</b></div><div class="drow"><span>Risk note</span><b>${a.note}</b></div></div>${a.note!=='None'?`<div class="callout w">${svg('alert')}<div><b>Risk note:</b> ${a.note}.</div></div>`:''}<div><b style="font-weight:600">Timeline</b><div class="feed" style="margin:8px -20px 0"><div class="fitem"><span class="fd"></span><div><p>Checked in by <b>Faisal</b></p><span>10:39</span></div></div><div class="fitem"><span class="fd g"></span><div><p>Booked via walk-in</p><span>10:39</span></div></div></div></div>`,foot:`<button class="btn g" data-open="cancelModal" style="margin-right:auto;color:var(--error)">Cancel / no-show</button><button class="btn s" data-close>Close</button><button class="btn p" data-submit="${a.n} started with ${a.b}">Start service</button>`};}
+const ov=document.createElement('div');ov.className='overlay';ov.innerHTML='<div class="modal" role="dialog" aria-modal="true"></div>';document.body.appendChild(ov);
+function openModal(cfg){const m=$('.modal',ov);m.className='modal '+(cfg.size||'');ov.classList.toggle('side',!!cfg.side);m.innerHTML=`<div class="mh"><div><h3>${cfg.title}</h3>${cfg.sub?`<p>${cfg.sub}</p>`:''}</div><button class="iconbtn ghost x" data-close aria-label="Close">${svg('x')}</button></div><div class="mb">${cfg.body}</div><div class="mf">${cfg.foot||''}</div>`;$$('.sel',m).forEach(s=>{const ctl=$('.ctl',s);ctl.addEventListener('click',e=>{e.stopPropagation();const o=s.classList.contains('open');$$('.sel.open',m).forEach(x=>x.classList.remove('open'));s.classList.toggle('open',!o);});$$('.opt',s).forEach(o=>o.addEventListener('click',e=>{e.stopPropagation();$$('.opt',s).forEach(x=>x.classList.remove('selected'));o.classList.add('selected');$('.ctl > span',s).textContent=o.textContent.trim();s.classList.remove('open');}));});m.addEventListener('click',e=>{if(!e.target.closest('.sel'))$$('.sel.open',m).forEach(x=>x.classList.remove('open'));});ov.classList.add('open');}
+function closeModal(){ov.classList.remove('open');}
+ov.addEventListener('click',e=>{if(e.target===ov)closeModal();});
+document.addEventListener('click',e=>{const o=e.target.closest('[data-open]');if(o){e.preventDefault();e.stopPropagation();closeAllMenus();const cfg=M[o.dataset.open];if(cfg)openModal(cfg);return;}
+const c=e.target.closest('[data-close]');if(c&&ov.contains(c)){closeModal();return;}
+const s=e.target.closest('[data-submit]');if(s&&ov.contains(s)&&!s.classList.contains('loading')){const inv=$('.field.invalid',ov);if(inv&&!s.dataset.force){const inp=$('.ctl',inv);inp.focus();toast('Please fix the highlighted field','The form was not saved','e');s.dataset.force='1';return;}s.classList.add('loading');setTimeout(()=>{s.classList.remove('loading');s.classList.add('success');s.innerHTML=svg('check','i16 chk')+' Saved';setTimeout(()=>{closeModal();toast(s.dataset.submit,'Logged to audit trail · just now',s.dataset.tone||'s');},500);},900);return;}
+const tr=e.target.closest('tr[data-appt]');if(tr&&!e.target.closest('button')){$$('tr.sel',tr.closest('table')).forEach(x=>x.classList.remove('sel'));tr.classList.add('sel');openModal(apptDetail(tr.dataset.appt));}
+const cr=e.target.closest('tr[data-cust]');if(cr&&!e.target.closest('button')){openModal({title:'Ali Khan',sub:'Customer profile',side:true,body:`<div style="display:flex;align-items:center;gap:12px"><span class="avatar lg">AK</span><div><b style="font-weight:600;font-size:16px">Ali Khan</b><div class="hint">+971 50 000 0000 · Regular · 6 visits</div></div><span class="badge g" style="margin-left:auto">Regular</span></div><div class="grid g3" style="gap:12px"><div class="card kpi" style="padding:12px;gap:4px"><div class="kh">Visits</div><div class="kv num" style="font-size:20px">6</div></div><div class="card kpi" style="padding:12px;gap:4px"><div class="kh">Spent</div><div class="kv num" style="font-size:20px">AED 310</div></div><div class="card kpi" style="padding:12px;gap:4px"><div class="kh">No-shows</div><div class="kv num" style="font-size:20px">0</div></div></div><div class="dbox"><div class="drow"><span>Preference</span><b>Skin fade, beard line · prefers Rafiq</b></div><div class="drow"><span>Risk note</span><b>None</b></div><div class="drow"><span>Receipts</span><b>WhatsApp</b></div></div><div><b style="font-weight:600">Visit history</b><table class="tbl" style="margin:8px -20px 0;width:calc(100% + 40px)"><tbody><tr><td class="num">Today 09:30</td><td>Haircut · Rafiq</td><td class="r num">AED 25.00</td></tr><tr><td class="num">Sat, 12 Sep</td><td>Facial + Head Massage · Rafiq</td><td class="r num">AED 95.00</td></tr><tr><td class="num">Fri, 28 Aug</td><td>Haircut · Rafiq</td><td class="r num">AED 25.00</td></tr></tbody></table></div>`,foot:`<button class="btn g" data-open="customerModal" style="margin-right:auto">${svg('edit','i16')}Edit</button><button class="btn s" data-open="apptModal">Book</button><button class="btn p" data-nav="quick-sale">New sale</button>`});}
+});
+
+/* ---------- date picker ---------- */
+const dpMenu=document.createElement('div');dpMenu.className='menu dp';dpMenu.innerHTML=`<div class="dph"><button class="iconbtn">${svg('chevronLeft','i16')}</button><span>September 2026</span><button class="iconbtn">${svg('chevronRight','i16')}</button></div><div class="dow"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div><div class="days">${[31].map(d=>`<button class="o">${d}</button>`).join('')}${Array.from({length:30},(_,i)=>i+1).map(d=>`<button class="${d===22?'on t':''} ${[1,5,12,18,23,25].includes(d)?'has':''}">${d}</button>`).join('')}${[1,2,3,4].map(d=>`<button class="o">${d}</button>`).join('')}</div><div style="display:flex;gap:6px;margin-top:8px"><button class="btn sm s" style="flex:1">Today</button><button class="btn sm s" style="flex:1">Tomorrow</button></div>`;
+$('#dateBtn').parentElement.classList.add('rel');$('#dateBtn').after(dpMenu);bindMenu($('#dateBtn'),dpMenu);
+dpMenu.addEventListener('click',e=>{const d=e.target.closest('.days button');if(d){$$('.days button',dpMenu).forEach(b=>b.classList.remove('on'));d.classList.add('on');$('#dateBtn').childNodes[1].textContent=(d.textContent==='22'?'Today, ':'')+d.textContent+' Sep';}});
+
+/* ---------- init ---------- */
+document.body.classList.add('glass');
+window.addEventListener('load',()=>{showSkeleton(900);setTimeout(animateDashboard,950);});
+/* expose for export script */
+window.__proto={go,openModal,closeModal,M,apptDetail,toast,showSkeleton,closeAllMenus};
+
+</script>
+
+</body></html>
