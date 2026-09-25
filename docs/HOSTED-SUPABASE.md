@@ -73,3 +73,34 @@ passwords. It is only for the local database.
 
 Set `EXPO_PUBLIC_SUPABASE_URL=auto` and the local anon key (from `npx supabase status`) in `.env`,
 then restart `npx expo start`.
+
+## 6. Going live on the Vercel link (replacing the old app)
+
+Agreed on 2026-09-26: new Supabase project (the old project `vmoocchjtlpggnoadpio` and its data stay untouched),
+`main` of `libertylightllc-ctrl/saloon` gets the new app in one new commit (old version kept under the tag `v1-web`),
+and nothing is pushed until the hosted database is ready.
+
+Already prepared (local, not pushed):
+- `vercel.json`: builds the website with `expo export` into `dist/` and sends every path to the app.
+- `scripts/check-web-env.mjs`: the Vercel build **stops** unless a hosted Supabase URL and anon key are set, so the
+  live link can never show a sign-in that does not work.
+- Branch `ready-for-main` (= the new app + the old history as a parent) and tag `v1-web` (= today's live commit
+  `7c93ae6`). Pushing them is a normal fast-forward; nothing is force-pushed.
+- The full e2e suite passes against the production website build served the way Vercel serves it (34/34).
+
+Order on the day:
+1. You: create the project, then `npx supabase login` and `npx supabase link --project-ref <ref>` (you type the
+   database password). Send me the Project URL and the anon / publishable key.
+2. Me: `npx supabase db push`, deploy the two Edge Functions, set the auth settings (site URL = the Vercel link,
+   6-digit recovery template, confirm email on, SMTP as you choose).
+3. Me: put the two public values where the Vercel build reads them — either a committed `.env.production`
+   (they are public by design) or you add `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` under
+   Vercel → Project → Settings → Environment Variables.
+4. Me: a smoke test against the hosted project (sign up, setup, a sale, Accounts balanced), then
+   `git push origin v1-web` and `git push origin ready-for-main:main`. Vercel deploys the new app.
+5. Rolling back is one command away: `git push origin v1-web^{commit}:main --force-with-lease` would put the old app
+   back (only if ever needed, and only with your go-ahead).
+
+Side effects to expect: the old repo's GitHub Actions (`pages.yml` for GitHub Pages, `mobile.yml` for Android
+builds) are not part of the new app, so they stop running; the last GitHub Pages deployment stays online until
+disabled in the repo settings.
