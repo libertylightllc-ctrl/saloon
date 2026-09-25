@@ -1,14 +1,19 @@
 /** A confirmation must stay on screen for its full time, even right after another one. */
 import { act, screen } from '@testing-library/react-native';
+import { useEffect } from 'react';
 
 import { renderInApp } from './testUtils';
 import { TOAST_MS, useToast } from './Toast';
 
-let show: ReturnType<typeof useToast>;
+const handle: { show?: ReturnType<typeof useToast> } = {};
 function Grab() {
-  show = useToast();
+  const toast = useToast();
+  useEffect(() => {
+    handle.show = toast;
+  }, [toast]);
   return null;
 }
+const show = (text: string) => handle.show!(text);
 
 const advance = async (ms: number) => {
   await act(async () => {
