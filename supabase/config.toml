@@ -177,7 +177,7 @@ password_requirements = ""
 # Local limits are raised so the end-to-end suite (many sign-ups from one IP) is not throttled.
 # A hosted project keeps Supabase's production defaults.
 # Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
-email_sent = 100
+email_sent = 1000
 # Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
 sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
