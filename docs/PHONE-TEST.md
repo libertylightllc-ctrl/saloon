@@ -62,12 +62,11 @@ A: More → **Branch settings** → tap **Ladies salon & spa** → **Switch to L
 ✅ **Both** phones turn coral within a few seconds; B's New walk-in says "Any stylist" instead of
 "Any barber". Switch back to Gents.
 
-## 7 · Sign-out and disabled login (1 min)
+## 7 · Disabled login (1 min)
 
 1. A: More → Team & logins → Faisal → **Disable login**.
    ✅ B is signed out by itself: "This login is disabled. Ask the owner."
 2. A: **Enable login** again; B can sign in again (salon code is remembered).
-3. A: More → **Sign out** → ✅ back on the violet sign-in.
 
 ## 8 · Owner's books (A, 1 min)
 
@@ -80,5 +79,9 @@ expected cash as Home; card payments are not in it. ✅ Trial balance says **Bal
 
 A: More → Language → **العربية**. ✅ The layout flips right-to-left, day and month names are Arabic
 ("الجمعة 25 سبتمبر"), numbers stay 0-9.
+
+## 10 · Sign out
+
+A: More → **Sign out** → ✅ back on the sign-in, still in the salon's colours.
 
 If anything does not match a ✅, note the step number and what you saw.
