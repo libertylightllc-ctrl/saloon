@@ -15,7 +15,10 @@
     "test": "jest",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
     "e2e": "playwright test",
-    "test:db": "supabase test db"
+    "test:db": "supabase test db",
+    "build:web": "node scripts/check-web-env.mjs && expo export -p web",
+    "build:web:local": "expo export -p web",
+    "serve:web": "node scripts/serve-web.mjs 8090"
   },
   "dependencies": {
     "@expo-google-fonts/ibm-plex-sans-arabic": "^0.4.2",
@@ -92,6 +95,6 @@
     ]
   },
   "engines": {
-    "node": ">=20.19.4"
+    "node": "20.x"
   }
 }
