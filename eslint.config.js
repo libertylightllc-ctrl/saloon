@@ -62,6 +62,14 @@ module.exports = defineConfig([
     },
   },
   {
+    // Playwright runs in Node: fixtures call `use()` (not a React hook) and env keys are read at run time.
+    files: ['e2e/**/*.ts', 'playwright.config.ts'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
+      'expo/no-dynamic-env-var': 'off',
+    },
+  },
+  {
     files: ['**/*.test.{ts,tsx}', 'jest.setup.ts'],
     rules: {
       'no-restricted-syntax': 'off',

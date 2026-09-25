@@ -1,6 +1,6 @@
 import { createOwner, createStaff, latestCode } from './support/api';
 import { expect, test, THEME } from './support/fixtures';
-import { chooseType, field, id, ownerOn, signInOwner, signInStaff, staffOn, tab, text } from './support/ui';
+import { chooseType, field, id, ownerOn, signInOwner, signInStaff, tab, text } from './support/ui';
 
 test('owner: wrong password, no internet, sign out to the themed sign-in, forgot password', async ({ page, mode, context }) => {
   const owner = await createOwner(mode);

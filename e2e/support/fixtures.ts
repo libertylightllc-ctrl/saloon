@@ -1,15 +1,24 @@
 import { test as base, expect, type Browser, type Page } from '@playwright/test';
 
+import { gents } from '../../src/theme/gents';
+import { ladies } from '../../src/theme/ladies';
+
 import type { Mode } from './api';
 
 export interface Options {
   mode: Mode;
 }
 
-/** Colours that only the chosen theme uses (src/theme/gents.ts, ladies.ts). */
+/** '#6C45F2' → 'rgb(108, 69, 242)', the way getComputedStyle reports it. */
+const rgb = (hex: string) => {
+  const n = parseInt(hex.slice(1, 7), 16);
+  return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+};
+
+/** Colours only the chosen theme uses — read from the theme files, so the tests follow any change. */
 export const THEME = {
-  gents: { primaryText: 'rgb(108, 69, 242)', primaryAction: 'rgb(108, 69, 242)', staff: 'Barber', anyStaff: 'Any barber' },
-  ladies: { primaryText: 'rgb(184, 70, 75)', primaryAction: 'rgb(224, 96, 106)', staff: 'Stylist', anyStaff: 'Any stylist' },
+  gents: { primaryText: rgb(gents.colors.primaryText), primaryAction: rgb(gents.colors.primaryAction), staff: 'Barber', anyStaff: 'Any barber' },
+  ladies: { primaryText: rgb(ladies.colors.primaryText), primaryAction: rgb(ladies.colors.primaryAction), staff: 'Stylist', anyStaff: 'Any stylist' },
 } as const;
 
 /** Records API errors, failed requests and console errors of a page, with timestamps. */
