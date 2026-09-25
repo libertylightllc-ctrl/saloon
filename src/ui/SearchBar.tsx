@@ -16,6 +16,7 @@ export interface SearchBarProps {
   onSubmit?: () => void;
   /** Render as a button that opens the search screen. */
   onPress?: () => void;
+  testID?: string;
 }
 
 export function SearchBar({
@@ -25,6 +26,7 @@ export function SearchBar({
   onFilter,
   onSubmit,
   onPress,
+  testID,
 }: SearchBarProps) {
   const theme = useTheme();
   const font = useFontFamily();
@@ -44,6 +46,7 @@ export function SearchBar({
         onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
         onPressIn={onPress}
+        testID={testID}
         editable={!onPress}
         placeholder={placeholder ?? t('common.search')}
         placeholderTextColor={theme.colors.textSecondary}

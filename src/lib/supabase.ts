@@ -1,43 +1,67 @@
 import 'react-native-url-polyfill/auto';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { AppState } from 'react-native';
+import { createClient } from '@supabase/supabase-js';
+import Constants from 'expo-constants';
+import { AppState, Platform } from 'react-native';
 
-// Expo inlines EXPO_PUBLIC_* at build time; they must be read with these exact names.
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+import type { Database, Json } from './database.types';
 
-export const isSupabaseConfigured = Boolean(url && anonKey);
-
-let client: SupabaseClient | null = null;
+const LOCAL_API_PORT = 54321;
 
 /**
- * The shared Supabase client. Created on first use so the app still opens before a backend is
- * configured (phases 0–1 have none).
+ * EXPO_PUBLIC_SUPABASE_URL is either a full URL (hosted project) or "auto": use the machine that
+ * serves the app. On a phone that is the Mac's network IP from the Expo dev server, on web the
+ * page's host — so the local database works without hard-coding an IP that changes.
  */
-export function getSupabase(): SupabaseClient {
-  if (!url || !anonKey) {
-    throw new Error(
-      'Supabase is not configured. Copy .env.example to .env and set EXPO_PUBLIC_SUPABASE_URL ' +
-        'and EXPO_PUBLIC_SUPABASE_ANON_KEY, then restart Expo.',
-    );
-  }
-  if (!client) {
-    const created = createClient(url, anonKey, {
-      auth: {
-        storage: AsyncStorage,
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: false,
-      },
-    });
-    // Refresh tokens only while the app is in the foreground (Supabase guidance for RN).
-    AppState.addEventListener('change', (state) => {
-      if (state === 'active') created.auth.startAutoRefresh();
-      else created.auth.stopAutoRefresh();
-    });
-    client = created;
-  }
-  return client;
+export function resolveSupabaseUrl(
+  configured: string | undefined,
+  hostUri: string | undefined,
+  webHost: string | undefined,
+): string | null {
+  const value = configured?.trim();
+  if (value && value !== 'auto') return value.replace(/\/$/, '');
+  const host = webHost || hostUri?.split(':')[0];
+  return host ? `http://${host}:${LOCAL_API_PORT}` : null;
+}
+
+const url = resolveSupabaseUrl(
+  process.env.EXPO_PUBLIC_SUPABASE_URL,
+  Constants.expoConfig?.hostUri,
+  Platform.OS === 'web' && typeof window !== 'undefined' ? window.location.hostname : undefined,
+);
+const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+
+export const supabaseConfigError = !url || !anonKey ? 'missing_supabase_config' : null;
+export const supabaseUrl = url ?? 'http://127.0.0.1:54321';
+export const supabaseAnonKey = anonKey ?? 'missing-anon-key';
+
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    storage: AsyncStorage,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: false,
+  },
+});
+
+// Refresh tokens only while the app is in the foreground (Supabase guidance for React Native).
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') supabase.auth.startAutoRefresh();
+  else supabase.auth.stopAutoRefresh();
+});
+
+/**
+ * A client that keeps its session in memory only — for steps that must not sign this device in
+ * until they have fully succeeded (password reset).
+ */
+export function detachedClient() {
+  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: 'sb-detached' },
+  });
+}
+
+/** RPC payloads are typed as Json; our input interfaces are plain JSON already. */
+export function asJson<T>(value: T): Json {
+  return value as unknown as Json;
 }

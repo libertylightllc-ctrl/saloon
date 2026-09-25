@@ -24,7 +24,7 @@ export function CategoryCircle({ icon, label, index = 0, selected, onPress }: Ca
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}
-      accessibilityState={{ selected }}
+      aria-selected={selected}
       style={({ pressed }) => [styles.wrap, pressed && styles.pressed]}
     >
       <View

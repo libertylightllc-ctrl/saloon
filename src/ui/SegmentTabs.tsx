@@ -17,6 +17,8 @@ export interface SegmentTabsProps<K extends string> {
   onChange: (key: K) => void;
   /** White labels on the violet band. Detected automatically inside <HeaderBand>. */
   onBand?: boolean;
+  /** Each tab gets `${testID}-${key}`. */
+  testID?: string;
 }
 
 /**
@@ -28,6 +30,7 @@ export function SegmentTabs<K extends string>({
   value,
   onChange,
   onBand: onBandProp,
+  testID,
 }: SegmentTabsProps<K>) {
   const theme = useTheme();
   const insideBand = useOnBand();
@@ -60,8 +63,9 @@ export function SegmentTabs<K extends string>({
           <Pressable
             key={item.key}
             onPress={() => onChange(item.key)}
+            testID={testID ? `${testID}-${item.key}` : undefined}
             accessibilityRole="tab"
-            accessibilityState={{ selected: active }}
+            aria-selected={active}
             accessibilityLabel={label}
             hitSlop={pill ? 4 : 0}
             style={[

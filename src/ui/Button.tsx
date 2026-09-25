@@ -26,6 +26,7 @@ export interface ButtonProps {
   loading?: boolean;
   disabled?: boolean;
   accessibilityHint?: string;
+  testID?: string;
 }
 
 export function Button({
@@ -37,6 +38,7 @@ export function Button({
   loading,
   disabled,
   accessibilityHint,
+  testID,
 }: ButtonProps) {
   const theme = useTheme();
   const { colors } = theme;
@@ -76,12 +78,14 @@ export function Button({
 
   return (
     <Pressable
+      testID={testID}
       onPress={onPress}
       disabled={inactive}
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
-      accessibilityState={{ disabled: inactive, busy: loading }}
+      aria-disabled={inactive}
+      aria-busy={loading}
       hitSlop={Math.max(0, Math.ceil((tapTarget - height) / 2))}
       style={({ pressed }) => [
         styles.base,

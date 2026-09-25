@@ -28,6 +28,7 @@ export interface ListRowProps {
   chevron?: boolean;
   onPress?: () => void;
   accessibilityLabel?: string;
+  testID?: string;
 }
 
 /** Gents: bordered card rows (Nearby Salons). Ladies: plain rows on the white sheet (Services). */
@@ -41,6 +42,7 @@ export function ListRow({
   chevron,
   onPress,
   accessibilityLabel,
+  testID,
 }: ListRowProps) {
   const theme = useTheme();
   const card = theme.variants.listRow === 'card';
@@ -101,10 +103,16 @@ export function ListRow({
         },
   ];
 
-  if (!onPress) return <View style={look}>{content}</View>;
+  if (!onPress)
+    return (
+      <View style={look} testID={testID}>
+        {content}
+      </View>
+    );
   return (
     <Pressable
       onPress={onPress}
+      testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
       style={({ pressed }) => [look, pressed && styles.pressed]}

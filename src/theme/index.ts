@@ -1,7 +1,7 @@
 export * from './tokens';
 export { gents } from './gents';
 export { ladies } from './ladies';
-export { DEFAULT_MODE, loadStoredMode, ThemeProvider, themes } from './ThemeProvider';
+export { DEFAULT_MODE, ThemeProvider, themes } from './ThemeProvider';
 export {
   DirectionProvider,
   DirectionView,

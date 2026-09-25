@@ -154,12 +154,12 @@ begin
   -- Spread the discount over the lines, then VAT (inclusive, 5/105) over the nets.
   select array_agg(gross order by idx) into v_weights from _sale_lines;
   v_parts := public.allocate_minor(v_discount, v_weights);
-  update _sale_lines set discount = v_parts[idx], net = gross - v_parts[idx];
+  update _sale_lines set discount = v_parts[idx], net = gross - v_parts[idx] where true;
   v_net := v_subtotal - v_discount;
   v_vat := case when b.vat_mode = 'on' then round(v_net * 500::numeric / 10500)::bigint else 0 end;
   select array_agg(net order by idx) into v_weights from _sale_lines;
   v_parts := public.allocate_minor(v_vat, v_weights);
-  update _sale_lines set vat = v_parts[idx];
+  update _sale_lines set vat = v_parts[idx] where true;
   update _sale_lines sl set
     commission_bps = coalesce(e.commission_bps, 0),
     commission = round((sl.net - sl.vat) * coalesce(e.commission_bps, 0)::numeric / 10000)::bigint
@@ -227,7 +227,7 @@ begin
     if v_block then
       raise exception 'insufficient_stock: %', array_to_string(v_shortages, ', ') using errcode = '22023';
     end if;
-    v_warnings := v_warnings || ('Low stock: ' || array_to_string(v_shortages, ', '));
+    v_warnings := v_warnings || ('low_stock: ' || array_to_string(v_shortages, ', '));
   end if;
 
   select coalesce(jsonb_agg(jsonb_build_object('account', public.method_account((x ->> 'method')::payment_method),

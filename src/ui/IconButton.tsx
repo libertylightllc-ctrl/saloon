@@ -15,6 +15,7 @@ export interface IconButtonProps {
   /** A number shows a count bubble; `true` shows a dot. */
   badge?: number | boolean;
   disabled?: boolean;
+  testID?: string;
 }
 
 /** Round in gents, rounded-square in ladies. */
@@ -26,6 +27,7 @@ export function IconButton({
   size = 40,
   badge,
   disabled,
+  testID,
 }: IconButtonProps) {
   const theme = useTheme();
   const { colors } = theme;
@@ -46,10 +48,11 @@ export function IconButton({
   return (
     <Pressable
       onPress={onPress}
+      testID={testID}
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      accessibilityState={{ disabled }}
+      aria-disabled={disabled}
       hitSlop={Math.max(0, (tapTarget - size) / 2)}
       style={({ pressed }) => [
         styles.base,

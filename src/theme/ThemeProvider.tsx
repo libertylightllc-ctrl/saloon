@@ -1,5 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
 import { gents } from './gents';
 import { ladies } from './ladies';
@@ -7,50 +6,22 @@ import type { Mode, Theme } from './tokens';
 
 export const themes: Record<Mode, Theme> = { gents, ladies };
 
-/** Onboarding and sign-in use gents until a mode is chosen (03-SCREENS §2.1). */
+/** Used before a salon type is chosen (the welcome screen). */
 export const DEFAULT_MODE: Mode = 'gents';
 
 interface ThemeContextValue {
   theme: Theme;
   mode: Mode;
-  setMode: (mode: Mode) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-// Until branches exist (phase 2) the mode is a developer toggle remembered on the device.
-const DEV_MODE_KEY = 'dev.themeMode';
-
-export async function loadStoredMode(): Promise<Mode> {
-  try {
-    const stored = await AsyncStorage.getItem(DEV_MODE_KEY);
-    return stored === 'gents' || stored === 'ladies' ? stored : DEFAULT_MODE;
-  } catch {
-    return DEFAULT_MODE;
-  }
-}
-
-export function ThemeProvider({
-  initialMode = DEFAULT_MODE,
-  children,
-}: {
-  initialMode?: Mode;
-  children: ReactNode;
-}) {
-  const [mode, setModeState] = useState<Mode>(initialMode);
-
-  const value = useMemo<ThemeContextValue>(
-    () => ({
-      theme: themes[mode],
-      mode,
-      setMode: (next) => {
-        setModeState(next);
-        AsyncStorage.setItem(DEV_MODE_KEY, next).catch(() => {});
-      },
-    }),
-    [mode],
-  );
-
+/**
+ * The look follows the signed-in branch's mode; before sign-in it follows the salon type chosen
+ * on this device. The caller decides which — this just applies it.
+ */
+export function ThemeProvider({ mode, children }: { mode: Mode; children: ReactNode }) {
+  const value = useMemo(() => ({ theme: themes[mode], mode }), [mode]);
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
@@ -64,7 +35,6 @@ export function useTheme(): Theme {
   return useThemeContext().theme;
 }
 
-export function useThemeMode(): { mode: Mode; setMode: (mode: Mode) => void } {
-  const { mode, setMode } = useThemeContext();
-  return { mode, setMode };
+export function useThemeMode(): { mode: Mode } {
+  return { mode: useThemeContext().mode };
 }

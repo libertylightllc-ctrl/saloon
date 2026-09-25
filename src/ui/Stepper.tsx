@@ -17,6 +17,8 @@ export interface StepperProps {
   showAddAtZero?: boolean;
   /** Stretch to the parent's width (grid tiles). */
   fullWidth?: boolean;
+  /** `${testID}-add`, `${testID}-plus`, `${testID}-minus`. */
+  testID?: string;
 }
 
 /**
@@ -30,6 +32,7 @@ export function Stepper({
   max = 99,
   showAddAtZero = true,
   fullWidth,
+  testID,
 }: StepperProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -46,6 +49,7 @@ export function Stepper({
     return (
       <Pressable
         onPress={() => onChange(Math.min(max, value + 1))}
+        testID={testID ? `${testID}-add` : undefined}
         accessibilityRole="button"
         accessibilityLabel={t('common.addItem', { item: itemLabel })}
         hitSlop={6}
@@ -67,6 +71,7 @@ export function Stepper({
   const step = (icon: IconName, delta: number, label: string, disabled: boolean) => (
     <Pressable
       onPress={() => onChange(value + delta)}
+      testID={testID ? `${testID}-${delta > 0 ? 'plus' : 'minus'}` : undefined}
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={label}

@@ -13,7 +13,7 @@ export async function renderInApp(ui: ReactElement, { mode = 'gents' }: { mode?:
   function Providers({ children }: { children: ReactNode }) {
     return (
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider initialMode={mode}>
+        <ThemeProvider mode={mode}>
           <DirectionProvider>
             <ToastProvider>{children}</ToastProvider>
           </DirectionProvider>

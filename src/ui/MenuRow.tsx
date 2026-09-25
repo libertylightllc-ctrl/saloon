@@ -16,10 +16,11 @@ export interface MenuRowProps {
   danger?: boolean;
   /** Hide the divider under the last row of a group. */
   last?: boolean;
+  testID?: string;
 }
 
 /** Icon in a small pastel square, label, chevron — the Barber kit's Profile list. */
-export function MenuRow({ icon, label, value, onPress, index = 0, danger, last }: MenuRowProps) {
+export function MenuRow({ icon, label, value, onPress, index = 0, danger, last, testID }: MenuRowProps) {
   const theme = useTheme();
   const { categoryFills, categoryIcons } = theme.colors;
   const fill = danger ? semantic.error.surface : categoryFills[index % categoryFills.length];
@@ -28,6 +29,7 @@ export function MenuRow({ icon, label, value, onPress, index = 0, danger, last }
   return (
     <Pressable
       onPress={onPress}
+      testID={testID}
       accessibilityRole="button"
       accessibilityLabel={value ? `${label}, ${value}` : label}
       style={({ pressed }) => [

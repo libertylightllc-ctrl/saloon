@@ -25,9 +25,10 @@ export interface KpiCardProps {
   hero?: boolean;
   action?: ReactNode;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 }
 
-export function KpiCard({ label, value, delta, sub, icon, hero, action, style }: KpiCardProps) {
+export function KpiCard({ label, value, delta, sub, icon, hero, action, style, testID }: KpiCardProps) {
   const theme = useTheme();
   const good = delta ? (delta.good ?? delta.trend === 'up') : true;
   const tone = good ? semantic.success : semantic.error;
@@ -53,6 +54,7 @@ export function KpiCard({ label, value, delta, sub, icon, hero, action, style }:
         tabular
         numberOfLines={1}
         adjustsFontSizeToFit
+        testID={testID ? `${testID}-value` : undefined}
       >
         {value}
       </Text>

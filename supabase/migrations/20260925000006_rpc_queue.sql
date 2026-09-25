@@ -253,16 +253,18 @@ end;
 $$;
 
 -- Free start times for a booking (30-minute steps within opening hours).
+-- Bookable start times for a day, every 30 minutes from opening. Hours that close at or before
+-- they open run past midnight (18:00 → 02:00), and `starts_at` is the exact instant to book.
 create function public.available_slots(p_branch uuid, p_date date, p_duration int, p_employee uuid default null)
-returns table (slot text, available boolean)
+returns table (slot text, starts_at timestamptz, available boolean)
 language plpgsql stable security definer set search_path = public as $$
 declare
   b branches;
   tz text := public.branch_tz(p_branch);
-  v_open time;
-  v_close time;
-  t time;
-  v_start timestamptz;
+  v_open int;
+  v_close int;
+  v_min int;
+  v_len int := greatest(coalesce(p_duration, 30), 5);
   v_staff int;
   v_busy int;
 begin
@@ -273,22 +275,25 @@ begin
   if not (extract(dow from p_date)::int in (select jsonb_array_elements_text(b.opening_hours -> 'days')::int)) then
     return;
   end if;
-  v_open := (b.opening_hours ->> 'open')::time;
-  v_close := (b.opening_hours ->> 'close')::time;
+  v_open := extract(epoch from (b.opening_hours ->> 'open')::time)::int / 60;
+  v_close := extract(epoch from (b.opening_hours ->> 'close')::time)::int / 60;
+  if v_close <= v_open then
+    v_close := v_close + 1440;
+  end if;
   select count(*) into v_staff from employees where branch_id = p_branch and active;
-  t := v_open;
-  while t + make_interval(mins => greatest(p_duration, 5)) <= v_close loop
-    v_start := (p_date + t) at time zone tz;
+  v_min := v_open;
+  while v_min + v_len <= v_close loop
+    starts_at := (p_date::timestamp + make_interval(mins => v_min)) at time zone tz;
     select count(*) into v_busy from appointments a
     where a.branch_id = p_branch and a.status in ('booked', 'waiting', 'in_progress')
       and (p_employee is null or a.employee_id = p_employee)
       and tstzrange(a.scheduled_at, a.scheduled_at + make_interval(mins => a.duration_min))
-          && tstzrange(v_start, v_start + make_interval(mins => p_duration));
-    slot := to_char(t, 'HH24:MI');
-    available := v_start > now()
+          && tstzrange(starts_at, starts_at + make_interval(mins => v_len));
+    slot := to_char(p_date::timestamp + make_interval(mins => v_min), 'HH24:MI');
+    available := starts_at > now()
       and case when p_employee is null then v_busy < greatest(v_staff, 1) else v_busy = 0 end;
     return next;
-    t := t + interval '30 minutes';
+    v_min := v_min + 30;
   end loop;
 end;
 $$;

@@ -73,9 +73,10 @@ export function DateStrip({
         return (
           <Pressable
             key={date}
+            testID={`date-${date}`}
             onPress={() => onChange(date)}
             accessibilityRole="button"
-            accessibilityState={{ selected }}
+            aria-selected={selected}
             accessibilityLabel={format(day, 'EEEE d MMMM')}
             style={[
               styles.day,
@@ -131,10 +132,12 @@ export function TimeSlotGrid({
         return (
           <Pressable
             key={slot.time}
+            testID={`slot-${slot.time}`}
             disabled={!slot.available}
             onPress={() => onChange(slot.time)}
             accessibilityRole="button"
-            accessibilityState={{ selected, disabled: !slot.available }}
+            aria-selected={selected}
+            aria-disabled={!slot.available}
             accessibilityLabel={slot.time}
             style={[
               styles.slot,

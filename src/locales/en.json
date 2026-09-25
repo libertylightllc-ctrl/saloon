@@ -22,7 +22,13 @@
       "fri": "Fri",
       "sat": "Sat",
       "sun": "Sun"
-    }
+    },
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "loading": "Loading",
+    "new": "New",
+    "retry": "Try again",
+    "save": "Save"
   },
   "status": {
     "booked": "Booked",
@@ -105,7 +111,7 @@
       "afternoon": "Good afternoon, {{name}}",
       "evening": "Good evening, {{name}}"
     },
-    "subline": "{{queue}} in the queue · {{approvals}} to approve",
+    "subline": "{{queue}} in the queue · {{booked}} booked",
     "searchPlaceholder": "Search customers, services, sales",
     "expectedCash": "Expected cash today",
     "vsYesterday": "vs yesterday",
@@ -114,13 +120,19 @@
     "salesSub": "{{services}} services · {{sales}} sales",
     "appointmentsToday": "Appointments today",
     "doneCount": "{{n}} done",
-    "appointmentsSub": "{{waiting}} waiting · {{noShow}} no-show",
+    "appointmentsSub": "{{waiting}} waiting · {{booked}} booked · {{noShow}} no-show",
     "moneyOut": "Money out today",
     "moneyOutSub": "Purchases {{purchases}} · Expenses {{expenses}}",
     "setup": {
       "title": "Finish setting up",
-      "body": "{{done}} of {{total}} steps done. Next: count your opening stock.",
-      "action": "Continue setup"
+      "body": "{{done}} of {{total}} steps done. Next: {{next}}.",
+      "action": "Continue setup",
+      "steps": {
+        "services": "check your services",
+        "staff": "add a staff login",
+        "tax": "confirm tax settings",
+        "opening_cash": "set opening cash"
+      }
     },
     "quickActions": "Quick actions",
     "quick": {
@@ -128,7 +140,8 @@
       "book": "Book",
       "newSale": "New sale",
       "expense": "Expense",
-      "stock": "Stock"
+      "stock": "Stock",
+      "customer": "Customer"
     },
     "needsAttention": "Needs attention",
     "attentionActions": {
@@ -152,12 +165,20 @@
     "staffState": {
       "on_shift": "On shift",
       "with_client": "With client",
-      "off": "Off"
+      "off": "Off",
+      "available": "Available"
     },
     "topServices": "Top services this week",
     "timesCount": "{{n}}×",
     "recentActivity": "Recent activity",
-    "viewAuditTrail": "View audit trail"
+    "viewAuditTrail": "View audit trail",
+    "cashSub": "Opening cash plus today's cash sales",
+    "noSalesYet": "No sales yet today.",
+    "me": {
+      "services": "My services today",
+      "sales": "My sales today",
+      "commission": "Commission this month"
+    }
   },
   "queue": {
     "title": "Queue",
@@ -192,17 +213,49 @@
       "checkIn": "Check in",
       "start": "Start",
       "complete": "Complete",
-      "rebook": "Rebook"
+      "rebook": "Rebook",
+      "noShow": "Mark no-show",
+      "cancel": "Cancel"
     },
     "toast": {
       "checkIn": "Checked in {{name}}",
       "start": "Started {{name}}",
       "complete": "Completed {{name}}",
-      "rebook": "Rebooking {{name}} arrives in phase 4"
+      "rebook": "Rebooking {{name}} arrives in phase 4",
+      "booked": "Booked {{name}}",
+      "walkIn": "{{name}} added to the queue",
+      "noShow": "Marked {{name}} as no-show",
+      "cancel": "Cancelled {{name}}",
+      "cancel_refund": "Cancelled {{name}}. Deposit refunded.",
+      "cancel_forfeit": "Cancelled {{name}}. Deposit kept.",
+      "cancel_none": "Cancelled {{name}}"
     },
     "moreActions": "More actions for {{name}}",
     "empty": "No one is waiting. Add a walk-in.",
-    "addWalkIn": "Add walk-in"
+    "addWalkIn": "Add walk-in",
+    "late": "{{minutes}} min late",
+    "noServices": "No service picked",
+    "depositHeld": "Deposit {{amount}}",
+    "depositRule": "Deposit {{amount}}: refunded if cancelled {{hours}} h or more before, kept if later or no-show.",
+    "cancelReason": "Reason for cancelling",
+    "confirmCancel": "Cancel appointment",
+    "viewSale": "View sale",
+    "newBooking": "New appointment",
+    "newWalkIn": "New walk-in",
+    "book": "Book",
+    "addToQueue": "Add to queue",
+    "walkIn": "Walk-in",
+    "appointment": "Appointment",
+    "services": "Services",
+    "room": "Room",
+    "date": "Date",
+    "time": "Time",
+    "noSlots": "No free times this day. Try another day.",
+    "deposit": "Deposit",
+    "depositAmount": "Deposit amount (optional)",
+    "notes": "Notes",
+    "summaryLine": "{{minutes}} min · {{amount}}",
+    "guestName": "Guest name (optional)"
   },
   "sale": {
     "title": "Quick sale",
@@ -222,14 +275,15 @@
       "cash": "Cash",
       "card": "Card",
       "wallet": "Wallet",
-      "split": "Split"
+      "split": "Split",
+      "deposit": "Deposit"
     },
     "subtotal": "Subtotal",
     "vat": "VAT",
     "vatNotApplied": "Not applied",
     "vatIncluded": "{{amount}} included",
     "amountDue": "Amount due",
-    "willUpdate": "Saving updates expected cash, {{staff}}'s commission and stock ({{stock}}).",
+    "willUpdate": "Saving updates expected cash and stock ({{stock}}).",
     "save": "Save sale · {{amount}}",
     "saved": "Sale saved",
     "doneTitle": "Sale {{number}} saved",
@@ -237,13 +291,56 @@
     "doneBody": "Share the receipt or start the next sale.",
     "shareReceipt": "Share receipt",
     "print": "Print",
-    "newSale": "New sale"
+    "newSale": "New sale",
+    "forCustomer": "For {{name}}",
+    "noServices": "No services yet.",
+    "customItem": "Custom item",
+    "customName": "What is it?",
+    "customPrice": "Price",
+    "addToBasket": "Add to basket",
+    "splitRemaining": "Left to allocate: {{amount}}",
+    "depositApplied": "Deposit used",
+    "willUpdateStaff": "Saving updates expected cash, {{staff}}'s commission and stock ({{stock}}).",
+    "noStock": "no products",
+    "printReceipt": "Print receipt",
+    "lowStock": "Low stock: {{items}}"
   },
   "customers": {
     "subtitle": "Profiles, visits and notes.",
     "search": "Search by name or phone",
     "empty": "No customers yet. Add your first customer.",
-    "add": "Add customer"
+    "add": "Add customer",
+    "new": "New",
+    "noMatch": "No customer matches that search.",
+    "noPhone": "No phone",
+    "noShows": "{{n}} no-shows",
+    "noShowsLabel": "No-shows",
+    "visits": "Visits",
+    "lastVisit": "Last visit",
+    "visitsLine": "{{n}} visits · last {{last}}",
+    "tapToChange": "Tap to change",
+    "profile": "Customer",
+    "book": "Book",
+    "upcoming": "Upcoming",
+    "noUpcoming": "Nothing booked.",
+    "history": "Visits",
+    "noVisits": "No visits yet.",
+    "newTitle": "New customer",
+    "editTitle": "Edit customer",
+    "saved": "Customer saved",
+    "fields": {
+      "name": "Name",
+      "phone": "Phone",
+      "preferences": "Preferences",
+      "notes": "Notes",
+      "risk": "Alerts",
+      "marketing": "Happy to get offers by SMS or WhatsApp"
+    },
+    "risk": {
+      "allergy": "Allergy",
+      "patch_test": "Needs patch test",
+      "no_show": "Past no-show"
+    }
   },
   "more": {
     "roleAtBranch": "Owner · {{branch}}",
@@ -267,9 +364,17 @@
       "reports": "Reports",
       "setup": "Setup",
       "settings": "Settings",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "sales": "Sales",
+      "team": "Team & logins",
+      "branch": "Branch settings"
     },
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "title": "More",
+    "business": "Business",
+    "app": "App",
+    "salonCode": "Salon code: {{code}}",
+    "signOut": "Sign out"
   },
   "gallery": {
     "title": "Theme gallery",
@@ -319,5 +424,323 @@
     "openSheet": "Open sheet",
     "showToast": "Show toast",
     "sheetTitle": "Bottom sheet"
+  },
+  "roles": {
+    "owner": "Owner",
+    "cashier": "Cashier",
+    "staff": "Staff",
+    "accountant": "Accountant"
+  },
+  "units": {
+    "ml": "ml",
+    "g": "g",
+    "pcs": "pc",
+    "pairs": "pr"
+  },
+  "auth": {
+    "salonType": {
+      "gents": "Gents salon",
+      "ladies": "Ladies salon & spa"
+    },
+    "welcome": {
+      "subtitle": "Choose your salon type. You can change it later.",
+      "gents": "Barber shops and gents salons",
+      "ladies": "Ladies salons, beauty and spa"
+    },
+    "fields": {
+      "yourName": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "password": "Password",
+      "passwordHint": "At least 8 characters",
+      "confirmPassword": "Confirm password",
+      "newPassword": "New password",
+      "code": "6-digit code",
+      "salonCode": "Salon code",
+      "salonCodeHint": "Your owner can see it under More",
+      "username": "Username"
+    },
+    "signIn": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to run your salon.",
+      "owner": "Owner",
+      "staff": "Staff",
+      "action": "Sign in",
+      "forgot": "Forgot password?",
+      "createAccount": "New here? Create an owner account",
+      "staffHelp": "Staff logins are created by the owner. Ask them for your salon code, username and password."
+    },
+    "signUp": {
+      "title": "Create your account",
+      "subtitle": "For the salon owner. Staff get their own logins later.",
+      "action": "Create account"
+    },
+    "forgot": {
+      "title": "Reset password",
+      "subtitle": "We will email you a 6-digit code.",
+      "send": "Send code",
+      "enterCode": "Enter the code we sent to {{email}}.",
+      "reset": "Set new password",
+      "resend": "Send a new code",
+      "codeSent": "Code sent. Check your email.",
+      "done": "Password changed. You are signed in."
+    }
+  },
+  "setup": {
+    "title": "Set up your salon",
+    "next": "Next",
+    "create": "Create my salon",
+    "steps": {
+      "business": {
+        "title": "Your business",
+        "subtitle": "Step 1 of 5"
+      },
+      "country": {
+        "title": "Country",
+        "subtitle": "Step 2 of 5"
+      },
+      "mode": {
+        "title": "Salon type",
+        "subtitle": "Step 3 of 5"
+      },
+      "branch": {
+        "title": "First branch",
+        "subtitle": "Step 4 of 5"
+      },
+      "tax": {
+        "title": "Tax and cash",
+        "subtitle": "Step 5 of 5"
+      }
+    },
+    "country": {
+      "uae": "United Arab Emirates",
+      "detail": "Dirham (AED), 5% VAT, Dubai time"
+    },
+    "fields": {
+      "businessName": "Business name",
+      "branchName": "Branch name",
+      "branchNameHint": "For example: Al Barsha",
+      "address": "Address",
+      "phone": "Phone",
+      "opens": "Opens",
+      "closes": "Closes",
+      "days": "Open days",
+      "trn": "Tax registration number (TRN)",
+      "openingCash": "Cash in the drawer now",
+      "openingCashHint": "Optional. You can set it later in branch settings."
+    },
+    "tax": {
+      "off": "Not VAT registered",
+      "on": "VAT registered",
+      "offDetail": "Prices have no VAT. Receipts do not show a TRN.",
+      "onDetail": "Prices include 5% VAT. Receipts become tax invoices with your TRN."
+    }
+  },
+  "validation": {
+    "required": "Required",
+    "email": "Enter a valid email",
+    "passwordMin": "At least 8 characters",
+    "passwordLength": "At least 8 characters",
+    "passwordMatch": "Passwords do not match",
+    "code": "Enter the 6-digit code",
+    "salonCode": "4 to 12 letters or numbers",
+    "username": "3 to 20 letters, numbers, dots or dashes",
+    "name": "Enter a name",
+    "phone": "Enter a phone number like +971 50 123 4567",
+    "trn": "The TRN has 15 digits",
+    "time": "Use hh:mm, for example 09:00",
+    "hours": "Closing must be after opening",
+    "days": "Pick at least one day",
+    "number": "Whole numbers only",
+    "range": "Out of range",
+    "percent": "Enter a percentage like 10 or 12.5",
+    "pickCategory": "Pick a category",
+    "recipeQty": "Enter how much of each item is used",
+    "tooLong": "Too long"
+  },
+  "errors": {
+    "not_signed_in": "Your session ended. Please sign in again.",
+    "not_allowed": "Your role cannot do this. Ask the owner.",
+    "already_has_business": "This account already has a salon.",
+    "mode_required": "Choose a salon type.",
+    "trn_required": "VAT needs a 15-digit TRN.",
+    "invalid_amount": "Check the amount.",
+    "opening_cash_already_set": "Opening cash is already recorded.",
+    "category_required": "Pick a category.",
+    "not_found": "This record no longer exists. Pull down to refresh.",
+    "service_unavailable": "One of the services is archived. Pick another.",
+    "services_required": "Pick at least one service.",
+    "time_required": "Pick a time.",
+    "slot_taken": "That time was just booked. Pick another slot.",
+    "room_required": "This service needs a room. Pick one.",
+    "deposit_method_required": "Choose how the deposit was paid.",
+    "invalid_status": "Someone already changed this. Pull down to refresh.",
+    "reason_required": "Write a reason (at least 3 characters).",
+    "lines_required": "Add at least one service.",
+    "invalid_line": "One of the lines is not valid.",
+    "invalid_qty": "Check the quantities.",
+    "invalid_discount": "The discount is more than the bill.",
+    "invalid_tip": "Check the tip.",
+    "invalid_payment": "Check the payment method.",
+    "payment_mismatch": "Payments must add up to the amount due.",
+    "insufficient_stock": "Not enough stock:",
+    "period_closed": "That period is closed. Use today's date.",
+    "username_taken": "That username is taken. Try another.",
+    "weak_password": "Use at least 8 characters.",
+    "invalid_username": "Usernames are 3 to 20 letters, numbers, dots or dashes.",
+    "name_required": "Enter a name.",
+    "invalid_commission": "Commission must be between 0 and 100%.",
+    "wrong_password": "Wrong email, username or password.",
+    "disabled": "This login is disabled. Ask the owner.",
+    "email_taken": "An account with this email already exists. Sign in instead.",
+    "no_internet": "No connection. Check your internet and try again.",
+    "rate_limited": "Too many tries. Wait a minute and try again.",
+    "invalid_code": "That code is wrong or expired. Send a new one.",
+    "unknown_salon": "No salon with that code. Check it with the owner.",
+    "confirm_email": "Check your email to confirm your account, then sign in.",
+    "category_exists": "A category with that name already exists.",
+    "unknown_setting": "That setting cannot be changed here.",
+    "invalid_role": "Pick a role.",
+    "unknown": "Something went wrong. Try again."
+  },
+  "sales": {
+    "title": "Sales",
+    "subtitle": "Recent sales at this branch",
+    "empty": "No sales yet.",
+    "number": "Sale #{{number}}",
+    "paidBy": "Paid by {{method}}",
+    "refunds": "Refunds",
+    "refund": "Refund",
+    "refundTitle": "Refund sale #{{number}}",
+    "refundable": "Up to {{amount}} can be refunded.",
+    "refundAmount": "Amount to refund",
+    "tooMuch": "The most you can refund is {{amount}}.",
+    "reason": "Reason",
+    "reasonHint": "Required. The customer and the audit log see it.",
+    "confirmRefund": "Refund {{amount}}",
+    "refunded": "Refunded {{amount}}",
+    "status": {
+      "completed": "Paid",
+      "partially_refunded": "Part refunded",
+      "refunded": "Refunded"
+    }
+  },
+  "receipt": {
+    "receipt": "Receipt",
+    "taxInvoice": "Tax invoice",
+    "sale": "Sale",
+    "vatIncluded": "VAT included (5%)",
+    "deposit": "Deposit used",
+    "total": "Total",
+    "paid": "Paid",
+    "refunded": "Refunded",
+    "trn": "TRN",
+    "thanks": "Thank you for visiting."
+  },
+  "services": {
+    "title": "Services",
+    "add": "Add service",
+    "active": "Active",
+    "archived": "Archived",
+    "empty": "No services yet. Add your first one.",
+    "noArchived": "No archived services.",
+    "categories": "Categories",
+    "needsRoom": "Needs a room",
+    "patchTest": "Patch test",
+    "newTitle": "New service",
+    "editTitle": "Edit service",
+    "saved": "Service saved",
+    "archive": "Archive service",
+    "restore": "Restore service",
+    "archivedToast": "Service archived",
+    "restoredToast": "Service restored",
+    "fields": {
+      "name": "Service name",
+      "category": "Category",
+      "price": "Price",
+      "duration": "Minutes",
+      "buffer": "Clean-up minutes",
+      "room": "Needs a room",
+      "roomHint": "Only rooms that are free can be booked.",
+      "patchTest": "Needs a patch test first",
+      "recipe": "Products used",
+      "recipeHint": "Each sale takes these out of stock.",
+      "categoryName": "Category name"
+    },
+    "recipeEmpty": "No products yet.",
+    "newItem": "New product",
+    "newItemButton": "New product",
+    "itemName": "Product name",
+    "addItem": "Add product",
+    "qtyFor": "How much {{item}}",
+    "removeItem": "Remove {{item}}",
+    "newCategory": "New category",
+    "editCategory": "Edit category",
+    "categorySaved": "Category saved",
+    "categoryArchived": "Category archived",
+    "archiveCategory": "Archive category",
+    "countInCategory": "{{count}} services",
+    "iconOption": "Icon {{n}}"
+  },
+  "team": {
+    "title": "Team & logins",
+    "codeExplain": "Staff sign in with this salon code plus their username.",
+    "newLogin": "New login",
+    "create": "Create login",
+    "created": "Login created: {{username}} at salon {{code}}",
+    "fields": {
+      "name": "Full name",
+      "role": "Role",
+      "username": "Username",
+      "password": "Password",
+      "commission": "Commission %"
+    },
+    "usernameHint": "They sign in with salon code {{code}} and this username.",
+    "roleHint": {
+      "cashier": "Queue, sales and customers. No refunds or settings.",
+      "staff": "Their own queue and commission. No money screens.",
+      "accountant": "Reads money and reports. Cannot sell."
+    },
+    "commission": "Commission {{rate}}",
+    "disabled": "Disabled",
+    "newPassword": "New password",
+    "resetPassword": "Set new password",
+    "passwordReset": "Password changed",
+    "disable": "Disable login",
+    "enable": "Enable login",
+    "disabledToast": "{{name}} can no longer sign in",
+    "enabledToast": "{{name}} can sign in again"
+  },
+  "branch": {
+    "title": "Branch settings",
+    "saved": "Settings saved",
+    "mode": "Salon type",
+    "modeHint": "Changes the look and wording for everyone signed in to this branch.",
+    "switchTo": "Switch to {{mode}}",
+    "modeSwitched": "Switched to {{mode}}",
+    "details": "Details",
+    "tax": "VAT",
+    "queue": "Queue and bookings",
+    "rules": "Rules",
+    "fields": {
+      "name": "Branch name",
+      "address": "Address",
+      "phone": "Phone",
+      "vat": "VAT registered",
+      "vatHint": "Prices include 5% VAT and receipts show your TRN.",
+      "trn": "TRN (15 digits)",
+      "waitTarget": "Wait target (min)",
+      "cutoff": "Free cancel (hours before)",
+      "deposit": "Default deposit",
+      "staffCanSell": "Staff can take payments",
+      "blockStock": "Block sales without stock",
+      "blockStockHint": "When off, the sale goes through and shows a low-stock warning.",
+      "openingCash": "Amount"
+    },
+    "openingCash": "Opening cash",
+    "openingCashHint": "Cash in the drawer when you started using the app. Set once.",
+    "openingCashDone": "Opening cash is recorded.",
+    "setOpeningCash": "Save opening cash",
+    "openingCashSaved": "Opening cash saved"
   }
 }

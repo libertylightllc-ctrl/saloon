@@ -48,3 +48,7 @@ yarn-error.*
 
 # tests
 coverage/
+
+# e2e
+e2e-report/
+e2e-results/

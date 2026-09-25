@@ -47,8 +47,9 @@ export function TabBar({
         return (
           <Pressable
             key={route.key}
+            testID={`tab-${route.name}`}
             accessibilityRole="tab"
-            accessibilityState={{ selected: focused }}
+            aria-selected={focused}
             accessibilityLabel={item.label}
             onPress={() => {
               const event = navigation.emit({

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
-import { demoBranches } from '@/features/demo/data';
 import { modeConfig } from '@/features/mode/modeConfig';
 import { useTerms } from '@/features/mode/useTerms';
 import { businessDate, monthKey, shiftBusinessDate } from '@/lib/dates';
@@ -34,16 +33,16 @@ import {
   type StatusKey,
 } from '@/ui';
 
+import { gallerySamples } from './samples';
 import { galleryStyles, Section } from './Section';
 
 export function CardSection() {
   const { t } = useTranslation();
   const terms = useTerms();
   const [qty, setQty] = useState(1);
-  const sample = demoBranches.gents;
-  const service = sample.services[0]!;
-  const customer = sample.queue[0]!.customer ?? t('queue.guest');
-  const barber = sample.staff[0]!.name;
+  const service = gallerySamples.service;
+  const customer = gallerySamples.customer;
+  const barber = gallerySamples.staff[0].name;
   return (
     <Section title={t('gallery.sections.cards')}>
       <KpiCard
@@ -123,13 +122,11 @@ export function IdentitySection() {
         ))}
       </View>
       <View style={galleryStyles.row}>
-        <Avatar name={demoBranches.gents.owner} size={56} />
-        {demoBranches.gents.staff.map((person) => (
+        <Avatar name={gallerySamples.owner} size={56} />
+        {gallerySamples.staff.map((person) => (
           <Avatar key={person.id} name={person.name} color={person.colour} />
         ))}
-        {demoBranches.ladies.staff.slice(0, 2).map((person) => (
-          <Avatar key={person.id} name={person.name} size={32} />
-        ))}
+        <Avatar name={gallerySamples.customer} size={32} />
       </View>
     </Section>
   );

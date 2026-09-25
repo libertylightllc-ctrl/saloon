@@ -13,9 +13,10 @@ export interface ChipProps {
   icon?: IconName;
   /** Summary chips (Queue "Waiting 2 · longest 6 min") use a status tone. */
   tone?: Tone;
+  testID?: string;
 }
 
-export function Chip({ label, selected, onPress, icon, tone }: ChipProps) {
+export function Chip({ label, selected, onPress, icon, tone, testID }: ChipProps) {
   const theme = useTheme();
   const toneColors = useToneColors(tone ?? 'neutral');
   const { colors } = theme;
@@ -42,9 +43,10 @@ export function Chip({ label, selected, onPress, icon, tone }: ChipProps) {
   if (!onPress) return body;
   return (
     <Pressable
+      testID={testID}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityState={{ selected }}
+      aria-selected={selected}
       accessibilityLabel={label}
       hitSlop={6}
       style={({ pressed }) => pressed && styles.pressed}

@@ -23,7 +23,13 @@
       "fri": "جمعہ",
       "sat": "ہفتہ",
       "sun": "اتوار"
-    }
+    },
+    "cancel": "منسوخ کریں",
+    "edit": "ترمیم",
+    "loading": "لوڈ ہو رہا ہے",
+    "new": "نیا",
+    "retry": "دوبارہ کوشش کریں",
+    "save": "محفوظ کریں"
   },
   "status": {
     "booked": "بک شدہ",
@@ -106,7 +112,7 @@
       "afternoon": "سلام، {{name}}",
       "evening": "شام بخیر، {{name}}"
     },
-    "subline": "قطار میں {{queue}} · منظوری کے لیے {{approvals}}",
+    "subline": "{{queue}} قطار میں · {{booked}} بک",
     "searchPlaceholder": "گاہک، خدمات، فروخت تلاش کریں",
     "expectedCash": "آج متوقع نقد",
     "vsYesterday": "کل کے مقابلے میں",
@@ -115,13 +121,19 @@
     "salesSub": "{{services}} خدمات · {{sales}} فروخت",
     "appointmentsToday": "آج کی ملاقاتیں",
     "doneCount": "{{n}} مکمل",
-    "appointmentsSub": "{{waiting}} انتظار میں · {{noShow}} نہیں آئے",
+    "appointmentsSub": "{{waiting}} منتظر · {{booked}} بک · {{noShow}} نہیں آئے",
     "moneyOut": "آج کا خرچ",
     "moneyOutSub": "خریداری {{purchases}} · اخراجات {{expenses}}",
     "setup": {
       "title": "سیٹ اپ مکمل کریں",
-      "body": "{{total}} میں سے {{done}} مراحل مکمل۔ اگلا: ابتدائی اسٹاک گنیں۔",
-      "action": "سیٹ اپ جاری رکھیں"
+      "body": "{{total}} میں سے {{done}} مراحل مکمل۔ اگلا: {{next}}۔",
+      "action": "سیٹ اپ جاری رکھیں",
+      "steps": {
+        "services": "اپنی سروسز چیک کریں",
+        "staff": "عملے کا لاگ ان شامل کریں",
+        "tax": "ٹیکس سیٹنگ کی تصدیق کریں",
+        "opening_cash": "ابتدائی نقد رکھیں"
+      }
     },
     "quickActions": "فوری کام",
     "quick": {
@@ -129,7 +141,8 @@
       "book": "بک کریں",
       "newSale": "نئی فروخت",
       "expense": "خرچ",
-      "stock": "اسٹاک"
+      "stock": "اسٹاک",
+      "customer": "گاہک"
     },
     "needsAttention": "توجہ درکار",
     "attentionActions": {
@@ -153,12 +166,20 @@
     "staffState": {
       "on_shift": "ڈیوٹی پر",
       "with_client": "گاہک کے ساتھ",
-      "off": "چھٹی"
+      "off": "چھٹی",
+      "available": "فارغ"
     },
     "topServices": "اس ہفتے کی بہترین خدمات",
     "timesCount": "{{n}}×",
     "recentActivity": "حالیہ سرگرمی",
-    "viewAuditTrail": "آڈٹ ٹریل دیکھیں"
+    "viewAuditTrail": "آڈٹ ٹریل دیکھیں",
+    "cashSub": "ابتدائی نقد اور آج کی نقد فروخت",
+    "noSalesYet": "آج ابھی کوئی فروخت نہیں۔",
+    "me": {
+      "services": "آج میری سروسز",
+      "sales": "آج میری فروخت",
+      "commission": "اس ماہ کمیشن"
+    }
   },
   "queue": {
     "title": "قطار",
@@ -193,17 +214,49 @@
       "checkIn": "چیک اِن",
       "start": "شروع کریں",
       "complete": "مکمل کریں",
-      "rebook": "دوبارہ بک کریں"
+      "rebook": "دوبارہ بک کریں",
+      "noShow": "نہیں آئے",
+      "cancel": "منسوخ"
     },
     "toast": {
       "checkIn": "{{name}} کا چیک اِن ہو گیا",
       "start": "{{name}} کی سروس شروع",
       "complete": "{{name}} کی سروس مکمل",
-      "rebook": "{{name}} کی دوبارہ بکنگ مرحلہ 4 میں آئے گی"
+      "rebook": "{{name}} کی دوبارہ بکنگ مرحلہ 4 میں آئے گی",
+      "booked": "{{name}} بک ہو گیا",
+      "walkIn": "{{name}} قطار میں شامل",
+      "noShow": "{{name}} کو غیر حاضر لکھا",
+      "cancel": "{{name}} منسوخ",
+      "cancel_refund": "{{name}} منسوخ۔ ڈپازٹ واپس۔",
+      "cancel_forfeit": "{{name}} منسوخ۔ ڈپازٹ رکھا گیا۔",
+      "cancel_none": "{{name}} منسوخ"
     },
     "moreActions": "{{name}} کے لیے مزید کام",
     "empty": "کوئی انتظار میں نہیں۔ واک اِن شامل کریں۔",
-    "addWalkIn": "واک اِن شامل کریں"
+    "addWalkIn": "واک اِن شامل کریں",
+    "late": "{{minutes}} منٹ تاخیر",
+    "noServices": "کوئی سروس نہیں چنی",
+    "depositHeld": "ڈپازٹ {{amount}}",
+    "depositRule": "ڈپازٹ {{amount}}: {{hours}} گھنٹے یا پہلے منسوخی پر واپس، بعد میں یا نہ آنے پر رکھا جائے گا۔",
+    "cancelReason": "منسوخی کی وجہ",
+    "confirmCancel": "اپائنٹمنٹ منسوخ کریں",
+    "viewSale": "فروخت دیکھیں",
+    "newBooking": "نئی اپائنٹمنٹ",
+    "newWalkIn": "نیا واک اِن",
+    "book": "بک کریں",
+    "addToQueue": "قطار میں شامل کریں",
+    "walkIn": "واک اِن",
+    "appointment": "اپائنٹمنٹ",
+    "services": "سروسز",
+    "room": "کمرہ",
+    "date": "تاریخ",
+    "time": "وقت",
+    "noSlots": "اس دن کوئی خالی وقت نہیں۔ دوسرا دن دیکھیں۔",
+    "deposit": "ڈپازٹ",
+    "depositAmount": "ڈپازٹ رقم (اختیاری)",
+    "notes": "نوٹس",
+    "summaryLine": "{{minutes}} منٹ · {{amount}}",
+    "guestName": "مہمان کا نام (اختیاری)"
   },
   "sale": {
     "title": "فوری فروخت",
@@ -223,14 +276,15 @@
       "cash": "نقد",
       "card": "کارڈ",
       "wallet": "والیٹ",
-      "split": "تقسیم"
+      "split": "تقسیم",
+      "deposit": "ڈپازٹ"
     },
     "subtotal": "ذیلی کل",
     "vat": "وی اے ٹی",
     "vatNotApplied": "لاگو نہیں",
     "vatIncluded": "{{amount}} شامل",
     "amountDue": "واجب رقم",
-    "willUpdate": "محفوظ کرنے سے متوقع نقد، {{staff}} کا کمیشن اور اسٹاک ({{stock}}) اپڈیٹ ہوں گے۔",
+    "willUpdate": "محفوظ کرنے سے متوقع نقد اور اسٹاک ({{stock}}) اپڈیٹ ہوں گے۔",
     "save": "فروخت محفوظ کریں · {{amount}}",
     "saved": "فروخت محفوظ ہو گئی",
     "doneTitle": "فروخت {{number}} محفوظ ہو گئی",
@@ -238,13 +292,56 @@
     "doneBody": "رسید بھیجیں یا اگلی فروخت شروع کریں۔",
     "shareReceipt": "رسید بھیجیں",
     "print": "پرنٹ",
-    "newSale": "نئی فروخت"
+    "newSale": "نئی فروخت",
+    "forCustomer": "{{name}} کے لیے",
+    "noServices": "ابھی کوئی سروس نہیں۔",
+    "customItem": "کسٹم آئٹم",
+    "customName": "یہ کیا ہے؟",
+    "customPrice": "قیمت",
+    "addToBasket": "ٹوکری میں شامل کریں",
+    "splitRemaining": "تقسیم باقی: {{amount}}",
+    "depositApplied": "ڈپازٹ استعمال",
+    "willUpdateStaff": "محفوظ کرنے سے متوقع نقد، {{staff}} کا کمیشن اور اسٹاک ({{stock}}) اپڈیٹ ہوں گے۔",
+    "noStock": "کوئی پروڈکٹ نہیں",
+    "printReceipt": "رسید پرنٹ کریں",
+    "lowStock": "کم اسٹاک: {{items}}"
   },
   "customers": {
     "subtitle": "پروفائل، دورے اور نوٹس۔",
     "search": "نام یا فون سے تلاش کریں",
     "empty": "ابھی کوئی گاہک نہیں۔ پہلا گاہک شامل کریں۔",
-    "add": "گاہک شامل کریں"
+    "add": "گاہک شامل کریں",
+    "new": "نیا",
+    "noMatch": "کوئی گاہک نہیں ملا۔",
+    "noPhone": "فون نہیں",
+    "noShows": "{{n}} بار نہیں آئے",
+    "noShowsLabel": "غیر حاضری",
+    "visits": "وزٹ",
+    "lastVisit": "آخری وزٹ",
+    "visitsLine": "{{n}} وزٹ · آخری {{last}}",
+    "tapToChange": "بدلنے کے لیے ٹیپ کریں",
+    "profile": "گاہک",
+    "book": "بک کریں",
+    "upcoming": "آنے والے",
+    "noUpcoming": "کچھ بک نہیں۔",
+    "history": "وزٹ",
+    "noVisits": "ابھی کوئی وزٹ نہیں۔",
+    "newTitle": "نیا گاہک",
+    "editTitle": "گاہک میں ترمیم",
+    "saved": "گاہک محفوظ ہو گیا",
+    "fields": {
+      "name": "نام",
+      "phone": "فون",
+      "preferences": "پسند",
+      "notes": "نوٹس",
+      "risk": "انتباہ",
+      "marketing": "SMS یا WhatsApp پر آفرز لینا چاہتے ہیں"
+    },
+    "risk": {
+      "allergy": "الرجی",
+      "patch_test": "پیچ ٹیسٹ ضروری",
+      "no_show": "پہلے غیر حاضر"
+    }
   },
   "more": {
     "roleAtBranch": "مالک · {{branch}}",
@@ -268,9 +365,17 @@
       "reports": "رپورٹس",
       "setup": "سیٹ اپ",
       "settings": "ترتیبات",
-      "notifications": "اطلاعات"
+      "notifications": "اطلاعات",
+      "sales": "فروخت",
+      "team": "ٹیم اور لاگ ان",
+      "branch": "برانچ سیٹنگ"
     },
-    "logOut": "لاگ آؤٹ"
+    "logOut": "لاگ آؤٹ",
+    "title": "مزید",
+    "business": "کاروبار",
+    "app": "ایپ",
+    "salonCode": "سیلون کوڈ: {{code}}",
+    "signOut": "سائن آؤٹ"
   },
   "gallery": {
     "title": "تھیم گیلری",
@@ -320,5 +425,323 @@
     "openSheet": "شیٹ کھولیں",
     "showToast": "اطلاع دکھائیں",
     "sheetTitle": "نیچے کی شیٹ"
+  },
+  "roles": {
+    "owner": "مالک",
+    "cashier": "کیشیئر",
+    "staff": "عملہ",
+    "accountant": "اکاؤنٹنٹ"
+  },
+  "units": {
+    "ml": "ملی لیٹر",
+    "g": "گرام",
+    "pcs": "عدد",
+    "pairs": "جوڑا"
+  },
+  "auth": {
+    "salonType": {
+      "gents": "جینٹس سیلون",
+      "ladies": "لیڈیز سیلون اور سپا"
+    },
+    "welcome": {
+      "subtitle": "اپنے سیلون کی قسم چنیں۔ بعد میں بدل سکتے ہیں۔",
+      "gents": "باربر شاپ اور جینٹس سیلون",
+      "ladies": "لیڈیز سیلون، بیوٹی اور سپا"
+    },
+    "fields": {
+      "yourName": "آپ کا نام",
+      "email": "ای میل",
+      "emailPlaceholder": "name@example.com",
+      "password": "پاس ورڈ",
+      "passwordHint": "کم از کم 8 حروف",
+      "confirmPassword": "پاس ورڈ دوبارہ",
+      "newPassword": "نیا پاس ورڈ",
+      "code": "6 ہندسوں کا کوڈ",
+      "salonCode": "سیلون کوڈ",
+      "salonCodeHint": "مالک اسے More میں دیکھ سکتے ہیں",
+      "username": "یوزر نیم"
+    },
+    "signIn": {
+      "title": "خوش آمدید",
+      "subtitle": "اپنا سیلون چلانے کے لیے سائن ان کریں۔",
+      "owner": "مالک",
+      "staff": "عملہ",
+      "action": "سائن ان",
+      "forgot": "پاس ورڈ بھول گئے؟",
+      "createAccount": "نئے ہیں؟ مالک کا اکاؤنٹ بنائیں",
+      "staffHelp": "عملے کے لاگ ان مالک بناتے ہیں۔ ان سے سیلون کوڈ، یوزر نیم اور پاس ورڈ لیں۔"
+    },
+    "signUp": {
+      "title": "اپنا اکاؤنٹ بنائیں",
+      "subtitle": "سیلون کے مالک کے لیے۔ عملے کو بعد میں لاگ ان ملیں گے۔",
+      "action": "اکاؤنٹ بنائیں"
+    },
+    "forgot": {
+      "title": "پاس ورڈ ری سیٹ",
+      "subtitle": "ہم آپ کو 6 ہندسوں کا کوڈ ای میل کریں گے۔",
+      "send": "کوڈ بھیجیں",
+      "enterCode": "{{email}} پر بھیجا گیا کوڈ درج کریں۔",
+      "reset": "نیا پاس ورڈ رکھیں",
+      "resend": "نیا کوڈ بھیجیں",
+      "codeSent": "کوڈ بھیج دیا۔ ای میل دیکھیں۔",
+      "done": "پاس ورڈ بدل گیا۔ آپ سائن ان ہیں۔"
+    }
+  },
+  "setup": {
+    "title": "اپنا سیلون سیٹ کریں",
+    "next": "آگے",
+    "create": "میرا سیلون بنائیں",
+    "steps": {
+      "business": {
+        "title": "آپ کا کاروبار",
+        "subtitle": "مرحلہ 1 از 5"
+      },
+      "country": {
+        "title": "ملک",
+        "subtitle": "مرحلہ 2 از 5"
+      },
+      "mode": {
+        "title": "سیلون کی قسم",
+        "subtitle": "مرحلہ 3 از 5"
+      },
+      "branch": {
+        "title": "پہلی برانچ",
+        "subtitle": "مرحلہ 4 از 5"
+      },
+      "tax": {
+        "title": "ٹیکس اور نقد",
+        "subtitle": "مرحلہ 5 از 5"
+      }
+    },
+    "country": {
+      "uae": "متحدہ عرب امارات",
+      "detail": "درہم (AED)، 5% VAT، دبئی وقت"
+    },
+    "fields": {
+      "businessName": "کاروبار کا نام",
+      "branchName": "برانچ کا نام",
+      "branchNameHint": "مثلاً: البرشاء",
+      "address": "پتہ",
+      "phone": "فون",
+      "opens": "کھلتا ہے",
+      "closes": "بند ہوتا ہے",
+      "days": "کھلے دن",
+      "trn": "ٹیکس رجسٹریشن نمبر (TRN)",
+      "openingCash": "ابھی دراز میں نقد",
+      "openingCashHint": "اختیاری۔ بعد میں برانچ سیٹنگ میں رکھ سکتے ہیں۔"
+    },
+    "tax": {
+      "off": "VAT میں رجسٹرڈ نہیں",
+      "on": "VAT میں رجسٹرڈ",
+      "offDetail": "قیمتوں میں VAT نہیں۔ رسید پر TRN نہیں ہوگا۔",
+      "onDetail": "قیمتوں میں 5% VAT شامل۔ رسیدیں آپ کے TRN کے ساتھ ٹیکس انوائس ہوں گی۔"
+    }
+  },
+  "validation": {
+    "required": "ضروری",
+    "email": "درست ای میل درج کریں",
+    "passwordMin": "کم از کم 8 حروف",
+    "passwordLength": "کم از کم 8 حروف",
+    "passwordMatch": "پاس ورڈ مماثل نہیں",
+    "code": "6 ہندسوں کا کوڈ درج کریں",
+    "salonCode": "4 سے 12 حروف یا ہندسے",
+    "username": "3 سے 20 حروف، ہندسے، نقطے یا ڈیش",
+    "name": "نام درج کریں",
+    "phone": "فون نمبر درج کریں جیسے ‎+971 50 123 4567",
+    "trn": "TRN میں 15 ہندسے ہوتے ہیں",
+    "time": "hh:mm لکھیں، جیسے 09:00",
+    "hours": "بند ہونے کا وقت کھلنے کے بعد ہو",
+    "days": "کم از کم ایک دن چنیں",
+    "number": "صرف پورے ہندسے",
+    "range": "حد سے باہر",
+    "percent": "فیصد درج کریں جیسے 10 یا 12.5",
+    "pickCategory": "کیٹیگری چنیں",
+    "recipeQty": "ہر پروڈکٹ کی مقدار درج کریں",
+    "tooLong": "بہت لمبا"
+  },
+  "errors": {
+    "not_signed_in": "سیشن ختم ہو گیا۔ دوبارہ سائن ان کریں۔",
+    "not_allowed": "آپ کا کردار یہ نہیں کر سکتا۔ مالک سے پوچھیں۔",
+    "already_has_business": "اس اکاؤنٹ کا سیلون پہلے سے ہے۔",
+    "mode_required": "سیلون کی قسم چنیں۔",
+    "trn_required": "VAT کے لیے 15 ہندسوں کا TRN چاہیے۔",
+    "invalid_amount": "رقم چیک کریں۔",
+    "opening_cash_already_set": "ابتدائی نقد پہلے سے درج ہے۔",
+    "category_required": "کیٹیگری چنیں۔",
+    "not_found": "یہ ریکارڈ اب موجود نہیں۔ ریفریش کے لیے نیچے کھینچیں۔",
+    "service_unavailable": "ایک سروس آرکائیو ہے۔ دوسری چنیں۔",
+    "services_required": "کم از کم ایک سروس چنیں۔",
+    "time_required": "وقت چنیں۔",
+    "slot_taken": "یہ وقت ابھی بک ہوا۔ دوسرا چنیں۔",
+    "room_required": "اس سروس کے لیے کمرہ چاہیے۔ ایک چنیں۔",
+    "deposit_method_required": "ڈپازٹ کیسے ملا، چنیں۔",
+    "invalid_status": "کسی نے اسے پہلے ہی بدل دیا۔ ریفریش کریں۔",
+    "reason_required": "وجہ لکھیں (کم از کم 3 حروف)۔",
+    "lines_required": "کم از کم ایک سروس شامل کریں۔",
+    "invalid_line": "ایک لائن درست نہیں۔",
+    "invalid_qty": "مقدار چیک کریں۔",
+    "invalid_discount": "رعایت بل سے زیادہ ہے۔",
+    "invalid_tip": "ٹپ چیک کریں۔",
+    "invalid_payment": "ادائیگی کا طریقہ چیک کریں۔",
+    "payment_mismatch": "ادائیگیوں کا مجموعہ واجب رقم کے برابر ہو۔",
+    "insufficient_stock": "اسٹاک کم ہے:",
+    "period_closed": "وہ مدت بند ہے۔ آج کی تاریخ لیں۔",
+    "username_taken": "یہ یوزر نیم لیا جا چکا ہے۔ دوسرا آزمائیں۔",
+    "weak_password": "کم از کم 8 حروف رکھیں۔",
+    "invalid_username": "یوزر نیم 3 سے 20 حروف، ہندسے، نقطے یا ڈیش۔",
+    "name_required": "نام درج کریں۔",
+    "invalid_commission": "کمیشن 0 سے 100% کے درمیان ہو۔",
+    "wrong_password": "ای میل، یوزر نیم یا پاس ورڈ غلط ہے۔",
+    "disabled": "یہ لاگ ان بند ہے۔ مالک سے پوچھیں۔",
+    "email_taken": "اس ای میل سے اکاؤنٹ پہلے سے ہے۔ سائن ان کریں۔",
+    "no_internet": "کنکشن نہیں۔ انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔",
+    "rate_limited": "بہت زیادہ کوششیں۔ ایک منٹ رک کر دوبارہ کریں۔",
+    "invalid_code": "کوڈ غلط یا پرانا ہے۔ نیا بھیجیں۔",
+    "unknown_salon": "اس کوڈ کا کوئی سیلون نہیں۔ مالک سے تصدیق کریں۔",
+    "confirm_email": "اکاؤنٹ کی تصدیق کے لیے ای میل دیکھیں، پھر سائن ان کریں۔",
+    "category_exists": "اس نام کی کیٹیگری پہلے سے ہے۔",
+    "unknown_setting": "یہ سیٹنگ یہاں نہیں بدل سکتی۔",
+    "invalid_role": "کردار چنیں۔",
+    "unknown": "کچھ غلط ہو گیا۔ دوبارہ کوشش کریں۔"
+  },
+  "sales": {
+    "title": "فروخت",
+    "subtitle": "اس برانچ کی حالیہ فروخت",
+    "empty": "ابھی کوئی فروخت نہیں۔",
+    "number": "فروخت #{{number}}",
+    "paidBy": "{{method}} سے ادائیگی",
+    "refunds": "ریفنڈ",
+    "refund": "ریفنڈ",
+    "refundTitle": "فروخت #{{number}} کا ریفنڈ",
+    "refundable": "{{amount}} تک ریفنڈ ہو سکتا ہے۔",
+    "refundAmount": "ریفنڈ رقم",
+    "tooMuch": "زیادہ سے زیادہ {{amount}} ریفنڈ ہو سکتا ہے۔",
+    "reason": "وجہ",
+    "reasonHint": "ضروری۔ گاہک اور آڈٹ لاگ میں نظر آئے گی۔",
+    "confirmRefund": "{{amount}} ریفنڈ کریں",
+    "refunded": "{{amount}} ریفنڈ ہوا",
+    "status": {
+      "completed": "ادا شدہ",
+      "partially_refunded": "جزوی ریفنڈ",
+      "refunded": "ریفنڈ شدہ"
+    }
+  },
+  "receipt": {
+    "receipt": "رسید",
+    "taxInvoice": "ٹیکس انوائس",
+    "sale": "فروخت",
+    "vatIncluded": "VAT شامل (5%)",
+    "deposit": "ڈپازٹ استعمال",
+    "total": "کل",
+    "paid": "ادا",
+    "refunded": "ریفنڈ",
+    "trn": "TRN",
+    "thanks": "تشریف آوری کا شکریہ۔"
+  },
+  "services": {
+    "title": "سروسز",
+    "add": "سروس شامل کریں",
+    "active": "فعال",
+    "archived": "آرکائیو",
+    "empty": "ابھی کوئی سروس نہیں۔ پہلی شامل کریں۔",
+    "noArchived": "کوئی آرکائیو سروس نہیں۔",
+    "categories": "کیٹیگریز",
+    "needsRoom": "کمرہ چاہیے",
+    "patchTest": "پیچ ٹیسٹ",
+    "newTitle": "نئی سروس",
+    "editTitle": "سروس میں ترمیم",
+    "saved": "سروس محفوظ ہو گئی",
+    "archive": "سروس آرکائیو کریں",
+    "restore": "سروس بحال کریں",
+    "archivedToast": "سروس آرکائیو ہو گئی",
+    "restoredToast": "سروس بحال ہو گئی",
+    "fields": {
+      "name": "سروس کا نام",
+      "category": "کیٹیگری",
+      "price": "قیمت",
+      "duration": "منٹ",
+      "buffer": "صفائی کے منٹ",
+      "room": "کمرہ چاہیے",
+      "roomHint": "صرف خالی کمرے بک ہوں گے۔",
+      "patchTest": "پہلے پیچ ٹیسٹ ضروری",
+      "recipe": "استعمال ہونے والی پروڈکٹس",
+      "recipeHint": "ہر فروخت انہیں اسٹاک سے کم کرتی ہے۔",
+      "categoryName": "کیٹیگری کا نام"
+    },
+    "recipeEmpty": "ابھی کوئی پروڈکٹ نہیں۔",
+    "newItem": "نئی پروڈکٹ",
+    "newItemButton": "نئی پروڈکٹ",
+    "itemName": "پروڈکٹ کا نام",
+    "addItem": "پروڈکٹ شامل کریں",
+    "qtyFor": "{{item}} کتنی",
+    "removeItem": "{{item}} ہٹائیں",
+    "newCategory": "نئی کیٹیگری",
+    "editCategory": "کیٹیگری میں ترمیم",
+    "categorySaved": "کیٹیگری محفوظ ہو گئی",
+    "categoryArchived": "کیٹیگری آرکائیو ہو گئی",
+    "archiveCategory": "کیٹیگری آرکائیو کریں",
+    "countInCategory": "{{count}} سروسز",
+    "iconOption": "آئیکن {{n}}"
+  },
+  "team": {
+    "title": "ٹیم اور لاگ ان",
+    "codeExplain": "عملہ اس سیلون کوڈ اور اپنے یوزر نیم سے سائن ان کرتا ہے۔",
+    "newLogin": "نیا لاگ ان",
+    "create": "لاگ ان بنائیں",
+    "created": "لاگ ان بن گیا: سیلون {{code}} میں {{username}}",
+    "fields": {
+      "name": "پورا نام",
+      "role": "کردار",
+      "username": "یوزر نیم",
+      "password": "پاس ورڈ",
+      "commission": "کمیشن %"
+    },
+    "usernameHint": "وہ سیلون کوڈ {{code}} اور اس یوزر نیم سے سائن ان کریں گے۔",
+    "roleHint": {
+      "cashier": "قطار، فروخت اور گاہک۔ ریفنڈ یا سیٹنگ نہیں۔",
+      "staff": "صرف اپنی قطار اور کمیشن۔ رقم کی اسکرینیں نہیں۔",
+      "accountant": "رقم اور رپورٹس دیکھتا ہے۔ فروخت نہیں کر سکتا۔"
+    },
+    "commission": "کمیشن {{rate}}",
+    "disabled": "بند",
+    "newPassword": "نیا پاس ورڈ",
+    "resetPassword": "نیا پاس ورڈ رکھیں",
+    "passwordReset": "پاس ورڈ بدل گیا",
+    "disable": "لاگ ان بند کریں",
+    "enable": "لاگ ان چالو کریں",
+    "disabledToast": "{{name}} اب سائن ان نہیں کر سکتے",
+    "enabledToast": "{{name}} دوبارہ سائن ان کر سکتے ہیں"
+  },
+  "branch": {
+    "title": "برانچ سیٹنگ",
+    "saved": "سیٹنگ محفوظ ہو گئی",
+    "mode": "سیلون کی قسم",
+    "modeHint": "اس برانچ میں سائن ان سب کے لیے شکل اور الفاظ بدلتا ہے۔",
+    "switchTo": "{{mode}} پر بدلیں",
+    "modeSwitched": "{{mode}} پر بدل دیا",
+    "details": "تفصیلات",
+    "tax": "VAT",
+    "queue": "قطار اور بکنگ",
+    "rules": "قواعد",
+    "fields": {
+      "name": "برانچ کا نام",
+      "address": "پتہ",
+      "phone": "فون",
+      "vat": "VAT میں رجسٹرڈ",
+      "vatHint": "قیمتوں میں 5% VAT شامل اور رسید پر TRN۔",
+      "trn": "TRN (15 ہندسے)",
+      "waitTarget": "انتظار ہدف (منٹ)",
+      "cutoff": "مفت منسوخی (گھنٹے پہلے)",
+      "deposit": "طے شدہ ڈپازٹ",
+      "staffCanSell": "عملہ ادائیگی لے سکتا ہے",
+      "blockStock": "اسٹاک کے بغیر فروخت روکیں",
+      "blockStockHint": "بند ہونے پر فروخت ہو گی اور کم اسٹاک کا انتباہ دکھے گا۔",
+      "openingCash": "رقم"
+    },
+    "openingCash": "ابتدائی نقد",
+    "openingCashHint": "ایپ شروع کرتے وقت دراز میں نقد۔ ایک بار رکھا جاتا ہے۔",
+    "openingCashDone": "ابتدائی نقد درج ہے۔",
+    "setOpeningCash": "ابتدائی نقد محفوظ کریں",
+    "openingCashSaved": "ابتدائی نقد محفوظ ہو گیا"
   }
 }

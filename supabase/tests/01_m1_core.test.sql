@@ -1,7 +1,7 @@
 -- M1 core: tenancy, setup, queue, sales, refunds, deposits, ledger guarantees.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(53);
+select plan(57);
 
 -- ── Test users ──────────────────────────────────────────────────────────────────────────
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
@@ -228,6 +228,27 @@ select throws_ok(format($$ select create_sale('{"branch_id":"%s","lines":[{"serv
   "payments":[{"method":"cash","amount_minor":1500}]}') $$, current_setting('t.a_branch'),
   (select id from services where name = 'Shave' and business_id = current_setting('t.a')::uuid)), '22023', null,
   'blocked when recipe stock is short');
+
+-- ── Booking slots: late closing and past-midnight hours ──────────────────────────────────
+select pg_temp.as_admin();
+update branches set opening_hours = '{"open":"00:00","close":"23:59","days":[0,1,2,3,4,5,6]}'
+where id = current_setting('t.a_branch')::uuid;
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select is((select count(*)::int from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)), 47,
+  'open until 23:59: 30-minute slots stop at 23:00 (no wrap past midnight)');
+select pg_temp.as_admin();
+update branches set opening_hours = '{"open":"18:00","close":"02:00","days":[0,1,2,3,4,5,6]}'
+where id = current_setting('t.a_branch')::uuid;
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select is((select max(slot) filter (where slot < '12:00')
+           from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)), '01:30',
+  'open 18:00 to 02:00: the last slot is 01:30');
+select is((select starts_at from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)
+           where slot = '01:30'),
+          ((current_date + 2)::timestamp + time '01:30') at time zone 'Asia/Dubai',
+  'a slot after midnight starts on the next calendar day');
+select is((select count(*)::int from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)), 16,
+  'open 18:00 to 02:00: 16 half-hour slots (18:00 to 01:30)');
 
 select * from finish();
 rollback;

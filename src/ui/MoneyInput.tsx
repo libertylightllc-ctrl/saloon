@@ -22,6 +22,7 @@ export interface MoneyInputProps {
   error?: string;
   hint?: string;
   placeholder?: string;
+  testID?: string;
 }
 
 const toText = (value: Minor | null, currency: CurrencyCode) =>
@@ -36,6 +37,7 @@ export function MoneyInput({
   error,
   hint,
   placeholder,
+  testID,
 }: MoneyInputProps) {
   const { t } = useTranslation();
   const [text, setText] = useState(() => toText(value, currency));
@@ -44,6 +46,7 @@ export function MoneyInput({
   return (
     <TextField
       label={label}
+      testID={testID}
       value={text}
       placeholder={placeholder ?? formatAmount(0, currency)}
       keyboardType="decimal-pad"
