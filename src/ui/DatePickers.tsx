@@ -1,19 +1,14 @@
 /** MonthSwitcher, DateStrip and TimeSlotGrid — the Barber kit's "Select Date & Time". */
-import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { shiftMonth, type BusinessDate, type MonthKey } from '@/lib/dates';
+import { useDates } from '@/lib/useDates';
 import { spacing, useTheme } from '@/theme';
 
 import { useOnBand } from './layoutContext';
 import { IconButton } from './IconButton';
 import { Text } from './Text';
-
-const toDate = (date: BusinessDate) => {
-  const [y, m, d] = date.split('-').map(Number) as [number, number, number];
-  return new Date(y, m - 1, d);
-};
 
 export function MonthSwitcher({
   value,
@@ -25,6 +20,7 @@ export function MonthSwitcher({
   onBand?: boolean;
 }) {
   const { t } = useTranslation();
+  const dates = useDates();
   const insideBand = useOnBand();
   const onBand = onBandProp ?? insideBand;
   return (
@@ -37,7 +33,7 @@ export function MonthSwitcher({
         onPress={() => onChange(shiftMonth(value, -1))}
       />
       <Text variant="h4" align="center" color={onBand ? 'onPrimary' : 'text'} style={styles.flex}>
-        {format(toDate(`${value}-01`), 'MMMM yyyy')}
+        {dates.day(`${value}-01`, 'MMMM yyyy')}
       </Text>
       <IconButton
         icon="chevronRight"
@@ -61,6 +57,7 @@ export function DateStrip({
 }) {
   const theme = useTheme();
   const { colors } = theme;
+  const names = useDates();
   return (
     <ScrollView
       horizontal
@@ -69,7 +66,6 @@ export function DateStrip({
     >
       {dates.map((date) => {
         const selected = date === value;
-        const day = toDate(date);
         return (
           <Pressable
             key={date}
@@ -77,7 +73,7 @@ export function DateStrip({
             onPress={() => onChange(date)}
             accessibilityRole="button"
             aria-selected={selected}
-            accessibilityLabel={format(day, 'EEEE d MMMM')}
+            accessibilityLabel={names.day(date, 'EEEE d MMMM')}
             style={[
               styles.day,
               {
@@ -92,7 +88,7 @@ export function DateStrip({
               align="center"
               style={{ color: selected ? colors.onPrimary : colors.textSecondary }}
             >
-              {format(day, 'EEE')}
+              {names.day(date, 'EEE')}
             </Text>
             <Text
               variant="h3"
@@ -100,7 +96,7 @@ export function DateStrip({
               tabular
               style={{ color: selected ? colors.onPrimary : colors.text }}
             >
-              {format(day, 'd')}
+              {names.day(date, 'd')}
             </Text>
           </Pressable>
         );

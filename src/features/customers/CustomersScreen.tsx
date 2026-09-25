@@ -1,4 +1,3 @@
-import { formatInTimeZone } from 'date-fns-tz';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { can } from '@/lib/permissions';
+import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Avatar, Button, EmptyState, HeaderBand, ListRow, QueryState, Screen, SearchBar, StatusPill } from '@/ui';
 
@@ -13,6 +13,7 @@ import { useCustomers } from './api';
 
 export function CustomersScreen() {
   const { t } = useTranslation();
+  const dates = useDates();
   const router = useRouter();
   const { business, role } = useWorkspace();
   const [search, setSearch] = useState('');
@@ -67,7 +68,7 @@ export function CustomersScreen() {
                 meta={[
                   t('customers.visitsLine', {
                     n: c.visit_count,
-                    last: c.last_visit_at ? formatInTimeZone(new Date(c.last_visit_at), business.timezone, 'd MMM') : '—',
+                    last: c.last_visit_at ? dates.at(new Date(c.last_visit_at), business.timezone, 'd MMM') : '—',
                   }),
                   ...(c.preferences ? [c.preferences] : []),
                 ]}

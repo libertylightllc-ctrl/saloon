@@ -1,4 +1,3 @@
-import { formatInTimeZone } from 'date-fns-tz';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -6,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
+import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import {
   Avatar,
@@ -43,6 +43,7 @@ function Profile({ name, phone }: { name: string; phone: string | null }) {
 
 export function CustomerScreen() {
   const { t } = useTranslation();
+  const dates = useDates();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { business, role, rules } = useWorkspace();
@@ -83,7 +84,7 @@ export function CustomerScreen() {
                 label={t('customers.lastVisit')}
                 value={
                   customer.last_visit_at
-                    ? formatInTimeZone(new Date(customer.last_visit_at), business.timezone, 'd MMM')
+                    ? dates.at(new Date(customer.last_visit_at), business.timezone, 'd MMM')
                     : '—'
                 }
               />
@@ -148,7 +149,7 @@ export function CustomerScreen() {
                 <ListRow
                   key={a.id}
                   title={a.appointment_services.map((s) => s.name_snapshot).join(' + ') || t('queue.noServices')}
-                  meta={[formatInTimeZone(new Date(a.scheduled_at), business.timezone, 'EEE d MMM · HH:mm')]}
+                  meta={[dates.at(new Date(a.scheduled_at), business.timezone, 'EEE d MMM · HH:mm')]}
                   trailing={<StatusPill status={a.status} />}
                 />
               ))
@@ -161,7 +162,7 @@ export function CustomerScreen() {
                 <ListRow
                   key={s.id}
                   title={t('sales.number', { number: s.number })}
-                  meta={[formatInTimeZone(new Date(s.created_at), business.timezone, 'd MMM yyyy · HH:mm')]}
+                  meta={[dates.at(new Date(s.created_at), business.timezone, 'd MMM yyyy · HH:mm')]}
                   trailing={<Text variant="bodyStrong" tabular>{formatMoney(s.total_minor)}</Text>}
                   chevron={can(role, 'viewSales')}
                   onPress={can(role, 'viewSales') ? () => router.push({ pathname: '/sales/[id]', params: { id: s.id } }) : undefined}

@@ -30,6 +30,7 @@ export function useShareReceipt() {
         phone: branch.phone,
         trn: sale.vat_mode === 'on' ? branch.trn : null,
         timeZone: business.timezone,
+        language: i18n.language,
         rtl: isLanguage(i18n.language) && isRtlLanguage(i18n.language),
         ink: theme.colors.text,
         muted: theme.colors.textSecondary,

@@ -5,8 +5,12 @@
  *
  * Business dates are plain 'YYYY-MM-DD' strings, matching Postgres `date` columns.
  */
-import { format } from 'date-fns';
+import { format, type Locale } from 'date-fns';
+import { ar, enGB, hi } from 'date-fns/locale';
 import { formatInTimeZone, fromZonedTime } from 'date-fns-tz';
+
+import { ur } from './dateLocales/ur';
+import { normalizeDigits } from './money';
 
 export const DEFAULT_TIMEZONE = 'Asia/Dubai';
 
@@ -89,8 +93,28 @@ export function minutesBetween(from: Date, to: Date): number {
   return Math.trunc((to.getTime() - from.getTime()) / 60_000);
 }
 
-/** 'Tue 22 Sep' (English; localised day names come with the screens that show them). */
-export function formatDayLabel(date: BusinessDate): string {
+/** Day and month names follow the app language; unknown languages fall back to English. */
+const LOCALES: Record<string, Locale> = { en: enGB, ar, hi, ur };
+
+export function dateLocale(language?: string): Locale {
+  return LOCALES[language?.split('-')[0] ?? 'en'] ?? enGB;
+}
+
+/**
+ * An instant shown in the branch's time zone ("EEE d MMM · HH:mm"), with names in `language`.
+ * Digits always come out Latin (02-DESIGN-SYSTEM: numbers are never localised).
+ */
+export function formatAt(at: Date | string | number, timeZone: string, pattern: string, language?: string): string {
+  return normalizeDigits(formatInTimeZone(new Date(at), timeZone, pattern, { locale: dateLocale(language) }));
+}
+
+/** A business date ('2026-09-25') with names in `language`; no time zone is involved. */
+export function formatBusinessDate(date: BusinessDate, pattern: string, language?: string): string {
   const [y, m, d] = parts(date);
-  return format(new Date(y, m - 1, d), 'EEE d MMM');
+  return normalizeDigits(format(new Date(y, m - 1, d), pattern, { locale: dateLocale(language) }));
+}
+
+/** 'Tue 22 Sep' — 'الثلاثاء…' in Arabic; names in `language`, digits Latin. */
+export function formatDayLabel(date: BusinessDate, language?: string): string {
+  return formatBusinessDate(date, 'EEE d MMM', language);
 }

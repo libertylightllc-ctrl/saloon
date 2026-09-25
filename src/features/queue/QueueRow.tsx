@@ -1,9 +1,9 @@
-import { formatInTimeZone } from 'date-fns-tz';
 import { useTranslation } from 'react-i18next';
 
 import { useTerms } from '@/features/mode/useTerms';
 import { minutesBetween } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
+import { useDates } from '@/lib/useDates';
 import { semantic } from '@/theme';
 import { Avatar, Button, IconButton, ListRow, StatusPill } from '@/ui';
 
@@ -36,9 +36,10 @@ export function QueueRow({
   onMore?: (item: Appointment) => void;
 }) {
   const { t } = useTranslation();
+  const dates = useDates();
   const terms = useTerms();
   const name = item.customer_name ?? t('queue.guest');
-  const time = formatInTimeZone(new Date(item.scheduled_at), timeZone, 'HH:mm');
+  const time = dates.at(new Date(item.scheduled_at), timeZone, 'HH:mm');
   const action = onAction ? primaryAction(item.status) : null;
 
   const when = (() => {
@@ -51,7 +52,7 @@ export function QueueRow({
       return `${time} · ${until >= 0 ? t('queue.inMinutes', { minutes: until }) : t('queue.late', { minutes: -until })}`;
     }
     if (item.status === 'in_progress' && item.started_at) {
-      return t('queue.startedAt', { time: formatInTimeZone(new Date(item.started_at), timeZone, 'HH:mm') });
+      return t('queue.startedAt', { time: dates.at(new Date(item.started_at), timeZone, 'HH:mm') });
     }
     return time;
   })();

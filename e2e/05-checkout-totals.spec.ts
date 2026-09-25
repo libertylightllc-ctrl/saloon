@@ -1,6 +1,9 @@
 import type { Page } from '@playwright/test';
 
-import { createOwner, latestSale, vatInclusive, type Mode } from './support/api';
+import type { Month } from 'date-fns';
+import { ar } from 'date-fns/locale';
+
+import { createOwner, dubaiDate, latestSale, vatInclusive, type Mode } from './support/api';
 import { SERVICE } from './support/catalog';
 import { expect, test } from './support/fixtures';
 import { back, expectMoney, field, id, ownerOn, snap, tab, text } from './support/ui';
@@ -95,5 +98,9 @@ test('the same checkout in Arabic (right-to-left), VAT on', async ({ page, mode 
   await expectSaleRow(owner.branchId, true, r, split);
   await tab(page, 'index');
   await expectMoney(page, 'kpi-sales-value', r.due);
+  // The date under the greeting uses Arabic day and month names, with 0-9 digits.
+  const month = ar.localize.month(Number(dubaiDate(0).slice(5, 7)) - 1 as Month, { width: 'abbreviated' });
+  const day = String(Number(dubaiDate(0).slice(8)));
+  await expect(text(page, new RegExp(`${day} ${month}`)).first()).toBeVisible();
   await snap(page, 'home-arabic', mode);
 });

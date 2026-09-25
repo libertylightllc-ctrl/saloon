@@ -1,4 +1,3 @@
-import { formatInTimeZone } from 'date-fns-tz';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +6,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
+import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Button, Card, FormError, HeaderBand, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
@@ -31,12 +31,13 @@ function Row({ label, value, strong, testID }: { label: string; value: string; s
 
 export function SaleDetailScreen() {
   const { t } = useTranslation();
+  const dates = useDates();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { business, role } = useWorkspace();
   const query = useSale(id);
   const share = useShareReceipt();
   const [refunding, setRefunding] = useState(false);
-  const time = (iso: string) => formatInTimeZone(new Date(iso), business.timezone, 'd MMM yyyy · HH:mm');
+  const time = (iso: string) => dates.at(new Date(iso), business.timezone, 'd MMM yyyy · HH:mm');
 
   return (
     <>

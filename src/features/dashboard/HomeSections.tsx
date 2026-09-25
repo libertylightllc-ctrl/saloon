@@ -1,9 +1,9 @@
-import { formatInTimeZone } from 'date-fns-tz';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
+import { useDates } from '@/lib/useDates';
 import { DirectionView, spacing, useTheme } from '@/theme';
 import { Avatar, Card, ListRow, SectionHeader, StatusPill, Text } from '@/ui';
 
@@ -159,6 +159,7 @@ export function TopServices({ data }: { data: Dashboard }) {
 
 export function RecentActivity({ data }: { data: Dashboard }) {
   const { t } = useTranslation();
+  const dates = useDates();
   const { business } = useWorkspace();
   const items = data.activity ?? [];
   if (items.length === 0) return null;
@@ -172,7 +173,7 @@ export function RecentActivity({ data }: { data: Dashboard }) {
             {item.actor ? `${item.actor}: ${item.summary}` : item.summary}
           </Text>
           <Text variant="small" color="textSecondary" tabular>
-            {formatInTimeZone(new Date(item.at), business.timezone, 'HH:mm')}
+            {dates.at(new Date(item.at), business.timezone, 'HH:mm')}
           </Text>
         </View>
       ))}

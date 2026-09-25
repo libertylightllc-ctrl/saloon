@@ -2,11 +2,11 @@
  * Receipt as HTML → PDF. Phones share the PDF through the share sheet (WhatsApp, email…);
  * the web build opens the print dialog. Colours come from the theme, text from i18n.
  */
-import { formatInTimeZone } from 'date-fns-tz';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { Platform } from 'react-native';
 
+import { formatAt } from '@/lib/dates';
 import { formatMoney } from '@/lib/money';
 
 import type { SaleDetail } from './api';
@@ -18,6 +18,8 @@ export interface ReceiptContext {
   phone: string | null;
   trn: string | null;
   timeZone: string;
+  /** App language: day and month names on the receipt. */
+  language: string;
   rtl: boolean;
   ink: string;
   muted: string;
@@ -66,7 +68,7 @@ export function receiptHtml(sale: SaleDetail, ctx: ReceiptContext): string {
 <div class="muted">${escape([ctx.branchName, ctx.address, ctx.phone].filter(Boolean).join(' · '))}</div>
 ${ctx.trn ? `<div class="muted">${escape(L.trn)} ${escape(ctx.trn)}</div>` : ''}
 <p><strong>${escape(L.title)}</strong> · ${escape(L.sale)} #${sale.number}<br>
-<span class="muted">${formatInTimeZone(new Date(sale.created_at), ctx.timeZone, 'dd MMM yyyy HH:mm')}</span>
+<span class="muted">${formatAt(sale.created_at, ctx.timeZone, 'dd MMM yyyy HH:mm', ctx.language)}</span>
 ${sale.customer_name ? `<br>${escape(L.customer)}: ${escape(sale.customer_name)}` : ''}</p>
 <table>${lines}
 ${row(L.subtotal, formatMoney(sale.subtotal_minor))}

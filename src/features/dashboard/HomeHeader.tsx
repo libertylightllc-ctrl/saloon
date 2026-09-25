@@ -15,11 +15,11 @@ export function partOfDay(timeZone: string, at = new Date()): 'morning' | 'after
 
 /** Gents: avatar + greeting inside the violet band. Ladies: coral wordmark row on blush. */
 export function HomeTop({ subline }: { subline: string }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const { member, business, branch } = useWorkspace();
   const greeting = t(`home.greeting.${partOfDay(business.timezone)}`, { name: member.display_name });
-  const place = `${branch.name} · ${formatDayLabel(businessDate(new Date(), business.timezone))}`;
+  const place = `${branch.name} · ${formatDayLabel(businessDate(new Date(), business.timezone), i18n.language)}`;
 
   if (theme.variants.homeTop === 'profile') {
     return (

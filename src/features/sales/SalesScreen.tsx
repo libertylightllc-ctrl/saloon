@@ -1,10 +1,10 @@
-import { formatInTimeZone } from 'date-fns-tz';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
+import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { EmptyState, HeaderBand, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
@@ -12,6 +12,7 @@ import { useRecentSales, type Sale } from './api';
 
 export function SalesScreen() {
   const { t } = useTranslation();
+  const dates = useDates();
   const router = useRouter();
   const { business, branch } = useWorkspace();
   const query = useRecentSales(branch.id);
@@ -37,14 +38,14 @@ export function SalesScreen() {
           <View style={styles.body}>
             {byDay(data).map(([day, sales]) => (
               <View key={day} style={styles.group}>
-                <SectionHeader title={formatInTimeZone(new Date(`${day}T12:00:00Z`), 'UTC', 'EEE d MMM')} />
+                <SectionHeader title={dates.day(day, 'EEE d MMM')} />
                 {sales.map((s) => (
                   <ListRow
                     key={s.id}
                     testID={`sale-row-${s.number}`}
                     title={t('sales.number', { number: s.number })}
                     meta={[
-                      [formatInTimeZone(new Date(s.created_at), business.timezone, 'HH:mm'), s.customer_name ?? t('queue.guest')].join(' · '),
+                      [dates.at(new Date(s.created_at), business.timezone, 'HH:mm'), s.customer_name ?? t('queue.guest')].join(' · '),
                     ]}
                     badges={s.status !== 'completed' ? <StatusPill status="reversed" label={t(`sales.status.${s.status}`)} /> : undefined}
                     trailing={
