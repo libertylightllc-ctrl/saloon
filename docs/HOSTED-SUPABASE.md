@@ -98,8 +98,9 @@ Order on the day:
    Vercel → Project → Settings → Environment Variables.
 4. Me: a smoke test against the hosted project (sign up, setup, a sale, Accounts balanced), then
    `git push origin v1-web` and `git push origin ready-for-main:main`. Vercel deploys the new app.
-5. Rolling back is one command away: `git push origin v1-web^{commit}:main --force-with-lease` would put the old app
-   back (only if ever needed, and only with your go-ahead).
+5. Rolling back, if ever needed (only with your go-ahead): Vercel → Deployments → the last old deployment →
+   **Instant Rollback** puts the old site back in seconds; the code can then be restored with a normal commit that
+   brings back the `v1-web` files — no force-push.
 
 Side effects to expect: the old repo's GitHub Actions (`pages.yml` for GitHub Pages, `mobile.yml` for Android
 builds) are not part of the new app, so they stop running; the last GitHub Pages deployment stays online until
