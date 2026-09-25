@@ -601,6 +601,7 @@
     "category_exists": "A category with that name already exists.",
     "unknown_setting": "That setting cannot be changed here.",
     "invalid_role": "Pick a role.",
+    "server_busy": "The server is taking too long. Try again in a moment.",
     "unknown": "Something went wrong. Try again."
   },
   "sales": {

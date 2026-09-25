@@ -75,6 +75,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [notice, setNotice] = useState<ErrorCode | null>(null);
   const userId = session?.user.id ?? null;
   const loadedFor = useRef<string | null>(null);
+  /**
+   * Bumped whenever the signed-in person changes (sign-out, another sign-in) and on every load.
+   * A membership load that finishes after that belongs to the past and is dropped — otherwise a
+   * slow answer could put a signed-out device, or the next person on a shared phone, into the
+   * previous person's salon.
+   */
+  const generation = useRef(0);
+  const currentUser = useRef<string | null>(null);
 
   const signOut = useCallback(async () => {
     // The audit row is sent with the current token; the local session is cleared right away so a
@@ -90,8 +98,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const reload = useCallback(async () => {
     if (!userId) return;
+    const mine = ++generation.current;
+    const stale = () => mine !== generation.current || currentUser.current !== userId;
     try {
       const next = await loadMembership(userId);
+      if (stale()) return;
       if (next.member && !next.member.active) {
         setNotice('disabled');
         await signOut();
@@ -100,18 +111,27 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       setLoaded(next);
       setStatus(next.member ? 'ready' : 'needsSetup');
     } catch (error) {
+      if (stale()) return;
       setNotice(errorCode(error));
       setStatus('error');
     }
   }, [userId, signOut]);
 
   useEffect(() => {
+    const follow = (next: Session | null) => {
+      const user = next?.user.id ?? null;
+      if (user !== currentUser.current) {
+        currentUser.current = user;
+        generation.current++;
+      }
+      setSession(next);
+    };
     supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
+      follow(data.session);
       if (!data.session) setStatus('signedOut');
     });
     const { data } = supabase.auth.onAuthStateChange((event, next) => {
-      setSession(next);
+      follow(next);
       if (!next) {
         loadedFor.current = null;
         setLoaded({ member: null, business: null, branch: null, employeeId: null });
@@ -143,7 +163,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const channel = supabase
       .channel(`session-${memberId}`)
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'branches', filter: `id=eq.${branchId}` },
-        (payload) => setLoaded((prev) => ({ ...prev, branch: { ...prev.branch!, ...(payload.new as Branch) } })))
+        (payload) =>
+          setLoaded((prev) => (prev.branch?.id === branchId ? { ...prev, branch: { ...prev.branch, ...(payload.new as Branch) } } : prev)))
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'members', filter: `id=eq.${memberId}` },
         () => void reload())
       .subscribe();

@@ -16,6 +16,14 @@ describe('errorCode', () => {
     expect(errorCode(new Error('Token has expired or is invalid'))).toBe('invalid_code');
   });
 
+  it('tells a slow or failing server apart from a wrong password', () => {
+    // GoTrue's own deadline (504), a database statement timeout and a gateway error.
+    expect(errorCode({ message: 'Processing this request timed out, please retry after a moment.', status: 504 })).toBe('server_busy');
+    expect(errorCode({ message: 'canceling statement due to statement timeout', code: '57014' })).toBe('server_busy');
+    expect(errorCode({ message: 'An invalid response was received from the upstream server', status: 502 })).toBe('server_busy');
+    expect(errorCode({ message: 'Invalid login credentials', status: 400 })).toBe('wrong_password');
+  });
+
   it('falls back to permission and unknown', () => {
     expect(errorCode({ message: 'permission denied for table services', code: '42501' })).toBe('not_allowed');
     expect(errorCode(new Error('something odd'))).toBe('unknown');

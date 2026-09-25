@@ -109,17 +109,28 @@ begin
 end;
 $$;
 
+-- The short code staff type to sign in: up to 8 letters of the name + a few digits
+-- ("albarsha07"). Longer numbers are tried as a prefix fills up, and a crowded prefix falls back
+-- to 6 letters + 6 random characters, so the search always ends quickly.
 create function public.unique_business_code(p_name text) returns text
 language plpgsql volatile security definer set search_path = public as $$
 declare
   base text := left(regexp_replace(lower(coalesce(p_name, '')), '[^a-z0-9]', '', 'g'), 8);
   candidate text;
+  digits int;
 begin
   if length(base) < 3 then
     base := 'salon';
   end if;
+  for attempt in 0..29 loop
+    digits := 2 + attempt / 10;
+    candidate := base || lpad(floor(random() * 10 ^ digits)::bigint::text, digits, '0');
+    if not exists (select 1 from businesses where code = candidate) then
+      return candidate;
+    end if;
+  end loop;
   loop
-    candidate := base || lpad((floor(random() * 100))::int::text, 2, '0');
+    candidate := left(base, 6) || substr(md5(gen_random_uuid()::text), 1, 6);
     exit when not exists (select 1 from businesses where code = candidate);
   end loop;
   return candidate;
@@ -144,6 +155,9 @@ begin
   if v_user is null then
     raise exception 'not_signed_in' using errcode = '28000';
   end if;
+  -- One setup at a time per owner: a double tap or a retry after a timeout must not create two
+  -- salons (both requests would pass the check below before either had committed).
+  perform pg_advisory_xact_lock(hashtextextended('create_business:' || v_user::text, 0));
   if exists (select 1 from members where user_id = v_user) then
     raise exception 'already_has_business' using errcode = '23505';
   end if;
@@ -157,10 +171,20 @@ begin
     raise exception 'trn_required' using errcode = '22023';
   end if;
 
-  v_code := public.unique_business_code(p ->> 'business_name');
-  insert into businesses (name, code, created_by, is_demo)
-  values (btrim(p ->> 'business_name'), v_code, v_user, coalesce((p ->> 'is_demo')::boolean, false))
-  returning id into v_business;
+  -- Two salons signing up at the same moment can draw the same free code; the second draws again.
+  for attempt in 1..5 loop
+    v_code := public.unique_business_code(p ->> 'business_name');
+    begin
+      insert into businesses (name, code, created_by, is_demo)
+      values (btrim(p ->> 'business_name'), v_code, v_user, coalesce((p ->> 'is_demo')::boolean, false))
+      returning id into v_business;
+      exit;
+    exception when unique_violation then
+      if attempt = 5 then
+        raise;
+      end if;
+    end;
+  end loop;
 
   insert into branches (business_id, name, mode, address, phone, opening_hours, vat_mode, trn, settings)
   values (

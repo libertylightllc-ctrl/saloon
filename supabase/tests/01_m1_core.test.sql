@@ -1,7 +1,7 @@
 -- M1 core: tenancy, setup, queue, sales, refunds, deposits, ledger guarantees.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(57);
+select plan(60);
 
 -- ── Test users ──────────────────────────────────────────────────────────────────────────
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
@@ -249,6 +249,21 @@ select is((select starts_at from available_slots(current_setting('t.a_branch')::
   'a slot after midnight starts on the next calendar day');
 select is((select count(*)::int from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)), 16,
   'open 18:00 to 02:00: 16 half-hour slots (18:00 to 01:30)');
+
+-- ── Salon codes never run out ───────────────────────────────────────────────────────────
+select pg_temp.as_admin();
+insert into businesses (name, code) select 'Crowded Salon ' || n, 'crowdeds' || lpad(n::text, 2, '0') from generate_series(0, 99) n;
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select matches(unique_business_code('Crowded Salon'), '^crowdeds[0-9]{3,4}$',
+  'all 100 two-digit codes taken: a longer number is used');
+select pg_temp.as_admin();
+insert into businesses (name, code)
+  select 'Crowded Salon', 'crowdeds' || lpad(n::text, 3, '0') from generate_series(0, 999) n
+  union all select 'Crowded Salon', 'crowdeds' || lpad(n::text, 4, '0') from generate_series(0, 9999) n;
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select matches(unique_business_code('Crowded Salon'), '^crowde[0-9a-f]{6}$',
+  'every numbered code taken: 6 letters + 6 random characters, and the search ends');
+select matches(unique_business_code('!!'), '^salon[0-9]{2,4}$', 'a name without letters gets a salon… code');
 
 select * from finish();
 rollback;

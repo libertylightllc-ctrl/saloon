@@ -10,7 +10,7 @@ export const ERROR_CODES = [
   'payment_mismatch', 'insufficient_stock', 'period_closed', 'username_taken', 'weak_password', 'invalid_username',
   'name_required', 'invalid_commission', 'wrong_password', 'disabled', 'email_taken', 'no_internet',
   'rate_limited', 'invalid_code', 'unknown_salon', 'confirm_email', 'category_exists', 'unknown_setting',
-  'invalid_role', 'unknown',
+  'invalid_role', 'server_busy', 'unknown',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];
@@ -33,6 +33,15 @@ export function errorCode(error: unknown): ErrorCode {
   const message = typeof e.message === 'string' ? e.message : String(error);
   if (/failed to fetch|network request failed|networkerror|fetch failed|load failed/i.test(message)) {
     return 'no_internet';
+  }
+  // Gateway / auth / database timeouts and 5xx: the request reached a server that was too slow.
+  const status = Number((error as { status?: unknown }).status);
+  if (
+    status >= 500 ||
+    e.code === '57014' ||
+    /timed out|statement timeout|deadline exceeded|upstream server|bad gateway|gateway timeout/i.test(message)
+  ) {
+    return 'server_busy';
   }
   if (/invalid login credentials/i.test(message)) return 'wrong_password';
   if (/banned/i.test(message)) return 'disabled';
