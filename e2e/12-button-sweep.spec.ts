@@ -172,6 +172,8 @@ function report(mode: Mode, role: string, rows: Row[]) {
 }
 
 test.describe.configure({ timeout: 2_400_000 });
+// The sweep writes its own report; a trace over hundreds of page loads runs to gigabytes.
+test.use({ trace: 'off', screenshot: 'off' });
 
 test('owner: every button on every screen does something visible', { tag: '@sweep' }, async ({ page, mode }) => {
   const owner = await createOwner(mode, { openingCash: 10_000 });
