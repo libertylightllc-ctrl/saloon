@@ -21,7 +21,8 @@ const MATRIX = {
   noShowOrCancel: ['owner', 'cashier'],
   manageUsers: ['owner'],
   manageBranch: ['owner'],
-  viewActivity: ['owner', 'cashier', 'accountant'],
+  viewActivity: ['owner', 'accountant'],
+  viewAccounting: ['owner', 'accountant'],
 } as const satisfies Record<string, readonly Role[]>;
 
 export type Capability = keyof typeof MATRIX;

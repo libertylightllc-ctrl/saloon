@@ -21,6 +21,7 @@ export function MoreScreen() {
   const business_rows = [
     { key: 'services', icon: 'scissors', href: '/services', show: can(role, 'viewServices') },
     { key: 'sales', icon: 'receipt', href: '/sales', show: can(role, 'viewSales') },
+    { key: 'accounts', icon: 'calculator', href: '/accounts', show: can(role, 'viewAccounting') },
     { key: 'team', icon: 'users', href: '/settings/team', show: can(role, 'manageUsers') },
     { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch') },
   ] as const;

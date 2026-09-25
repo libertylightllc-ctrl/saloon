@@ -20,6 +20,14 @@ describe('tabsFor', () => {
 });
 
 describe('can', () => {
+  it('shows accounts and history to the owner and the accountant only', () => {
+    expect(can('owner', 'viewAccounting')).toBe(true);
+    expect(can('accountant', 'viewAccounting')).toBe(true);
+    expect(can('cashier', 'viewAccounting')).toBe(false);
+    expect(can('staff', 'viewAccounting')).toBe(false);
+    expect(can('cashier', 'viewActivity')).toBe(false);
+  });
+
   it('lets only the owner refund, manage users and switch the salon type', () => {
     expect(can('owner', 'refund')).toBe(true);
     expect(can('cashier', 'refund')).toBe(false);

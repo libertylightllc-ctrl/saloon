@@ -29,6 +29,8 @@ export default defineConfig<Options>({
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
     actionTimeout: 15_000,
+    // E2E_SLOWMO=400 slows every step down so a person can watch a headed run.
+    launchOptions: { slowMo: Number(process.env.E2E_SLOWMO ?? 0) },
   },
   projects: [
     { name: 'gents', use: { mode: 'gents' } },

@@ -43,3 +43,38 @@ One line per decision. Newest at the bottom. Claude Code adds to this when a doc
 - 2026-09-24 · Shadows use `boxShadow` with the tinted values from the spec so the tint shows on iOS, Android and web (plain `elevation` is grey on Android).
 - 2026-09-24 · Employee colours come from a `staffColours` token palette; no colour literals outside `src/theme/`. A lint rule also blocks literal text in title/label/placeholder-style props.
 - 2026-09-24 · The "Save sale" success sheet shows the sale number, total and payment method with a spring check animation; with Reduce Motion on it appears in its final state.
+
+## M1 — working core
+- 2026-09-25 · Staff sign in with **salon code + username + password**. The code is the business's short unique `code` (shown to the owner under More and Team). Auth stores staff as `username@code.staff.internal`; staff never see that address.
+- 2026-09-25 · A wrong salon code gets the same "Wrong email, username or password" message as a wrong password, so the sign-in never reveals which salons exist.
+- 2026-09-25 · One business per owner account in M1 (`create_business` refuses a second). Multi-business owners come with M5.
+- 2026-09-25 · Staff cannot read the customer book (01-PRODUCT role matrix). Appointments carry `customer_name`, so a barber still sees who is next.
+- 2026-09-25 · Accountant logins get Home and More only in M1; their reports arrive with M3.
+- 2026-09-25 · Password reset uses a **6-digit code by email** (custom recovery template), not a link — works the same on phones and web with no deep-link setup. The code and new password are checked on a detached client; the device signs in only after the new password is saved.
+- 2026-09-25 · Deposits: cancelling at least `cancel_cutoff_hours` (default 12) before the start refunds the deposit; later cancels and no-shows keep it. A deposit left over after a sale is refunded, never kept silently.
+- 2026-09-25 · Demo seed creates both demo businesses through the real RPCs; demo sales are then backdated with one direct UPDATE of dates (seed only), so Home and reports have history.
+- 2026-09-25 · Seed catalogue names are English (data, not UI text); owners rename them.
+- 2026-09-25 · Local analytics container is disabled in `supabase/config.toml` (it failed its health check on this Mac and is not needed).
+- 2026-09-25 · Supabase CLI pinned as a dev dependency (2.118.0) so `npx supabase` cannot drift to a version that needs new images.
+- 2026-09-25 · Booking slots are every 30 minutes from opening. Opening hours that close at or before they open run past midnight (18:00 → 02:00); slots return their exact `starts_at`.
+- 2026-09-25 · Requests are always attempted (TanStack `networkMode: 'always'`): offline shows "No connection" with a retry instead of a paused spinner. A failed background refresh keeps the data on screen and shows the error above it.
+- 2026-09-25 · Timeouts and 5xx answers show "The server is taking too long" (`server_busy`), never "wrong password" or "something went wrong".
+- 2026-09-25 · Sign-out clears the local session immediately; the audit row is sent alongside, so a closed app or a slow network cannot leave a phone signed in.
+- 2026-09-25 · The sign-in screen reopens on the tab the device last used (owner or staff), with the salon code remembered for staff.
+- 2026-09-25 · Accessibility state uses `aria-*` props (`aria-selected`, `aria-checked`, `aria-disabled`) so it reaches screen readers on web as well as native.
+- 2026-09-25 · E2E runs on Expo web with Playwright against the local stack; every flow runs in gents and ladies. Keys are read from `supabase status` at start-up — none are stored in the repo.
+- 2026-09-25 · Salon codes: up to 8 letters of the business name + 2 digits, growing to 3–4 digits as a prefix fills; a very crowded prefix gets 6 letters + 6 random characters. Simultaneous sign-ups that draw the same code retry; `create_business` holds a per-owner lock so a double submit can never create two salons.
+- 2026-09-25 · Session loads are generation-checked: a membership answer that arrives after sign-out or after another person signs in is dropped.
+- 2026-09-25 · Day and month names follow the app language through date-fns locales (ar, hi, en-GB, and a small custom Urdu locale since date-fns has none). Digits are always 0-9. Stored dates (`yyyy-MM-dd`) never use a locale.
+- 2026-09-25 · Staff without "Staff can take payments" do not get Complete on a visit (Complete opens checkout); the cashier or owner completes and takes payment. They can still start visits.
+- 2026-09-25 · Hidden tabs are also guarded by role on the screen itself, so a link or typed address cannot open them.
+- 2026-09-25 · Back on a screen with no history (refreshed page, deep link) goes to its parent screen (`parentPath`), never nowhere.
+- 2026-09-25 · Web "Print receipt" prints the receipt HTML from a hidden frame (expo-print on web only prints the whole page). Phones share a PDF as before.
+- 2026-09-25 · Bottom sheets are modal dialogs for assistive tech (`role="dialog"`, `aria-modal`); the backdrop is announced as "Close" in the app language.
+- 2026-09-25 · Button sweep (`npx playwright test --grep @sweep`, ~20 min) taps every visible button per screen, mode and role and writes `e2e-results/button-sweep-<mode>-<role>.md`. It runs separately from the main suite because every tap reloads the screen.
+- 2026-09-25 · Toasts: the provider owns one timer per toast and a timer only clears its own toast; the animation is visual only. One toast at a time, newest wins.
+- 2026-09-25 · Owner's request: the owner account shows the calculations, accounting and history now (a read-only slice of M4). More → Accounts & history: Overview (how today's expected cash is made up; this month's revenue, costs, result, VAT and tips; balanced check), Journal, Trial balance ("Balanced: Yes"), History (activity + sign-ins). Owner and the read-only accountant (01-PRODUCT §2); cashier and staff neither see nor reach it. Close period and CSV export stay in M4.
+- 2026-09-25 · History (audit log) is readable by owner and accountant only; the cashier's Home no longer shows recent activity (was readable by cashiers before).
+- 2026-09-25 · App roles have no TRUNCATE/TRIGGER/REFERENCES on any table (Supabase grants them by default; TRUNCATE ignores row level security). A SQL test checks it.
+- 2026-09-25 · Local Docker VM runs with 4 CPUs / 6 GB: with 2 CPUs the local auth server hit its 10 s deadline (504) while three test browsers ran.
+- 2026-09-25 · `supabase/checks/health.sql`: table security, row counts and 12 integrity checks (balanced journal, every sale/refund/deposit posted, payments = totals, stock = movements…). Run: `docker exec -i supabase_db_salon-app psql -U postgres < supabase/checks/health.sql`.

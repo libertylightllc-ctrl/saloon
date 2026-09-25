@@ -236,7 +236,7 @@ create policy "owners and accountants read journal lines" on public.journal_line
     where e.id = entry_id and public.has_role(e.business_id, array['owner', 'accountant']::public.member_role[])
   ));
 
-create policy "owners and cashiers read activity" on public.audit_log
+create policy "owners and accountants read activity" on public.audit_log
   for select to authenticated
-  using (public.has_role(business_id, array['owner', 'cashier', 'accountant']::public.member_role[])
+  using (public.has_role(business_id, array['owner', 'accountant']::public.member_role[])
          and (branch_id is null or public.can_use_branch(branch_id)));

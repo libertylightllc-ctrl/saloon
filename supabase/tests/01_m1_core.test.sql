@@ -1,7 +1,7 @@
 -- M1 core: tenancy, setup, queue, sales, refunds, deposits, ledger guarantees.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(60);
+select plan(70);
 
 -- ── Test users ──────────────────────────────────────────────────────────────────────────
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
@@ -249,6 +249,34 @@ select is((select starts_at from available_slots(current_setting('t.a_branch')::
   'a slot after midnight starts on the next calendar day');
 select is((select count(*)::int from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)), 16,
   'open 18:00 to 02:00: 16 half-hour slots (18:00 to 01:30)');
+
+-- ── Owner's books: read-only accounting, history only for owner/accountant ───────────────
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select is((select sum(debit_minor) - sum(credit_minor) from account_totals(current_setting('t.a')::uuid)), 0::numeric,
+  'owner: account totals over all time balance (debits = credits)');
+select is((select sum(amount_minor) from cash_breakdown(current_setting('t.a_branch')::uuid)),
+          expected_cash(current_setting('t.a_branch')::uuid)::numeric,
+  'owner: cash brought forward + today''s cash movements = expected cash');
+select ok((select count(*) > 0 from audit_log where business_id = current_setting('t.a')::uuid), 'owner reads the history');
+select ok(jsonb_typeof(dashboard_today(current_setting('t.a_branch')::uuid) -> 'activity') = 'array',
+  'owner Home has recent activity');
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');
+select throws_ok(format('select * from account_totals(%L)', current_setting('t.a')), '42501', null,
+  'cashier cannot read account totals');
+select throws_ok(format('select * from cash_breakdown(%L)', current_setting('t.a_branch')), '42501', null,
+  'cashier cannot read the cash calculation');
+select is((select count(*)::int from audit_log where business_id = current_setting('t.a')::uuid), 0,
+  'cashier cannot read the history');
+select is((select count(*)::int from journal_lines), 0, 'cashier cannot read the journal');
+select ok(dashboard_today(current_setting('t.a_branch')::uuid) -> 'activity' = 'null'::jsonb
+          or not (dashboard_today(current_setting('t.a_branch')::uuid) ? 'activity')
+          or dashboard_today(current_setting('t.a_branch')::uuid) ->> 'activity' is null,
+  'cashier Home has no activity feed');
+select pg_temp.as_admin();
+select is((select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
+           where n.nspname = 'public' and c.relkind = 'r'
+             and (has_table_privilege('authenticated', c.oid, 'TRUNCATE') or has_table_privilege('anon', c.oid, 'TRUNCATE'))), 0,
+  'no app role can TRUNCATE any table (TRUNCATE ignores row level security)');
 
 -- ── Salon codes never run out ───────────────────────────────────────────────────────────
 select pg_temp.as_admin();

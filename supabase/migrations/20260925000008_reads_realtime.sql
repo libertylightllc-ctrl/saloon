@@ -77,12 +77,13 @@ begin
             from sale_lines sl join sales s on s.id = sl.sale_id
             where sl.employee_id = e.id and s.business_date = v_today and s.branch_id = p_branch) x on true
           where e.branch_id = p_branch and e.active and e.role_title <> 'cashier'), '[]'),
-      'activity', coalesce((select jsonb_agg(jsonb_build_object('summary', al.summary, 'at', al.created_at,
-            'actor', mem.display_name) order by al.created_at desc)
+      -- History is for the owner (and the read-only accountant), not the front desk.
+      'activity', case when m.role in ('owner', 'accountant') then coalesce((select jsonb_agg(jsonb_build_object(
+            'summary', al.summary, 'at', al.created_at, 'actor', mem.display_name) order by al.created_at desc)
           from (select * from audit_log
                 where business_id = b.business_id and (branch_id = p_branch or branch_id is null)
                 order by created_at desc limit 6) al
-          left join members mem on mem.id = al.actor_member_id), '[]')
+          left join members mem on mem.id = al.actor_member_id), '[]') end
     );
   end if;
 

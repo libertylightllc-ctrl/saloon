@@ -1,8 +1,10 @@
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
+import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { DirectionView, spacing, useTheme } from '@/theme';
 import { Avatar, Card, ListRow, SectionHeader, StatusPill, Text } from '@/ui';
@@ -160,12 +162,17 @@ export function TopServices({ data }: { data: Dashboard }) {
 export function RecentActivity({ data }: { data: Dashboard }) {
   const { t } = useTranslation();
   const dates = useDates();
-  const { business } = useWorkspace();
+  const { business, role } = useWorkspace();
+  const router = useRouter();
   const items = data.activity ?? [];
   if (items.length === 0) return null;
   return (
     <View style={styles.block}>
-      <SectionHeader title={t('home.recentActivity')} />
+      <SectionHeader
+        title={t('home.recentActivity')}
+        actionLabel={can(role, 'viewAccounting') ? t('home.viewAuditTrail') : undefined}
+        onAction={can(role, 'viewAccounting') ? () => router.push({ pathname: '/accounts', params: { tab: 'history' } }) : undefined}
+      />
       {items.map((item, i) => (
         <View key={`${item.at}-${i}`} style={styles.activity}>
           <Avatar name={item.actor ?? '—'} size={32} />

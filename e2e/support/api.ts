@@ -215,3 +215,10 @@ export async function sellService(client: SupabaseClient, owner: Owner, serviceN
   if (saleError) throw saleError;
   return data as { sale_id: string; number: number; total_minor: number };
 }
+
+export async function refundSale(owner: Owner, saleId: string, amount: number, method = 'cash') {
+  const { error } = await owner.client.rpc('refund_sale', {
+    p: { sale_id: saleId, amount_minor: amount, method, reason: 'Test refund', idempotency_key: crypto.randomUUID() },
+  });
+  if (error) throw error;
+}
