@@ -1,7 +1,7 @@
 import { createOwner, createStaff } from './support/api';
 import { uid } from './support/env';
 import { expect, test, THEME } from './support/fixtures';
-import { expectTheme, field, id, ownerOn, snap, staffOn, tab, text, visibleTabs } from './support/ui';
+import { expectTheme, field, id, idStarts, ownerOn, snap, staffOn, tab, text, visibleTabs } from './support/ui';
 
 test('owner creates a cashier login; the cashier sees cashier tabs in the branch theme', async ({ page, mode, device }) => {
   const owner = await createOwner(mode);
@@ -53,10 +53,26 @@ test('owner creates a cashier login; the cashier sees cashier tabs in the branch
 test('a staff login sees only its own tabs and no money', async ({ page, mode }) => {
   const owner = await createOwner(mode, { openingCash: 30_000 });
   const staff = await createStaff(owner, 'staff');
+  // A visit in progress: staff may start visits, but Complete (checkout) is for people who take payment.
+  const { data: visit } = await owner.client.rpc('create_appointment', {
+    p: { branch_id: owner.branchId, kind: 'walk_in', guest_name: 'Walk-in guest', service_ids: [] },
+  });
+  await owner.client.rpc('start_service', { p_id: visit as string });
   await staffOn(page, mode, owner.code, staff.username, staff.password);
   await expectTheme(page, mode);
   expect(await visibleTabs(page)).toEqual(['index', 'queue', 'more']);
   await expect(id(page, 'kpi-expected-cash')).toHaveCount(0);
+  await tab(page, 'queue');
+  await expect(idStarts(page, 'queue-row-')).toContainText('Walk-in guest');
+  await expect(idStarts(page, 'queue-complete-')).toHaveCount(0);
+  await idStarts(page, 'queue-more-').click();
+  await expect(page.getByRole('button', { name: 'Complete', exact: true })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  // Hidden tabs cannot be opened by address either.
+  for (const path of ['/sale', '/customers', '/sales', '/settings/team']) {
+    await page.goto(path);
+    await expect(id(page, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  }
   await tab(page, 'more');
   await expect(id(page, 'more-sales')).toHaveCount(0);
   await expect(id(page, 'more-services')).toBeVisible();

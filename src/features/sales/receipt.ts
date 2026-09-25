@@ -82,10 +82,29 @@ ${payments}${refunded}</table>
 </body></html>`;
 }
 
+/**
+ * Web: expo-print ignores the HTML and prints the whole page, so the receipt goes into a hidden
+ * frame of its own and that frame is printed. The frame stays until the next receipt replaces it.
+ */
+function printOnWeb(html: string) {
+  document.querySelector('iframe[data-receipt]')?.remove();
+  const frame = document.createElement('iframe');
+  frame.setAttribute('data-receipt', 'true');
+  frame.setAttribute('aria-hidden', 'true');
+  frame.style.cssText = 'position:fixed;width:0;height:0;border:0;opacity:0;pointer-events:none';
+  document.body.appendChild(frame);
+  const doc = frame.contentDocument!;
+  doc.open();
+  doc.write(html);
+  doc.close();
+  frame.contentWindow!.focus();
+  frame.contentWindow!.print();
+}
+
 /** Share as PDF (phones) or print (web). */
 export async function shareReceipt(html: string, dialogTitle: string): Promise<void> {
   if (Platform.OS === 'web') {
-    await Print.printAsync({ html });
+    printOnWeb(html);
     return;
   }
   const { uri } = await Print.printToFileAsync({ html });

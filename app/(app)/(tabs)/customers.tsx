@@ -1,1 +1,10 @@
-export { CustomersScreen as default } from '@/features/customers/CustomersScreen';
+import { Allowed } from '@/features/auth/Allowed';
+import { CustomersScreen } from '@/features/customers/CustomersScreen';
+
+export default function CustomersTab() {
+  return (
+    <Allowed cap="viewCustomers">
+      <CustomersScreen />
+    </Allowed>
+  );
+}

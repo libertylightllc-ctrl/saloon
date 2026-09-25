@@ -5,6 +5,7 @@ import {
   type BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
 import { useEffect, useRef, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -24,6 +25,7 @@ export interface BottomSheetProps {
 /** Radius-28 top corners and a grab handle. Needs <BottomSheetModalProvider> at the root. */
 export function BottomSheet({ open, onClose, title, children, snapPoints }: BottomSheetProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const ref = useRef<BottomSheetModal>(null);
   const shown = useRef(false);
@@ -47,12 +49,17 @@ export function BottomSheet({ open, onClose, title, children, snapPoints }: Bott
           appearsOnIndex={0}
           disappearsOnIndex={-1}
           pressBehavior="close"
+          accessibilityLabel={t('common.close')}
         />
       )}
       backgroundStyle={{ backgroundColor: theme.colors.surface, borderRadius: theme.radius.sheet }}
       handleIndicatorStyle={{ backgroundColor: theme.colors.border, width: 40 }}
     >
+      {/* A modal dialog: screen readers (and VoiceOver via aria-modal) stay inside while it is open. */}
       <BottomSheetScrollView
+        role="dialog"
+        aria-modal
+        aria-label={title}
         contentContainerStyle={[styles.content, { paddingBottom: spacing['2xl'] + insets.bottom }]}
       >
         {title ? (

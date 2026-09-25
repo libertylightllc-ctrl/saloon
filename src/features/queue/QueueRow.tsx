@@ -8,15 +8,7 @@ import { semantic } from '@/theme';
 import { Avatar, Button, IconButton, ListRow, StatusPill } from '@/ui';
 
 import type { Appointment } from './api';
-
-export type RowAction = 'checkIn' | 'start' | 'complete';
-
-export function primaryAction(status: Appointment['status']): RowAction | null {
-  if (status === 'booked') return 'checkIn';
-  if (status === 'waiting') return 'start';
-  if (status === 'in_progress') return 'complete';
-  return null;
-}
+import { primaryAction, type RowAction } from './actions';
 
 export function QueueRow({
   item,
@@ -26,6 +18,7 @@ export function QueueRow({
   busy,
   onAction,
   onMore,
+  canSell = true,
 }: {
   item: Appointment;
   now: Date;
@@ -34,13 +27,15 @@ export function QueueRow({
   busy?: boolean;
   onAction?: (item: Appointment, action: RowAction) => void;
   onMore?: (item: Appointment) => void;
+  /** False for staff when the branch does not let them take payments. */
+  canSell?: boolean;
 }) {
   const { t } = useTranslation();
   const dates = useDates();
   const terms = useTerms();
   const name = item.customer_name ?? t('queue.guest');
   const time = dates.at(new Date(item.scheduled_at), timeZone, 'HH:mm');
-  const action = onAction ? primaryAction(item.status) : null;
+  const action = onAction ? primaryAction(item.status, canSell) : null;
 
   const when = (() => {
     if (item.status === 'waiting') {

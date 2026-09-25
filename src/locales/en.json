@@ -28,7 +28,8 @@
     "loading": "Loading",
     "new": "New",
     "retry": "Try again",
-    "save": "Save"
+    "save": "Save",
+    "close": "Close"
   },
   "status": {
     "booked": "Booked",

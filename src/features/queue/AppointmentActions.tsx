@@ -16,7 +16,7 @@ export function AppointmentActions({ item, onClose }: { item: Appointment | null
   const { t } = useTranslation();
   const router = useRouter();
   const toast = useToast();
-  const { branch, role } = useWorkspace();
+  const { branch, role, rules } = useWorkspace();
   const action = useQueueAction(branch.id);
   const [cancelling, setCancelling] = useState(false);
   const [reason, setReason] = useState('');
@@ -78,7 +78,7 @@ export function AppointmentActions({ item, onClose }: { item: Appointment | null
           {item?.status === 'booked' ? (
             <Button label={t('queue.actions.start')} variant="secondary" loading={action.isPending} onPress={() => run('start')} />
           ) : null}
-          {item?.status === 'in_progress' ? (
+          {item?.status === 'in_progress' && can(role, 'sell', rules) ? (
             <Button
               label={t('queue.actions.complete')}
               onPress={() => {
@@ -104,7 +104,7 @@ export function AppointmentActions({ item, onClose }: { item: Appointment | null
               />
             </>
           ) : null}
-          {item?.sale_id ? (
+          {item?.sale_id && can(role, 'viewSales') ? (
             <Button
               label={t('queue.viewSale')}
               variant="secondary"

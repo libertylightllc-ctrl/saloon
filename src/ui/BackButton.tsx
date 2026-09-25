@@ -1,7 +1,8 @@
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter, type Href } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet } from 'react-native';
 
+import { parentPath } from '@/lib/navigation';
 import { tapTarget, useTheme } from '@/theme';
 
 import { Icon } from './Icon';
@@ -14,7 +15,10 @@ import { useOnBand } from './layoutContext';
 export function BackButton({ onPress }: { onPress?: () => void }) {
   const theme = useTheme();
   const router = useRouter();
+  const pathname = usePathname();
   const { t } = useTranslation();
+  // No history (refreshed page, deep link): go to the parent screen instead of doing nothing.
+  const back = () => (router.canGoBack() ? router.back() : router.replace(parentPath(pathname) as Href));
   const onBand = useOnBand();
   const square = theme.variants.iconButton === 'square';
   const size = square ? 32 : 40;
@@ -27,7 +31,7 @@ export function BackButton({ onPress }: { onPress?: () => void }) {
 
   return (
     <Pressable
-      onPress={onPress ?? (() => router.back())}
+      onPress={onPress ?? back}
       accessibilityRole="button"
       accessibilityLabel={t('common.back')}
       hitSlop={(tapTarget - size) / 2 + 2}

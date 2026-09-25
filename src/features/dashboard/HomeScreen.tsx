@@ -149,6 +149,7 @@ export function HomeScreen() {
                         compact
                         busy={handlers.busyId === item.id}
                         onAction={handlers.onAction}
+                        canSell={can(role, 'sell', rules)}
                       />
                     ))
                   )}

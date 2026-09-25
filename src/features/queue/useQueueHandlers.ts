@@ -7,7 +7,7 @@ import { errorCode } from '@/lib/errors';
 import { useToast } from '@/ui';
 
 import { useQueueAction, type Appointment } from './api';
-import type { RowAction } from './QueueRow';
+import type { RowAction } from './actions';
 
 /** Row buttons: check in / start run the RPC; complete opens Quick sale pre-filled. */
 export function useQueueHandlers() {

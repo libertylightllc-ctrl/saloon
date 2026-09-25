@@ -7,6 +7,7 @@ import { useWorkspace } from '@/features/auth/session';
 import { useTerms } from '@/features/mode/useTerms';
 import { minutesBetween } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
+import { can } from '@/lib/permissions';
 import { useNow } from '@/lib/useNow';
 import { spacing } from '@/theme';
 import { Button, Chip, EmptyState, HeaderBand, QueryState, Screen, SegmentTabs } from '@/ui';
@@ -24,7 +25,7 @@ export function QueueScreen() {
   const terms = useTerms();
   const router = useRouter();
   const now = useNow();
-  const { business, branch } = useWorkspace();
+  const { business, branch, role, rules } = useWorkspace();
   const [day, setDay] = useState<QueueDay>('today');
   const [filter, setFilter] = useState<Filter>('all');
   const [staff, setStaff] = useState<string | null>(null);
@@ -129,6 +130,7 @@ export function QueueScreen() {
                       timeZone={business.timezone}
                       busy={handlers.busyId === item.id}
                       onAction={handlers.onAction}
+                        canSell={can(role, 'sell', rules)}
                       onMore={handlers.openMenu}
                     />
                   ))}
