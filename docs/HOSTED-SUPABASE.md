@@ -74,34 +74,29 @@ passwords. It is only for the local database.
 Set `EXPO_PUBLIC_SUPABASE_URL=auto` and the local anon key (from `npx supabase status`) in `.env`,
 then restart `npx expo start`.
 
-## 6. Going live on the Vercel link (replacing the old app)
+## 6. Going live on the Vercel link (replacing the old app completely)
 
-Agreed on 2026-09-26: new Supabase project (the old project `vmoocchjtlpggnoadpio` and its data stay untouched),
-`main` of `libertylightllc-ctrl/saloon` gets the new app in one new commit (old version kept under the tag `v1-web`),
-and nothing is pushed until the hosted database is ready.
+Owner's decision (2026-09-26): only the new app — the old version must not stay live anywhere or be mixed into the
+repo. `main` of `libertylightllc-ctrl/saloon` becomes the new app's own history (a force-push); the old app's
+live copies are removed.
 
-Already prepared (local, not pushed):
-- `vercel.json`: builds the website with `expo export` into `dist/` and sends every path to the app.
-- `scripts/check-web-env.mjs`: the Vercel build **stops** unless a hosted Supabase URL and anon key are set, so the
-  live link can never show a sign-in that does not work.
-- Branch `ready-for-main` (= the new app + the old history as a parent) and tag `v1-web` (= today's live commit
-  `7c93ae6`). Pushing them is a normal fast-forward; nothing is force-pushed.
-- The full e2e suite passes against the production website build served the way Vercel serves it (34/34).
+Until the hosted database is connected, the site shows "Salon Control is being set up" on every page (no sign-in
+that cannot work). `vercel.json` builds it with `expo export`; the build log warns while no hosted URL is set.
 
-Order on the day:
-1. You: create the project, then `npx supabase login` and `npx supabase link --project-ref <ref>` (you type the
-   database password). Send me the Project URL and the anon / publishable key.
-2. Me: `npx supabase db push`, deploy the two Edge Functions, set the auth settings (site URL = the Vercel link,
-   6-digit recovery template, confirm email on, SMTP as you choose).
-3. Me: put the two public values where the Vercel build reads them — either a committed `.env.production`
-   (they are public by design) or you add `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` under
-   Vercel → Project → Settings → Environment Variables.
-4. Me: a smoke test against the hosted project (sign up, setup, a sale, Accounts balanced), then
-   `git push origin v1-web` and `git push origin ready-for-main:main`. Vercel deploys the new app.
-5. Rolling back, if ever needed (only with your go-ahead): Vercel → Deployments → the last old deployment →
-   **Instant Rollback** puts the old site back in seconds; the code can then be restored with a normal commit that
-   brings back the `v1-web` files — no force-push.
+**You run (pushing and removing live sites needs your go-ahead), in `~/salon-app`:**
+1. Replace `main` with the new app (only if nobody pushed since `7c93ae6`):
+   `git -c credential.helper= -c credential.helper='!gh auth git-credential' push --force-with-lease=main:7c93ae6 origin main`
+2. Remove the old Android download: `gh release delete android-test-v1.0.0 -R libertylightllc-ctrl/saloon --cleanup-tag --yes`
+3. Take the old GitHub Pages site offline: `gh api -X DELETE repos/libertylightllc-ctrl/saloon/pages`
+4. Vercel: two projects deploy from this repo — **saloon** and **salon-mvp**. Keep the one behind your live link and
+   delete the other (Settings → Delete Project). In the kept project, delete the old deployments
+   (Deployments → select → Delete) so no old URL keeps working.
+5. Old Supabase project `vmoocchjtlpggnoadpio`: pause or delete it in the Supabase dashboard once you are sure
+   nothing in it is needed (deleting is permanent).
 
-Side effects to expect: the old repo's GitHub Actions (`pages.yml` for GitHub Pages, `mobile.yml` for Android
-builds) are not part of the new app, so they stop running; the last GitHub Pages deployment stays online until
-disabled in the repo settings.
+**Then, when the new database exists** (steps 1–3 of this guide): I run `db push`, deploy the Edge Functions, set
+the auth settings and give the Vercel build the two public values. The next deploy replaces "being set up" with
+the working app.
+
+Note: after a force-push GitHub can still open old commits by their exact link for a while. If they must be
+completely unreachable, the only certain way is a new repository.
