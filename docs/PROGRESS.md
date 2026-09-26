@@ -33,6 +33,12 @@ Updated: 2026-09-25
   instead of the receipt; sheets were not modal for screen readers; staff were offered checkout; a quick second
   toast was wiped by the first one's timer.
 
+### Live status (2026-09-26)
+- GitHub `libertylightllc-ctrl/saloon` `main` = the new app only (old app, Android test release and GitHub
+  Pages removed). Vercel project **saloon** builds from `main`; the live link shows "Salon Control is being set
+  up" until a hosted Supabase project is connected (docs/HOSTED-SUPABASE.md §6).
+- Also built at the owner's request: Accounts & history, Expenses (16 categories), Purchases & suppliers.
+
 ### Next
 - M2 — Money in / out (see 05-BUILD-PLAN.md). Owner actions before real use: hosted Supabase
   (docs/HOSTED-SUPABASE.md), native-speaker review of ar/hi/ur, sign-off on the ladies button contrast.
