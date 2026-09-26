@@ -815,5 +815,9 @@
       "opening_stock": "Opening stock",
       "brought_forward": "Brought forward"
     }
+  },
+  "settingUp": {
+    "title": "{{name}} is being set up",
+    "body": "It will be ready here soon. Please check back later."
   }
 }

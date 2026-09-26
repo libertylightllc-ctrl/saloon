@@ -11,10 +11,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SalonTypeProvider, useSalonType } from '@/features/auth/salonType';
 import { SessionProvider, useSession } from '@/features/auth/session';
+import { SettingUpScreen } from '@/features/setup/SettingUpScreen';
 import { fontAssets } from '@/lib/fonts';
 import { DEFAULT_LANGUAGE, i18n, initI18n } from '@/lib/i18n';
 import { bootstrapLanguage } from '@/lib/language';
 import { queryClient } from '@/lib/queryClient';
+import { backendReady } from '@/lib/supabase';
 import { DEFAULT_MODE, DirectionProvider, ThemeProvider } from '@/theme';
 import { ToastProvider } from '@/ui';
 
@@ -50,6 +52,20 @@ export default function RootLayout() {
     if (ready) SplashScreen.hideAsync().catch(() => {});
   }, [ready]);
   if (!ready) return null;
+
+  if (!backendReady) {
+    return (
+      <I18nextProvider i18n={i18n}>
+        <SafeAreaProvider>
+          <ThemeProvider mode={DEFAULT_MODE}>
+            <DirectionProvider>
+              <SettingUpScreen />
+            </DirectionProvider>
+          </ThemeProvider>
+        </SafeAreaProvider>
+      </I18nextProvider>
+    );
+  }
 
   return (
     <I18nextProvider i18n={i18n}>

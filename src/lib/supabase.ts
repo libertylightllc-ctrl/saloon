@@ -25,14 +25,34 @@ export function resolveSupabaseUrl(
   return host ? `http://${host}:${LOCAL_API_PORT}` : null;
 }
 
-const url = resolveSupabaseUrl(
-  process.env.EXPO_PUBLIC_SUPABASE_URL,
-  Constants.expoConfig?.hostUri,
-  Platform.OS === 'web' && typeof window !== 'undefined' ? window.location.hostname : undefined,
-);
+/** This computer or the local network — where the Mac's local database (`npx supabase start`) is reachable. */
+export function isLocalHost(host: string): boolean {
+  return (
+    host === 'localhost' ||
+    host === '127.0.0.1' ||
+    host === '[::1]' ||
+    host.endsWith('.local') ||
+    /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host)
+  );
+}
+
+/**
+ * Is there a database to talk to? "auto" (or nothing) only works next to the local stack; a site on
+ * a public address needs a hosted project URL. Without one the app shows "being set up" instead of
+ * a sign-in that cannot work.
+ */
+export function hasBackend(configured: string | undefined, anonKey: string | undefined, webHost: string | undefined): boolean {
+  if (!anonKey?.trim()) return false;
+  const value = configured?.trim();
+  if (value && value !== 'auto') return true;
+  return !webHost || isLocalHost(webHost);
+}
+
+const webHost = Platform.OS === 'web' && typeof window !== 'undefined' ? window.location.hostname : undefined;
+const url = resolveSupabaseUrl(process.env.EXPO_PUBLIC_SUPABASE_URL, Constants.expoConfig?.hostUri, webHost);
 const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabaseConfigError = !url || !anonKey ? 'missing_supabase_config' : null;
+export const backendReady = Boolean(url) && hasBackend(process.env.EXPO_PUBLIC_SUPABASE_URL, anonKey, webHost);
 export const supabaseUrl = url ?? 'http://127.0.0.1:54321';
 export const supabaseAnonKey = anonKey ?? 'missing-anon-key';
 

@@ -1,6 +1,6 @@
 /**
- * Runs before the web build on Vercel. The live site must point at a hosted Supabase project:
- * "auto" (the Mac's local database) or a missing key would ship a site nobody can sign in to.
+ * Runs before the web build on Vercel. Without a hosted Supabase URL and anon key the site shows
+ * "being set up" (never a sign-in that cannot work); this says so clearly in the build log.
  * Reads the same files Expo does for a production build; real environment variables win.
  */
 import { existsSync, readFileSync } from 'node:fs';
@@ -25,7 +25,7 @@ if (!/^https:\/\/\S+$/.test(url)) {
 if (key.length < 20) problems.push('EXPO_PUBLIC_SUPABASE_ANON_KEY is missing.');
 
 if (problems.length) {
-  console.error(`\nWeb build stopped — the live site would not be able to sign anyone in:\n- ${problems.join('\n- ')}\nSee docs/HOSTED-SUPABASE.md.\n`);
-  process.exit(1);
+  console.warn(`\nNo hosted database yet — the site will show "being set up" until these are set:\n- ${problems.join('\n- ')}\nSee docs/HOSTED-SUPABASE.md.\n`);
+} else {
+  console.log(`Web build will use ${url}`);
 }
-console.log(`Web build will use ${url}`);
