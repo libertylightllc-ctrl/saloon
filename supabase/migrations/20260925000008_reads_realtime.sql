@@ -37,6 +37,12 @@ begin
 
   if v_front then
     out := out || jsonb_build_object(
+      -- Money out today: expenses (not reversed) and supplier payments (tables from migration …011).
+      'money_out', jsonb_build_object(
+          'expenses_minor', coalesce((select sum(amount_minor) from expenses
+                                      where branch_id = p_branch and business_date = v_today and status = 'posted'), 0),
+          'supplier_payments_minor', coalesce((select sum(amount_minor) from supplier_payments
+                                               where branch_id = p_branch and business_date = v_today), 0)),
       'expected_cash', public.expected_cash(p_branch, v_today),
       'expected_cash_yesterday', public.expected_cash(p_branch, v_today - 1),
       'sales', (select jsonb_build_object(

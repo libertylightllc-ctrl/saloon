@@ -20,6 +20,17 @@ describe('tabsFor', () => {
 });
 
 describe('can', () => {
+  it('lets cashiers add money out but only the owner pay or reverse it; staff see none of it', () => {
+    expect(can('cashier', 'addExpense')).toBe(true);
+    expect(can('cashier', 'addPurchase')).toBe(true);
+    expect(can('cashier', 'payOrReverseMoneyOut')).toBe(false);
+    expect(can('owner', 'payOrReverseMoneyOut')).toBe(true);
+    expect(can('accountant', 'viewExpenses')).toBe(true);
+    expect(can('accountant', 'addExpense')).toBe(false);
+    expect(can('staff', 'viewExpenses')).toBe(false);
+    expect(can('staff', 'viewPurchases')).toBe(false);
+  });
+
   it('shows accounts and history to the owner and the accountant only', () => {
     expect(can('owner', 'viewAccounting')).toBe(true);
     expect(can('accountant', 'viewAccounting')).toBe(true);

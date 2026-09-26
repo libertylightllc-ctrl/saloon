@@ -22,6 +22,7 @@ export interface Dashboard {
     busy: boolean;
   }[];
   activity?: { summary: string; at: string; actor: string | null }[];
+  money_out?: { expenses_minor: number; supplier_payments_minor: number };
   appointments?: { completed: number; waiting: number; in_progress: number; booked: number; no_show: number };
   setup?: { services: boolean; staff: boolean; tax: boolean; opening_cash: boolean };
   me?: { services_today: number; sales_today_minor: number; commission_month_minor: number };

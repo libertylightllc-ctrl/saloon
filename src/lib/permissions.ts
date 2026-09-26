@@ -23,6 +23,13 @@ const MATRIX = {
   manageBranch: ['owner'],
   viewActivity: ['owner', 'accountant'],
   viewAccounting: ['owner', 'accountant'],
+  // Money out (01-PRODUCT §2): cashiers add cash expenses and bills; only the owner pays suppliers,
+  // reverses, edits suppliers and adds expense categories. The accountant reads everything.
+  addExpense: ['owner', 'cashier'],
+  viewExpenses: ['owner', 'cashier', 'accountant'],
+  addPurchase: ['owner', 'cashier'],
+  viewPurchases: ['owner', 'cashier', 'accountant'],
+  payOrReverseMoneyOut: ['owner'],
 } as const satisfies Record<string, readonly Role[]>;
 
 export type Capability = keyof typeof MATRIX;

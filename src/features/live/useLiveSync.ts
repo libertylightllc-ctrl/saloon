@@ -19,6 +19,7 @@ export const keys = {
   team: (businessId: string) => ['team', businessId] as const,
   stock: (branchId: string) => ['stock', branchId] as const,
   rooms: (branchId: string) => ['rooms', branchId] as const,
+  moneyOut: (businessId: string) => ['moneyout', businessId] as const,
 };
 
 export function useLiveSync(businessId: string, branchId: string) {
@@ -50,6 +51,16 @@ export function useLiveSync(businessId: string, branchId: string) {
         invalidate(keys.team(businessId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'employees', filter: businessFilter },
         invalidate(keys.team(businessId), keys.dashboard(branchId)))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'expenses', filter: branchFilter },
+        invalidate(keys.moneyOut(businessId), keys.dashboard(branchId), ['accounts', businessId]))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'supplier_payments', filter: branchFilter },
+        invalidate(keys.moneyOut(businessId), keys.dashboard(branchId), ['accounts', businessId]))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'purchase_bills', filter: businessFilter },
+        invalidate(keys.moneyOut(businessId), keys.stock(branchId), ['accounts', businessId]))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'suppliers', filter: businessFilter },
+        invalidate(keys.moneyOut(businessId)))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'expense_categories', filter: businessFilter },
+        invalidate(keys.moneyOut(businessId)))
       .subscribe();
     return () => {
       void supabase.removeChannel(channel);

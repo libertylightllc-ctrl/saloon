@@ -26,6 +26,18 @@ union all select 'stock levels that differ from their movements', count(*) from 
 union all select 'held deposits without a deposit journal', count(*) from appointments a
   where a.deposit_minor > 0 and not exists (select 1 from journal_entries e where e.source_id = a.id)
 union all select 'completed visits without a sale', count(*) from appointments a where a.status = 'completed' and a.sale_id is null
+union all select 'expenses without a journal entry', count(*) from expenses x
+  where not exists (select 1 from journal_entries e where e.source_type = 'expense' and e.source_id = x.id)
+union all select 'reversed expenses without a reversal entry', count(*) from expenses x where x.status = 'reversed'
+  and not exists (select 1 from journal_entries e where e.source_type = 'expense_reversal' and e.source_id = x.id)
+union all select 'bills without a journal entry', count(*) from purchase_bills b
+  where not exists (select 1 from journal_entries e where e.source_type = 'purchase_bill' and e.source_id = b.id)
+union all select 'supplier payments without a journal entry', count(*) from supplier_payments sp
+  where not exists (select 1 from journal_entries e where e.source_type = 'supplier_payment' and e.source_id = sp.id)
+union all select 'bills whose paid amount differs from their payments', count(*) from purchase_bills b
+  where b.paid_minor <> coalesce((select sum(amount_minor) from supplier_payments sp where sp.bill_id = b.id), 0)
+union all select 'bills whose lines do not add up to the total', count(*) from purchase_bills b
+  where b.total_minor <> (select sum(total_minor) from purchase_bill_lines l where l.bill_id = b.id)
 union all select 'businesses without an owner', count(*) from businesses b
   where not exists (select 1 from members m where m.business_id = b.id and m.role = 'owner')
 union all select 'tables without row level security', count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace

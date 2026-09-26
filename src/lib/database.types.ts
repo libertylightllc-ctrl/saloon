@@ -280,13 +280,13 @@ isOneToOne: true
                   ]
                 },"expense_categories": {
                   Row: {
-                    "account_id": string | null,"business_id": string,"id": string,"name": string
+                    "account_id": string | null,"archived": boolean,"business_id": string,"icon": string,"id": string,"key": string | null,"name": string,"sort": number
                   }
                   Insert: {
-                    "account_id"?: string | null,"business_id": string,"id"?: string,"name": string
+                    "account_id"?: string | null,"archived"?: boolean,"business_id": string,"icon"?: string,"id"?: string,"key"?: string | null,"name": string,"sort"?: number
                   }
                   Update: {
-                    "account_id"?: string | null,"business_id"?: string,"id"?: string,"name"?: string
+                    "account_id"?: string | null,"archived"?: boolean,"business_id"?: string,"icon"?: string,"id"?: string,"key"?: string | null,"name"?: string,"sort"?: number
                   }
                   Relationships: [
                     {
@@ -300,6 +300,55 @@ isOneToOne: false
       columns: ["business_id"]
 isOneToOne: false
       referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"expenses": {
+                  Row: {
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"category_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"id": string,"method": Database["public"]['Enums']["payment_method"],"note": string | null,"paid_by_member_id": string | null,"reverse_reason": string | null,"reversed_at": string | null,"reversed_by": string | null,"status": string
+                  }
+                  Insert: {
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"category_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"method": Database["public"]['Enums']["payment_method"],"note"?: string | null,"paid_by_member_id"?: string | null,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string
+                  }
+                  Update: {
+                    "amount_minor"?: number,"branch_id"?: string,"business_date"?: string,"business_id"?: string,"category_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"method"?: Database["public"]['Enums']["payment_method"],"note"?: string | null,"paid_by_member_id"?: string | null,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "expenses_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "expenses_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "expenses_category_id_fkey"
+      columns: ["category_id"]
+isOneToOne: false
+      referencedRelation: "expense_categories"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "expenses_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "expenses_paid_by_member_id_fkey"
+      columns: ["paid_by_member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "expenses_reversed_by_fkey"
+      columns: ["reversed_by"]
+isOneToOne: false
+      referencedRelation: "members"
       referencedColumns: ["id"]
     }
                   ]
@@ -444,6 +493,74 @@ isOneToOne: false
       columns: ["business_id"]
 isOneToOne: false
       referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"purchase_bill_lines": {
+                  Row: {
+                    "bill_id": string,"description": string,"id": string,"item_id": string | null,"qty": number,"total_minor": number,"unit_cost_minor": number,"update_stock": boolean
+                  }
+                  Insert: {
+                    "bill_id": string,"description": string,"id"?: string,"item_id"?: string | null,"qty": number,"total_minor": number,"unit_cost_minor": number,"update_stock"?: boolean
+                  }
+                  Update: {
+                    "bill_id"?: string,"description"?: string,"id"?: string,"item_id"?: string | null,"qty"?: number,"total_minor"?: number,"unit_cost_minor"?: number,"update_stock"?: boolean
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "purchase_bill_lines_bill_id_fkey"
+      columns: ["bill_id"]
+isOneToOne: false
+      referencedRelation: "purchase_bills"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "purchase_bill_lines_item_id_fkey"
+      columns: ["item_id"]
+isOneToOne: false
+      referencedRelation: "inventory_items"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"purchase_bills": {
+                  Row: {
+                    "bill_date": string,"branch_id": string,"business_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"due_date": string,"id": string,"invoice_ref": string | null,"note": string | null,"number": number,"paid_minor": number,"reverse_reason": string | null,"reversed_at": string | null,"reversed_by": string | null,"status": string,"supplier_id": string,"total_minor": number
+                  }
+                  Insert: {
+                    "bill_date": string,"branch_id": string,"business_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"due_date": string,"id"?: string,"invoice_ref"?: string | null,"note"?: string | null,"number": number,"paid_minor"?: number,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string,"supplier_id": string,"total_minor": number
+                  }
+                  Update: {
+                    "bill_date"?: string,"branch_id"?: string,"business_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"due_date"?: string,"id"?: string,"invoice_ref"?: string | null,"note"?: string | null,"number"?: number,"paid_minor"?: number,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string,"supplier_id"?: string,"total_minor"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "purchase_bills_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "purchase_bills_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "purchase_bills_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "purchase_bills_reversed_by_fkey"
+      columns: ["reversed_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "purchase_bills_supplier_id_fkey"
+      columns: ["supplier_id"]
+isOneToOne: false
+      referencedRelation: "suppliers"
       referencedColumns: ["id"]
     }
                   ]
@@ -770,6 +887,68 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"supplier_payments": {
+                  Row: {
+                    "amount_minor": number,"bill_id": string | null,"branch_id": string,"business_date": string,"business_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"id": string,"method": Database["public"]['Enums']["payment_method"],"note": string | null,"supplier_id": string
+                  }
+                  Insert: {
+                    "amount_minor": number,"bill_id"?: string | null,"branch_id": string,"business_date": string,"business_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"method": Database["public"]['Enums']["payment_method"],"note"?: string | null,"supplier_id": string
+                  }
+                  Update: {
+                    "amount_minor"?: number,"bill_id"?: string | null,"branch_id"?: string,"business_date"?: string,"business_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"method"?: Database["public"]['Enums']["payment_method"],"note"?: string | null,"supplier_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "supplier_payments_bill_id_fkey"
+      columns: ["bill_id"]
+isOneToOne: false
+      referencedRelation: "purchase_bills"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "supplier_payments_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "supplier_payments_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "supplier_payments_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "supplier_payments_supplier_id_fkey"
+      columns: ["supplier_id"]
+isOneToOne: false
+      referencedRelation: "suppliers"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"suppliers": {
+                  Row: {
+                    "active": boolean,"business_id": string,"created_at": string,"id": string,"name": string,"phone": string | null,"terms_days": number,"trn": string | null
+                  }
+                  Insert: {
+                    "active"?: boolean,"business_id": string,"created_at"?: string,"id"?: string,"name": string,"phone"?: string | null,"terms_days"?: number,"trn"?: string | null
+                  }
+                  Update: {
+                    "active"?: boolean,"business_id"?: string,"created_at"?: string,"id"?: string,"name"?: string,"phone"?: string | null,"terms_days"?: number,"trn"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "suppliers_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Views: {
@@ -887,8 +1066,20 @@ isOneToOne: false
 "method_account":
 { Args: { "p_method": Database["public"]['Enums']["payment_method"] }; Returns: string
                            },
+"paid_from_account":
+{ Args: { "p_method": Database["public"]['Enums']["payment_method"] }; Returns: string
+                           },
+"pay_supplier":
+{ Args: { "p": Json }; Returns: Json
+                           },
 "post_journal":
 { Args: { "p_actor": string,"p_branch": string,"p_business": string,"p_date": string,"p_lines": Json,"p_memo": string,"p_source_id": string,"p_source_type": string }; Returns: string
+                           },
+"post_purchase_bill":
+{ Args: { "p": Json }; Returns: Json
+                           },
+"record_expense":
+{ Args: { "p": Json }; Returns: Json
                            },
 "refund_sale":
 { Args: { "p": Json }; Returns: Json
@@ -914,8 +1105,23 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"reverse_expense":
+{ Args: { "p_id": string,"p_reason": string }; Returns: undefined
+                           },
+"reverse_purchase_bill":
+{ Args: { "p_id": string,"p_reason": string }; Returns: undefined
+                           },
+"save_expense_category":
+{ Args: { "p": Json }; Returns: string
+                           },
 "save_service":
 { Args: { "p": Json }; Returns: string
+                           },
+"save_supplier":
+{ Args: { "p": Json }; Returns: string
+                           },
+"seed_expense_categories":
+{ Args: { "p_business": string }; Returns: undefined
                            },
 "seed_mode_catalogue":
 { Args: { "p_branch": string,"p_business": string,"p_mode": Database["public"]['Enums']["salon_mode"] }; Returns: undefined
@@ -937,6 +1143,11 @@ isOneToOne: false
                            },
 "start_service":
 { Args: { "p_id": string }; Returns: undefined
+                           },
+"supplier_balances":
+{ Args: { "p_business": string }; Returns: {
+              "balance_minor": number,"name": string,"open_bills": number,"overdue_minor": number,"phone": string,"supplier_id": string,"terms_days": number
+            }[]
                            },
 "unique_business_code":
 { Args: { "p_name": string }; Returns: string

@@ -4,7 +4,13 @@
  */
 
 /** Screens opened from More, whose parent is not in their path. */
-const OPENED_FROM: Record<string, string> = { '/sales': '/more', '/services': '/more', '/accounts': '/more' };
+const OPENED_FROM: Record<string, string> = {
+  '/sales': '/more',
+  '/services': '/more',
+  '/accounts': '/more',
+  '/expenses': '/more',
+  '/purchases': '/more',
+};
 /** Path prefixes that are folders, not screens. */
 const FOLDER_PARENT: Record<string, string> = { '/settings': '/more', '/appointment': '/queue' };
 

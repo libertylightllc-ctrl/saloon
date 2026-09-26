@@ -71,6 +71,92 @@ begin
 end;
 $$;
 
+-- An expense through record_expense, then moved p_days_ago back (demo history only).
+create function pg_temp.expense(p_biz uuid, p_branch uuid, p_user uuid, p_key text, p_amount bigint, p_method text,
+                                p_note text, p_days_ago int) returns void
+language plpgsql as $$
+declare
+  v uuid;
+begin
+  perform pg_temp.act_as(p_user);
+  v := (public.record_expense(jsonb_build_object('branch_id', p_branch, 'amount_minor', p_amount, 'method', p_method,
+    'note', p_note, 'category_id', (select id from expense_categories where business_id = p_biz and key = p_key)))
+    ->> 'expense_id')::uuid;
+  if p_days_ago > 0 then
+    update expenses set business_date = business_date - p_days_ago, created_at = created_at - make_interval(days => p_days_ago)
+    where id = v;
+    update journal_entries set business_date = business_date - p_days_ago, created_at = created_at - make_interval(days => p_days_ago)
+    where source_type = 'expense' and source_id = v;
+    update audit_log set created_at = created_at - make_interval(days => p_days_ago) where entity_type = 'expense' and entity_id = v;
+  end if;
+end;
+$$;
+
+-- A supplier bill (stock lines by item name) through post_purchase_bill, optionally part-paid, moved back in time.
+create function pg_temp.bill(p_biz uuid, p_branch uuid, p_owner uuid, p_supplier uuid, p_ref text, p_lines jsonb,
+                             p_paid bigint, p_method text, p_days_ago int) returns void
+language plpgsql as $$
+declare
+  v uuid;
+  l jsonb;
+  v_lines jsonb := '[]';
+begin
+  perform pg_temp.act_as(p_owner);
+  for l in select * from jsonb_array_elements(p_lines) loop
+    v_lines := v_lines || jsonb_build_object('item_id', (select id from inventory_items where business_id = p_biz and name = l ->> 0),
+      'description', l ->> 0, 'qty', (l ->> 1)::numeric, 'unit_cost_minor', (l ->> 2)::bigint);
+  end loop;
+  v := (public.post_purchase_bill(jsonb_build_object('branch_id', p_branch, 'supplier_id', p_supplier, 'invoice_ref', p_ref,
+    'lines', v_lines || jsonb_build_array(jsonb_build_object('description', 'Delivery', 'qty', 1, 'unit_cost_minor', 1500)))
+    || case when p_paid > 0 then jsonb_build_object('paid_now', jsonb_build_object('method', p_method, 'amount_minor', p_paid))
+            else '{}'::jsonb end) ->> 'bill_id')::uuid;
+  if p_days_ago > 0 then
+    update purchase_bills set bill_date = bill_date - p_days_ago, due_date = due_date - p_days_ago,
+                              created_at = created_at - make_interval(days => p_days_ago) where id = v;
+    update supplier_payments set business_date = business_date - p_days_ago, created_at = created_at - make_interval(days => p_days_ago)
+    where bill_id = v;
+    update journal_entries set business_date = business_date - p_days_ago, created_at = created_at - make_interval(days => p_days_ago)
+    where (source_type = 'purchase_bill' and source_id = v)
+       or (source_type = 'supplier_payment' and source_id in (select id from supplier_payments where bill_id = v));
+    update stock_movements set created_at = created_at - make_interval(days => p_days_ago) where ref_type = 'purchase_bill' and ref_id = v;
+  end if;
+end;
+$$;
+
+-- A month of running costs and two suppliers for a demo branch.
+create function pg_temp.money_out(p_biz uuid, p_branch uuid, p_owner uuid, p_cashier uuid, p_rent bigint,
+                                  p_supplier_a text, p_supplier_b text, p_stock jsonb) returns void
+language plpgsql as $$
+declare
+  sa uuid;
+  sb uuid;
+  d int;
+begin
+  perform pg_temp.act_as(p_owner);
+  sa := public.save_supplier(jsonb_build_object('business_id', p_biz, 'name', p_supplier_a, 'phone', '+971 4 339 2210', 'terms_days', 30));
+  sb := public.save_supplier(jsonb_build_object('business_id', p_biz, 'name', p_supplier_b, 'phone', '+971 6 543 8800', 'terms_days', 15));
+  perform pg_temp.bill(p_biz, p_branch, p_owner, sa, 'AM-4410', p_stock, 10000, 'bank', 20);   -- part paid
+  perform pg_temp.bill(p_biz, p_branch, p_owner, sb, 'GC-2291', p_stock, 0, 'cash', 25);       -- overdue
+  perform pg_temp.bill(p_biz, p_branch, p_owner, sa, 'AM-4498', p_stock, 0, 'cash', 3);        -- due later
+  -- Tea & food most days, weekly dry cleaning; monthly bills.
+  foreach d in array array[1, 2, 3, 5, 6, 8, 9, 10, 12, 13, 15, 16, 17, 19, 20, 22, 23, 24, 26, 27] loop
+    perform pg_temp.expense(p_biz, p_branch, p_owner, 'tea_food', 1200 + (d % 5) * 350, 'cash', 'Tea, coffee and snacks', d);
+  end loop;
+  foreach d in array array[4, 11, 18, 25] loop
+    perform pg_temp.expense(p_biz, p_branch, p_owner, 'dry_cleaning', 8500, 'cash', 'Towels and capes', d);
+  end loop;
+  perform pg_temp.expense(p_biz, p_branch, p_owner, 'rent', p_rent, 'bank', 'Monthly rent', 26);
+  perform pg_temp.expense(p_biz, p_branch, p_owner, 'electricity', 124000, 'bank', 'DEWA — electricity', 14);
+  perform pg_temp.expense(p_biz, p_branch, p_owner, 'water', 18000, 'bank', 'DEWA — water', 14);
+  perform pg_temp.expense(p_biz, p_branch, p_owner, 'internet_phone', 39900, 'card', 'du Business internet', 12);
+  perform pg_temp.expense(p_biz, p_branch, p_owner, 'uniforms', 60000, 'card', '6 new uniforms', 9);
+  perform pg_temp.expense(p_biz, p_branch, p_owner, 'cleaning', 6000, 'cash', 'Disinfectant and wipes', 7);
+  perform pg_temp.expense(p_biz, p_branch, p_owner, 'repairs', 25000, 'card', 'Chair hydraulic repair', 16);
+  -- Today, by the cashier.
+  perform pg_temp.expense(p_biz, p_branch, p_cashier, 'tea_food', 1500, 'cash', 'Tea for the team', 0);
+end;
+$$;
+
 -- Opening stock for every recipe item: p_qty of each at p_cost fils per unit.
 create function pg_temp.stock_up(p_branch uuid, p_owner uuid, p_qty numeric, p_cost numeric) returns void
 language plpgsql as $$
@@ -167,6 +253,9 @@ begin
   perform public.create_appointment(jsonb_build_object('branch_id', br, 'kind', 'booking', 'customer_id', c_yousef,
     'scheduled_at', now() + interval '1 day 2 hours', 'service_ids', jsonb_build_array(pg_temp.svc(biz, 'Facial')),
     'deposit_minor', 2000, 'deposit_method', 'cash'));
+
+  perform pg_temp.money_out(biz, br, owner, cashier, 850000, 'Al Maya Barber Supplies', 'Gulf Cosmetics Trading',
+    '[["Blades", 200, 35], ["Neck strips", 500, 8], ["Shaving Foam", 2000, 4]]');
 end $$;
 
 -- ── Ladies: Jumeirah Ladies Salon & Spa ────────────────────────────────────────────────
@@ -252,6 +341,9 @@ begin
   perform public.create_appointment(jsonb_build_object('branch_id', br, 'kind', 'booking', 'customer_id', c_noura,
     'scheduled_at', now() + interval '1 day 3 hours', 'service_ids', jsonb_build_array(pg_temp.svc(biz, 'Bridal Makeup')),
     'deposit_minor', 20000, 'deposit_method', 'card'));
+
+  perform pg_temp.money_out(biz, br, owner, cashier, 1500000, 'Beauty Line Trading LLC', 'Nails & Co Wholesale',
+    '[["Nail polish", 500, 12], ["Gel polish", 300, 25], ["Face masks", 60, 450]]');
 end $$;
 
 select set_config('request.jwt.claims', '', false);

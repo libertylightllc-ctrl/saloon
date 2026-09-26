@@ -58,6 +58,7 @@ export function HomeScreen() {
     { key: 'book', icon: 'calendarPlus', href: { pathname: '/appointment/new', params: { kind: 'booking' } }, show: can(role, 'addToQueue') },
     { key: 'newSale', icon: 'receipt', href: '/sale', show: can(role, 'sell', rules) },
     { key: 'customer', icon: 'contact', href: '/customers/form', show: can(role, 'manageCustomers') },
+    { key: 'expense', icon: 'coins', href: '/expenses/new', show: can(role, 'addExpense') },
   ];
   const quickRow = (
     <View style={styles.circles}>
@@ -193,6 +194,18 @@ function MoneyCards({ data }: { data: Dashboard }) {
           sub={t('home.salesSub', { services: Number(data.sales?.services ?? 0), sales: data.sales?.count ?? 0 })}
           testID="kpi-sales"
         />
+        {data.money_out ? (
+          <KpiCard
+            icon="coins"
+            label={t('home.moneyOut')}
+            value={formatMoney(data.money_out.expenses_minor + data.money_out.supplier_payments_minor)}
+            sub={t('home.moneyOutSub', {
+              purchases: formatMoney(data.money_out.supplier_payments_minor),
+              expenses: formatMoney(data.money_out.expenses_minor),
+            })}
+            testID="kpi-money-out"
+          />
+        ) : null}
         {a ? (
           <KpiCard
             icon="calendar"
