@@ -19,7 +19,7 @@ Updated: 2026-09-27
   events for bookings, long waits, closes, low stock, documents due 30/7/0, payroll, refund requests; 08:00 daily
   digest; push tokens and delivery through send-push (pg_cron every minute, proven locally with the push-sink
   stand-in); cashier "request refund". SQL `09_notifications.test.sql` (30), e2e `23-notifications.spec.ts`.
-- ⏳ Next: M3 hand-over (full suite 3 runs in a row, button sweep).
+- ⏳ M3 hand-over: `docs/M3-HANDOVER.md` — waiting on the final proof runs.
 
 ### M2 status
 - ✅ Expenses (16 categories, reversal) and Purchases & suppliers (bills, stock, payments, reversal) — 2026-09-26.

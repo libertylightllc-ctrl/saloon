@@ -6,8 +6,8 @@ import { useLiveSync } from '@/features/live/useLiveSync';
 import { usePush } from '@/features/notifications/usePush';
 
 function LiveStack() {
-  const { business, branch, member } = useWorkspace();
-  useLiveSync(business.id, branch.id, member.id);
+  const { business, branch, member, role } = useWorkspace();
+  useLiveSync(business.id, branch.id, member.id, role === 'owner' || role === 'accountant');
   usePush(business.id);
   return <Stack screenOptions={{ headerShown: false }} />;
 }

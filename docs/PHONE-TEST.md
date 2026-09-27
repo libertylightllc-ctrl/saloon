@@ -124,3 +124,40 @@ Continue with the salon from the M1 test (owner on phone A, cashier Faisal on ph
    shows Cash over/short AED 5.00 and **Balanced: Yes**.
 
 If anything does not match a ✅, note the step number and what you saw.
+
+---
+
+# M3 add-on: people, pay, compliance and notifications (10 minutes)
+
+Same two phones. Phone A = owner, phone B = the barber/stylist login from step 2 (or add one in Team & logins).
+
+## 14 · Roster and a late clock-in (3 min)
+
+1. A: More → **Staff & payroll** → the barber → **Edit** → salary `3500`, commission `10`, **WPS** on → Save.
+2. A: **Weekly roster → Edit** → switch on today, start = one hour ago, end `22:00` → **Save roster**.
+3. B: Home shows **My day** with that shift → **Clock in**. ✅ "Clocked in — 60 min late" (roughly).
+4. A: Staff & payroll → **Attendance** → ✅ the barber shows **In** and **Late**.
+
+## 15 · Payroll (3 min)
+
+1. A: Staff & payroll → **Payroll** → **Bonuses & advances** → New → the barber, **Advance** `100`, Cash → Save.
+   ✅ Home's expected cash drops by 100.
+2. Back → **Work out payroll** → ✅ the barber's line = 3,500 + commission − 100.
+   **Approve payroll** → tap the barber → **Pay … by bank** → **Choose photo** (any screenshot) → ✅ "WPS proven".
+3. B: the **My pay** tab → ✅ the payslip, the commission this month and the advance.
+
+## 16 · Compliance (2 min)
+
+1. A: More → **Compliance** → ✅ readiness 0%, everything **Missing**.
+2. Tap **Trade licence** → **Add details** → number, expiry about two months ahead, **Take photo** → Save.
+   ✅ **Valid**; readiness goes up. **Inspection binder → Export PDF** → ✅ a PDF to share.
+3. The cashier: More → Compliance → ✅ only the **Hygiene log** → tick the items → **Sign the log**.
+
+## 17 · Notifications (2 min)
+
+1. B: Queue → a **booking** for tomorrow. ✅ A's Home bell shows **1**; the list says "New booking".
+2. The cashier: More → Sales → a sale → **Ask the owner for a refund** → amount, reason → Send.
+   ✅ A gets "Refund requested"; tapping it opens the sale with the request; refunding clears it.
+3. (Push on the phones' lock screen needs the store/dev build — see docs/M3-HANDOVER.md, open items.)
+
+If anything does not match a ✅, note the step number and what you saw.

@@ -1,6 +1,9 @@
 /**
- * Keeps every signed-in device in step: one Realtime channel per branch invalidates the queries a
- * change affects, so a walk-in added on one phone appears on the other within a second or two.
+ * Keeps every signed-in device in step. The database announces "table X changed" on private broadcast topics
+ * (migration …019): branch:<id>, business:<id>, member:<member id>, and owners:<business id> for the owner and
+ * accountant. Each announcement invalidates the queries that table feeds, so a walk-in added on one phone appears
+ * on the other within a second or two. (One topic per scope instead of one subscription per table: ~35
+ * postgres_changes subscriptions per phone made the realtime server miss events.)
  */
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -28,80 +31,59 @@ export const keys = {
   notifications: (memberId: string) => ['notifications', memberId] as const,
 };
 
-export function useLiveSync(businessId: string, branchId: string, memberId: string) {
+export function useLiveSync(businessId: string, branchId: string, memberId: string, seesOwnerTopics: boolean) {
   const client = useQueryClient();
 
   useEffect(() => {
-    const invalidate = (...targets: Key[]) => () => {
-      for (const queryKey of targets) void client.invalidateQueries({ queryKey });
+    // What each table's change makes stale.
+    const affected: Record<string, Key[]> = {
+      appointments: [keys.appointments(branchId), keys.dashboard(branchId), keys.customers(businessId), keys.closing(branchId)],
+      sales: [keys.sales(branchId), ['sale'], keys.dashboard(branchId), keys.customers(businessId), keys.closing(branchId)],
+      refunds: [keys.sales(branchId), ['sale'], keys.dashboard(branchId), keys.closing(branchId)],
+      stock_levels: [keys.stock(branchId), keys.catalog(businessId)],
+      stock_counts: [keys.stock(branchId), keys.dashboard(branchId), ['accounts', businessId]],
+      inventory_items: [keys.stock(branchId), keys.catalog(businessId), keys.dashboard(branchId)],
+      services: [keys.catalog(businessId)],
+      service_categories: [keys.catalog(businessId)],
+      customers: [keys.customers(businessId)],
+      members: [keys.team(businessId)],
+      employees: [keys.team(businessId), keys.dashboard(branchId)],
+      expenses: [keys.moneyOut(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId]],
+      supplier_payments: [keys.moneyOut(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId]],
+      purchase_bills: [keys.moneyOut(businessId), keys.stock(branchId), ['accounts', businessId]],
+      suppliers: [keys.moneyOut(businessId)],
+      expense_categories: [keys.moneyOut(businessId)],
+      cash_closings: [keys.closing(branchId), keys.dashboard(branchId), ['accounts', businessId]],
+      tip_payouts: [keys.closing(branchId), keys.dashboard(branchId), ['accounts', businessId]],
+      attendance: [keys.attendance(branchId), keys.dashboard(branchId), ['attendance-history']],
+      rosters: [keys.attendance(branchId), keys.team(businessId)],
+      payroll_runs: [keys.payroll(businessId), keys.dashboard(branchId)],
+      payroll_lines: [keys.payroll(businessId), keys.closing(branchId)],
+      payroll_adjustments: [keys.payroll(businessId), keys.closing(branchId)],
+      compliance_documents: [keys.compliance(businessId), keys.dashboard(branchId)],
+      hygiene_logs: [keys.hygiene(branchId), keys.dashboard(branchId)],
+      refund_requests: [['refund-request']],
+      notifications: [keys.notifications(memberId)],
     };
-    const branchFilter = `branch_id=eq.${branchId}`;
-    // Rejoining after sleep or a dropped connection: anything that changed meanwhile sent no event.
-    let joined = false;
-    const businessFilter = `business_id=eq.${businessId}`;
-    const channel = supabase
-      .channel(`live-${branchId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'appointments', filter: branchFilter },
-        invalidate(keys.appointments(branchId), keys.dashboard(branchId), keys.customers(businessId), keys.closing(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'sales', filter: branchFilter },
-        invalidate(keys.sales(branchId), ['sale'], keys.dashboard(branchId), keys.customers(businessId), keys.closing(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'refunds', filter: branchFilter },
-        invalidate(keys.sales(branchId), ['sale'], keys.dashboard(branchId), keys.closing(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'stock_levels', filter: branchFilter },
-        invalidate(keys.stock(branchId), keys.catalog(businessId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'inventory_items', filter: businessFilter },
-        invalidate(keys.stock(branchId), keys.catalog(businessId), keys.dashboard(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'stock_counts', filter: branchFilter },
-        invalidate(keys.stock(branchId), keys.dashboard(branchId), ['accounts', businessId]))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'services', filter: businessFilter },
-        invalidate(keys.catalog(businessId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'service_categories', filter: businessFilter },
-        invalidate(keys.catalog(businessId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'customers', filter: businessFilter },
-        invalidate(keys.customers(businessId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'members', filter: businessFilter },
-        invalidate(keys.team(businessId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'employees', filter: businessFilter },
-        invalidate(keys.team(businessId), keys.dashboard(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'expenses', filter: branchFilter },
-        invalidate(keys.moneyOut(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId]))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'attendance', filter: branchFilter },
-        invalidate(keys.attendance(branchId), keys.dashboard(branchId), ['attendance-history']))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'payroll_runs', filter: businessFilter },
-        invalidate(keys.payroll(businessId), keys.dashboard(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'payroll_lines', filter: businessFilter },
-        invalidate(keys.payroll(businessId), keys.closing(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'payroll_adjustments', filter: businessFilter },
-        invalidate(keys.payroll(businessId), keys.closing(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications', filter: `member_id=eq.${memberId}` },
-        invalidate(keys.notifications(memberId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'refund_requests', filter: branchFilter },
-        invalidate(['refund-request']))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'compliance_documents', filter: businessFilter },
-        invalidate(keys.compliance(businessId), keys.dashboard(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'hygiene_logs', filter: branchFilter },
-        invalidate(keys.hygiene(branchId), keys.dashboard(branchId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'rosters', filter: businessFilter },
-        invalidate(keys.attendance(branchId), keys.team(businessId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'cash_closings', filter: branchFilter },
-        invalidate(keys.closing(branchId), keys.dashboard(branchId), ['accounts', businessId]))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tip_payouts', filter: branchFilter },
-        invalidate(keys.closing(branchId), keys.dashboard(branchId), ['accounts', businessId]))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'supplier_payments', filter: branchFilter },
-        invalidate(keys.moneyOut(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId]))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'purchase_bills', filter: businessFilter },
-        invalidate(keys.moneyOut(businessId), keys.stock(branchId), ['accounts', businessId]))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'suppliers', filter: businessFilter },
-        invalidate(keys.moneyOut(businessId)))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'expense_categories', filter: businessFilter },
-        invalidate(keys.moneyOut(businessId)))
-      .subscribe((state) => {
-        if (state !== 'SUBSCRIBED') return;
-        if (joined) void client.invalidateQueries();
-        joined = true;
-      });
+    const onChange = ({ payload }: { payload: { table?: string } }) => {
+      for (const queryKey of affected[payload.table ?? ''] ?? []) void client.invalidateQueries({ queryKey });
+    };
+    const topics = [`branch:${branchId}`, `business:${businessId}`, `member:${memberId}`];
+    if (seesOwnerTopics) topics.push(`owners:${businessId}`);
+    const channels = topics.map((topic) => {
+      // Rejoining after sleep or a dropped connection: anything that changed meanwhile sent no event.
+      let joined = false;
+      return supabase
+        .channel(topic, { config: { private: true } })
+        .on('broadcast', { event: 'change' }, onChange)
+        .subscribe((state) => {
+          if (state !== 'SUBSCRIBED') return;
+          if (joined) void client.invalidateQueries();
+          joined = true;
+        });
+    });
     return () => {
-      void supabase.removeChannel(channel);
+      for (const channel of channels) void supabase.removeChannel(channel);
     };
-  }, [client, businessId, branchId, memberId]);
+  }, [client, businessId, branchId, memberId, seesOwnerTopics]);
 }
