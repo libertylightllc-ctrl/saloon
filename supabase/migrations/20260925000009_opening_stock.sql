@@ -37,6 +37,7 @@ begin
     'Opening stock', m.id,
     jsonb_build_array(jsonb_build_object('account', 'inventory', 'debit', v_value),
                       jsonb_build_object('account', 'owner_equity', 'credit', v_value)));
+  update branches set settings = settings || '{"opening_stock_set": true}' where id = p_branch;
   perform public.write_audit(m.business_id, p_branch, m.id, 'create', 'opening_stock', p_branch, 'Counted opening stock');
 end;
 $$;

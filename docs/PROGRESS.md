@@ -13,7 +13,8 @@ Updated: 2026-09-27
 - ✅ Inventory & tools — 2026-09-27: items (consumable / retail / tool), levels, value, low stock, adjustment with a
   reason, stock count, movements with who and why, tools (condition, next service, assigned to), retail products in
   Quick sale (product revenue, cost of goods, no commission), restock on a full refund, Home quick action "Stock" and
-  Needs attention (low stock, tools due, supplier bills overdue / due this week). SQL `04_inventory.test.sql` (41),
+  Needs attention (low stock, tools due, supplier bills overdue / due this week), Opening stock screen, setup
+  checklist's six steps. SQL `04_inventory.test.sql` (43),
   e2e `18-inventory.spec.ts` (both modes).
 - ✅ Receipt photos — 2026-09-27: take or choose a photo on an expense or bill (form or details), private bucket,
   signed links, never replaced or deleted. SQL `05_receipts.test.sql` (16), e2e `19-receipts.spec.ts` (both modes).

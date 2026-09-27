@@ -132,7 +132,9 @@
         "services": "check your services",
         "staff": "add a staff login",
         "tax": "confirm tax settings",
-        "opening_cash": "set opening cash"
+        "opening_cash": "set opening cash",
+        "opening_stock": "count your opening stock",
+        "suppliers": "add your suppliers"
       }
     },
     "quickActions": "Quick actions",
@@ -1135,7 +1137,15 @@
     "countedFor": "Counted {{name}}",
     "countNote": "Note (optional)",
     "countSave": "Save count ({{n}})",
-    "counted": "Count saved: {{n}} changed, {{value}}"
+    "counted": "Count saved: {{n}} changed, {{value}}",
+    "opening": {
+      "title": "Opening stock",
+      "hint": "What is on the shelves now, and what each one cost",
+      "qty": "Quantity ({{unit}})",
+      "cost": "Cost each",
+      "save": "Save opening stock · {{value}}",
+      "saved": "Opening stock saved for {{n}} item(s)"
+    }
   },
   "receipts": {
     "photo": "Receipt photo",

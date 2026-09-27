@@ -32,7 +32,7 @@ export interface Dashboard {
     unclosed_days: string[];
   };
   appointments?: { completed: number; waiting: number; in_progress: number; booked: number; no_show: number };
-  setup?: { services: boolean; staff: boolean; tax: boolean; opening_cash: boolean };
+  setup?: { services: boolean; staff: boolean; tax: boolean; opening_cash: boolean; opening_stock: boolean; suppliers: boolean };
   me?: { services_today: number; sales_today_minor: number; commission_month_minor: number };
 }
 

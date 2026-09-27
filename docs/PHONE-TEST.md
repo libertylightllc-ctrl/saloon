@@ -85,3 +85,42 @@ A: More → Language → **العربية**. ✅ The layout flips right-to-left,
 A: More → **Sign out** → ✅ back on the sign-in, still in the salon's colours.
 
 If anything does not match a ✅, note the step number and what you saw.
+
+---
+
+# M2 add-on: money out, stock and closing the day (10 minutes, same two phones)
+
+Continue with the salon from the M1 test (owner on phone A, cashier Faisal on phone B).
+
+## 11 · Expenses with a receipt photo (A, 2 min)
+
+1. A: Home → **Expense** → amount `15`, **Tea & Food**, **Cash** → **Take photo** of any paper → **Save**.
+   ✅ "Expense saved"; Home's expected cash drops by 15; Money out today AED 15.00.
+2. A: More → **Expenses** → the tea expense → ✅ the photo is there; tap it to see it full size.
+3. B: Home → **Expense** → ✅ "Cash from the drawer" only (no card/bank), no new-category button.
+
+## 12 · Stock (A, 3 min)
+
+1. A: More → **Inventory & tools** → **Add item** → `Beard Oil`, **Retail product**, reorder at `3`,
+   selling price `60` → **Save**.
+2. A: More → **Purchases & suppliers** → **New bill** → add a supplier → add item **Beard Oil**, qty `6`,
+   cost `25` → **Save bill**. ✅ Inventory shows Beard Oil **6 pc**.
+3. A: **Sale** tab → **Products** → Beard Oil **+** → Checkout → Cash → Save. ✅ Inventory **5 pc**.
+4. A: Beard Oil → **Adjust stock** → Take out `1`, reason `Broken` → ✅ **4 pc**, the movement shows who and why.
+5. A: Inventory → **Stock count** → Beard Oil `3` → **Save count**. ✅ Beard Oil shows **Low**, and Home
+   lists it under **Needs attention**.
+6. B (cashier): Inventory shows levels; ✅ no Adjust, no Stock count. Staff logins see levels without any costs.
+
+## 13 · Close the day (A and B, 4 min)
+
+1. B: Home → **Close day**. ✅ The card shows how expected cash is made up (brought forward, sales, expenses …).
+2. If a stylist earned tips: **Pay tips** → ✅ expected cash drops by what was paid.
+3. B: **Count notes & coins** → enter the notes → **Use this count**. Make it AED 5 less than expected.
+   ✅ "Short by AED 5.00"; a reason is required → type `Change given twice` → tick the confirmation →
+   **Submit for approval**. ✅ "Sent to the owner for approval".
+4. B: try a **cash** sale → ✅ refused: "This day's cash is closed…". A card sale still works.
+5. A: Home → **Needs attention** → "Cash close … waiting for approval" → **Review** → **Approve closing**.
+   ✅ "Day closed and locked"; Home's expected cash = what was counted; Accounts → Trial balance
+   shows Cash over/short AED 5.00 and **Balanced: Yes**.
+
+If anything does not match a ✅, note the step number and what you saw.

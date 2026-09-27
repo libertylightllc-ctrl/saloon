@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -43,7 +43,8 @@ export function PurchasesScreen() {
   const { business, role } = useWorkspace();
   const owner = can(role, 'payOrReverseMoneyOut');
   const seesBalances = role === 'owner' || role === 'accountant';
-  const [tab, setTab] = useState<Tab>('bills');
+  const params = useLocalSearchParams<{ tab?: string }>();
+  const [tab, setTab] = useState<Tab>(params.tab === 'suppliers' ? 'suppliers' : 'bills');
   const bills = useBills(business.id);
   const suppliers = useSuppliers(business.id, seesBalances);
   const [editing, setEditing] = useState<Supplier | null | undefined>(undefined);

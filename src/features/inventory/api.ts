@@ -139,3 +139,15 @@ export function useRecordCount(branchId: string, businessId: string) {
     onSuccess: done,
   });
 }
+
+/** Opening stock at its cost (Dr Inventory · Cr Owner equity). Owner. */
+export function useOpeningStock(branchId: string, businessId: string) {
+  const done = useInvalidateStock(branchId, businessId);
+  return useMutation({
+    mutationFn: async (input: { items: { item_id: string; qty: number; unit_cost_minor: number }[] }) => {
+      const { error } = await supabase.rpc('set_opening_stock', { p_branch: branchId, p_items: asJson(input.items) });
+      if (error) throw error;
+    },
+    onSuccess: done,
+  });
+}

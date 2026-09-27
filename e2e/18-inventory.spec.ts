@@ -1,6 +1,6 @@
 /** Inventory & tools: add a retail product, sell it in Quick sale, refund it back onto the shelf, adjust with a
  * reason, count the shelf; low stock and tools due show on Home; staff see levels but never costs. */
-import { admin, createOwner, createStaff } from './support/api';
+import { createOwner, createStaff } from './support/api';
 import { expect, test } from './support/fixtures';
 import { back, expectMoney, id, ownerOn, snap, staffOn, tab, text } from './support/ui';
 
@@ -24,14 +24,15 @@ test('owner adds a product, sells it, refunds it to stock, adjusts and counts; H
   await expect(text(page, 'Item saved')).toBeVisible();
   await expect(id(page, 'item-qty')).toHaveText('0 pc');
 
-  // Ten in at 25.00 each (opening stock through the same RPC the setup wizard uses).
-  const { data: item } = await admin.from('inventory_items').select('id').eq('business_id', owner.businessId).eq('name', product).single();
-  const { error } = await owner.client.rpc('set_opening_stock', {
-    p_branch: owner.branchId,
-    p_items: [{ item_id: item!.id, qty: 10, unit_cost_minor: 2500 }],
-  });
-  expect(error).toBeNull();
-  await page.reload();
+  // Opening stock: ten on the shelf at 25.00 each.
+  await back(page);
+  await id(page, 'inventory-opening').click();
+  await id(page, `opening-qty-${product}`).fill('10');
+  await id(page, `opening-cost-${product}`).fill('25');
+  await expect(id(page, 'opening-save')).toContainText('AED 250.00');
+  await id(page, 'opening-save').click();
+  await expect(text(page, 'Opening stock saved for 1 item')).toBeVisible();
+  await id(page, `item-${product}`).click();
   await expect(id(page, 'item-qty')).toHaveText('10 pc');
   await expectMoney(page, 'item-value', 25_000);
   await back(page);

@@ -2,7 +2,7 @@
 -- staff, adjustments with a reason, stock counts, low stock and tools on Home, restock on a full refund.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(41);
+select plan(43);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -65,6 +65,10 @@ select lives_ok(format($$ select save_item('{"business_id":"%s","name":"Hair Dry
   "assigned_to":"Station 2"}') $$, current_setting('t.b')), 'owner adds a tool that needs a service');
 select lives_ok(format($$ select set_opening_stock('%s', '[{"item_id":"%s","qty":10,"unit_cost_minor":3000}]') $$,
   current_setting('t.br'), current_setting('t.oil')), 'owner counts 10 bottles in at AED 30.00');
+select ok((dashboard_today(current_setting('t.br')::uuid) -> 'setup' ->> 'opening_stock')::boolean,
+  'the setup checklist ticks "opening stock counted"');
+select ok(not (dashboard_today(current_setting('t.br')::uuid) -> 'setup' ->> 'suppliers')::boolean,
+  'no suppliers yet: that step is still open');
 
 select pg_temp.as_user('00000000-0000-0000-0000-00000000030c');
 select throws_ok(format($$ select save_item('{"business_id":"%s","name":"Nail File","kind":"consumable"}') $$,

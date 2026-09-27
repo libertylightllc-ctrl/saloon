@@ -144,7 +144,10 @@ begin
       'services', exists (select 1 from services where business_id = b.business_id and status = 'active'),
       'staff', exists (select 1 from members where business_id = b.business_id and role <> 'owner'),
       'tax', coalesce((b.settings ->> 'tax_confirmed')::boolean, false),
-      'opening_cash', coalesce((b.settings ->> 'opening_cash_set')::boolean, false)));
+      'opening_cash', coalesce((b.settings ->> 'opening_cash_set')::boolean, false),
+      -- M2 steps (01-PRODUCT §3.1): opening stock counted, suppliers added.
+      'opening_stock', coalesce((b.settings ->> 'opening_stock_set')::boolean, false),
+      'suppliers', exists (select 1 from suppliers where business_id = b.business_id)));
   end if;
 
   if m.role = 'staff' then

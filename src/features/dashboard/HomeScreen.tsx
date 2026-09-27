@@ -34,6 +34,8 @@ const SETUP_STEPS: { key: keyof NonNullable<Dashboard['setup']>; href: Href }[] 
   { key: 'staff', href: '/settings/team' },
   { key: 'tax', href: '/settings/branch' },
   { key: 'opening_cash', href: '/settings/branch' },
+  { key: 'opening_stock', href: '/inventory/opening' },
+  { key: 'suppliers', href: { pathname: '/purchases', params: { tab: 'suppliers' } } },
 ];
 
 export function HomeScreen() {

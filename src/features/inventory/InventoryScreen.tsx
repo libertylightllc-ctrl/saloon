@@ -91,6 +91,9 @@ export function InventoryScreen() {
                 {can(role, 'countStock') ? (
                   <Button label={t('inventory.count')} icon="clipboard" variant="outline" size="md" onPress={() => router.push('/inventory/count')} testID="inventory-count" />
                 ) : null}
+                {owner ? (
+                  <Button label={t('inventory.opening.title')} icon="boxes" variant="outline" size="md" onPress={() => router.push('/inventory/opening')} testID="inventory-opening" />
+                ) : null}
                 {can(role, 'addPurchase') ? (
                   <Button label={t('inventory.order')} icon="truck" variant="outline" size="md" onPress={() => router.push('/purchases/new')} testID="inventory-order" />
                 ) : null}

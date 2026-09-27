@@ -243,6 +243,7 @@ test('owner: every button on every screen does something visible', { tag: '@swee
     ['Item detail', `/inventory/${s.itemId}`],
     ['Item form', `/inventory/form?id=${s.itemId}`],
     ['Stock count', '/inventory/count'],
+    ['Opening stock', '/inventory/opening'],
   ];
   for (const [screen, url, prepare] of screens) await sweepScreen(page, rows, screen, url, prepare);
   report(mode, 'owner', rows);
