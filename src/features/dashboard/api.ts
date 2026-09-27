@@ -23,6 +23,14 @@ export interface Dashboard {
   }[];
   activity?: { summary: string; at: string; actor: string | null }[];
   money_out?: { expenses_minor: number; supplier_payments_minor: number };
+  stock?: { low: number; low_items: string[]; tools_due: number };
+  bills?: { overdue_count: number; overdue_minor: number; due_soon_count: number; due_soon_minor: number } | null;
+  closing?: {
+    today_status: 'open' | 'draft' | 'pending_approval' | 'approved';
+    pending_approval: number;
+    pending: { id: string; business_date: string; variance_minor: number | null }[];
+    unclosed_days: string[];
+  };
   appointments?: { completed: number; waiting: number; in_progress: number; booked: number; no_show: number };
   setup?: { services: boolean; staff: boolean; tax: boolean; opening_cash: boolean };
   me?: { services_today: number; sales_today_minor: number; commission_month_minor: number };

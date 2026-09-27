@@ -14,8 +14,9 @@ export type SaleDetail = Sale & {
 };
 
 export interface SaleLineInput {
-  kind: 'service' | 'custom';
+  kind: 'service' | 'retail' | 'custom';
   service_id?: string;
+  item_id?: string;
   name?: string;
   unit_price_minor?: number;
   qty: number;
@@ -101,6 +102,7 @@ export function useRefundSale(branchId: string) {
       method: PaymentMethod;
       reason: string;
       idempotency_key: string;
+      restock?: boolean;
     }) => {
       const { data, error } = await supabase.rpc('refund_sale', { p: asJson(input) });
       if (error) throw error;
@@ -110,6 +112,8 @@ export function useRefundSale(branchId: string) {
       void client.invalidateQueries({ queryKey: keys.sale(input.sale_id) });
       void client.invalidateQueries({ queryKey: keys.sales(branchId) });
       void client.invalidateQueries({ queryKey: keys.dashboard(branchId) });
+      void client.invalidateQueries({ queryKey: keys.stock(branchId) });
+      void client.invalidateQueries({ queryKey: keys.closing(branchId) });
     },
   });
 }

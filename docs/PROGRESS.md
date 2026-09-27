@@ -1,8 +1,21 @@
 # Progress
 
-Updated: 2026-09-25
+Updated: 2026-09-27
 
-## Current milestone: M1 — Working core ✅ done (hand-over: docs/M1-HANDOVER.md). Next: M2 — Money in / out
+## Current milestone: M2 — Money in / out (in progress). M1 ✅ done (hand-over: docs/M1-HANDOVER.md)
+
+### M2 status
+- ✅ Expenses (16 categories, reversal) and Purchases & suppliers (bills, stock, payments, reversal) — 2026-09-26.
+- ✅ Cash closing — 2026-09-27: expected-cash calculation, notes & coins helper, difference with reason, counted by,
+  drawer-closed tick, draft / submit / owner approve or send back, day lock, over/short and cash taken out posted,
+  next day's opening, tip payouts, 30-day history, Home "Close day" and Needs attention (closes waiting, days not
+  closed). SQL `03_cash_closing.test.sql` (53), e2e `17-cash-closing.spec.ts` (both modes).
+- ✅ Inventory & tools — 2026-09-27: items (consumable / retail / tool), levels, value, low stock, adjustment with a
+  reason, stock count, movements with who and why, tools (condition, next service, assigned to), retail products in
+  Quick sale (product revenue, cost of goods, no commission), restock on a full refund, Home quick action "Stock" and
+  Needs attention (low stock, tools due, supplier bills overdue / due this week). SQL `04_inventory.test.sql` (41),
+  e2e `18-inventory.spec.ts` (both modes).
+- ⏳ Next: receipt photos on expenses and bills (Storage), then the M2 hand-over.
 
 ### Works (proven)
 - **Database** (`supabase/migrations/…01–09`): tenancy, ledger (balanced-journal constraint, closed periods),

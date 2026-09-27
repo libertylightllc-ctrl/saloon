@@ -5,33 +5,32 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { useCatalog, type Service } from '@/features/catalog/api';
-import { recipeText } from '@/features/catalog/recipeText';
+import { useInventory } from '@/features/inventory/api';
 import type { PickedCustomer } from '@/features/customers/CustomerPicker';
 import { modeConfig } from '@/features/mode/modeConfig';
 import { useAppointment } from '@/features/queue/api';
 import type { SaleResult } from '@/features/sales/api';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
-import { spacing, useTheme, useThemeMode } from '@/theme';
+import { spacing, useThemeMode } from '@/theme';
 import {
   Button,
   Card,
   EmptyState,
   HeaderBand,
-  Icon,
   QueryState,
   Screen,
   SegmentTabs,
-  Stepper,
   Text,
-  Thumb,
   type IconName,
 } from '@/ui';
 
 import { basketTotals, type BasketLine } from './basket';
 import { CheckoutSheet } from './CheckoutSheet';
 import { CustomItemSheet } from './CustomItemSheet';
+import { ProductTile } from './ProductTile';
 import { SaleDoneSheet } from './SaleDoneSheet';
+import { ServiceTile } from './ServiceTile';
 
 export function SaleScreen() {
   const { t } = useTranslation();
@@ -41,6 +40,7 @@ export function SaleScreen() {
   const params = useLocalSearchParams<{ appointment?: string; customer?: string; customerName?: string }>();
   const catalog = useCatalog(business.id);
   const appointment = useAppointment(branch.id, params.appointment);
+  const inventory = useInventory(branch.id);
 
   const [category, setCategory] = useState('all');
   const [lines, setLines] = useState<BasketLine[]>([]);
@@ -80,12 +80,14 @@ export function SaleScreen() {
   const services = useMemo(() => (catalog.data?.services ?? []).filter((s) => s.status === 'active'), [catalog.data]);
   const categories = (catalog.data?.categories ?? []).filter((c) => services.some((s) => s.category_id === c.id));
   const shown = services.filter((s) => category === 'all' || s.category_id === category);
+  const products = (inventory.data ?? []).filter((i) => i.kind === 'retail' && i.active && i.sell_price_minor !== null);
   const iconFor = (s: Service): IconName =>
     (categories.find((c) => c.id === s.category_id)?.icon as IconName | undefined) ??
     modeConfig[mode].defaultCategories[0]!.icon;
   const deposit = appt?.deposit_status === 'held' ? appt.deposit_minor : 0;
   const totals = basketTotals(lines, { vatOn: branch.vat_mode === 'on', deposit });
   const qtyOf = (id: string) => lines.find((l) => l.serviceId === id)?.qty ?? 0;
+  const qtyOfItem = (id: string) => lines.find((l) => l.itemId === id)?.qty ?? 0;
 
   const setQty = (key: string, qty: number, add?: BasketLine) =>
     setLines((all) => {
@@ -108,16 +110,24 @@ export function SaleScreen() {
       <Screen
         insetBottom={false}
         refreshing={catalog.isRefetching}
-        onRefresh={() => void catalog.refetch()}
+        onRefresh={() => {
+          void catalog.refetch();
+          void inventory.refetch();
+        }}
         header={
           <HeaderBand
             title={t('sale.title')}
             subtitle={appt ? t('sale.forCustomer', { name: appt.customer_name ?? t('queue.guest') }) : t('sale.subtitle')}
           >
             <SegmentTabs
-              items={[{ key: 'all', label: t('sale.all') }, ...categories.map((c) => ({ key: c.id, label: c.name }))]}
+              items={[
+                { key: 'all', label: t('sale.all') },
+                ...categories.map((c) => ({ key: c.id, label: c.name })),
+                ...(products.length ? [{ key: 'products', label: t('sale.products') }] : []),
+              ]}
               value={category}
               onChange={setCategory}
+              testID="sale-tab"
             />
           </HeaderBand>
         }
@@ -143,7 +153,7 @@ export function SaleScreen() {
       >
         <QueryState
           query={catalog}
-          isEmpty={() => services.length === 0}
+          isEmpty={() => services.length === 0 && products.length === 0}
           empty={
             <EmptyState
               illustration="no-results"
@@ -155,7 +165,28 @@ export function SaleScreen() {
         >
           {() => (
             <View style={styles.grid}>
-              {shown.map((service, i) => (
+              {category === 'products'
+                ? products.map((item, i) => (
+                    <ProductTile
+                      key={item.item_id}
+                      item={item}
+                      index={i}
+                      qty={qtyOfItem(item.item_id)}
+                      onChange={(n) =>
+                        setQty(`item-${item.item_id}`, n, {
+                          key: `item-${item.item_id}`,
+                          kind: 'retail',
+                          itemId: item.item_id,
+                          unit: item.unit,
+                          name: item.name,
+                          unitPriceMinor: item.sell_price_minor ?? 0,
+                          qty: n,
+                        })
+                      }
+                    />
+                  ))
+                : null}
+              {(category === 'products' ? [] : shown).map((service, i) => (
                 <ServiceTile
                   key={service.id}
                   service={service}
@@ -222,60 +253,9 @@ export function SaleScreen() {
   );
 }
 
-function ServiceTile({
-  service,
-  icon,
-  index,
-  qty,
-  onChange,
-}: {
-  service: Service;
-  icon: IconName;
-  index: number;
-  qty: number;
-  onChange: (n: number) => void;
-}) {
-  const theme = useTheme();
-  const { t } = useTranslation();
-  const recipe = recipeText(service.recipe, t);
-  return (
-    <Card
-      variant="outlined"
-      padding={spacing.md}
-      style={[styles.tile, qty > 0 && { borderColor: theme.colors.primary400 }]}
-    >
-      <View style={styles.tileTop}>
-        <Thumb icon={icon} index={index} size={44} />
-        <View style={styles.flex}>
-          <Text variant="bodyStrong" weight="semibold" numberOfLines={2}>
-            {service.name}
-          </Text>
-          <View style={styles.duration}>
-            <Icon name="clock" size={12} color={theme.colors.textSecondary} />
-            <Text variant="small" color="textSecondary">
-              {t('common.minutes', { n: service.duration_min })}
-            </Text>
-          </View>
-        </View>
-      </View>
-      {recipe ? (
-        <Text variant="small" color="textSecondary" numberOfLines={1}>
-          {recipe}
-        </Text>
-      ) : null}
-      <Text variant="h4" weight="bold" tabular numberOfLines={1}>
-        {formatMoney(service.price_minor)}
-      </Text>
-      <Stepper value={qty} onChange={onChange} itemLabel={service.name} fullWidth testID={`tile-${service.name}`} />
-    </Card>
-  );
-}
-
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
   tile: { flexBasis: '46%', flexGrow: 1, gap: spacing.sm, justifyContent: 'center' },
-  tileTop: { flexDirection: 'row', gap: spacing.sm },
-  duration: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   footer: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg },
 });

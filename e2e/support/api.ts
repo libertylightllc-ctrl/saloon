@@ -222,3 +222,36 @@ export async function refundSale(owner: Owner, saleId: string, amount: number, m
   });
   if (error) throw error;
 }
+
+/** The employee row behind a staff login (tips and commission are per employee). */
+export async function employeeOf(memberId: string): Promise<string> {
+  const { data, error } = await admin.from('employees').select('id').eq('member_id', memberId).single();
+  if (error) throw error;
+  return data.id as string;
+}
+
+/** A custom-priced sale paid in cash and/or card, with an optional tip for `employeeId`. */
+export async function sellCustom(
+  client: SupabaseClient,
+  owner: Owner,
+  opts: { cash?: number; card?: number; tip?: number; employeeId?: string },
+) {
+  const cash = opts.cash ?? 0;
+  const card = opts.card ?? 0;
+  const tip = opts.tip ?? 0;
+  const { data, error } = await client.rpc('create_sale', {
+    p: {
+      branch_id: owner.branchId,
+      client_ref: crypto.randomUUID(),
+      employee_id: opts.employeeId,
+      lines: [{ kind: 'custom', name: 'Walk-in service', unit_price_minor: cash + card - tip }],
+      tip_minor: tip,
+      payments: [
+        ...(cash ? [{ method: 'cash', amount_minor: cash }] : []),
+        ...(card ? [{ method: 'card', amount_minor: card }] : []),
+      ],
+    },
+  });
+  if (error) throw error;
+  return data as { sale_id: string; number: number; total_minor: number };
+}

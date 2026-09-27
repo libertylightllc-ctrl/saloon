@@ -9,8 +9,11 @@ export const VAT_BPS = 500;
 
 export interface BasketLine {
   key: string;
-  kind: 'service' | 'custom';
+  kind: 'service' | 'retail' | 'custom';
   serviceId?: string;
+  itemId?: string;
+  /** Retail: the unit, so the stock line reads "Argan Hair Oil 2 pc". */
+  unit?: string;
   name: string;
   unitPriceMinor: Minor;
   qty: number;

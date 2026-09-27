@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatMoney, type Minor } from '@/lib/money';
-import { BottomSheet, Button, FormError, MoneyInput, SegmentTabs, Text, TextField, useToast } from '@/ui';
+import { BottomSheet, Button, FormError, MoneyInput, SegmentTabs, SwitchRow, Text, TextField, useToast } from '@/ui';
 
 import { useRefundSale, type PaymentMethod, type SaleDetail } from './api';
 
@@ -29,6 +29,9 @@ function RefundForm({ sale, onDone }: { sale: SaleDetail; onDone: () => void }) 
   const [method, setMethod] = useState<PaymentMethod>(firstMethod);
   const [reason, setReason] = useState('');
   const [key] = useState(() => Crypto.randomUUID());
+  const [restock, setRestock] = useState(false);
+  // Products go back on the shelf only with a full refund (a part refund cannot say which ones).
+  const canRestock = sale.sale_lines.some((l) => l.kind === 'retail') && amount === left;
 
   const valid = amount !== null && amount > 0 && amount <= left && reason.trim().length >= 3;
 
@@ -56,6 +59,9 @@ function RefundForm({ sale, onDone }: { sale: SaleDetail; onDone: () => void }) 
         maxLength={200}
         testID="refund-reason"
       />
+      {canRestock ? (
+        <SwitchRow label={t('sales.restock')} hint={t('sales.restockHint')} value={restock} onChange={setRestock} testID="refund-restock" />
+      ) : null}
       <FormError error={refund.error} />
       <Button
         label={t('sales.confirmRefund', { amount: formatMoney(amount ?? 0) })}
@@ -63,7 +69,14 @@ function RefundForm({ sale, onDone }: { sale: SaleDetail; onDone: () => void }) 
         loading={refund.isPending}
         onPress={() =>
           refund.mutate(
-            { sale_id: sale.id, amount_minor: amount!, method, reason: reason.trim(), idempotency_key: key },
+            {
+              sale_id: sale.id,
+              amount_minor: amount!,
+              method,
+              reason: reason.trim(),
+              idempotency_key: key,
+              restock: canRestock && restock,
+            },
             {
               onSuccess: () => {
                 toast(t('sales.refunded', { amount: formatMoney(amount!) }));

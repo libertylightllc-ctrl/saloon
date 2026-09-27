@@ -43,6 +43,35 @@ begin
                                       where branch_id = p_branch and business_date = v_today and status = 'posted'), 0),
           'supplier_payments_minor', coalesce((select sum(amount_minor) from supplier_payments
                                                where branch_id = p_branch and business_date = v_today), 0)),
+      -- Cash closing (tables from migration …012): today's status, closes waiting for the owner, and
+      -- earlier days in the last week that had cash but were never submitted.
+      'closing', jsonb_build_object(
+          'today_status', coalesce((select status from cash_closings
+                                    where branch_id = p_branch and business_date = v_today), 'open'),
+          'pending_approval', (select count(*) from cash_closings
+                               where branch_id = p_branch and status = 'pending_approval'),
+          'pending', coalesce((select jsonb_agg(jsonb_build_object('id', c.id, 'business_date', c.business_date,
+                                 'variance_minor', c.variance_minor) order by c.business_date)
+                               from cash_closings c where c.branch_id = p_branch and c.status = 'pending_approval'), '[]'),
+          'unclosed_days', coalesce((select jsonb_agg(d.day order by d.day) from (
+                               select distinct e.business_date as day from journal_entries e
+                               join journal_lines l on l.entry_id = e.id and l.account_id = public.acct(b.business_id, 'cash')
+                               where e.branch_id = p_branch and e.business_date between v_today - 7 and v_today - 1
+                                 -- a day before the latest close can no longer be closed on its own
+                                 and e.business_date > coalesce((select max(c.business_date) from cash_closings c
+                                                                 where c.branch_id = p_branch and c.status <> 'draft'),
+                                                                v_today - 8)) d), '[]')),
+      -- Stock (…013): items at or below their reorder level; tools that need a service within a week.
+      'stock', (select jsonb_build_object(
+          'low', count(*) filter (where x.low),
+          'low_items', coalesce(jsonb_agg(x.name order by x.qty) filter (where x.low), '[]'),
+          'tools_due', count(*) filter (where x.kind = 'tool' and (x.condition = 'needs_service'
+                                          or x.next_service_date <= v_today + 7)))
+        from (select i.name, i.kind, i.condition, i.next_service_date, coalesce(sl.qty, 0) as qty,
+                     i.kind <> 'tool' and i.reorder_level > 0 and coalesce(sl.qty, 0) <= i.reorder_level as low
+              from inventory_items i
+              left join stock_levels sl on sl.item_id = i.id and sl.branch_id = p_branch
+              where i.business_id = b.business_id and i.active) x),
       'expected_cash', public.expected_cash(p_branch, v_today),
       'expected_cash_yesterday', public.expected_cash(p_branch, v_today - 1),
       'sales', (select jsonb_build_object(
@@ -83,6 +112,13 @@ begin
             from sale_lines sl join sales s on s.id = sl.sale_id
             where sl.employee_id = e.id and s.business_date = v_today and s.branch_id = p_branch) x on true
           where e.branch_id = p_branch and e.active and e.role_title <> 'cashier'), '[]'),
+      -- Supplier bills due within a week or overdue (owner and accountant; cashiers see no balances).
+      'bills', case when m.role in ('owner', 'accountant') then (select jsonb_build_object(
+          'overdue_count', count(*) filter (where due_date < v_today),
+          'overdue_minor', coalesce(sum(total_minor - paid_minor) filter (where due_date < v_today), 0),
+          'due_soon_count', count(*) filter (where due_date between v_today and v_today + 7),
+          'due_soon_minor', coalesce(sum(total_minor - paid_minor) filter (where due_date between v_today and v_today + 7), 0))
+        from purchase_bills where business_id = b.business_id and status in ('unpaid', 'partial')) end,
       -- History is for the owner (and the read-only accountant), not the front desk.
       'activity', case when m.role in ('owner', 'accountant') then coalesce((select jsonb_agg(jsonb_build_object(
             'summary', al.summary, 'at', al.created_at, 'actor', mem.display_name) order by al.created_at desc)

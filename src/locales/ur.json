@@ -180,7 +180,22 @@
       "services": "آج میری سروسز",
       "sales": "آج میری فروخت",
       "commission": "اس ماہ کمیشن"
-    }
+    },
+    "dayPending": "گنا گیا · منظوری باقی",
+    "dayClosed": "دن بند",
+    "attention": {
+      "closePending": "{{date}} کی کلوزنگ منظوری کے لیے باقی",
+      "closePendingSub": "فرق {{amount}}",
+      "unclosed": "{{date}} بند نہیں ہوا",
+      "unclosedSub": "آج سے پہلے اسے گن کر بند کریں",
+      "lowStock": "{{n}} آئٹم کا اسٹاک کم",
+      "toolsDue": "{{n}} اوزار کو سروس چاہیے",
+      "toolsDueSub": "ایک ہفتے میں سروس",
+      "billsOverdue": "{{n}} سپلائر بل واجب الادا",
+      "billsDue": "اس ہفتے {{n}} سپلائر بل واجب",
+      "billsSub": "{{amount}} ادا کرنا ہے"
+    },
+    "attentionClose": "بند کریں"
   },
   "queue": {
     "title": "قطار",
@@ -305,7 +320,10 @@
     "willUpdateStaff": "محفوظ کرنے سے متوقع نقد، {{staff}} کا کمیشن اور اسٹاک ({{stock}}) اپڈیٹ ہوں گے۔",
     "noStock": "کوئی پروڈکٹ نہیں",
     "printReceipt": "رسید پرنٹ کریں",
-    "lowStock": "کم اسٹاک: {{items}}"
+    "lowStock": "کم اسٹاک: {{items}}",
+    "products": "مصنوعات",
+    "inStock": "{{qty}} اسٹاک میں",
+    "noProducts": "ابھی فروخت کے لیے کوئی چیز نہیں۔"
   },
   "customers": {
     "subtitle": "پروفائل، دورے اور نوٹس۔",
@@ -605,7 +623,16 @@
     "unknown_setting": "یہ سیٹنگ یہاں نہیں بدل سکتی۔",
     "invalid_role": "کردار چنیں۔",
     "server_busy": "سرور بہت وقت لے رہا ہے۔ تھوڑی دیر میں دوبارہ کوشش کریں۔",
-    "unknown": "کچھ غلط ہو گیا۔ دوبارہ کوشش کریں۔"
+    "unknown": "کچھ غلط ہو گیا۔ دوبارہ کوشش کریں۔",
+    "day_closed": "اس دن کا نقد بند ہے۔ کارڈ لیں، یا مالک سے گنتی واپس بھیجنے کو کہیں۔",
+    "invalid_date": "وہ دن بند نہیں ہو سکتا۔ دن ترتیب سے، آج تک بند ہوتے ہیں۔",
+    "count_required": "گنا گیا نقد درج کریں۔",
+    "confirm_required": "تصدیق کا باکس ٹک کریں کہ گنتی کے وقت دراز بند تھا۔",
+    "previous_close_pending": "پچھلی کلوزنگ مالک کے پاس باقی ہے۔ پہلے اسے منظور کرنا ہوگا۔",
+    "item_exists": "اس نام کا آئٹم پہلے سے ہے۔",
+    "price_required": "فروخت والے آئٹم کی قیمت چاہیے۔",
+    "item_unavailable": "یہ چیز اب فروخت میں نہیں۔ ریفریش کریں۔",
+    "invalid_restock": "پوری فروخت واپس ہونے پر ہی سامان اسٹاک میں واپس جاتا ہے۔"
   },
   "sales": {
     "title": "فروخت",
@@ -627,7 +654,9 @@
       "completed": "ادا شدہ",
       "partially_refunded": "جزوی ریفنڈ",
       "refunded": "ریفنڈ شدہ"
-    }
+    },
+    "restock": "چیزیں واپس اسٹاک میں رکھیں",
+    "restockHint": "صرف جب پوری فروخت واپس ہو اور چیزیں دوبارہ بک سکیں۔"
   },
   "receipt": {
     "receipt": "رسید",
@@ -819,7 +848,11 @@
       "expense_reversal": "واپس شدہ اخراجات",
       "purchase_bill": "سپلائر بل",
       "purchase_bill_reversal": "واپس شدہ بل",
-      "supplier_payment": "سپلائر ادائیگیاں"
+      "supplier_payment": "سپلائر ادائیگیاں",
+      "cash_close": "کیش کلوز",
+      "tip_payout": "دی گئی ٹپس",
+      "stock_adjustment": "اسٹاک تبدیلیاں",
+      "stock_count": "اسٹاک گنتی"
     }
   },
   "settingUp": {
@@ -939,5 +972,166 @@
       "paid": "ادا شدہ",
       "reversed": "واپس شدہ"
     }
+  },
+  "closing": {
+    "title": "کیش کلوزنگ",
+    "expectedOn": "متوقع نقد · {{date}}",
+    "opening": "پچھلا بقایا",
+    "expected": "متوقع نقد",
+    "noCashMoves": "ابھی تک کوئی نقد آیا یا گیا نہیں۔",
+    "count": "دراز گنیں",
+    "counted": "اصل گنا گیا نقد",
+    "countNotes": "نوٹ اور سکے گنیں",
+    "denominations": "نوٹ اور سکے",
+    "note": "AED {{value}} کے نوٹ",
+    "coin": "AED {{value}} کے سکے",
+    "denominationTotal": "کل {{amount}}",
+    "useCount": "یہ گنتی لیں",
+    "variance": {
+      "short": "{{amount}} کم",
+      "over": "{{amount}} زیادہ",
+      "balanced": "برابر"
+    },
+    "reason": "فرق کی وجہ",
+    "reasonHint": "گنتی نہ ملے تو ضروری ہے۔",
+    "reasonWas": "وجہ: {{reason}}",
+    "countedBy": "کس نے گنا",
+    "countedByName": "{{name}} نے گنا",
+    "takenOut": "کلوز کے بعد نکالا گیا نقد",
+    "takenOutHint": "اختیاری۔ کل کا آغاز گنے گئے نقد میں سے یہ رقم نکال کر ہوگا۔",
+    "takenTooMuch": "گنے گئے نقد ({{amount}}) سے زیادہ نہیں نکال سکتے۔",
+    "takenTo": {
+      "bank": "بینک میں",
+      "owner": "مالک کو"
+    },
+    "takenOutTo": {
+      "bank": "بینک کے لیے نکالا",
+      "owner": "مالک نے نکالا"
+    },
+    "confirm": "میں تصدیق کرتا/کرتی ہوں کہ گنتی فروخت کے لیے دراز بند کر کے کی گئی",
+    "saveDraft": "ڈرافٹ محفوظ کریں",
+    "submit": "منظوری کے لیے بھیجیں",
+    "approve": "کلوزنگ منظور کریں",
+    "done": {
+      "draft": "ڈرافٹ محفوظ ہو گیا",
+      "submit": "منظوری کے لیے مالک کو بھیج دیا گیا",
+      "approve": "دن بند اور لاک ہو گیا",
+      "sentBack": "دوبارہ گنتی کے لیے واپس بھیجا"
+    },
+    "locked": "لاک ہے۔ اس دن کے لیے مزید نقد درج نہیں ہو سکتا۔",
+    "waiting": "مالک کا انتظار۔ اس دن کا نقد بند ہے۔",
+    "sendBack": "واپس بھیجیں",
+    "sendBackHint": "کیشیئر دوبارہ گنے گا۔ دوبارہ بھیجے جانے تک دن نقد کے لیے کھلا رہے گا۔",
+    "sendBackReason": "کیا چیک کرنا ہے؟",
+    "sentBack": "واپس بھیجا گیا",
+    "sentBackBecause": "مالک نے یہ گنتی واپس بھیجی: {{reason}}",
+    "notCounted": "ابھی گنا نہیں گیا۔",
+    "tips": "ٹپس کی ادائیگی",
+    "noTips": "کوئی ٹپ واجب نہیں۔",
+    "tipsOwed": "واجب {{amount}}",
+    "payTips": "ٹپ دیں",
+    "payTipsHint": "{{name}} کا {{amount}} واجب ہے۔ دراز سے نقد دیا جائے گا۔",
+    "tipsAmount": "رقم",
+    "payTipsAmount": "{{amount}} دیں",
+    "tipsPaid": "{{name}} کو {{amount}} ٹپ دی گئی",
+    "history": "کلوزنگ کی تاریخ",
+    "noHistory": "ابھی دکھانے کو کوئی دن نہیں۔",
+    "historyExpected": "متوقع {{amount}}",
+    "historyCounted": "گنا {{amount}}",
+    "status": {
+      "open": "بند نہیں",
+      "draft": "ڈرافٹ",
+      "pending_approval": "منظوری باقی",
+      "approved": "منظور"
+    }
+  },
+  "inventory": {
+    "title": "اسٹاک اور اوزار",
+    "subtitle": "مقدار، مالیت اور ہر تبدیلی",
+    "add": "آئٹم شامل کریں",
+    "filters": {
+      "all": "سب",
+      "low": "کم اسٹاک",
+      "consumable": "استعمال کا سامان",
+      "retail": "فروخت کا سامان",
+      "tool": "اوزار"
+    },
+    "kinds": {
+      "consumable": "استعمال",
+      "retail": "فروخت کی چیز",
+      "tool": "اوزار"
+    },
+    "units": {
+      "pcs": "پیس",
+      "ml": "ملی لیٹر",
+      "g": "گرام",
+      "pairs": "جوڑے"
+    },
+    "value": "اسٹاک کی مالیت",
+    "lowCount": "کم اسٹاک",
+    "activeItems": "فعال آئٹم",
+    "movements": "تبدیلیاں · 30 دن",
+    "count": "اسٹاک گنتی",
+    "order": "آرڈر",
+    "search": "آئٹم تلاش کریں",
+    "empty": "یہاں ابھی کوئی آئٹم نہیں۔",
+    "noLow": "کچھ بھی کم نہیں۔",
+    "assignedTo": "{{name}} کے پاس",
+    "serviceOn": "سروس {{date}}",
+    "conditions": {
+      "good": "ٹھیک",
+      "needs_service": "سروس چاہیے"
+    },
+    "onHand": "موجود",
+    "avgCost": "اوسط لاگت",
+    "reorderLevel": "دوبارہ آرڈر پر",
+    "sellPrice": "فروخت کی قیمت",
+    "location": "کہاں رکھا ہے",
+    "condition": "حالت",
+    "nextService": "اگلی سروس کی تاریخ",
+    "assigned": "کس کو دیا",
+    "adjust": "اسٹاک بدلیں",
+    "adjustHint": "ابھی موجود: {{qty}}۔ ہر تبدیلی کی وجہ چاہیے۔",
+    "adjustOut": "کم کریں",
+    "adjustIn": "شامل کریں",
+    "adjustQty": "مقدار ({{unit}})",
+    "adjustTooMuch": "صرف {{qty}} موجود ہے۔",
+    "adjustReason": "وجہ (ٹوٹا، ایکسپائر، ملا…)",
+    "adjustSave": "تبدیلی محفوظ کریں",
+    "adjusted": "اسٹاک بدل گیا",
+    "history": "تبدیلیاں",
+    "noMovements": "ابھی کوئی تبدیلی نہیں۔",
+    "reasons": {
+      "purchase": "آیا",
+      "service_use": "سروس میں لگا",
+      "retail_sale": "فروخت",
+      "adjustment": "تبدیل",
+      "count": "گنتی",
+      "reversal": "واپس",
+      "opening": "ابتدائی اسٹاک"
+    },
+    "newTitle": "نیا آئٹم",
+    "editTitle": "آئٹم بدلیں",
+    "saved": "آئٹم محفوظ ہو گیا",
+    "fields": {
+      "name": "آئٹم کا نام",
+      "kind": "قسم",
+      "unit": "کس میں گنیں",
+      "reorder": "دوبارہ آرڈر کی حد",
+      "reorderHint": "اتنا یا کم ہونے پر کم اسٹاک دکھے گا۔",
+      "price": "فروخت کی قیمت",
+      "location": "کہاں رکھا ہے",
+      "locationHint": "اسٹور روم، کلر اسٹیشن…",
+      "assignedHint": "کرسی 2، ٹیم…",
+      "dateFormat": "سال-مہینہ-دن لکھیں، جیسے 2026-10-31۔",
+      "active": "استعمال میں",
+      "activeHint": "بند آئٹم چھپ جاتے ہیں، تاریخ رہتی ہے۔"
+    },
+    "countHint": "شیلف پر جو ہے وہ لکھیں۔ چھوڑنے کے لیے خالی رکھیں۔",
+    "system": "ریکارڈ میں {{qty}}",
+    "countedFor": "{{name}} کی گنتی",
+    "countNote": "نوٹ (اختیاری)",
+    "countSave": "گنتی محفوظ کریں ({{n}})",
+    "counted": "گنتی محفوظ: {{n}} بدلے، {{value}}"
   }
 }

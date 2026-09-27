@@ -180,7 +180,22 @@
       "services": "आज मेरी सर्विस",
       "sales": "आज मेरी बिक्री",
       "commission": "इस महीने कमीशन"
-    }
+    },
+    "dayPending": "गिना गया · मंज़ूरी बाकी",
+    "dayClosed": "दिन बंद",
+    "attention": {
+      "closePending": "{{date}} की क्लोज़िंग मंज़ूरी के लिए बाकी",
+      "closePendingSub": "अंतर {{amount}}",
+      "unclosed": "{{date}} बंद नहीं हुआ",
+      "unclosedSub": "आज से पहले इसे गिनकर बंद करें",
+      "lowStock": "{{n}} आइटम का स्टॉक कम",
+      "toolsDue": "{{n}} औज़ारों को सर्विस चाहिए",
+      "toolsDueSub": "एक हफ़्ते में सर्विस",
+      "billsOverdue": "{{n}} सप्लायर बिल बकाया",
+      "billsDue": "इस हफ़्ते {{n}} सप्लायर बिल देय",
+      "billsSub": "{{amount}} देना है"
+    },
+    "attentionClose": "बंद करें"
   },
   "queue": {
     "title": "कतार",
@@ -305,7 +320,10 @@
     "willUpdateStaff": "सेव करने से अपेक्षित कैश, {{staff}} का कमीशन और स्टॉक ({{stock}}) अपडेट होंगे।",
     "noStock": "कोई प्रोडक्ट नहीं",
     "printReceipt": "रसीद प्रिंट करें",
-    "lowStock": "कम स्टॉक: {{items}}"
+    "lowStock": "कम स्टॉक: {{items}}",
+    "products": "उत्पाद",
+    "inStock": "{{qty}} स्टॉक में",
+    "noProducts": "अभी बेचने को कोई उत्पाद नहीं।"
   },
   "customers": {
     "subtitle": "प्रोफ़ाइल, विज़िट और नोट्स।",
@@ -605,7 +623,16 @@
     "unknown_setting": "यह सेटिंग यहाँ नहीं बदल सकती।",
     "invalid_role": "रोल चुनें।",
     "server_busy": "सर्वर को बहुत समय लग रहा है। थोड़ी देर में फिर कोशिश करें।",
-    "unknown": "कुछ गड़बड़ हुई। फिर कोशिश करें।"
+    "unknown": "कुछ गड़बड़ हुई। फिर कोशिश करें।",
+    "day_closed": "इस दिन का नकद बंद है। कार्ड लें, या मालिक से गिनती वापस भेजने को कहें।",
+    "invalid_date": "वह दिन बंद नहीं हो सकता। दिन क्रम से, आज तक बंद होते हैं।",
+    "count_required": "गिना गया नकद दर्ज करें।",
+    "confirm_required": "पुष्टि का बॉक्स टिक करें कि गिनती के समय दराज़ बंद था।",
+    "previous_close_pending": "पिछली क्लोज़िंग मालिक के पास बाकी है। पहले उसे मंज़ूर करना होगा।",
+    "item_exists": "इस नाम का आइटम पहले से है।",
+    "price_required": "बिक्री वाले आइटम का दाम चाहिए।",
+    "item_unavailable": "यह उत्पाद अब बिक्री में नहीं है। रिफ्रेश करें।",
+    "invalid_restock": "पूरी बिक्री लौटाने पर ही सामान स्टॉक में वापस जाता है।"
   },
   "sales": {
     "title": "बिक्री",
@@ -627,7 +654,9 @@
       "completed": "भुगतान हुआ",
       "partially_refunded": "आंशिक रिफंड",
       "refunded": "रिफंड हुआ"
-    }
+    },
+    "restock": "उत्पाद वापस स्टॉक में रखें",
+    "restockHint": "तभी जब पूरी बिक्री लौटाई जाए और उत्पाद फिर बिक सकें।"
   },
   "receipt": {
     "receipt": "रसीद",
@@ -819,7 +848,11 @@
       "expense_reversal": "रिवर्स खर्चे",
       "purchase_bill": "सप्लायर बिल",
       "purchase_bill_reversal": "रिवर्स बिल",
-      "supplier_payment": "सप्लायर भुगतान"
+      "supplier_payment": "सप्लायर भुगतान",
+      "cash_close": "कैश क्लोज़",
+      "tip_payout": "दी गई टिप्स",
+      "stock_adjustment": "स्टॉक बदलाव",
+      "stock_count": "स्टॉक गिनती"
     }
   },
   "settingUp": {
@@ -939,5 +972,166 @@
       "paid": "भुगतान हुआ",
       "reversed": "रिवर्स"
     }
+  },
+  "closing": {
+    "title": "कैश क्लोज़िंग",
+    "expectedOn": "अपेक्षित नकद · {{date}}",
+    "opening": "पिछला शेष",
+    "expected": "अपेक्षित नकद",
+    "noCashMoves": "अभी तक कोई नकद आया या गया नहीं।",
+    "count": "दराज़ गिनें",
+    "counted": "असल गिना गया नकद",
+    "countNotes": "नोट और सिक्के गिनें",
+    "denominations": "नोट और सिक्के",
+    "note": "AED {{value}} के नोट",
+    "coin": "AED {{value}} के सिक्के",
+    "denominationTotal": "कुल {{amount}}",
+    "useCount": "यह गिनती लें",
+    "variance": {
+      "short": "{{amount}} कम",
+      "over": "{{amount}} ज़्यादा",
+      "balanced": "बराबर"
+    },
+    "reason": "अंतर का कारण",
+    "reasonHint": "गिनती मेल न खाए तो ज़रूरी।",
+    "reasonWas": "कारण: {{reason}}",
+    "countedBy": "किसने गिना",
+    "countedByName": "{{name}} ने गिना",
+    "takenOut": "क्लोज़ के बाद निकाला गया नकद",
+    "takenOutHint": "वैकल्पिक। कल की शुरुआत गिने गए नकद में से यह घटाकर होगी।",
+    "takenTooMuch": "गिने गए नकद ({{amount}}) से ज़्यादा नहीं निकाल सकते।",
+    "takenTo": {
+      "bank": "बैंक में",
+      "owner": "मालिक को"
+    },
+    "takenOutTo": {
+      "bank": "बैंक में जमा के लिए निकाला",
+      "owner": "मालिक ने निकाला"
+    },
+    "confirm": "मैं पुष्टि करता/करती हूँ कि गिनती बिक्री के लिए दराज़ बंद करके की गई",
+    "saveDraft": "ड्राफ़्ट सहेजें",
+    "submit": "मंज़ूरी के लिए भेजें",
+    "approve": "क्लोज़िंग मंज़ूर करें",
+    "done": {
+      "draft": "ड्राफ़्ट सहेजा गया",
+      "submit": "मंज़ूरी के लिए मालिक को भेजा गया",
+      "approve": "दिन बंद और लॉक हो गया",
+      "sentBack": "दोबारा गिनती के लिए वापस भेजा"
+    },
+    "locked": "लॉक है। इस दिन के लिए और नकद दर्ज नहीं हो सकता।",
+    "waiting": "मालिक का इंतज़ार। इस दिन का नकद बंद है।",
+    "sendBack": "वापस भेजें",
+    "sendBackHint": "कैशियर फिर से गिनेगा। दोबारा भेजे जाने तक दिन नकद के लिए खुला रहेगा।",
+    "sendBackReason": "क्या जाँचना है?",
+    "sentBack": "वापस भेजा गया",
+    "sentBackBecause": "मालिक ने यह गिनती वापस भेजी: {{reason}}",
+    "notCounted": "अभी गिना नहीं गया।",
+    "tips": "टिप्स का भुगतान",
+    "noTips": "कोई टिप बकाया नहीं।",
+    "tipsOwed": "बकाया {{amount}}",
+    "payTips": "टिप दें",
+    "payTipsHint": "{{name}} का {{amount}} बकाया है। दराज़ से नकद दिया जाएगा।",
+    "tipsAmount": "राशि",
+    "payTipsAmount": "{{amount}} दें",
+    "tipsPaid": "{{name}} को {{amount}} टिप दी गई",
+    "history": "क्लोज़िंग इतिहास",
+    "noHistory": "अभी दिखाने को कोई दिन नहीं।",
+    "historyExpected": "अपेक्षित {{amount}}",
+    "historyCounted": "गिना {{amount}}",
+    "status": {
+      "open": "बंद नहीं",
+      "draft": "ड्राफ़्ट",
+      "pending_approval": "मंज़ूरी बाकी",
+      "approved": "मंज़ूर"
+    }
+  },
+  "inventory": {
+    "title": "स्टॉक और औज़ार",
+    "subtitle": "मात्रा, मूल्य और हर बदलाव",
+    "add": "आइटम जोड़ें",
+    "filters": {
+      "all": "सभी",
+      "low": "कम स्टॉक",
+      "consumable": "खपत का सामान",
+      "retail": "बिक्री का सामान",
+      "tool": "औज़ार"
+    },
+    "kinds": {
+      "consumable": "खपत",
+      "retail": "बिक्री उत्पाद",
+      "tool": "औज़ार"
+    },
+    "units": {
+      "pcs": "पीस",
+      "ml": "मिलीलीटर",
+      "g": "ग्राम",
+      "pairs": "जोड़े"
+    },
+    "value": "स्टॉक मूल्य",
+    "lowCount": "कम स्टॉक",
+    "activeItems": "सक्रिय आइटम",
+    "movements": "बदलाव · 30 दिन",
+    "count": "स्टॉक गिनती",
+    "order": "ऑर्डर",
+    "search": "आइटम खोजें",
+    "empty": "यहाँ अभी कोई आइटम नहीं।",
+    "noLow": "कुछ भी कम नहीं है।",
+    "assignedTo": "{{name}} के पास",
+    "serviceOn": "सर्विस {{date}}",
+    "conditions": {
+      "good": "ठीक",
+      "needs_service": "सर्विस चाहिए"
+    },
+    "onHand": "मौजूद",
+    "avgCost": "औसत लागत",
+    "reorderLevel": "दोबारा ऑर्डर पर",
+    "sellPrice": "बिक्री मूल्य",
+    "location": "कहाँ रखा है",
+    "condition": "हालत",
+    "nextService": "अगली सर्विस की तारीख",
+    "assigned": "किसे दिया",
+    "adjust": "स्टॉक बदलें",
+    "adjustHint": "अभी मौजूद: {{qty}}। हर बदलाव का कारण चाहिए।",
+    "adjustOut": "घटाएँ",
+    "adjustIn": "जोड़ें",
+    "adjustQty": "मात्रा ({{unit}})",
+    "adjustTooMuch": "सिर्फ़ {{qty}} मौजूद है।",
+    "adjustReason": "कारण (टूटा, एक्सपायर, मिला…)",
+    "adjustSave": "बदलाव सहेजें",
+    "adjusted": "स्टॉक बदला गया",
+    "history": "बदलाव",
+    "noMovements": "अभी कोई बदलाव नहीं।",
+    "reasons": {
+      "purchase": "आया",
+      "service_use": "सर्विस में लगा",
+      "retail_sale": "बेचा",
+      "adjustment": "बदला",
+      "count": "गिनती",
+      "reversal": "वापस",
+      "opening": "शुरुआती स्टॉक"
+    },
+    "newTitle": "नया आइटम",
+    "editTitle": "आइटम बदलें",
+    "saved": "आइटम सहेजा गया",
+    "fields": {
+      "name": "आइटम का नाम",
+      "kind": "प्रकार",
+      "unit": "किसमें गिनें",
+      "reorder": "दोबारा ऑर्डर स्तर",
+      "reorderHint": "इतना या कम होने पर कम स्टॉक दिखेगा।",
+      "price": "बिक्री मूल्य",
+      "location": "कहाँ रखा है",
+      "locationHint": "स्टोर रूम, कलर स्टेशन…",
+      "assignedHint": "कुर्सी 2, टीम…",
+      "dateFormat": "साल-महीना-दिन लिखें, जैसे 2026-10-31।",
+      "active": "उपयोग में",
+      "activeHint": "बंद आइटम छिप जाते हैं, इतिहास रहता है।"
+    },
+    "countHint": "शेल्फ़ पर जो है वह लिखें। छोड़ने के लिए खाली रखें।",
+    "system": "रिकॉर्ड में {{qty}}",
+    "countedFor": "{{name}} की गिनती",
+    "countNote": "नोट (वैकल्पिक)",
+    "countSave": "गिनती सहेजें ({{n}})",
+    "counted": "गिनती सहेजी: {{n}} बदले, {{value}}"
   }
 }

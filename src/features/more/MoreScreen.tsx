@@ -20,9 +20,11 @@ export function MoreScreen() {
 
   const business_rows = [
     { key: 'services', icon: 'scissors', href: '/services', show: can(role, 'viewServices') },
+    { key: 'inventory', icon: 'boxes', href: '/inventory', show: can(role, 'viewInventory') },
     { key: 'sales', icon: 'receipt', href: '/sales', show: can(role, 'viewSales') },
     { key: 'expenses', icon: 'coins', href: '/expenses', show: can(role, 'viewExpenses') },
     { key: 'purchases', icon: 'truck', href: '/purchases', show: can(role, 'viewPurchases') },
+    { key: 'cashClosing', icon: 'banknote', href: '/cash-closing', show: can(role, 'viewClosing') },
     { key: 'accounts', icon: 'calculator', href: '/accounts', show: can(role, 'viewAccounting') },
     { key: 'team', icon: 'users', href: '/settings/team', show: can(role, 'manageUsers') },
     { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch') },

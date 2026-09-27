@@ -55,19 +55,27 @@ begin
     'branch_id', p_branch, 'customer_id', p_customer, 'employee_id', pg_temp.emp(v_business, p_employee),
     'lines', (select jsonb_agg(jsonb_build_object('service_id', pg_temp.svc(v_business, n))) from unnest(p_services) n),
     'discount_minor', p_discount, 'tip_minor', p_tip, 'payments', v_payments)) ->> 'sale_id')::uuid;
+  perform pg_temp.backdate_sale(v_sale, p_days_ago);
+  return v_sale;
+end;
+$$;
+
+-- Move a sale and everything it wrote p_days_ago back (demo history only).
+create function pg_temp.backdate_sale(p_sale uuid, p_days_ago int) returns void
+language plpgsql as $$
+begin
   if p_days_ago > 0 then
     update sales set business_date = business_date - p_days_ago,
                      created_at = created_at - make_interval(days => p_days_ago)
-    where id = v_sale;
+    where id = p_sale;
     update journal_entries set business_date = business_date - p_days_ago,
                                created_at = created_at - make_interval(days => p_days_ago)
-    where source_type = 'sale' and source_id = v_sale;
+    where source_type = 'sale' and source_id = p_sale;
     update audit_log set created_at = created_at - make_interval(days => p_days_ago)
-    where entity_type = 'sale' and entity_id = v_sale;
+    where entity_type = 'sale' and entity_id = p_sale;
     update stock_movements set created_at = created_at - make_interval(days => p_days_ago)
-    where ref_type = 'sale' and ref_id = v_sale;
+    where ref_type = 'sale' and ref_id = p_sale;
   end if;
-  return v_sale;
 end;
 $$;
 
@@ -170,6 +178,91 @@ begin
 end;
 $$;
 
+-- Retail shelf and tools for a demo branch: p_items [[name, price, cost, qty, reorder]],
+-- p_tools [[name, qty, cost, condition, service in days, assigned to]]; a few retail sales over the month.
+create function pg_temp.shop(p_branch uuid, p_owner uuid, p_cashier uuid, p_items jsonb, p_tools jsonb) returns void
+language plpgsql as $$
+declare
+  v_biz uuid := (select business_id from branches where id = p_branch);
+  it jsonb;
+  v_id uuid;
+  v_first uuid;
+  v_sale uuid;
+  d int;
+begin
+  perform pg_temp.act_as(p_owner);
+  for it in select * from jsonb_array_elements(p_items) loop
+    v_id := public.save_item(jsonb_build_object('business_id', v_biz, 'name', it ->> 0, 'kind', 'retail', 'unit', 'pcs',
+      'sell_price_minor', (it ->> 1)::bigint, 'reorder_level', (it ->> 4)::numeric, 'location', 'Reception shelf'));
+    perform public.set_opening_stock(p_branch, jsonb_build_array(jsonb_build_object('item_id', v_id,
+      'qty', (it ->> 3)::numeric, 'unit_cost_minor', (it ->> 2)::numeric)));
+    v_first := coalesce(v_first, v_id);
+  end loop;
+  for it in select * from jsonb_array_elements(p_tools) loop
+    v_id := public.save_item(jsonb_build_object('business_id', v_biz, 'name', it ->> 0, 'kind', 'tool', 'unit', 'pcs',
+      'condition', it ->> 3, 'next_service_date', public.branch_today(p_branch) + (it ->> 4)::int,
+      'assigned_to', it ->> 5, 'location', 'Stations'));
+    perform public.set_opening_stock(p_branch, jsonb_build_array(jsonb_build_object('item_id', v_id,
+      'qty', (it ->> 1)::numeric, 'unit_cost_minor', (it ->> 2)::numeric)));
+  end loop;
+  perform pg_temp.act_as(p_cashier);
+  foreach d in array array[22, 15, 8, 3] loop
+    v_sale := (public.create_sale(jsonb_build_object('branch_id', p_branch,
+      'lines', jsonb_build_array(jsonb_build_object('kind', 'retail', 'item_id', v_first)),
+      'payments', jsonb_build_array(jsonb_build_object('method', 'cash',
+        'amount_minor', (select sell_price_minor from inventory_items where id = v_first))))) ->> 'sale_id')::uuid;
+    perform pg_temp.backdate_sale(v_sale, d);
+  end loop;
+end;
+$$;
+
+-- Four weeks of daily cash closes (demo history): the opening cash moves to the first day, every day
+-- is counted by the cashier and approved by the owner the next morning, with a few real-looking
+-- differences and weekly banking; yesterday waits for approval, today is still open.
+create function pg_temp.closings(p_branch uuid, p_owner uuid, p_cashier uuid) returns void
+language plpgsql as $$
+declare
+  v_tz text := (select bu.timezone from branches b join businesses bu on bu.id = b.business_id where b.id = p_branch);
+  v_date date;
+  v_expected bigint;
+  v_diff bigint;
+  v_taken bigint;
+  v_id uuid;
+  d int;
+begin
+  update journal_entries set business_date = business_date - 28, created_at = created_at - interval '28 days'
+  where branch_id = p_branch and source_type in ('opening_cash', 'opening_stock');
+  for d in reverse 27..1 loop
+    v_date := public.branch_today(p_branch) - d;
+    perform pg_temp.act_as(p_cashier);
+    v_expected := public.expected_cash(p_branch, v_date);
+    v_diff := least(case d when 19 then -250 when 12 then -1000 when 5 then -500 when 3 then 1000 else 0 end, v_expected);
+    v_diff := greatest(v_diff, -v_expected);
+    v_taken := case when d % 7 = 0 then greatest((v_expected + v_diff) * 6 / 10 / 10000 * 10000, 0) else 0 end;
+    v_id := (public.submit_cash_count(jsonb_build_object('branch_id', p_branch, 'business_date', v_date,
+      'counted_cash_minor', v_expected + v_diff, 'drawer_closed_confirmed', true, 'submit', true,
+      'reason', case when v_diff < 0 then 'Change given twice' when v_diff > 0 then 'Customer left the change' end,
+      'taken_out_minor', v_taken, 'taken_out_to', case when v_taken > 0 then 'bank' end)) ->> 'id')::uuid;
+    update cash_closings set created_at = (v_date + time '22:10') at time zone v_tz,
+      submitted_at = (v_date + time '22:15') at time zone v_tz, updated_at = (v_date + time '22:15') at time zone v_tz
+    where id = v_id;
+    update audit_log set created_at = (v_date + time '22:15') at time zone v_tz
+    where entity_type = 'cash_closing' and entity_id = v_id;
+    if d > 1 then
+      perform pg_temp.act_as(p_owner);
+      perform public.approve_cash_closing(v_id);
+      update cash_closings set approved_at = (v_date + 1 + time '09:05') at time zone v_tz,
+        updated_at = (v_date + 1 + time '09:05') at time zone v_tz
+      where id = v_id;
+      update audit_log set created_at = (v_date + 1 + time '09:05') at time zone v_tz
+      where entity_type = 'cash_closing' and entity_id = v_id and action = 'approve';
+      update journal_entries set created_at = (v_date + 1 + time '09:05') at time zone v_tz
+      where source_type = 'cash_close' and source_id = v_id;
+    end if;
+  end loop;
+end;
+$$;
+
 -- ── Gents: Al Barsha Gents ──────────────────────────────────────────────────────────────
 do $$
 declare
@@ -224,7 +317,7 @@ begin
   select id into c_yousef from customers where business_id = biz and name = 'Yousef Ali';
   select id into c_hamza from customers where business_id = biz and name = 'Hamza Qureshi';
 
-  for d in reverse 6..1 loop
+  for d in reverse 27..1 loop
     perform pg_temp.sell(br, cashier, array['Haircut'], 'Rafiq', 'cash', d);
     perform pg_temp.sell(br, cashier, array['Haircut', 'Beard Trim'], 'Sameer', 'card', d, 0, 0, c_bilal);
     perform pg_temp.sell(br, cashier, array['Shave'], 'Imran', 'cash', d);
@@ -256,6 +349,11 @@ begin
 
   perform pg_temp.money_out(biz, br, owner, cashier, 850000, 'Al Maya Barber Supplies', 'Gulf Cosmetics Trading',
     '[["Blades", 200, 35], ["Neck strips", 500, 8], ["Shaving Foam", 2000, 4]]');
+  perform pg_temp.shop(br, owner, cashier,
+    '[["Matte Hair Clay 100 g", 5500, 2200, 18, 6], ["Beard Oil 30 ml", 6000, 2800, 4, 5], ["Aftershave Balm", 4500, 1800, 12, 4]]',
+    '[["Cordless Clipper", 4, 45000, "good", 5, "Chairs 1–4"], ["Hair Dryer", 2, 22000, "needs_service", 30, "Chair 3"],
+      ["Barber Chair", 4, 180000, "good", 90, "Main floor"]]');
+  perform pg_temp.closings(br, owner, cashier);
 end $$;
 
 -- ── Ladies: Jumeirah Ladies Salon & Spa ────────────────────────────────────────────────
@@ -312,7 +410,7 @@ begin
   select id into c_hind from customers where business_id = biz and name = 'Hind Rashid';
   select id into c_noura from customers where business_id = biz and name = 'Noura Saeed';
 
-  for d in reverse 6..1 loop
+  for d in reverse 27..1 loop
     perform pg_temp.sell(br, cashier, array['Blow-dry'], 'Aisha', 'card', d);
     perform pg_temp.sell(br, cashier, array['Gel Nails'], 'Priya', 'card', d, 0, 0, c_sara);
     perform pg_temp.sell(br, cashier, array['Manicure', 'Pedicure'], 'Priya', 'cash', d);
@@ -344,6 +442,11 @@ begin
 
   perform pg_temp.money_out(biz, br, owner, cashier, 1500000, 'Beauty Line Trading LLC', 'Nails & Co Wholesale',
     '[["Nail polish", 500, 12], ["Gel polish", 300, 25], ["Face masks", 60, 450]]');
+  perform pg_temp.shop(br, owner, cashier,
+    '[["Argan Hair Oil", 9500, 4200, 14, 5], ["Hand Cream 75 ml", 4000, 1500, 3, 5], ["Keratin Shampoo", 12000, 5500, 10, 4]]',
+    '[["Professional Hair Dryer", 3, 38000, "good", 12, "Styling stations"], ["Hair Straightener", 2, 26000, "good", 4, "Aisha"],
+      ["Pedicure Spa Chair", 2, 420000, "needs_service", 20, "Spa room 2"]]');
+  perform pg_temp.closings(br, owner, cashier);
 end $$;
 
 select set_config('request.jwt.claims', '', false);

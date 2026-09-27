@@ -179,7 +179,22 @@
       "services": "My services today",
       "sales": "My sales today",
       "commission": "Commission this month"
-    }
+    },
+    "dayPending": "Counted · waiting for approval",
+    "dayClosed": "Day closed",
+    "attention": {
+      "closePending": "Cash close {{date}} waiting for approval",
+      "closePendingSub": "Difference {{amount}}",
+      "unclosed": "{{date}} was not closed",
+      "unclosedSub": "Count and close it before today",
+      "lowStock": "{{n}} items low on stock",
+      "toolsDue": "{{n}} tools need a service",
+      "toolsDueSub": "Service due within a week",
+      "billsOverdue": "{{n}} supplier bills overdue",
+      "billsDue": "{{n}} supplier bills due this week",
+      "billsSub": "{{amount}} to pay"
+    },
+    "attentionClose": "Close"
   },
   "queue": {
     "title": "Queue",
@@ -304,7 +319,10 @@
     "willUpdateStaff": "Saving updates expected cash, {{staff}}'s commission and stock ({{stock}}).",
     "noStock": "no products",
     "printReceipt": "Print receipt",
-    "lowStock": "Low stock: {{items}}"
+    "lowStock": "Low stock: {{items}}",
+    "products": "Products",
+    "inStock": "{{qty}} in stock",
+    "noProducts": "No products for sale yet."
   },
   "customers": {
     "subtitle": "Profiles, visits and notes.",
@@ -604,7 +622,16 @@
     "unknown_setting": "That setting cannot be changed here.",
     "invalid_role": "Pick a role.",
     "server_busy": "The server is taking too long. Try again in a moment.",
-    "unknown": "Something went wrong. Try again."
+    "unknown": "Something went wrong. Try again.",
+    "day_closed": "This day's cash is closed. Take card, or ask the owner to send the count back.",
+    "invalid_date": "That day cannot be closed. Days close in order, up to today.",
+    "count_required": "Enter the cash you counted.",
+    "confirm_required": "Tick the box to confirm the drawer was closed while counting.",
+    "previous_close_pending": "An earlier close is waiting for the owner. It must be approved first.",
+    "item_exists": "An item with that name already exists.",
+    "price_required": "Retail items need a selling price.",
+    "item_unavailable": "That product is no longer for sale. Refresh and try again.",
+    "invalid_restock": "Items go back to stock only when the whole sale is refunded."
   },
   "sales": {
     "title": "Sales",
@@ -626,7 +653,9 @@
       "completed": "Paid",
       "partially_refunded": "Part refunded",
       "refunded": "Refunded"
-    }
+    },
+    "restock": "Put the products back in stock",
+    "restockHint": "Only when the whole sale is refunded and the products can be sold again."
   },
   "receipt": {
     "receipt": "Receipt",
@@ -818,7 +847,11 @@
       "expense_reversal": "Reversed expenses",
       "purchase_bill": "Supplier bills",
       "purchase_bill_reversal": "Reversed bills",
-      "supplier_payment": "Supplier payments"
+      "supplier_payment": "Supplier payments",
+      "cash_close": "Cash close",
+      "tip_payout": "Tips paid",
+      "stock_adjustment": "Stock adjustments",
+      "stock_count": "Stock counts"
     }
   },
   "settingUp": {
@@ -938,5 +971,166 @@
       "paid": "Paid",
       "reversed": "Reversed"
     }
+  },
+  "closing": {
+    "title": "Cash closing",
+    "expectedOn": "Expected cash · {{date}}",
+    "opening": "Brought forward",
+    "expected": "Expected cash",
+    "noCashMoves": "No cash in or out yet.",
+    "count": "Count the drawer",
+    "counted": "Actual cash counted",
+    "countNotes": "Count notes & coins",
+    "denominations": "Notes & coins",
+    "note": "AED {{value}} notes",
+    "coin": "AED {{value}} coins",
+    "denominationTotal": "Total {{amount}}",
+    "useCount": "Use this count",
+    "variance": {
+      "short": "Short by {{amount}}",
+      "over": "Over by {{amount}}",
+      "balanced": "Balanced"
+    },
+    "reason": "Reason for the difference",
+    "reasonHint": "Needed when the count does not match.",
+    "reasonWas": "Reason: {{reason}}",
+    "countedBy": "Counted by",
+    "countedByName": "Counted by {{name}}",
+    "takenOut": "Cash taken out after close",
+    "takenOutHint": "Optional. Tomorrow opens with counted cash minus this.",
+    "takenTooMuch": "You cannot take out more than was counted ({{amount}}).",
+    "takenTo": {
+      "bank": "To the bank",
+      "owner": "To the owner"
+    },
+    "takenOutTo": {
+      "bank": "Taken out to the bank",
+      "owner": "Taken out by the owner"
+    },
+    "confirm": "I confirm the count was done with the drawer closed to sales",
+    "saveDraft": "Save draft",
+    "submit": "Submit for approval",
+    "approve": "Approve closing",
+    "done": {
+      "draft": "Draft saved",
+      "submit": "Sent to the owner for approval",
+      "approve": "Day closed and locked",
+      "sentBack": "Sent back for a recount"
+    },
+    "locked": "Locked. No more cash can be recorded for this day.",
+    "waiting": "Waiting for the owner. Cash is closed for this day.",
+    "sendBack": "Send back",
+    "sendBackHint": "The cashier counts again. The day opens for cash until it is submitted again.",
+    "sendBackReason": "What should be checked?",
+    "sentBack": "Sent back",
+    "sentBackBecause": "The owner sent this count back: {{reason}}",
+    "notCounted": "Not counted yet.",
+    "tips": "Pay out tips",
+    "noTips": "No tips owed.",
+    "tipsOwed": "Owed {{amount}}",
+    "payTips": "Pay tips",
+    "payTipsHint": "{{name}} is owed {{amount}}. Paid in cash from the drawer.",
+    "tipsAmount": "Amount",
+    "payTipsAmount": "Pay {{amount}}",
+    "tipsPaid": "Paid {{amount}} tips to {{name}}",
+    "history": "Close history",
+    "noHistory": "No days to show yet.",
+    "historyExpected": "Expected {{amount}}",
+    "historyCounted": "Counted {{amount}}",
+    "status": {
+      "open": "Not closed",
+      "draft": "Draft",
+      "pending_approval": "Pending approval",
+      "approved": "Approved"
+    }
+  },
+  "inventory": {
+    "title": "Inventory & tools",
+    "subtitle": "Levels, value and every movement",
+    "add": "Add item",
+    "filters": {
+      "all": "All",
+      "low": "Low stock",
+      "consumable": "Consumables",
+      "retail": "Retail",
+      "tool": "Tools"
+    },
+    "kinds": {
+      "consumable": "Consumable",
+      "retail": "Retail product",
+      "tool": "Tool"
+    },
+    "units": {
+      "pcs": "Pieces",
+      "ml": "Millilitres",
+      "g": "Grams",
+      "pairs": "Pairs"
+    },
+    "value": "Stock value",
+    "lowCount": "Low stock",
+    "activeItems": "Active items",
+    "movements": "Movements · 30 days",
+    "count": "Stock count",
+    "order": "Order",
+    "search": "Search items",
+    "empty": "No items here yet.",
+    "noLow": "Nothing is low. Well stocked!",
+    "assignedTo": "With {{name}}",
+    "serviceOn": "Service {{date}}",
+    "conditions": {
+      "good": "Good",
+      "needs_service": "Needs service"
+    },
+    "onHand": "On hand",
+    "avgCost": "Average cost",
+    "reorderLevel": "Reorder at",
+    "sellPrice": "Selling price",
+    "location": "Kept at",
+    "condition": "Condition",
+    "nextService": "Next service date",
+    "assigned": "Assigned to",
+    "adjust": "Adjust stock",
+    "adjustHint": "On hand now: {{qty}}. Every change needs a reason.",
+    "adjustOut": "Take out",
+    "adjustIn": "Add in",
+    "adjustQty": "Quantity ({{unit}})",
+    "adjustTooMuch": "Only {{qty}} on hand.",
+    "adjustReason": "Reason (broken, expired, found…)",
+    "adjustSave": "Save adjustment",
+    "adjusted": "Stock adjusted",
+    "history": "Movements",
+    "noMovements": "No movements yet.",
+    "reasons": {
+      "purchase": "Received",
+      "service_use": "Used in a service",
+      "retail_sale": "Sold",
+      "adjustment": "Adjusted",
+      "count": "Stock count",
+      "reversal": "Returned",
+      "opening": "Opening stock"
+    },
+    "newTitle": "New item",
+    "editTitle": "Edit item",
+    "saved": "Item saved",
+    "fields": {
+      "name": "Item name",
+      "kind": "Type",
+      "unit": "Counted in",
+      "reorder": "Reorder level",
+      "reorderHint": "At or below this it shows as low stock.",
+      "price": "Selling price",
+      "location": "Kept at",
+      "locationHint": "Store room, colour station…",
+      "assignedHint": "Chair 2, the team…",
+      "dateFormat": "Use year-month-day, like 2026-10-31.",
+      "active": "In use",
+      "activeHint": "Items no longer used are hidden but keep their history."
+    },
+    "countHint": "Type what is on the shelf. Leave blank to skip.",
+    "system": "Books say {{qty}}",
+    "countedFor": "Counted {{name}}",
+    "countNote": "Note (optional)",
+    "countSave": "Save count ({{n}})",
+    "counted": "Count saved: {{n}} changed, {{value}}"
   }
 }

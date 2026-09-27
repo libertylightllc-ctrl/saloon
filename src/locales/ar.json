@@ -180,7 +180,22 @@
       "services": "خدماتي اليوم",
       "sales": "مبيعاتي اليوم",
       "commission": "العمولة هذا الشهر"
-    }
+    },
+    "dayPending": "معدود · بانتظار الموافقة",
+    "dayClosed": "اليوم مغلق",
+    "attention": {
+      "closePending": "إغلاق {{date}} بانتظار الموافقة",
+      "closePendingSub": "الفرق {{amount}}",
+      "unclosed": "لم يُغلق {{date}}",
+      "unclosedSub": "عُدّه وأغلقه قبل اليوم",
+      "lowStock": "{{n}} أصناف مخزونها منخفض",
+      "toolsDue": "{{n}} أدوات تحتاج صيانة",
+      "toolsDueSub": "الصيانة خلال أسبوع",
+      "billsOverdue": "{{n}} فواتير موردين متأخرة",
+      "billsDue": "{{n}} فواتير موردين مستحقة هذا الأسبوع",
+      "billsSub": "{{amount}} للدفع"
+    },
+    "attentionClose": "إغلاق"
   },
   "queue": {
     "title": "الطابور",
@@ -305,7 +320,10 @@
     "willUpdateStaff": "الحفظ يحدّث النقد المتوقع وعمولة {{staff}} والمخزون ({{stock}}).",
     "noStock": "بدون منتجات",
     "printReceipt": "طباعة الإيصال",
-    "lowStock": "مخزون منخفض: {{items}}"
+    "lowStock": "مخزون منخفض: {{items}}",
+    "products": "منتجات",
+    "inStock": "{{qty}} في المخزون",
+    "noProducts": "لا توجد منتجات للبيع بعد."
   },
   "customers": {
     "subtitle": "الملفات والزيارات والملاحظات.",
@@ -605,7 +623,16 @@
     "unknown_setting": "لا يمكن تغيير هذا الإعداد هنا.",
     "invalid_role": "اختر دورًا.",
     "server_busy": "الخادم يستغرق وقتًا طويلًا. حاول مجددًا بعد قليل.",
-    "unknown": "حدث خطأ. حاول مجددًا."
+    "unknown": "حدث خطأ. حاول مجددًا.",
+    "day_closed": "نقد هذا اليوم مغلق. اقبل البطاقة، أو اطلب من المالك إعادة العدّ.",
+    "invalid_date": "لا يمكن إغلاق ذلك اليوم. تُغلق الأيام بالترتيب حتى اليوم.",
+    "count_required": "أدخل النقد الذي عددته.",
+    "confirm_required": "ضع علامة للتأكيد أن الدرج كان مغلقًا أثناء العدّ.",
+    "previous_close_pending": "إغلاق سابق بانتظار المالك. يجب اعتماده أولًا.",
+    "item_exists": "يوجد صنف بهذا الاسم.",
+    "price_required": "أصناف البيع تحتاج سعر بيع.",
+    "item_unavailable": "هذا المنتج لم يعد للبيع. حدّث وحاول مجددًا.",
+    "invalid_restock": "تعود الأصناف إلى المخزون فقط عند استرداد البيع كاملًا."
   },
   "sales": {
     "title": "المبيعات",
@@ -627,7 +654,9 @@
       "completed": "مدفوع",
       "partially_refunded": "مسترد جزئيًا",
       "refunded": "مسترد"
-    }
+    },
+    "restock": "أعد المنتجات إلى المخزون",
+    "restockHint": "فقط عند استرداد البيع كاملًا وإمكانية بيع المنتجات مجددًا."
   },
   "receipt": {
     "receipt": "إيصال",
@@ -819,7 +848,11 @@
       "expense_reversal": "مصروفات معكوسة",
       "purchase_bill": "فواتير الموردين",
       "purchase_bill_reversal": "فواتير معكوسة",
-      "supplier_payment": "مدفوعات الموردين"
+      "supplier_payment": "مدفوعات الموردين",
+      "cash_close": "إغلاق الصندوق",
+      "tip_payout": "بقشيش مصروف",
+      "stock_adjustment": "تعديلات المخزون",
+      "stock_count": "جرد المخزون"
     }
   },
   "settingUp": {
@@ -939,5 +972,166 @@
       "paid": "مدفوعة",
       "reversed": "معكوسة"
     }
+  },
+  "closing": {
+    "title": "إغلاق الصندوق",
+    "expectedOn": "النقد المتوقع · {{date}}",
+    "opening": "رصيد مُرحّل",
+    "expected": "النقد المتوقع",
+    "noCashMoves": "لا يوجد نقد داخل أو خارج بعد.",
+    "count": "عُدّ الدرج",
+    "counted": "النقد المعدود فعليًا",
+    "countNotes": "عُدّ الأوراق والعملات",
+    "denominations": "الأوراق والعملات",
+    "note": "أوراق {{value}} درهم",
+    "coin": "عملات {{value}} درهم",
+    "denominationTotal": "الإجمالي {{amount}}",
+    "useCount": "استخدم هذا العدّ",
+    "variance": {
+      "short": "ناقص {{amount}}",
+      "over": "زائد {{amount}}",
+      "balanced": "مطابق"
+    },
+    "reason": "سبب الفرق",
+    "reasonHint": "مطلوب عندما لا يطابق العدّ.",
+    "reasonWas": "السبب: {{reason}}",
+    "countedBy": "عدّه",
+    "countedByName": "عدّه {{name}}",
+    "takenOut": "نقد مسحوب بعد الإغلاق",
+    "takenOutHint": "اختياري. يبدأ الغد بالنقد المعدود ناقص هذا المبلغ.",
+    "takenTooMuch": "لا يمكن سحب أكثر مما عُدّ ({{amount}}).",
+    "takenTo": {
+      "bank": "إلى البنك",
+      "owner": "إلى المالك"
+    },
+    "takenOutTo": {
+      "bank": "مسحوب إلى البنك",
+      "owner": "سحبه المالك"
+    },
+    "confirm": "أؤكد أن العدّ تم والدرج مغلق أمام المبيعات",
+    "saveDraft": "حفظ كمسودة",
+    "submit": "إرسال للموافقة",
+    "approve": "اعتماد الإغلاق",
+    "done": {
+      "draft": "تم حفظ المسودة",
+      "submit": "أُرسل إلى المالك للموافقة",
+      "approve": "أُغلق اليوم وقُفل",
+      "sentBack": "أُعيد لإعادة العدّ"
+    },
+    "locked": "مقفل. لا يمكن تسجيل نقد آخر لهذا اليوم.",
+    "waiting": "بانتظار المالك. النقد مغلق لهذا اليوم.",
+    "sendBack": "إعادة",
+    "sendBackHint": "يعيد الكاشير العدّ. يُفتح اليوم للنقد حتى يُرسل مجددًا.",
+    "sendBackReason": "ما الذي يجب التحقق منه؟",
+    "sentBack": "مُعاد",
+    "sentBackBecause": "أعاد المالك هذا العدّ: {{reason}}",
+    "notCounted": "لم يُعدّ بعد.",
+    "tips": "صرف البقشيش",
+    "noTips": "لا يوجد بقشيش مستحق.",
+    "tipsOwed": "مستحق {{amount}}",
+    "payTips": "صرف البقشيش",
+    "payTipsHint": "{{name}} مستحق له {{amount}}. يُدفع نقدًا من الدرج.",
+    "tipsAmount": "المبلغ",
+    "payTipsAmount": "ادفع {{amount}}",
+    "tipsPaid": "صُرف بقشيش {{amount}} إلى {{name}}",
+    "history": "سجل الإغلاق",
+    "noHistory": "لا توجد أيام لعرضها بعد.",
+    "historyExpected": "المتوقع {{amount}}",
+    "historyCounted": "المعدود {{amount}}",
+    "status": {
+      "open": "غير مغلق",
+      "draft": "مسودة",
+      "pending_approval": "بانتظار الموافقة",
+      "approved": "معتمد"
+    }
+  },
+  "inventory": {
+    "title": "المخزون والأدوات",
+    "subtitle": "الكميات والقيمة وكل حركة",
+    "add": "إضافة صنف",
+    "filters": {
+      "all": "الكل",
+      "low": "مخزون منخفض",
+      "consumable": "مستهلكات",
+      "retail": "للبيع",
+      "tool": "أدوات"
+    },
+    "kinds": {
+      "consumable": "مستهلك",
+      "retail": "منتج للبيع",
+      "tool": "أداة"
+    },
+    "units": {
+      "pcs": "قطع",
+      "ml": "ملليلتر",
+      "g": "غرام",
+      "pairs": "أزواج"
+    },
+    "value": "قيمة المخزون",
+    "lowCount": "مخزون منخفض",
+    "activeItems": "أصناف نشطة",
+    "movements": "الحركات · 30 يومًا",
+    "count": "جرد المخزون",
+    "order": "طلب",
+    "search": "ابحث في الأصناف",
+    "empty": "لا توجد أصناف هنا بعد.",
+    "noLow": "لا شيء منخفض. المخزون جيد!",
+    "assignedTo": "مع {{name}}",
+    "serviceOn": "صيانة {{date}}",
+    "conditions": {
+      "good": "جيدة",
+      "needs_service": "تحتاج صيانة"
+    },
+    "onHand": "المتوفر",
+    "avgCost": "متوسط التكلفة",
+    "reorderLevel": "إعادة الطلب عند",
+    "sellPrice": "سعر البيع",
+    "location": "مكانه",
+    "condition": "الحالة",
+    "nextService": "موعد الصيانة التالية",
+    "assigned": "مخصصة لـ",
+    "adjust": "تعديل المخزون",
+    "adjustHint": "المتوفر الآن: {{qty}}. كل تغيير يحتاج سببًا.",
+    "adjustOut": "إخراج",
+    "adjustIn": "إضافة",
+    "adjustQty": "الكمية ({{unit}})",
+    "adjustTooMuch": "المتوفر {{qty}} فقط.",
+    "adjustReason": "السبب (مكسور، منتهي، وُجد…)",
+    "adjustSave": "حفظ التعديل",
+    "adjusted": "تم تعديل المخزون",
+    "history": "الحركات",
+    "noMovements": "لا توجد حركات بعد.",
+    "reasons": {
+      "purchase": "استلام",
+      "service_use": "استُخدم في خدمة",
+      "retail_sale": "مباع",
+      "adjustment": "تعديل",
+      "count": "جرد",
+      "reversal": "مُرجع",
+      "opening": "مخزون افتتاحي"
+    },
+    "newTitle": "صنف جديد",
+    "editTitle": "تعديل صنف",
+    "saved": "تم حفظ الصنف",
+    "fields": {
+      "name": "اسم الصنف",
+      "kind": "النوع",
+      "unit": "يُعدّ بـ",
+      "reorder": "حد إعادة الطلب",
+      "reorderHint": "عند هذا الحد أو أقل يظهر كمخزون منخفض.",
+      "price": "سعر البيع",
+      "location": "مكانه",
+      "locationHint": "المخزن، ركن الصبغة…",
+      "assignedHint": "الكرسي 2، الفريق…",
+      "dateFormat": "استخدم سنة-شهر-يوم، مثل 2026-10-31.",
+      "active": "قيد الاستخدام",
+      "activeHint": "الأصناف غير المستخدمة تُخفى وتحتفظ بسجلها."
+    },
+    "countHint": "اكتب ما على الرف. اتركه فارغًا للتخطي.",
+    "system": "في السجل {{qty}}",
+    "countedFor": "المعدود من {{name}}",
+    "countNote": "ملاحظة (اختياري)",
+    "countSave": "حفظ الجرد ({{n}})",
+    "counted": "حُفظ الجرد: {{n}} تغيّر، {{value}}"
   }
 }

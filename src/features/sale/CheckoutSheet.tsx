@@ -71,6 +71,11 @@ export function CheckoutSheet(props: {
   const staff = (employees.data ?? []).find((e) => e.id === props.employeeId);
   const usage = new Map<string, { qty: number; unit: string }>();
   for (const line of props.lines) {
+    if (line.kind === 'retail') {
+      const prev = usage.get(line.name);
+      usage.set(line.name, { qty: (prev?.qty ?? 0) + line.qty, unit: line.unit ?? 'pcs' });
+      continue;
+    }
     const service = catalog.data?.services.find((s) => s.id === line.serviceId);
     for (const r of service?.recipe ?? []) {
       const prev = usage.get(r.name);
@@ -89,7 +94,9 @@ export function CheckoutSheet(props: {
         lines: props.lines.map((l) =>
           l.kind === 'service'
             ? { kind: 'service', service_id: l.serviceId, qty: l.qty }
-            : { kind: 'custom', name: l.name, unit_price_minor: l.unitPriceMinor, qty: l.qty },
+            : l.kind === 'retail'
+              ? { kind: 'retail', item_id: l.itemId, qty: l.qty }
+              : { kind: 'custom', name: l.name, unit_price_minor: l.unitPriceMinor, qty: l.qty },
         ),
         discount_minor: totals.discount,
         tip_minor: totals.tip,

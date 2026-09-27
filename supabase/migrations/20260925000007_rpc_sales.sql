@@ -7,7 +7,7 @@ language sql immutable as $$
 $$;
 
 -- p: {branch_id, client_ref, appointment_id, customer_id, employee_id,
---     lines: [{kind: service|custom, service_id | name + unit_price_minor, qty, employee_id}],
+--     lines: [{kind: service|retail|custom, service_id | item_id | name + unit_price_minor, qty, employee_id}],
 --     discount_minor | discount_bps, tip_minor, tip_employee_id, use_deposit,
 --     payments: [{method, amount_minor}], note}
 create function public.create_sale(p jsonb) returns jsonb
@@ -29,6 +29,7 @@ declare
   v_name text;
   v_price bigint;
   v_service services;
+  v_item inventory_items;
   v_subtotal bigint;
   v_discount bigint;
   v_net bigint;
@@ -49,6 +50,8 @@ declare
   v_used numeric;
   v_level numeric;
   v_cost bigint := 0;
+  v_cogs bigint := 0;
+  v_product bigint;
   v_warnings text[] := '{}';
   v_shortages text[] := '{}';
   v_block boolean;
@@ -97,7 +100,7 @@ begin
 
   drop table if exists _sale_lines;
   create temp table _sale_lines (
-    idx int, kind sale_line_kind, service_id uuid, name text, qty numeric, unit_price bigint, gross bigint,
+    idx int, kind sale_line_kind, service_id uuid, item_id uuid, name text, qty numeric, unit_price bigint, gross bigint,
     discount bigint default 0, net bigint default 0, vat bigint default 0, employee_id uuid,
     commission_bps int default 0, commission bigint default 0
   ) on commit drop;
@@ -117,6 +120,17 @@ begin
       end if;
       v_name := v_service.name;
       v_price := v_service.price_minor;
+      v_item := null;
+    elsif v_kind = 'retail' then
+      select * into v_item from inventory_items
+      where id = (l ->> 'item_id')::uuid and business_id = b.business_id and kind = 'retail' and active
+        and sell_price_minor is not null;
+      if v_item.id is null then
+        raise exception 'item_unavailable' using errcode = '22023';
+      end if;
+      v_name := v_item.name;
+      v_price := v_item.sell_price_minor;
+      v_service := null;
     elsif v_kind = 'custom' then
       v_name := nullif(btrim(l ->> 'name'), '');
       v_price := (l ->> 'unit_price_minor')::bigint;
@@ -124,11 +138,12 @@ begin
         raise exception 'invalid_line' using errcode = '22023';
       end if;
       v_service := null;
+      v_item := null;
     else
       raise exception 'invalid_line' using errcode = '22023';
     end if;
-    insert into _sale_lines (idx, kind, service_id, name, qty, unit_price, gross, employee_id)
-    values (v_idx, v_kind::sale_line_kind, v_service.id, v_name, v_qty, v_price, round(v_price * v_qty)::bigint,
+    insert into _sale_lines (idx, kind, service_id, item_id, name, qty, unit_price, gross, employee_id)
+    values (v_idx, v_kind::sale_line_kind, v_service.id, v_item.id, v_name, v_qty, v_price, round(v_price * v_qty)::bigint,
             coalesce(nullif(l ->> 'employee_id', '')::uuid, v_default_employee));
   end loop;
   if v_idx = 0 then
@@ -163,7 +178,7 @@ begin
   update _sale_lines sl set
     commission_bps = coalesce(e.commission_bps, 0),
     commission = round((sl.net - sl.vat) * coalesce(e.commission_bps, 0)::numeric / 10000)::bigint
-  from employees e where e.id = sl.employee_id;
+  from employees e where e.id = sl.employee_id and sl.kind <> 'retail';   -- commission is on services only
 
   v_total := v_net + v_tip;
   if a.id is not null and a.deposit_status = 'held' and coalesce((p ->> 'use_deposit')::boolean, true) then
@@ -194,23 +209,26 @@ begin
           v_total, v_deposit, b.vat_mode, nullif(btrim(p ->> 'note'), ''), v_ref, m.id)
   returning id into v_sale;
 
-  insert into sale_lines (sale_id, kind, service_id, name_snapshot, qty, unit_price_minor, discount_minor,
+  insert into sale_lines (sale_id, kind, service_id, item_id, name_snapshot, qty, unit_price_minor, discount_minor,
                           net_minor, vat_minor, employee_id, commission_bps, commission_minor)
-  select v_sale, kind, service_id, name, qty, unit_price, discount, net, vat, employee_id, commission_bps, commission
+  select v_sale, kind, service_id, item_id, name, qty, unit_price, discount, net, vat, employee_id, commission_bps, commission
   from _sale_lines order by idx;
 
   insert into sale_payments (sale_id, method, amount_minor)
   select v_sale, (x ->> 'method')::payment_method, (x ->> 'amount_minor')::bigint
   from jsonb_array_elements(coalesce(p -> 'payments', '[]')) x;
 
-  -- Recipe stock (services only). Shortage warns, or blocks when the branch setting says so.
+  -- Stock: recipe use for services, the item itself for retail. Shortage warns, or blocks when the branch
+  -- setting says so.
   v_block := coalesce((b.settings ->> 'block_insufficient_stock')::boolean, false);
   for r in
-    select ri.item_id, i.name, i.avg_unit_cost_minor, sum(ri.qty * sl.qty) as used
-    from _sale_lines sl
-    join service_recipe_items ri on ri.service_id = sl.service_id
-    join inventory_items i on i.id = ri.item_id
-    group by ri.item_id, i.name, i.avg_unit_cost_minor
+    select x.item_id, i.name, i.avg_unit_cost_minor, x.reason, sum(x.used) as used
+    from (select ri.item_id, 'service_use'::stock_reason as reason, ri.qty * sl.qty as used
+          from _sale_lines sl join service_recipe_items ri on ri.service_id = sl.service_id
+          union all
+          select sl.item_id, 'retail_sale'::stock_reason, sl.qty from _sale_lines sl where sl.kind = 'retail') x
+    join inventory_items i on i.id = x.item_id
+    group by x.item_id, i.name, i.avg_unit_cost_minor, x.reason
   loop
     insert into stock_levels (item_id, branch_id, qty) values (r.item_id, v_branch, 0) on conflict do nothing;
     select qty into v_level from stock_levels where item_id = r.item_id and branch_id = v_branch for update;
@@ -220,8 +238,12 @@ begin
     update stock_levels set qty = qty - r.used where item_id = r.item_id and branch_id = v_branch;
     insert into stock_movements (business_id, branch_id, item_id, qty_delta, reason, unit_cost_minor, ref_type, ref_id,
                                  created_by)
-    values (b.business_id, v_branch, r.item_id, -r.used, 'service_use', r.avg_unit_cost_minor, 'sale', v_sale, m.id);
-    v_cost := v_cost + round(r.used * r.avg_unit_cost_minor)::bigint;
+    values (b.business_id, v_branch, r.item_id, -r.used, r.reason, r.avg_unit_cost_minor, 'sale', v_sale, m.id);
+    if r.reason = 'retail_sale' then
+      v_cogs := v_cogs + round(r.used * r.avg_unit_cost_minor)::bigint;
+    else
+      v_cost := v_cost + round(r.used * r.avg_unit_cost_minor)::bigint;
+    end if;
   end loop;
   if array_length(v_shortages, 1) > 0 then
     if v_block then
@@ -234,14 +256,18 @@ begin
                                                'debit', (x ->> 'amount_minor')::bigint)), '[]')
     into v_journal
   from jsonb_array_elements(coalesce(p -> 'payments', '[]')) x;
+  select coalesce(sum(net - vat) filter (where kind = 'retail'), 0) into v_product from _sale_lines;
   v_journal := v_journal
     || jsonb_build_array(
          jsonb_build_object('account', 'deposits_held', 'debit', v_deposit),
-         jsonb_build_object('account', 'service_revenue', 'credit', v_net - v_vat),
+         jsonb_build_object('account', 'service_revenue', 'credit', v_net - v_vat - v_product),
+         jsonb_build_object('account', 'product_revenue', 'credit', v_product),
          jsonb_build_object('account', 'vat_payable', 'credit', v_vat),
          jsonb_build_object('account', 'tips_payable', 'credit', v_tip),
          jsonb_build_object('account', 'consumables_used', 'debit', v_cost),
-         jsonb_build_object('account', 'inventory', 'credit', v_cost));
+         jsonb_build_object('account', 'inventory', 'credit', v_cost),
+         jsonb_build_object('account', 'cost_of_goods_sold', 'debit', v_cogs),
+         jsonb_build_object('account', 'inventory', 'credit', v_cogs));
   perform public.post_journal(b.business_id, v_branch, v_today, 'sale', v_sale, 'Sale #' || v_number, m.id, v_journal);
 
   if v_deposit_left > 0 then
@@ -283,6 +309,11 @@ declare
   v_parts bigint[];
   v_refund uuid;
   v_today date;
+  v_product bigint;
+  v_restock boolean := coalesce((p ->> 'restock')::boolean, false);
+  v_back bigint := 0;
+  r record;
+  v_level numeric;
 begin
   select * into s from sales where id = (p ->> 'sale_id')::uuid for update;
   if s.id is null then
@@ -305,25 +336,58 @@ begin
   if v_method is null or v_method = 'bank' then
     raise exception 'invalid_payment' using errcode = '22023';
   end if;
+  -- Retail items go back to stock only when the whole sale is refunded (a part refund cannot say which items).
+  if v_restock and (s.refunded_minor + v_amount < s.total_minor
+                    or not exists (select 1 from sale_lines where sale_id = s.id and kind = 'retail')) then
+    raise exception 'invalid_restock' using errcode = '22023';
+  end if;
   select * into bu from businesses where id = s.business_id;
   v_today := public.branch_today(s.branch_id);
 
-  -- Pro-rata over revenue (ex VAT), VAT and tip.
+  -- Pro-rata over service revenue and product revenue (ex VAT), VAT and tip.
+  select coalesce(sum(net_minor - vat_minor), 0) into v_product from sale_lines where sale_id = s.id and kind = 'retail';
   v_parts := public.allocate_minor(v_amount,
-    array[s.total_minor - s.vat_minor - s.tip_minor, s.vat_minor, s.tip_minor]::bigint[]);
+    array[s.total_minor - s.vat_minor - s.tip_minor - v_product, v_product, s.vat_minor, s.tip_minor]::bigint[]);
 
-  insert into refunds (sale_id, business_id, branch_id, business_date, amount_minor, method, reason, restock,
+  insert into refunds (sale_id, business_id, branch_id, business_date, amount_minor, tip_minor, method, reason, restock,
                        idempotency_key, created_by)
-  values (s.id, s.business_id, s.branch_id, v_today, v_amount, v_method, btrim(p ->> 'reason'),
-          coalesce((p ->> 'restock')::boolean, false), v_key, m.id)
+  values (s.id, s.business_id, s.branch_id, v_today, v_amount, v_parts[4], v_method, btrim(p ->> 'reason'),
+          v_restock, v_key, m.id)
   returning id into v_refund;
+
+  if v_restock then
+    -- Back in at the cost they went out at; the average cost takes them in like a purchase.
+    for r in
+      select sm.item_id, -sum(sm.qty_delta) as qty, max(sm.unit_cost_minor) as cost
+      from stock_movements sm
+      where sm.ref_type = 'sale' and sm.ref_id = s.id and sm.reason = 'retail_sale'
+      group by sm.item_id
+    loop
+      insert into stock_levels (item_id, branch_id, qty) values (r.item_id, s.branch_id, 0) on conflict do nothing;
+      select qty into v_level from stock_levels where item_id = r.item_id and branch_id = s.branch_id for update;
+      update inventory_items set avg_unit_cost_minor =
+        case when greatest(v_level, 0) + r.qty > 0
+             then (greatest(v_level, 0) * avg_unit_cost_minor + r.qty * r.cost) / (greatest(v_level, 0) + r.qty)
+             else r.cost end
+      where id = r.item_id;
+      update stock_levels set qty = qty + r.qty where item_id = r.item_id and branch_id = s.branch_id;
+      insert into stock_movements (business_id, branch_id, item_id, qty_delta, reason, unit_cost_minor, ref_type, ref_id,
+                                   note, created_by)
+      values (s.business_id, s.branch_id, r.item_id, r.qty, 'reversal', r.cost, 'refund', v_refund,
+              btrim(p ->> 'reason'), m.id);
+      v_back := v_back + round(r.qty * r.cost)::bigint;
+    end loop;
+  end if;
 
   perform public.post_journal(s.business_id, s.branch_id, v_today, 'refund', v_refund, 'Refund sale #' || s.number, m.id,
     jsonb_build_array(
       jsonb_build_object('account', 'service_revenue', 'debit', v_parts[1]),
-      jsonb_build_object('account', 'vat_payable', 'debit', v_parts[2]),
-      jsonb_build_object('account', 'tips_payable', 'debit', v_parts[3]),
-      jsonb_build_object('account', public.method_account(v_method), 'credit', v_amount)));
+      jsonb_build_object('account', 'product_revenue', 'debit', v_parts[2]),
+      jsonb_build_object('account', 'vat_payable', 'debit', v_parts[3]),
+      jsonb_build_object('account', 'tips_payable', 'debit', v_parts[4]),
+      jsonb_build_object('account', public.method_account(v_method), 'credit', v_amount),
+      jsonb_build_object('account', 'inventory', 'debit', v_back),
+      jsonb_build_object('account', 'cost_of_goods_sold', 'credit', v_back)));
 
   update sales set
     refunded_minor = refunded_minor + v_amount,

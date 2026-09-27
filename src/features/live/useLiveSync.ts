@@ -20,6 +20,7 @@ export const keys = {
   stock: (branchId: string) => ['stock', branchId] as const,
   rooms: (branchId: string) => ['rooms', branchId] as const,
   moneyOut: (businessId: string) => ['moneyout', businessId] as const,
+  closing: (branchId: string) => ['closing', branchId] as const,
 };
 
 export function useLiveSync(businessId: string, branchId: string) {
@@ -34,13 +35,17 @@ export function useLiveSync(businessId: string, branchId: string) {
     const channel = supabase
       .channel(`live-${branchId}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'appointments', filter: branchFilter },
-        invalidate(keys.appointments(branchId), keys.dashboard(branchId), keys.customers(businessId)))
+        invalidate(keys.appointments(branchId), keys.dashboard(branchId), keys.customers(businessId), keys.closing(branchId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'sales', filter: branchFilter },
-        invalidate(keys.sales(branchId), ['sale'], keys.dashboard(branchId), keys.customers(businessId)))
+        invalidate(keys.sales(branchId), ['sale'], keys.dashboard(branchId), keys.customers(businessId), keys.closing(branchId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'refunds', filter: branchFilter },
-        invalidate(keys.sales(branchId), ['sale'], keys.dashboard(branchId)))
+        invalidate(keys.sales(branchId), ['sale'], keys.dashboard(branchId), keys.closing(branchId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'stock_levels', filter: branchFilter },
         invalidate(keys.stock(branchId), keys.catalog(businessId)))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'inventory_items', filter: businessFilter },
+        invalidate(keys.stock(branchId), keys.catalog(businessId), keys.dashboard(branchId)))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'stock_counts', filter: branchFilter },
+        invalidate(keys.stock(branchId), keys.dashboard(branchId), ['accounts', businessId]))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'services', filter: businessFilter },
         invalidate(keys.catalog(businessId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'service_categories', filter: businessFilter },
@@ -52,9 +57,13 @@ export function useLiveSync(businessId: string, branchId: string) {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'employees', filter: businessFilter },
         invalidate(keys.team(businessId), keys.dashboard(branchId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'expenses', filter: branchFilter },
-        invalidate(keys.moneyOut(businessId), keys.dashboard(branchId), ['accounts', businessId]))
+        invalidate(keys.moneyOut(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId]))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'cash_closings', filter: branchFilter },
+        invalidate(keys.closing(branchId), keys.dashboard(branchId), ['accounts', businessId]))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tip_payouts', filter: branchFilter },
+        invalidate(keys.closing(branchId), keys.dashboard(branchId), ['accounts', businessId]))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'supplier_payments', filter: branchFilter },
-        invalidate(keys.moneyOut(businessId), keys.dashboard(branchId), ['accounts', businessId]))
+        invalidate(keys.moneyOut(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId]))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'purchase_bills', filter: businessFilter },
         invalidate(keys.moneyOut(businessId), keys.stock(branchId), ['accounts', businessId]))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'suppliers', filter: businessFilter },

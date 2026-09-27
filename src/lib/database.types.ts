@@ -216,6 +216,55 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"cash_closings": {
+                  Row: {
+                    "approved_at": string | null,"approved_by": string | null,"branch_id": string,"business_date": string,"business_id": string,"counted_by": string | null,"counted_cash_minor": number | null,"created_at": string,"created_by": string | null,"denominations": NonNullable<Json>,"drawer_closed_confirmed": boolean,"expected_cash_minor": number | null,"id": string,"opening_cash_minor": number | null,"reason": string | null,"returned_reason": string | null,"status": string,"submitted_at": string | null,"submitted_by": string | null,"taken_out_minor": number,"taken_out_to": string | null,"updated_at": string,"variance_minor": number | null
+                  }
+                  Insert: {
+                    "approved_at"?: string | null,"approved_by"?: string | null,"branch_id": string,"business_date": string,"business_id": string,"counted_by"?: string | null,"counted_cash_minor"?: number | null,"created_at"?: string,"created_by"?: string | null,"denominations"?: NonNullable<Json>,"drawer_closed_confirmed"?: boolean,"expected_cash_minor"?: number | null,"id"?: string,"opening_cash_minor"?: number | null,"reason"?: string | null,"returned_reason"?: string | null,"status"?: string,"submitted_at"?: string | null,"submitted_by"?: string | null,"taken_out_minor"?: number,"taken_out_to"?: string | null,"updated_at"?: string,"variance_minor"?: number | null
+                  }
+                  Update: {
+                    "approved_at"?: string | null,"approved_by"?: string | null,"branch_id"?: string,"business_date"?: string,"business_id"?: string,"counted_by"?: string | null,"counted_cash_minor"?: number | null,"created_at"?: string,"created_by"?: string | null,"denominations"?: NonNullable<Json>,"drawer_closed_confirmed"?: boolean,"expected_cash_minor"?: number | null,"id"?: string,"opening_cash_minor"?: number | null,"reason"?: string | null,"returned_reason"?: string | null,"status"?: string,"submitted_at"?: string | null,"submitted_by"?: string | null,"taken_out_minor"?: number,"taken_out_to"?: string | null,"updated_at"?: string,"variance_minor"?: number | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "cash_closings_approved_by_fkey"
+      columns: ["approved_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "cash_closings_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "cash_closings_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "cash_closings_counted_by_fkey"
+      columns: ["counted_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "cash_closings_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "cash_closings_submitted_by_fkey"
+      columns: ["submitted_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"customers": {
                   Row: {
                     "business_id": string,"created_at": string,"created_by": string | null,"id": string,"last_visit_at": string | null,"marketing_opt_in": boolean,"name": string,"no_show_count": number,"notes": string | null,"phone": string | null,"preferences": string | null,"preferred_employee_id": string | null,"risk_flags": (string)[],"visit_count": number
@@ -354,13 +403,13 @@ isOneToOne: false
                   ]
                 },"inventory_items": {
                   Row: {
-                    "active": boolean,"avg_unit_cost_minor": number,"business_id": string,"created_at": string,"id": string,"kind": Database["public"]['Enums']["item_kind"],"location": string | null,"name": string,"reorder_level": number,"sell_price_minor": number | null,"unit": string
+                    "active": boolean,"assigned_to": string | null,"avg_unit_cost_minor": number,"business_id": string,"condition": string | null,"created_at": string,"id": string,"kind": Database["public"]['Enums']["item_kind"],"location": string | null,"montaji_reg_no": string | null,"name": string,"next_service_date": string | null,"reorder_level": number,"sell_price_minor": number | null,"unit": string
                   }
                   Insert: {
-                    "active"?: boolean,"avg_unit_cost_minor"?: number,"business_id": string,"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["item_kind"],"location"?: string | null,"name": string,"reorder_level"?: number,"sell_price_minor"?: number | null,"unit"?: string
+                    "active"?: boolean,"assigned_to"?: string | null,"avg_unit_cost_minor"?: number,"business_id": string,"condition"?: string | null,"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["item_kind"],"location"?: string | null,"montaji_reg_no"?: string | null,"name": string,"next_service_date"?: string | null,"reorder_level"?: number,"sell_price_minor"?: number | null,"unit"?: string
                   }
                   Update: {
-                    "active"?: boolean,"avg_unit_cost_minor"?: number,"business_id"?: string,"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["item_kind"],"location"?: string | null,"name"?: string,"reorder_level"?: number,"sell_price_minor"?: number | null,"unit"?: string
+                    "active"?: boolean,"assigned_to"?: string | null,"avg_unit_cost_minor"?: number,"business_id"?: string,"condition"?: string | null,"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["item_kind"],"location"?: string | null,"montaji_reg_no"?: string | null,"name"?: string,"next_service_date"?: string | null,"reorder_level"?: number,"sell_price_minor"?: number | null,"unit"?: string
                   }
                   Relationships: [
                     {
@@ -566,13 +615,13 @@ isOneToOne: false
                   ]
                 },"refunds": {
                   Row: {
-                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"created_at": string,"created_by": string | null,"id": string,"idempotency_key": string | null,"method": Database["public"]['Enums']["payment_method"],"reason": string,"restock": boolean,"sale_id": string
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"created_at": string,"created_by": string | null,"id": string,"idempotency_key": string | null,"method": Database["public"]['Enums']["payment_method"],"reason": string,"restock": boolean,"sale_id": string,"tip_minor": number
                   }
                   Insert: {
-                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"idempotency_key"?: string | null,"method": Database["public"]['Enums']["payment_method"],"reason": string,"restock"?: boolean,"sale_id": string
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"idempotency_key"?: string | null,"method": Database["public"]['Enums']["payment_method"],"reason": string,"restock"?: boolean,"sale_id": string,"tip_minor"?: number
                   }
                   Update: {
-                    "amount_minor"?: number,"branch_id"?: string,"business_date"?: string,"business_id"?: string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"idempotency_key"?: string | null,"method"?: Database["public"]['Enums']["payment_method"],"reason"?: string,"restock"?: boolean,"sale_id"?: string
+                    "amount_minor"?: number,"branch_id"?: string,"business_date"?: string,"business_id"?: string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"idempotency_key"?: string | null,"method"?: Database["public"]['Enums']["payment_method"],"reason"?: string,"restock"?: boolean,"sale_id"?: string,"tip_minor"?: number
                   }
                   Relationships: [
                     {
@@ -825,6 +874,37 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"stock_counts": {
+                  Row: {
+                    "branch_id": string,"business_date": string,"business_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"id": string,"items_changed": number,"items_counted": number,"note": string | null,"value_change_minor": number
+                  }
+                  Insert: {
+                    "branch_id": string,"business_date": string,"business_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"items_changed": number,"items_counted": number,"note"?: string | null,"value_change_minor": number
+                  }
+                  Update: {
+                    "branch_id"?: string,"business_date"?: string,"business_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"items_changed"?: number,"items_counted"?: number,"note"?: string | null,"value_change_minor"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "stock_counts_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "stock_counts_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "stock_counts_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"stock_levels": {
                   Row: {
                     "branch_id": string,"item_id": string,"qty": number
@@ -852,13 +932,13 @@ isOneToOne: false
                   ]
                 },"stock_movements": {
                   Row: {
-                    "branch_id": string,"business_id": string,"created_at": string,"created_by": string | null,"id": string,"item_id": string,"note": string | null,"qty_delta": number,"reason": Database["public"]['Enums']["stock_reason"],"ref_id": string | null,"ref_type": string | null,"unit_cost_minor": number
+                    "branch_id": string,"business_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"id": string,"item_id": string,"note": string | null,"qty_delta": number,"reason": Database["public"]['Enums']["stock_reason"],"ref_id": string | null,"ref_type": string | null,"unit_cost_minor": number
                   }
                   Insert: {
-                    "branch_id": string,"business_id": string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"item_id": string,"note"?: string | null,"qty_delta": number,"reason": Database["public"]['Enums']["stock_reason"],"ref_id"?: string | null,"ref_type"?: string | null,"unit_cost_minor"?: number
+                    "branch_id": string,"business_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"item_id": string,"note"?: string | null,"qty_delta": number,"reason": Database["public"]['Enums']["stock_reason"],"ref_id"?: string | null,"ref_type"?: string | null,"unit_cost_minor"?: number
                   }
                   Update: {
-                    "branch_id"?: string,"business_id"?: string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"item_id"?: string,"note"?: string | null,"qty_delta"?: number,"reason"?: Database["public"]['Enums']["stock_reason"],"ref_id"?: string | null,"ref_type"?: string | null,"unit_cost_minor"?: number
+                    "branch_id"?: string,"business_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"item_id"?: string,"note"?: string | null,"qty_delta"?: number,"reason"?: Database["public"]['Enums']["stock_reason"],"ref_id"?: string | null,"ref_type"?: string | null,"unit_cost_minor"?: number
                   }
                   Relationships: [
                     {
@@ -949,6 +1029,43 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"tip_payouts": {
+                  Row: {
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"employee_id": string,"id": string
+                  }
+                  Insert: {
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"employee_id": string,"id"?: string
+                  }
+                  Update: {
+                    "amount_minor"?: number,"branch_id"?: string,"business_date"?: string,"business_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"employee_id"?: string,"id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tip_payouts_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tip_payouts_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tip_payouts_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tip_payouts_employee_id_fkey"
+      columns: ["employee_id"]
+isOneToOne: false
+      referencedRelation: "employees"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Views: {
@@ -962,6 +1079,9 @@ isOneToOne: false
                            },
 "acct":
 { Args: { "p_business": string,"p_key": string }; Returns: string
+                           },
+"adjust_stock":
+{ Args: { "p": Json }; Returns: Json
                            },
 "allocate_minor":
 { Args: { "p_total": number,"p_weights": (number)[] }; Returns: (number)[]
@@ -999,6 +1119,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"approve_cash_closing":
+{ Args: { "p_id": string }; Returns: Json
+                           },
 "available_slots":
 { Args: { "p_branch": string,"p_date": string,"p_duration": number,"p_employee"?: string }; Returns: {
               "available": boolean,"slot": string,"starts_at": string
@@ -1030,6 +1153,14 @@ isOneToOne: false
 "check_in":
 { Args: { "p_id": string }; Returns: undefined
                            },
+"closing_history":
+{ Args: { "p_branch": string,"p_days"?: number }; Returns: {
+              "business_date": string,"closing_id": string,"counted_cash_minor": number,"expected_cash_minor": number,"reason": string,"status": string,"variance_minor": number
+            }[]
+                           },
+"closing_preview":
+{ Args: { "p_branch": string,"p_date"?: string }; Returns: Json
+                           },
 "create_appointment":
 { Args: { "p": Json }; Returns: string
                            },
@@ -1054,6 +1185,11 @@ isOneToOne: false
 "has_role":
 { Args: { "p_business": string,"p_roles": (Database["public"]['Enums']["member_role"])[] }; Returns: boolean
                            },
+"inventory_levels":
+{ Args: { "p_branch": string }; Returns: {
+              "active": boolean,"assigned_to": string,"avg_unit_cost_minor": number,"condition": string,"item_id": string,"kind": Database["public"]['Enums']["item_kind"],"last_movement_at": string,"location": string,"low": boolean,"montaji_reg_no": string,"movements_30d": number,"name": string,"next_service_date": string,"qty": number,"reorder_level": number,"sell_price_minor": number,"unit": string,"value_minor": number
+            }[]
+                           },
 "is_member":
 { Args: { "p_business": string }; Returns: boolean
                            },
@@ -1066,10 +1202,16 @@ isOneToOne: false
 "method_account":
 { Args: { "p_method": Database["public"]['Enums']["payment_method"] }; Returns: string
                            },
+"move_stock":
+{ Args: { "p_actor": string,"p_branch": string,"p_business": string,"p_client_ref"?: string,"p_delta": number,"p_item": string,"p_note": string,"p_reason": Database["public"]['Enums']["stock_reason"],"p_ref_id": string,"p_ref_type": string }; Returns: Record<string, unknown>
+                           },
 "paid_from_account":
 { Args: { "p_method": Database["public"]['Enums']["payment_method"] }; Returns: string
                            },
 "pay_supplier":
+{ Args: { "p": Json }; Returns: Json
+                           },
+"pay_tips":
 { Args: { "p": Json }; Returns: Json
                            },
 "post_journal":
@@ -1078,7 +1220,13 @@ isOneToOne: false
 "post_purchase_bill":
 { Args: { "p": Json }; Returns: Json
                            },
+"post_stock_change":
+{ Args: { "p_actor": string,"p_branch": string,"p_business": string,"p_gain": number,"p_loss": number,"p_memo": string,"p_source": string,"p_source_id": string }; Returns: undefined
+                           },
 "record_expense":
+{ Args: { "p": Json }; Returns: Json
+                           },
+"record_stock_count":
 { Args: { "p": Json }; Returns: Json
                            },
 "refund_sale":
@@ -1105,6 +1253,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"return_cash_closing":
+{ Args: { "p_id": string,"p_reason": string }; Returns: Json
+                           },
 "reverse_expense":
 { Args: { "p_id": string,"p_reason": string }; Returns: undefined
                            },
@@ -1112,6 +1263,9 @@ isOneToOne: false
 { Args: { "p_id": string,"p_reason": string }; Returns: undefined
                            },
 "save_expense_category":
+{ Args: { "p": Json }; Returns: string
+                           },
+"save_item":
 { Args: { "p": Json }; Returns: string
                            },
 "save_service":
@@ -1144,9 +1298,17 @@ isOneToOne: false
 "start_service":
 { Args: { "p_id": string }; Returns: undefined
                            },
+"submit_cash_count":
+{ Args: { "p": Json }; Returns: Json
+                           },
 "supplier_balances":
 { Args: { "p_business": string }; Returns: {
               "balance_minor": number,"name": string,"open_bills": number,"overdue_minor": number,"phone": string,"supplier_id": string,"terms_days": number
+            }[]
+                           },
+"tips_owed":
+{ Args: { "p_branch": string }; Returns: {
+              "employee_id": string,"full_name": string,"owed_minor": number
             }[]
                            },
 "unique_business_code":

@@ -39,3 +39,4 @@ export { FormMoneyField } from './form/FormMoneyField';
 export { FormTextField } from './form/FormTextField';
 export { QueryState } from './QueryState';
 export { SwitchRow } from './SwitchRow';
+export { CheckRow } from './CheckRow';

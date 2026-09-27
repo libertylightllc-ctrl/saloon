@@ -30,6 +30,15 @@ const MATRIX = {
   addPurchase: ['owner', 'cashier'],
   viewPurchases: ['owner', 'cashier', 'accountant'],
   payOrReverseMoneyOut: ['owner'],
+  // Cash closing (01-PRODUCT §2): the cashier counts and submits, the owner counts and approves.
+  viewClosing: ['owner', 'cashier', 'accountant'],
+  countCash: ['owner', 'cashier'],
+  approveClosing: ['owner'],
+  payTips: ['owner', 'cashier'],
+  // Inventory (01-PRODUCT §2): everyone sees levels; the owner adds items, adjusts and counts.
+  viewInventory: ['owner', 'cashier', 'staff', 'accountant'],
+  manageInventory: ['owner'],
+  countStock: ['owner'],
 } as const satisfies Record<string, readonly Role[]>;
 
 export type Capability = keyof typeof MATRIX;

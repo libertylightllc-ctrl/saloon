@@ -38,6 +38,17 @@ union all select 'bills whose paid amount differs from their payments', count(*)
   where b.paid_minor <> coalesce((select sum(amount_minor) from supplier_payments sp where sp.bill_id = b.id), 0)
 union all select 'bills whose lines do not add up to the total', count(*) from purchase_bills b
   where b.total_minor <> (select sum(total_minor) from purchase_bill_lines l where l.bill_id = b.id)
+union all select 'tip payouts without a journal entry', count(*) from tip_payouts t
+  where not exists (select 1 from journal_entries e where e.source_type = 'tip_payout' and e.source_id = t.id)
+union all select 'approved closes with a difference but no journal entry', count(*) from cash_closings c
+  where c.status = 'approved' and (c.variance_minor <> 0 or c.taken_out_minor > 0)
+    and not exists (select 1 from journal_entries e where e.source_type = 'cash_close' and e.source_id = c.id)
+union all select 'closed days whose cash moved after the count', count(*) from cash_closings c
+  where c.status <> 'draft' and c.expected_cash_minor <> (
+    select coalesce(sum(l.debit_minor - l.credit_minor), 0) from journal_lines l
+    join journal_entries e on e.id = l.entry_id join accounts a on a.id = l.account_id and a.system_key = 'cash'
+    where e.branch_id = c.branch_id and e.business_date <= c.business_date
+      and not (e.source_type = 'cash_close' and e.source_id = c.id))
 union all select 'businesses without an owner', count(*) from businesses b
   where not exists (select 1 from members m where m.business_id = b.id and m.role = 'owner')
 union all select 'tables without row level security', count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace

@@ -1,5 +1,5 @@
 /**
- * Button sweep: every visible button on every M1 screen, in both modes and for each role.
+ * Button sweep: every visible button on every screen (M1 and the M2 money and stock screens), in both modes and for each role.
  * Each tap must do something the person can see — navigate, open a sheet, change the screen,
  * or show a validation message — never nothing, never a crash, never an unbuilt route, never a
  * permission error. Deliberately disabled buttons are listed with their state.
@@ -156,7 +156,29 @@ async function seed(owner: Owner, mode: Mode) {
   await owner.client.rpc('create_appointment', {
     p: { branch_id: owner.branchId, kind: 'walk_in', guest_name: 'Sweep Walk-in', service_ids: [service!.id] },
   });
-  return { customerId: customer!.id as string, saleId: sale.sale_id, serviceId: service!.id as string };
+  // M2: an expense, a supplier bill, a retail product on the shelf.
+  const { data: tea } = await admin.from('expense_categories').select('id').eq('business_id', owner.businessId).eq('key', 'tea_food').single();
+  const { data: expense } = await owner.client.rpc('record_expense', {
+    p: { branch_id: owner.branchId, category_id: tea!.id, amount_minor: 1500, method: 'cash', note: 'Sweep tea' },
+  });
+  const { data: supplierId } = await owner.client.rpc('save_supplier', {
+    p: { business_id: owner.businessId, name: 'Sweep Supplier', terms_days: 30 },
+  });
+  const { data: bill } = await owner.client.rpc('post_purchase_bill', {
+    p: { branch_id: owner.branchId, supplier_id: supplierId, lines: [{ description: 'Towels', qty: 2, unit_cost_minor: 1500 }] },
+  });
+  const { data: itemId } = await owner.client.rpc('save_item', {
+    p: { business_id: owner.businessId, name: 'Sweep Oil', kind: 'retail', sell_price_minor: 5000, reorder_level: 2 },
+  });
+  await owner.client.rpc('set_opening_stock', { p_branch: owner.branchId, p_items: [{ item_id: itemId, qty: 5, unit_cost_minor: 2000 }] });
+  return {
+    customerId: customer!.id as string,
+    saleId: sale.sale_id,
+    serviceId: service!.id as string,
+    expenseId: (expense as { expense_id: string }).expense_id,
+    billId: (bill as { bill_id: string }).bill_id,
+    itemId: itemId as string,
+  };
 }
 
 function report(mode: Mode, role: string, rows: Row[]) {
@@ -209,6 +231,18 @@ test('owner: every button on every screen does something visible', { tag: '@swee
     ['Sale detail', `/sales/${s.saleId}`],
     ['Team & logins', '/settings/team'],
     ['Branch settings', '/settings/branch'],
+    ['Accounts & history', '/accounts'],
+    ['Expenses', '/expenses'],
+    ['New expense', '/expenses/new'],
+    ['Expense detail', `/expenses/${s.expenseId}`],
+    ['Purchases', '/purchases'],
+    ['New bill', '/purchases/new'],
+    ['Bill detail', `/purchases/${s.billId}`],
+    ['Cash closing', '/cash-closing'],
+    ['Inventory', '/inventory'],
+    ['Item detail', `/inventory/${s.itemId}`],
+    ['Item form', `/inventory/form?id=${s.itemId}`],
+    ['Stock count', '/inventory/count'],
   ];
   for (const [screen, url, prepare] of screens) await sweepScreen(page, rows, screen, url, prepare);
   report(mode, 'owner', rows);
@@ -233,6 +267,13 @@ test('cashier and staff: their buttons work and none hit a permission error', { 
     ['Services', '/services'],
     ['Sales', '/sales'],
     ['Sale detail', `/sales/${s.saleId}`],
+    ['Expenses', '/expenses'],
+    ['New expense', '/expenses/new'],
+    ['Purchases', '/purchases'],
+    ['New bill', '/purchases/new'],
+    ['Cash closing', '/cash-closing'],
+    ['Inventory', '/inventory'],
+    ['Item detail', `/inventory/${s.itemId}`],
   ] as const)
     await sweepScreen(page, rows, screen, url);
   report(mode, 'cashier', rows);
@@ -245,6 +286,8 @@ test('cashier and staff: their buttons work and none hit a permission error', { 
     ['Queue', '/queue'],
     ['More', '/more'],
     ['Services', '/services'],
+    ['Inventory', '/inventory'],
+    ['Item detail', `/inventory/${s.itemId}`],
   ] as const)
     await sweepScreen(phone, staffRows, screen, url);
   report(mode, 'staff', staffRows);

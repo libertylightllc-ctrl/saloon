@@ -10,7 +10,9 @@ export const ERROR_CODES = [
   'payment_mismatch', 'insufficient_stock', 'period_closed', 'username_taken', 'weak_password', 'invalid_username',
   'name_required', 'invalid_commission', 'wrong_password', 'disabled', 'email_taken', 'no_internet',
   'rate_limited', 'invalid_code', 'unknown_salon', 'confirm_email', 'category_exists', 'unknown_setting',
-  'invalid_role', 'server_busy', 'unknown',
+  'invalid_role', 'day_closed', 'invalid_date', 'count_required', 'confirm_required', 'previous_close_pending',
+  'item_exists', 'price_required', 'item_unavailable', 'invalid_restock',
+  'server_busy', 'unknown',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

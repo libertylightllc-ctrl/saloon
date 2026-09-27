@@ -118,6 +118,8 @@ create table public.refunds (
   branch_id uuid not null references public.branches (id) on delete cascade,
   business_date date not null,
   amount_minor bigint not null check (amount_minor > 0),
+  -- The tip's share of this refund (tips owed to staff go down by it).
+  tip_minor bigint not null default 0 check (tip_minor >= 0),
   method public.payment_method not null,
   reason text not null check (length(btrim(reason)) >= 3),
   restock boolean not null default false,

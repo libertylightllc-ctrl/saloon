@@ -12,6 +12,7 @@ import { can } from '@/lib/permissions';
 import { useNow } from '@/lib/useNow';
 import { spacing, useTheme } from '@/theme';
 import {
+  Button,
   CategoryCircle,
   EmptyState,
   HeaderBand,
@@ -26,6 +27,7 @@ import {
 import { useDashboard, type Dashboard } from './api';
 import { HomeTop } from './HomeHeader';
 import { RecentActivity, RevenueCards, StaffToday, TopServices } from './HomeSections';
+import { NeedsAttention } from './NeedsAttention';
 
 const SETUP_STEPS: { key: keyof NonNullable<Dashboard['setup']>; href: Href }[] = [
   { key: 'services', href: '/services' },
@@ -59,6 +61,7 @@ export function HomeScreen() {
     { key: 'newSale', icon: 'receipt', href: '/sale', show: can(role, 'sell', rules) },
     { key: 'customer', icon: 'contact', href: '/customers/form', show: can(role, 'manageCustomers') },
     { key: 'expense', icon: 'coins', href: '/expenses/new', show: can(role, 'addExpense') },
+    { key: 'stock', icon: 'boxes', href: '/inventory', show: can(role, 'viewInventory') && role !== 'staff' },
   ];
   const quickRow = (
     <View style={styles.circles}>
@@ -120,6 +123,7 @@ export function HomeScreen() {
                   onAction={() => router.push(SETUP_STEPS.find((s) => !data.setup![s.key])!.href)}
                 />
               ) : null}
+              <NeedsAttention data={data} />
               {theme.variants.homeTop === 'profile' ? (
                 <View style={styles.block}>
                   <SectionHeader title={t('home.quickActions')} />
@@ -171,6 +175,9 @@ export function HomeScreen() {
 
 function MoneyCards({ data }: { data: Dashboard }) {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { role } = useWorkspace();
+  const closed = data.closing?.today_status;
   const cash = data.expected_cash ?? 0;
   const yesterday = data.expected_cash_yesterday ?? 0;
   const change = yesterday > 0 ? Math.round(((cash - yesterday) / yesterday) * 100) : null;
@@ -183,7 +190,27 @@ function MoneyCards({ data }: { data: Dashboard }) {
         label={t('home.expectedCash')}
         value={formatMoney(cash)}
         delta={change !== null && change !== 0 ? { label: `${Math.abs(change)}%`, trend: change > 0 ? 'up' : 'down' } : undefined}
-        sub={change !== null ? t('home.vsYesterday') : t('home.cashSub')}
+        sub={
+          closed === 'approved'
+            ? t('home.dayClosed')
+            : closed === 'pending_approval'
+              ? t('home.dayPending')
+              : change !== null
+                ? t('home.vsYesterday')
+                : t('home.cashSub')
+        }
+        action={
+          can(role, 'viewClosing') ? (
+            <Button
+              label={t('home.closeDay')}
+              size="sm"
+              variant={closed === 'approved' ? 'ghost' : 'secondary'}
+              icon="banknote"
+              onPress={() => router.push('/cash-closing')}
+              testID="home-close-day"
+            />
+          ) : undefined
+        }
         testID="kpi-expected-cash"
       />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.kpiRow}>
