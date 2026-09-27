@@ -2,7 +2,7 @@
 
 Updated: 2026-09-27
 
-## Current milestone: M2 — Money in / out (in progress). M1 ✅ done (hand-over: docs/M1-HANDOVER.md)
+## Current milestone: M2 — Money in / out ✅ done (hand-over: docs/M2-HANDOVER.md). Next: M3 — People & rules
 
 ### M2 status
 - ✅ Expenses (16 categories, reversal) and Purchases & suppliers (bills, stock, payments, reversal) — 2026-09-26.
@@ -18,8 +18,8 @@ Updated: 2026-09-27
   e2e `18-inventory.spec.ts` (both modes).
 - ✅ Receipt photos — 2026-09-27: take or choose a photo on an expense or bill (form or details), private bucket,
   signed links, never replaced or deleted. SQL `05_receipts.test.sql` (16), e2e `19-receipts.spec.ts` (both modes).
-- ⏳ Next: M2 hand-over — full suite 3 runs in a row and the button sweep on a quiet machine (the Mac was running
-  heavy ffmpeg jobs from another tool on 2026-09-27, which made the local sign-in server time out).
+- ✅ M2 hand-over — 2026-09-27: `docs/M2-HANDOVER.md`. Full suite 3 runs in a row 56/56; button sweep 1,098 taps,
+  0 failures. Next: M3 — People & rules (05-BUILD-PLAN.md).
 
 ### Works (proven)
 - **Database** (`supabase/migrations/…01–09`): tenancy, ledger (balanced-journal constraint, closed periods),

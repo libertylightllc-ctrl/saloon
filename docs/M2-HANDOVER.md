@@ -34,15 +34,21 @@ Date: 2026-09-27 · Branch: `main` · Local stack (Supabase in Docker on this Ma
 |---|---|---|
 | Type check | `npx tsc --noEmit` | clean |
 | Lint | `npx eslint .` | clean |
-| App tests | `npx jest` | 152 / 152 |
+| App tests | `npx jest` | 153 / 153 |
 | Database tests | `npx supabase test db` | 227 / 227 (M1 70, money out 45, cash closing 53, inventory 43, receipts 16) |
 | Database health | `supabase/checks/health.sql` | 22 integrity checks, 0 problems; both demo salons balanced |
-| E2E, gents + ladies | `npx playwright test --grep-invert @sweep` | PROOF_RESULT |
-| Button sweep, owner/cashier/staff, both modes (now includes every M2 screen) | `npx playwright test --grep @sweep` | SWEEP_RESULT |
+| E2E, gents + ladies | `npx playwright test --grep-invert @sweep` | 3 runs in a row on the final code: 56/56, 56/56, 56/56, no retries; salon-type switch repeated 20/20 |
+| Button sweep, owner/cashier/staff, both modes (now includes every M2 screen) | `npx playwright test --grep @sweep` | 1,098 taps, 0 failures — `docs/button-sweep/` |
 
 The build plan's M2 checks, each an automated test in both modes: receive stock → sell → level drops (flows 16, 18);
 bill → pay supplier → balance (16); cash expense lowers expected cash (15); close day short by AED 5 → cashier
 submits → owner approves → locked, over/short posted (17); journal balances (13, 15–18).
+
+## Real problems the tests caught (fixed, with tests)
+1. A phone that joined live updates late, or came back from sleep, missed a salon-type switch and kept the old
+   look until restarted. It now catches up on every (re)join; the unit test fails on the old code.
+2. Seed data went negative on past days (expenses a month back, sales only a week back); the demo now has a
+   consistent four weeks.
 
 ## Open items
 - Hosted Supabase is still not set up — see `docs/HOSTED-SUPABASE.md` (you create the project; never send the

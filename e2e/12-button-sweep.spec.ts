@@ -99,16 +99,22 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
   const before = await perceivable(page);
   const errors: string[] = [];
   const onError = (e: Error) => errors.push(e.message);
+  // "Choose photo" opens the device's own photo picker, which a headless browser does not draw.
+  let picker = false;
+  const onChooser = () => (picker = true);
   page.on('pageerror', onError);
+  page.on('filechooser', onChooser);
   await target
     .click({ timeout: 5_000, ...(backdrop ? { position: { x: 12, y: 12 } } : {}) })
     .catch((e: Error) => errors.push(`click: ${e.message.split('\n')[0]}`));
   await page.waitForTimeout(900);
   page.off('pageerror', onError);
+  page.off('filechooser', onChooser);
 
   const after = await perceivable(page);
   const text = after.text;
   if (errors.length) return { ok: false, result: `ERROR ${errors[0]}` };
+  if (picker) return { ok: true, result: 'opens the photo picker' };
   if (/Unmatched Route|This screen doesn't exist|doesn't exist/i.test(text)) return { ok: false, result: 'leads to an unbuilt route' };
   if (/Your role cannot do this|Something went wrong/.test(text) && !/Your role cannot do this|Something went wrong/.test(before.text))
     return { ok: false, result: 'shows an error' };
