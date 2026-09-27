@@ -10,8 +10,8 @@ describe('tabsFor', () => {
   });
 
   it('gives staff Sale only when the branch allows it', () => {
-    expect(tabsFor('staff', off)).toEqual(['index', 'queue', 'more']);
-    expect(tabsFor('staff', on)).toEqual(['index', 'queue', 'sale', 'more']);
+    expect(tabsFor('staff', off)).toEqual(['index', 'queue', 'pay', 'more']);
+    expect(tabsFor('staff', on)).toEqual(['index', 'queue', 'sale', 'pay', 'more']);
   });
 
   it('keeps the accountant to Home and More in M1', () => {

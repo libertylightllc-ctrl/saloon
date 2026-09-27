@@ -184,6 +184,7 @@ async function seed(owner: Owner, mode: Mode) {
     expenseId: (expense as { expense_id: string }).expense_id,
     billId: (bill as { bill_id: string }).bill_id,
     itemId: itemId as string,
+    employeeId: (await admin.from('employees').select('id').eq('business_id', owner.businessId).neq('role_title', 'cashier').limit(1).single()).data!.id as string,
   };
 }
 
@@ -250,6 +251,12 @@ test('owner: every button on every screen does something visible', { tag: '@swee
     ['Item form', `/inventory/form?id=${s.itemId}`],
     ['Stock count', '/inventory/count'],
     ['Opening stock', '/inventory/opening'],
+    ['Staff & payroll', '/staff'],
+    ['Staff profile', `/staff/${s.employeeId}`],
+    ['Staff form', `/staff/form?id=${s.employeeId}`],
+    ['Attendance', '/attendance'],
+    ['Payroll', '/payroll'],
+    ['Bonuses & advances', '/payroll/adjustments'],
   ];
   for (const [screen, url, prepare] of screens) await sweepScreen(page, rows, screen, url, prepare);
   report(mode, 'owner', rows);
@@ -281,6 +288,7 @@ test('cashier and staff: their buttons work and none hit a permission error', { 
     ['Cash closing', '/cash-closing'],
     ['Inventory', '/inventory'],
     ['Item detail', `/inventory/${s.itemId}`],
+    ['Attendance', '/attendance'],
   ] as const)
     await sweepScreen(page, rows, screen, url);
   report(mode, 'cashier', rows);
@@ -295,6 +303,7 @@ test('cashier and staff: their buttons work and none hit a permission error', { 
     ['Services', '/services'],
     ['Inventory', '/inventory'],
     ['Item detail', `/inventory/${s.itemId}`],
+    ['My pay', '/pay'],
   ] as const)
     await sweepScreen(phone, staffRows, screen, url);
   report(mode, 'staff', staffRows);

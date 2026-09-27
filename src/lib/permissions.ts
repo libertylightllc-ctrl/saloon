@@ -45,6 +45,9 @@ const MATRIX = {
   manageStaff: ['owner'],
   viewAttendance: ['owner', 'cashier', 'accountant'],
   recordAttendance: ['owner', 'cashier'],
+  viewPayroll: ['owner', 'accountant'],
+  runPayroll: ['owner'],
+  myPay: ['staff'],
 } as const satisfies Record<string, readonly Role[]>;
 
 export type Capability = keyof typeof MATRIX;
@@ -55,13 +58,15 @@ export function can(role: Role | null | undefined, capability: Capability, rules
   return (MATRIX[capability] as readonly Role[]).includes(role);
 }
 
-export type TabKey = 'index' | 'queue' | 'sale' | 'customers' | 'more';
+export type TabKey = 'index' | 'queue' | 'sale' | 'customers' | 'pay' | 'more';
 
 export function tabsFor(role: Role, rules: BranchRules): TabKey[] {
   const tabs: TabKey[] = ['index'];
   if (can(role, 'addToQueue')) tabs.push('queue');
   if (can(role, 'sell', rules)) tabs.push('sale');
   if (can(role, 'viewCustomers') && role !== 'accountant') tabs.push('customers');
+  // Staff get "My pay" (03-SCREENS: Staff → Home, Queue, (Sale), My pay, More).
+  if (role === 'staff') tabs.push('pay');
   tabs.push('more');
   return tabs;
 }

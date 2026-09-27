@@ -91,7 +91,8 @@
     "queue": "الطابور",
     "sale": "البيع",
     "customers": "العملاء",
-    "more": "المزيد"
+    "more": "المزيد",
+    "pay": "راتبي"
   },
   "language": {
     "title": "اللغة",
@@ -195,7 +196,11 @@
       "toolsDueSub": "الصيانة خلال أسبوع",
       "billsOverdue": "{{n}} فواتير موردين متأخرة",
       "billsDue": "{{n}} فواتير موردين مستحقة هذا الأسبوع",
-      "billsSub": "{{amount}} للدفع"
+      "billsSub": "{{amount}} للدفع",
+      "payrollPending": "رواتب {{month}} بانتظار الاعتماد",
+      "payrollPendingSub": "راجعها واعتمدها للدفع",
+      "wpsMissing": "{{n}} رواتب تحتاج إثبات حماية الأجور",
+      "wpsMissingSub": "الهدف: 85% مثبت بحلول اليوم 5"
     },
     "attentionClose": "إغلاق"
   },
@@ -642,7 +647,8 @@
     "invalid_roster": "كل مناوبة تحتاج وقت بداية ونهاية.",
     "invalid_time": "هذا الوقت ليس اليوم أو في المستقبل.",
     "already_clocked_in": "تم تسجيل الحضور اليوم بالفعل.",
-    "not_clocked_in": "لم يُسجَّل الحضور أو تم الانصراف بالفعل."
+    "not_clocked_in": "لم يُسجَّل الحضور أو تم الانصراف بالفعل.",
+    "payroll_approved": "هذا الشهر معتمد بالفعل. التغييرات تدخل الشهر التالي."
   },
   "sales": {
     "title": "المبيعات",
@@ -862,7 +868,11 @@
       "cash_close": "إغلاق الصندوق",
       "tip_payout": "بقشيش مصروف",
       "stock_adjustment": "تعديلات المخزون",
-      "stock_count": "جرد المخزون"
+      "stock_count": "جرد المخزون",
+      "staff_advance": "سلف الموظفين",
+      "staff_advance_reversal": "سلف معكوسة",
+      "payroll": "الرواتب",
+      "payroll_payment": "رواتب مدفوعة"
     }
   },
   "settingUp": {
@@ -1240,5 +1250,69 @@
     "clockedInMeLate": "تم تسجيل الحضور — متأخر {{n}} د",
     "clockedOutMe": "تم تسجيل الانصراف. إلى الغد!",
     "dayDone": "انتهى يومك."
+  },
+  "payroll": {
+    "title": "الرواتب",
+    "adjustments": "المكافآت والسلف",
+    "monthTotal": "هذا الشهر",
+    "status": {
+      "generated": "بانتظار الاعتماد",
+      "approved": "معتمد · للدفع",
+      "paid": "مدفوع",
+      "none": "لم يبدأ"
+    },
+    "noneYet": "احسب الشهر عند استحقاق الرواتب.",
+    "generate": "احسب الرواتب",
+    "regenerate": "أعد الحساب",
+    "generated": "تم حساب الرواتب",
+    "approve": "اعتماد الرواتب",
+    "approved": "اعتُمدت الرواتب وسُجلت في الدفاتر",
+    "draftHint": "لا شيء في الدفاتر حتى الاعتماد. أضف مكافأة أو خصمًا وأعد الحساب عند الحاجة.",
+    "noLines": "لا أحد للدفع هذا الشهر.",
+    "base": "الراتب الأساسي",
+    "commission": "العمولة",
+    "bonus": "المكافآت",
+    "deductions": "الخصومات",
+    "advances": "السلف المستردة",
+    "net": "صافي الراتب",
+    "slipMeta": "الأساسي {{base}} · العمولة {{commission}}",
+    "paid": "مدفوع",
+    "unpaid": "للدفع",
+    "paidBy": "دُفع {{method}}",
+    "nothingToPay": "لا شيء للدفع",
+    "payBy": {
+      "cash": "ادفع {{amount}} نقدًا",
+      "bank": "ادفع {{amount}} عبر البنك"
+    },
+    "paidToast": "تم الدفع لـ {{name}}",
+    "wps": {
+      "na": "ليس ضمن حماية الأجور",
+      "required": "مطلوب إثبات حماية الأجور",
+      "proven": "حماية الأجور مثبتة"
+    },
+    "wpsHint": "أضف لقطة أو ملف تحويل البنك لهذا الراتب.",
+    "wpsAdded": "أُضيف إثبات حماية الأجور",
+    "kinds": {
+      "bonus": "مكافأة",
+      "deduction": "خصم",
+      "advance": "سلفة"
+    },
+    "noAdjustments": "لا مكافآت أو خصومات أو سلف هذا الشهر.",
+    "newAdjustment": "مكافأة أو خصم أو سلفة",
+    "amount": "المبلغ",
+    "advanceHint": "تُدفع الآن (النقد يخرج من الدرج) وتُسترد من الراتب التالي.",
+    "adjustmentSaved": "تم الحفظ",
+    "reverse": "عكس",
+    "adjustmentReversed": "تم العكس",
+    "reversedBecause": "معكوس: {{reason}}"
+  },
+  "myPay": {
+    "title": "راتبي",
+    "subtitle": "العمولة والسلف وقسائم الراتب",
+    "commission": "عمولة هذا الشهر",
+    "advances": "سلف هذا الشهر",
+    "thisMonth": "هذا الشهر",
+    "payslips": "قسائم الراتب",
+    "noPayslips": "تظهر قسائمك هنا بعد أن يعتمد المالك الشهر."
   }
 }

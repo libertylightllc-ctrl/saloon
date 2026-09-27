@@ -569,6 +569,117 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"payroll_adjustments": {
+                  Row: {
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"employee_id": string,"id": string,"kind": string,"method": Database["public"]['Enums']["payment_method"] | null,"note": string | null,"period": string,"reverse_reason": string | null,"status": string
+                  }
+                  Insert: {
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"employee_id": string,"id"?: string,"kind": string,"method"?: Database["public"]['Enums']["payment_method"] | null,"note"?: string | null,"period": string,"reverse_reason"?: string | null,"status"?: string
+                  }
+                  Update: {
+                    "amount_minor"?: number,"branch_id"?: string,"business_date"?: string,"business_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"employee_id"?: string,"id"?: string,"kind"?: string,"method"?: Database["public"]['Enums']["payment_method"] | null,"note"?: string | null,"period"?: string,"reverse_reason"?: string | null,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "payroll_adjustments_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payroll_adjustments_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payroll_adjustments_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payroll_adjustments_employee_id_fkey"
+      columns: ["employee_id"]
+isOneToOne: false
+      referencedRelation: "employees"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"payroll_lines": {
+                  Row: {
+                    "advances_minor": number,"base_minor": number,"bonus_minor": number,"branch_id": string,"business_id": string,"commission_minor": number,"deductions_minor": number,"employee_id": string,"id": string,"net_minor": number,"paid_at": string | null,"paid_by": string | null,"paid_method": Database["public"]['Enums']["payment_method"] | null,"run_id": string,"wps_evidence_path": string | null,"wps_status": string
+                  }
+                  Insert: {
+                    "advances_minor"?: number,"base_minor"?: number,"bonus_minor"?: number,"branch_id": string,"business_id": string,"commission_minor"?: number,"deductions_minor"?: number,"employee_id": string,"id"?: string,"net_minor": number,"paid_at"?: string | null,"paid_by"?: string | null,"paid_method"?: Database["public"]['Enums']["payment_method"] | null,"run_id": string,"wps_evidence_path"?: string | null,"wps_status"?: string
+                  }
+                  Update: {
+                    "advances_minor"?: number,"base_minor"?: number,"bonus_minor"?: number,"branch_id"?: string,"business_id"?: string,"commission_minor"?: number,"deductions_minor"?: number,"employee_id"?: string,"id"?: string,"net_minor"?: number,"paid_at"?: string | null,"paid_by"?: string | null,"paid_method"?: Database["public"]['Enums']["payment_method"] | null,"run_id"?: string,"wps_evidence_path"?: string | null,"wps_status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "payroll_lines_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payroll_lines_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payroll_lines_employee_id_fkey"
+      columns: ["employee_id"]
+isOneToOne: false
+      referencedRelation: "employees"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payroll_lines_paid_by_fkey"
+      columns: ["paid_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payroll_lines_run_id_fkey"
+      columns: ["run_id"]
+isOneToOne: false
+      referencedRelation: "payroll_runs"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"payroll_runs": {
+                  Row: {
+                    "approved_at": string | null,"approved_by": string | null,"business_id": string,"generated_at": string,"generated_by": string | null,"id": string,"period": string,"status": string
+                  }
+                  Insert: {
+                    "approved_at"?: string | null,"approved_by"?: string | null,"business_id": string,"generated_at"?: string,"generated_by"?: string | null,"id"?: string,"period": string,"status"?: string
+                  }
+                  Update: {
+                    "approved_at"?: string | null,"approved_by"?: string | null,"business_id"?: string,"generated_at"?: string,"generated_by"?: string | null,"id"?: string,"period"?: string,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "payroll_runs_approved_by_fkey"
+      columns: ["approved_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payroll_runs_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payroll_runs_generated_by_fkey"
+      columns: ["generated_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"periods": {
                   Row: {
                     "business_id": string,"month": string,"status": string
@@ -1190,8 +1301,14 @@ isOneToOne: false
 "approve_cash_closing":
 { Args: { "p_id": string }; Returns: Json
                            },
+"approve_payroll":
+{ Args: { "p_run": string }; Returns: undefined
+                           },
 "attach_receipt":
 { Args: { "p_id": string,"p_kind": string,"p_path": string }; Returns: undefined
+                           },
+"attach_wps_evidence":
+{ Args: { "p_line": string,"p_path": string }; Returns: undefined
                            },
 "attendance_day":
 { Args: { "p_branch": string,"p_date"?: string }; Returns: {
@@ -1240,6 +1357,9 @@ isOneToOne: false
 "closing_preview":
 { Args: { "p_branch": string,"p_date"?: string }; Returns: Json
                            },
+"commission_for":
+{ Args: { "p_employee": string,"p_period": string }; Returns: number
+                           },
 "create_appointment":
 { Args: { "p": Json }; Returns: string
                            },
@@ -1260,6 +1380,9 @@ isOneToOne: false
                            },
 "fmt_money":
 { Args: { "p_currency"?: string,"p_minor": number }; Returns: string
+                           },
+"generate_payroll":
+{ Args: { "p_business": string,"p_period": string }; Returns: string
                            },
 "has_role":
 { Args: { "p_business": string,"p_roles": (Database["public"]['Enums']["member_role"])[] }; Returns: boolean
@@ -1287,6 +1410,9 @@ isOneToOne: false
 "paid_from_account":
 { Args: { "p_method": Database["public"]['Enums']["payment_method"] }; Returns: string
                            },
+"pay_payroll_line":
+{ Args: { "p_line": string,"p_method": string }; Returns: undefined
+                           },
 "pay_supplier":
 { Args: { "p": Json }; Returns: Json
                            },
@@ -1301,6 +1427,9 @@ isOneToOne: false
                            },
 "post_stock_change":
 { Args: { "p_actor": string,"p_branch": string,"p_business": string,"p_gain": number,"p_loss": number,"p_memo": string,"p_source": string,"p_source_id": string }; Returns: undefined
+                           },
+"record_adjustment":
+{ Args: { "p": Json }; Returns: Json
                            },
 "record_expense":
 { Args: { "p": Json }; Returns: Json
@@ -1334,6 +1463,9 @@ isOneToOne: false
       } },
 "return_cash_closing":
 { Args: { "p_id": string,"p_reason": string }; Returns: Json
+                           },
+"reverse_adjustment":
+{ Args: { "p_id": string,"p_reason": string }; Returns: undefined
                            },
 "reverse_expense":
 { Args: { "p_id": string,"p_reason": string }; Returns: undefined

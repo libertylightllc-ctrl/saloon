@@ -57,7 +57,7 @@ export async function back(page: Page) {
   await page.getByRole('button', { name: 'Back' }).filter({ visible: true }).first().click();
 }
 
-export async function tab(page: Page, name: 'index' | 'queue' | 'sale' | 'customers' | 'more') {
+export async function tab(page: Page, name: 'index' | 'queue' | 'sale' | 'customers' | 'pay' | 'more') {
   await id(page, `tab-${name}`).click();
 }
 

@@ -37,17 +37,20 @@ export async function pickPhoto(source: 'camera' | 'library'): Promise<PickedPho
   return { uri: asset.uri, base64: asset.base64, mimeType };
 }
 
+/** Uploads a photo to `<bucket>/<folder>/<rowId>-<random>.<ext>` and gives back its path. Never overwrites. */
+export async function uploadPhoto(bucket: 'receipts' | 'documents', folder: string, rowId: string, photo: PickedPhoto): Promise<string> {
+  const path = `${folder}/${rowId}-${Crypto.randomUUID().slice(0, 8)}.${EXT[photo.mimeType]}`;
+  const bytes = Uint8Array.from(atob(photo.base64), (c) => c.charCodeAt(0));
+  const { error } = await supabase.storage.from(bucket).upload(path, bytes, { contentType: photo.mimeType, upsert: false });
+  if (error) throw error;
+  return path;
+}
+
 export function useAttachReceipt(kind: ReceiptKind, businessId: string) {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async ({ rowId, photo }: { rowId: string; photo: PickedPhoto }) => {
-      const folder = kind === 'expense' ? 'expenses' : 'bills';
-      const path = `${businessId}/${folder}/${rowId}-${Crypto.randomUUID().slice(0, 8)}.${EXT[photo.mimeType]}`;
-      const bytes = Uint8Array.from(atob(photo.base64), (c) => c.charCodeAt(0));
-      const { error: uploadError } = await supabase.storage
-        .from('receipts')
-        .upload(path, bytes, { contentType: photo.mimeType, upsert: false });
-      if (uploadError) throw uploadError;
+      const path = await uploadPhoto('receipts', `${businessId}/${kind === 'expense' ? 'expenses' : 'bills'}`, rowId, photo);
       const { error } = await supabase.rpc('attach_receipt', { p_kind: kind, p_id: rowId, p_path: path });
       if (error) throw error;
       return path;
@@ -57,13 +60,13 @@ export function useAttachReceipt(kind: ReceiptKind, businessId: string) {
 }
 
 /** A signed link that works for an hour; refreshed before it runs out. */
-export function useReceiptUrl(path: string | null | undefined) {
+export function useReceiptUrl(path: string | null | undefined, bucket: 'receipts' | 'documents' = 'receipts') {
   return useQuery({
     enabled: Boolean(path),
-    queryKey: ['receipt', path],
+    queryKey: ['receipt', bucket, path],
     staleTime: 50 * 60 * 1000,
     queryFn: async () => {
-      const { data, error } = await supabase.storage.from('receipts').createSignedUrl(path!, 3600);
+      const { data, error } = await supabase.storage.from(bucket).createSignedUrl(path!, 3600);
       if (error) throw error;
       return data.signedUrl;
     },

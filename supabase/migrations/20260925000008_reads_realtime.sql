@@ -119,6 +119,12 @@ begin
           'due_soon_count', count(*) filter (where due_date between v_today and v_today + 7),
           'due_soon_minor', coalesce(sum(total_minor - paid_minor) filter (where due_date between v_today and v_today + 7), 0))
         from purchase_bills where business_id = b.business_id and status in ('unpaid', 'partial')) end,
+      -- Payroll (…016): a month waiting for approval, and paid WPS payslips still without the transfer proof.
+      'payroll', case when m.role in ('owner', 'accountant') then jsonb_build_object(
+          'pending_period', (select period from payroll_runs where business_id = b.business_id and status = 'generated'
+                             order by period desc limit 1),
+          'wps_missing', (select count(*) from payroll_lines l join payroll_runs r on r.id = l.run_id
+                          where r.business_id = b.business_id and l.wps_status = 'required' and l.paid_at is not null)) end,
       -- History is for the owner (and the read-only accountant), not the front desk.
       'activity', case when m.role in ('owner', 'accountant') then coalesce((select jsonb_agg(jsonb_build_object(
             'summary', al.summary, 'at', al.created_at, 'actor', mem.display_name) order by al.created_at desc)

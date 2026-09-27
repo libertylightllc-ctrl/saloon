@@ -8,7 +8,10 @@ Updated: 2026-09-27
 - ✅ Staff & attendance — 2026-09-28: staff list with pay terms (owner/accountant only), add people without a login,
   weekly rosters that booking slots follow, attendance board, clock in/out from Home with a late flag, owner and
   cashier record for others. SQL `06_staff_attendance.test.sql` (32), e2e `20-staff-attendance.spec.ts` (both modes).
-- ⏳ Next: payroll (adjustments, advances, monthly run, WPS proof, My pay), compliance, notifications & push.
+- ✅ Payroll — 2026-09-28: bonuses, deductions and advances (cash advances leave the drawer), month worked out →
+  approved (posted) → paid by cash or bank, commission less refunds, advances recovered, WPS proof, My pay tab for
+  staff, Home asks for approval and missing WPS proofs. SQL `07_payroll.test.sql` (42), e2e `21-payroll.spec.ts`.
+- ⏳ Next: compliance (expiry register, hygiene log, inspection binder PDF, WPS & Montaji), notifications & push.
 
 ### M2 status
 - ✅ Expenses (16 categories, reversal) and Purchases & suppliers (bills, stock, payments, reversal) — 2026-09-26.

@@ -91,7 +91,8 @@
     "queue": "قطار",
     "sale": "فروخت",
     "customers": "گاہک",
-    "more": "مزید"
+    "more": "مزید",
+    "pay": "میری تنخواہ"
   },
   "language": {
     "title": "زبان",
@@ -195,7 +196,11 @@
       "toolsDueSub": "ایک ہفتے میں سروس",
       "billsOverdue": "{{n}} سپلائر بل واجب الادا",
       "billsDue": "اس ہفتے {{n}} سپلائر بل واجب",
-      "billsSub": "{{amount}} ادا کرنا ہے"
+      "billsSub": "{{amount}} ادا کرنا ہے",
+      "payrollPending": "{{month}} کا پے رول منظوری باقی",
+      "payrollPendingSub": "جانچیں اور ادائیگی کے لیے منظور کریں",
+      "wpsMissing": "{{n}} تنخواہوں کا WPS ثبوت باقی",
+      "wpsMissingSub": "ہدف: 5 تاریخ تک 85%"
     },
     "attentionClose": "بند کریں"
   },
@@ -642,7 +647,8 @@
     "invalid_roster": "ہر شفٹ کا شروع اور ختم ہونے کا وقت چاہیے۔",
     "invalid_time": "یہ وقت آج کا نہیں یا مستقبل کا ہے۔",
     "already_clocked_in": "آج کی حاضری پہلے سے لگی ہے۔",
-    "not_clocked_in": "حاضری نہیں لگی، یا چھٹی پہلے سے درج ہے۔"
+    "not_clocked_in": "حاضری نہیں لگی، یا چھٹی پہلے سے درج ہے۔",
+    "payroll_approved": "وہ مہینہ پہلے سے منظور ہے۔ تبدیلیاں اگلے مہینے میں جائیں گی۔"
   },
   "sales": {
     "title": "فروخت",
@@ -862,7 +868,11 @@
       "cash_close": "کیش کلوز",
       "tip_payout": "دی گئی ٹپس",
       "stock_adjustment": "اسٹاک تبدیلیاں",
-      "stock_count": "اسٹاک گنتی"
+      "stock_count": "اسٹاک گنتی",
+      "staff_advance": "عملے کے ایڈوانس",
+      "staff_advance_reversal": "واپس ایڈوانس",
+      "payroll": "پے رول",
+      "payroll_payment": "ادا کی گئی تنخواہیں"
     }
   },
   "settingUp": {
@@ -1240,5 +1250,69 @@
     "clockedInMeLate": "حاضری لگی — {{n}} منٹ دیر",
     "clockedOutMe": "چھٹی درج۔ کل ملتے ہیں!",
     "dayDone": "آپ کا دن مکمل۔"
+  },
+  "payroll": {
+    "title": "پے رول",
+    "adjustments": "بونس اور ایڈوانس",
+    "monthTotal": "یہ مہینہ",
+    "status": {
+      "generated": "منظوری باقی",
+      "approved": "منظور · ادائیگی باقی",
+      "paid": "ادا ہو گیا",
+      "none": "شروع نہیں"
+    },
+    "noneYet": "تنخواہ کے وقت مہینہ نکالیں۔",
+    "generate": "پے رول نکالیں",
+    "regenerate": "دوبارہ نکالیں",
+    "generated": "پے رول نکال لیا",
+    "approve": "پے رول منظور کریں",
+    "approved": "پے رول منظور اور کھاتوں میں درج",
+    "draftHint": "منظوری تک کھاتوں میں کچھ نہیں۔ ضرورت ہو تو بونس/کٹوتی شامل کر کے دوبارہ نکالیں۔",
+    "noLines": "اس مہینے کسی کو ادائیگی نہیں۔",
+    "base": "بنیادی تنخواہ",
+    "commission": "کمیشن",
+    "bonus": "بونس",
+    "deductions": "کٹوتیاں",
+    "advances": "ایڈوانس واپسی",
+    "net": "خالص تنخواہ",
+    "slipMeta": "بنیادی {{base}} · کمیشن {{commission}}",
+    "paid": "ادا",
+    "unpaid": "ادائیگی باقی",
+    "paidBy": "{{method}} سے ادا",
+    "nothingToPay": "ادائیگی کچھ نہیں",
+    "payBy": {
+      "cash": "{{amount}} نقد دیں",
+      "bank": "{{amount}} بینک سے دیں"
+    },
+    "paidToast": "{{name}} کو ادائیگی ہو گئی",
+    "wps": {
+      "na": "WPS نہیں",
+      "required": "WPS ثبوت چاہیے",
+      "proven": "WPS ثابت"
+    },
+    "wpsHint": "اس تنخواہ کے بینک ٹرانسفر کا اسکرین شاٹ لگائیں۔",
+    "wpsAdded": "WPS ثبوت لگ گیا",
+    "kinds": {
+      "bonus": "بونس",
+      "deduction": "کٹوتی",
+      "advance": "ایڈوانس"
+    },
+    "noAdjustments": "اس مہینے کوئی بونس، کٹوتی یا ایڈوانس نہیں۔",
+    "newAdjustment": "بونس، کٹوتی یا ایڈوانس",
+    "amount": "رقم",
+    "advanceHint": "ابھی دیا جائے گا (نقد دراز سے) اور اگلی تنخواہ سے کٹے گا۔",
+    "adjustmentSaved": "محفوظ ہو گیا",
+    "reverse": "واپس کریں",
+    "adjustmentReversed": "واپس ہو گیا",
+    "reversedBecause": "واپس: {{reason}}"
+  },
+  "myPay": {
+    "title": "میری تنخواہ",
+    "subtitle": "کمیشن، ایڈوانس اور پے سلپ",
+    "commission": "اس مہینے کا کمیشن",
+    "advances": "اس مہینے کے ایڈوانس",
+    "thisMonth": "یہ مہینہ",
+    "payslips": "پے سلپ",
+    "noPayslips": "مالک کے مہینہ منظور کرنے پر پے سلپ یہاں دکھیں گی۔"
   }
 }

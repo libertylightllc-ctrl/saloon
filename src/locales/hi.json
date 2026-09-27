@@ -91,7 +91,8 @@
     "queue": "कतार",
     "sale": "बिक्री",
     "customers": "ग्राहक",
-    "more": "और"
+    "more": "और",
+    "pay": "मेरा वेतन"
   },
   "language": {
     "title": "भाषा",
@@ -195,7 +196,11 @@
       "toolsDueSub": "एक हफ़्ते में सर्विस",
       "billsOverdue": "{{n}} सप्लायर बिल बकाया",
       "billsDue": "इस हफ़्ते {{n}} सप्लायर बिल देय",
-      "billsSub": "{{amount}} देना है"
+      "billsSub": "{{amount}} देना है",
+      "payrollPending": "{{month}} का पेरोल मंज़ूरी बाकी",
+      "payrollPendingSub": "जाँचें और भुगतान के लिए मंज़ूर करें",
+      "wpsMissing": "{{n}} वेतन के WPS सबूत बाकी",
+      "wpsMissingSub": "लक्ष्य: 5 तारीख तक 85%"
     },
     "attentionClose": "बंद करें"
   },
@@ -642,7 +647,8 @@
     "invalid_roster": "हर शिफ़्ट का शुरू और खत्म होने का समय चाहिए।",
     "invalid_time": "यह समय आज का नहीं है या भविष्य का है।",
     "already_clocked_in": "आज की हाज़िरी पहले से लगी है।",
-    "not_clocked_in": "हाज़िरी नहीं लगी, या छुट्टी पहले से दर्ज है।"
+    "not_clocked_in": "हाज़िरी नहीं लगी, या छुट्टी पहले से दर्ज है।",
+    "payroll_approved": "वह महीना पहले से मंज़ूर है। बदलाव अगले महीने में जाएँगे।"
   },
   "sales": {
     "title": "बिक्री",
@@ -862,7 +868,11 @@
       "cash_close": "कैश क्लोज़",
       "tip_payout": "दी गई टिप्स",
       "stock_adjustment": "स्टॉक बदलाव",
-      "stock_count": "स्टॉक गिनती"
+      "stock_count": "स्टॉक गिनती",
+      "staff_advance": "स्टाफ़ एडवांस",
+      "staff_advance_reversal": "पलटे एडवांस",
+      "payroll": "पेरोल",
+      "payroll_payment": "दिए गए वेतन"
     }
   },
   "settingUp": {
@@ -1240,5 +1250,69 @@
     "clockedInMeLate": "हाज़िरी लगी — {{n}} मिनट देर",
     "clockedOutMe": "छुट्टी दर्ज। कल मिलते हैं!",
     "dayDone": "आपका दिन पूरा हुआ।"
+  },
+  "payroll": {
+    "title": "पेरोल",
+    "adjustments": "बोनस और एडवांस",
+    "monthTotal": "यह महीना",
+    "status": {
+      "generated": "मंज़ूरी बाकी",
+      "approved": "मंज़ूर · भुगतान बाकी",
+      "paid": "भुगतान हुआ",
+      "none": "शुरू नहीं"
+    },
+    "noneYet": "वेतन देने के समय महीना निकालें।",
+    "generate": "पेरोल निकालें",
+    "regenerate": "फिर से निकालें",
+    "generated": "पेरोल निकाला गया",
+    "approve": "पेरोल मंज़ूर करें",
+    "approved": "पेरोल मंज़ूर और खातों में दर्ज",
+    "draftHint": "मंज़ूरी तक खातों में कुछ नहीं। ज़रूरत हो तो बोनस/कटौती जोड़कर फिर निकालें।",
+    "noLines": "इस महीने किसी को भुगतान नहीं।",
+    "base": "मूल वेतन",
+    "commission": "कमीशन",
+    "bonus": "बोनस",
+    "deductions": "कटौतियाँ",
+    "advances": "एडवांस वापसी",
+    "net": "कुल देय",
+    "slipMeta": "मूल {{base}} · कमीशन {{commission}}",
+    "paid": "भुगतान हुआ",
+    "unpaid": "भुगतान बाकी",
+    "paidBy": "{{method}} से भुगतान",
+    "nothingToPay": "भुगतान कुछ नहीं",
+    "payBy": {
+      "cash": "{{amount}} नकद दें",
+      "bank": "{{amount}} बैंक से दें"
+    },
+    "paidToast": "{{name}} को भुगतान हुआ",
+    "wps": {
+      "na": "WPS नहीं",
+      "required": "WPS सबूत चाहिए",
+      "proven": "WPS साबित"
+    },
+    "wpsHint": "इस वेतन के बैंक ट्रांसफ़र का स्क्रीनशॉट जोड़ें।",
+    "wpsAdded": "WPS सबूत जुड़ गया",
+    "kinds": {
+      "bonus": "बोनस",
+      "deduction": "कटौती",
+      "advance": "एडवांस"
+    },
+    "noAdjustments": "इस महीने कोई बोनस, कटौती या एडवांस नहीं।",
+    "newAdjustment": "बोनस, कटौती या एडवांस",
+    "amount": "राशि",
+    "advanceHint": "अभी दिया जाएगा (नकद दराज़ से) और अगले वेतन से कटेगा।",
+    "adjustmentSaved": "सहेजा गया",
+    "reverse": "पलटें",
+    "adjustmentReversed": "पलटा गया",
+    "reversedBecause": "पलटा: {{reason}}"
+  },
+  "myPay": {
+    "title": "मेरा वेतन",
+    "subtitle": "कमीशन, एडवांस और पे-स्लिप",
+    "commission": "इस महीने का कमीशन",
+    "advances": "इस महीने के एडवांस",
+    "thisMonth": "यह महीना",
+    "payslips": "पे-स्लिप",
+    "noPayslips": "मालिक के महीना मंज़ूर करने पर पे-स्लिप यहाँ दिखेंगी।"
   }
 }

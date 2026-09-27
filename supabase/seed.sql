@@ -307,6 +307,28 @@ begin
 end;
 $$;
 
+-- Last month's payroll worked out, approved and paid by bank (WPS proofs still to add), and this month's
+-- advance and bonus (demo history).
+create function pg_temp.payroll(p_branch uuid, p_owner uuid, p_advance_to text, p_bonus_to text) returns void
+language plpgsql as $$
+declare
+  v_biz uuid := (select business_id from branches where id = p_branch);
+  v_run uuid;
+  l payroll_lines;
+begin
+  perform pg_temp.act_as(p_owner);
+  v_run := public.generate_payroll(v_biz, to_char(public.branch_today(p_branch) - interval '1 month', 'YYYY-MM'));
+  perform public.approve_payroll(v_run);
+  for l in select * from payroll_lines where run_id = v_run and net_minor > 0 loop
+    perform public.pay_payroll_line(l.id, 'bank');
+  end loop;
+  perform public.record_adjustment(jsonb_build_object('employee_id', (select id from employees where business_id = v_biz
+    and full_name = p_advance_to), 'kind', 'advance', 'amount_minor', 30000, 'method', 'cash', 'note', 'School fees'));
+  perform public.record_adjustment(jsonb_build_object('employee_id', (select id from employees where business_id = v_biz
+    and full_name = p_bonus_to), 'kind', 'bonus', 'amount_minor', 25000, 'note', 'Best reviews this month'));
+end;
+$$;
+
 -- ── Gents: Al Barsha Gents ──────────────────────────────────────────────────────────────
 do $$
 declare
@@ -401,6 +423,7 @@ begin
   perform pg_temp.people(br, owner, cashier, '[["Faisal", "AB-01", 280000, true, "cashier"],
     ["Rafiq", "AB-02", 350000, true, "staff"], ["Sameer", "AB-03", 320000, true, "staff"],
     ["Imran", "AB-04", 300000, false, "staff"]]');
+  perform pg_temp.payroll(br, owner, 'Imran', 'Rafiq');
 end $$;
 
 -- ── Ladies: Jumeirah Ladies Salon & Spa ────────────────────────────────────────────────
@@ -497,6 +520,7 @@ begin
   perform pg_temp.people(br, owner, cashier, '[["Noor", "JL-01", 320000, true, "cashier"],
     ["Aisha", "JL-02", 450000, true, "staff"], ["Priya", "JL-03", 400000, true, "staff"],
     ["Leila", "JL-04", 420000, true, "therapist"]]');
+  perform pg_temp.payroll(br, owner, 'Priya', 'Aisha');
 end $$;
 
 select set_config('request.jwt.claims', '', false);

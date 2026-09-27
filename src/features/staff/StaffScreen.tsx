@@ -51,6 +51,7 @@ export function StaffScreen() {
               </ScrollView>
               <View style={styles.actions}>
                 <Button label={t('attendance.title')} icon="clock" variant="outline" size="md" onPress={() => router.push('/attendance')} testID="staff-attendance" />
+                <Button label={t('payroll.title')} icon="wallet" variant="outline" size="md" onPress={() => router.push('/payroll')} testID="staff-payroll" />
               </View>
               {rows.map((s) => (
                 <ListRow

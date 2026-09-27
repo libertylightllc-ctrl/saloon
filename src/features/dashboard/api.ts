@@ -25,6 +25,7 @@ export interface Dashboard {
   money_out?: { expenses_minor: number; supplier_payments_minor: number };
   stock?: { low: number; low_items: string[]; tools_due: number };
   bills?: { overdue_count: number; overdue_minor: number; due_soon_count: number; due_soon_minor: number } | null;
+  payroll?: { pending_period: string | null; wps_missing: number } | null;
   closing?: {
     today_status: 'open' | 'draft' | 'pending_approval' | 'approved';
     pending_approval: number;

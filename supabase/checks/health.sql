@@ -53,6 +53,15 @@ union all select 'receipt photos that point to no file', count(*) from (
     select receipt_path from expenses where receipt_path is not null
     union all select receipt_path from purchase_bills where receipt_path is not null) r
   where not exists (select 1 from storage.objects o where o.bucket_id = 'receipts' and o.name = r.receipt_path)
+union all select 'advances without a journal entry', count(*) from payroll_adjustments a
+  where a.kind = 'advance' and not exists (select 1 from journal_entries e where e.source_type = 'staff_advance' and e.source_id = a.id)
+union all select 'approved payroll months without a journal entry', count(*) from payroll_runs r
+  where r.status <> 'generated' and exists (select 1 from payroll_lines l where l.run_id = r.id and l.net_minor + l.advances_minor > 0)
+    and not exists (select 1 from journal_entries e where e.source_type = 'payroll' and e.source_id = r.id)
+union all select 'paid payslips without a payment entry', count(*) from payroll_lines l
+  where l.paid_method is not null and not exists (select 1 from journal_entries e where e.source_type = 'payroll_payment' and e.source_id = l.id)
+union all select 'payslips whose net does not add up', count(*) from payroll_lines l
+  where l.net_minor <> l.base_minor + l.commission_minor + l.bonus_minor - l.deductions_minor - l.advances_minor
 union all select 'businesses without an owner', count(*) from businesses b
   where not exists (select 1 from members m where m.business_id = b.id and m.role = 'owner')
 union all select 'tables without row level security', count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace

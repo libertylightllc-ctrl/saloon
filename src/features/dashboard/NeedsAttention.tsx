@@ -98,6 +98,29 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
       });
     }
   }
+  const payroll = data.payroll;
+  if (payroll && can(role, 'runPayroll')) {
+    if (payroll.pending_period) {
+      items.push({
+        key: 'payroll-approval',
+        title: t('home.attention.payrollPending', { month: dates.day(`${payroll.pending_period}-01`, 'MMMM yyyy') }),
+        sub: t('home.attention.payrollPendingSub'),
+        status: 'pending_approval',
+        action: t('home.attentionActions.review'),
+        href: '/payroll',
+      });
+    }
+    if (payroll.wps_missing > 0) {
+      items.push({
+        key: 'wps-missing',
+        title: t('home.attention.wpsMissing', { n: payroll.wps_missing }),
+        sub: t('home.attention.wpsMissingSub'),
+        status: 'due_soon',
+        action: t('home.attentionActions.review'),
+        href: '/payroll',
+      });
+    }
+  }
   if (items.length === 0) return null;
 
   return (

@@ -14,6 +14,7 @@ const OPENED_FROM: Record<string, string> = {
   '/inventory': '/more',
   '/staff': '/more',
   '/attendance': '/more',
+  '/payroll': '/more',
 };
 /** Path prefixes that are folders, not screens. */
 const FOLDER_PARENT: Record<string, string> = { '/settings': '/more', '/appointment': '/queue' };

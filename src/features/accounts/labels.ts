@@ -11,7 +11,7 @@ const SYSTEM_ACCOUNTS = [
 const SOURCES = [
   'sale', 'refund', 'deposit', 'deposit_refund', 'deposit_forfeit', 'opening_cash', 'opening_stock', 'brought_forward',
   'expense', 'expense_reversal', 'purchase_bill', 'purchase_bill_reversal', 'supplier_payment', 'cash_close',
-  'tip_payout', 'stock_adjustment', 'stock_count',
+  'tip_payout', 'stock_adjustment', 'stock_count', 'staff_advance', 'staff_advance_reversal', 'payroll', 'payroll_payment',
 ] as const;
 
 /** System account and journal source names in the app language; the owner's own accounts keep their name. */

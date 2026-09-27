@@ -60,7 +60,7 @@ test('a staff login sees only its own tabs and no money', async ({ page, mode })
   await owner.client.rpc('start_service', { p_id: visit as string });
   await staffOn(page, mode, owner.code, staff.username, staff.password);
   await expectTheme(page, mode);
-  expect(await visibleTabs(page)).toEqual(['index', 'queue', 'more']);
+  expect(await visibleTabs(page)).toEqual(['index', 'queue', 'pay', 'more']);
   await expect(id(page, 'kpi-expected-cash')).toHaveCount(0);
   await tab(page, 'queue');
   await expect(idStarts(page, 'queue-row-')).toContainText('Walk-in guest');

@@ -90,7 +90,8 @@
     "queue": "Queue",
     "sale": "Sale",
     "customers": "Customers",
-    "more": "More"
+    "more": "More",
+    "pay": "My pay"
   },
   "language": {
     "title": "Language",
@@ -194,7 +195,11 @@
       "toolsDueSub": "Service due within a week",
       "billsOverdue": "{{n}} supplier bills overdue",
       "billsDue": "{{n}} supplier bills due this week",
-      "billsSub": "{{amount}} to pay"
+      "billsSub": "{{amount}} to pay",
+      "payrollPending": "Payroll {{month}} waiting for approval",
+      "payrollPendingSub": "Check it and approve to pay",
+      "wpsMissing": "{{n}} salaries need WPS proof",
+      "wpsMissingSub": "Target: 85% proven by day 5"
     },
     "attentionClose": "Close"
   },
@@ -641,7 +646,8 @@
     "invalid_roster": "Each shift needs a start and an end time.",
     "invalid_time": "That time is not today or is in the future.",
     "already_clocked_in": "Already clocked in today.",
-    "not_clocked_in": "Not clocked in, or already clocked out."
+    "not_clocked_in": "Not clocked in, or already clocked out.",
+    "payroll_approved": "That month is already approved. Changes go into next month."
   },
   "sales": {
     "title": "Sales",
@@ -861,7 +867,11 @@
       "cash_close": "Cash close",
       "tip_payout": "Tips paid",
       "stock_adjustment": "Stock adjustments",
-      "stock_count": "Stock counts"
+      "stock_count": "Stock counts",
+      "staff_advance": "Staff advances",
+      "staff_advance_reversal": "Reversed advances",
+      "payroll": "Payroll",
+      "payroll_payment": "Salaries paid"
     }
   },
   "settingUp": {
@@ -1239,5 +1249,69 @@
     "clockedInMeLate": "Clocked in — {{n}} min late",
     "clockedOutMe": "Clocked out. See you tomorrow!",
     "dayDone": "Your day is done."
+  },
+  "payroll": {
+    "title": "Payroll",
+    "adjustments": "Bonuses & advances",
+    "monthTotal": "This month",
+    "status": {
+      "generated": "Waiting for approval",
+      "approved": "Approved · to pay",
+      "paid": "Paid",
+      "none": "Not started"
+    },
+    "noneYet": "Work out the month when the salaries are due.",
+    "generate": "Work out payroll",
+    "regenerate": "Work it out again",
+    "generated": "Payroll worked out",
+    "approve": "Approve payroll",
+    "approved": "Payroll approved and posted to the books",
+    "draftHint": "Nothing is in the books until you approve. Add a bonus or deduction and work it out again if needed.",
+    "noLines": "Nobody to pay this month.",
+    "base": "Base salary",
+    "commission": "Commission",
+    "bonus": "Bonuses",
+    "deductions": "Deductions",
+    "advances": "Advances paid back",
+    "net": "Net pay",
+    "slipMeta": "Base {{base}} · Commission {{commission}}",
+    "paid": "Paid",
+    "unpaid": "To pay",
+    "paidBy": "Paid by {{method}}",
+    "nothingToPay": "Nothing to pay",
+    "payBy": {
+      "cash": "Pay {{amount}} in cash",
+      "bank": "Pay {{amount}} by bank"
+    },
+    "paidToast": "{{name}} paid",
+    "wps": {
+      "na": "Not on WPS",
+      "required": "WPS proof needed",
+      "proven": "WPS proven"
+    },
+    "wpsHint": "Add the bank transfer screenshot or PDF for this salary.",
+    "wpsAdded": "WPS proof added",
+    "kinds": {
+      "bonus": "Bonus",
+      "deduction": "Deduction",
+      "advance": "Advance"
+    },
+    "noAdjustments": "No bonuses, deductions or advances this month.",
+    "newAdjustment": "Bonus, deduction or advance",
+    "amount": "Amount",
+    "advanceHint": "Paid out now (cash leaves the drawer) and taken back from the next salary.",
+    "adjustmentSaved": "Saved",
+    "reverse": "Reverse",
+    "adjustmentReversed": "Reversed",
+    "reversedBecause": "Reversed: {{reason}}"
+  },
+  "myPay": {
+    "title": "My pay",
+    "subtitle": "Commission, advances and payslips",
+    "commission": "Commission this month",
+    "advances": "Advances this month",
+    "thisMonth": "This month",
+    "payslips": "Payslips",
+    "noPayslips": "Your payslips appear here once the owner approves a month."
   }
 }

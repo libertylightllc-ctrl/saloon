@@ -14,6 +14,7 @@ export default function TabsLayout() {
     queue: { icon: 'users', label: t('tabs.queue') },
     sale: { icon: 'receipt', label: t('tabs.sale'), prominent: true },
     customers: { icon: 'contact', label: t('tabs.customers') },
+    pay: { icon: 'wallet', label: t('tabs.pay') },
     more: { icon: 'grid', label: t('tabs.more') },
   };
   const visible = Object.fromEntries(Object.entries(items).filter(([key]) => allowed.has(key as TabKey)));
