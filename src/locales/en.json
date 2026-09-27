@@ -791,7 +791,11 @@
       "staffCanSell": "Staff can take payments",
       "blockStock": "Block sales without stock",
       "blockStockHint": "When off, the sale goes through and shows a low-stock warning.",
-      "openingCash": "Amount"
+      "openingCash": "Amount",
+      "lateGrace": "Late after (minutes)",
+      "lateGraceHint": "Clocking in this long after the roster start counts as late.",
+      "hygienePhoto": "Hygiene log needs a photo",
+      "hygienePhotoHint": "Whoever signs the daily checklist must add a photo."
     },
     "openingCash": "Opening cash",
     "openingCashHint": "Cash in the drawer when you started using the app. Set once.",

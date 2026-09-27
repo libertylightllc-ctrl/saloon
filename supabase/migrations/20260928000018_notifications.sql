@@ -290,7 +290,7 @@ $$;
 
 -- ── Scheduled jobs ─────────────────────────────────────────────────────────────────────
 
--- Walk-ins waiting longer than the branch target (setting wait_target_min, default 20).
+-- Walk-ins waiting longer than the branch target (setting waiting_target_min, default 10).
 create function public.notify_long_waits(p_now timestamptz default now()) returns int
 language plpgsql security definer set search_path = public as $$
 declare
@@ -300,7 +300,7 @@ begin
   for a in
     select * from appointments ap
     where ap.status = 'waiting' and ap.wait_notified_at is null and ap.checked_in_at is not null
-      and ap.checked_in_at < p_now - make_interval(mins => coalesce((public.branch_setting(ap.branch_id, 'wait_target_min', '20'))::text::int, 20))
+      and ap.checked_in_at < p_now - make_interval(mins => coalesce((public.branch_setting(ap.branch_id, 'waiting_target_min', '10'))::text::int, 10))
   loop
     perform public.notify(a.business_id, a.branch_id, array['owner', 'cashier']::member_role[], 'long_wait',
       'Walk-in waiting', coalesce(a.customer_name, 'A guest') || ' has waited '

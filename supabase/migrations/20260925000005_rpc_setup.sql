@@ -283,7 +283,7 @@ declare
   m members := public.require_member(p_branch, array['owner']::member_role[]);
   v_settings jsonb := coalesce(p -> 'settings', '{}'::jsonb);
   v_allowed text[] := array['waiting_target_min', 'cancel_cutoff_hours', 'default_deposit_minor',
-                            'staff_can_sell', 'block_insufficient_stock'];
+                            'staff_can_sell', 'block_insufficient_stock', 'late_grace_min', 'require_hygiene_evidence'];
   k text;
 begin
   for k in select jsonb_object_keys(v_settings) loop

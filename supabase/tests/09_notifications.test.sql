@@ -57,16 +57,16 @@ select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'new_booking'), 1,
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080d', 'new_booking'), 0, 'staff do not');
 select is((select body from notifications where type = 'new_booking' limit 1) like 'Omar · %', true, 'the push text names the customer');
 
--- ── Walk-in waiting too long (target 20 min) ─────────────────────────────────────────────
+-- ── Walk-in waiting too long (target 10 min) ─────────────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000080c');
 select set_config('t.walkin', (create_appointment(jsonb_build_object('branch_id', current_setting('t.br'), 'kind', 'walk_in',
   'guest_name', 'Yousef', 'service_ids', jsonb_build_array((select id from services
   where business_id = current_setting('t.b')::uuid and status = 'active' limit 1)))))::text, false);
 select pg_temp.as_admin();
-select notify_long_waits(now() + interval '10 minutes');
-select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'long_wait'), 0, 'not yet at 10 minutes');
-select notify_long_waits(now() + interval '25 minutes');
-select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'long_wait'), 1, 'at 25 minutes the desk is told');
+select notify_long_waits(now() + interval '5 minutes');
+select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'long_wait'), 0, 'not yet at 5 minutes');
+select notify_long_waits(now() + interval '15 minutes');
+select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'long_wait'), 1, 'at 15 minutes the desk is told');
 select notify_long_waits(now() + interval '40 minutes');
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080a', 'long_wait'), 1, 'the owner too, only once');
 

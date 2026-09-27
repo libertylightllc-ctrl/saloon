@@ -4,7 +4,7 @@
 import type { Page } from '@playwright/test';
 import path from 'path';
 
-import { createOwner, createStaff, dubaiDate } from './support/api';
+import { admin, createOwner, createStaff, dubaiDate } from './support/api';
 import { expect, test } from './support/fixtures';
 import { back, id, ownerOn, staffOn, tab, text } from './support/ui';
 
@@ -106,6 +106,17 @@ test('the cashier signs the hygiene log; staff never reach compliance', async ({
   await page.goto('/compliance/doc?type=trade_licence');
   await expect(id(page, 'tab-index')).toHaveAttribute('aria-selected', 'true');
   await expect(id(page, 'attention-hygiene')).toHaveCount(0);
+
+  // The owner makes a photo compulsory from Branch settings; tomorrow's log would need one.
+  const boss = await device();
+  await ownerOn(boss, mode, owner.email, owner.password);
+  await boss.goto('/settings/branch');
+  await id(boss, 'branch-hygiene-photo').click();
+  await id(boss, 'field-late_grace_min').fill('15');
+  await id(boss, 'branch-save').click();
+  await expect(text(boss, 'Settings saved')).toBeVisible();
+  const { data: saved } = await admin.from('branches').select('settings').eq('id', owner.branchId).single();
+  expect(saved!.settings).toMatchObject({ require_hygiene_evidence: true, late_grace_min: 15 });
 
   const phone = await device();
   await staffOn(phone, mode, owner.code, barber.username, barber.password);

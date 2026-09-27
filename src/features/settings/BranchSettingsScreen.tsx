@@ -43,6 +43,8 @@ const schema = z
     default_deposit_minor: z.number().int().min(0).nullable(),
     staff_can_sell: z.boolean(),
     block_insufficient_stock: z.boolean(),
+    late_grace_min: whole(0, 120),
+    require_hygiene_evidence: z.boolean(),
   })
   .refine((v) => !v.vat_on || /^[0-9]{15}$/.test(v.trn), { path: ['trn'], message: 'validation.trn' });
 type Values = z.infer<typeof schema>;
@@ -70,6 +72,8 @@ export function BranchSettingsScreen() {
       default_deposit_minor: Number(settings.default_deposit_minor ?? 0) || null,
       staff_can_sell: settings.staff_can_sell === true,
       block_insufficient_stock: settings.block_insufficient_stock === true,
+      late_grace_min: String(settings.late_grace_min ?? 10),
+      require_hygiene_evidence: settings.require_hygiene_evidence === true,
     },
   });
   const vatOn = useWatch({ control: form.control, name: 'vat_on' });
@@ -88,6 +92,8 @@ export function BranchSettingsScreen() {
           default_deposit_minor: v.default_deposit_minor ?? 0,
           staff_can_sell: v.staff_can_sell,
           block_insufficient_stock: v.block_insufficient_stock,
+          late_grace_min: Number(v.late_grace_min),
+          require_hygiene_evidence: v.require_hygiene_evidence,
         },
       },
       {
@@ -189,6 +195,14 @@ export function BranchSettingsScreen() {
             name="block_insufficient_stock"
             render={({ field }) => (
               <SwitchRow label={t('branch.fields.blockStock')} hint={t('branch.fields.blockStockHint')} value={field.value} onChange={field.onChange} />
+            )}
+          />
+          <FormTextField control={form.control} name="late_grace_min" label={t('branch.fields.lateGrace')} hint={t('branch.fields.lateGraceHint')} keyboardType="number-pad" />
+          <Controller
+            control={form.control}
+            name="require_hygiene_evidence"
+            render={({ field }) => (
+              <SwitchRow label={t('branch.fields.hygienePhoto')} hint={t('branch.fields.hygienePhotoHint')} value={field.value} onChange={field.onChange} testID="branch-hygiene-photo" />
             )}
           />
         </View>
