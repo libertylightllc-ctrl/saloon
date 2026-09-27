@@ -17,7 +17,12 @@ const hhmm = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${St
 
 test('owner sets pay and a roster; the barber clocks in late from Home; the board shows it', async ({ page, mode, device }) => {
   const now = dubaiNow();
-  test.skip(now.minutes < 60, 'the shift below starts 45 minutes ago, which is yesterday this close to midnight');
+  // The shift started 45 minutes ago. In the first 45 minutes after midnight that is last night's shift, which
+  // runs past midnight.
+  const overnight = now.minutes < 45;
+  const shiftDay = overnight ? WEEKDAYS[(WEEKDAYS.indexOf(now.day) + 6) % 7]! : now.day;
+  const start = hhmm((now.minutes - 45 + 1440) % 1440);
+  const end = overnight ? '06:00' : '23:59';
   const owner = await createOwner(mode);
   const barber = await createStaff(owner, 'staff');
   expect(WEEKDAYS).toContain(now.day);
@@ -36,14 +41,13 @@ test('owner sets pay and a roster; the barber clocks in late from Home; the boar
   await expectMoney(page, 'staff-detail-salary', 350_000);
   await expect(id(page, 'staff-detail-commission')).toHaveText('15%');
 
-  // Today's shift started 45 minutes ago.
   await id(page, 'staff-roster-edit').click();
-  await id(page, `roster-${now.day}`).click();
-  await id(page, `roster-${now.day}-start`).fill(hhmm(now.minutes - 45));
-  await id(page, `roster-${now.day}-end`).fill('23:59');
+  await id(page, `roster-${shiftDay}`).click();
+  await id(page, `roster-${shiftDay}-start`).fill(start);
+  await id(page, `roster-${shiftDay}-end`).fill(end);
   await id(page, 'roster-save').click();
   await expect(text(page, 'Roster saved')).toBeVisible();
-  await expect(id(page, 'staff-roster')).toContainText(`${hhmm(now.minutes - 45)}–23:59`);
+  await expect(id(page, 'staff-roster')).toContainText(`${start}–${end}`);
   await back(page);
 
   // Someone without the app.
@@ -59,7 +63,7 @@ test('owner sets pay and a roster; the barber clocks in late from Home; the boar
   // The barber clocks in from Home: 45 minutes after the shift start → late.
   const phone = await device();
   await staffOn(phone, mode, owner.code, barber.username, barber.password);
-  await expect(id(phone, 'clock-card')).toContainText(`${hhmm(now.minutes - 45)}–23:59`);
+  await expect(id(phone, 'clock-card')).toContainText(`${start}–${end}`);
   await id(phone, 'clock-in').click();
   await expect(text(phone, /Clocked in — 4\d min late/)).toBeVisible();
   await expect(id(phone, 'clock-card')).toContainText('Late');

@@ -73,6 +73,25 @@ language sql stable security definer set search_path = public as $$
   end
 $$;
 
+-- The shift a local moment belongs to: yesterday's if it runs past midnight and has not ended yet, otherwise
+-- today's (a barber on 22:00–06:00 who clocks in at 00:30 is 150 minutes late, not early for today).
+create function public.shift_at(p_employee uuid, p_local timestamp, out shift_start timestamp, out shift_end timestamp)
+language sql stable security definer set search_path = public as $$
+  select x.s, x.e from (
+    select (p_local::date - 1) + r.start_time as s, p_local::date + r.end_time as e, 0 as pref
+    from rosters r
+    where r.employee_id = p_employee and r.weekday = extract(dow from p_local::date - 1)::int
+      and r.end_time <= r.start_time and p_local < p_local::date + r.end_time
+    union all
+    select p_local::date + r.start_time,
+           p_local::date + r.end_time + case when r.end_time <= r.start_time then interval '1 day' else interval '0' end, 1
+    from rosters r
+    where r.employee_id = p_employee and r.weekday = extract(dow from p_local::date)::int
+  ) x
+  order by x.pref
+  limit 1
+$$;
+
 -- ── Staff ───────────────────────────────────────────────────────────────────────────────
 
 -- The staff list with pay, for the owner and the accountant.
@@ -202,7 +221,7 @@ declare
   v_at timestamptz := coalesce(nullif(p ->> 'at', '')::timestamptz, now());
   v_tz text;
   v_today date;
-  v_start time;
+  v_start timestamp;
   v_late_min int := 0;
   v_grace int;
 begin
@@ -227,9 +246,9 @@ begin
     if a.id is not null then
       raise exception 'already_clocked_in' using errcode = '22023';
     end if;
-    select start_time into v_start from rosters where employee_id = e.id and weekday = extract(dow from v_today)::int;
+    select shift_start into v_start from public.shift_at(e.id, v_at at time zone v_tz);
     if v_start is not null then
-      v_late_min := greatest(0, floor(extract(epoch from (v_at at time zone v_tz) - (v_today + v_start)) / 60)::int);
+      v_late_min := greatest(0, floor(extract(epoch from (v_at at time zone v_tz) - v_start) / 60)::int);
     end if;
     v_grace := coalesce((public.branch_setting(e.branch_id, 'late_grace_min', '10'))::text::int, 10);
     insert into attendance (business_id, branch_id, employee_id, business_date, clock_in, late, late_minutes, clock_in_by)
@@ -265,17 +284,21 @@ returns table (employee_id uuid, full_name text, role_title text, colour text, s
 language plpgsql stable security definer set search_path = public as $$
 declare
   m members := public.require_member(p_branch, array['owner', 'cashier', 'staff', 'accountant']::member_role[]);
-  v_date date := coalesce(p_date, public.branch_today(p_branch));
+  v_today date := public.branch_today(p_branch);
+  v_date date := coalesce(p_date, v_today);
+  -- Today: the shift running now (it may have started yesterday). Other days: that day's shift.
+  v_at timestamp := case when v_date = v_today then (now() at time zone public.branch_tz(p_branch))
+                         else v_date + time '12:00' end;
 begin
   return query
-    select e.id, e.full_name, e.role_title, e.colour, to_char(r.start_time, 'HH24:MI'), to_char(r.end_time, 'HH24:MI'),
+    select e.id, e.full_name, e.role_title, e.colour, to_char(sh.shift_start, 'HH24:MI'), to_char(sh.shift_end, 'HH24:MI'),
            case when a.clock_out is not null then 'done'
                 when a.id is not null then 'on_shift'
-                when exists (select 1 from rosters x where x.employee_id = e.id) and r.employee_id is null then 'off'
+                when exists (select 1 from rosters x where x.employee_id = e.id) and sh.shift_start is null then 'off'
                 else 'not_in' end,
            a.clock_in, a.clock_out, coalesce(a.late, false), coalesce(a.late_minutes, 0)
     from employees e
-    left join rosters r on r.employee_id = e.id and r.weekday = extract(dow from v_date)::int
+    left join lateral public.shift_at(e.id, v_at) sh on true
     left join attendance a on a.employee_id = e.id and a.business_date = v_date
     where e.branch_id = p_branch and e.active
       and (m.role <> 'staff' or e.member_id = m.id)
@@ -337,9 +360,10 @@ end;
 $$;
 
 revoke execute on function public.shift_minutes(time, time), public.rostered(uuid, date, int, int),
+  public.shift_at(uuid, timestamp),
   public.staff_directory(uuid), public.save_employee(jsonb), public.set_roster(uuid, jsonb), public.clock(jsonb),
   public.attendance_day(uuid, date) from public, anon;
-revoke execute on function public.rostered(uuid, date, int, int) from authenticated;
+revoke execute on function public.rostered(uuid, date, int, int), public.shift_at(uuid, timestamp) from authenticated;
 grant execute on function public.staff_directory(uuid), public.save_employee(jsonb), public.set_roster(uuid, jsonb),
   public.clock(jsonb), public.attendance_day(uuid, date) to authenticated;
 

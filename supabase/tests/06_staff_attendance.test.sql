@@ -2,7 +2,7 @@
 -- booked, clocking in after the start plus grace is flagged late, staff clock only themselves.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(32);
+select plan(35);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -153,7 +153,20 @@ select is((select status from attendance_day(current_setting('t.br')::uuid) wher
 select throws_ok(format($$ select clock('{"employee_id":"%s","action":"out"}') $$, current_setting('t.cash_emp')), '22023',
   'not_clocked_in', 'no clocking out twice');
 
+-- Shifts that run past midnight: a moment after midnight belongs to yesterday's shift while it is still going.
+select pg_temp.as_user('00000000-0000-0000-0000-00000000050a');
+select set_roster(current_setting('t.new')::uuid, '[{"weekday":1,"start":"22:00","end":"06:00"},{"weekday":2,"start":"10:00","end":"18:00"}]');
 select pg_temp.as_admin();
+-- 2026-09-29 is a Tuesday (2); Monday's shift runs 22:00 → Tuesday 06:00.
+select results_eq(format($$ select * from shift_at(%L, '2026-09-29 00:30') $$, current_setting('t.new')),
+  $$ values ('2026-09-28 22:00'::timestamp, '2026-09-29 06:00'::timestamp) $$,
+  'at 00:30 on Tuesday the barber is on Monday''s night shift');
+select results_eq(format($$ select * from shift_at(%L, '2026-09-29 09:00') $$, current_setting('t.new')),
+  $$ values ('2026-09-29 10:00'::timestamp, '2026-09-29 18:00'::timestamp) $$,
+  'after it ends, Tuesday''s own shift applies');
+select is((select shift_start from shift_at(current_setting('t.new')::uuid, '2026-10-01 12:00')), null,
+  'no shift on a day off');
+
 select case when current_setting('t.ok')::boolean
   then is((select count(*)::int from audit_log where entity_type = 'attendance' and summary like 'Rafiq Ahmed clocked in%recorded by Faisal'),
           1, 'recording for someone else names who recorded it')
