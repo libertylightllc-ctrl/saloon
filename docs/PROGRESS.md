@@ -11,7 +11,11 @@ Updated: 2026-09-27
 - ✅ Payroll — 2026-09-28: bonuses, deductions and advances (cash advances leave the drawer), month worked out →
   approved (posted) → paid by cash or bank, commission less refunds, advances recovered, WPS proof, My pay tab for
   staff, Home asks for approval and missing WPS proofs. SQL `07_payroll.test.sql` (42), e2e `21-payroll.spec.ts`.
-- ⏳ Next: compliance (expiry register, hygiene log, inspection binder PDF, WPS & Montaji), notifications & push.
+- ✅ Compliance — 2026-09-28: expiry register from the UAE template with statuses, versions (renew) and scans,
+  owner's own records, readiness %, hygiene log (cashier signs; photo can be required), inspection binder PDF,
+  WPS & Montaji, Home asks for what is missing and for today's hygiene log. SQL `08_compliance.test.sql` (30),
+  e2e `22-compliance.spec.ts` (both modes).
+- ⏳ Next: notifications (bell, list), push tokens and delivery, daily digest (pg_cron), cashier "request refund".
 
 ### M2 status
 - ✅ Expenses (16 categories, reversal) and Purchases & suppliers (bills, stock, payments, reversal) — 2026-09-26.

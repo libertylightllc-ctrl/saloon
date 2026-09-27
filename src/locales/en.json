@@ -199,7 +199,11 @@
       "payrollPending": "Payroll {{month}} waiting for approval",
       "payrollPendingSub": "Check it and approve to pay",
       "wpsMissing": "{{n}} salaries need WPS proof",
-      "wpsMissingSub": "Target: 85% proven by day 5"
+      "wpsMissingSub": "Target: 85% proven by day 5",
+      "compliance": "{{n}} compliance records need attention",
+      "complianceSub": "Inspection readiness {{pct}}%",
+      "hygiene": "Today's hygiene log is not signed",
+      "hygieneSub": "Tools, towels, surfaces, floors, waste"
     },
     "attentionClose": "Close"
   },
@@ -647,7 +651,9 @@
     "invalid_time": "That time is not today or is in the future.",
     "already_clocked_in": "Already clocked in today.",
     "not_clocked_in": "Not clocked in, or already clocked out.",
-    "payroll_approved": "That month is already approved. Changes go into next month."
+    "payroll_approved": "That month is already approved. Changes go into next month.",
+    "evidence_required": "A photo is required for the hygiene log.",
+    "already_signed": "Today's hygiene log is already signed."
   },
   "sales": {
     "title": "Sales",
@@ -1144,7 +1150,9 @@
       "assignedHint": "Chair 2, the team…",
       "dateFormat": "Use year-month-day, like 2026-10-31.",
       "active": "In use",
-      "activeHint": "Items no longer used are hidden but keep their history."
+      "activeHint": "Items no longer used are hidden but keep their history.",
+      "montaji": "Montaji registration no.",
+      "montajiHint": "For cosmetic products (compliance)."
     },
     "countHint": "Type what is on the shelf. Leave blank to skip.",
     "system": "Books say {{qty}}",
@@ -1313,5 +1321,107 @@
     "thisMonth": "This month",
     "payslips": "Payslips",
     "noPayslips": "Your payslips appear here once the owner approves a month."
+  },
+  "compliance": {
+    "title": "Compliance",
+    "subtitle": "Licences, staff papers, hygiene and inspections",
+    "tabs": {
+      "register": "Expiry register",
+      "binder": "Inspection binder",
+      "hygiene": "Hygiene log",
+      "wps": "WPS & Montaji"
+    },
+    "types": {
+      "trade_licence": "Trade licence",
+      "ejari": "Ejari / tenancy contract",
+      "pest_control": "Pest control certificate",
+      "civil_defence": "Civil defence certificate",
+      "health_card": "Occupational health card",
+      "visa": "Visa / residence permit",
+      "vaccination": "Vaccination record"
+    },
+    "status": {
+      "valid": "Valid",
+      "due_soon": "Due soon",
+      "expired": "Expired",
+      "missing_date": "No expiry date",
+      "evidence_missing": "Scan missing",
+      "missing": "Missing"
+    },
+    "holders": {
+      "company": "Company",
+      "premises": "Premises",
+      "employee": "Staff member"
+    },
+    "readiness": "Inspection readiness",
+    "readinessSub": "{{ok}} of {{total}} records valid with scans",
+    "addOther": "Add another record",
+    "salon": "Salon",
+    "staff": "Staff",
+    "noNumber": "No number yet",
+    "expiresOn": "Expires {{date}} · {{n}} days",
+    "expiredOn": "Expired {{date}}",
+    "noDocument": "Nothing recorded yet. Add the number, dates and a scan.",
+    "addDetails": "Add details",
+    "renew": "Renew",
+    "renewHint": "Renewing keeps the old version in the history.",
+    "renewed": "Renewed",
+    "saved": "Saved",
+    "addEvidenceHint": "Add a photo or scan of the document.",
+    "evidenceAdded": "Scan added",
+    "versions": "Versions",
+    "versionLine": "Version {{n}} · {{number}}",
+    "current": "Current",
+    "fields": {
+      "name": "Record name",
+      "number": "Number",
+      "issued": "Issued",
+      "expires": "Expires",
+      "cost": "Renewal cost",
+      "reminder": "Remind me (days before)",
+      "evidence": "Scan or photo",
+      "version": "Version"
+    },
+    "hygiene": {
+      "today": "Today's checklist",
+      "items": {
+        "tools_sterilised": "Tools sterilised",
+        "towels_changed": "Towels changed",
+        "surfaces_cleaned": "Surfaces cleaned",
+        "floors_mopped": "Floors mopped",
+        "waste_disposed": "Waste disposed"
+      },
+      "note": "Note (optional)",
+      "photoRequired": "A photo is required (Settings).",
+      "photoOptional": "A photo is optional.",
+      "sign": "Sign the log",
+      "signed": "Hygiene log signed",
+      "signedBy": "Signed by {{name}}",
+      "done": "{{n}} of {{total}} done today",
+      "history": "Last two weeks",
+      "none": "No logs yet."
+    },
+    "binder": {
+      "hint": "Show this to an inspector, or export it as a PDF.",
+      "export": "Export PDF",
+      "pdfTitle": "Inspection binder",
+      "record": "Record",
+      "holder": "For",
+      "status": "Status"
+    },
+    "wps": {
+      "title": "WPS",
+      "proven": "{{proven}} of {{required}} salaries proven",
+      "target": "Target {{pct}}% by day 5",
+      "none": "No paid payroll month yet."
+    },
+    "montaji": {
+      "title": "Montaji product registration",
+      "hint": "Cosmetic products used or sold need their Montaji number. Tap one to add it.",
+      "number": "Montaji {{number}}",
+      "missing": "No Montaji number",
+      "registered": "Registered",
+      "add": "Add number"
+    }
   }
 }

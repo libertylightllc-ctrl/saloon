@@ -28,6 +28,7 @@ export function MoreScreen() {
     { key: 'accounts', icon: 'calculator', href: '/accounts', show: can(role, 'viewAccounting') },
     { key: 'staff', icon: 'users', href: '/staff', show: can(role, 'viewStaff') },
     { key: 'attendance', icon: 'clock', href: '/attendance', show: can(role, 'viewAttendance') },
+    { key: 'compliance', icon: 'shield', href: '/compliance', show: can(role, 'viewCompliance') },
     { key: 'team', icon: 'userCheck', href: '/settings/team', show: can(role, 'manageUsers') },
     { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch') },
   ] as const;

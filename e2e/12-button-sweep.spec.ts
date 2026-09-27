@@ -184,6 +184,7 @@ async function seed(owner: Owner, mode: Mode) {
     expenseId: (expense as { expense_id: string }).expense_id,
     billId: (bill as { bill_id: string }).bill_id,
     itemId: itemId as string,
+    branchId: owner.branchId,
     employeeId: (await admin.from('employees').select('id').eq('business_id', owner.businessId).neq('role_title', 'cashier').limit(1).single()).data!.id as string,
   };
 }
@@ -257,6 +258,11 @@ test('owner: every button on every screen does something visible', { tag: '@swee
     ['Attendance', '/attendance'],
     ['Payroll', '/payroll'],
     ['Bonuses & advances', '/payroll/adjustments'],
+    ['Compliance', '/compliance'],
+    ['Compliance · binder', '/compliance?tab=binder'],
+    ['Compliance · hygiene', '/compliance?tab=hygiene'],
+    ['Compliance · WPS & Montaji', '/compliance?tab=wps'],
+    ['Compliance record', '/compliance/doc?type=trade_licence&branch=' + s.branchId],
   ];
   for (const [screen, url, prepare] of screens) await sweepScreen(page, rows, screen, url, prepare);
   report(mode, 'owner', rows);
@@ -289,6 +295,7 @@ test('cashier and staff: their buttons work and none hit a permission error', { 
     ['Inventory', '/inventory'],
     ['Item detail', `/inventory/${s.itemId}`],
     ['Attendance', '/attendance'],
+    ['Compliance · hygiene', '/compliance'],
   ] as const)
     await sweepScreen(page, rows, screen, url);
   report(mode, 'cashier', rows);

@@ -308,6 +308,49 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"compliance_documents": {
+                  Row: {
+                    "active": boolean,"branch_id": string | null,"business_id": string,"created_at": string,"created_by": string | null,"doc_type": string,"employee_id": string | null,"evidence_path": string | null,"expires_on": string | null,"holder_type": string,"id": string,"issued_on": string | null,"number": string | null,"previous_id": string | null,"reminder_days": number,"renewal_cost_minor": number | null,"version": number
+                  }
+                  Insert: {
+                    "active"?: boolean,"branch_id"?: string | null,"business_id": string,"created_at"?: string,"created_by"?: string | null,"doc_type": string,"employee_id"?: string | null,"evidence_path"?: string | null,"expires_on"?: string | null,"holder_type": string,"id"?: string,"issued_on"?: string | null,"number"?: string | null,"previous_id"?: string | null,"reminder_days"?: number,"renewal_cost_minor"?: number | null,"version"?: number
+                  }
+                  Update: {
+                    "active"?: boolean,"branch_id"?: string | null,"business_id"?: string,"created_at"?: string,"created_by"?: string | null,"doc_type"?: string,"employee_id"?: string | null,"evidence_path"?: string | null,"expires_on"?: string | null,"holder_type"?: string,"id"?: string,"issued_on"?: string | null,"number"?: string | null,"previous_id"?: string | null,"reminder_days"?: number,"renewal_cost_minor"?: number | null,"version"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "compliance_documents_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "compliance_documents_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "compliance_documents_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "compliance_documents_employee_id_fkey"
+      columns: ["employee_id"]
+isOneToOne: false
+      referencedRelation: "employees"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "compliance_documents_previous_id_fkey"
+      columns: ["previous_id"]
+isOneToOne: false
+      referencedRelation: "compliance_documents"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"customers": {
                   Row: {
                     "business_id": string,"created_at": string,"created_by": string | null,"id": string,"last_visit_at": string | null,"marketing_opt_in": boolean,"name": string,"no_show_count": number,"notes": string | null,"phone": string | null,"preferences": string | null,"preferred_employee_id": string | null,"risk_flags": (string)[],"visit_count": number
@@ -439,6 +482,37 @@ isOneToOne: false
     },{
       foreignKeyName: "expenses_reversed_by_fkey"
       columns: ["reversed_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"hygiene_logs": {
+                  Row: {
+                    "branch_id": string,"business_date": string,"business_id": string,"checklist": NonNullable<Json>,"created_at": string,"evidence_path": string | null,"id": string,"note": string | null,"signed_by": string | null
+                  }
+                  Insert: {
+                    "branch_id": string,"business_date": string,"business_id": string,"checklist": NonNullable<Json>,"created_at"?: string,"evidence_path"?: string | null,"id"?: string,"note"?: string | null,"signed_by"?: string | null
+                  }
+                  Update: {
+                    "branch_id"?: string,"business_date"?: string,"business_id"?: string,"checklist"?: NonNullable<Json>,"created_at"?: string,"evidence_path"?: string | null,"id"?: string,"note"?: string | null,"signed_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "hygiene_logs_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "hygiene_logs_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "hygiene_logs_signed_by_fkey"
+      columns: ["signed_by"]
 isOneToOne: false
       referencedRelation: "members"
       referencedColumns: ["id"]
@@ -1304,6 +1378,9 @@ isOneToOne: false
 "approve_payroll":
 { Args: { "p_run": string }; Returns: undefined
                            },
+"attach_document_evidence":
+{ Args: { "p_document": string,"p_path": string }; Returns: undefined
+                           },
 "attach_receipt":
 { Args: { "p_id": string,"p_kind": string,"p_path": string }; Returns: undefined
                            },
@@ -1360,6 +1437,14 @@ isOneToOne: false
 "commission_for":
 { Args: { "p_employee": string,"p_period": string }; Returns: number
                            },
+"compliance_readiness":
+{ Args: { "p_business": string }; Returns: number
+                           },
+"compliance_status":
+{ Args: { "p_business": string }; Returns: {
+              "branch_id": string,"days_left": number,"doc_type": string,"document_id": string,"employee_id": string,"evidence_path": string,"expires_on": string,"holder_name": string,"holder_type": string,"issued_on": string,"number": string,"reminder_days": number,"renewal_cost_minor": number,"required": boolean,"slot_key": string,"status": string,"version": number
+            }[]
+                           },
 "create_appointment":
 { Args: { "p": Json }; Returns: string
                            },
@@ -1386,6 +1471,9 @@ isOneToOne: false
                            },
 "has_role":
 { Args: { "p_business": string,"p_roles": (Database["public"]['Enums']["member_role"])[] }; Returns: boolean
+                           },
+"hygiene_items":
+{ Args: Record<PropertyKey, never>; Returns: (string)[]
                            },
 "inventory_levels":
 { Args: { "p_branch": string }; Returns: {
@@ -1476,6 +1564,9 @@ isOneToOne: false
 "rostered":
 { Args: { "p_date": string,"p_employee": string,"p_from": number,"p_to": number }; Returns: boolean
                            },
+"save_document":
+{ Args: { "p": Json }; Returns: string
+                           },
 "save_employee":
 { Args: { "p": Json }; Returns: string
                            },
@@ -1518,6 +1609,9 @@ isOneToOne: false
 "shift_minutes":
 { Args: { "p_end": string,"p_start": string }; Returns: Record<string, unknown>
                            },
+"sign_hygiene_log":
+{ Args: { "p": Json }; Returns: string
+                           },
 "staff_directory":
 { Args: { "p_business": string }; Returns: {
               "active": boolean,"base_salary_minor": number,"branch_id": string,"colour": string,"commission_bps": number,"employee_code": string,"employee_id": string,"full_name": string,"member_id": string,"phone": string,"role_title": string,"roster": Json,"username": string,"wps_required": boolean
@@ -1544,6 +1638,9 @@ isOneToOne: false
                            },
 "update_branch":
 { Args: { "p": Json,"p_branch": string }; Returns: undefined
+                           },
+"wps_status":
+{ Args: { "p_business": string }; Returns: Json
                            },
 "write_audit":
 { Args: { "p_action": string,"p_actor": string,"p_after"?: Json,"p_before"?: Json,"p_branch": string,"p_business": string,"p_entity_id": string,"p_entity_type": string,"p_summary": string }; Returns: undefined

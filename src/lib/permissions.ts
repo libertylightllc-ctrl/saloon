@@ -48,6 +48,10 @@ const MATRIX = {
   viewPayroll: ['owner', 'accountant'],
   runPayroll: ['owner'],
   myPay: ['staff'],
+  // Compliance (01-PRODUCT §2): the owner keeps it; a cashier adds hygiene log entries.
+  viewCompliance: ['owner', 'cashier'],
+  manageCompliance: ['owner'],
+  signHygiene: ['owner', 'cashier'],
 } as const satisfies Record<string, readonly Role[]>;
 
 export type Capability = keyof typeof MATRIX;

@@ -23,6 +23,8 @@ export const keys = {
   closing: (branchId: string) => ['closing', branchId] as const,
   attendance: (branchId: string) => ['attendance', branchId] as const,
   payroll: (businessId: string) => ['payroll', businessId] as const,
+  compliance: (businessId: string) => ['compliance', businessId] as const,
+  hygiene: (branchId: string) => ['hygiene', branchId] as const,
 };
 
 export function useLiveSync(businessId: string, branchId: string) {
@@ -70,6 +72,10 @@ export function useLiveSync(businessId: string, branchId: string) {
         invalidate(keys.payroll(businessId), keys.closing(branchId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'payroll_adjustments', filter: businessFilter },
         invalidate(keys.payroll(businessId), keys.closing(branchId)))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'compliance_documents', filter: businessFilter },
+        invalidate(keys.compliance(businessId), keys.dashboard(branchId)))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'hygiene_logs', filter: branchFilter },
+        invalidate(keys.hygiene(branchId), keys.dashboard(branchId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'rosters', filter: businessFilter },
         invalidate(keys.attendance(branchId), keys.team(businessId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'cash_closings', filter: branchFilter },

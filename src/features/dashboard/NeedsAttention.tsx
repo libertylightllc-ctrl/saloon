@@ -121,6 +121,26 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
       });
     }
   }
+  if (data.compliance && data.compliance.attention > 0) {
+    items.push({
+      key: 'compliance',
+      title: t('home.attention.compliance', { n: data.compliance.attention }),
+      sub: t('home.attention.complianceSub', { pct: data.compliance.readiness }),
+      status: data.compliance.expired > 0 ? 'expired' : 'due_soon',
+      action: t('home.attentionActions.renew'),
+      href: '/compliance',
+    });
+  }
+  if (data.hygiene_signed === false && can(role, 'signHygiene')) {
+    items.push({
+      key: 'hygiene',
+      title: t('home.attention.hygiene'),
+      sub: t('home.attention.hygieneSub'),
+      status: 'due_soon',
+      action: t('home.attentionActions.review'),
+      href: { pathname: '/compliance', params: { tab: 'hygiene' } },
+    });
+  }
   if (items.length === 0) return null;
 
   return (

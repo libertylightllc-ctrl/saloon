@@ -329,6 +329,43 @@ begin
 end;
 $$;
 
+-- Compliance records (numbers and dates; scans are added by the owner in the app) and a week of hygiene logs.
+create function pg_temp.compliance(p_branch uuid, p_owner uuid, p_cashier uuid, p_prefix text) returns void
+language plpgsql as $$
+declare
+  v_biz uuid := (select business_id from branches where id = p_branch);
+  v_today date := public.branch_today(p_branch);
+  v_cashier_member uuid := (select id from members where user_id = p_cashier);
+  e employees;
+  n int := 0;
+  d int;
+begin
+  perform pg_temp.act_as(p_owner);
+  perform public.save_document(jsonb_build_object('business_id', v_biz, 'branch_id', p_branch, 'doc_type', 'trade_licence',
+    'holder_type', 'company', 'number', p_prefix || '-TL-884512', 'issued_on', v_today - 290, 'expires_on', v_today + 75,
+    'renewal_cost_minor', 1350000));
+  perform public.save_document(jsonb_build_object('business_id', v_biz, 'branch_id', p_branch, 'doc_type', 'ejari',
+    'holder_type', 'premises', 'number', 'EJ-2025-' || p_prefix || '-3321', 'issued_on', v_today - 340, 'expires_on', v_today + 25,
+    'renewal_cost_minor', 22000));
+  perform public.save_document(jsonb_build_object('business_id', v_biz, 'branch_id', p_branch, 'doc_type', 'pest_control',
+    'holder_type', 'premises', 'number', 'PC-7781', 'issued_on', v_today - 95, 'expires_on', v_today - 5, 'renewal_cost_minor', 45000));
+  for e in select * from employees where business_id = v_biz and active order by full_name loop
+    perform public.save_document(jsonb_build_object('business_id', v_biz, 'employee_id', e.id, 'doc_type', 'health_card',
+      'holder_type', 'employee', 'number', 'OHC-' || (40210 + n), 'expires_on', v_today + 40 + n * 60));
+    perform public.save_document(jsonb_build_object('business_id', v_biz, 'employee_id', e.id, 'doc_type', 'visa',
+      'holder_type', 'employee', 'number', '784-1990-' || (1234500 + n), 'expires_on', v_today + 200 + n * 30));
+    n := n + 1;
+  end loop;
+  for d in 1..7 loop
+    insert into hygiene_logs (business_id, branch_id, business_date, checklist, signed_by, created_at)
+    values (v_biz, p_branch, v_today - d,
+            jsonb_build_object('tools_sterilised', true, 'towels_changed', true, 'surfaces_cleaned', true,
+                               'floors_mopped', d % 4 <> 0, 'waste_disposed', true),
+            v_cashier_member, ((v_today - d) + time '21:45') at time zone public.branch_tz(p_branch));
+  end loop;
+end;
+$$;
+
 -- ── Gents: Al Barsha Gents ──────────────────────────────────────────────────────────────
 do $$
 declare
@@ -424,6 +461,7 @@ begin
     ["Rafiq", "AB-02", 350000, true, "staff"], ["Sameer", "AB-03", 320000, true, "staff"],
     ["Imran", "AB-04", 300000, false, "staff"]]');
   perform pg_temp.payroll(br, owner, 'Imran', 'Rafiq');
+  perform pg_temp.compliance(br, owner, cashier, 'AB');
 end $$;
 
 -- ── Ladies: Jumeirah Ladies Salon & Spa ────────────────────────────────────────────────
@@ -521,6 +559,7 @@ begin
     ["Aisha", "JL-02", 450000, true, "staff"], ["Priya", "JL-03", 400000, true, "staff"],
     ["Leila", "JL-04", 420000, true, "therapist"]]');
   perform pg_temp.payroll(br, owner, 'Priya', 'Aisha');
+  perform pg_temp.compliance(br, owner, cashier, 'JL');
 end $$;
 
 select set_config('request.jwt.claims', '', false);

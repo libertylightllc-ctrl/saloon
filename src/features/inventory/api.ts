@@ -101,6 +101,7 @@ export interface ItemInput {
   condition: 'good' | 'needs_service' | null;
   next_service_date: string | null;
   assigned_to: string | null;
+  montaji_reg_no: string | null;
   active?: boolean;
 }
 

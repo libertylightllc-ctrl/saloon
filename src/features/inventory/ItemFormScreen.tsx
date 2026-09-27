@@ -46,6 +46,7 @@ function ItemForm({ item }: { item: StockItem | null }) {
   const [condition, setCondition] = useState<'good' | 'needs_service'>(item?.condition ?? 'good');
   const [serviceDate, setServiceDate] = useState(item?.next_service_date ?? '');
   const [assigned, setAssigned] = useState(item?.assigned_to ?? '');
+  const [montaji, setMontaji] = useState(item?.montaji_reg_no ?? '');
   const [active, setActive] = useState(item?.active ?? true);
 
   const reorderN = reorder.trim() === '' ? 0 : Number(normalizeDigits(reorder).replace(',', '.'));
@@ -103,6 +104,9 @@ function ItemForm({ item }: { item: StockItem | null }) {
           <TextField label={t('inventory.assigned')} placeholder={t('inventory.fields.assignedHint')} value={assigned} onChangeText={setAssigned} maxLength={60} testID="item-assigned" />
         </>
       ) : null}
+      {kind !== 'tool' ? (
+        <TextField label={t('inventory.fields.montaji')} hint={t('inventory.fields.montajiHint')} value={montaji} onChangeText={setMontaji} maxLength={40} testID="item-montaji" />
+      ) : null}
       {item ? <SwitchRow label={t('inventory.fields.active')} hint={t('inventory.fields.activeHint')} value={active} onChange={setActive} testID="item-active" /> : null}
       <FormError error={save.error} />
       <Button
@@ -122,6 +126,7 @@ function ItemForm({ item }: { item: StockItem | null }) {
               condition: kind === 'tool' ? condition : null,
               next_service_date: kind === 'tool' && serviceDate.trim() ? serviceDate.trim() : null,
               assigned_to: kind === 'tool' ? assigned.trim() || null : null,
+              montaji_reg_no: kind === 'tool' ? null : montaji.trim() || null,
               active,
             },
             {
