@@ -12,6 +12,7 @@ import { BottomSheet, Button, Card, FormError, HeaderBand, QueryState, Screen, S
 
 import { useExpense, useReverseExpense } from './api';
 import { useCategoryName } from './labels';
+import { ReceiptPhoto } from './ReceiptPhoto';
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
@@ -56,6 +57,7 @@ export function ExpenseDetailScreen() {
                 {e.members ? <Row label={t('expenses.recordedBy')} value={e.members.display_name} /> : null}
                 {e.reverse_reason ? <Row label={t('expenses.reverseReason')} value={e.reverse_reason} /> : null}
               </Card>
+              <ReceiptPhoto kind="expense" rowId={e.id} path={e.receipt_path} canAttach={e.status === 'posted' && can(role, 'addExpense')} />
               {e.status === 'posted' && can(role, 'payOrReverseMoneyOut') ? (
                 <Button label={t('expenses.reverse')} icon="rotate" variant="ghost" onPress={() => setReversing(true)} testID="expense-reverse" />
               ) : null}

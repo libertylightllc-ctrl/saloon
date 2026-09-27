@@ -354,13 +354,13 @@ isOneToOne: false
                   ]
                 },"expenses": {
                   Row: {
-                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"category_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"id": string,"method": Database["public"]['Enums']["payment_method"],"note": string | null,"paid_by_member_id": string | null,"reverse_reason": string | null,"reversed_at": string | null,"reversed_by": string | null,"status": string
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"category_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"id": string,"method": Database["public"]['Enums']["payment_method"],"note": string | null,"paid_by_member_id": string | null,"receipt_path": string | null,"reverse_reason": string | null,"reversed_at": string | null,"reversed_by": string | null,"status": string
                   }
                   Insert: {
-                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"category_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"method": Database["public"]['Enums']["payment_method"],"note"?: string | null,"paid_by_member_id"?: string | null,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string
+                    "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"category_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"method": Database["public"]['Enums']["payment_method"],"note"?: string | null,"paid_by_member_id"?: string | null,"receipt_path"?: string | null,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string
                   }
                   Update: {
-                    "amount_minor"?: number,"branch_id"?: string,"business_date"?: string,"business_id"?: string,"category_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"method"?: Database["public"]['Enums']["payment_method"],"note"?: string | null,"paid_by_member_id"?: string | null,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string
+                    "amount_minor"?: number,"branch_id"?: string,"business_date"?: string,"business_id"?: string,"category_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"method"?: Database["public"]['Enums']["payment_method"],"note"?: string | null,"paid_by_member_id"?: string | null,"receipt_path"?: string | null,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string
                   }
                   Relationships: [
                     {
@@ -572,13 +572,13 @@ isOneToOne: false
                   ]
                 },"purchase_bills": {
                   Row: {
-                    "bill_date": string,"branch_id": string,"business_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"due_date": string,"id": string,"invoice_ref": string | null,"note": string | null,"number": number,"paid_minor": number,"reverse_reason": string | null,"reversed_at": string | null,"reversed_by": string | null,"status": string,"supplier_id": string,"total_minor": number
+                    "bill_date": string,"branch_id": string,"business_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"due_date": string,"id": string,"invoice_ref": string | null,"note": string | null,"number": number,"paid_minor": number,"receipt_path": string | null,"reverse_reason": string | null,"reversed_at": string | null,"reversed_by": string | null,"status": string,"supplier_id": string,"total_minor": number
                   }
                   Insert: {
-                    "bill_date": string,"branch_id": string,"business_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"due_date": string,"id"?: string,"invoice_ref"?: string | null,"note"?: string | null,"number": number,"paid_minor"?: number,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string,"supplier_id": string,"total_minor": number
+                    "bill_date": string,"branch_id": string,"business_id": string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"due_date": string,"id"?: string,"invoice_ref"?: string | null,"note"?: string | null,"number": number,"paid_minor"?: number,"receipt_path"?: string | null,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string,"supplier_id": string,"total_minor": number
                   }
                   Update: {
-                    "bill_date"?: string,"branch_id"?: string,"business_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"due_date"?: string,"id"?: string,"invoice_ref"?: string | null,"note"?: string | null,"number"?: number,"paid_minor"?: number,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string,"supplier_id"?: string,"total_minor"?: number
+                    "bill_date"?: string,"branch_id"?: string,"business_id"?: string,"client_ref"?: string | null,"created_at"?: string,"created_by"?: string | null,"due_date"?: string,"id"?: string,"invoice_ref"?: string | null,"note"?: string | null,"number"?: number,"paid_minor"?: number,"receipt_path"?: string | null,"reverse_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: string,"supplier_id"?: string,"total_minor"?: number
                   }
                   Relationships: [
                     {
@@ -1121,6 +1121,9 @@ isOneToOne: false
       } },
 "approve_cash_closing":
 { Args: { "p_id": string }; Returns: Json
+                           },
+"attach_receipt":
+{ Args: { "p_id": string,"p_kind": string,"p_path": string }; Returns: undefined
                            },
 "available_slots":
 { Args: { "p_branch": string,"p_date": string,"p_duration": number,"p_employee"?: string }; Returns: {

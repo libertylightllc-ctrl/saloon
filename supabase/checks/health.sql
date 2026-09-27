@@ -49,6 +49,10 @@ union all select 'closed days whose cash moved after the count', count(*) from c
     join journal_entries e on e.id = l.entry_id join accounts a on a.id = l.account_id and a.system_key = 'cash'
     where e.branch_id = c.branch_id and e.business_date <= c.business_date
       and not (e.source_type = 'cash_close' and e.source_id = c.id))
+union all select 'receipt photos that point to no file', count(*) from (
+    select receipt_path from expenses where receipt_path is not null
+    union all select receipt_path from purchase_bills where receipt_path is not null) r
+  where not exists (select 1 from storage.objects o where o.bucket_id = 'receipts' and o.name = r.receipt_path)
 union all select 'businesses without an owner', count(*) from businesses b
   where not exists (select 1 from members m where m.business_id = b.id and m.role = 'owner')
 union all select 'tables without row level security', count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace

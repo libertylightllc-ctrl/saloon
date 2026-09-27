@@ -11,7 +11,8 @@ export const ERROR_CODES = [
   'name_required', 'invalid_commission', 'wrong_password', 'disabled', 'email_taken', 'no_internet',
   'rate_limited', 'invalid_code', 'unknown_salon', 'confirm_email', 'category_exists', 'unknown_setting',
   'invalid_role', 'day_closed', 'invalid_date', 'count_required', 'confirm_required', 'previous_close_pending',
-  'item_exists', 'price_required', 'item_unavailable', 'invalid_restock',
+  'item_exists', 'price_required', 'item_unavailable', 'invalid_restock', 'receipt_exists', 'receipt_missing',
+  'photo_too_large', 'camera_denied',
   'server_busy', 'unknown',
 ] as const;
 
@@ -49,6 +50,8 @@ export function errorCode(error: unknown): ErrorCode {
   if (/banned/i.test(message)) return 'disabled';
   if (/already (been )?registered|user already exists/i.test(message)) return 'email_taken';
   if (/rate limit|too many requests/i.test(message)) return 'rate_limited';
+  if (/payload too large|exceeded the maximum allowed size/i.test(message)) return 'photo_too_large';
+  if (/row-level security/i.test(message)) return 'not_allowed';
   if (/token has expired or is invalid|invalid otp|otp.*expired/i.test(message)) return 'invalid_code';
   if (/password should be|weak password/i.test(message)) return 'weak_password';
   const head = message.split(':')[0]!.trim();

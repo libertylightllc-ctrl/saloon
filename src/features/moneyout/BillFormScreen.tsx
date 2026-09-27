@@ -28,6 +28,8 @@ import {
 
 import { usePostBill, useSuppliers, type PayMethod } from './api';
 import { BillLines, lineTotal, lineValid, type LineDraft } from './BillLines';
+import { PhotoButtons, PickedPreview } from './ReceiptPhoto';
+import { useAttachReceipt, type PickedPhoto } from './receipts';
 import { SupplierSheet } from './SupplierSheet';
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -60,6 +62,8 @@ export function BillFormScreen() {
   const [paidAmount, setPaidAmount] = useState<number | null>(null);
   const [clientRef] = useState(() => Crypto.randomUUID());
   const [addingSupplier, setAddingSupplier] = useState(false);
+  const attach = useAttachReceipt('bill', business.id);
+  const [photo, setPhoto] = useState<PickedPhoto | null>(null);
 
   const total = sum(lines.map(lineTotal));
   const paying = owner && paidNow ? (paidAmount ?? total) : 0;
@@ -83,8 +87,10 @@ export function BillFormScreen() {
         ...(paying > 0 ? { paid_now: { method, amount_minor: paying } } : {}),
       },
       {
-        onSuccess: (r) => {
-          toast(t('purchases.billSaved', { number: r.number }));
+        onSuccess: async (r) => {
+          let photoFailed = false;
+          if (photo) await attach.mutateAsync({ rowId: r.bill_id, photo }).catch(() => (photoFailed = true));
+          toast(photoFailed ? t('receipts.failedLater') : t('purchases.billSaved', { number: r.number }));
           router.replace({ pathname: '/purchases/[id]', params: { id: r.bill_id } });
         },
       },
@@ -94,7 +100,7 @@ export function BillFormScreen() {
     <>
       <Screen
         header={<HeaderBand title={t('purchases.newBill')} onBack />}
-        footer={<Button label={t('purchases.saveBill', { amount: formatMoney(total) })} onPress={save} disabled={!ready} loading={post.isPending} testID="bill-save" />}
+        footer={<Button label={t('purchases.saveBill', { amount: formatMoney(total) })} onPress={save} disabled={!ready} loading={post.isPending || attach.isPending} testID="bill-save" />}
       >
         <View style={styles.body}>
           <Section title={t('purchases.supplier')}>
@@ -115,6 +121,9 @@ export function BillFormScreen() {
               <DateStrip dates={Array.from({ length: 14 }, (_, i) => shiftBusinessDate(today, i - 13))} value={date} onChange={setDate} />
             </Section>
           ) : null}
+          <Section title={t('receipts.photo')}>
+            {photo ? <PickedPreview photo={photo} onRemove={() => setPhoto(null)} /> : <PhotoButtons onPicked={setPhoto} />}
+          </Section>
           <Section title={t('purchases.lines')}>
             <QueryState query={catalog}>{(data) => <BillLines items={data.items} value={lines} onChange={setLines} />}</QueryState>
           </Section>

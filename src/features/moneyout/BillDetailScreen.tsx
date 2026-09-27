@@ -28,6 +28,7 @@ import {
 
 import { useBill, usePaySupplier, useReverseBill, type BillDetail, type PayMethod } from './api';
 import { BILL_STATUS } from './PurchasesScreen';
+import { ReceiptPhoto } from './ReceiptPhoto';
 
 function Row({ label, value, strong, testID }: { label: string; value: string; strong?: boolean; testID?: string }) {
   return (
@@ -101,6 +102,7 @@ export function BillDetailScreen() {
                     ))}
                   </View>
                 ) : null}
+                <ReceiptPhoto kind="bill" rowId={b.id} path={b.receipt_path} canAttach={b.status !== 'reversed' && can(role, 'addPurchase')} />
                 {b.reverse_reason ? <Text color="textSecondary">{t('purchases.reversedBecause', { reason: b.reverse_reason })}</Text> : null}
                 {owner && b.status !== 'reversed' && left > 0 ? (
                   <Button label={t('purchases.pay')} icon="wallet" onPress={() => setSheet('pay')} testID="bill-pay" />

@@ -50,7 +50,8 @@ that the tools on this Mac can update the hosted database, and I never see the p
 
 ## 4. What I then do (no secrets needed)
 
-1. `npx supabase db push`: creates all tables, security rules and functions (`supabase/migrations`).
+1. `npx supabase db push`: creates all tables, security rules and functions (`supabase/migrations`),
+   and the private `receipts` photo bucket with its rules (nothing to click in Storage).
 2. `npx supabase functions deploy create-staff-login manage-staff-login`: the staff-login functions.
    Supabase gives functions their own service key automatically; it never leaves Supabase.
 3. **Auth settings** (dashboard → Authentication):

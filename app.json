@@ -45,7 +45,15 @@
           "imageWidth": 76
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Your photos are used only to attach receipts to expenses and supplier bills.",
+          "cameraPermission": "The camera is used only to photograph receipts for expenses and supplier bills.",
+          "microphonePermission": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

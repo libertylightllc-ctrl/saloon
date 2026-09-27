@@ -631,7 +631,11 @@
     "item_exists": "An item with that name already exists.",
     "price_required": "Retail items need a selling price.",
     "item_unavailable": "That product is no longer for sale. Refresh and try again.",
-    "invalid_restock": "Items go back to stock only when the whole sale is refunded."
+    "invalid_restock": "Items go back to stock only when the whole sale is refunded.",
+    "receipt_exists": "This already has a receipt photo.",
+    "receipt_missing": "The photo did not finish uploading. Try again.",
+    "photo_too_large": "That photo is over 5 MB. Choose a smaller one.",
+    "camera_denied": "Camera access is off. Allow it in the phone settings, or choose a photo."
   },
   "sales": {
     "title": "Sales",
@@ -1132,5 +1136,15 @@
     "countNote": "Note (optional)",
     "countSave": "Save count ({{n}})",
     "counted": "Count saved: {{n}} changed, {{value}}"
+  },
+  "receipts": {
+    "photo": "Receipt photo",
+    "takePhoto": "Take photo",
+    "choosePhoto": "Choose photo",
+    "remove": "Remove photo",
+    "view": "Open the receipt photo",
+    "none": "No photo yet. Add one so the paper receipt can be thrown away.",
+    "added": "Receipt photo added",
+    "failedLater": "Saved. The photo did not upload — add it from the details."
   }
 }

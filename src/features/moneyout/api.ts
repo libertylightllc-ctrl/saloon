@@ -28,6 +28,7 @@ export interface Expense {
   note: string | null;
   status: 'posted' | 'reversed';
   reverse_reason: string | null;
+  receipt_path: string | null;
   created_at: string;
   category_id: string;
   expense_categories: { name: string; key: string | null; icon: string } | null;
@@ -68,7 +69,7 @@ export function useExpenses(branchId: string, businessId: string, from: Business
     queryFn: async (): Promise<Expense[]> => {
       const { data, error } = await supabase
         .from('expenses')
-        .select('id, business_date, amount_minor, method, note, status, reverse_reason, created_at, category_id, expense_categories(name, key, icon), members!expenses_created_by_fkey(display_name)')
+        .select('id, business_date, amount_minor, method, note, status, reverse_reason, receipt_path, created_at, category_id, expense_categories(name, key, icon), members!expenses_created_by_fkey(display_name)')
         .eq('branch_id', branchId)
         .gte('business_date', from)
         .lte('business_date', to)
@@ -87,7 +88,7 @@ export function useExpense(businessId: string, id: string | undefined) {
     queryFn: async (): Promise<Expense> => {
       const { data, error } = await supabase
         .from('expenses')
-        .select('id, business_date, amount_minor, method, note, status, reverse_reason, created_at, category_id, expense_categories(name, key, icon), members!expenses_created_by_fkey(display_name)')
+        .select('id, business_date, amount_minor, method, note, status, reverse_reason, receipt_path, created_at, category_id, expense_categories(name, key, icon), members!expenses_created_by_fkey(display_name)')
         .eq('id', id!)
         .single();
       if (error) throw error;
@@ -204,6 +205,7 @@ export interface Bill {
   status: 'unpaid' | 'partial' | 'paid' | 'reversed';
   note: string | null;
   reverse_reason: string | null;
+  receipt_path: string | null;
   supplier_id: string;
   suppliers: { name: string } | null;
 }
@@ -213,7 +215,8 @@ export interface BillDetail extends Bill {
   supplier_payments: { id: string; business_date: string; method: PayMethod; amount_minor: number; created_at: string }[];
 }
 
-const BILL_FIELDS = 'id, number, invoice_ref, bill_date, due_date, total_minor, paid_minor, status, note, reverse_reason, supplier_id, suppliers(name)';
+const BILL_FIELDS =
+  'id, number, invoice_ref, bill_date, due_date, total_minor, paid_minor, status, note, reverse_reason, receipt_path, supplier_id, suppliers(name)';
 
 export function useBills(businessId: string) {
   return useQuery({

@@ -15,7 +15,10 @@ Updated: 2026-09-27
   Quick sale (product revenue, cost of goods, no commission), restock on a full refund, Home quick action "Stock" and
   Needs attention (low stock, tools due, supplier bills overdue / due this week). SQL `04_inventory.test.sql` (41),
   e2e `18-inventory.spec.ts` (both modes).
-- ⏳ Next: receipt photos on expenses and bills (Storage), then the M2 hand-over.
+- ✅ Receipt photos — 2026-09-27: take or choose a photo on an expense or bill (form or details), private bucket,
+  signed links, never replaced or deleted. SQL `05_receipts.test.sql` (16), e2e `19-receipts.spec.ts` (both modes).
+- ⏳ Next: M2 hand-over — full suite 3 runs in a row and the button sweep on a quiet machine (the Mac was running
+  heavy ffmpeg jobs from another tool on 2026-09-27, which made the local sign-in server time out).
 
 ### Works (proven)
 - **Database** (`supabase/migrations/…01–09`): tenancy, ledger (balanced-journal constraint, closed periods),

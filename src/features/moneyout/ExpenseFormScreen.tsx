@@ -24,6 +24,8 @@ import {
   useToast,
 } from '@/ui';
 
+import { PhotoButtons, PickedPreview } from './ReceiptPhoto';
+import { useAttachReceipt, type PickedPhoto } from './receipts';
 import { useExpenseCategories, useRecordExpense, useSaveExpenseCategory, type PayMethod } from './api';
 import { categoryIcon, useCategoryName } from './labels';
 
@@ -48,6 +50,8 @@ export function ExpenseFormScreen() {
   const categories = useExpenseCategories(business.id);
   const record = useRecordExpense(business.id, branch.id);
   const saveCategory = useSaveExpenseCategory(business.id);
+  const attach = useAttachReceipt('expense', business.id);
+  const [photo, setPhoto] = useState<PickedPhoto | null>(null);
 
   const [amount, setAmount] = useState<number | null>(null);
   const [categoryId, setCategoryId] = useState<string | null>(null);
@@ -62,7 +66,17 @@ export function ExpenseFormScreen() {
     record.mutate(
       { category_id: categoryId!, amount_minor: amount!, method, business_date: date, note: note.trim() || null, client_ref: clientRef },
       {
-        onSuccess: () => {
+        // The photo goes up once the expense exists; if it fails the expense stays and the photo can be added later.
+        onSuccess: async (r) => {
+          if (photo) {
+            try {
+              await attach.mutateAsync({ rowId: r.expense_id, photo });
+            } catch {
+              toast(t('receipts.failedLater'));
+              router.back();
+              return;
+            }
+          }
           toast(t('expenses.saved'));
           router.back();
         },
@@ -73,7 +87,7 @@ export function ExpenseFormScreen() {
     <>
       <Screen
         header={<HeaderBand title={t('expenses.newTitle')} onBack />}
-        footer={<Button label={t('expenses.save')} onPress={save} disabled={!ready} loading={record.isPending} testID="expense-save" />}
+        footer={<Button label={t('expenses.save')} onPress={save} disabled={!ready} loading={record.isPending || attach.isPending} testID="expense-save" />}
       >
         <View style={styles.body}>
           <MoneyInput label={t('expenses.amount')} value={amount} onChange={setAmount} testID="expense-amount" />
@@ -117,6 +131,9 @@ export function ExpenseFormScreen() {
             </Section>
           ) : null}
           <TextField label={t('expenses.note')} hint={t('expenses.noteHint')} value={note} onChangeText={setNote} maxLength={200} testID="expense-note" />
+          <Section title={t('receipts.photo')}>
+            {photo ? <PickedPreview photo={photo} onRemove={() => setPhoto(null)} /> : <PhotoButtons onPicked={setPhoto} />}
+          </Section>
           <FormError error={record.error} />
         </View>
       </Screen>
