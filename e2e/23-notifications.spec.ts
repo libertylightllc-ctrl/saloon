@@ -24,10 +24,11 @@ test('a submitted close rings the owner\'s bell and is pushed to the owner\'s ph
   const row = id(page, 'notification-close_submitted');
   await expect(row).toContainText('Cash close waiting for approval');
   await expect(row).toContainText('-AED 5.00');
+  await id(page, 'notifications-read-all').click();
+  await expect(text(page, '1 marked as read')).toBeVisible();
+  await expect(id(page, 'notifications-read-all')).toHaveAttribute('aria-disabled', 'true'); // nothing left to mark
   await row.click();
   await expect(id(page, 'closing-approve')).toBeVisible();
-  await page.goto('/notifications');
-  await id(page, 'notifications-read-all').click();
   await page.goto('/');
   await expect(id(page, 'home-bell')).not.toContainText('1');
 

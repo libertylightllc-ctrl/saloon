@@ -6,7 +6,7 @@ import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
 import { useDates } from '@/lib/useDates';
 import { spacing, useTheme } from '@/theme';
-import { Button, EmptyState, HeaderBand, Icon, ListRow, QueryState, Screen, type IconName } from '@/ui';
+import { Button, EmptyState, HeaderBand, Icon, ListRow, QueryState, Screen, useToast, type IconName } from '@/ui';
 
 import { useMarkRead, useNotifications, type AppNotification } from './api';
 import { notificationHref } from './links';
@@ -58,6 +58,8 @@ export function NotificationsScreen() {
   const list = useNotifications(member.id);
   const mark = useMarkRead(member.id);
   const words = useNotificationText();
+  const toast = useToast();
+  const unread = (list.data ?? []).filter((n) => !n.read_at).length;
 
   return (
     <Screen
@@ -67,7 +69,18 @@ export function NotificationsScreen() {
         <HeaderBand
           title={t('notifications.title')}
           onBack
-          right={<Button label={t('notifications.markAll')} size="sm" variant="secondary" onPress={() => mark.mutate(null)} loading={mark.isPending} testID="notifications-read-all" />}
+          right={
+            <Button
+              label={t('notifications.markAll')}
+              size="sm"
+              variant="secondary"
+              // Nothing to mark: the button says so by being off.
+              disabled={unread === 0}
+              onPress={() => mark.mutate(null, { onSuccess: () => toast(t('notifications.markedRead', { count: unread })) })}
+              loading={mark.isPending}
+              testID="notifications-read-all"
+            />
+          }
         />
       }
     >

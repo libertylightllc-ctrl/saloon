@@ -1469,7 +1469,8 @@
         "title": "صبح بخیر — {{branch}}",
         "body": "کل {{sales}} فروخت سے {{sales_total}} · {{pending_closes}} کلوز منظوری باقی · {{low_stock}} کم اسٹاک"
       }
-    }
+    },
+    "markedRead": "{{count}} پڑھا ہوا کیا"
   },
   "refundRequest": {
     "open": "ریفنڈ کی درخواست",

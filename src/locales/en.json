@@ -1468,7 +1468,8 @@
         "title": "Good morning — {{branch}}",
         "body": "Yesterday {{sales_total}} from {{sales}} sales · {{pending_closes}} closes to approve · {{low_stock}} low on stock"
       }
-    }
+    },
+    "markedRead": "{{count}} marked as read"
   },
   "refundRequest": {
     "open": "Refund requested",

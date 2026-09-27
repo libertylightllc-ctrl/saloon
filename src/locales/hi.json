@@ -1469,7 +1469,8 @@
         "title": "सुप्रभात — {{branch}}",
         "body": "कल {{sales}} बिक्री से {{sales_total}} · {{pending_closes}} क्लोज़ मंज़ूरी बाकी · {{low_stock}} कम स्टॉक"
       }
-    }
+    },
+    "markedRead": "{{count}} पढ़ा हुआ किया"
   },
   "refundRequest": {
     "open": "रिफ़ंड का अनुरोध",

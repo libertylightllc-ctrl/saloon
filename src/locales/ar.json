@@ -1469,7 +1469,8 @@
         "title": "صباح الخير — {{branch}}",
         "body": "أمس {{sales_total}} من {{sales}} مبيعات · {{pending_closes}} إغلاقات للاعتماد · {{low_stock}} منخفضة"
       }
-    }
+    },
+    "markedRead": "تم تعليم {{count}} كمقروء"
   },
   "refundRequest": {
     "open": "طلب استرداد",
