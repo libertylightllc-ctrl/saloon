@@ -127,7 +127,9 @@ function ItemForm({ item }: { item: StockItem | null }) {
             {
               onSuccess: (id) => {
                 toast(t('inventory.saved'));
-                router.replace({ pathname: '/inventory/[id]', params: { id } });
+                // Editing goes back to the item it came from; a new item opens its page.
+                if (item) router.back();
+                else router.replace({ pathname: '/inventory/[id]', params: { id } });
               },
             },
           )

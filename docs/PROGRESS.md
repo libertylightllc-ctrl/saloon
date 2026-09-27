@@ -2,7 +2,13 @@
 
 Updated: 2026-09-27
 
-## Current milestone: M2 — Money in / out ✅ done (hand-over: docs/M2-HANDOVER.md). Next: M3 — People & rules
+## Current milestone: M3 — People & rules (in progress). M2 ✅ done (hand-over: docs/M2-HANDOVER.md)
+
+### M3 status
+- ✅ Staff & attendance — 2026-09-28: staff list with pay terms (owner/accountant only), add people without a login,
+  weekly rosters that booking slots follow, attendance board, clock in/out from Home with a late flag, owner and
+  cashier record for others. SQL `06_staff_attendance.test.sql` (32), e2e `20-staff-attendance.spec.ts` (both modes).
+- ⏳ Next: payroll (adjustments, advances, monthly run, WPS proof, My pay), compliance, notifications & push.
 
 ### M2 status
 - ✅ Expenses (16 categories, reversal) and Purchases & suppliers (bills, stock, payments, reversal) — 2026-09-26.

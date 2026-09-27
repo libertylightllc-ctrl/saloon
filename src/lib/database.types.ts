@@ -153,6 +153,49 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"attendance": {
+                  Row: {
+                    "branch_id": string,"business_date": string,"business_id": string,"clock_in": string,"clock_in_by": string | null,"clock_out": string | null,"clock_out_by": string | null,"created_at": string,"employee_id": string,"id": string,"late": boolean,"late_minutes": number
+                  }
+                  Insert: {
+                    "branch_id": string,"business_date": string,"business_id": string,"clock_in": string,"clock_in_by"?: string | null,"clock_out"?: string | null,"clock_out_by"?: string | null,"created_at"?: string,"employee_id": string,"id"?: string,"late"?: boolean,"late_minutes"?: number
+                  }
+                  Update: {
+                    "branch_id"?: string,"business_date"?: string,"business_id"?: string,"clock_in"?: string,"clock_in_by"?: string | null,"clock_out"?: string | null,"clock_out_by"?: string | null,"created_at"?: string,"employee_id"?: string,"id"?: string,"late"?: boolean,"late_minutes"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "attendance_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "attendance_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "attendance_clock_in_by_fkey"
+      columns: ["clock_in_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "attendance_clock_out_by_fkey"
+      columns: ["clock_out_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "attendance_employee_id_fkey"
+      columns: ["employee_id"]
+isOneToOne: false
+      referencedRelation: "employees"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"audit_log": {
                   Row: {
                     "action": string,"actor_member_id": string | null,"after": Json | null,"before": Json | null,"branch_id": string | null,"business_id": string,"created_at": string,"entity_id": string | null,"entity_type": string,"id": string,"summary": string
@@ -298,13 +341,13 @@ isOneToOne: false
                   ]
                 },"employees": {
                   Row: {
-                    "active": boolean,"branch_id": string,"business_id": string,"colour": string | null,"commission_bps": number,"created_at": string,"full_name": string,"id": string,"member_id": string | null,"role_title": string
+                    "active": boolean,"base_salary_minor": number,"branch_id": string,"business_id": string,"colour": string | null,"commission_bps": number,"created_at": string,"employee_code": string | null,"full_name": string,"id": string,"member_id": string | null,"phone": string | null,"role_title": string,"wps_required": boolean
                   }
                   Insert: {
-                    "active"?: boolean,"branch_id": string,"business_id": string,"colour"?: string | null,"commission_bps"?: number,"created_at"?: string,"full_name": string,"id"?: string,"member_id"?: string | null,"role_title"?: string
+                    "active"?: boolean,"base_salary_minor"?: number,"branch_id": string,"business_id": string,"colour"?: string | null,"commission_bps"?: number,"created_at"?: string,"employee_code"?: string | null,"full_name": string,"id"?: string,"member_id"?: string | null,"phone"?: string | null,"role_title"?: string,"wps_required"?: boolean
                   }
                   Update: {
-                    "active"?: boolean,"branch_id"?: string,"business_id"?: string,"colour"?: string | null,"commission_bps"?: number,"created_at"?: string,"full_name"?: string,"id"?: string,"member_id"?: string | null,"role_title"?: string
+                    "active"?: boolean,"base_salary_minor"?: number,"branch_id"?: string,"business_id"?: string,"colour"?: string | null,"commission_bps"?: number,"created_at"?: string,"employee_code"?: string | null,"full_name"?: string,"id"?: string,"member_id"?: string | null,"phone"?: string | null,"role_title"?: string,"wps_required"?: boolean
                   }
                   Relationships: [
                     {
@@ -672,6 +715,31 @@ isOneToOne: false
       columns: ["business_id"]
 isOneToOne: false
       referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"rosters": {
+                  Row: {
+                    "business_id": string,"employee_id": string,"end_time": string,"start_time": string,"weekday": number
+                  }
+                  Insert: {
+                    "business_id": string,"employee_id": string,"end_time": string,"start_time": string,"weekday": number
+                  }
+                  Update: {
+                    "business_id"?: string,"employee_id"?: string,"end_time"?: string,"start_time"?: string,"weekday"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "rosters_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "rosters_employee_id_fkey"
+      columns: ["employee_id"]
+isOneToOne: false
+      referencedRelation: "employees"
       referencedColumns: ["id"]
     }
                   ]
@@ -1125,6 +1193,11 @@ isOneToOne: false
 "attach_receipt":
 { Args: { "p_id": string,"p_kind": string,"p_path": string }; Returns: undefined
                            },
+"attendance_day":
+{ Args: { "p_branch": string,"p_date"?: string }; Returns: {
+              "clock_in": string,"clock_out": string,"colour": string,"employee_id": string,"full_name": string,"late": boolean,"late_minutes": number,"role_title": string,"shift_end": string,"shift_start": string,"status": string
+            }[]
+                           },
 "available_slots":
 { Args: { "p_branch": string,"p_date": string,"p_duration": number,"p_employee"?: string }; Returns: {
               "available": boolean,"slot": string,"starts_at": string
@@ -1155,6 +1228,9 @@ isOneToOne: false
                            },
 "check_in":
 { Args: { "p_id": string }; Returns: undefined
+                           },
+"clock":
+{ Args: { "p": Json }; Returns: Json
                            },
 "closing_history":
 { Args: { "p_branch": string,"p_days"?: number }; Returns: {
@@ -1265,6 +1341,12 @@ isOneToOne: false
 "reverse_purchase_bill":
 { Args: { "p_id": string,"p_reason": string }; Returns: undefined
                            },
+"rostered":
+{ Args: { "p_date": string,"p_employee": string,"p_from": number,"p_to": number }; Returns: boolean
+                           },
+"save_employee":
+{ Args: { "p": Json }; Returns: string
+                           },
 "save_expense_category":
 { Args: { "p": Json }; Returns: string
                            },
@@ -1295,8 +1377,19 @@ isOneToOne: false
 "set_opening_stock":
 { Args: { "p_branch": string,"p_items": Json }; Returns: undefined
                            },
+"set_roster":
+{ Args: { "p_days": Json,"p_employee": string }; Returns: undefined
+                           },
 "settle_deposit":
 { Args: { "a": Database["public"]['Tables']["appointments"]['Row'],"p_actor": string,"p_outcome": string }; Returns: undefined
+                           },
+"shift_minutes":
+{ Args: { "p_end": string,"p_start": string }; Returns: Record<string, unknown>
+                           },
+"staff_directory":
+{ Args: { "p_business": string }; Returns: {
+              "active": boolean,"base_salary_minor": number,"branch_id": string,"colour": string,"commission_bps": number,"employee_code": string,"employee_id": string,"full_name": string,"member_id": string,"phone": string,"role_title": string,"roster": Json,"username": string,"wps_required": boolean
+            }[]
                            },
 "start_service":
 { Args: { "p_id": string }; Returns: undefined

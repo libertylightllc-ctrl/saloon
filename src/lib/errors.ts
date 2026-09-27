@@ -12,7 +12,7 @@ export const ERROR_CODES = [
   'rate_limited', 'invalid_code', 'unknown_salon', 'confirm_email', 'category_exists', 'unknown_setting',
   'invalid_role', 'day_closed', 'invalid_date', 'count_required', 'confirm_required', 'previous_close_pending',
   'item_exists', 'price_required', 'item_unavailable', 'invalid_restock', 'receipt_exists', 'receipt_missing',
-  'photo_too_large', 'camera_denied',
+  'photo_too_large', 'camera_denied', 'invalid_roster', 'invalid_time', 'already_clocked_in', 'not_clocked_in',
   'server_busy', 'unknown',
 ] as const;
 

@@ -28,6 +28,7 @@ import { useDashboard, type Dashboard } from './api';
 import { HomeTop } from './HomeHeader';
 import { RecentActivity, RevenueCards, StaffToday, TopServices } from './HomeSections';
 import { NeedsAttention } from './NeedsAttention';
+import { ClockCard } from '@/features/staff/ClockCard';
 
 const SETUP_STEPS: { key: keyof NonNullable<Dashboard['setup']>; href: Href }[] = [
   { key: 'services', href: '/services' },
@@ -125,6 +126,7 @@ export function HomeScreen() {
                   onAction={() => router.push(SETUP_STEPS.find((s) => !data.setup![s.key])!.href)}
                 />
               ) : null}
+              {role === 'staff' || role === 'cashier' ? <ClockCard /> : null}
               <NeedsAttention data={data} />
               {theme.variants.homeTop === 'profile' ? (
                 <View style={styles.block}>

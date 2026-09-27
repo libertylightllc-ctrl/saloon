@@ -39,6 +39,12 @@ const MATRIX = {
   viewInventory: ['owner', 'cashier', 'staff', 'accountant'],
   manageInventory: ['owner'],
   countStock: ['owner'],
+  // Staff & payroll (01-PRODUCT §2): the owner runs it, the accountant views; attendance is recorded by the
+  // owner and cashier, staff clock themselves.
+  viewStaff: ['owner', 'accountant'],
+  manageStaff: ['owner'],
+  viewAttendance: ['owner', 'cashier', 'accountant'],
+  recordAttendance: ['owner', 'cashier'],
 } as const satisfies Record<string, readonly Role[]>;
 
 export type Capability = keyof typeof MATRIX;

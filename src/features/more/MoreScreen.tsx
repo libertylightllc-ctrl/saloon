@@ -26,7 +26,9 @@ export function MoreScreen() {
     { key: 'purchases', icon: 'truck', href: '/purchases', show: can(role, 'viewPurchases') },
     { key: 'cashClosing', icon: 'banknote', href: '/cash-closing', show: can(role, 'viewClosing') },
     { key: 'accounts', icon: 'calculator', href: '/accounts', show: can(role, 'viewAccounting') },
-    { key: 'team', icon: 'users', href: '/settings/team', show: can(role, 'manageUsers') },
+    { key: 'staff', icon: 'users', href: '/staff', show: can(role, 'viewStaff') },
+    { key: 'attendance', icon: 'clock', href: '/attendance', show: can(role, 'viewAttendance') },
+    { key: 'team', icon: 'userCheck', href: '/settings/team', show: can(role, 'manageUsers') },
     { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch') },
   ] as const;
   const shown = business_rows.filter((r) => r.show);

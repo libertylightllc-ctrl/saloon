@@ -8,10 +8,12 @@ export interface SectionHeaderProps {
   title: string;
   actionLabel?: string;
   onAction?: () => void;
+  /** On the action button. */
+  testID?: string;
 }
 
 /** "Categories · View all". */
-export function SectionHeader({ title, actionLabel, onAction }: SectionHeaderProps) {
+export function SectionHeader({ title, actionLabel, onAction, testID }: SectionHeaderProps) {
   const theme = useTheme();
   return (
     <View style={styles.row}>
@@ -24,7 +26,7 @@ export function SectionHeader({ title, actionLabel, onAction }: SectionHeaderPro
         {title}
       </Text>
       {actionLabel ? (
-        <Pressable onPress={onAction} accessibilityRole="button" hitSlop={14}>
+        <Pressable onPress={onAction} accessibilityRole="button" hitSlop={14} testID={testID}>
           <Text variant="small" color="textSecondary">
             {actionLabel}
           </Text>

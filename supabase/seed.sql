@@ -263,6 +263,50 @@ begin
 end;
 $$;
 
+-- Pay terms, a Saturday–Thursday roster (Friday afternoons only) and two weeks of attendance for a demo
+-- branch. p_people: [[name, code, salary, wps, role_title]]. Past days are written directly (demo history);
+-- today's clock-ins go through clock() like the app.
+create function pg_temp.people(p_branch uuid, p_owner uuid, p_cashier uuid, p_people jsonb) returns void
+language plpgsql as $$
+declare
+  v_biz uuid := (select business_id from branches where id = p_branch);
+  v_tz text := public.branch_tz(p_branch);
+  v_today date := public.branch_today(p_branch);
+  it jsonb;
+  e employees;
+  d int;
+  v_day date;
+  v_late int;
+  n int := 0;
+begin
+  perform pg_temp.act_as(p_owner);
+  for it in select * from jsonb_array_elements(p_people) loop
+    select * into e from employees where business_id = v_biz and full_name = it ->> 0;
+    perform public.save_employee(jsonb_build_object('business_id', v_biz, 'id', e.id, 'full_name', e.full_name,
+      'employee_code', it ->> 1, 'base_salary_minor', (it ->> 2)::bigint, 'wps_required', (it ->> 3)::boolean,
+      'role_title', it ->> 4, 'phone', '+971 50 ' || (200 + n) || ' ' || (4000 + n * 7)));
+    if it ->> 4 <> 'cashier' then
+      perform public.set_roster(e.id, '[{"weekday":6,"start":"10:00","end":"22:00"},{"weekday":0,"start":"10:00","end":"22:00"},
+        {"weekday":1,"start":"10:00","end":"22:00"},{"weekday":2,"start":"10:00","end":"22:00"},
+        {"weekday":3,"start":"10:00","end":"22:00"},{"weekday":4,"start":"10:00","end":"22:00"},
+        {"weekday":5,"start":"14:00","end":"22:00"}]');
+      for d in 1..14 loop
+        v_day := v_today - d;
+        v_late := case when (d + n) % 6 = 0 then 18 + n * 4 else 0 end;
+        insert into attendance (business_id, branch_id, employee_id, business_date, clock_in, clock_out, late, late_minutes,
+                                clock_in_by, clock_out_by)
+        values (v_biz, p_branch, e.id, v_day,
+                (v_day + (case when extract(dow from v_day) = 5 then time '14:00' else time '10:00' end)
+                 + make_interval(mins => v_late - 4)) at time zone v_tz,
+                (v_day + time '22:05') at time zone v_tz, v_late > 10, v_late,
+                e.member_id, e.member_id);
+      end loop;
+    end if;
+    n := n + 1;
+  end loop;
+end;
+$$;
+
 -- ── Gents: Al Barsha Gents ──────────────────────────────────────────────────────────────
 do $$
 declare
@@ -354,6 +398,9 @@ begin
     '[["Cordless Clipper", 4, 45000, "good", 5, "Chairs 1–4"], ["Hair Dryer", 2, 22000, "needs_service", 30, "Chair 3"],
       ["Barber Chair", 4, 180000, "good", 90, "Main floor"]]');
   perform pg_temp.closings(br, owner, cashier);
+  perform pg_temp.people(br, owner, cashier, '[["Faisal", "AB-01", 280000, true, "cashier"],
+    ["Rafiq", "AB-02", 350000, true, "staff"], ["Sameer", "AB-03", 320000, true, "staff"],
+    ["Imran", "AB-04", 300000, false, "staff"]]');
 end $$;
 
 -- ── Ladies: Jumeirah Ladies Salon & Spa ────────────────────────────────────────────────
@@ -447,6 +494,9 @@ begin
     '[["Professional Hair Dryer", 3, 38000, "good", 12, "Styling stations"], ["Hair Straightener", 2, 26000, "good", 4, "Aisha"],
       ["Pedicure Spa Chair", 2, 420000, "needs_service", 20, "Spa room 2"]]');
   perform pg_temp.closings(br, owner, cashier);
+  perform pg_temp.people(br, owner, cashier, '[["Noor", "JL-01", 320000, true, "cashier"],
+    ["Aisha", "JL-02", 450000, true, "staff"], ["Priya", "JL-03", 400000, true, "staff"],
+    ["Leila", "JL-04", 420000, true, "therapist"]]');
 end $$;
 
 select set_config('request.jwt.claims', '', false);

@@ -10,7 +10,10 @@ export type Appointment = Tables<'appointments'> & {
   employees: Pick<Tables<'employees'>, 'full_name' | 'colour'> | null;
   rooms: Pick<Tables<'rooms'>, 'name'> | null;
 };
-export type Employee = Tables<'employees'>;
+export type Employee = Pick<
+  Tables<'employees'>,
+  'id' | 'business_id' | 'branch_id' | 'member_id' | 'full_name' | 'role_title' | 'commission_bps' | 'colour' | 'active' | 'created_at'
+>;
 export type Room = Tables<'rooms'>;
 export type QueueDay = 'today' | 'tomorrow' | 'week';
 
@@ -65,7 +68,7 @@ export function useEmployees(branchId: string) {
     queryFn: async (): Promise<Employee[]> => {
       const { data, error } = await supabase
         .from('employees')
-        .select('*')
+        .select('id, business_id, branch_id, member_id, full_name, role_title, commission_bps, colour, active, created_at')
         .eq('branch_id', branchId)
         .eq('active', true)
         .neq('role_title', 'cashier')

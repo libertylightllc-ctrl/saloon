@@ -80,6 +80,12 @@ test('owner adds a product, sells it, refunds it to stock, adjusts and counts; H
   await expect(text(page, 'Stock adjusted')).toBeVisible();
   await expect(id(page, 'item-qty')).toHaveText('9 pc');
   await expect(text(page, 'Bottle broke', false).first()).toBeVisible();
+  // Editing returns to the same item page (Back then reaches the list).
+  await id(page, 'item-edit').click();
+  await id(page, 'item-location').fill('Front shelf');
+  await id(page, 'item-save').click();
+  await expect(text(page, 'Item saved')).toBeVisible();
+  await expect(text(page, 'Front shelf').first()).toBeVisible();
   await snap(page, 'inventory-item', mode);
   await back(page);
 

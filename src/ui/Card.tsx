@@ -11,6 +11,7 @@ export interface CardProps {
   onPress?: () => void;
   accessibilityLabel?: string;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 }
 
 export function Card({
@@ -20,6 +21,7 @@ export function Card({
   onPress,
   accessibilityLabel,
   style,
+  testID,
 }: CardProps) {
   const theme = useTheme();
   const look: StyleProp<ViewStyle> = [
@@ -33,13 +35,19 @@ export function Card({
     style,
   ];
 
-  if (!onPress) return <View style={look}>{children}</View>;
+  if (!onPress)
+    return (
+      <View style={look} testID={testID}>
+        {children}
+      </View>
+    );
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       style={({ pressed }) => [look, pressed && styles.pressed]}
+      testID={testID}
     >
       {children}
     </Pressable>
