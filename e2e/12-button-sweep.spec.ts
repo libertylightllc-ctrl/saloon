@@ -263,6 +263,7 @@ test('owner: every button on every screen does something visible', { tag: '@swee
     ['Compliance · hygiene', '/compliance?tab=hygiene'],
     ['Compliance · WPS & Montaji', '/compliance?tab=wps'],
     ['Compliance record', '/compliance/doc?type=trade_licence&branch=' + s.branchId],
+    ['Notifications', '/notifications'],
   ];
   for (const [screen, url, prepare] of screens) await sweepScreen(page, rows, screen, url, prepare);
   report(mode, 'owner', rows);
@@ -296,6 +297,7 @@ test('cashier and staff: their buttons work and none hit a permission error', { 
     ['Item detail', `/inventory/${s.itemId}`],
     ['Attendance', '/attendance'],
     ['Compliance · hygiene', '/compliance'],
+    ['Notifications', '/notifications'],
   ] as const)
     await sweepScreen(page, rows, screen, url);
   report(mode, 'cashier', rows);

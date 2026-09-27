@@ -654,7 +654,9 @@
     "not_clocked_in": "हाज़िरी नहीं लगी, या छुट्टी पहले से दर्ज है।",
     "payroll_approved": "वह महीना पहले से मंज़ूर है। बदलाव अगले महीने में जाएँगे।",
     "evidence_required": "स्वच्छता लॉग के लिए फ़ोटो ज़रूरी है।",
-    "already_signed": "आज का स्वच्छता लॉग पहले से साइन है।"
+    "already_signed": "आज का स्वच्छता लॉग पहले से साइन है।",
+    "already_requested": "इस बिक्री का रिफ़ंड पहले से माँगा गया है।",
+    "invalid_token": "यह फ़ोन सूचनाओं के लिए नहीं जुड़ सका।"
   },
   "sales": {
     "title": "बिक्री",
@@ -1424,5 +1426,55 @@
       "registered": "पंजीकृत",
       "add": "नंबर जोड़ें"
     }
+  },
+  "notifications": {
+    "title": "सूचनाएँ",
+    "open": "सूचनाएँ, {{count}} अपठित",
+    "markAll": "सब पढ़ा हुआ करें",
+    "empty": "कुछ नया नहीं। बुकिंग, क्लोज़िंग, कम स्टॉक और रिमाइंडर यहाँ दिखेंगे।",
+    "types": {
+      "new_booking": {
+        "title": "नई बुकिंग",
+        "body": "{{customer}} · {{at}}"
+      },
+      "long_wait": {
+        "title": "वॉक-इन इंतज़ार में",
+        "body": "{{customer}} {{minutes}} मिनट से इंतज़ार में"
+      },
+      "close_submitted": {
+        "title": "कैश क्लोज़ मंज़ूरी बाकी",
+        "body": "{{date}} · अंतर {{variance}}"
+      },
+      "low_stock": {
+        "title": "स्टॉक कम",
+        "body": "{{item}} · {{qty}} {{unit}} बचा"
+      },
+      "document_due": {
+        "title": "दस्तावेज़ {{count}} दिन में देय",
+        "body": "{{doc}} · {{holder}} · {{expires}}"
+      },
+      "payroll_generated": {
+        "title": "पेरोल निकाला गया",
+        "body": "{{period}} जाँच और मंज़ूरी के लिए तैयार"
+      },
+      "refund_requested": {
+        "title": "रिफ़ंड का अनुरोध",
+        "body": "बिक्री #{{number}} · {{amount}} · {{reason}}"
+      },
+      "daily_digest": {
+        "title": "सुप्रभात — {{branch}}",
+        "body": "कल {{sales}} बिक्री से {{sales_total}} · {{pending_closes}} क्लोज़ मंज़ूरी बाकी · {{low_stock}} कम स्टॉक"
+      }
+    }
+  },
+  "refundRequest": {
+    "open": "रिफ़ंड का अनुरोध",
+    "summary": "{{name}} ने {{amount}} माँगा",
+    "decline": "मना करें",
+    "declined": "अनुरोध अस्वीकार",
+    "ask": "मालिक से रिफ़ंड माँगें",
+    "hint": "मालिक को सूचना मिलेगी और वे इसी बिक्री से रिफ़ंड करेंगे।",
+    "send": "अनुरोध भेजें",
+    "sent": "अनुरोध मालिक को भेजा"
   }
 }

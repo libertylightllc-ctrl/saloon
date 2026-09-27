@@ -3,10 +3,12 @@ import { Stack } from 'expo-router';
 import { Gate } from '@/features/auth/Gate';
 import { useWorkspace } from '@/features/auth/session';
 import { useLiveSync } from '@/features/live/useLiveSync';
+import { usePush } from '@/features/notifications/usePush';
 
 function LiveStack() {
-  const { business, branch } = useWorkspace();
-  useLiveSync(business.id, branch.id);
+  const { business, branch, member } = useWorkspace();
+  useLiveSync(business.id, branch.id, member.id);
+  usePush(business.id);
   return <Stack screenOptions={{ headerShown: false }} />;
 }
 

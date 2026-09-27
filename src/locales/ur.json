@@ -654,7 +654,9 @@
     "not_clocked_in": "حاضری نہیں لگی، یا چھٹی پہلے سے درج ہے۔",
     "payroll_approved": "وہ مہینہ پہلے سے منظور ہے۔ تبدیلیاں اگلے مہینے میں جائیں گی۔",
     "evidence_required": "صفائی لاگ کے لیے تصویر ضروری ہے۔",
-    "already_signed": "آج کا صفائی لاگ پہلے سے دستخط شدہ ہے۔"
+    "already_signed": "آج کا صفائی لاگ پہلے سے دستخط شدہ ہے۔",
+    "already_requested": "اس فروخت کا ریفنڈ پہلے سے مانگا گیا ہے۔",
+    "invalid_token": "یہ فون اطلاعات کے لیے رجسٹر نہ ہو سکا۔"
   },
   "sales": {
     "title": "فروخت",
@@ -1424,5 +1426,55 @@
       "registered": "رجسٹرڈ",
       "add": "نمبر شامل کریں"
     }
+  },
+  "notifications": {
+    "title": "اطلاعات",
+    "open": "اطلاعات، {{count}} غیر پڑھی",
+    "markAll": "سب پڑھا ہوا کریں",
+    "empty": "کچھ نیا نہیں۔ بکنگ، کلوزنگ، کم اسٹاک اور یاد دہانیاں یہاں دکھیں گی۔",
+    "types": {
+      "new_booking": {
+        "title": "نئی بکنگ",
+        "body": "{{customer}} · {{at}}"
+      },
+      "long_wait": {
+        "title": "واک اِن انتظار میں",
+        "body": "{{customer}} {{minutes}} منٹ سے انتظار میں"
+      },
+      "close_submitted": {
+        "title": "کیش کلوز منظوری باقی",
+        "body": "{{date}} · فرق {{variance}}"
+      },
+      "low_stock": {
+        "title": "اسٹاک کم",
+        "body": "{{item}} · {{qty}} {{unit}} باقی"
+      },
+      "document_due": {
+        "title": "دستاویز {{count}} دن میں واجب",
+        "body": "{{doc}} · {{holder}} · {{expires}}"
+      },
+      "payroll_generated": {
+        "title": "پے رول نکال لیا",
+        "body": "{{period}} جانچ اور منظوری کے لیے تیار"
+      },
+      "refund_requested": {
+        "title": "ریفنڈ کی درخواست",
+        "body": "فروخت #{{number}} · {{amount}} · {{reason}}"
+      },
+      "daily_digest": {
+        "title": "صبح بخیر — {{branch}}",
+        "body": "کل {{sales}} فروخت سے {{sales_total}} · {{pending_closes}} کلوز منظوری باقی · {{low_stock}} کم اسٹاک"
+      }
+    }
+  },
+  "refundRequest": {
+    "open": "ریفنڈ کی درخواست",
+    "summary": "{{name}} نے {{amount}} مانگا",
+    "decline": "انکار کریں",
+    "declined": "درخواست مسترد",
+    "ask": "مالک سے ریفنڈ مانگیں",
+    "hint": "مالک کو اطلاع ملے گی اور وہ اسی فروخت سے ریفنڈ کریں گے۔",
+    "send": "درخواست بھیجیں",
+    "sent": "درخواست مالک کو بھیج دی"
   }
 }

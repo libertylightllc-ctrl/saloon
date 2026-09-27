@@ -11,6 +11,7 @@ import type { Tables } from '@/lib/database.types';
 import { errorCode, type ErrorCode } from '@/lib/errors';
 import type { BranchRules, Role } from '@/lib/permissions';
 import { queryClient } from '@/lib/queryClient';
+import { registeredPushToken } from '@/features/notifications/pushToken';
 import { supabase } from '@/lib/supabase';
 
 export type Member = Tables<'members'>;
@@ -91,9 +92,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       () => undefined,
       () => undefined,
     );
+    // This phone stops getting the signed-out person's pushes.
+    const token = registeredPushToken();
+    const unregistered = token
+      ? supabase.rpc('unregister_push_token', { p_token: token }).then(
+          () => undefined,
+          () => undefined,
+        )
+      : Promise.resolve();
     await supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
     queryClient.clear();
-    await logged;
+    await Promise.all([logged, unregistered]);
   }, []);
 
   const reload = useCallback(async () => {

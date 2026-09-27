@@ -52,8 +52,12 @@ that the tools on this Mac can update the hosted database, and I never see the p
 
 1. `npx supabase db push`: creates all tables, security rules and functions (`supabase/migrations`),
    and the private `receipts` photo bucket with its rules (nothing to click in Storage).
-2. `npx supabase functions deploy create-staff-login manage-staff-login`: the staff-login functions.
-   Supabase gives functions their own service key automatically; it never leaves Supabase.
+2. `npx supabase functions deploy create-staff-login manage-staff-login send-push`: staff logins and push delivery
+   (`push-sink` is a local stand-in and is never deployed). Supabase gives functions their own service key
+   automatically; it never leaves Supabase.
+   Then, once, so the every-minute push job can reach `send-push` (both values are public; this is the anon key,
+   never the service_role key): `select configure_push('https://<ref>.supabase.co', '<anon key>');` run as the
+   service role (dashboard → SQL editor runs as postgres; I run it through the API with the function's own key).
 3. **Auth settings** (dashboard → Authentication):
    - *URL configuration:* Site URL `saloncontrol://` (the app) and your web address if you use the web build.
    - *Email templates → Reset password:* the 6-digit code template from `supabase/templates/recovery.html`.

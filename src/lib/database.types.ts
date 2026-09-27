@@ -100,13 +100,13 @@ isOneToOne: false
                   ]
                 },"appointments": {
                   Row: {
-                    "branch_id": string,"business_date": string,"business_id": string,"cancel_reason": string | null,"checked_in_at": string | null,"completed_at": string | null,"created_at": string,"created_by": string | null,"customer_id": string | null,"customer_name": string | null,"deposit_method": Database["public"]['Enums']["payment_method"] | null,"deposit_minor": number,"deposit_status": Database["public"]['Enums']["deposit_status"],"duration_min": number,"employee_id": string | null,"id": string,"notes": string | null,"room_id": string | null,"sale_id": string | null,"scheduled_at": string,"source": Database["public"]['Enums']["appointment_source"],"started_at": string | null,"status": Database["public"]['Enums']["appointment_status"],"updated_at": string
+                    "branch_id": string,"business_date": string,"business_id": string,"cancel_reason": string | null,"checked_in_at": string | null,"completed_at": string | null,"created_at": string,"created_by": string | null,"customer_id": string | null,"customer_name": string | null,"deposit_method": Database["public"]['Enums']["payment_method"] | null,"deposit_minor": number,"deposit_status": Database["public"]['Enums']["deposit_status"],"duration_min": number,"employee_id": string | null,"id": string,"notes": string | null,"room_id": string | null,"sale_id": string | null,"scheduled_at": string,"source": Database["public"]['Enums']["appointment_source"],"started_at": string | null,"status": Database["public"]['Enums']["appointment_status"],"updated_at": string,"wait_notified_at": string | null
                   }
                   Insert: {
-                    "branch_id": string,"business_date": string,"business_id": string,"cancel_reason"?: string | null,"checked_in_at"?: string | null,"completed_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"customer_id"?: string | null,"customer_name"?: string | null,"deposit_method"?: Database["public"]['Enums']["payment_method"] | null,"deposit_minor"?: number,"deposit_status"?: Database["public"]['Enums']["deposit_status"],"duration_min"?: number,"employee_id"?: string | null,"id"?: string,"notes"?: string | null,"room_id"?: string | null,"sale_id"?: string | null,"scheduled_at": string,"source": Database["public"]['Enums']["appointment_source"],"started_at"?: string | null,"status": Database["public"]['Enums']["appointment_status"],"updated_at"?: string
+                    "branch_id": string,"business_date": string,"business_id": string,"cancel_reason"?: string | null,"checked_in_at"?: string | null,"completed_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"customer_id"?: string | null,"customer_name"?: string | null,"deposit_method"?: Database["public"]['Enums']["payment_method"] | null,"deposit_minor"?: number,"deposit_status"?: Database["public"]['Enums']["deposit_status"],"duration_min"?: number,"employee_id"?: string | null,"id"?: string,"notes"?: string | null,"room_id"?: string | null,"sale_id"?: string | null,"scheduled_at": string,"source": Database["public"]['Enums']["appointment_source"],"started_at"?: string | null,"status": Database["public"]['Enums']["appointment_status"],"updated_at"?: string,"wait_notified_at"?: string | null
                   }
                   Update: {
-                    "branch_id"?: string,"business_date"?: string,"business_id"?: string,"cancel_reason"?: string | null,"checked_in_at"?: string | null,"completed_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"customer_id"?: string | null,"customer_name"?: string | null,"deposit_method"?: Database["public"]['Enums']["payment_method"] | null,"deposit_minor"?: number,"deposit_status"?: Database["public"]['Enums']["deposit_status"],"duration_min"?: number,"employee_id"?: string | null,"id"?: string,"notes"?: string | null,"room_id"?: string | null,"sale_id"?: string | null,"scheduled_at"?: string,"source"?: Database["public"]['Enums']["appointment_source"],"started_at"?: string | null,"status"?: Database["public"]['Enums']["appointment_status"],"updated_at"?: string
+                    "branch_id"?: string,"business_date"?: string,"business_id"?: string,"cancel_reason"?: string | null,"checked_in_at"?: string | null,"completed_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"customer_id"?: string | null,"customer_name"?: string | null,"deposit_method"?: Database["public"]['Enums']["payment_method"] | null,"deposit_minor"?: number,"deposit_status"?: Database["public"]['Enums']["deposit_status"],"duration_min"?: number,"employee_id"?: string | null,"id"?: string,"notes"?: string | null,"room_id"?: string | null,"sale_id"?: string | null,"scheduled_at"?: string,"source"?: Database["public"]['Enums']["appointment_source"],"started_at"?: string | null,"status"?: Database["public"]['Enums']["appointment_status"],"updated_at"?: string,"wait_notified_at"?: string | null
                   }
                   Relationships: [
                     {
@@ -643,6 +643,37 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"notifications": {
+                  Row: {
+                    "body": string,"branch_id": string | null,"business_id": string,"created_at": string,"data": NonNullable<Json>,"dedupe_key": string | null,"entity_id": string | null,"entity_type": string | null,"id": string,"member_id": string,"pushed_at": string | null,"read_at": string | null,"title": string,"type": string
+                  }
+                  Insert: {
+                    "body": string,"branch_id"?: string | null,"business_id": string,"created_at"?: string,"data"?: NonNullable<Json>,"dedupe_key"?: string | null,"entity_id"?: string | null,"entity_type"?: string | null,"id"?: string,"member_id": string,"pushed_at"?: string | null,"read_at"?: string | null,"title": string,"type": string
+                  }
+                  Update: {
+                    "body"?: string,"branch_id"?: string | null,"business_id"?: string,"created_at"?: string,"data"?: NonNullable<Json>,"dedupe_key"?: string | null,"entity_id"?: string | null,"entity_type"?: string | null,"id"?: string,"member_id"?: string,"pushed_at"?: string | null,"read_at"?: string | null,"title"?: string,"type"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "notifications_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "notifications_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "notifications_member_id_fkey"
+      columns: ["member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"payroll_adjustments": {
                   Row: {
                     "amount_minor": number,"branch_id": string,"business_date": string,"business_id": string,"client_ref": string | null,"created_at": string,"created_by": string | null,"employee_id": string,"id": string,"kind": string,"method": Database["public"]['Enums']["payment_method"] | null,"note": string | null,"period": string,"reverse_reason": string | null,"status": string
@@ -838,6 +869,87 @@ isOneToOne: false
       columns: ["supplier_id"]
 isOneToOne: false
       referencedRelation: "suppliers"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"push_deliveries": {
+                  Row: {
+                    "body": string,"created_at": string,"detail": string | null,"id": string,"notification_id": string,"status": string,"ticket": string | null,"title": string,"token": string
+                  }
+                  Insert: {
+                    "body": string,"created_at"?: string,"detail"?: string | null,"id"?: string,"notification_id": string,"status": string,"ticket"?: string | null,"title": string,"token": string
+                  }
+                  Update: {
+                    "body"?: string,"created_at"?: string,"detail"?: string | null,"id"?: string,"notification_id"?: string,"status"?: string,"ticket"?: string | null,"title"?: string,"token"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "push_deliveries_notification_id_fkey"
+      columns: ["notification_id"]
+isOneToOne: false
+      referencedRelation: "notifications"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"push_tokens": {
+                  Row: {
+                    "created_at": string,"last_seen_at": string,"member_id": string,"platform": string,"token": string
+                  }
+                  Insert: {
+                    "created_at"?: string,"last_seen_at"?: string,"member_id": string,"platform": string,"token": string
+                  }
+                  Update: {
+                    "created_at"?: string,"last_seen_at"?: string,"member_id"?: string,"platform"?: string,"token"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "push_tokens_member_id_fkey"
+      columns: ["member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"refund_requests": {
+                  Row: {
+                    "amount_minor": number,"branch_id": string,"business_id": string,"created_at": string,"handled_by": string | null,"handled_note": string | null,"id": string,"reason": string,"requested_by": string | null,"sale_id": string,"status": string
+                  }
+                  Insert: {
+                    "amount_minor": number,"branch_id": string,"business_id": string,"created_at"?: string,"handled_by"?: string | null,"handled_note"?: string | null,"id"?: string,"reason": string,"requested_by"?: string | null,"sale_id": string,"status"?: string
+                  }
+                  Update: {
+                    "amount_minor"?: number,"branch_id"?: string,"business_id"?: string,"created_at"?: string,"handled_by"?: string | null,"handled_note"?: string | null,"id"?: string,"reason"?: string,"requested_by"?: string | null,"sale_id"?: string,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "refund_requests_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "refund_requests_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "refund_requests_handled_by_fkey"
+      columns: ["handled_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "refund_requests_requested_by_fkey"
+      columns: ["requested_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "refund_requests_sale_id_fkey"
+      columns: ["sale_id"]
+isOneToOne: false
+      referencedRelation: "sales"
       referencedColumns: ["id"]
     }
                   ]
@@ -1364,7 +1476,8 @@ isOneToOne: false
 "source": Database["public"]['Enums']["appointment_source"],
 "started_at": string | null,
 "status": Database["public"]['Enums']["appointment_status"],
-"updated_at": string
+"updated_at": string,
+"wait_notified_at": string | null
             }
                           SetofOptions: {
         from: "*"
@@ -1445,6 +1558,9 @@ isOneToOne: false
               "branch_id": string,"days_left": number,"doc_type": string,"document_id": string,"employee_id": string,"evidence_path": string,"expires_on": string,"holder_name": string,"holder_type": string,"issued_on": string,"number": string,"reminder_days": number,"renewal_cost_minor": number,"required": boolean,"slot_key": string,"status": string,"version": number
             }[]
                            },
+"configure_push":
+{ Args: { "p_anon_key": string,"p_project_url": string }; Returns: undefined
+                           },
 "create_appointment":
 { Args: { "p": Json }; Returns: string
                            },
@@ -1459,6 +1575,12 @@ isOneToOne: false
                            },
 "dashboard_today":
 { Args: { "p_branch": string }; Returns: Json
+                           },
+"dismiss_refund_request":
+{ Args: { "p_id": string,"p_note": string }; Returns: undefined
+                           },
+"dispatch_push":
+{ Args: Record<PropertyKey, never>; Returns: number
                            },
 "expected_cash":
 { Args: { "p_branch": string,"p_date"?: string }; Returns: number
@@ -1489,11 +1611,23 @@ isOneToOne: false
 "mark_no_show":
 { Args: { "p_id": string }; Returns: undefined
                            },
+"mark_notifications_read":
+{ Args: { "p_ids"?: (string)[] }; Returns: number
+                           },
 "method_account":
 { Args: { "p_method": Database["public"]['Enums']["payment_method"] }; Returns: string
                            },
 "move_stock":
 { Args: { "p_actor": string,"p_branch": string,"p_business": string,"p_client_ref"?: string,"p_delta": number,"p_item": string,"p_note": string,"p_reason": Database["public"]['Enums']["stock_reason"],"p_ref_id": string,"p_ref_type": string }; Returns: Record<string, unknown>
+                           },
+"notify":
+{ Args: { "p_body": string,"p_branch": string,"p_business": string,"p_data"?: Json,"p_dedupe"?: string,"p_entity_id"?: string,"p_entity_type"?: string,"p_roles": (Database["public"]['Enums']["member_role"])[],"p_title": string,"p_type": string }; Returns: number
+                           },
+"notify_documents_due":
+{ Args: { "p_today"?: string }; Returns: number
+                           },
+"notify_long_waits":
+{ Args: { "p_now"?: string }; Returns: number
                            },
 "paid_from_account":
 { Args: { "p_method": Database["public"]['Enums']["payment_method"] }; Returns: string
@@ -1528,8 +1662,14 @@ isOneToOne: false
 "refund_sale":
 { Args: { "p": Json }; Returns: Json
                            },
+"register_push_token":
+{ Args: { "p_business": string,"p_platform": string,"p_token": string }; Returns: undefined
+                           },
 "register_staff_member":
 { Args: { "p": Json }; Returns: Json
+                           },
+"request_refund":
+{ Args: { "p": Json }; Returns: string
                            },
 "require_member":
 { Args: { "p_branch": string,"p_roles": (Database["public"]['Enums']["member_role"])[] }; Returns: {
@@ -1591,6 +1731,9 @@ isOneToOne: false
 "seed_system_accounts":
 { Args: { "p_business": string }; Returns: undefined
                            },
+"send_daily_digests":
+{ Args: { "p_now"?: string }; Returns: number
+                           },
 "set_branch_mode":
 { Args: { "p_branch": string,"p_mode": Database["public"]['Enums']["salon_mode"] }; Returns: undefined
                            },
@@ -1635,6 +1778,9 @@ isOneToOne: false
                            },
 "unique_business_code":
 { Args: { "p_name": string }; Returns: string
+                           },
+"unregister_push_token":
+{ Args: { "p_token": string }; Returns: undefined
                            },
 "update_branch":
 { Args: { "p": Json,"p_branch": string }; Returns: undefined

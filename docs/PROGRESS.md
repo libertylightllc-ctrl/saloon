@@ -15,7 +15,11 @@ Updated: 2026-09-27
   owner's own records, readiness %, hygiene log (cashier signs; photo can be required), inspection binder PDF,
   WPS & Montaji, Home asks for what is missing and for today's hygiene log. SQL `08_compliance.test.sql` (30),
   e2e `22-compliance.spec.ts` (both modes).
-- ⏳ Next: notifications (bell, list), push tokens and delivery, daily digest (pg_cron), cashier "request refund".
+- ✅ Notifications — 2026-09-28: bell with unread count, list in the app language, mark all read, tap to open;
+  events for bookings, long waits, closes, low stock, documents due 30/7/0, payroll, refund requests; 08:00 daily
+  digest; push tokens and delivery through send-push (pg_cron every minute, proven locally with the push-sink
+  stand-in); cashier "request refund". SQL `09_notifications.test.sql` (30), e2e `23-notifications.spec.ts`.
+- ⏳ Next: M3 hand-over (full suite 3 runs in a row, button sweep).
 
 ### M2 status
 - ✅ Expenses (16 categories, reversal) and Purchases & suppliers (bills, stock, payments, reversal) — 2026-09-26.

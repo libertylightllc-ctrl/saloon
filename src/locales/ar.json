@@ -654,7 +654,9 @@
     "not_clocked_in": "لم يُسجَّل الحضور أو تم الانصراف بالفعل.",
     "payroll_approved": "هذا الشهر معتمد بالفعل. التغييرات تدخل الشهر التالي.",
     "evidence_required": "الصورة مطلوبة لسجل النظافة.",
-    "already_signed": "سجل النظافة لليوم موقّع بالفعل."
+    "already_signed": "سجل النظافة لليوم موقّع بالفعل.",
+    "already_requested": "تم طلب استرداد لهذا البيع بالفعل.",
+    "invalid_token": "تعذر تسجيل هذا الهاتف للإشعارات."
   },
   "sales": {
     "title": "المبيعات",
@@ -1424,5 +1426,55 @@
       "registered": "مسجل",
       "add": "أضف الرقم"
     }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "open": "الإشعارات، {{count}} غير مقروءة",
+    "markAll": "تعليم الكل كمقروء",
+    "empty": "لا جديد. تظهر هنا الحجوزات والإغلاقات والمخزون المنخفض والتذكيرات.",
+    "types": {
+      "new_booking": {
+        "title": "حجز جديد",
+        "body": "{{customer}} · {{at}}"
+      },
+      "long_wait": {
+        "title": "زبون ينتظر",
+        "body": "{{customer}} ينتظر منذ {{minutes}} د"
+      },
+      "close_submitted": {
+        "title": "إغلاق الصندوق بانتظار الاعتماد",
+        "body": "{{date}} · الفرق {{variance}}"
+      },
+      "low_stock": {
+        "title": "مخزون منخفض",
+        "body": "{{item}} · تبقى {{qty}} {{unit}}"
+      },
+      "document_due": {
+        "title": "مستند يستحق خلال {{count}} يوم",
+        "body": "{{doc}} · {{holder}} · {{expires}}"
+      },
+      "payroll_generated": {
+        "title": "تم حساب الرواتب",
+        "body": "{{period}} جاهز للمراجعة والاعتماد"
+      },
+      "refund_requested": {
+        "title": "طلب استرداد",
+        "body": "بيع #{{number}} · {{amount}} · {{reason}}"
+      },
+      "daily_digest": {
+        "title": "صباح الخير — {{branch}}",
+        "body": "أمس {{sales_total}} من {{sales}} مبيعات · {{pending_closes}} إغلاقات للاعتماد · {{low_stock}} منخفضة"
+      }
+    }
+  },
+  "refundRequest": {
+    "open": "طلب استرداد",
+    "summary": "طلب {{name}} مبلغ {{amount}}",
+    "decline": "رفض",
+    "declined": "رُفض الطلب",
+    "ask": "اطلب الاسترداد من المالك",
+    "hint": "يصل إشعار للمالك ويسترد من هذا البيع.",
+    "send": "إرسال الطلب",
+    "sent": "أُرسل الطلب إلى المالك"
   }
 }

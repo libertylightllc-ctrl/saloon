@@ -1,16 +1,36 @@
 import { formatInTimeZone } from 'date-fns-tz';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { brand } from '@/config/brand';
 import { useWorkspace } from '@/features/auth/session';
+import { useUnreadCount } from '@/features/notifications/api';
 import { businessDate, formatDayLabel } from '@/lib/dates';
 import { spacing, useTheme } from '@/theme';
-import { Avatar, Text } from '@/ui';
+import { Avatar, IconButton, Text } from '@/ui';
 
 export function partOfDay(timeZone: string, at = new Date()): 'morning' | 'afternoon' | 'evening' {
   const hour = Number(formatInTimeZone(at, timeZone, 'H'));
   return hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
+}
+
+/** The bell with the unread count; opens the notifications list. */
+function Bell({ variant }: { variant: 'surface' | 'plain' }) {
+  const { t } = useTranslation();
+  const router = useRouter();
+  const { member } = useWorkspace();
+  const unread = useUnreadCount(member.id);
+  return (
+    <IconButton
+      icon="bell"
+      variant={variant}
+      accessibilityLabel={t('notifications.open', { count: unread.data ?? 0 })}
+      badge={unread.data ? unread.data : undefined}
+      onPress={() => router.push('/notifications')}
+      testID="home-bell"
+    />
+  );
 }
 
 /** Gents: avatar + greeting inside the violet band. Ladies: coral wordmark row on blush. */
@@ -36,6 +56,7 @@ export function HomeTop({ subline }: { subline: string }) {
             {subline}
           </Text>
         </View>
+        <Bell variant="surface" />
       </View>
     );
   }
@@ -45,6 +66,7 @@ export function HomeTop({ subline }: { subline: string }) {
         <Text variant="h3" weight="bold" style={[styles.flex, { color: theme.colors.primary500 }]} numberOfLines={1}>
           {brand.appName.toLocaleUpperCase()}
         </Text>
+        <Bell variant="plain" />
         <Avatar name={member.display_name} size={36} />
       </View>
       <Text variant="h3" testID="home-greeting">

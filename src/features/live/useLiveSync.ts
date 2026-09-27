@@ -25,9 +25,10 @@ export const keys = {
   payroll: (businessId: string) => ['payroll', businessId] as const,
   compliance: (businessId: string) => ['compliance', businessId] as const,
   hygiene: (branchId: string) => ['hygiene', branchId] as const,
+  notifications: (memberId: string) => ['notifications', memberId] as const,
 };
 
-export function useLiveSync(businessId: string, branchId: string) {
+export function useLiveSync(businessId: string, branchId: string, memberId: string) {
   const client = useQueryClient();
 
   useEffect(() => {
@@ -72,6 +73,10 @@ export function useLiveSync(businessId: string, branchId: string) {
         invalidate(keys.payroll(businessId), keys.closing(branchId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'payroll_adjustments', filter: businessFilter },
         invalidate(keys.payroll(businessId), keys.closing(branchId)))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications', filter: `member_id=eq.${memberId}` },
+        invalidate(keys.notifications(memberId)))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'refund_requests', filter: branchFilter },
+        invalidate(['refund-request']))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'compliance_documents', filter: businessFilter },
         invalidate(keys.compliance(businessId), keys.dashboard(branchId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'hygiene_logs', filter: branchFilter },
@@ -98,5 +103,5 @@ export function useLiveSync(businessId: string, branchId: string) {
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [client, businessId, branchId]);
+  }, [client, businessId, branchId, memberId]);
 }

@@ -653,7 +653,9 @@
     "not_clocked_in": "Not clocked in, or already clocked out.",
     "payroll_approved": "That month is already approved. Changes go into next month.",
     "evidence_required": "A photo is required for the hygiene log.",
-    "already_signed": "Today's hygiene log is already signed."
+    "already_signed": "Today's hygiene log is already signed.",
+    "already_requested": "A refund is already requested for this sale.",
+    "invalid_token": "This phone could not sign up for notifications."
   },
   "sales": {
     "title": "Sales",
@@ -1423,5 +1425,55 @@
       "registered": "Registered",
       "add": "Add number"
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "open": "Notifications, {{count}} unread",
+    "markAll": "Mark all as read",
+    "empty": "Nothing new. Bookings, closes, low stock and reminders show here.",
+    "types": {
+      "new_booking": {
+        "title": "New booking",
+        "body": "{{customer}} · {{at}}"
+      },
+      "long_wait": {
+        "title": "Walk-in waiting",
+        "body": "{{customer}} has waited {{minutes}} min"
+      },
+      "close_submitted": {
+        "title": "Cash close waiting for approval",
+        "body": "{{date}} · difference {{variance}}"
+      },
+      "low_stock": {
+        "title": "Low on stock",
+        "body": "{{item}} · {{qty}} {{unit}} left"
+      },
+      "document_due": {
+        "title": "Document due in {{count}} days",
+        "body": "{{doc}} · {{holder}} · {{expires}}"
+      },
+      "payroll_generated": {
+        "title": "Payroll worked out",
+        "body": "{{period}} is ready to check and approve"
+      },
+      "refund_requested": {
+        "title": "Refund requested",
+        "body": "Sale #{{number}} · {{amount}} · {{reason}}"
+      },
+      "daily_digest": {
+        "title": "Good morning — {{branch}}",
+        "body": "Yesterday {{sales_total}} from {{sales}} sales · {{pending_closes}} closes to approve · {{low_stock}} low on stock"
+      }
+    }
+  },
+  "refundRequest": {
+    "open": "Refund requested",
+    "summary": "{{name}} asked for {{amount}}",
+    "decline": "Decline",
+    "declined": "Request declined",
+    "ask": "Ask the owner for a refund",
+    "hint": "The owner gets a notification and refunds it from this sale.",
+    "send": "Send request",
+    "sent": "Request sent to the owner"
   }
 }

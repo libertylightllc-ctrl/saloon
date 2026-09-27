@@ -562,4 +562,10 @@ begin
   perform pg_temp.compliance(br, owner, cashier, 'JL');
 end $$;
 
+-- The demo's history made notifications as it went: keep only the last day's unread, and push none of them.
+update notifications set pushed_at = now(),
+  read_at = case when created_at < now() - interval '1 day' or type = 'close_submitted'
+                      and (data ->> 'date')::date < (now() at time zone 'Asia/Dubai')::date - 1 then now() end
+where true;
+
 select set_config('request.jwt.claims', '', false);

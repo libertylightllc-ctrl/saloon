@@ -11,6 +11,7 @@ import { spacing } from '@/theme';
 import { Button, Card, FormError, HeaderBand, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
 import { useSale } from './api';
+import { RefundRequest } from './RefundRequest';
 import { RefundSheet } from './RefundSheet';
 import { useShareReceipt } from './useReceipt';
 
@@ -115,6 +116,7 @@ export function SaleDetailScreen() {
                   loading={share.isPending}
                   onPress={() => share.mutate(sale.id)}
                 />
+                <RefundRequest sale={sale} />
                 {can(role, 'refund') && left > 0 ? (
                   <Button label={t('sales.refund')} icon="rotate" variant="ghost" onPress={() => setRefunding(true)} testID="sale-refund" />
                 ) : null}
