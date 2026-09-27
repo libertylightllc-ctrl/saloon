@@ -31,6 +31,8 @@ export function useLiveSync(businessId: string, branchId: string) {
       for (const queryKey of targets) void client.invalidateQueries({ queryKey });
     };
     const branchFilter = `branch_id=eq.${branchId}`;
+    // Rejoining after sleep or a dropped connection: anything that changed meanwhile sent no event.
+    let joined = false;
     const businessFilter = `business_id=eq.${businessId}`;
     const channel = supabase
       .channel(`live-${branchId}`)
@@ -70,7 +72,11 @@ export function useLiveSync(businessId: string, branchId: string) {
         invalidate(keys.moneyOut(businessId)))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'expense_categories', filter: businessFilter },
         invalidate(keys.moneyOut(businessId)))
-      .subscribe();
+      .subscribe((state) => {
+        if (state !== 'SUBSCRIBED') return;
+        if (joined) void client.invalidateQueries();
+        joined = true;
+      });
     return () => {
       void supabase.removeChannel(channel);
     };

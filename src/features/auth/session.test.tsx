@@ -18,6 +18,9 @@ const mockDeferred = (): Deferred => {
 
 const mock = {
   listener: null as Listener | null,
+  /** The realtime join callback the provider registered, and what the branch row says now. */
+  joined: null as ((state: string) => void) | null,
+  branchMode: 'gents',
   /** One pending members lookup per user id, resolved by the test. */
   members: new Map<string, Deferred>(),
 };
@@ -50,6 +53,8 @@ function mockBuilder(table: string) {
       }
       const owner = (filters.id ?? filters.business_id ?? filters.member_id ?? '').replace(/^(b|m)-/, '');
       if (table === 'businesses') return Promise.resolve({ data: { id: `b-${owner}`, timezone: 'Asia/Dubai' }, error: null });
+      if (table === 'branches' && filters.id)
+        return Promise.resolve({ data: { id: filters.id, mode: mock.branchMode, settings: {} }, error: null });
       if (table === 'branches')
         return Promise.resolve({ data: [{ id: `br-${owner}`, mode: 'gents', settings: {} }], error: null });
       return Promise.resolve({ data: null, error: null });
@@ -72,7 +77,13 @@ jest.mock('@/lib/supabase', () => ({
     from: (table: string) => mockBuilder(table),
     rpc: () => Promise.resolve({ data: null, error: null }),
     channel: () => {
-      const channel = { on: () => channel, subscribe: () => channel };
+      const channel = {
+        on: () => channel,
+        subscribe: (cb?: (state: string) => void) => {
+          mock.joined = cb ?? null;
+          return channel;
+        },
+      };
       return channel;
     },
     removeChannel: () => Promise.resolve(),
@@ -81,7 +92,12 @@ jest.mock('@/lib/supabase', () => ({
 
 function Probe() {
   const s = useSession();
-  return <Text testID="probe">{`${s.status}|${s.member?.user_id ?? '-'}|${s.business?.id ?? '-'}`}</Text>;
+  return (
+    <>
+      <Text testID="probe">{`${s.status}|${s.member?.user_id ?? '-'}|${s.business?.id ?? '-'}`}</Text>
+      <Text testID="mode">{s.branch?.mode ?? '-'}</Text>
+    </>
+  );
 }
 
 const session = (user: string) => ({ user: { id: user }, access_token: 't' });
@@ -101,6 +117,8 @@ async function start() {
 beforeEach(() => {
   mock.listener = null;
   mock.members.clear();
+  mock.joined = null;
+  mock.branchMode = 'gents';
 });
 
 it('a load that finishes after sign-out does not sign the device back in', async () => {
@@ -138,4 +156,17 @@ it('a normal sign-in still loads the salon', async () => {
   await act(async () => mock.members.get('sara')!.resolve(member('sara')));
   await flush();
   expect(probe()).toBe('ready|sara|b-sara');
+});
+
+it('a salon-type change made before the live channel joined is picked up when it joins', async () => {
+  await start();
+  await act(async () => mock.listener!('SIGNED_IN', session('sara')));
+  await act(async () => mock.members.get('sara')!.resolve(member('sara')));
+  await flush();
+  expect(screen.getByTestId('mode').props.children).toBe('gents');
+  // The owner switched the branch while this phone was still joining: no change event reaches it.
+  mock.branchMode = 'ladies';
+  await act(async () => mock.joined!('SUBSCRIBED'));
+  await flush();
+  expect(screen.getByTestId('mode').props.children).toBe('ladies');
 });

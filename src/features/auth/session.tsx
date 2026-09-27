@@ -167,7 +167,19 @@ export function SessionProvider({ children }: { children: ReactNode }) {
           setLoaded((prev) => (prev.branch?.id === branchId ? { ...prev, branch: { ...prev.branch, ...(payload.new as Branch) } } : prev)))
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'members', filter: `id=eq.${memberId}` },
         () => void reload())
-      .subscribe();
+      // A change made before the channel finished joining, or while the phone was asleep or offline, sends no
+      // event: every (re)join reads the branch again so the salon type and settings catch up.
+      .subscribe((state) => {
+        if (state !== 'SUBSCRIBED') return;
+        void supabase
+          .from('branches')
+          .select('*')
+          .eq('id', branchId)
+          .maybeSingle()
+          .then(({ data }) => {
+            if (data) setLoaded((prev) => (prev.branch?.id === branchId ? { ...prev, branch: { ...prev.branch, ...data } } : prev));
+          });
+      });
     return () => {
       void supabase.removeChannel(channel);
     };
