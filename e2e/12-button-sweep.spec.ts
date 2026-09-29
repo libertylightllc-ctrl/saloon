@@ -3,7 +3,7 @@
  * Each tap must do something the person can see — navigate, open a sheet, change the screen,
  * or show a validation message — never nothing, never a crash, never an unbuilt route, never a
  * permission error. Deliberately disabled buttons are listed with their state.
- * The report is written to e2e-results/button-sweep-<mode>.md.
+ * The report is written to docs/button-sweep/button-sweep-<mode>-<role>.md.
  */
 import { mkdirSync, writeFileSync } from 'fs';
 
@@ -196,7 +196,8 @@ async function seed(owner: Owner, mode: Mode) {
 }
 
 function report(mode: Mode, role: string, rows: Row[]) {
-  mkdirSync('e2e-results', { recursive: true });
+  // Straight into docs: the test runner empties e2e-results at the start of every run.
+  mkdirSync('docs/button-sweep', { recursive: true });
   const lines = [
     `# Button sweep — ${mode} — ${role}`,
     '',
@@ -204,7 +205,7 @@ function report(mode: Mode, role: string, rows: Row[]) {
     '|---|---|---|',
     ...rows.map((r) => `| ${r.screen} | ${r.button.replace(/\|/g, '/')} | ${r.ok ? '' : '❌ '}${r.result.replace(/\|/g, '/')} |`),
   ];
-  writeFileSync(`e2e-results/button-sweep-${mode}-${role}.md`, lines.join('\n'));
+  writeFileSync(`docs/button-sweep/button-sweep-${mode}-${role}.md`, lines.join('\n'));
 }
 
 test.describe.configure({ timeout: 2_400_000 });

@@ -1,8 +1,23 @@
 # Progress
 
-Updated: 2026-09-27
+Updated: 2026-09-29
 
-## Current milestone: M3 — People & rules (in progress). M2 ✅ done (hand-over: docs/M2-HANDOVER.md)
+## Current milestone: M4 — Books & finish. M3 ✅ built (hand-over: docs/M3-HANDOVER.md), M2 ✅ done
+
+### M4 status
+- ✅ Books — close month (owner; books must balance; reopen with a reason), ledger CSV. SQL `11_books_reports.test.sql`.
+- ✅ Reports — monthly business, staff sales, daily closing, stock movement, cash shortage, customer list; month picker,
+  figures, chart, table, print / PDF / CSV, owner control line; accountant tabs Reports and Accounting. e2e flow 24.
+- ✅ Settings — customer receipt (none / print / WhatsApp), backup ZIP, PIN quick-switch (SQL `12_quick_switch`,
+  e2e flow 25). Access history was already in Accounts & history.
+- ✅ Performance — access checks once per query (SQL `13_rls_shape`), paged virtual customer list, reports and
+  exports read past 1,000 rows; e2e flow 26 (1,200 customers).
+- ✅ Languages — 23 screens in Arabic, Urdu, Hindi: direction, no raw keys, nothing wider than the phone (flow 27).
+  Texts remain machine drafts for a native speaker to review.
+- ✅ Store builds prepared — `eas.json`, `app.config.ts`, `docs/STORE-RELEASE.md`. Building needs the owner's
+  Expo / Apple / Google accounts.
+- ⏳ Proof — full suite 3 runs in a row and the button sweep: see docs/M4-HANDOVER.md.
+
 
 ### M3 status
 - ✅ Staff & attendance — 2026-09-28: staff list with pay terms (owner/accountant only), add people without a login,
@@ -19,7 +34,7 @@ Updated: 2026-09-27
   events for bookings, long waits, closes, low stock, documents due 30/7/0, payroll, refund requests; 08:00 daily
   digest; push tokens and delivery through send-push (pg_cron every minute, proven locally with the push-sink
   stand-in); cashier "request refund". SQL `09_notifications.test.sql` (30), e2e `23-notifications.spec.ts`.
-- ⏳ M3 hand-over: `docs/M3-HANDOVER.md` — waiting on the final proof runs.
+- ✅ M3 hand-over: `docs/M3-HANDOVER.md`. Its 3-in-a-row proof is part of M4's (the suite includes every M3 flow).
 
 ### M2 status
 - ✅ Expenses (16 categories, reversal) and Purchases & suppliers (bills, stock, payments, reversal) — 2026-09-26.
