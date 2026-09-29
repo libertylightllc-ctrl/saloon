@@ -61,7 +61,8 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     storage: AsyncStorage,
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false,
+    // Web: "Continue with Google" comes back to the site with the session in the address; phones use a deep link.
+    detectSessionInUrl: Platform.OS === 'web',
   },
 });
 

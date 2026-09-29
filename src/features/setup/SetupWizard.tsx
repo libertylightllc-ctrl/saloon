@@ -65,7 +65,9 @@ export function SetupWizard() {
   const { session, reload, signOut } = useSession();
   const { salonType, setSalonType } = useSalonType();
   const [step, setStep] = useState(0);
-  const suggestedName = String(session?.user.user_metadata?.display_name ?? '');
+  // Email sign-up stores display_name; Google gives full_name / name.
+  const meta = session?.user.user_metadata ?? {};
+  const suggestedName = String(meta.display_name ?? meta.full_name ?? meta.name ?? '');
 
   const form = useForm<Values>({
     resolver: zodResolver(schema),

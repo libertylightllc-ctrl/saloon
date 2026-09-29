@@ -1,6 +1,8 @@
 -- M1 core: tenancy, setup, queue, sales, refunds, deposits, ledger guarantees.
 begin;
 create extension if not exists pgtap with schema extensions;
+-- Paid plans are tested in 14_plans; here every salon may work.
+select set_config('salon.plan_check', 'off', false);
 select plan(70);
 
 -- ── Test users ──────────────────────────────────────────────────────────────────────────

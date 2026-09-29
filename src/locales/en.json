@@ -404,7 +404,9 @@
       "accounts": "Accounts & history",
       "backup": "Backup & recovery",
       "pin": "Quick-switch PIN",
-      "switch": "Switch user"
+      "switch": "Switch user",
+      "plan": "Plan & billing",
+      "admin": "Salons & plans (admin)"
     },
     "logOut": "Log out",
     "title": "More",
@@ -588,6 +590,11 @@
         "inChair": "in the chair"
       },
       "about": "About {{app}}"
+    },
+    "google": {
+      "action": "Continue with Google",
+      "or": "or with email",
+      "mark": "G"
     }
   },
   "setup": {
@@ -733,7 +740,8 @@
     "invalid_pin": "Use 4 digits that are not all the same or in a row.",
     "pin_locked": "Too many wrong PINs. Try again in 5 minutes, or sign in with the password.",
     "wrong_pin": "That PIN is not right.",
-    "switch_expired": "That person needs to sign in again with their password."
+    "switch_expired": "That person needs to sign in again with their password.",
+    "plan_required": "Your salon’s plan isn’t active, so this can’t be saved yet. The owner can switch it on under More → Plan & billing."
   },
   "sales": {
     "title": "Sales",
@@ -1734,5 +1742,66 @@
     "addHint": "Sign them in once with their password; after they set a PIN, they switch with it.",
     "login": "Username (or owner email)",
     "signIn": "Sign in"
+  },
+  "plan": {
+    "title": "Plan & billing",
+    "subtitle": "Your salon’s plan",
+    "name": "Salon plan",
+    "active": "Active",
+    "inactive": "Not active",
+    "paidUntil": "Paid until {{date}}.",
+    "notActiveBody": "Queue, sales and the other features start once your plan is active. Setting up (services, team, items) is free.",
+    "perBranchMonth": "per branch, per month",
+    "forBranches": "Branches: {{count}} · {{total}} a month",
+    "included": {
+      "queue": "Walk-ins, bookings and the live queue",
+      "sale": "Quick sale, receipts and refunds",
+      "money": "Expenses, purchases, stock and cash closing",
+      "people": "Staff, attendance, payroll and WPS",
+      "compliance": "UAE compliance and hygiene log",
+      "books": "Books, reports, backups and all languages"
+    },
+    "requestTitle": "Switch on your plan",
+    "extendTitle": "Pay for more months",
+    "requested": "You asked for {{months}} month(s) on {{date}}. It switches on as soon as the payment is received.",
+    "monthsOption": {
+      "1": "1 month",
+      "3": "3 months",
+      "6": "6 months",
+      "12": "12 months"
+    },
+    "total": "Total: {{total}}",
+    "note": "Note (optional)",
+    "notePlaceholder": "e.g. paying by bank transfer",
+    "requestAction": "Ask to switch on",
+    "requestSent": "Request sent. We’ll switch it on once paid.",
+    "howToPay": "Card payments in the app are coming. For now we contact you to take the payment by bank transfer or a card link, then switch the plan on.",
+    "banner": {
+      "title": "Switch on your plan",
+      "body": "Queue, sales and the other features start once your plan is active: {{price}} per branch a month.",
+      "requestedTitle": "Plan requested",
+      "requestedBody": "It switches on as soon as the payment is received ({{price}} per branch a month).",
+      "action": "See plan",
+      "staffTitle": "The salon’s plan isn’t active",
+      "staffBody": "Ask the owner to switch it on. You can still look around."
+    },
+    "extendAction": "Ask to add months"
+  },
+  "admin": {
+    "title": "Salons & plans",
+    "subtitle": "Every salon, and who asked for a plan",
+    "empty": "No salons yet.",
+    "meta": "Code {{code}} · branches {{branches}} · joined {{date}}",
+    "requested": "Asked for {{months}} month(s). {{note}}",
+    "asked": "Asked",
+    "until": "Until {{date}}",
+    "amount": "Amount received",
+    "note": "Note",
+    "notePlaceholder": "e.g. bank transfer ref",
+    "recordPayment": "Record payment ({{total}})",
+    "activated": "{{name}}: plan switched on",
+    "endPlan": "End plan (note needed)",
+    "ended": "{{name}}: plan ended",
+    "hint": "The plan runs from today, or from its current end if it is still running. Ending it keeps all the salon’s data."
   }
 }

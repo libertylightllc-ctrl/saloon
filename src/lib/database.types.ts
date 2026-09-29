@@ -1720,6 +1720,83 @@ export type Database = {
           },
         ];
       };
+      plan_events: {
+        Row: {
+          amount_minor: number | null;
+          business_id: string;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          kind: string;
+          months: number | null;
+          note: string | null;
+          paid_until: string | null;
+        };
+        Insert: {
+          amount_minor?: number | null;
+          business_id: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind: string;
+          months?: number | null;
+          note?: string | null;
+          paid_until?: string | null;
+        };
+        Update: {
+          amount_minor?: number | null;
+          business_id?: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind?: string;
+          months?: number | null;
+          note?: string | null;
+          paid_until?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'plan_events_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      platform_admins: {
+        Row: {
+          created_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      platform_settings: {
+        Row: {
+          currency: string;
+          id: boolean;
+          price_per_branch_minor: number;
+        };
+        Insert: {
+          currency?: string;
+          id?: boolean;
+          price_per_branch_minor?: number;
+        };
+        Update: {
+          currency?: string;
+          id?: boolean;
+          price_per_branch_minor?: number;
+        };
+        Relationships: [];
+      };
       purchase_bill_lines: {
         Row: {
           bill_id: string;
@@ -2750,6 +2827,32 @@ export type Database = {
           },
         ];
       };
+      subscriptions: {
+        Row: {
+          business_id: string;
+          paid_until: string;
+          updated_at: string;
+        };
+        Insert: {
+          business_id: string;
+          paid_until: string;
+          updated_at?: string;
+        };
+        Update: {
+          business_id?: string;
+          paid_until?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'subscriptions_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: true;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       supplier_payments: {
         Row: {
           amount_minor: number;
@@ -2956,6 +3059,28 @@ export type Database = {
       };
       acct: { Args: { p_business: string; p_key: string }; Returns: string };
       adjust_stock: { Args: { p: Json }; Returns: Json };
+      admin_activate: {
+        Args: { p_amount_minor: number; p_business: string; p_months: number; p_note: string };
+        Returns: string;
+      };
+      admin_end_plan: { Args: { p_business: string; p_note: string }; Returns: undefined };
+      admin_salons: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          active: boolean;
+          branches: number;
+          business_id: string;
+          code: string;
+          created_at: string;
+          name: string;
+          owner_email: string;
+          owner_name: string;
+          paid_until: string;
+          request_note: string;
+          requested_at: string;
+          requested_months: number;
+        }[];
+      };
       allocate_minor: { Args: { p_total: number; p_weights: number[] }; Returns: number[] };
       appointment_for_update: {
         Args: { p_id: string };
@@ -3032,6 +3157,7 @@ export type Database = {
       branch_setting: { Args: { p_branch: string; p_default: Json; p_key: string }; Returns: Json };
       branch_today: { Args: { p_branch: string }; Returns: string };
       branch_tz: { Args: { p_branch: string }; Returns: string };
+      business_today: { Args: { p_business: string }; Returns: string };
       can_use_branch: { Args: { p_branch: string }; Returns: boolean };
       cancel_appointment: { Args: { p_id: string; p_reason: string }; Returns: string };
       cash_breakdown: {
@@ -3124,6 +3250,7 @@ export type Database = {
         }[];
       };
       is_member: { Args: { p_business: string }; Returns: boolean };
+      is_platform_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       log_access: { Args: { p_device: string; p_event: string }; Returns: undefined };
       mark_no_show: { Args: { p_id: string }; Returns: undefined };
       mark_notifications_read: { Args: { p_ids?: string[] }; Returns: number };
@@ -3146,6 +3273,11 @@ export type Database = {
           p_ref_type: string;
         };
         Returns: Record<string, unknown>;
+      };
+      my_branch_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      my_business_ids: {
+        Args: { p_roles: Database['public']['Enums']['member_role'][] };
+        Returns: string[];
       };
       notify: {
         Args: {
@@ -3182,6 +3314,8 @@ export type Database = {
           status: string;
         }[];
       };
+      plan_active: { Args: { p_business: string }; Returns: boolean };
+      plan_status: { Args: { p_business: string }; Returns: Json };
       post_journal: {
         Args: {
           p_actor: string;
@@ -3290,6 +3424,10 @@ export type Database = {
           value_minor: number;
         }[];
       };
+      request_plan: {
+        Args: { p_business: string; p_months: number; p_note: string };
+        Returns: undefined;
+      };
       request_refund: { Args: { p: Json }; Returns: string };
       require_member: {
         Args: { p_branch: string; p_roles: Database['public']['Enums']['member_role'][] };
@@ -3311,6 +3449,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      require_plan: { Args: { p_business: string }; Returns: undefined };
       return_cash_closing: { Args: { p_id: string; p_reason: string }; Returns: Json };
       reverse_adjustment: { Args: { p_id: string; p_reason: string }; Returns: undefined };
       reverse_expense: { Args: { p_id: string; p_reason: string }; Returns: undefined };

@@ -27,6 +27,8 @@ import {
 import { useDashboard, type Dashboard } from './api';
 import { HomeTop } from './HomeHeader';
 import { RecentActivity, RevenueCards, StaffToday, TopServices } from './HomeSections';
+import { PlanBanner } from '@/features/plan/PlanBanner';
+
 import { NeedsAttention } from './NeedsAttention';
 import { ClockCard } from '@/features/staff/ClockCard';
 
@@ -104,6 +106,7 @@ export function HomeScreen() {
         <QueryState query={dashboard} skeletonRows={4}>
           {(data) => (
             <View style={styles.sections}>
+              <PlanBanner />
               {money ? <MoneyCards data={data} /> : null}
               {data.me ? (
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.kpiRow}>

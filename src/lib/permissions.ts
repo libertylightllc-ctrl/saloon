@@ -56,6 +56,9 @@ const MATRIX = {
   viewReports: ['owner', 'accountant'],
   closePeriod: ['owner'],
   backup: ['owner'],
+  // Paid plan (docs/06): the owner asks for it; the accountant can see it.
+  viewPlan: ['owner', 'accountant'],
+  requestPlan: ['owner'],
 } as const satisfies Record<string, readonly Role[]>;
 
 export type Capability = keyof typeof MATRIX;

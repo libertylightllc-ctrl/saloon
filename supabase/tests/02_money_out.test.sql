@@ -2,6 +2,8 @@
 -- suppliers, purchase bills, supplier payments — roles, books, cash and stock.
 begin;
 create extension if not exists pgtap with schema extensions;
+-- Paid plans are tested in 14_plans; here every salon may work.
+select set_config('salon.plan_check', 'off', false);
 select plan(45);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,

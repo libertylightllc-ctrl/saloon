@@ -4,6 +4,9 @@
 --   Gents  owner demo-gents@example.com   · salon code albarsha · cashier faisal · staff rafiq, sameer, imran
 --   Ladies owner demo-ladies@example.com  · salon code jumeirah · cashier noor   · staff aisha, priya, leila
 
+-- The demo salons do a month of activity; their plans are switched on at the end.
+select set_config('salon.plan_check', 'off', false);
+
 create function pg_temp.new_user(p_id uuid, p_email text, p_password text, p_name text) returns void
 language sql as $$
   insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, created_at,
@@ -569,3 +572,9 @@ update notifications set pushed_at = now(),
 where true;
 
 select set_config('request.jwt.claims', '', false);
+
+-- The demo salons have a running plan.
+insert into public.subscriptions (business_id, paid_until)
+select id, date '2099-12-31' from public.businesses where is_demo
+on conflict (business_id) do update set paid_until = excluded.paid_until;
+select set_config('salon.plan_check', '', false);

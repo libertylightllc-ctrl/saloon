@@ -2,6 +2,8 @@
 -- the hygiene log (cashier signs; evidence can be required), WPS status, and who may see it.
 begin;
 create extension if not exists pgtap with schema extensions;
+-- Paid plans are tested in 14_plans; here every salon may work.
+select set_config('salon.plan_check', 'off', false);
 select plan(30);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,

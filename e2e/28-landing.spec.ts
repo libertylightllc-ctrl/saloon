@@ -28,3 +28,31 @@ test('a new visitor reads what the app does, picks a salon type and lands on the
   await id(page, 'landing-sign-in').click();
   await expect(id(page, 'sign-in-submit')).toHaveCSS('background-color', THEME[mode].primaryAction);
 });
+
+test('"Continue with Google" shows only when Google is switched on, and sends people to Google and back to the site', async ({ page, mode }) => {
+  // The local database has Google off: no button.
+  await page.goto('/');
+  await id(page, `welcome-${mode}`).click();
+  await expect(id(page, 'sign-in-submit')).toBeVisible();
+  await expect(id(page, 'google-sign-in')).toHaveCount(0);
+
+  // Switched on (as on the hosted project once Google is set up): the button appears on sign-in and sign-up.
+  await page.route('**/auth/v1/settings', async (route) => {
+    const res = await route.fetch();
+    const body = (await res.json()) as { external: Record<string, boolean> };
+    await route.fulfill({ response: res, json: { ...body, external: { ...body.external, google: true } } });
+  });
+  let authorize = '';
+  await page.route('**/auth/v1/authorize**', (route) => {
+    authorize = route.request().url();
+    return route.fulfill({ contentType: 'text/html', body: '<p>Google</p>' });
+  });
+  await page.reload();
+  await expect(id(page, 'google-sign-in')).toBeVisible();
+  await id(page, 'link-sign-up').click();
+  await expect(id(page, 'google-sign-in')).toBeVisible();
+  const site = new URL(page.url()).origin;
+  await id(page, 'google-sign-in').click();
+  await expect.poll(() => authorize).toContain('provider=google');
+  expect(new URL(authorize).searchParams.get('redirect_to')).toBe(`${site}/`);
+});

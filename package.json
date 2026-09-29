@@ -47,6 +47,7 @@
     "expo-splash-screen": "~57.0.9",
     "expo-status-bar": "~57.0.1",
     "expo-system-ui": "~57.0.4",
+    "expo-web-browser": "~57.0.3",
     "fflate": "^0.8.3",
     "i18next": "^26.4.2",
     "intl-pluralrules": "^2.0.1",

@@ -2,6 +2,8 @@
 -- (branch staff to branch:, members to business:, owner and accountant to owners:, each person to member:).
 begin;
 create extension if not exists pgtap with schema extensions;
+-- Paid plans are tested in 14_plans; here every salon may work.
+select set_config('salon.plan_check', 'off', false);
 select plan(9);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,

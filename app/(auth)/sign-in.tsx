@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { brand } from '@/config/brand';
 import { rememberedSalonCode, rememberedSignInAs, signInOwner, signInStaff } from '@/features/auth/api';
 import { AuthShell } from '@/features/auth/AuthShell';
+import { GoogleButton } from '@/features/auth/GoogleButton';
 import { useSession } from '@/features/auth/session';
 import { AppError } from '@/lib/errors';
 import { spacing } from '@/theme';
@@ -79,6 +80,7 @@ function OwnerForm() {
 
   return (
     <View style={styles.form}>
+      <GoogleButton />
       <FormTextField
         control={form.control}
         name="email"

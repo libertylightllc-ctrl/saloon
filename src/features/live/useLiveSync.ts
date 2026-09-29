@@ -65,6 +65,7 @@ export function useLiveSync(businessId: string, branchId: string, memberId: stri
       refund_requests: [['refund-request']],
       notifications: [keys.notifications(memberId)],
       periods: [['accounts', businessId]],
+      subscriptions: [['plan', businessId]],
     };
     const onChange = ({ payload }: { payload: { table?: string } }) => {
       for (const queryKey of affected[payload.table ?? ''] ?? []) void client.invalidateQueries({ queryKey });

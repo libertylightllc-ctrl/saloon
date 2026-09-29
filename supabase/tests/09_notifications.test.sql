@@ -2,6 +2,8 @@
 -- due 30/7/0, the 08:00 digest) once each, refund requests, reading your own only, push tokens.
 begin;
 create extension if not exists pgtap with schema extensions;
+-- Paid plans are tested in 14_plans; here every salon may work.
+select set_config('salon.plan_check', 'off', false);
 select plan(30);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,

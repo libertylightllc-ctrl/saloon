@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { PinSheet, SwitchUserSheet } from '@/features/auth/QuickSwitchSheets';
 import { useHasPin } from '@/features/auth/quickSwitch';
+import { useIsPlatformAdmin } from '@/features/plan/api';
 import { useSession, useWorkspace } from '@/features/auth/session';
 import { LanguageSheet } from '@/features/settings/LanguageSheet';
 import { LANGUAGES } from '@/lib/i18n';
@@ -21,6 +22,7 @@ export function MoreScreen() {
   const [pinOpen, setPinOpen] = useState(false);
   const [switchOpen, setSwitchOpen] = useState(false);
   const hasPin = useHasPin(business.id);
+  const platformAdmin = useIsPlatformAdmin();
   const [signingOut, setSigningOut] = useState(false);
 
   const business_rows = [
@@ -38,6 +40,8 @@ export function MoreScreen() {
     { key: 'team', icon: 'userCheck', href: '/settings/team', show: can(role, 'manageUsers') },
     { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch') },
     { key: 'backup', icon: 'archive', href: '/settings/backup', show: can(role, 'backup') },
+    { key: 'plan', icon: 'creditCard', href: '/plan', show: can(role, 'viewPlan') },
+    { key: 'admin', icon: 'building', href: '/admin', show: platformAdmin.data === true },
   ] as const;
   const shown = business_rows.filter((r) => r.show);
 

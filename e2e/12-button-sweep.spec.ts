@@ -280,6 +280,7 @@ test('owner: every button on every screen does something visible', { tag: '@swee
     ['Reports · customers', '/reports?type=customers'],
     ['Close month', '/accounts/close-period'],
     ['Backup & recovery', '/settings/backup'],
+    ['Plan & billing', '/plan'],
   ];
   for (const [screen, url, prepare] of screens) await sweepScreen(page, rows, screen, url, prepare);
   report(mode, 'owner', rows);
@@ -354,6 +355,7 @@ test('accountant: reports and books work read-only', { tag: '@sweep' }, async ({
     ['Purchases', '/purchases'],
     ['Staff & payroll', '/staff'],
     ['Payroll', '/payroll'],
+    ['Plan & billing', '/plan'],
   ] as const)
     await sweepScreen(page, rows, screen, url);
   report(mode, 'accountant', rows);

@@ -105,3 +105,29 @@ the working app.
 
 Note: after a force-push GitHub can still open old commits by their exact link for a while. If they must be
 completely unreachable, the only certain way is a new repository.
+
+## 7. Continue with Google (you, once)
+
+1. **Google Cloud Console** → create a project → *APIs & Services → OAuth consent screen* (External; app name, your
+   support email) → *Credentials → Create credentials → OAuth client ID* → **Web application**.
+2. Under **Authorized redirect URIs** add: `https://<ref>.supabase.co/auth/v1/callback`
+3. Copy the **Client ID** and **Client secret**, then in Supabase → **Authentication → Sign In / Providers → Google**:
+   switch it on and paste both (you type the secret there yourself; never send it to me).
+4. Supabase → **Authentication → URL Configuration**: Site URL `https://saloon-virid.vercel.app`; Redirect URLs
+   `https://saloon-virid.vercel.app/**` and `saloncontrol://auth-callback`.
+
+The "Continue with Google" button appears on the sign-in and sign-up pages by itself once step 3 is saved.
+
+## 8. An email sender (you, once)
+
+Supabase → **Authentication → Emails → SMTP Settings** → enable custom SMTP:
+- **Quick (Gmail):** host `smtp.gmail.com`, port `465`, user = your Gmail address, password = a Google **app password**
+  (Google Account → Security → 2-Step Verification → App passwords). About 500 emails a day, sent from your Gmail.
+- **Proper (own domain):** Resend or Postmark with your domain (e.g. `hello@yourdomain.com`); follow their Supabase guide.
+
+Also paste `supabase/templates/recovery.html` into **Emails → Templates → Reset password** (the app asks for the 6-digit code).
+
+## 9. Platform owner (plans)
+
+The person who switches salon plans on is listed in `platform_admins`. After that person has signed up on the site,
+I add them once (`insert into platform_admins …` through the linked CLI). They then see **More → Salons & plans**.

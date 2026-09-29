@@ -34,7 +34,7 @@ export interface Owner {
 /** An owner with a set-up business, created the way the setup wizard does it. */
 export async function createOwner(
   mode: Mode,
-  opts: { vat?: boolean; openingCash?: number; businessName?: string } = {},
+  opts: { vat?: boolean; openingCash?: number; businessName?: string; plan?: boolean } = {},
 ): Promise<Owner> {
   const id = uid();
   const email = `owner-${id}@e2e.test`;
@@ -64,6 +64,11 @@ export async function createOwner(
   });
   if (rpcError) throw rpcError;
   const r = data as { business_id: string; branch_id: string; code: string };
+  // Salons need a paid plan to work (docs/06); flows about something else get one, the plan flow does not.
+  if (opts.plan !== false) {
+    const { error: planError } = await admin.from('subscriptions').upsert({ business_id: r.business_id, paid_until: '2099-12-31' });
+    if (planError) throw planError;
+  }
   return { email, password, name, client, businessId: r.business_id, branchId: r.branch_id, code: r.code };
 }
 
@@ -254,4 +259,14 @@ export async function sellCustom(
   });
   if (error) throw error;
   return data as { sale_id: string; number: number; total_minor: number };
+}
+
+/** Makes a signed-up user the platform owner (who switches plans on). */
+export async function makePlatformAdmin(email: string): Promise<void> {
+  const { data, error } = await admin.auth.admin.listUsers({ perPage: 1000 });
+  if (error) throw error;
+  const user = data.users.find((u) => u.email === email);
+  if (!user) throw new Error(`no user ${email}`);
+  const { error: insertError } = await admin.from('platform_admins').upsert({ user_id: user.id });
+  if (insertError) throw insertError;
 }

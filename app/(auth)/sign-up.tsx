@@ -9,6 +9,7 @@ import { signUpOwner } from '@/features/auth/api';
 import { AuthShell } from '@/features/auth/AuthShell';
 import { spacing } from '@/theme';
 import { Button, FormError, FormTextField } from '@/ui';
+import { GoogleButton } from '@/features/auth/GoogleButton';
 
 const schema = z
   .object({
@@ -34,6 +35,7 @@ export default function SignUp() {
   return (
     <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack>
       <View style={styles.form}>
+        <GoogleButton />
         <FormTextField control={form.control} name="name" label={t('auth.fields.yourName')} autoComplete="name" />
         <FormTextField
           control={form.control}
