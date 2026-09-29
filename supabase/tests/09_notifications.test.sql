@@ -55,7 +55,8 @@ select pg_temp.as_admin();
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080a', 'new_booking'), 1, 'the owner hears about a new booking');
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'new_booking'), 1, 'so does the cashier');
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080d', 'new_booking'), 0, 'staff do not');
-select is((select body from notifications where type = 'new_booking' limit 1) like 'Omar · %', true, 'the push text names the customer');
+select is((select body from notifications where type = 'new_booking' and business_id = current_setting('t.b')::uuid limit 1)
+  like 'Omar · %', true, 'the push text names the customer');
 
 -- ── Walk-in waiting too long (target 10 min) ─────────────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000080c');
