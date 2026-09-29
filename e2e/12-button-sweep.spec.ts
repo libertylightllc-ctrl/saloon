@@ -338,6 +338,7 @@ test('cashier and staff: their buttons work and none hit a permission error', { 
 test('accountant: reports and books work read-only', { tag: '@sweep' }, async ({ page, mode }) => {
   const owner = await createOwner(mode, { openingCash: 10_000 });
   const accountant = await createStaff(owner, 'accountant');
+  await createStaff(owner, 'staff', { name: SERVICE[mode].staff });
   await seed(owner, mode);
   await staffOn(page, mode, owner.code, accountant.username, accountant.password);
   const rows: Row[] = [];

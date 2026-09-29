@@ -161,3 +161,39 @@ Same two phones. Phone A = owner, phone B = the barber/stylist login from step 2
 3. (Push on the phones' lock screen needs the store/dev build — see docs/M3-HANDOVER.md, open items.)
 
 If anything does not match a ✅, note the step number and what you saw.
+
+---
+
+# M4 add-on: books, reports, settings and the shared counter phone (10 minutes)
+
+Same two phones. Phone A = owner, phone B = the cashier login.
+
+## 18 · Reports (3 min)
+
+1. A: More → **Reports** → ✅ **Monthly business** shows this month's sales, revenue, costs and result, a bar chart
+   of sales by day and the **Owner control summary** (latest close difference, owed to suppliers, low stock,
+   compliance issues).
+2. Tap **Staff sales**, **Daily closing**, **Stock movement**, **Cash shortage**, **Customer list** → ✅ each shows its
+   figures, chart and table; the arrows change the month.
+3. **Share PDF** → ✅ a PDF in the share sheet. **Export CSV** → ✅ a CSV file (opens in Excel / Sheets).
+
+## 19 · Close a month (2 min)
+
+1. A: More → **Accounts & history** → **Months** → ✅ each month with entries; only finished months have **Close**.
+2. Last month → **Close** → **Close the month** → ✅ **Closed**. (Nothing dated in that month can be saved now.)
+3. **Reopen** → a reason → ✅ **Open** again. **Export ledger CSV** → ✅ every journal line; debits = credits.
+
+## 20 · Receipt and backup settings (2 min)
+
+1. A: More → **Branch settings** → VAT → **Customer receipt** → **WhatsApp** → Save.
+2. B: sell a service to a customer with a phone number → **Send on WhatsApp** → ✅ WhatsApp opens with the receipt.
+3. A: More → **Backup & recovery** → **Download backup (ZIP)** → ✅ a ZIP with a CSV per list (sales, customers …).
+
+## 21 · Shared counter phone with PINs (3 min)
+
+1. B (cashier): More → **Quick-switch PIN** → a 4-digit PIN twice → Save. ✅ "PIN saved"; **Switch user** appears.
+2. **Switch user** → Someone else → the barber's username and password → Sign in → ✅ the barber is signed in.
+3. Barber: More → **Quick-switch PIN** → a PIN → **Switch user** → the cashier → a wrong PIN → ✅ "That PIN is not
+   right." → the right PIN → ✅ back as the cashier, no password typed.
+
+If anything does not match a ✅, note the step number and what you saw.
