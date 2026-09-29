@@ -116,6 +116,8 @@ export interface TypeStyle {
 }
 
 export const typeScale = {
+  /** Landing page headline only. */
+  hero: { fontSize: 36, lineHeight: 44, weight: 'bold' },
   display: { fontSize: 28, lineHeight: 36, weight: 'bold' },
   h1: { fontSize: 24, lineHeight: 32, weight: 'bold' },
   h2: { fontSize: 20, lineHeight: 28, weight: 'bold' },

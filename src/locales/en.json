@@ -521,6 +521,73 @@
       "resend": "Send a new code",
       "codeSent": "Code sent. Check your email.",
       "done": "Password changed. You are signed in."
+    },
+    "landing": {
+      "signIn": "Sign in",
+      "headline": "Run your salon from your phone",
+      "lead": "Walk-ins and bookings, quick sales, daily cash closing, staff pay and UAE compliance — one app for barber shops and ladies salons & spas.",
+      "create": "Create your salon — free",
+      "staffNote": "Owners create the salon. Staff sign in with the username the owner gives them.",
+      "choose": "Choose",
+      "facts": {
+        "languages": "English · العربية · हिन्दी · اردو",
+        "devices": "Phone, tablet and web",
+        "private": "Each salon's data is private"
+      },
+      "featuresTitle": "Everything the counter needs",
+      "featuresLead": "Built from how UAE salons really run a day — from the first walk-in to the closing count.",
+      "features": {
+        "queue": {
+          "title": "Walk-ins and bookings",
+          "body": "One live queue every phone sees within seconds, with deposits, no-shows and waiting-time alerts."
+        },
+        "sale": {
+          "title": "Quick sale and receipts",
+          "body": "Services and products, split payments, tips and 5% VAT; print, share or WhatsApp the receipt."
+        },
+        "closing": {
+          "title": "Daily cash closing",
+          "body": "Expected cash worked out for you; count the drawer, explain any difference, approve and lock the day."
+        },
+        "staff": {
+          "title": "Staff, attendance and pay",
+          "body": "Rosters, clock-in with late flags, commission, advances, payroll and WPS salary proof."
+        },
+        "compliance": {
+          "title": "UAE compliance",
+          "body": "Trade licence, Ejari, health cards and visas with expiry reminders, a hygiene log and an inspection binder."
+        },
+        "stock": {
+          "title": "Stock, suppliers and expenses",
+          "body": "Products and consumables, low-stock alerts, supplier bills and payments, receipt photos."
+        },
+        "reports": {
+          "title": "Books and reports",
+          "body": "Double-entry books, month close and six reports with PDF and CSV for your accountant."
+        },
+        "roles": {
+          "title": "The right access for everyone",
+          "body": "Owner, cashier, barber or stylist and accountant each see only what their job needs."
+        }
+      },
+      "typeTitle": "Which salon are you?",
+      "stepsTitle": "Up and running in minutes",
+      "steps": {
+        "1": "Create your salon: name, branch, opening hours and VAT.",
+        "2": "Add your services, prices and your team's logins.",
+        "3": "Take your first walk-in, sell, and close the day."
+      },
+      "contact": "Questions? Write to {{email}}",
+      "preview": {
+        "expected": "Expected cash today",
+        "queueLine": "{{n}} in the queue",
+        "fade": "Skin fade",
+        "blowDry": "Blow-dry",
+        "beard": "Beard trim",
+        "waiting": "waiting {{min}} min",
+        "inChair": "in the chair"
+      },
+      "about": "About {{app}}"
     }
   },
   "setup": {

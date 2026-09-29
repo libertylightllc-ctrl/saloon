@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
+import { brand } from '@/config/brand';
 import { rememberedSalonCode, rememberedSignInAs, signInOwner, signInStaff } from '@/features/auth/api';
 import { AuthShell } from '@/features/auth/AuthShell';
 import { useSession } from '@/features/auth/session';
@@ -56,6 +57,9 @@ export default function SignIn() {
       />
       {notice ? <FormError error={new AppError(notice)} testID="session-notice" /> : null}
       {who === 'owner' ? <OwnerForm /> : <StaffForm />}
+      <Link href="/welcome" asChild>
+        <Button label={t('auth.landing.about', { app: brand.appName })} variant="ghost" size="sm" icon="sparkles" testID="link-about" />
+      </Link>
     </AuthShell>
   );
 }
