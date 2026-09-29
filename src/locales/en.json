@@ -91,7 +91,9 @@
     "sale": "Sale",
     "customers": "Customers",
     "more": "More",
-    "pay": "My pay"
+    "pay": "My pay",
+    "reportsTab": "Reports",
+    "accountsTab": "Accounting"
   },
   "language": {
     "title": "Language",
@@ -333,7 +335,8 @@
     "lowStock": "Low stock: {{items}}",
     "products": "Products",
     "inStock": "{{qty}} in stock",
-    "noProducts": "No products for sale yet."
+    "noProducts": "No products for sale yet.",
+    "sendWhatsApp": "Send on WhatsApp"
   },
   "customers": {
     "subtitle": "Profiles, visits and notes.",
@@ -398,7 +401,10 @@
       "sales": "Sales",
       "team": "Team & logins",
       "branch": "Branch settings",
-      "accounts": "Accounts & history"
+      "accounts": "Accounts & history",
+      "backup": "Backup & recovery",
+      "pin": "Quick-switch PIN",
+      "switch": "Switch user"
     },
     "logOut": "Log out",
     "title": "More",
@@ -655,7 +661,12 @@
     "evidence_required": "A photo is required for the hygiene log.",
     "already_signed": "Today's hygiene log is already signed.",
     "already_requested": "A refund is already requested for this sale.",
-    "invalid_token": "This phone could not sign up for notifications."
+    "invalid_token": "This phone could not sign up for notifications.",
+    "not_balanced": "The books for that month do not balance. Check the trial balance first.",
+    "invalid_pin": "Use 4 digits that are not all the same or in a row.",
+    "pin_locked": "Too many wrong PINs. Try again in 5 minutes, or sign in with the password.",
+    "wrong_pin": "That PIN is not right.",
+    "switch_expired": "That person needs to sign in again with their password."
   },
   "sales": {
     "title": "Sales",
@@ -801,7 +812,14 @@
     "openingCashHint": "Cash in the drawer when you started using the app. Set once.",
     "openingCashDone": "Opening cash is recorded.",
     "setOpeningCash": "Save opening cash",
-    "openingCashSaved": "Opening cash saved"
+    "openingCashSaved": "Opening cash saved",
+    "receipt": "Customer receipt",
+    "receiptHint": "What the counter offers the customer after a sale.",
+    "receiptModes": {
+      "off": "None",
+      "simple": "Print / share",
+      "whatsapp": "WhatsApp"
+    }
   },
   "accounts": {
     "title": "Accounts & history",
@@ -884,6 +902,39 @@
       "staff_advance_reversal": "Reversed advances",
       "payroll": "Payroll",
       "payroll_payment": "Salaries paid"
+    },
+    "months": "Months",
+    "exportLedger": "Export ledger CSV",
+    "ledgerExported": "Ledger exported ({{count}} lines)",
+    "csv": {
+      "date": "Date",
+      "source": "Source",
+      "memo": "Memo",
+      "code": "Code",
+      "account": "Account"
+    },
+    "period": {
+      "title": "Close month",
+      "subtitle": "Lock a finished month so nothing more is posted into it",
+      "empty": "No postings yet.",
+      "entries": "Entries: {{count}}",
+      "closedBy": "Closed by {{name}} · {{date}}",
+      "status": {
+        "open": "Open",
+        "closed": "Closed"
+      },
+      "close": "Close",
+      "reopen": "Reopen",
+      "closeTitle": "Close {{month}}?",
+      "reopenTitle": "Reopen {{month}}",
+      "closeBody": "Nothing can be posted into this month after it is closed: no sales, costs or corrections dated in it. You can reopen it later with a reason.",
+      "reopenBody": "Reopening lets entries be posted into this month again. The reason is kept in the history.",
+      "reason": "Reason",
+      "confirmClose": "Close the month",
+      "confirmReopen": "Reopen the month",
+      "closedToast": "{{month}} is closed",
+      "reopenedToast": "{{month}} is open again",
+      "hint": "Only finished months can be closed. The books must balance."
     }
   },
   "settingUp": {
@@ -1480,5 +1531,141 @@
     "hint": "The owner gets a notification and refunds it from this sale.",
     "send": "Send request",
     "sent": "Request sent to the owner"
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Pick a report and a month",
+    "types": {
+      "monthly": "Monthly business",
+      "staff": "Staff sales",
+      "closing": "Daily closing",
+      "stock": "Stock movement",
+      "shortages": "Cash shortage",
+      "customers": "Customer list"
+    },
+    "kpi": {
+      "sales": "Sales",
+      "revenue": "Revenue (books)",
+      "costs": "Costs",
+      "result": "Result",
+      "services": "Services",
+      "commission": "Commission",
+      "tips": "Tips",
+      "daysClosed": "Days closed",
+      "difference": "Total difference",
+      "takenOut": "Taken out",
+      "items": "Items",
+      "stockValue": "Stock value",
+      "itemsOut": "Items used or sold",
+      "shortDays": "Short days",
+      "totalShort": "Total short",
+      "totalOver": "Total over",
+      "customers": "Customers",
+      "cameThisMonth": "Came this month",
+      "spentThisMonth": "Spent this month"
+    },
+    "chart": {
+      "salesByDay": "Sales by day",
+      "salesByPerson": "Sales by person",
+      "differenceByDay": "Cash difference by day",
+      "valueByItem": "Stock value by item",
+      "topCustomers": "Top customers this month"
+    },
+    "col": {
+      "date": "Date",
+      "sales": "Sales",
+      "services": "Services",
+      "refunds": "Refunds",
+      "expenses": "Expenses",
+      "person": "Person",
+      "revenue": "Revenue",
+      "commission": "Commission",
+      "tips": "Tips",
+      "days": "Days",
+      "daysWorked": "Days worked",
+      "lateDays": "Late days",
+      "status": "Status",
+      "expected": "Expected",
+      "counted": "Counted",
+      "difference": "Difference",
+      "by": "By",
+      "countedBy": "Counted by",
+      "approvedBy": "Approved by",
+      "reason": "Reason",
+      "item": "Item",
+      "kind": "Kind",
+      "unit": "Unit",
+      "start": "Start",
+      "in": "In",
+      "out": "Out",
+      "end": "End",
+      "value": "Value",
+      "customer": "Customer",
+      "phone": "Phone",
+      "visits": "Visits",
+      "lastVisit": "Last visit",
+      "spent": "Spent (all time)",
+      "thisMonth": "This month",
+      "visitsThisMonth": "Visits this month"
+    },
+    "status": {
+      "open": "Not closed",
+      "draft": "Draft",
+      "pending_approval": "Waiting for approval",
+      "approved": "Closed"
+    },
+    "empty": {
+      "monthly": "No sales or costs in this month.",
+      "staff": "No staff sales in this month.",
+      "closing": "No days in this month yet.",
+      "stock": "No stock items yet.",
+      "shortages": "No cash differences in this month.",
+      "customers": "No customers yet."
+    },
+    "daysLate": "{{days}} days · {{late}} late",
+    "print": "Print",
+    "printPdf": "Print / PDF",
+    "pdf": "Share PDF",
+    "csv": "Export CSV",
+    "generated": "Made {{at}}",
+    "control": {
+      "title": "Owner control summary",
+      "noClose": "No cash close yet",
+      "closeShort": "Last close {{date}}: short by {{amount}}",
+      "closeOver": "Last close {{date}}: over by {{amount}}",
+      "closeBalanced": "Last close {{date}}: balanced",
+      "suppliers": "Owed to suppliers: {{amount}}",
+      "lowItems": "Low on stock: {{count}}",
+      "compliance": "Compliance issues: {{count}}"
+    },
+    "moreRows": "Showing the first {{shown}} of {{total}} rows. The PDF and CSV have them all."
+  },
+  "backup": {
+    "title": "Backup & recovery",
+    "subtitle": "Keep a copy of everything",
+    "what": "Download all your data",
+    "body": "One ZIP file with every list as a spreadsheet (CSV): customers, services, sales, refunds, expenses, bills, stock, staff, attendance, payroll, cash closings, compliance, the ledger and the history.",
+    "keepSafe": "It holds your customers' phone numbers and your staff's pay. Keep it somewhere private.",
+    "download": "Download backup (ZIP)",
+    "progress": "Reading {{done}} of {{total}}…",
+    "done": "Backup ready ({{count}} files)",
+    "recovery": "Nothing financial is ever deleted in the app, so a mistake is corrected with a refund or a reversal, not by restoring a backup. The backup is your own copy, and what a new system would import."
+  },
+  "quickSwitch": {
+    "pinTitle": "Quick-switch PIN",
+    "pinHint": "On a shared counter phone, switch back to yourself with this PIN instead of your password.",
+    "pin": "New PIN (4 digits)",
+    "pinAgain": "The same PIN again",
+    "pinMismatch": "The two PINs are different.",
+    "savePin": "Save PIN",
+    "pinSaved": "PIN saved",
+    "switchTitle": "Switch user",
+    "enterPin": "{{name}}'s PIN",
+    "switch": "Switch",
+    "nobody": "Nobody else is signed in on this phone yet.",
+    "addTitle": "Someone else",
+    "addHint": "Sign them in once with their password; after they set a PIN, they switch with it.",
+    "login": "Username (or owner email)",
+    "signIn": "Sign in"
   }
 }

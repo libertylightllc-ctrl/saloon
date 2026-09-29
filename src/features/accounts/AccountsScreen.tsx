@@ -1,11 +1,11 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useWorkspace } from '@/features/auth/session';
-import { HeaderBand, Screen, SegmentTabs } from '@/ui';
+import { Button, HeaderBand, Screen, SegmentTabs } from '@/ui';
 
 import { HistoryTab } from './HistoryTab';
 import { JournalTab } from './JournalTab';
@@ -15,9 +15,10 @@ import { TrialBalanceTab } from './TrialBalanceTab';
 type Tab = 'overview' | 'journal' | 'balance' | 'history';
 const TABS: Tab[] = ['overview', 'journal', 'balance', 'history'];
 
-/** Owner and accountant: the calculations behind the numbers, the books and the history. Read-only. */
-export function AccountsScreen() {
+/** Owner and accountant: the calculations behind the numbers, the books and the history; Months closes a month. */
+export function AccountsScreen({ asTab = false }: { asTab?: boolean }) {
   const { t } = useTranslation();
+  const router = useRouter();
   const client = useQueryClient();
   const { business, branch } = useWorkspace();
   const params = useLocalSearchParams<{ tab?: string }>();
@@ -38,7 +39,21 @@ export function AccountsScreen() {
       refreshing={refreshing}
       onRefresh={() => void refresh()}
       header={
-        <HeaderBand title={t('accounts.title')} subtitle={t('accounts.subtitle')} onBack>
+        <HeaderBand
+          title={t('accounts.title')}
+          subtitle={t('accounts.subtitle')}
+          onBack={asTab ? undefined : true}
+          right={
+            <Button
+              label={t('accounts.months')}
+              icon="lock"
+              size="sm"
+              variant="secondary"
+              onPress={() => router.push('/accounts/close-period')}
+              testID="accounts-months"
+            />
+          }
+        >
           <SegmentTabs<Tab>
             items={TABS.map((key) => ({ key, label: t(`accounts.tabs.${key}`) }))}
             value={tab}

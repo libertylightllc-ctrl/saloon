@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 
+import { useWorkspace } from '@/features/auth/session';
 import type { SaleResult } from '@/features/sales/api';
 import { useShareReceipt } from '@/features/sales/useReceipt';
+import { useWhatsAppReceipt } from '@/features/sales/whatsappReceipt';
 import { formatMoney } from '@/lib/money';
 import { spacing } from '@/theme';
 import { BottomSheet, Button, FormError, StatusPill, SuccessCheck, Text } from '@/ui';
@@ -15,7 +17,11 @@ export function SaleDoneSheet({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const share = useShareReceipt();
+  const { branch } = useWorkspace();
+  const receiptMode = ((branch.settings ?? {}) as Record<string, unknown>).receipt_mode ?? 'simple';
+  const print = useShareReceipt();
+  const whatsapp = useWhatsAppReceipt();
+  const share = receiptMode === 'whatsapp' ? whatsapp : print;
   return (
     <BottomSheet open={sale !== null} onClose={onClose}>
       {sale ? (
@@ -40,10 +46,10 @@ export function SaleDoneSheet({
         </View>
       ) : null}
       <FormError error={share.error} />
-      {sale ? (
+      {sale && receiptMode !== 'off' ? (
         <Button
-          label={t(Platform.OS === 'web' ? 'sale.printReceipt' : 'sale.shareReceipt')}
-          icon={Platform.OS === 'web' ? 'printer' : 'share'}
+          label={t(receiptMode === 'whatsapp' ? 'sale.sendWhatsApp' : Platform.OS === 'web' ? 'sale.printReceipt' : 'sale.shareReceipt')}
+          icon={receiptMode === 'whatsapp' || Platform.OS !== 'web' ? 'share' : 'printer'}
           variant="secondary"
           loading={share.isPending}
           onPress={() => share.mutate(sale.sale_id)}

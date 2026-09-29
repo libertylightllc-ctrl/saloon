@@ -14,8 +14,16 @@ describe('tabsFor', () => {
     expect(tabsFor('staff', on)).toEqual(['index', 'queue', 'sale', 'pay', 'more']);
   });
 
-  it('keeps the accountant to Home and More in M1', () => {
-    expect(tabsFor('accountant', off)).toEqual(['index', 'more']);
+  it('gives the accountant Home, Reports, Accounting and More', () => {
+    expect(tabsFor('accountant', off)).toEqual(['index', 'reports-tab', 'accounts-tab', 'more']);
+  });
+
+  it('lets only the owner close a month or download a backup; the accountant reads reports', () => {
+    expect(can('accountant', 'viewReports')).toBe(true);
+    expect(can('cashier', 'viewReports')).toBe(false);
+    expect(can('accountant', 'closePeriod')).toBe(false);
+    expect(can('owner', 'closePeriod')).toBe(true);
+    expect(can('accountant', 'backup')).toBe(false);
   });
 });
 

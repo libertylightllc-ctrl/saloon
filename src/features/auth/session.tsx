@@ -11,6 +11,7 @@ import type { Tables } from '@/lib/database.types';
 import { errorCode, type ErrorCode } from '@/lib/errors';
 import type { BranchRules, Role } from '@/lib/permissions';
 import { queryClient } from '@/lib/queryClient';
+import { forget } from './quickSwitch';
 import { registeredPushToken } from '@/features/notifications/pushToken';
 import { supabase } from '@/lib/supabase';
 
@@ -84,6 +85,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
    */
   const generation = useRef(0);
   const currentUser = useRef<string | null>(null);
+  const currentMember = useRef<string | null>(null);
 
   const signOut = useCallback(async () => {
     // The audit row is sent with the current token; the local session is cleared right away so a
@@ -100,6 +102,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
           () => undefined,
         )
       : Promise.resolve();
+    // Signing out means leaving this device: it no longer offers a PIN switch to this person.
+    if (currentMember.current) await forget(currentMember.current).catch(() => undefined);
     await supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
     queryClient.clear();
     await Promise.all([logged, unregistered]);
@@ -167,6 +171,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   // Follow the branch (salon type, settings) and my own member row (disabled) live.
   const branchId = loaded.branch?.id;
   const memberId = loaded.member?.id;
+  useEffect(() => {
+    currentMember.current = memberId ?? null;
+  }, [memberId]);
   useEffect(() => {
     if (!branchId || !memberId) return;
     const channel = supabase

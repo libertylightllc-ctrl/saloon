@@ -52,6 +52,10 @@ const MATRIX = {
   viewCompliance: ['owner', 'cashier'],
   manageCompliance: ['owner'],
   signHygiene: ['owner', 'cashier'],
+  // Books & reports (01-PRODUCT §2): owner full, accountant reads and exports; only the owner closes a month.
+  viewReports: ['owner', 'accountant'],
+  closePeriod: ['owner'],
+  backup: ['owner'],
 } as const satisfies Record<string, readonly Role[]>;
 
 export type Capability = keyof typeof MATRIX;
@@ -62,7 +66,7 @@ export function can(role: Role | null | undefined, capability: Capability, rules
   return (MATRIX[capability] as readonly Role[]).includes(role);
 }
 
-export type TabKey = 'index' | 'queue' | 'sale' | 'customers' | 'pay' | 'more';
+export type TabKey = 'index' | 'queue' | 'sale' | 'customers' | 'pay' | 'reports-tab' | 'accounts-tab' | 'more';
 
 export function tabsFor(role: Role, rules: BranchRules): TabKey[] {
   const tabs: TabKey[] = ['index'];
@@ -71,6 +75,8 @@ export function tabsFor(role: Role, rules: BranchRules): TabKey[] {
   if (can(role, 'viewCustomers') && role !== 'accountant') tabs.push('customers');
   // Staff get "My pay" (03-SCREENS: Staff → Home, Queue, (Sale), My pay, More).
   if (role === 'staff') tabs.push('pay');
+  // Accountant → Home, Reports, Accounting, More.
+  if (role === 'accountant') tabs.push('reports-tab', 'accounts-tab');
   tabs.push('more');
   return tabs;
 }

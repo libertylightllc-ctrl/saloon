@@ -15,6 +15,7 @@ import {
   FormMoneyField,
   FormTextField,
   HeaderBand,
+  PillTabs,
   Screen,
   SectionHeader,
   SwitchRow,
@@ -45,6 +46,7 @@ const schema = z
     block_insufficient_stock: z.boolean(),
     late_grace_min: whole(0, 120),
     require_hygiene_evidence: z.boolean(),
+    receipt_mode: z.enum(['off', 'simple', 'whatsapp']),
   })
   .refine((v) => !v.vat_on || /^[0-9]{15}$/.test(v.trn), { path: ['trn'], message: 'validation.trn' });
 type Values = z.infer<typeof schema>;
@@ -74,6 +76,7 @@ export function BranchSettingsScreen() {
       block_insufficient_stock: settings.block_insufficient_stock === true,
       late_grace_min: String(settings.late_grace_min ?? 10),
       require_hygiene_evidence: settings.require_hygiene_evidence === true,
+      receipt_mode: (['off', 'simple', 'whatsapp'] as const).find((m) => m === settings.receipt_mode) ?? 'simple',
     },
   });
   const vatOn = useWatch({ control: form.control, name: 'vat_on' });
@@ -94,6 +97,7 @@ export function BranchSettingsScreen() {
           block_insufficient_stock: v.block_insufficient_stock,
           late_grace_min: Number(v.late_grace_min),
           require_hygiene_evidence: v.require_hygiene_evidence,
+          receipt_mode: v.receipt_mode,
         },
       },
       {
@@ -166,6 +170,22 @@ export function BranchSettingsScreen() {
           {vatOn ? (
             <FormTextField control={form.control} name="trn" label={t('branch.fields.trn')} keyboardType="number-pad" maxLength={15} />
           ) : null}
+          <Text variant="bodyStrong">{t('branch.receipt')}</Text>
+          <Text variant="small" color="textSecondary">
+            {t('branch.receiptHint')}
+          </Text>
+          <Controller
+            control={form.control}
+            name="receipt_mode"
+            render={({ field }) => (
+              <PillTabs<Values['receipt_mode']>
+                items={(['off', 'simple', 'whatsapp'] as const).map((key) => ({ key, label: t(`branch.receiptModes.${key}`) }))}
+                value={field.value}
+                onChange={field.onChange}
+                testID="branch-receipt"
+              />
+            )}
+          />
         </View>
 
         <View style={styles.section}>

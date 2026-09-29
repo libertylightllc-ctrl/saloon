@@ -15,6 +15,8 @@ export default function TabsLayout() {
     sale: { icon: 'receipt', label: t('tabs.sale'), prominent: true },
     customers: { icon: 'contact', label: t('tabs.customers') },
     pay: { icon: 'wallet', label: t('tabs.pay') },
+    'reports-tab': { icon: 'chart', label: t('tabs.reportsTab') },
+    'accounts-tab': { icon: 'calculator', label: t('tabs.accountsTab') },
     more: { icon: 'grid', label: t('tabs.more') },
   };
   const visible = Object.fromEntries(Object.entries(items).filter(([key]) => allowed.has(key as TabKey)));

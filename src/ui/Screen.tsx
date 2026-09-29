@@ -64,6 +64,8 @@ export function Screen({
     <View
       style={[
         styles.body,
+        // Not scrolling: the body is exactly the space left, so a list inside can scroll (and draw only what shows).
+        !scroll && styles.fill,
         sheet && {
           backgroundColor: theme.colors.surface,
           borderTopStartRadius: theme.radius.sheet,
@@ -150,6 +152,7 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   grow: { flexGrow: 1 },
   body: { flexGrow: 1, paddingHorizontal: screenPadding },
+  fill: { flex: 1, minHeight: 0 },
   footer: {
     paddingHorizontal: screenPadding,
     paddingTop: spacing.md,

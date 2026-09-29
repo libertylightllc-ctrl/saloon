@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { PinSheet, SwitchUserSheet } from '@/features/auth/QuickSwitchSheets';
+import { useHasPin } from '@/features/auth/quickSwitch';
 import { useSession, useWorkspace } from '@/features/auth/session';
 import { LanguageSheet } from '@/features/settings/LanguageSheet';
 import { LANGUAGES } from '@/lib/i18n';
@@ -16,6 +18,9 @@ export function MoreScreen() {
   const { signOut } = useSession();
   const { member, business, branch, role } = useWorkspace();
   const [language, setLanguage] = useState(false);
+  const [pinOpen, setPinOpen] = useState(false);
+  const [switchOpen, setSwitchOpen] = useState(false);
+  const hasPin = useHasPin(business.id);
   const [signingOut, setSigningOut] = useState(false);
 
   const business_rows = [
@@ -26,11 +31,13 @@ export function MoreScreen() {
     { key: 'purchases', icon: 'truck', href: '/purchases', show: can(role, 'viewPurchases') },
     { key: 'cashClosing', icon: 'banknote', href: '/cash-closing', show: can(role, 'viewClosing') },
     { key: 'accounts', icon: 'calculator', href: '/accounts', show: can(role, 'viewAccounting') },
+    { key: 'reports', icon: 'chart', href: '/reports', show: can(role, 'viewReports') },
     { key: 'staff', icon: 'users', href: '/staff', show: can(role, 'viewStaff') },
     { key: 'attendance', icon: 'clock', href: '/attendance', show: can(role, 'viewAttendance') },
     { key: 'compliance', icon: 'shield', href: '/compliance', show: can(role, 'viewCompliance') },
     { key: 'team', icon: 'userCheck', href: '/settings/team', show: can(role, 'manageUsers') },
     { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch') },
+    { key: 'backup', icon: 'archive', href: '/settings/backup', show: can(role, 'backup') },
   ] as const;
   const shown = business_rows.filter((r) => r.show);
 
@@ -78,6 +85,10 @@ export function MoreScreen() {
               onPress={() => setLanguage(true)}
               testID="more-language"
             />
+            <MenuRow icon="keyRound" index={1} label={t('more.rows.pin')} onPress={() => setPinOpen(true)} testID="more-pin" />
+            {hasPin.data ? (
+              <MenuRow icon="repeat" index={2} label={t('more.rows.switch')} onPress={() => setSwitchOpen(true)} testID="more-switch" />
+            ) : null}
             <MenuRow
               icon="logOut"
               danger
@@ -94,6 +105,8 @@ export function MoreScreen() {
         </View>
       </Screen>
       <LanguageSheet open={language} onClose={() => setLanguage(false)} />
+      <PinSheet open={pinOpen} onClose={() => setPinOpen(false)} />
+      <SwitchUserSheet open={switchOpen} onClose={() => setSwitchOpen(false)} />
     </>
   );
 }

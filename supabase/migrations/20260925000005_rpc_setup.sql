@@ -283,7 +283,8 @@ declare
   m members := public.require_member(p_branch, array['owner']::member_role[]);
   v_settings jsonb := coalesce(p -> 'settings', '{}'::jsonb);
   v_allowed text[] := array['waiting_target_min', 'cancel_cutoff_hours', 'default_deposit_minor',
-                            'staff_can_sell', 'block_insufficient_stock', 'late_grace_min', 'require_hygiene_evidence'];
+                            'staff_can_sell', 'block_insufficient_stock', 'late_grace_min', 'require_hygiene_evidence',
+                            'receipt_mode'];
   k text;
 begin
   for k in select jsonb_object_keys(v_settings) loop
@@ -291,6 +292,10 @@ begin
       raise exception 'unknown_setting: %', k using errcode = '22023';
     end if;
   end loop;
+  -- Customer receipt after a sale: none, a simple printed/shared receipt, or sent on WhatsApp.
+  if v_settings ? 'receipt_mode' and not (v_settings ->> 'receipt_mode' = any (array['off', 'simple', 'whatsapp'])) then
+    raise exception 'unknown_setting: receipt_mode' using errcode = '22023';
+  end if;
   if p ? 'vat_mode' and p ->> 'vat_mode' = 'on'
      and coalesce(btrim(p ->> 'trn'), (select trn from branches where id = p_branch), '') !~ '^[0-9]{15}$' then
     raise exception 'trn_required' using errcode = '22023';

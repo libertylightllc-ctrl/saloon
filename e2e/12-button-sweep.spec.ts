@@ -1,5 +1,5 @@
 /**
- * Button sweep: every visible button on every screen (M1 and the M2 money and stock screens), in both modes and for each role.
+ * Button sweep: every visible button on every screen (M1–M4), in both modes and for each role.
  * Each tap must do something the person can see — navigate, open a sheet, change the screen,
  * or show a validation message — never nothing, never a crash, never an unbuilt route, never a
  * permission error. Deliberately disabled buttons are listed with their state.
@@ -102,19 +102,25 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
   // "Choose photo" opens the device's own photo picker, which a headless browser does not draw.
   let picker = false;
   const onChooser = () => (picker = true);
+  // Exports (CSV, backup ZIP) arrive as a download on the web.
+  let downloaded = '';
+  const onDownload = (d: { suggestedFilename: () => string }) => (downloaded = d.suggestedFilename());
   page.on('pageerror', onError);
   page.on('filechooser', onChooser);
+  page.on('download', onDownload);
   await target
     .click({ timeout: 5_000, ...(backdrop ? { position: { x: 12, y: 12 } } : {}) })
     .catch((e: Error) => errors.push(`click: ${e.message.split('\n')[0]}`));
   await page.waitForTimeout(900);
   page.off('pageerror', onError);
   page.off('filechooser', onChooser);
+  page.off('download', onDownload);
 
   const after = await perceivable(page);
   const text = after.text;
   if (errors.length) return { ok: false, result: `ERROR ${errors[0]}` };
   if (picker) return { ok: true, result: 'opens the photo picker' };
+  if (downloaded) return { ok: true, result: `downloads ${downloaded}` };
   if (/Unmatched Route|This screen doesn't exist|doesn't exist/i.test(text)) return { ok: false, result: 'leads to an unbuilt route' };
   if (/Your role cannot do this|Something went wrong/.test(text) && !/Your role cannot do this|Something went wrong/.test(before.text))
     return { ok: false, result: 'shows an error' };
@@ -264,6 +270,15 @@ test('owner: every button on every screen does something visible', { tag: '@swee
     ['Compliance · WPS & Montaji', '/compliance?tab=wps'],
     ['Compliance record', '/compliance/doc?type=trade_licence&branch=' + s.branchId],
     ['Notifications', '/notifications'],
+    // M4
+    ['Reports', '/reports'],
+    ['Reports · staff sales', '/reports?type=staff'],
+    ['Reports · daily closing', '/reports?type=closing'],
+    ['Reports · stock', '/reports?type=stock'],
+    ['Reports · cash shortage', '/reports?type=shortages'],
+    ['Reports · customers', '/reports?type=customers'],
+    ['Close month', '/accounts/close-period'],
+    ['Backup & recovery', '/settings/backup'],
   ];
   for (const [screen, url, prepare] of screens) await sweepScreen(page, rows, screen, url, prepare);
   report(mode, 'owner', rows);
@@ -318,4 +333,27 @@ test('cashier and staff: their buttons work and none hit a permission error', { 
   report(mode, 'staff', staffRows);
 
   expect([...rows, ...staffRows].filter((r) => !r.ok), 'buttons that failed').toEqual([]);
+});
+
+test('accountant: reports and books work read-only', { tag: '@sweep' }, async ({ page, mode }) => {
+  const owner = await createOwner(mode, { openingCash: 10_000 });
+  const accountant = await createStaff(owner, 'accountant');
+  await seed(owner, mode);
+  await staffOn(page, mode, owner.code, accountant.username, accountant.password);
+  const rows: Row[] = [];
+  for (const [screen, url] of [
+    ['Home', '/'],
+    ['Reports tab', '/reports-tab'],
+    ['Reports · customers', '/reports?type=customers'],
+    ['Accounting tab', '/accounts-tab'],
+    ['Close month', '/accounts/close-period'],
+    ['More', '/more'],
+    ['Expenses', '/expenses'],
+    ['Purchases', '/purchases'],
+    ['Staff & payroll', '/staff'],
+    ['Payroll', '/payroll'],
+  ] as const)
+    await sweepScreen(page, rows, screen, url);
+  report(mode, 'accountant', rows);
+  expect(rows.filter((r) => !r.ok), 'buttons that failed').toEqual([]);
 });

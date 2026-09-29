@@ -1,4 +1,6 @@
-import { AppError, errorCode, errorDetail } from './errors';
+import en from '@/locales/en.json';
+
+import { AppError, ERROR_CODES, errorCode, errorDetail } from './errors';
 
 describe('errorCode', () => {
   it('reads RPC codes with and without detail', () => {
@@ -28,5 +30,12 @@ describe('errorCode', () => {
     expect(errorCode({ message: 'permission denied for table services', code: '42501' })).toBe('not_allowed');
     expect(errorCode(new Error('something odd'))).toBe('unknown');
     expect(errorCode(new AppError('unknown_salon'))).toBe('unknown_salon');
+  });
+});
+
+describe('error messages', () => {
+  it('every error code has an English message', () => {
+    const messages = en.errors as Record<string, string>;
+    expect(ERROR_CODES.filter((code) => !messages[code])).toEqual([]);
   });
 });
