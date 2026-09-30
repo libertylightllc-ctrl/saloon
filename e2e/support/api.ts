@@ -98,7 +98,12 @@ export async function createStaff(
       commission_bps: opts.commissionBps ?? (role === 'staff' ? 1000 : 0),
     },
   });
-  if (error) throw error;
+  if (error) {
+    // Name the server's answer (status and error code), not just "non-2xx".
+    const response = (error as { context?: Response }).context;
+    const body = response ? await response.text().catch(() => '') : '';
+    throw new Error(`create-staff-login answered ${response?.status ?? '?'} ${body}`);
+  }
   return { username, password, name, memberId: (data as { member_id: string }).member_id };
 }
 
