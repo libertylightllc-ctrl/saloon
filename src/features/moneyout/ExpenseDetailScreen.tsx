@@ -50,6 +50,7 @@ export function ExpenseDetailScreen() {
                   {formatMoney(e.amount_minor)}
                 </Text>
                 {e.status === 'reversed' ? <StatusPill status="reversed" /> : null}
+                {e.vat_minor > 0 ? <Row label={t('expenses.vatAmount')} value={formatMoney(e.vat_minor)} /> : null}
                 <Row label={t('expenses.category')} value={name(e.expense_categories)} />
                 <Row label={t('expenses.paidBy')} value={t(`expenses.methods.${e.method}`)} />
                 <Row label={t('expenses.date')} value={dates.day(e.business_date, 'EEE d MMM yyyy')} />

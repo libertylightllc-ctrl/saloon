@@ -81,12 +81,18 @@ export function BillDetailScreen() {
                   {b.purchase_bill_lines.map((l) => (
                     <Row
                       key={l.id}
-                      label={`${Number(l.qty)} × ${l.description}${l.update_stock ? ` · ${t('purchases.inStock')}` : ''}`}
+                      label={`${Number(l.qty)}${l.inventory_items && l.inventory_items.unit !== 'pcs' ? ` ${t(`units.one.${l.inventory_items.unit as 'pcs'}`)}` : ' ×'} ${l.description}${l.update_stock ? ` · ${t('purchases.inStock')}` : ''}`}
                       value={formatMoney(l.total_minor)}
                     />
                   ))}
                 </Card>
                 <Card variant="outlined" style={styles.card}>
+                  {b.vat_minor > 0 ? (
+                    <>
+                      <Row label={t('purchases.net')} value={formatMoney(b.total_minor - b.vat_minor)} />
+                      <Row label={t('purchases.vat')} value={formatMoney(b.vat_minor)} testID="bill-detail-vat" />
+                    </>
+                  ) : null}
                   <Row label={t('purchases.total')} value={formatMoney(b.total_minor)} strong testID="bill-detail-total" />
                   <Row label={t('purchases.paid')} value={formatMoney(b.paid_minor)} testID="bill-detail-paid" />
                   {b.status !== 'reversed' ? <Row label={t('purchases.left')} value={formatMoney(left)} testID="bill-detail-left" /> : null}

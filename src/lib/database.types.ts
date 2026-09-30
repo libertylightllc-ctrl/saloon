@@ -950,6 +950,7 @@ export type Database = {
           reversed_at: string | null;
           reversed_by: string | null;
           status: string;
+          vat_minor: number;
         };
         Insert: {
           amount_minor: number;
@@ -969,6 +970,7 @@ export type Database = {
           reversed_at?: string | null;
           reversed_by?: string | null;
           status?: string;
+          vat_minor?: number;
         };
         Update: {
           amount_minor?: number;
@@ -988,6 +990,7 @@ export type Database = {
           reversed_at?: string | null;
           reversed_by?: string | null;
           status?: string;
+          vat_minor?: number;
         };
         Relationships: [
           {
@@ -1866,6 +1869,7 @@ export type Database = {
           status: string;
           supplier_id: string;
           total_minor: number;
+          vat_minor: number;
         };
         Insert: {
           bill_date: string;
@@ -1887,6 +1891,7 @@ export type Database = {
           status?: string;
           supplier_id: string;
           total_minor: number;
+          vat_minor?: number;
         };
         Update: {
           bill_date?: string;
@@ -1908,6 +1913,7 @@ export type Database = {
           status?: string;
           supplier_id?: string;
           total_minor?: number;
+          vat_minor?: number;
         };
         Relationships: [
           {
@@ -2599,7 +2605,7 @@ export type Database = {
           business_id: string;
           category_id: string;
           created_at: string;
-          duration_min: number;
+          duration_min: number | null;
           id: string;
           name: string;
           price_minor: number;
@@ -2613,7 +2619,7 @@ export type Database = {
           business_id: string;
           category_id: string;
           created_at?: string;
-          duration_min: number;
+          duration_min?: number | null;
           id?: string;
           name: string;
           price_minor: number;
@@ -2627,7 +2633,7 @@ export type Database = {
           business_id?: string;
           category_id?: string;
           created_at?: string;
-          duration_min?: number;
+          duration_min?: number | null;
           id?: string;
           name?: string;
           price_minor?: number;
@@ -3422,6 +3428,15 @@ export type Database = {
           qty_out: number;
           unit: string;
           value_minor: number;
+        }[];
+      };
+      report_vat: {
+        Args: { p_branch: string; p_month: string };
+        Returns: {
+          entries: number;
+          kind: string;
+          taxable_minor: number;
+          vat_minor: number;
         }[];
       };
       request_plan: {

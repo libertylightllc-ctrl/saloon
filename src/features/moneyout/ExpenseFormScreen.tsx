@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { VAT_BPS } from '@/features/sale/basket';
+import { vatFromInclusive } from '@/lib/money';
 import { businessDate, shiftBusinessDate } from '@/lib/dates';
 import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
@@ -16,6 +18,7 @@ import {
   FormError,
   HeaderBand,
   MoneyInput,
+  SwitchRow,
   QueryState,
   Screen,
   SegmentTabs,
@@ -61,10 +64,15 @@ export function ExpenseFormScreen() {
   const [clientRef] = useState(() => Crypto.randomUUID());
   const [newCategory, setNewCategory] = useState<string | null>(null);
 
-  const ready = Boolean(amount && amount > 0 && categoryId);
+  // VAT inside what was paid (5/105 of it), from a tax invoice; only for a VAT-registered salon; editable.
+  const vatRegistered = branch.vat_mode === 'on';
+  const [withVat, setWithVat] = useState(false);
+  const [vatEdited, setVatEdited] = useState<number | null>(null);
+  const vat = vatRegistered && withVat && amount ? (vatEdited ?? vatFromInclusive(amount, VAT_BPS)) : 0;
+  const ready = Boolean(amount && amount > 0 && categoryId) && vat < (amount ?? 0);
   const save = () =>
     record.mutate(
-      { category_id: categoryId!, amount_minor: amount!, method, business_date: date, note: note.trim() || null, client_ref: clientRef },
+      { category_id: categoryId!, amount_minor: amount!, vat_minor: vat, method, business_date: date, note: note.trim() || null, client_ref: clientRef },
       {
         // The photo goes up once the expense exists; if it fails the expense stays and the photo can be added later.
         onSuccess: async (r) => {
@@ -91,6 +99,12 @@ export function ExpenseFormScreen() {
       >
         <View style={styles.body}>
           <MoneyInput label={t('expenses.amount')} value={amount} onChange={setAmount} testID="expense-amount" />
+          {vatRegistered ? (
+            <View style={styles.vat}>
+              <SwitchRow label={t('expenses.withVat')} hint={t('expenses.withVatHint')} value={withVat} onChange={setWithVat} testID="expense-with-vat" />
+              {withVat ? <MoneyInput label={t('expenses.vatAmount')} value={vat} onChange={setVatEdited} testID="expense-vat" /> : null}
+            </View>
+          ) : null}
           <Section title={t('expenses.category')}>
             <QueryState query={categories}>
               {(rows) => (
@@ -163,6 +177,7 @@ export function ExpenseFormScreen() {
 }
 
 const styles = StyleSheet.create({
+  vat: { gap: spacing.sm },
   body: { gap: spacing.xl },
   section: { gap: spacing.sm },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },

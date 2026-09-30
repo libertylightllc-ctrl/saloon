@@ -7,7 +7,7 @@ import type { TFunction } from 'i18next';
 import type { CsvCell } from '@/lib/exportFile';
 import { formatAmount, formatBps, formatMoney, sum } from '@/lib/money';
 
-import type { ReportData } from './api';
+import type { ReportData, VatRow } from './api';
 
 export interface ReportKpi {
   key: string;
@@ -184,7 +184,32 @@ export function buildReport(report: ReportData, { t, day }: Helpers): ReportView
         empty: R('empty.customers'),
       };
     }
+    case 'vat':
+      return vatReport(report.data, R);
   }
+}
+
+/** Output VAT (sales less refunds), input VAT (purchases and expenses) and what is due for the month. */
+function vatReport(rows: VatRow[], R: (key: string, values?: Record<string, unknown>) => string): ReportView {
+  const vatOf = (kinds: VatRow['kind'][]) => sum(rows.filter((r) => kinds.includes(r.kind)).map((r) => r.vat_minor));
+  const output = vatOf(['sales', 'refunds']);
+  const input = vatOf(['purchases', 'expenses']);
+  const due = output - input;
+  return {
+    kpis: [
+      { key: 'output', label: R('kpi.vatOutput'), value: formatMoney(output) },
+      { key: 'input', label: R('kpi.vatInput'), value: formatMoney(input) },
+      { key: 'due', label: R(due >= 0 ? 'kpi.vatDue' : 'kpi.vatRefund'), value: formatMoney(Math.abs(due)) },
+    ],
+    chart: { title: R('chart.vatByKind'), money: true, bars: rows.map((r) => ({ label: R(`vatKinds.${r.kind}`), value: r.vat_minor })) },
+    columns: [{ label: R('col.kind') }, { label: R('col.entries'), numeric: true }, { label: R('col.taxable'), numeric: true }, { label: R('col.vat'), numeric: true }],
+    rows: rows.map((r) => ({
+      id: r.kind,
+      cells: [R(`vatKinds.${r.kind}`), String(r.entries), formatMoney(r.taxable_minor), formatMoney(r.vat_minor)],
+      csv: [R(`vatKinds.${r.kind}`), r.entries, csvMoney(r.taxable_minor), csvMoney(r.vat_minor)],
+    })),
+    empty: R('empty.vat'),
+  };
 }
 
 /** CSV header row: the CSV sometimes carries more columns than the screen (reasons, both names, kind). */
@@ -203,5 +228,7 @@ export function csvHeader(type: ReportData['type'], t: TFunction): string[] {
       return [C('date'), C('status'), C('difference'), C('reason'), C('countedBy'), C('approvedBy')];
     case 'customers':
       return [C('customer'), C('phone'), C('visits'), C('lastVisit'), C('spent'), C('visitsThisMonth'), C('thisMonth')];
+    case 'vat':
+      return [C('kind'), C('entries'), C('taxable'), C('vat')];
   }
 }

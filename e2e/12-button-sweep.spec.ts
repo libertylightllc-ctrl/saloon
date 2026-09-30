@@ -278,6 +278,7 @@ test('owner: every button on every screen does something visible', { tag: '@swee
     ['Reports · stock', '/reports?type=stock'],
     ['Reports · cash shortage', '/reports?type=shortages'],
     ['Reports · customers', '/reports?type=customers'],
+    ['Reports · VAT', '/reports?type=vat'],
     ['Close month', '/accounts/close-period'],
     ['Backup & recovery', '/settings/backup'],
     ['Plan & billing', '/plan'],

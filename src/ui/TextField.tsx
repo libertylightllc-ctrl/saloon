@@ -1,8 +1,10 @@
 import { useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
 import { semantic, spacing, useTheme } from '@/theme';
 
+import { IconButton } from './IconButton';
 import { START_ALIGN, Text, useFontFamily } from './Text';
 
 export interface TextFieldProps extends TextInputProps {
@@ -14,7 +16,10 @@ export interface TextFieldProps extends TextInputProps {
   end?: ReactNode;
 }
 
-/** Label above, 48 high, focus ring in primary400, error text below. */
+/**
+ * Label above, 48 high, focus ring in primary400, error text below. A secret field (password, PIN) gets an eye
+ * button that shows or hides what was typed.
+ */
 export function TextField({
   label,
   error,
@@ -24,11 +29,15 @@ export function TextField({
   onFocus,
   onBlur,
   style,
+  secureTextEntry,
+  testID,
   ...input
 }: TextFieldProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
   const font = useFontFamily();
   const [focused, setFocused] = useState(false);
+  const [revealed, setRevealed] = useState(false);
   const borderColor = error
     ? semantic.error.main
     : focused
@@ -72,8 +81,20 @@ export function TextField({
             setFocused(false);
             onBlur?.(e);
           }}
+          secureTextEntry={secureTextEntry && !revealed}
+          testID={testID}
           {...input}
         />
+        {secureTextEntry ? (
+          <IconButton
+            icon={revealed ? 'eyeOff' : 'eye'}
+            variant="plain"
+            size={32}
+            accessibilityLabel={t(revealed ? 'common.hidePassword' : 'common.showPassword')}
+            onPress={() => setRevealed(!revealed)}
+            testID={testID ? `${testID}-reveal` : undefined}
+          />
+        ) : null}
         {end}
       </View>
       {error ? (

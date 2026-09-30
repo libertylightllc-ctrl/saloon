@@ -30,7 +30,9 @@
     "new": "نیا",
     "retry": "دوبارہ کوشش کریں",
     "save": "محفوظ کریں",
-    "close": "بند کریں"
+    "close": "بند کریں",
+    "showPassword": "پاس ورڈ دکھائیں",
+    "hidePassword": "پاس ورڈ چھپائیں"
   },
   "status": {
     "booked": "بک شدہ",
@@ -475,7 +477,13 @@
     "ml": "ملی لیٹر",
     "g": "گرام",
     "pcs": "عدد",
-    "pairs": "جوڑا"
+    "pairs": "جوڑا",
+    "one": {
+      "pcs": "عدد",
+      "ml": "ml",
+      "g": "g",
+      "pairs": "جوڑا"
+    }
   },
   "auth": {
     "salonType": {
@@ -766,7 +774,8 @@
       "refunded": "ریفنڈ شدہ"
     },
     "restock": "چیزیں واپس اسٹاک میں رکھیں",
-    "restockHint": "صرف جب پوری فروخت واپس ہو اور چیزیں دوبارہ بک سکیں۔"
+    "restockHint": "صرف جب پوری فروخت واپس ہو اور چیزیں دوبارہ بک سکیں۔",
+    "by": "{{name}} نے کیا"
   },
   "receipt": {
     "receipt": "رسید",
@@ -778,7 +787,8 @@
     "paid": "ادا",
     "refunded": "ریفنڈ",
     "trn": "TRN",
-    "thanks": "تشریف آوری کا شکریہ۔"
+    "thanks": "تشریف آوری کا شکریہ۔",
+    "staff": "خدمت کی"
   },
   "services": {
     "title": "سروسز",
@@ -808,7 +818,8 @@
       "patchTest": "پہلے پیچ ٹیسٹ ضروری",
       "recipe": "استعمال ہونے والی پروڈکٹس",
       "recipeHint": "ہر فروخت انہیں اسٹاک سے کم کرتی ہے۔",
-      "categoryName": "کیٹیگری کا نام"
+      "categoryName": "کیٹیگری کا نام",
+      "durationOptional": "اختیاری"
     },
     "recipeEmpty": "ابھی کوئی پروڈکٹ نہیں۔",
     "newItem": "نئی پروڈکٹ",
@@ -1067,7 +1078,10 @@
       "staff_accommodation": "عملے کی رہائش",
       "staff_welfare": "عملے کی بہبود",
       "other": "دیگر"
-    }
+    },
+    "withVat": "بل میں VAT (5%) شامل ہے",
+    "withVatHint": "ٹیکس انوائس سے۔ آپ اسے اپنے VAT ریٹرن میں واپس لے سکتے ہیں۔",
+    "vatAmount": "شامل VAT"
   },
   "purchases": {
     "title": "خریداری اور سپلائرز",
@@ -1129,7 +1143,15 @@
       "partial": "جزوی ادا",
       "paid": "ادا شدہ",
       "reversed": "واپس شدہ"
-    }
+    },
+    "lineAmount": "ادا کی گئی رقم",
+    "perUnit": "= {{amount}} فی {{unit}}",
+    "perUnitAbout": "≈ {{amount}} فی {{unit}}",
+    "withVat": "سپلائر نے VAT (5%) لیا",
+    "withVatHint": "ان کی ٹیکس انوائس سے۔ آپ اسے اپنے VAT ریٹرن میں واپس لے سکتے ہیں۔",
+    "vatAmount": "اس بل پر VAT",
+    "vat": "VAT",
+    "net": "VAT سے پہلے"
   },
   "closing": {
     "title": "کیش کلوزنگ",
@@ -1617,7 +1639,8 @@
       "closing": "روزانہ کلوزنگ",
       "stock": "اسٹاک کی نقل و حرکت",
       "shortages": "نقد کمی",
-      "customers": "گاہکوں کی فہرست"
+      "customers": "گاہکوں کی فہرست",
+      "vat": "VAT"
     },
     "kpi": {
       "sales": "فروخت",
@@ -1638,14 +1661,19 @@
       "totalOver": "کل زیادتی",
       "customers": "گاہک",
       "cameThisMonth": "اس مہینے آئے",
-      "spentThisMonth": "اس مہینے خرچ"
+      "spentThisMonth": "اس مہینے خرچ",
+      "vatOutput": "وصول شدہ VAT",
+      "vatInput": "ادا شدہ VAT (قابلِ واپسی)",
+      "vatDue": "واجب الادا VAT",
+      "vatRefund": "واپس ملنے والا VAT"
     },
     "chart": {
       "salesByDay": "دن کے حساب سے فروخت",
       "salesByPerson": "فرد کے حساب سے فروخت",
       "differenceByDay": "دن کے حساب سے نقد فرق",
       "valueByItem": "آئٹم کے حساب سے اسٹاک مالیت",
-      "topCustomers": "اس مہینے کے بہترین گاہک"
+      "topCustomers": "اس مہینے کے بہترین گاہک",
+      "vatByKind": "قسم کے لحاظ سے VAT"
     },
     "col": {
       "date": "تاریخ",
@@ -1682,7 +1710,10 @@
       "lastVisit": "آخری دورہ",
       "spent": "خرچ (کل)",
       "thisMonth": "اس مہینے",
-      "visitsThisMonth": "اس مہینے دورے"
+      "visitsThisMonth": "اس مہینے دورے",
+      "entries": "اندراجات",
+      "taxable": "VAT کے بغیر رقم",
+      "vat": "VAT"
     },
     "status": {
       "open": "بند نہیں",
@@ -1696,7 +1727,8 @@
       "closing": "اس مہینے ابھی کوئی دن نہیں۔",
       "stock": "ابھی کوئی اسٹاک آئٹم نہیں۔",
       "shortages": "اس مہینے کوئی نقد فرق نہیں۔",
-      "customers": "ابھی کوئی گاہک نہیں۔"
+      "customers": "ابھی کوئی گاہک نہیں۔",
+      "vat": "اس مہینے کوئی VAT نہیں۔ برانچ VAT رجسٹرڈ ہو تو VAT درج ہوتا ہے (برانچ سیٹنگز)۔"
     },
     "daysLate": "{{days}} دن · {{late}} تاخیر",
     "print": "پرنٹ",
@@ -1714,7 +1746,13 @@
       "lowItems": "کم اسٹاک والے آئٹمز: {{count}}",
       "compliance": "تعمیل کے مسائل: {{count}}"
     },
-    "moreRows": "{{total}} میں سے پہلی {{shown}} سطریں دکھائی جا رہی ہیں۔ PDF اور CSV میں سب ہیں۔"
+    "moreRows": "{{total}} میں سے پہلی {{shown}} سطریں دکھائی جا رہی ہیں۔ PDF اور CSV میں سب ہیں۔",
+    "vatKinds": {
+      "sales": "فروخت (آؤٹ پٹ VAT)",
+      "refunds": "رقم واپسی",
+      "purchases": "سپلائر بل (ان پٹ VAT)",
+      "expenses": "اخراجات (ان پٹ VAT)"
+    }
   },
   "backup": {
     "title": "بیک اپ اور بحالی",

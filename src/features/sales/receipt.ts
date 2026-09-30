@@ -7,6 +7,7 @@ import { escapeHtml as escape, sharePdf } from '@/lib/exportFile';
 import { formatMoney } from '@/lib/money';
 
 import type { SaleDetail } from './api';
+import { staffNames } from './staff';
 
 export interface ReceiptContext {
   businessName: string;
@@ -25,6 +26,7 @@ export interface ReceiptContext {
     title: string;
     sale: string;
     customer: string;
+    staff: string;
     subtotal: string;
     discount: string;
     vat: string;
@@ -63,7 +65,8 @@ export function receiptHtml(sale: SaleDetail, ctx: ReceiptContext): string {
 ${ctx.trn ? `<div class="muted">${escape(L.trn)} ${escape(ctx.trn)}</div>` : ''}
 <p><strong>${escape(L.title)}</strong> · ${escape(L.sale)} #${sale.number}<br>
 <span class="muted">${formatAt(sale.created_at, ctx.timeZone, 'dd MMM yyyy HH:mm', ctx.language)}</span>
-${sale.customer_name ? `<br>${escape(L.customer)}: ${escape(sale.customer_name)}` : ''}</p>
+${sale.customer_name ? `<br>${escape(L.customer)}: ${escape(sale.customer_name)}` : ''}
+${staffNames(sale) ? `<br>${escape(L.staff)}: ${escape(staffNames(sale))}` : ''}</p>
 <table>${lines}
 ${row(L.subtotal, formatMoney(sale.subtotal_minor))}
 ${sale.discount_minor ? row(L.discount, formatMoney(-sale.discount_minor)) : ''}

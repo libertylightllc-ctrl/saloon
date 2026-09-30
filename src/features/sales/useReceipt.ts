@@ -6,7 +6,7 @@ import { isLanguage, isRtlLanguage } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/theme';
 
-import type { SaleDetail } from './api';
+import { SALE_WITH_STAFF, type SaleDetail } from './api';
 import { receiptHtml, shareReceipt } from './receipt';
 
 /** Loads the sale and shares (phones) or prints (web) its receipt. */
@@ -18,7 +18,7 @@ export function useShareReceipt() {
     mutationFn: async (saleId: string) => {
       const { data, error } = await supabase
         .from('sales')
-        .select('*, sale_lines(*), sale_payments(*), refunds(*)')
+        .select(SALE_WITH_STAFF)
         .eq('id', saleId)
         .single();
       if (error) throw error;
@@ -39,6 +39,7 @@ export function useShareReceipt() {
           title: t(sale.vat_mode === 'on' ? 'receipt.taxInvoice' : 'receipt.receipt'),
           sale: t('receipt.sale'),
           customer: t('sale.customer'),
+          staff: t('receipt.staff'),
           subtotal: t('sale.subtotal'),
           discount: t('sale.discount'),
           vat: t('receipt.vatIncluded'),

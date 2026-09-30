@@ -8,7 +8,7 @@ import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { EmptyState, HeaderBand, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
-import { useRecentSales, type Sale } from './api';
+import { staffNames, useRecentSales, type Sale } from './api';
 
 export function SalesScreen() {
   const { t } = useTranslation();
@@ -45,7 +45,9 @@ export function SalesScreen() {
                     testID={`sale-row-${s.number}`}
                     title={t('sales.number', { number: s.number })}
                     meta={[
-                      [dates.at(new Date(s.created_at), business.timezone, 'HH:mm'), s.customer_name ?? t('queue.guest')].join(' · '),
+                      [dates.at(new Date(s.created_at), business.timezone, 'HH:mm'), s.customer_name ?? t('queue.guest'), staffNames(s)]
+                        .filter(Boolean)
+                        .join(' · '),
                     ]}
                     badges={s.status !== 'completed' ? <StatusPill status="reversed" label={t(`sales.status.${s.status}`)} /> : undefined}
                     trailing={

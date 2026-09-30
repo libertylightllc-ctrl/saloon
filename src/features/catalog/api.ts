@@ -56,7 +56,8 @@ export interface ServiceInput {
   category_id: string;
   name: string;
   price_minor: number;
-  duration_min: number;
+  /** Minutes, or null when the service has no set time. */
+  duration_min: number | null;
   buffer_min: number;
   requires_room: boolean;
   requires_patch_test: boolean;

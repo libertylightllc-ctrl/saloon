@@ -36,12 +36,14 @@ export function ServiceTile({
           <Text variant="bodyStrong" weight="semibold" numberOfLines={2}>
             {service.name}
           </Text>
-          <View style={styles.duration}>
-            <Icon name="clock" size={12} color={theme.colors.textSecondary} />
-            <Text variant="small" color="textSecondary">
-              {t('common.minutes', { n: service.duration_min })}
-            </Text>
-          </View>
+          {service.duration_min !== null ? (
+            <View style={styles.duration}>
+              <Icon name="clock" size={12} color={theme.colors.textSecondary} />
+              <Text variant="small" color="textSecondary">
+                {t('common.minutes', { n: service.duration_min })}
+              </Text>
+            </View>
+          ) : null}
         </View>
       </View>
       {recipe ? (

@@ -69,4 +69,29 @@ describe('buildReport', () => {
     );
     expect(customers.rows[0]!.csv.length).toBe(csvHeader('customers', t).length);
   });
+
+  it('vat: output less input is what is due; more input than output is money back', () => {
+    const view = buildReport(
+      {
+        type: 'vat',
+        data: [
+          { kind: 'sales', entries: 3, taxable_minor: 60_000, vat_minor: 3_000 },
+          { kind: 'refunds', entries: 1, taxable_minor: -2_000, vat_minor: -100 },
+          { kind: 'purchases', entries: 1, taxable_minor: 4_500, vat_minor: 225 },
+          { kind: 'expenses', entries: 1, taxable_minor: 10_000, vat_minor: 500 },
+        ],
+      },
+      { t, day },
+    );
+    expect(view.kpis.map((k) => [k.key, k.label.split(':')[0], k.value])).toEqual([
+      ['output', 'reports.kpi.vatOutput', 'AED 29.00'],
+      ['input', 'reports.kpi.vatInput', 'AED 7.25'],
+      ['due', 'reports.kpi.vatDue', 'AED 21.75'],
+    ]);
+    expect(view.rows[1]!.csv).toEqual(['reports.vatKinds.refunds:{}', 1, '-20.00', '-1.00']);
+    expect(view.rows[0]!.csv.length).toBe(csvHeader('vat', t).length);
+
+    const refund = buildReport({ type: 'vat', data: [{ kind: 'purchases', entries: 1, taxable_minor: 4_500, vat_minor: 225 }] }, { t, day });
+    expect(refund.kpis[2]).toMatchObject({ label: 'reports.kpi.vatRefund:{}', value: 'AED 2.25' });
+  });
 });

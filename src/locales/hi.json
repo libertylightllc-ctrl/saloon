@@ -30,7 +30,9 @@
     "new": "नया",
     "retry": "फिर कोशिश करें",
     "save": "सेव करें",
-    "close": "बंद करें"
+    "close": "बंद करें",
+    "showPassword": "पासवर्ड दिखाएँ",
+    "hidePassword": "पासवर्ड छिपाएँ"
   },
   "status": {
     "booked": "बुक",
@@ -475,7 +477,13 @@
     "ml": "ml",
     "g": "g",
     "pcs": "पीस",
-    "pairs": "जोड़ी"
+    "pairs": "जोड़ी",
+    "one": {
+      "pcs": "पीस",
+      "ml": "ml",
+      "g": "g",
+      "pairs": "जोड़ी"
+    }
   },
   "auth": {
     "salonType": {
@@ -766,7 +774,8 @@
       "refunded": "रिफंड हुआ"
     },
     "restock": "उत्पाद वापस स्टॉक में रखें",
-    "restockHint": "तभी जब पूरी बिक्री लौटाई जाए और उत्पाद फिर बिक सकें।"
+    "restockHint": "तभी जब पूरी बिक्री लौटाई जाए और उत्पाद फिर बिक सकें।",
+    "by": "{{name}} द्वारा"
   },
   "receipt": {
     "receipt": "रसीद",
@@ -778,7 +787,8 @@
     "paid": "भुगतान",
     "refunded": "रिफंड",
     "trn": "TRN",
-    "thanks": "आने के लिए धन्यवाद।"
+    "thanks": "आने के लिए धन्यवाद।",
+    "staff": "सेवा दी"
   },
   "services": {
     "title": "सर्विस",
@@ -808,7 +818,8 @@
       "patchTest": "पहले पैच टेस्ट ज़रूरी",
       "recipe": "इस्तेमाल होने वाले प्रोडक्ट",
       "recipeHint": "हर बिक्री इन्हें स्टॉक से घटाती है।",
-      "categoryName": "कैटेगरी का नाम"
+      "categoryName": "कैटेगरी का नाम",
+      "durationOptional": "वैकल्पिक"
     },
     "recipeEmpty": "अभी कोई प्रोडक्ट नहीं।",
     "newItem": "नया प्रोडक्ट",
@@ -1067,7 +1078,10 @@
       "staff_accommodation": "स्टाफ़ आवास",
       "staff_welfare": "स्टाफ़ कल्याण",
       "other": "अन्य"
-    }
+    },
+    "withVat": "बिल में VAT (5%) शामिल है",
+    "withVatHint": "टैक्स इनवॉइस से। आप इसे अपने VAT रिटर्न में वापस ले सकते हैं।",
+    "vatAmount": "शामिल VAT"
   },
   "purchases": {
     "title": "ख़रीद और सप्लायर",
@@ -1129,7 +1143,15 @@
       "partial": "आंशिक भुगतान",
       "paid": "भुगतान हुआ",
       "reversed": "रिवर्स"
-    }
+    },
+    "lineAmount": "भुगतान की राशि",
+    "perUnit": "= {{amount}} प्रति {{unit}}",
+    "perUnitAbout": "≈ {{amount}} प्रति {{unit}}",
+    "withVat": "सप्लायर ने VAT (5%) लिया",
+    "withVatHint": "उनके टैक्स इनवॉइस से। आप इसे अपने VAT रिटर्न में वापस ले सकते हैं।",
+    "vatAmount": "इस बिल पर VAT",
+    "vat": "VAT",
+    "net": "VAT से पहले"
   },
   "closing": {
     "title": "कैश क्लोज़िंग",
@@ -1617,7 +1639,8 @@
       "closing": "दैनिक क्लोज़िंग",
       "stock": "स्टॉक आवाजाही",
       "shortages": "नकद कमी",
-      "customers": "ग्राहक सूची"
+      "customers": "ग्राहक सूची",
+      "vat": "VAT"
     },
     "kpi": {
       "sales": "बिक्री",
@@ -1638,14 +1661,19 @@
       "totalOver": "कुल अधिक",
       "customers": "ग्राहक",
       "cameThisMonth": "इस महीने आए",
-      "spentThisMonth": "इस महीने खर्च"
+      "spentThisMonth": "इस महीने खर्च",
+      "vatOutput": "वसूला गया VAT",
+      "vatInput": "चुकाया VAT (वापसी योग्य)",
+      "vatDue": "देय VAT",
+      "vatRefund": "वापस मिलने वाला VAT"
     },
     "chart": {
       "salesByDay": "दिन के हिसाब से बिक्री",
       "salesByPerson": "व्यक्ति के हिसाब से बिक्री",
       "differenceByDay": "दिन के हिसाब से नकद अंतर",
       "valueByItem": "आइटम के हिसाब से स्टॉक मूल्य",
-      "topCustomers": "इस महीने के शीर्ष ग्राहक"
+      "topCustomers": "इस महीने के शीर्ष ग्राहक",
+      "vatByKind": "प्रकार अनुसार VAT"
     },
     "col": {
       "date": "तारीख",
@@ -1682,7 +1710,10 @@
       "lastVisit": "आख़िरी विज़िट",
       "spent": "ख़र्च (कुल)",
       "thisMonth": "इस महीने",
-      "visitsThisMonth": "इस महीने विज़िट"
+      "visitsThisMonth": "इस महीने विज़िट",
+      "entries": "प्रविष्टियाँ",
+      "taxable": "VAT के बिना राशि",
+      "vat": "VAT"
     },
     "status": {
       "open": "बंद नहीं",
@@ -1696,7 +1727,8 @@
       "closing": "इस महीने अभी कोई दिन नहीं।",
       "stock": "अभी कोई स्टॉक आइटम नहीं।",
       "shortages": "इस महीने कोई नकद अंतर नहीं।",
-      "customers": "अभी कोई ग्राहक नहीं।"
+      "customers": "अभी कोई ग्राहक नहीं।",
+      "vat": "इस महीने कोई VAT नहीं। ब्रांच VAT-पंजीकृत होने पर VAT दर्ज होता है (ब्रांच सेटिंग्स)।"
     },
     "daysLate": "{{days}} दिन · {{late}} देर",
     "print": "प्रिंट",
@@ -1714,7 +1746,13 @@
       "lowItems": "कम स्टॉक वाले आइटम: {{count}}",
       "compliance": "अनुपालन समस्याएँ: {{count}}"
     },
-    "moreRows": "{{total}} में से पहली {{shown}} पंक्तियाँ दिख रही हैं। PDF और CSV में सब हैं।"
+    "moreRows": "{{total}} में से पहली {{shown}} पंक्तियाँ दिख रही हैं। PDF और CSV में सब हैं।",
+    "vatKinds": {
+      "sales": "बिक्री (आउटपुट VAT)",
+      "refunds": "रिफ़ंड",
+      "purchases": "सप्लायर बिल (इनपुट VAT)",
+      "expenses": "ख़र्च (इनपुट VAT)"
+    }
   },
   "backup": {
     "title": "बैकअप और रिकवरी",

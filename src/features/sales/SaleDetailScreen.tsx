@@ -10,7 +10,7 @@ import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Button, Card, FormError, HeaderBand, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
-import { useSale } from './api';
+import { staffNames, useSale } from './api';
 import { RefundRequest } from './RefundRequest';
 import { RefundSheet } from './RefundSheet';
 import { useShareReceipt } from './useReceipt';
@@ -64,16 +64,19 @@ export function SaleDetailScreen() {
                     label={t(`sales.status.${sale.status}`)}
                   />
                   <Text color="textSecondary" style={styles.flex}>
-                    {[sale.customer_name ?? t('queue.guest'), sale.employees?.full_name].filter(Boolean).join(' · ')}
+                    {[sale.customer_name ?? t('queue.guest'), staffNames(sale)].filter(Boolean).join(' · ')}
                   </Text>
                 </View>
                 <Card variant="outlined" style={styles.card}>
                   {sale.sale_lines.map((l) => (
-                    <Row
-                      key={l.id}
-                      label={`${Number(l.qty)} × ${l.name_snapshot}`}
-                      value={formatMoney(Math.round(l.unit_price_minor * Number(l.qty)))}
-                    />
+                    <View key={l.id} style={styles.line}>
+                      <Row label={`${Number(l.qty)} × ${l.name_snapshot}`} value={formatMoney(Math.round(l.unit_price_minor * Number(l.qty)))} />
+                      {l.employees?.full_name ? (
+                        <Text variant="small" color="textSecondary" testID="sale-line-staff">
+                          {t('sales.by', { name: l.employees.full_name })}
+                        </Text>
+                      ) : null}
+                    </View>
                   ))}
                 </Card>
                 <Card variant="outlined" style={styles.card}>
@@ -138,4 +141,5 @@ const styles = StyleSheet.create({
   card: { gap: spacing.sm },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   flex: { flex: 1 },
+  line: { gap: 2 },
 });

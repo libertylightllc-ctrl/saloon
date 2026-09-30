@@ -106,7 +106,7 @@ export function ServicesScreen() {
                       leading={<Thumb icon={category.icon as IconName} index={ci} size={44} />}
                       title={s.name}
                       meta={[
-                        t('common.minutes', { n: s.duration_min }),
+                        ...(s.duration_min !== null ? [t('common.minutes', { n: s.duration_min })] : []),
                         ...(s.recipe.length ? [recipeText(s.recipe, t)] : []),
                       ]}
                       badges={

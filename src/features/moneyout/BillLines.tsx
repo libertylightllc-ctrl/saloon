@@ -13,12 +13,16 @@ export interface LineDraft {
   description: string;
   unit?: string;
   qty: string;
-  unit_cost_minor: number | null;
+  /** What was paid for the whole line (100 ml → AED 45.00), as on the supplier's invoice. */
+  amount_minor: number | null;
   update_stock: boolean;
 }
 
-export const lineTotal = (l: LineDraft) => Math.round((Number(l.qty) || 0) * (l.unit_cost_minor ?? 0));
-export const lineValid = (l: LineDraft) => l.description.trim().length > 0 && Number(l.qty) > 0 && l.unit_cost_minor !== null;
+export const lineTotal = (l: LineDraft) => l.amount_minor ?? 0;
+export const lineValid = (l: LineDraft) => l.description.trim().length > 0 && Number(l.qty) > 0 && l.amount_minor !== null;
+
+/** The cost of one unit (one ml, one piece), shown so the owner can check it: may be a fraction of a fil. */
+export const unitCost = (l: LineDraft): number | null => (Number(l.qty) > 0 && l.amount_minor !== null ? l.amount_minor / Number(l.qty) : null);
 
 /** What was bought: stock items (added to stock at their cost) or anything else ("Delivery", "Towels"). */
 export function BillLines({ items, value, onChange }: { items: InventoryItem[]; value: LineDraft[]; onChange: (lines: LineDraft[]) => void }) {
@@ -60,13 +64,21 @@ export function BillLines({ items, value, onChange }: { items: InventoryItem[]; 
             </View>
             <View style={styles.flex}>
               <MoneyInput
-                label={t('purchases.unitCost')}
-                value={l.unit_cost_minor}
-                onChange={(unit_cost_minor) => update(l.key, { unit_cost_minor })}
-                testID={`bill-line-cost-${i}`}
+                label={t('purchases.lineAmount')}
+                value={l.amount_minor}
+                onChange={(amount_minor) => update(l.key, { amount_minor })}
+                testID={`bill-line-amount-${i}`}
               />
             </View>
           </View>
+          {unitCost(l) !== null && Number(l.qty) !== 1 ? (
+            <Text variant="small" color="textSecondary" testID={`bill-line-unit-${i}`}>
+              {t(Number.isInteger(unitCost(l)) ? 'purchases.perUnit' : 'purchases.perUnitAbout', {
+                amount: formatMoney(Math.round(unitCost(l)!)),
+                unit: l.unit ? t(`units.one.${l.unit as 'pcs'}`) : t('units.one.pcs'),
+              })}
+            </Text>
+          ) : null}
           <View style={styles.row}>
             {l.item_id ? (
               <View style={styles.flex}>
@@ -91,7 +103,7 @@ export function BillLines({ items, value, onChange }: { items: InventoryItem[]; 
               icon="package"
               label={item.name}
               onPress={() => {
-                onChange([...value, { key: `${item.id}-${value.length}`, item_id: item.id, description: item.name, unit: item.unit, qty: '', unit_cost_minor: null, update_stock: true }]);
+                onChange([...value, { key: `${item.id}-${value.length}`, item_id: item.id, description: item.name, unit: item.unit, qty: '', amount_minor: null, update_stock: true }]);
                 setPicking(false);
               }}
               testID={`bill-item-${item.name}`}
@@ -106,7 +118,7 @@ export function BillLines({ items, value, onChange }: { items: InventoryItem[]; 
           icon="plus"
           variant="secondary"
           size="sm"
-          onPress={() => onChange([...value, { key: `other-${value.length}-${Date.now()}`, description: '', qty: '1', unit_cost_minor: null, update_stock: false }])}
+          onPress={() => onChange([...value, { key: `other-${value.length}-${Date.now()}`, description: '', qty: '1', amount_minor: null, update_stock: false }])}
           testID="bill-add-other"
         />
       </View>

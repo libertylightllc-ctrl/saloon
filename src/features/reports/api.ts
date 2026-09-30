@@ -5,7 +5,7 @@ import type { Database } from '@/lib/database.types';
 import type { MonthKey } from '@/lib/dates';
 import { supabase } from '@/lib/supabase';
 
-export const REPORT_TYPES = ['monthly', 'staff', 'closing', 'stock', 'shortages', 'customers'] as const;
+export const REPORT_TYPES = ['monthly', 'staff', 'closing', 'stock', 'shortages', 'customers', 'vat'] as const;
 export type ReportType = (typeof REPORT_TYPES)[number];
 
 export interface MonthlyDay {
@@ -76,13 +76,22 @@ export interface CustomerRow {
   month_spent_minor: number;
 }
 
+/** One kind of VAT entry for the month: output (sales, refunds) or input (purchases, expenses). */
+export interface VatRow {
+  kind: 'sales' | 'refunds' | 'purchases' | 'expenses';
+  entries: number;
+  taxable_minor: number;
+  vat_minor: number;
+}
+
 export type ReportData =
   | { type: 'monthly'; data: MonthlyReport }
   | { type: 'staff'; data: StaffRow[] }
   | { type: 'closing'; data: ClosingRow[] }
   | { type: 'stock'; data: StockRow[] }
   | { type: 'shortages'; data: ShortageRow[] }
-  | { type: 'customers'; data: CustomerRow[] };
+  | { type: 'customers'; data: CustomerRow[] }
+  | { type: 'vat'; data: VatRow[] };
 
 type Functions = Database['public']['Functions'];
 type Returned<F extends keyof Functions> = Functions[F]['Returns'] extends (infer R)[] ? R : never;
@@ -167,6 +176,18 @@ async function fetchReport(type: ReportType, businessId: string, branchId: strin
       return {
         type,
         data: (data ?? []).map((r) => ({ ...r, spent_minor: num(r.spent_minor), month_spent_minor: num(r.month_spent_minor) })),
+      };
+    }
+    case 'vat': {
+      const data = await allRows('report_vat', args);
+      return {
+        type,
+        data: data.map((r) => ({
+          kind: r.kind as VatRow['kind'],
+          entries: Number(r.entries),
+          taxable_minor: num(r.taxable_minor),
+          vat_minor: num(r.vat_minor),
+        })),
       };
     }
   }

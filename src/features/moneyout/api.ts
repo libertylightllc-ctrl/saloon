@@ -24,6 +24,7 @@ export interface Expense {
   id: string;
   business_date: string;
   amount_minor: number;
+  vat_minor: number;
   method: PayMethod;
   note: string | null;
   status: 'posted' | 'reversed';
@@ -69,7 +70,7 @@ export function useExpenses(branchId: string, businessId: string, from: Business
     queryFn: async (): Promise<Expense[]> => {
       const { data, error } = await supabase
         .from('expenses')
-        .select('id, business_date, amount_minor, method, note, status, reverse_reason, receipt_path, created_at, category_id, expense_categories(name, key, icon), members!expenses_created_by_fkey(display_name)')
+        .select('id, business_date, amount_minor, vat_minor, method, note, status, reverse_reason, receipt_path, created_at, category_id, expense_categories(name, key, icon), members!expenses_created_by_fkey(display_name)')
         .eq('branch_id', branchId)
         .gte('business_date', from)
         .lte('business_date', to)
@@ -88,7 +89,7 @@ export function useExpense(businessId: string, id: string | undefined) {
     queryFn: async (): Promise<Expense> => {
       const { data, error } = await supabase
         .from('expenses')
-        .select('id, business_date, amount_minor, method, note, status, reverse_reason, receipt_path, created_at, category_id, expense_categories(name, key, icon), members!expenses_created_by_fkey(display_name)')
+        .select('id, business_date, amount_minor, vat_minor, method, note, status, reverse_reason, receipt_path, created_at, category_id, expense_categories(name, key, icon), members!expenses_created_by_fkey(display_name)')
         .eq('id', id!)
         .single();
       if (error) throw error;
@@ -100,6 +101,8 @@ export function useExpense(businessId: string, id: string | undefined) {
 export interface ExpenseInput {
   category_id: string;
   amount_minor: number;
+  /** The VAT inside amount_minor, from a tax invoice (VAT-registered salons only). */
+  vat_minor?: number;
   method: PayMethod;
   business_date: BusinessDate;
   note: string | null;
@@ -208,15 +211,25 @@ export interface Bill {
   receipt_path: string | null;
   supplier_id: string;
   suppliers: { name: string } | null;
+  /** Input VAT on the bill (included in total_minor). */
+  vat_minor: number;
 }
 
 export interface BillDetail extends Bill {
-  purchase_bill_lines: { id: string; description: string; qty: number; unit_cost_minor: number; total_minor: number; update_stock: boolean }[];
+  purchase_bill_lines: {
+    id: string;
+    description: string;
+    qty: number;
+    unit_cost_minor: number;
+    total_minor: number;
+    update_stock: boolean;
+    inventory_items: { unit: string } | null;
+  }[];
   supplier_payments: { id: string; business_date: string; method: PayMethod; amount_minor: number; created_at: string }[];
 }
 
 const BILL_FIELDS =
-  'id, number, invoice_ref, bill_date, due_date, total_minor, paid_minor, status, note, reverse_reason, receipt_path, supplier_id, suppliers(name)';
+  'id, number, invoice_ref, bill_date, due_date, total_minor, vat_minor, paid_minor, status, note, reverse_reason, receipt_path, supplier_id, suppliers(name)';
 
 export function useBills(businessId: string) {
   return useQuery({
@@ -242,7 +255,7 @@ export function useBill(businessId: string, id: string | undefined) {
     queryFn: async (): Promise<BillDetail> => {
       const { data, error } = await supabase
         .from('purchase_bills')
-        .select(`${BILL_FIELDS}, purchase_bill_lines(id, description, qty, unit_cost_minor, total_minor, update_stock), supplier_payments(id, business_date, method, amount_minor, created_at)`)
+        .select(`${BILL_FIELDS}, purchase_bill_lines(id, description, qty, unit_cost_minor, total_minor, update_stock, inventory_items(unit)), supplier_payments(id, business_date, method, amount_minor, created_at)`)
         .eq('id', id!)
         .single();
       if (error) throw error;
@@ -255,7 +268,8 @@ export interface BillLineInput {
   item_id?: string;
   description: string;
   qty: number;
-  unit_cost_minor: number;
+  /** What was paid for the line; the database works out the cost per unit. */
+  total_minor: number;
   update_stock: boolean;
 }
 
@@ -265,6 +279,8 @@ export interface BillInput {
   bill_date: BusinessDate;
   note: string | null;
   lines: BillLineInput[];
+  /** Input VAT on the supplier's tax invoice (VAT-registered salons only). */
+  vat_minor?: number;
   paid_now?: { method: PayMethod; amount_minor: number };
   client_ref: string;
 }

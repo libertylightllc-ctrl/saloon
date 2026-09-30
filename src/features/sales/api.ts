@@ -3,15 +3,22 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { keys } from '@/features/live/useLiveSync';
 import type { Tables } from '@/lib/database.types';
 import { asJson, supabase } from '@/lib/supabase';
+import type { StaffName } from './staff';
 
 export type PaymentMethod = 'cash' | 'card' | 'wallet';
-export type Sale = Tables<'sales'>;
-export type SaleDetail = Sale & {
-  sale_lines: Tables<'sale_lines'>[];
+
+export { staffNames } from './staff';
+/** A sale in the list, with who did the work (the sale's person and each line's). */
+export type Sale = Tables<'sales'> & { employees: StaffName; sale_lines: { employees: StaffName }[] };
+export type SaleDetail = Tables<'sales'> & {
+  sale_lines: (Tables<'sale_lines'> & { employees: StaffName })[];
   sale_payments: Tables<'sale_payments'>[];
   refunds: Tables<'refunds'>[];
-  employees: Pick<Tables<'employees'>, 'full_name'> | null;
+  employees: StaffName;
 };
+
+/** The select for a sale with its staff (sales has two links to employees: the person and the tip). */
+export const SALE_WITH_STAFF = '*, sale_lines(*, employees(full_name)), sale_payments(*), refunds(*), employees!sales_employee_id_fkey(full_name)';
 
 export interface SaleLineInput {
   kind: 'service' | 'retail' | 'custom';
@@ -67,12 +74,12 @@ export function useRecentSales(branchId: string) {
     queryFn: async (): Promise<Sale[]> => {
       const { data, error } = await supabase
         .from('sales')
-        .select('*')
+        .select('*, employees!sales_employee_id_fkey(full_name), sale_lines(employees(full_name))')
         .eq('branch_id', branchId)
         .order('created_at', { ascending: false })
         .limit(60);
       if (error) throw error;
-      return data;
+      return data as unknown as Sale[];
     },
   });
 }
@@ -84,7 +91,7 @@ export function useSale(saleId: string | undefined) {
     queryFn: async (): Promise<SaleDetail> => {
       const { data, error } = await supabase
         .from('sales')
-        .select('*, sale_lines(*), sale_payments(*), refunds(*), employees!sales_employee_id_fkey(full_name)')
+        .select(SALE_WITH_STAFF)
         .eq('id', saleId!)
         .single();
       if (error) throw error;

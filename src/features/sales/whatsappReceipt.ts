@@ -9,7 +9,7 @@ import { Linking } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { supabase } from '@/lib/supabase';
 
-import type { SaleDetail } from './api';
+import { SALE_WITH_STAFF, type SaleDetail } from './api';
 import { receiptText, waNumber } from './whatsappText';
 
 export function useWhatsAppReceipt() {
@@ -19,7 +19,7 @@ export function useWhatsAppReceipt() {
     mutationFn: async (saleId: string) => {
       const { data, error } = await supabase
         .from('sales')
-        .select('*, sale_lines(*), sale_payments(*), refunds(*), customers(phone)')
+        .select(`${SALE_WITH_STAFF}, customers(phone)`)
         .eq('id', saleId)
         .single();
       if (error) throw error;
@@ -30,6 +30,7 @@ export function useWhatsAppReceipt() {
         {
           title: t(sale.vat_mode === 'on' ? 'receipt.taxInvoice' : 'receipt.receipt'),
           sale: t('receipt.sale'),
+          staff: t('receipt.staff'),
           vat: t('receipt.vatIncluded'),
           tip: t('sale.tip'),
           total: t('receipt.total'),

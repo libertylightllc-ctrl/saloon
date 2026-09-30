@@ -59,7 +59,7 @@ export function NewAppointmentScreen() {
   const employees = useEmployees(branch.id);
   const services = (catalog.data?.services ?? []).filter((s) => s.status === 'active');
   const chosen = services.filter((s) => serviceIds.includes(s.id));
-  const duration = sum(chosen.map((s) => s.duration_min + s.buffer_min)) || 30;
+  const duration = sum(chosen.map((s) => (s.duration_min ?? 0) + s.buffer_min)) || 30;
   const needsRoom = branch.mode === 'ladies' && chosen.some((s) => s.requires_room);
   const rooms = useRooms(branch.id, needsRoom);
   const booking = kind === 'booking';

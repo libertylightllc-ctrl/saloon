@@ -29,7 +29,9 @@
     "new": "New",
     "retry": "Try again",
     "save": "Save",
-    "close": "Close"
+    "close": "Close",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "status": {
     "booked": "Booked",
@@ -474,7 +476,13 @@
     "ml": "ml",
     "g": "g",
     "pcs": "pc",
-    "pairs": "pr"
+    "pairs": "pr",
+    "one": {
+      "pcs": "piece",
+      "ml": "ml",
+      "g": "g",
+      "pairs": "pair"
+    }
   },
   "auth": {
     "salonType": {
@@ -765,7 +773,8 @@
       "refunded": "Refunded"
     },
     "restock": "Put the products back in stock",
-    "restockHint": "Only when the whole sale is refunded and the products can be sold again."
+    "restockHint": "Only when the whole sale is refunded and the products can be sold again.",
+    "by": "by {{name}}"
   },
   "receipt": {
     "receipt": "Receipt",
@@ -777,7 +786,8 @@
     "paid": "Paid",
     "refunded": "Refunded",
     "trn": "TRN",
-    "thanks": "Thank you for visiting."
+    "thanks": "Thank you for visiting.",
+    "staff": "Served by"
   },
   "services": {
     "title": "Services",
@@ -807,7 +817,8 @@
       "patchTest": "Needs a patch test first",
       "recipe": "Products used",
       "recipeHint": "Each sale takes these out of stock.",
-      "categoryName": "Category name"
+      "categoryName": "Category name",
+      "durationOptional": "Optional"
     },
     "recipeEmpty": "No products yet.",
     "newItem": "New product",
@@ -1066,7 +1077,10 @@
       "staff_accommodation": "Staff Accommodation",
       "staff_welfare": "Staff Welfare",
       "other": "Other"
-    }
+    },
+    "withVat": "The bill includes VAT (5%)",
+    "withVatHint": "From a tax invoice. You can claim it back in your VAT return.",
+    "vatAmount": "VAT included"
   },
   "purchases": {
     "title": "Purchases & suppliers",
@@ -1128,7 +1142,15 @@
       "partial": "Part paid",
       "paid": "Paid",
       "reversed": "Reversed"
-    }
+    },
+    "lineAmount": "Amount paid",
+    "perUnit": "= {{amount}} per {{unit}}",
+    "perUnitAbout": "≈ {{amount}} per {{unit}}",
+    "withVat": "The supplier charged VAT (5%)",
+    "withVatHint": "From their tax invoice. You can claim it back in your VAT return.",
+    "vatAmount": "VAT on this bill",
+    "vat": "VAT",
+    "net": "Before VAT"
   },
   "closing": {
     "title": "Cash closing",
@@ -1616,7 +1638,8 @@
       "closing": "Daily closing",
       "stock": "Stock movement",
       "shortages": "Cash shortage",
-      "customers": "Customer list"
+      "customers": "Customer list",
+      "vat": "VAT"
     },
     "kpi": {
       "sales": "Sales",
@@ -1637,14 +1660,19 @@
       "totalOver": "Total over",
       "customers": "Customers",
       "cameThisMonth": "Came this month",
-      "spentThisMonth": "Spent this month"
+      "spentThisMonth": "Spent this month",
+      "vatOutput": "VAT collected",
+      "vatInput": "VAT paid (claimable)",
+      "vatDue": "VAT to pay",
+      "vatRefund": "VAT to get back"
     },
     "chart": {
       "salesByDay": "Sales by day",
       "salesByPerson": "Sales by person",
       "differenceByDay": "Cash difference by day",
       "valueByItem": "Stock value by item",
-      "topCustomers": "Top customers this month"
+      "topCustomers": "Top customers this month",
+      "vatByKind": "VAT by kind"
     },
     "col": {
       "date": "Date",
@@ -1681,7 +1709,10 @@
       "lastVisit": "Last visit",
       "spent": "Spent (all time)",
       "thisMonth": "This month",
-      "visitsThisMonth": "Visits this month"
+      "visitsThisMonth": "Visits this month",
+      "entries": "Entries",
+      "taxable": "Amount without VAT",
+      "vat": "VAT"
     },
     "status": {
       "open": "Not closed",
@@ -1695,7 +1726,8 @@
       "closing": "No days in this month yet.",
       "stock": "No stock items yet.",
       "shortages": "No cash differences in this month.",
-      "customers": "No customers yet."
+      "customers": "No customers yet.",
+      "vat": "No VAT this month. VAT is recorded when the branch is VAT-registered (Branch settings)."
     },
     "daysLate": "{{days}} days · {{late}} late",
     "print": "Print",
@@ -1713,7 +1745,13 @@
       "lowItems": "Low on stock: {{count}}",
       "compliance": "Compliance issues: {{count}}"
     },
-    "moreRows": "Showing the first {{shown}} of {{total}} rows. The PDF and CSV have them all."
+    "moreRows": "Showing the first {{shown}} of {{total}} rows. The PDF and CSV have them all.",
+    "vatKinds": {
+      "sales": "Sales (output VAT)",
+      "refunds": "Refunds",
+      "purchases": "Supplier bills (input VAT)",
+      "expenses": "Expenses (input VAT)"
+    }
   },
   "backup": {
     "title": "Backup & recovery",

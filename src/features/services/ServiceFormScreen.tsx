@@ -37,7 +37,8 @@ const schema = z.object({
   name: z.string().trim().min(1, 'validation.required').max(60, 'validation.tooLong'),
   category_id: z.string().min(1, 'validation.pickCategory'),
   price_minor: z.number({ message: 'validation.required' }).int().min(0, 'validation.required'),
-  duration_min: minutes(5, 600),
+  // Optional: many services have no fixed time. Empty = no time; otherwise 5 to 600 minutes.
+  duration_min: z.union([z.literal(''), minutes(5, 600)]),
   buffer_min: minutes(0, 120),
   requires_room: z.boolean(),
   requires_patch_test: z.boolean(),
@@ -63,7 +64,7 @@ export function ServiceFormScreen() {
       name: '',
       category_id: '',
       price_minor: undefined,
-      duration_min: '30',
+      duration_min: '',
       buffer_min: '0',
       requires_room: false,
       requires_patch_test: false,
@@ -77,7 +78,7 @@ export function ServiceFormScreen() {
       name: existing.name,
       category_id: existing.category_id,
       price_minor: existing.price_minor,
-      duration_min: String(existing.duration_min),
+      duration_min: existing.duration_min === null ? '' : String(existing.duration_min),
       buffer_min: String(existing.buffer_min),
       requires_room: existing.requires_room,
       requires_patch_test: existing.requires_patch_test,
@@ -98,7 +99,7 @@ export function ServiceFormScreen() {
         category_id: v.category_id,
         name: v.name,
         price_minor: v.price_minor,
-        duration_min: Number(v.duration_min),
+        duration_min: v.duration_min === '' ? null : Number(v.duration_min),
         buffer_min: Number(v.buffer_min),
         requires_room: v.requires_room,
         requires_patch_test: v.requires_patch_test,
@@ -151,7 +152,13 @@ export function ServiceFormScreen() {
       <FormMoneyField control={form.control} name="price_minor" label={t('services.fields.price')} />
       <View style={styles.pair}>
         <View style={styles.flex}>
-          <FormTextField control={form.control} name="duration_min" label={t('services.fields.duration')} keyboardType="number-pad" />
+          <FormTextField
+            control={form.control}
+            name="duration_min"
+            label={t('services.fields.duration')}
+            placeholder={t('services.fields.durationOptional')}
+            keyboardType="number-pad"
+          />
         </View>
         <View style={styles.flex}>
           <FormTextField control={form.control} name="buffer_min" label={t('services.fields.buffer')} keyboardType="number-pad" />

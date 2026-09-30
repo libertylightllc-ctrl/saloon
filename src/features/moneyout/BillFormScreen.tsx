@@ -7,7 +7,8 @@ import { StyleSheet, View } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { useCatalog } from '@/features/catalog/api';
 import { businessDate, shiftBusinessDate } from '@/lib/dates';
-import { formatMoney, sum } from '@/lib/money';
+import { formatMoney, sum, vatOnTop } from '@/lib/money';
+import { VAT_BPS } from '@/features/sale/basket';
 import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
 import {
@@ -65,9 +66,15 @@ export function BillFormScreen() {
   const attach = useAttachReceipt('bill', business.id);
   const [photo, setPhoto] = useState<PickedPhoto | null>(null);
 
-  const total = sum(lines.map(lineTotal));
+  // VAT on the supplier's tax invoice (5% on top of the lines), for a VAT-registered salon; editable to match the invoice.
+  const vatRegistered = branch.vat_mode === 'on';
+  const [withVat, setWithVat] = useState(false);
+  const [vatEdited, setVatEdited] = useState<number | null>(null);
+  const net = sum(lines.map(lineTotal));
+  const vat = vatRegistered && withVat ? (vatEdited ?? vatOnTop(net, VAT_BPS)) : 0;
+  const total = net + vat;
   const paying = owner && paidNow ? (paidAmount ?? total) : 0;
-  const ready = Boolean(supplierId) && lines.length > 0 && lines.every(lineValid) && total > 0 && paying <= total;
+  const ready = Boolean(supplierId) && lines.length > 0 && lines.every(lineValid) && net > 0 && vat <= net && paying <= total;
 
   const save = () =>
     post.mutate(
@@ -81,9 +88,10 @@ export function BillFormScreen() {
           item_id: l.item_id,
           description: l.description.trim(),
           qty: Number(l.qty),
-          unit_cost_minor: l.unit_cost_minor!,
+          total_minor: l.amount_minor!,
           update_stock: Boolean(l.item_id) && l.update_stock,
         })),
+        vat_minor: vat,
         ...(paying > 0 ? { paid_now: { method, amount_minor: paying } } : {}),
       },
       {
@@ -127,6 +135,14 @@ export function BillFormScreen() {
           <Section title={t('purchases.lines')}>
             <QueryState query={catalog}>{(data) => <BillLines items={data.items} value={lines} onChange={setLines} />}</QueryState>
           </Section>
+          {vatRegistered ? (
+            <View style={styles.section}>
+              <SwitchRow label={t('purchases.withVat')} hint={t('purchases.withVatHint')} value={withVat} onChange={setWithVat} testID="bill-with-vat" />
+              {withVat ? (
+                <MoneyInput label={t('purchases.vatAmount')} value={vat} onChange={setVatEdited} testID="bill-vat" />
+              ) : null}
+            </View>
+          ) : null}
           <View style={styles.total}>
             <Text variant="h4" style={styles.flex}>
               {t('purchases.total')}
