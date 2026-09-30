@@ -14,7 +14,7 @@ export const ERROR_CODES = [
   'item_exists', 'price_required', 'item_unavailable', 'invalid_restock', 'receipt_exists', 'receipt_missing',
   'photo_too_large', 'camera_denied', 'invalid_roster', 'invalid_time', 'already_clocked_in', 'not_clocked_in',
   'payroll_approved', 'evidence_required', 'already_signed', 'already_requested', 'invalid_token',
-  'plan_required', 'not_balanced', 'invalid_pin', 'pin_locked', 'wrong_pin', 'switch_expired', 'server_busy', 'unknown',
+  'plan_required', 'employee_has_login', 'not_balanced', 'invalid_pin', 'pin_locked', 'wrong_pin', 'switch_expired', 'server_busy', 'unknown',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

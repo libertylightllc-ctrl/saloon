@@ -22,6 +22,8 @@ Updated: 2026-09-30
   VAT / grand total / paid / supplier balance, PUR-00001, Print / PDF), pack sizes; privacy policy and terms;
   Delete my account (closes the salon for an owner); phone apps show the plan without selling it; installable
   website with a real app icon. SQL `16_launch_purchases`, e2e flow 32.
+- ✅ One person, one staff record (2026-09-30): a login joins the person's Staff & payroll record (Create login on
+  their page, or pick them in Team & logins); earlier duplicates merged. SQL `17_one_person_one_record`, e2e flow 33.
 - ⏳ Proof — full suite 3 runs in a row and the button sweep: see docs/M4-HANDOVER.md.
 
 

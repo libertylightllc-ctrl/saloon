@@ -80,6 +80,11 @@ function StaffForm({ person }: { person: StaffMember | null }) {
       {person && !person.member_id ? (
         <SwitchRow label={t('staff.fields.active')} hint={t('staff.fields.activeHint')} value={active} onChange={setActive} testID="staff-active" />
       ) : null}
+      {!person ? (
+        <Text variant="small" color="textSecondary">
+          {t('staff.loginAfterSave')}
+        </Text>
+      ) : null}
       <FormError error={save.error} />
       <Button
         label={t('common.save')}

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { CreateLoginSheet } from '@/features/settings/CreateLoginSheet';
 import { formatBps, formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
@@ -38,6 +39,7 @@ export function StaffDetailScreen() {
   const staff = useStaffDirectory(business.id);
   const history = useAttendanceHistory(id);
   const [editingRoster, setEditingRoster] = useState(false);
+  const [creatingLogin, setCreatingLogin] = useState(false);
   const person = staff.data?.find((s) => s.employee_id === id);
   const owner = can(role, 'manageStaff');
 
@@ -71,6 +73,16 @@ export function StaffDetailScreen() {
                       size="md"
                       onPress={() => router.push({ pathname: '/staff/form', params: { id: person.employee_id } })}
                       testID="staff-edit"
+                    />
+                  ) : null}
+                  {!person.username && can(role, 'manageUsers') ? (
+                    <Button
+                      label={t('staff.createLogin')}
+                      icon="keyRound"
+                      variant="secondary"
+                      size="md"
+                      onPress={() => setCreatingLogin(true)}
+                      testID="staff-create-login"
                     />
                   ) : null}
                 </Card>
@@ -113,6 +125,13 @@ export function StaffDetailScreen() {
         </QueryState>
       </Screen>
       {person ? <RosterSheet person={person} open={editingRoster} onClose={() => setEditingRoster(false)} /> : null}
+      {person && !person.username ? (
+        <CreateLoginSheet
+          open={creatingLogin}
+          onClose={() => setCreatingLogin(false)}
+          person={{ employee_id: person.employee_id, full_name: person.full_name, role_title: person.role_title }}
+        />
+      ) : null}
     </>
   );
 }

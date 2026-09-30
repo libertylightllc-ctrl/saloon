@@ -235,3 +235,10 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 
 1. iPhone Safari: open the Vercel link → Share → **Add to Home Screen** → ✅ the scissors icon; it opens full-screen.
 2. Android Chrome: ⋮ → **Install app** → ✅ the same.
+
+## 27 · One person, one record (2 min)
+
+1. A: More → **Staff & payroll** → **Add staff** → a name and salary → Save → on their page **Create login** →
+   username + password → ✅ "Login: …" on their page; the Staff list shows them once.
+2. Add another person the same way but without a login → More → **Team & logins** → **New** → ✅ "Who is this login
+   for?" lists them → pick them → username + password → ✅ still one record in Staff & payroll, now with the login.

@@ -1,5 +1,6 @@
 // Owner creates a username + password login for a cashier, staff member or accountant.
 // Staff sign in with salon code + username; the internal email is username@code.staff.internal.
+// A person already on the staff list (employee_id) gets the login on their own record, never a second one.
 import { cors, fail, json, MIN_PASSWORD, requireOwner, staffEmail, USERNAME } from '../_shared/staff.ts';
 
 interface Body {
@@ -11,6 +12,7 @@ interface Body {
   role: 'cashier' | 'staff' | 'accountant';
   commission_bps?: number;
   colour?: string;
+  employee_id?: string;
 }
 
 Deno.serve(async (req) => {
@@ -65,12 +67,13 @@ Deno.serve(async (req) => {
       role: body.role,
       commission_bps: commission,
       colour: body.colour ?? null,
+      employee_id: body.employee_id ?? null,
       actor_member_id: ownerMemberId,
     },
   });
   if (registerError) {
     await admin.auth.admin.deleteUser(created.user.id);
-    return fail('create_failed', 500);
+    return /employee_has_login/.test(registerError.message) ? fail('employee_has_login', 409) : fail('create_failed', 500);
   }
   return json({ ...registered, username });
 });

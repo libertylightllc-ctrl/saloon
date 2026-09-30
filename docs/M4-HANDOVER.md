@@ -35,13 +35,15 @@ live at the Vercel link with hosted Supabase
 - **Launch items**: Privacy policy and Terms (/privacy, /terms); **Delete my account** (an owner's closes the salon;
   records are kept 5 years as the law requires); the phone apps show the plan but do not sell it (store rules);
   the website installs to the home screen with its own icon.
+- **One person, one record**: a login joins the person's Staff & payroll record (Create login on their page, or
+  pick them in Team & logins → New); people already recorded twice were merged.
 
 ## How it is proven
 | Check | Command | Result |
 |---|---|---|
 | Type check / lint | `npx tsc --noEmit` · `npx eslint .` | clean |
-| App tests | `npx jest` | 179 / 179 |
-| Database tests | `npx supabase test db` | 498 / 498 (M4: books & reports 25, PIN switch 14, access-check shape 2; plans 24; feedback & VAT 22; purchases & account deletion 38) |
+| App tests | `npx jest` | 180 / 180 |
+| Database tests | `npx supabase test db` | 512 / 512 (M4: books & reports 25, PIN switch 14, access-check shape 2; plans 24; feedback & VAT 22; purchases & account deletion 38; one person one record 14) |
 | E2E, gents + ladies | `npx playwright test --grep-invert @sweep` | PROOF_RESULT |
 | Button sweep (every screen, owner / cashier / staff / accountant) | `npx playwright test --grep @sweep` | SWEEP_RESULT |
 
@@ -62,4 +64,5 @@ receipt modes and backup (flow 25); 1,200 customers (flow 26); Arabic / Urdu / H
 
 ## Test on two phones
 `docs/PHONE-TEST.md` — steps 18–21 cover M4 (reports, close month, receipt and backup settings, PIN switch);
-steps 22–26 the purchase entry, legal pages, plan screen on phones, deleting an account and installing the website.
+steps 22–27 the purchase entry, legal pages, plan screen on phones, deleting an account, installing the website and
+one record per person.

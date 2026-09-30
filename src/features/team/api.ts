@@ -29,6 +29,8 @@ export interface NewStaffLogin {
   role: 'cashier' | 'staff' | 'accountant';
   commission_bps: number;
   colour: string | null;
+  /** The person's record in Staff & payroll, when they are already on the staff list. */
+  employee_id?: string;
 }
 
 export function useCreateStaffLogin(businessId: string, branchId: string) {

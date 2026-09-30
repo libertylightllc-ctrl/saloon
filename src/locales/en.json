@@ -750,7 +750,8 @@
     "pin_locked": "Too many wrong PINs. Try again in 5 minutes, or sign in with the password.",
     "wrong_pin": "That PIN is not right.",
     "switch_expired": "That person needs to sign in again with their password.",
-    "plan_required": "Your salon’s plan isn’t active, so this can’t be saved yet. The owner can switch it on under More → Plan & billing."
+    "plan_required": "Your salon’s plan isn’t active, so this can’t be saved yet. The owner can switch it on under More → Plan & billing.",
+    "employee_has_login": "This person already has a login."
   },
   "sales": {
     "title": "Sales",
@@ -863,7 +864,12 @@
     "disable": "Disable login",
     "enable": "Enable login",
     "disabledToast": "{{name}} can no longer sign in",
-    "enabledToast": "{{name}} can sign in again"
+    "enabledToast": "{{name}} can sign in again",
+    "loginFor": "Login for {{name}}",
+    "whoFor": "Who is this login for?",
+    "someoneNew": "Someone new",
+    "pickHint": "Already in Staff & payroll? Pick them, so they are not added twice.",
+    "fromStaff": "The login goes on {{name}}’s record in Staff & payroll, with their pay, roster and WPS."
   },
   "branch": {
     "title": "Branch settings",
@@ -1406,7 +1412,9 @@
       "phone": "Phone",
       "active": "Working here",
       "activeHint": "People who left are hidden but keep their history."
-    }
+    },
+    "createLogin": "Create login",
+    "loginAfterSave": "Will they use the app? After saving, give them a login on their page (Create login)."
   },
   "attendance": {
     "title": "Attendance",
