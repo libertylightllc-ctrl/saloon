@@ -2,11 +2,14 @@
 
 | Screen | Button | Result |
 |---|---|---|
+| Home | Notifications, 0 unread | opens /notifications |
+| Home | Clock in | shows "No roster · In 20:23 · Out …" |
 | Home | Walk-in | opens /appointment/new |
 | Home | Book | opens /appointment/new |
 | Home | Open queue | opens /queue |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
+| Home | My pay | opens /pay |
 | Home | More | opens /more |
 | Queue | New | opens /appointment/new |
 | Queue | Today | already selected |
@@ -20,17 +23,23 @@
 | Queue | No-show 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Cancelled 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Any barber | already selected |
-| Queue | Staff gno | shows "No one is waiting. Add a walk-in." |
+| Queue | Staff u6m | shows "No one is waiting. Add a walk-in." |
 | Queue | More actions for Sweep Walk-in | updates the screen |
 | Queue | Home | opens / |
 | Queue | Queue | already selected |
+| Queue | My pay | opens /pay |
 | Queue | More | opens /more |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
 | More | Language, English | shows "العربية" |
+| More | Quick-switch PIN | shows "On a shared counter phone, switch back to yourself" |
 | More | Sign out | covered by flow 9 |
+| More | Privacy policy | opens /privacy |
+| More | Terms of use | opens /terms |
+| More | Delete my account | shows "Delete your account" |
 | More | Home | opens / |
 | More | Queue | opens /queue |
+| More | My pay | opens /pay |
 | More | More | already selected |
 | Services | Back | opens /more |
 | Services | Active | already selected |
@@ -41,14 +50,18 @@
 | Inventory | Consumables | updates the screen |
 | Inventory | Retail | updates the screen |
 | Inventory | Tools | shows "No items here yet." |
-| Inventory | Beard Color | opens /inventory/f12e3e2c-6faf-4d54-99e2-81f4f309c6b3 |
-| Inventory | Blades | opens /inventory/ad077eb5-c49a-4203-a8a3-6ec20a34636d |
-| Inventory | Developer 20 Vol | opens /inventory/696a4bec-d998-4b46-8d92-733d202df0c2 |
-| Inventory | Gloves | opens /inventory/d9eaa4e9-38bc-4c92-954e-36270ab60629 |
-| Inventory | Hair Color | opens /inventory/e2753cf4-8f36-4072-9add-efe66dc6e204 |
-| Inventory | Hair Oil | opens /inventory/9b00f699-1d64-4053-9ae4-13dc70f4ccac |
-| Inventory | Neck strips | opens /inventory/3bbe0920-5d2f-43e3-9307-74307b210525 |
-| Inventory | Shaving Foam | opens /inventory/cc0296b7-4348-45e1-b55c-8aa12dd57148 |
-| Inventory | Sweep Oil | opens /inventory/19b8d0f2-a538-4009-b315-77ec5aed47ed |
-| Inventory | Tissues | opens /inventory/f7beaa52-2b86-4d3b-9f62-04929d6519d1 |
+| Inventory | Beard Color | opens /inventory/0f152b75-25b1-4f78-b8e5-e224cd241f36 |
+| Inventory | Blades | opens /inventory/16cef771-ce91-4775-a0f7-08b1d6ad2264 |
+| Inventory | Developer 20 Vol | opens /inventory/7a95ea0a-c694-4099-915b-42ba8ed8fcb1 |
+| Inventory | Gloves | opens /inventory/f3fa9483-ad5d-4161-af5b-712741cea610 |
+| Inventory | Hair Color | opens /inventory/82ec25c7-a4ae-4bfe-abeb-344410df0ea5 |
+| Inventory | Hair Oil | opens /inventory/1e0de525-508d-4360-92bd-fd8b0777e387 |
+| Inventory | Neck strips | opens /inventory/d6061f37-8a79-4fbe-b03f-507fac9b89e3 |
+| Inventory | Shaving Foam | opens /inventory/c99a590e-285c-4502-8bd7-4e289e118277 |
+| Inventory | Sweep Oil | opens /inventory/fa38f45a-4013-4da6-aa42-ab246b3eefcf |
+| Inventory | Tissues | opens /inventory/5349d5a3-4ebb-423c-a57b-35188885040d |
 | Item detail | Back | opens /inventory |
+| My pay | Home | opens / |
+| My pay | Queue | opens /queue |
+| My pay | My pay | already selected |
+| My pay | More | opens /more |

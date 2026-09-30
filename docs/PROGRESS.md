@@ -24,7 +24,7 @@ Updated: 2026-09-30
   website with a real app icon. SQL `16_launch_purchases`, e2e flow 32.
 - ✅ One person, one staff record (2026-09-30): a login joins the person's Staff & payroll record (Create login on
   their page, or pick them in Team & logins); earlier duplicates merged. SQL `17_one_person_one_record`, e2e flow 33.
-- ⏳ Proof — full suite 3 runs in a row and the button sweep: see docs/M4-HANDOVER.md.
+- ✅ Proof (2026-09-30, ad3a182) — full suite 112 / 112 three runs in a row, button sweep 6 / 6 (1871 buttons, 0 dead): docs/M4-HANDOVER.md.
 
 
 ### M3 status

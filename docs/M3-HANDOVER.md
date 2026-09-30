@@ -36,8 +36,8 @@ Date: 2026-09-28 · Branch: `main` · Local stack (Supabase in Docker on this Ma
 | App tests | `npx jest` | 157 / 157 |
 | Database tests | `npx supabase test db` | 361 / 361 (M3: staff & attendance 32, payroll 42, compliance 30, notifications 30) |
 | Database health | `supabase/checks/health.sql` | 26 integrity checks, 0 problems; both demo salons balanced |
-| E2E, gents + ladies | `npx playwright test --grep-invert @sweep` | PROOF_RESULT |
-| Button sweep (every screen incl. M3), owner/cashier/staff | `npx playwright test --grep @sweep` | SWEEP_RESULT |
+| E2E, gents + ladies | `npx playwright test --grep-invert @sweep` | 112 / 112 in 3 runs in a row (2026-09-30, commit ad3a182; 25, 24 and 25 min; no live-update drops) |
+| Button sweep (every screen incl. M3), owner/cashier/staff | `npx playwright test --grep @sweep` | 6 / 6 — 1871 buttons in both modes for owner, cashier, staff and accountant, 0 without a visible effect (docs/button-sweep/) |
 
 The build plan's M3 checks, each an automated test in both modes: clock in late → flagged (flow 20); generate payroll →
 approve → pay → journal (21); document expiring → Needs attention (22) and a notification (SQL: 30/7/0 days); push token

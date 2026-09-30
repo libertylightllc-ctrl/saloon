@@ -44,8 +44,8 @@ live at the Vercel link with hosted Supabase
 | Type check / lint | `npx tsc --noEmit` · `npx eslint .` | clean |
 | App tests | `npx jest` | 180 / 180 |
 | Database tests | `npx supabase test db` | 512 / 512 (M4: books & reports 25, PIN switch 14, access-check shape 2; plans 24; feedback & VAT 22; purchases & account deletion 38; one person one record 14) |
-| E2E, gents + ladies | `npx playwright test --grep-invert @sweep` | PROOF_RESULT |
-| Button sweep (every screen, owner / cashier / staff / accountant) | `npx playwright test --grep @sweep` | SWEEP_RESULT |
+| E2E, gents + ladies | `npx playwright test --grep-invert @sweep` | 112 / 112 in 3 runs in a row (2026-09-30, commit ad3a182; 25, 24 and 25 min; no live-update drops) |
+| Button sweep (every screen, owner / cashier / staff / accountant) | `npx playwright test --grep @sweep` | 6 / 6 — 1871 buttons in both modes for owner, cashier, staff and accountant, 0 without a visible effect (docs/button-sweep/) |
 
 The build plan's M4 checks: the trial balance balances after the full suite (flow 13 and the ledger CSV in flow 24
 compare debits and credits with the books); every report exports (flow 24, PDF and CSV, both modes); PIN switch,

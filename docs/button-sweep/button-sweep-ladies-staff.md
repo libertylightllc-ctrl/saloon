@@ -2,11 +2,14 @@
 
 | Screen | Button | Result |
 |---|---|---|
+| Home | Notifications, 0 unread | opens /notifications |
 | Home | Walk-in | opens /appointment/new |
 | Home | Book | opens /appointment/new |
+| Home | Clock in | shows "No roster · In 20:56 · Out …" |
 | Home | Open queue | opens /queue |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
+| Home | My pay | opens /pay |
 | Home | More | opens /more |
 | Queue | New | opens /appointment/new |
 | Queue | Today | already selected |
@@ -20,17 +23,23 @@
 | Queue | No-show 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Cancelled 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Any stylist | already selected |
-| Queue | Staff sww | shows "No one is waiting. Add a walk-in." |
+| Queue | Staff 72h | shows "No one is waiting. Add a walk-in." |
 | Queue | More actions for Sweep Walk-in | updates the screen |
 | Queue | Home | opens / |
 | Queue | Queue | already selected |
+| Queue | My pay | opens /pay |
 | Queue | More | opens /more |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
 | More | Language, English | shows "العربية" |
+| More | Quick-switch PIN | shows "On a shared counter phone, switch back to yourself" |
 | More | Sign out | covered by flow 9 |
+| More | Privacy policy | opens /privacy |
+| More | Terms of use | opens /terms |
+| More | Delete my account | shows "Delete your account" |
 | More | Home | opens / |
 | More | Queue | opens /queue |
+| More | My pay | opens /pay |
 | More | More | already selected |
 | Services | Back | opens /more |
 | Services | Active | already selected |
@@ -41,17 +50,21 @@
 | Inventory | Consumables | updates the screen |
 | Inventory | Retail | updates the screen |
 | Inventory | Tools | shows "No items here yet." |
-| Inventory | Black soap | opens /inventory/0c18ea6c-06ef-41a1-bcb3-f714ec5e0dad |
-| Inventory | Developer 20 Vol | opens /inventory/80267091-b92b-4257-8a3d-d1e0d4b6aaab |
-| Inventory | Face masks | opens /inventory/bf37b7d4-39fe-42a0-bd2b-b269fb6d110e |
-| Inventory | Gel polish | opens /inventory/5e0f04ce-545b-4fce-b8ab-2fb642c14e49 |
-| Inventory | Gloves | opens /inventory/e2e18602-f021-4c5c-903c-aed65fd1eed1 |
-| Inventory | Hair Color | opens /inventory/5c1546bb-e184-4ea2-b2f1-2518ec2ae81f |
-| Inventory | Heat spray | opens /inventory/10d97f32-d52b-499f-940b-b56076d1f828 |
-| Inventory | Massage oil | opens /inventory/4a298170-aa5d-40b1-b3be-66c9ce91d63c |
-| Inventory | Nail polish | opens /inventory/79fbd1d2-f292-42f5-b4d6-264e50df1d4e |
-| Inventory | Styling cream | opens /inventory/ef958d3f-b738-4fd5-8bb1-315c1c9f02a9 |
-| Inventory | Sweep Oil | opens /inventory/fc4ca06a-2c70-480b-ae33-bed41bc447c5 |
-| Inventory | Thread | opens /inventory/d3edbe5c-6bb3-44ca-87d4-3a4c35b04eef |
-| Inventory | Wax | opens /inventory/6504944a-40fa-4f97-8bda-fdc4216fbb13 |
+| Inventory | Black soap | opens /inventory/0c55030f-c58c-4dfc-957b-86b16c40cd42 |
+| Inventory | Developer 20 Vol | opens /inventory/88263197-e680-4f66-9edb-7182c031b80d |
+| Inventory | Face masks | opens /inventory/afb41eda-9614-4eb5-a9e9-bc8ff5d4c4e1 |
+| Inventory | Gel polish | opens /inventory/500703c3-3a81-4f21-8267-049a266f9e21 |
+| Inventory | Gloves | opens /inventory/f8c3132f-5af2-4cbc-aa59-34f087ba3b2a |
+| Inventory | Hair Color | opens /inventory/edfe11e0-49be-4066-b6a1-a637465382e1 |
+| Inventory | Heat spray | opens /inventory/4c16b1de-cc98-4e6c-91a1-f1811ff2cc39 |
+| Inventory | Massage oil | opens /inventory/22d38182-0d16-4cbf-b6e5-27f870f9ce00 |
+| Inventory | Nail polish | opens /inventory/5c124b52-bba3-45cf-ba0b-e71efeb82a95 |
+| Inventory | Styling cream | opens /inventory/87c94932-6525-41b6-b81c-b10110e4d379 |
+| Inventory | Sweep Oil | opens /inventory/759fbd46-3959-4b88-a9ff-29e6e72e74f6 |
+| Inventory | Thread | opens /inventory/10dbc518-48dd-49b9-a866-60797d872053 |
+| Inventory | Wax | opens /inventory/03577dff-6a0c-449c-9ba7-0329c5c13d70 |
 | Item detail | Back | opens /inventory |
+| My pay | Home | opens / |
+| My pay | Queue | opens /queue |
+| My pay | My pay | already selected |
+| My pay | More | opens /more |

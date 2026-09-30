@@ -4,7 +4,7 @@
 |---|---|---|
 | Home | Notifications, 0 unread | opens /notifications |
 | Home | Close day | opens /cash-closing |
-| Home | Clock in | shows "No roster · In 15:14 · Out …" |
+| Home | Clock in | shows "No roster · In 20:13 · Out …" |
 | Home | Review | opens /compliance |
 | Home | Walk-in | opens /appointment/new |
 | Home | Book | opens /appointment/new |
@@ -13,7 +13,7 @@
 | Home | Expense | opens /expenses/new |
 | Home | Stock | opens /inventory |
 | Home | Open queue | opens /queue |
-| Home | Start | shows "Started 15:14" |
+| Home | Start | shows "Started 20:14" |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
 | Home | Sale | opens /sale |
@@ -31,7 +31,7 @@
 | Queue | No-show 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Cancelled 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Any barber | already selected |
-| Queue | Staff cmg | shows "No one is waiting. Add a walk-in." |
+| Queue | Staff u6m | shows "No one is waiting. Add a walk-in." |
 | Queue | Complete | opens /sale |
 | Queue | More actions for Sweep Walk-in | updates the screen |
 | Queue | Home | opens / |
@@ -61,7 +61,7 @@
 | Quick sale | Customers | opens /customers |
 | Quick sale | More | opens /more |
 | Customers | New | opens /customers/form |
-| Customers | Sweep Customer | opens /customers/8832e742-047d-4a40-9361-a36d74f3a870 |
+| Customers | Sweep Customer | opens /customers/47ce1d84-8a26-4ed0-b7d7-d86264a24ae9 |
 | Customers | Home | opens / |
 | Customers | Queue | opens /queue |
 | Customers | Sale | opens /sale |
@@ -82,6 +82,9 @@
 | More | Language, English | shows "العربية" |
 | More | Quick-switch PIN | shows "On a shared counter phone, switch back to yourself" |
 | More | Sign out | covered by flow 9 |
+| More | Privacy policy | opens /privacy |
+| More | Terms of use | opens /terms |
+| More | Delete my account | shows "Delete your account" |
 | More | Home | opens / |
 | More | Queue | opens /queue |
 | More | Sale | opens /sale |
@@ -91,9 +94,9 @@
 | Services | Active | already selected |
 | Services | Archived | shows "No archived services." |
 | Sales | Back | opens /more |
-| Sales | Sale #1001 | opens /sales/c1711cc0-111a-4877-a1ee-706cb91b716d |
+| Sales | Sale #1001 | opens /sales/c5746e19-980c-4848-971a-7ef1a20220aa |
 | Sale detail | Back | opens /sales |
-| Sale detail | Print receipt | prints the receipt ("E2E gents muo0bxt8htru") |
+| Sale detail | Print receipt | prints the receipt ("E2E gents muob1ag2y73a") |
 | Sale detail | Ask the owner for a refund | shows "The owner gets a notification and refunds it from " |
 | Expenses | Back | opens /more |
 | Expenses | New | opens /expenses/new |
@@ -126,14 +129,14 @@
 | New bill | Back | opens /purchases |
 | New bill | Sweep Supplier | selects it |
 | New bill | New supplier | shows "Supplier name" |
-| New bill | Choose photo | opens the photo picker |
 | New bill | Stock item | shows "Beard Color" |
 | New bill | Other | shows "Qty" |
+| New bill | Choose photo | opens the photo picker |
 | New bill | Save bill · AED 0.00 | disabled until the form is valid / state allows |
 | Cash closing | Back | opens /more |
 | Cash closing | Count notes & coins | shows "Notes & coins" |
-| Cash closing | Owner htru | selects it |
-| Cash closing | Cashier rx4 | already selected |
+| Cash closing | Owner y73a | selects it |
+| Cash closing | Cashier t12 | already selected |
 | Cash closing | Save draft | shows "Draft" |
 | Cash closing | Submit for approval | disabled until the form is valid / state allows |
 | Cash closing | Wed 30 Sep | opens /cash-closing/2026-09-30 |
@@ -144,16 +147,16 @@
 | Inventory | Retail | updates the screen |
 | Inventory | Tools | shows "No items here yet." |
 | Inventory | Order | opens /purchases/new |
-| Inventory | Beard Color | opens /inventory/56546fbf-99db-4493-9bc0-f9eebc08e30a |
-| Inventory | Blades | opens /inventory/ed8d13dc-2805-4c6f-a8d6-ea5a19ae7983 |
-| Inventory | Developer 20 Vol | opens /inventory/58f7682a-9ff6-446e-8482-bdf93b0c4e4f |
-| Inventory | Gloves | opens /inventory/adb1fa33-3726-460e-a894-c2c12643a842 |
-| Inventory | Hair Color | opens /inventory/c4064a5d-9c50-4395-9f9e-8a402eac3fa3 |
-| Inventory | Hair Oil | opens /inventory/e96bfc2c-04f4-4a7c-bc66-030de00b076f |
-| Inventory | Neck strips | opens /inventory/ddf31e57-0e3e-4d03-ad29-1ae22cc81564 |
-| Inventory | Shaving Foam | opens /inventory/63f05633-4a39-4250-974a-c16d0ce52291 |
-| Inventory | Sweep Oil | opens /inventory/2096223f-f9eb-4dae-9bb6-96d7ecc62532 |
-| Inventory | Tissues | opens /inventory/afbc1887-301a-4259-b043-c0b9ba12a3a3 |
+| Inventory | Beard Color | opens /inventory/0f152b75-25b1-4f78-b8e5-e224cd241f36 |
+| Inventory | Blades | opens /inventory/16cef771-ce91-4775-a0f7-08b1d6ad2264 |
+| Inventory | Developer 20 Vol | opens /inventory/7a95ea0a-c694-4099-915b-42ba8ed8fcb1 |
+| Inventory | Gloves | opens /inventory/f3fa9483-ad5d-4161-af5b-712741cea610 |
+| Inventory | Hair Color | opens /inventory/82ec25c7-a4ae-4bfe-abeb-344410df0ea5 |
+| Inventory | Hair Oil | opens /inventory/1e0de525-508d-4360-92bd-fd8b0777e387 |
+| Inventory | Neck strips | opens /inventory/d6061f37-8a79-4fbe-b03f-507fac9b89e3 |
+| Inventory | Shaving Foam | opens /inventory/c99a590e-285c-4502-8bd7-4e289e118277 |
+| Inventory | Sweep Oil | opens /inventory/fa38f45a-4013-4da6-aa42-ab246b3eefcf |
+| Inventory | Tissues | opens /inventory/5349d5a3-4ebb-423c-a57b-35188885040d |
 | Item detail | Back | opens /inventory |
 | Attendance | Back | opens /more |
 | Attendance | Thursday 17 September | shows "Thursday 17 September" |
@@ -170,10 +173,10 @@
 | Attendance | Monday 28 September | shows "Monday 28 September" |
 | Attendance | Tuesday 29 September | shows "Tuesday 29 September" |
 | Attendance | Wednesday 30 September | already selected |
-| Attendance | Clock out | shows "Clock out Cashier rx4" |
-| Attendance | Clock in | shows "Clock in Staff cmg" |
+| Attendance | Clock out | shows "Clock out Cashier t12" |
+| Attendance | Clock in | shows "Clock in Staff u6m" |
 | Compliance · hygiene | Back | opens /more |
 | Compliance · hygiene | Choose photo | opens the photo picker |
-| Compliance · hygiene | Sign the log | shows "Signed by Cashier rx4" |
+| Compliance · hygiene | Sign the log | shows "Signed by Cashier t12" |
 | Notifications | Back | opens / |
 | Notifications | Mark all as read | disabled until the form is valid / state allows |
