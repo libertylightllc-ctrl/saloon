@@ -28,19 +28,30 @@ export function BottomSheet({ open, onClose, title, children, snapPoints }: Bott
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const ref = useRef<BottomSheetModal>(null);
-  const shown = useRef(false);
+  /** Whether the modal is on screen right now (not what the parent asked for). */
+  const visible = useRef(false);
 
   useEffect(() => {
-    // Dismissing a sheet that was never presented confuses the modal's state machine.
-    if (open) ref.current?.present();
-    else if (shown.current) ref.current?.dismiss();
-    shown.current = open;
+    // Dismissing a sheet that is not on screen — never presented, or already closed by a tap on the backdrop or a
+    // swipe — jams the modal: it marks the sheet as leaving, and every later present() closes it again at once, so
+    // its button seems dead until the page reloads. So only dismiss a sheet that is still visible.
+    if (open && !visible.current) {
+      visible.current = true;
+      ref.current?.present();
+    } else if (!open && visible.current) {
+      visible.current = false;
+      ref.current?.dismiss();
+    }
   }, [open]);
 
   return (
     <BottomSheetModal
       ref={ref}
-      onDismiss={onClose}
+      onDismiss={() => {
+        // Closed by the person (backdrop, swipe) or by us: either way it is off screen now.
+        visible.current = false;
+        onClose();
+      }}
       snapPoints={snapPoints}
       enableDynamicSizing={!snapPoints}
       backdropComponent={(props: BottomSheetBackdropProps) => (
