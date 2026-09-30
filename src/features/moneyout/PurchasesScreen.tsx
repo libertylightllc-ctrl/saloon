@@ -24,6 +24,7 @@ import {
 } from '@/ui';
 
 import { useBills, useSuppliers, type Bill, type Supplier } from './api';
+import { purchaseNo } from './labels';
 import { SupplierSheet } from './SupplierSheet';
 
 type Tab = 'bills' | 'suppliers';
@@ -128,7 +129,7 @@ export function PurchasesScreen() {
                   <ListRow
                     key={b.id}
                     testID={`bill-${b.number}`}
-                    title={`${t('purchases.billNumber', { number: b.number })} · ${b.suppliers?.name ?? ''}`}
+                    title={`${purchaseNo(b.number)} · ${b.suppliers?.name ?? ''}`}
                     meta={[
                       [dates.day(b.bill_date, 'd MMM'), b.invoice_ref].filter(Boolean).join(' · '),
                       ...(b.status === 'unpaid' || b.status === 'partial'

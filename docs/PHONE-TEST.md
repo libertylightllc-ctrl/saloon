@@ -197,3 +197,41 @@ Same two phones. Phone A = owner, phone B = the cashier login.
    right." → the right PIN → ✅ back as the cashier, no password typed.
 
 If anything does not match a ✅, note the step number and what you saw.
+
+---
+
+# Launch add-on: purchase entry, legal pages, deleting an account, install (10 minutes)
+
+Phone A = owner. Use a test salon for step 25, not your real one: deleting the owner's account closes the salon.
+
+## 22 · A purchase like the supplier's invoice (4 min)
+
+1. A: More → **Inventory & tools** → an item counted in ml → Edit → **Pack size (Millilitres)** = 1000 → Save.
+2. More → **Purchases & suppliers** → **New bill** → a supplier → Invoice no. → Payment **Credit**.
+3. **Stock item** → that item → ✅ "One pack holds (ml)" shows 1000. Qty (packs) **10**, Unit price **45** →
+   ✅ VAT 5% fills in **22.50**, Total **AED 472.50**, "10000 ml into stock".
+4. **Other** → "Delivery", Unit price 20 → ✅ Summary: Subtotal 470.00 · VAT 5% 23.50 · Grand total 493.50 ·
+   Paid 0.00 · Supplier balance 493.50.
+5. Save → ✅ "PUR-0000N saved"; the bill shows each line as "10 × 1000 ml · AED 45.00 each · VAT 5% AED 22.50".
+6. **Print / PDF** → ✅ a page titled "Purchase entry" with the table Product · Qty · Unit price · VAT 5% · Total.
+
+## 23 · Privacy policy and terms (1 min)
+
+1. Sign out → on the landing page scroll to the bottom → **Privacy policy** → ✅ opens without signing in.
+2. ✅ **Terms of use** at the bottom of it; both also under More → Account.
+
+## 24 · The phone app does not sell plans (1 min)
+
+1. On a phone build (not the website): More → **Plan & billing** → ✅ shows Active / Paid until, no price and no
+   "Ask to switch on". The website still shows both.
+
+## 25 · Delete an account (2 min, test salon only)
+
+1. A test barber: More → **Delete my account** → ✅ the button stays grey until you type DELETE → Delete →
+   ✅ "Your account has been deleted." and the sign-in page; that username can no longer sign in.
+2. The test salon's owner: the same → ✅ the sheet says it closes the salon; after it nobody can sign in to it.
+
+## 26 · Install the website (1 min)
+
+1. iPhone Safari: open the Vercel link → Share → **Add to Home Screen** → ✅ the scissors icon; it opens full-screen.
+2. Android Chrome: ⋮ → **Install app** → ✅ the same.

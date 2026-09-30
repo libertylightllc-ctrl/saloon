@@ -16,3 +16,6 @@ export function useCategoryName() {
 }
 
 export const categoryIcon = (icon: string | undefined): IconName => (icon ?? 'receipt') as IconName;
+
+/** How a purchase is numbered on screen, on paper and in the books (purchase_no() in the database): PUR-00125. */
+export const purchaseNo = (n: number) => `PUR-${String(n).padStart(5, '0')}`;

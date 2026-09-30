@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { DeleteAccountSheet } from '@/features/account/DeleteAccountSheet';
 import { PinSheet, SwitchUserSheet } from '@/features/auth/QuickSwitchSheets';
 import { useHasPin } from '@/features/auth/quickSwitch';
 import { useIsPlatformAdmin } from '@/features/plan/api';
@@ -21,6 +22,7 @@ export function MoreScreen() {
   const [language, setLanguage] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
   const [switchOpen, setSwitchOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const hasPin = useHasPin(business.id);
   const platformAdmin = useIsPlatformAdmin();
   const [signingOut, setSigningOut] = useState(false);
@@ -106,11 +108,24 @@ export function MoreScreen() {
               testID="sign-out"
             />
           </MenuGroup>
+          <MenuGroup title={t('more.account')}>
+            <MenuRow icon="shield" index={0} label={t('legal.privacy.title')} onPress={() => router.push('/privacy')} testID="more-privacy" />
+            <MenuRow icon="fileText" index={1} label={t('legal.terms.title')} onPress={() => router.push('/terms')} testID="more-terms" />
+            <MenuRow
+              icon="trash"
+              danger
+              last
+              label={t('account.delete.row')}
+              onPress={() => setDeleteOpen(true)}
+              testID="more-delete-account"
+            />
+          </MenuGroup>
         </View>
       </Screen>
       <LanguageSheet open={language} onClose={() => setLanguage(false)} />
       <PinSheet open={pinOpen} onClose={() => setPinOpen(false)} />
       <SwitchUserSheet open={switchOpen} onClose={() => setSwitchOpen(false)} />
+      <DeleteAccountSheet open={deleteOpen} onClose={() => setDeleteOpen(false)} />
     </>
   );
 }

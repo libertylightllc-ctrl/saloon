@@ -7,19 +7,27 @@ import { uid } from './support/env';
 import { expect, test } from './support/fixtures';
 import { back, expectMoney, id, idStarts, ownerOn, snap, staffOn, tab, text } from './support/ui';
 
-/** A bill: `qty` of the mode's recipe product for `amount` in all (as on the invoice), plus a delivery charge. */
-async function newBill(page: Page, supplier: string, product: string, qty: string, amount: string, delivery?: string) {
+interface BillLine {
+  /** Packs as on the invoice, what one pack holds (stock units) and the price of one pack. */
+  packs: string;
+  pack: string;
+  price: string;
+}
+
+/** A bill as on the supplier's invoice: packs of the mode's recipe product, and maybe a delivery charge. VAT 5% is on. */
+async function newBill(page: Page, supplier: string, product: string, line: BillLine, delivery?: string) {
   await id(page, 'bills-new').click();
   await id(page, `bill-supplier-${supplier}`).click();
   await id(page, 'bill-invoice').fill(`INV-${uid().slice(-4)}`);
   await id(page, 'bill-add-item').click();
   await id(page, `bill-item-${product}`).click();
-  await id(page, 'bill-line-qty-0').fill(qty);
-  await id(page, 'bill-line-amount-0').fill(amount);
+  await id(page, 'bill-line-qty-0').fill(line.packs);
+  await id(page, 'bill-line-pack-0').fill(line.pack);
+  await id(page, 'bill-line-price-0').fill(line.price);
   if (delivery) {
     await id(page, 'bill-add-other').click();
     await id(page, 'bill-line-desc-1').fill('Delivery');
-    await id(page, 'bill-line-amount-1').fill(delivery);
+    await id(page, 'bill-line-price-1').fill(delivery);
   }
   await id(page, 'bill-save').click();
 }
@@ -40,10 +48,12 @@ test('owner adds a supplier and a bill; stock goes up; part-pays it in cash; rev
   await id(page, 'supplier-save').click();
   await expect(idStarts(page, `supplier-${supplier}`)).toBeVisible();
 
-  // 100 for 25.00 (0.25 each) + 15.00 delivery = 40.00; the stock line adds 100 to stock.
-  await newBill(page, supplier, product, '100', '25', '15');
-  await expect(text(page, 'Bill #1 saved')).toBeVisible();
-  await expectMoney(page, 'bill-detail-total', 4000);
+  // 1 pack of 100 for 25.00 + 15.00 delivery = 40.00, + 2.00 VAT = 42.00; the stock line adds 100 to stock.
+  await newBill(page, supplier, product, { packs: '1', pack: '100', price: '25' }, '15');
+  await expect(text(page, 'PUR-00001 saved')).toBeVisible();
+  await expectMoney(page, 'bill-detail-subtotal', 4000);
+  await expectMoney(page, 'bill-detail-vat', 200);
+  await expectMoney(page, 'bill-detail-total', 4200);
   await expect(text(page, 'Unpaid').first()).toBeVisible();
   expect(await stockQty(owner.branchId, owner.businessId, product)).toBe(100);
 
@@ -52,18 +62,18 @@ test('owner adds a supplier and a bill; stock goes up; part-pays it in cash; rev
   await id(page, 'pay-method-cash').click();
   await id(page, 'pay-confirm').click();
   await expect(text(page, 'Paid AED 20.00')).toBeVisible();
-  await expectMoney(page, 'bill-detail-left', 2000);
+  await expectMoney(page, 'bill-detail-left', 2200);
   await expect(text(page, 'Part paid').first()).toBeVisible();
   await expect(id(page, 'bill-reverse')).toHaveCount(0); // paid bills are not reversed
   await snap(page, 'bill-detail', mode);
   await back(page);
 
-  await expectMoney(page, 'purchases-owed-value', 2000);
-  await expectMoney(page, 'purchases-month-value', 4000);
+  await expectMoney(page, 'purchases-owed-value', 2200);
+  await expectMoney(page, 'purchases-month-value', 4200);
 
   // A second bill, unpaid, reversed with a reason: its stock goes back out.
-  await newBill(page, supplier, product, '10', '5');
-  await expect(text(page, 'Bill #2 saved')).toBeVisible();
+  await newBill(page, supplier, product, { packs: '10', pack: '1', price: '0.50' });
+  await expect(text(page, 'PUR-00002 saved')).toBeVisible();
   expect(await stockQty(owner.branchId, owner.businessId, product)).toBe(110);
   await id(page, 'bill-reverse').click();
   await id(page, 'bill-reverse-reason').fill('Goods returned');
@@ -88,7 +98,7 @@ test('owner adds a supplier and a bill; stock goes up; part-pays it in cash; rev
   await expect(idStarts(page, 'journal-purchase_bill_reversal')).toHaveCount(1);
   await id(page, 'accounts-tab-balance').click();
   await expect(text(page, 'Balanced: Yes')).toBeVisible();
-  await expect(id(page, 'tb-supplier_payable')).toContainText('20.00');
+  await expect(id(page, 'tb-supplier_payable')).toContainText('22.00');
 });
 
 test('cashier adds a bill but cannot pay or reverse it, and sees no supplier balances', async ({ page, mode }) => {
@@ -103,10 +113,10 @@ test('cashier adds a bill but cannot pay or reverse it, and sees no supplier bal
   await expect(id(page, 'purchases-owed')).toHaveCount(0);
   await id(page, 'bills-new').click();
   await expect(text(page, 'The owner records payments to suppliers.')).toBeVisible();
-  await expect(id(page, 'bill-paid-now')).toHaveCount(0);
+  await expect(id(page, 'bill-payment')).toHaveCount(0);
   await back(page);
-  await newBill(page, 'Beauty Line Trading', product, '5', '5');
-  await expect(text(page, 'Bill #1 saved')).toBeVisible();
+  await newBill(page, 'Beauty Line Trading', product, { packs: '5', pack: '1', price: '1' });
+  await expect(text(page, 'PUR-00001 saved')).toBeVisible();
   await expect(id(page, 'bill-pay')).toHaveCount(0);
   await expect(id(page, 'bill-reverse')).toHaveCount(0);
   expect(await stockQty(owner.branchId, owner.businessId, product)).toBe(5);

@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query';
 import * as Crypto from 'expo-crypto';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -5,10 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { qtyText } from '@/features/inventory/labels';
+import { sharePdf } from '@/lib/exportFile';
+import { isLanguage, isRtlLanguage } from '@/lib/i18n';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
-import { spacing } from '@/theme';
+import { spacing, useTheme } from '@/theme';
 import {
   BottomSheet,
   Button,
@@ -27,31 +31,71 @@ import {
 } from '@/ui';
 
 import { useBill, usePaySupplier, useReverseBill, type BillDetail, type PayMethod } from './api';
+import { billHtml, lineParts } from './billPrint';
+import { purchaseNo } from './labels';
 import { BILL_STATUS } from './PurchasesScreen';
+import { SummaryRow as Row } from './SummaryRow';
 import { ReceiptPhoto } from './ReceiptPhoto';
-
-function Row({ label, value, strong, testID }: { label: string; value: string; strong?: boolean; testID?: string }) {
-  return (
-    <View style={styles.row}>
-      <Text variant={strong ? 'bodyStrong' : 'body'} color={strong ? 'text' : 'textSecondary'} style={styles.flex}>
-        {label}
-      </Text>
-      <Text variant={strong ? 'h4' : 'bodyStrong'} tabular testID={testID}>
-        {value}
-      </Text>
-    </View>
-  );
-}
 
 /** A bill with its lines and payments; the owner pays it (any part) or reverses it while unpaid. */
 export function BillDetailScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const theme = useTheme();
   const dates = useDates();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { business, role } = useWorkspace();
+  const { business, branch, role } = useWorkspace();
   const bill = useBill(business.id, id);
   const owner = can(role, 'payOrReverseMoneyOut');
   const [sheet, setSheet] = useState<'pay' | 'reverse' | null>(null);
+
+  /** "10 × 1000 ml", "100 ml", "2": the quantity as on the invoice. */
+  const qtyLabel = (l: BillDetail['purchase_bill_lines'][number]) => {
+    const { packs } = lineParts(l);
+    const unit = l.inventory_items?.unit;
+    const pack = packs > 0 ? Number(l.qty) / packs : 1;
+    if (!unit) return String(Number(packs.toFixed(3)));
+    if (Math.abs(pack - 1) < 1e-9) return qtyText(Number(l.qty), unit, t);
+    return t('purchases.packsOf', { n: Number(packs.toFixed(3)), pack: qtyText(pack, unit, t) });
+  };
+  const paymentLabel = (b: BillDetail) =>
+    b.status === 'reversed' ? t('purchases.status.reversed') : b.paid_minor === 0 ? t('purchases.payment.credit') : t(`purchases.status.${b.status}`);
+  const print = useMutation({
+    mutationFn: (b: BillDetail) =>
+      sharePdf(
+        billHtml(b, {
+          businessName: business.name,
+          branchName: branch.name,
+          trn: branch.vat_mode === 'on' ? branch.trn : null,
+          rtl: isLanguage(i18n.language) && isRtlLanguage(i18n.language),
+          ink: theme.colors.text,
+          muted: theme.colors.textSecondary,
+          line: theme.colors.divider,
+          date: dates.day(b.bill_date, 'd MMM yyyy'),
+          qtyText: qtyLabel,
+          labels: {
+            title: t('purchases.entryTitle'),
+            number: t('purchases.number'),
+            supplier: t('purchases.supplier'),
+            invoice: t('purchases.invoiceNo'),
+            date: t('purchases.billDate'),
+            payment: t('purchases.payment.title'),
+            paymentValue: paymentLabel(b),
+            product: t('purchases.product'),
+            qty: t('purchases.qty'),
+            unitPrice: t('purchases.unitPrice'),
+            vat: t('purchases.lineVat'),
+            total: t('purchases.lineTotalVat'),
+            subtotal: t('purchases.subtotal'),
+            vatTotal: t('purchases.vatTotal'),
+            grandTotal: t('purchases.grandTotal'),
+            paid: t('purchases.paid'),
+            balance: t('purchases.balance'),
+            trn: t('receipt.trn'),
+          },
+        }),
+        purchaseNo(b.number),
+      ),
+  });
 
   return (
     <>
@@ -60,7 +104,7 @@ export function BillDetailScreen() {
         onRefresh={() => void bill.refetch()}
         header={
           <HeaderBand
-            title={bill.data ? t('purchases.billNumber', { number: bill.data.number }) : t('purchases.bills')}
+            title={bill.data ? purchaseNo(bill.data.number) : t('purchases.bills')}
             subtitle={bill.data?.suppliers?.name}
             onBack
           />
@@ -78,24 +122,36 @@ export function BillDetailScreen() {
                   </Text>
                 </View>
                 <Card variant="outlined" style={styles.card}>
-                  {b.purchase_bill_lines.map((l) => (
-                    <Row
-                      key={l.id}
-                      label={`${Number(l.qty)}${l.inventory_items && l.inventory_items.unit !== 'pcs' ? ` ${t(`units.one.${l.inventory_items.unit as 'pcs'}`)}` : ' ×'} ${l.description}${l.update_stock ? ` · ${t('purchases.inStock')}` : ''}`}
-                      value={formatMoney(l.total_minor)}
-                    />
-                  ))}
+                  {b.purchase_bill_lines.map((l, i) => {
+                    const p = lineParts(l);
+                    return (
+                      <View key={l.id} style={styles.line} testID={`bill-detail-line-${i}`}>
+                        <Text variant="bodyStrong">
+                          {l.update_stock ? `${l.description} · ${t('purchases.inStock')}` : l.description}
+                        </Text>
+                        <View style={styles.row}>
+                          <Text variant="small" color="textSecondary" style={styles.flex}>
+                            {[
+                              `${qtyLabel(l)} · ${t('purchases.each', { amount: formatMoney(p.price) })}`,
+                              p.vat > 0 ? `${t('purchases.lineVat')} ${formatMoney(p.vat)}` : null,
+                            ]
+                              .filter(Boolean)
+                              .join(' · ')}
+                          </Text>
+                          <Text variant="bodyStrong" tabular>
+                            {formatMoney(p.gross)}
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  })}
                 </Card>
                 <Card variant="outlined" style={styles.card}>
-                  {b.vat_minor > 0 ? (
-                    <>
-                      <Row label={t('purchases.net')} value={formatMoney(b.total_minor - b.vat_minor)} />
-                      <Row label={t('purchases.vat')} value={formatMoney(b.vat_minor)} testID="bill-detail-vat" />
-                    </>
-                  ) : null}
-                  <Row label={t('purchases.total')} value={formatMoney(b.total_minor)} strong testID="bill-detail-total" />
+                  <Row label={t('purchases.subtotal')} value={formatMoney(b.total_minor - b.vat_minor)} testID="bill-detail-subtotal" />
+                  {b.vat_minor > 0 ? <Row label={t('purchases.vatTotal')} value={formatMoney(b.vat_minor)} testID="bill-detail-vat" /> : null}
+                  <Row label={t('purchases.grandTotal')} value={formatMoney(b.total_minor)} strong testID="bill-detail-total" />
                   <Row label={t('purchases.paid')} value={formatMoney(b.paid_minor)} testID="bill-detail-paid" />
-                  {b.status !== 'reversed' ? <Row label={t('purchases.left')} value={formatMoney(left)} testID="bill-detail-left" /> : null}
+                  {b.status !== 'reversed' ? <Row label={t('purchases.balance')} value={formatMoney(left)} strong testID="bill-detail-left" /> : null}
                   {b.status !== 'reversed' && left > 0 ? (
                     <Row label={t('purchases.due')} value={dates.day(b.due_date, 'd MMM yyyy')} />
                   ) : null}
@@ -110,6 +166,8 @@ export function BillDetailScreen() {
                 ) : null}
                 <ReceiptPhoto kind="bill" rowId={b.id} path={b.receipt_path} canAttach={b.status !== 'reversed' && can(role, 'addPurchase')} />
                 {b.reverse_reason ? <Text color="textSecondary">{t('purchases.reversedBecause', { reason: b.reverse_reason })}</Text> : null}
+                <FormError error={print.error} />
+                <Button label={t('purchases.print')} icon="printer" variant="secondary" loading={print.isPending} onPress={() => print.mutate(b)} testID="bill-print" />
                 {owner && b.status !== 'reversed' && left > 0 ? (
                   <Button label={t('purchases.pay')} icon="wallet" onPress={() => setSheet('pay')} testID="bill-pay" />
                 ) : null}
@@ -220,5 +278,6 @@ const styles = StyleSheet.create({
   body: { gap: spacing.lg },
   card: { gap: spacing.sm },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  line: { gap: 2 },
   flex: { flex: 1 },
 });

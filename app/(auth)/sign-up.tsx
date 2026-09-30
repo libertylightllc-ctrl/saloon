@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -8,7 +9,7 @@ import { z } from 'zod';
 import { signUpOwner } from '@/features/auth/api';
 import { AuthShell } from '@/features/auth/AuthShell';
 import { spacing } from '@/theme';
-import { Button, FormError, FormTextField } from '@/ui';
+import { Button, FormError, FormTextField, Text } from '@/ui';
 import { GoogleButton } from '@/features/auth/GoogleButton';
 
 const schema = z
@@ -25,6 +26,7 @@ type Values = z.infer<typeof schema>;
 /** Owner account. Setting up the salon comes next (the session gate opens /setup). */
 export default function SignUp() {
   const { t } = useTranslation();
+  const router = useRouter();
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: { name: '', email: '', password: '', confirm: '' },
@@ -64,9 +66,19 @@ export default function SignUp() {
         />
         <FormError error={signUp.error} />
         <Button label={t('auth.signUp.action')} onPress={submit} loading={signUp.isPending} testID="sign-up-submit" />
+        <Text variant="small" color="textSecondary" align="center">
+          {t('legal.agree')}
+        </Text>
+        <View style={styles.legal}>
+          <Button variant="ghost" size="sm" label={t('legal.terms.title')} onPress={() => router.push('/terms')} testID="sign-up-terms" />
+          <Button variant="ghost" size="sm" label={t('legal.privacy.title')} onPress={() => router.push('/privacy')} testID="sign-up-privacy" />
+        </View>
       </View>
     </AuthShell>
   );
 }
 
-const styles = StyleSheet.create({ form: { gap: spacing.lg } });
+const styles = StyleSheet.create({
+  form: { gap: spacing.lg },
+  legal: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: spacing.sm },
+});

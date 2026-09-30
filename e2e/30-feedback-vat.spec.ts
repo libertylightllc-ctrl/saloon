@@ -46,9 +46,9 @@ test('services without a time, and who did each sale on the list, the sale and t
   await snap(page, 'sale-staff', mode);
 });
 
-test('a VAT-registered salon buys 100 ml for AED 45 + VAT, pays a phone bill with VAT, and reads its VAT report', async ({ page, mode }) => {
+test('a VAT-registered salon buys a 100 ml bottle for AED 45 + VAT, pays a phone bill with VAT, and reads its VAT report', async ({ page, mode }) => {
   const owner = await createOwner(mode, { vat: true });
-  await owner.client.rpc('save_item', { p: { business_id: owner.businessId, name: 'Argan oil 100', kind: 'consumable', unit: 'ml' } });
+  await owner.client.rpc('save_item', { p: { business_id: owner.businessId, name: 'Argan oil 100', kind: 'consumable', unit: 'ml', pack_size: 100 } });
   await owner.client.rpc('save_supplier', { p: { business_id: owner.businessId, name: 'Beauty Trading', terms_days: 30 } });
   await sellCustom(owner.client, owner, { card: 21_000 });
 
@@ -59,16 +59,18 @@ test('a VAT-registered salon buys 100 ml for AED 45 + VAT, pays a phone bill wit
   await id(page, 'bill-supplier-Beauty Trading').click();
   await id(page, 'bill-add-item').click();
   await id(page, 'bill-item-Argan oil 100').click();
-  await id(page, 'bill-line-qty-0').fill('100');
-  await id(page, 'bill-line-amount-0').fill('45');
-  await expect(id(page, 'bill-line-unit-0')).toContainText('AED 0.45 per ml');
-  await id(page, 'bill-with-vat').click();
-  await expect(id(page, 'bill-vat')).toHaveValue('2.25');
+  // The item's bottle size is filled in; one bottle at 45.00 is 45 fils a ml, with 5% VAT on top.
+  await expect(id(page, 'bill-line-pack-0')).toHaveValue('100');
+  await id(page, 'bill-line-qty-0').fill('1');
+  await id(page, 'bill-line-price-0').fill('45');
+  await expect(id(page, 'bill-line-vat-0')).toHaveValue('2.25');
+  await expect(id(page, 'bill-line-stock-0')).toContainText('100 ml into stock');
+  await expect(id(page, 'bill-line-stock-0')).toContainText('AED 0.45 per ml');
   await expectMoney(page, 'bill-total', 4725);
   await id(page, 'bill-save').click();
   await expectMoney(page, 'bill-detail-vat', 225);
   await expectMoney(page, 'bill-detail-total', 4725);
-  await expect(text(page, /100 ml Argan oil 100/)).toBeVisible();
+  await expect(id(page, 'bill-detail-line-0')).toContainText('100 ml');
   await snap(page, 'bill-vat', mode);
 
   // An expense with VAT inside: 105.00 paid, 5.00 of it VAT.

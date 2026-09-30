@@ -223,6 +223,10 @@ export interface BillDetail extends Bill {
     unit_cost_minor: number;
     total_minor: number;
     update_stock: boolean;
+    /** As on the invoice: packs × price per pack, and the line's VAT. Older bills have no packs or price. */
+    packs: number | null;
+    unit_price_minor: number | null;
+    vat_minor: number;
     inventory_items: { unit: string } | null;
   }[];
   supplier_payments: { id: string; business_date: string; method: PayMethod; amount_minor: number; created_at: string }[];
@@ -255,7 +259,7 @@ export function useBill(businessId: string, id: string | undefined) {
     queryFn: async (): Promise<BillDetail> => {
       const { data, error } = await supabase
         .from('purchase_bills')
-        .select(`${BILL_FIELDS}, purchase_bill_lines(id, description, qty, unit_cost_minor, total_minor, update_stock, inventory_items(unit)), supplier_payments(id, business_date, method, amount_minor, created_at)`)
+        .select(`${BILL_FIELDS}, purchase_bill_lines(id, description, qty, unit_cost_minor, total_minor, update_stock, packs, unit_price_minor, vat_minor, inventory_items(unit)), supplier_payments(id, business_date, method, amount_minor, created_at)`)
         .eq('id', id!)
         .single();
       if (error) throw error;
@@ -264,12 +268,16 @@ export function useBill(businessId: string, id: string | undefined) {
   });
 }
 
+/** A row of the supplier's invoice; the database works out the stock (packs × pack size) and the cost per unit. */
 export interface BillLineInput {
   item_id?: string;
   description: string;
-  qty: number;
-  /** What was paid for the line; the database works out the cost per unit. */
-  total_minor: number;
+  packs: number;
+  /** What one pack holds in the item's stock unit (stock lines); it becomes the item's usual pack. */
+  pack_size?: number;
+  /** Price of one pack before VAT. */
+  unit_price_minor: number;
+  vat_minor: number;
   update_stock: boolean;
 }
 
@@ -279,8 +287,6 @@ export interface BillInput {
   bill_date: BusinessDate;
   note: string | null;
   lines: BillLineInput[];
-  /** Input VAT on the supplier's tax invoice (VAT-registered salons only). */
-  vat_minor?: number;
   paid_now?: { method: PayMethod; amount_minor: number };
   client_ref: string;
 }

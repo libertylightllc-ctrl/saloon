@@ -415,7 +415,8 @@
     "business": "Business",
     "app": "App",
     "salonCode": "Salon code: {{code}}",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "account": "Account"
   },
   "gallery": {
     "title": "Theme gallery",
@@ -1092,7 +1093,6 @@
     "thisMonth": "Bills this month",
     "noBills": "No bills yet.",
     "noSuppliers": "No suppliers yet.",
-    "billNumber": "Bill #{{number}}",
     "dueOn": "Due {{date}}",
     "overdueSince": "Overdue since {{date}}",
     "termsDays": "{{n}} days to pay",
@@ -1107,17 +1107,14 @@
     "invoiceRef": "Supplier's invoice number (optional)",
     "billDate": "Bill date",
     "lines": "What was bought",
-    "total": "Total",
     "paidNow": "Paid now",
     "paidNowHint": "Record the payment together with the bill.",
     "amountPaid": "Amount paid",
     "ownerPays": "The owner records payments to suppliers.",
     "saveBill": "Save bill · {{amount}}",
-    "billSaved": "Bill #{{number}} saved",
+    "billSaved": "{{number}} saved",
     "lineDescription": "What",
     "qty": "Qty",
-    "qtyUnit": "Qty ({{unit}})",
-    "unitCost": "Cost each",
     "addToStock": "Add to stock",
     "notStock": "Not stock (a cost)",
     "removeLine": "Remove line",
@@ -1125,7 +1122,6 @@
     "addOtherLine": "Other",
     "inStock": "added to stock",
     "paid": "Paid",
-    "left": "Left to pay",
     "due": "Due",
     "payments": "Payments",
     "pay": "Pay supplier",
@@ -1143,14 +1139,40 @@
       "paid": "Paid",
       "reversed": "Reversed"
     },
-    "lineAmount": "Amount paid",
     "perUnit": "= {{amount}} per {{unit}}",
     "perUnitAbout": "≈ {{amount}} per {{unit}}",
-    "withVat": "The supplier charged VAT (5%)",
+    "withVat": "The supplier charges VAT (5%)",
     "withVatHint": "From their tax invoice. You can claim it back in your VAT return.",
-    "vatAmount": "VAT on this bill",
-    "vat": "VAT",
-    "net": "Before VAT"
+    "numberLater": "The purchase number is given when you save",
+    "qtyPacks": "Qty (packs)",
+    "packHolds": "One pack holds ({{unit}})",
+    "unitPrice": "Unit price",
+    "lineVat": "VAT 5%",
+    "vatTooMuch": "More than the line itself",
+    "intoStock": "{{qty}} into stock",
+    "lineTotal": "Total",
+    "lineTotalVat": "Total (incl. VAT)",
+    "payment": {
+      "title": "Payment",
+      "credit": "Credit",
+      "creditHint": "Pay later: the amount is added to what you owe this supplier.",
+      "paidHint": "Paid now: recorded as a payment to the supplier."
+    },
+    "withVatCostHint": "Your salon isn’t VAT-registered, so the VAT is part of what the goods cost.",
+    "photo": "Photo of the supplier’s invoice",
+    "summary": "Purchase summary",
+    "subtotal": "Subtotal",
+    "vatTotal": "VAT 5%",
+    "grandTotal": "Grand total",
+    "balance": "Supplier balance",
+    "afterSave": "When you save: stock goes up, the supplier’s balance is updated, the purchase cost and the VAT are recorded, and the invoice photo is kept with the bill.",
+    "packsOf": "{{n}} × {{pack}}",
+    "each": "{{amount}} each",
+    "print": "Print / PDF",
+    "entryTitle": "Purchase entry",
+    "number": "Purchase no.",
+    "invoiceNo": "Invoice no.",
+    "product": "Product"
   },
   "closing": {
     "title": "Cash closing",
@@ -1306,7 +1328,9 @@
       "active": "In use",
       "activeHint": "Items no longer used are hidden but keep their history.",
       "montaji": "Montaji registration no.",
-      "montajiHint": "For cosmetic products (compliance)."
+      "montajiHint": "For cosmetic products (compliance).",
+      "packSize": "Pack size ({{unit}})",
+      "packSizeHint": "How much one pack or bottle holds as the supplier sells it: a 1 L bottle is 1000 ml, a box of 10 is 10. Purchases start from this."
     },
     "countHint": "Type what is on the shelf. Leave blank to skip.",
     "system": "Books say {{qty}}",
@@ -1823,7 +1847,10 @@
       "staffTitle": "The salon’s plan isn’t active",
       "staffBody": "Ask the owner to switch it on. You can still look around."
     },
-    "extendAction": "Ask to add months"
+    "extendAction": "Ask to add months",
+    "store": {
+      "inactiveBody": "This salon’s plan isn’t active, so nothing new can be saved for now. Everything already saved can still be viewed."
+    }
   },
   "admin": {
     "title": "Salons & plans",
@@ -1841,5 +1868,115 @@
     "endPlan": "End plan (note needed)",
     "ended": "{{name}}: plan ended",
     "hint": "The plan runs from today, or from its current end if it is still running. Ending it keeps all the salon’s data."
+  },
+  "account": {
+    "delete": {
+      "row": "Delete my account",
+      "title": "Delete your account",
+      "ownerBody": "This closes {{salon}}. Every login for it stops working, your team’s too, and its plan ends. Nothing new can be added after that.",
+      "staffBody": "Your login stops working and your name is taken off it. {{salon}} carries on without you.",
+      "kept": "The salon’s records (sales, VAT, expenses, purchases and payroll) are kept for five years, as UAE tax law requires, and then deleted.",
+      "backupFirst": "Make a backup first",
+      "typeLabel": "Type {{word}} to confirm",
+      "word": "DELETE",
+      "action": "Delete my account",
+      "done": "Your account has been deleted."
+    }
+  },
+  "legal": {
+    "updated": "Last updated {{date}}",
+    "agree": "By creating an account you agree to the terms and the privacy policy.",
+    "contact": {
+      "title": "Contact",
+      "body": "Questions or requests: {{email}}"
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "This policy explains what {{app}} collects, why, and the choices you have. {{app}} is software that barber shops and ladies salons in the UAE use to run their day: queue, sales, stock, staff, payroll and VAT.",
+      "who": {
+        "title": "Who we are",
+        "body": "{{app}} (“we”) provides the app and the website. For the details a salon keeps about its own customers and staff, the salon decides what is recorded and why; we store and process them for the salon, on its instructions."
+      },
+      "collect": {
+        "title": "What we collect",
+        "body": "• Your account: your name, email address and password (kept only as a secure hash). If you continue with Google, Google gives us your name and email address.\n• What salons enter: services and prices, sales and receipts, expenses, suppliers and purchases, stock, cash counts, customers’ names, phone numbers and visits, staff names, attendance and pay, and documents such as licences and photos of receipts.\n• This device: a notification token if you allow notifications. Your language and remembered sign-in stay on the device.\nWe use no advertising trackers and we never sell personal data."
+      },
+      "use": {
+        "title": "How we use it",
+        "body": "Only to run the service: to sign you in, save and show your salon’s records, send the notifications you switch on, produce receipts, reports and backups, keep the service secure, answer support requests and meet legal duties such as keeping tax records."
+      },
+      "where": {
+        "title": "Where it is kept",
+        "body": "With our hosting providers: Supabase (database, sign-in and file storage) and Vercel (the website). Notifications to phones go through Expo and Apple or Google, and Google handles “Continue with Google”. These providers may keep data outside the UAE and must keep it confidential and secure."
+      },
+      "share": {
+        "title": "Who we share it with",
+        "body": "Only the providers above, to run the service, and public authorities when the law requires it. Inside a salon, what each person sees follows their role; for example, a cashier cannot see payroll. Receipts you send by WhatsApp or print are shared by you."
+      },
+      "keep": {
+        "title": "How long we keep it",
+        "body": "Your account details stay until you delete your account. A salon’s financial records (sales, VAT, expenses, purchases and payroll) are kept for at least five years, as UAE tax law requires, even after an account is deleted or a salon closes. After that they are deleted."
+      },
+      "rights": {
+        "title": "Your choices and rights",
+        "body": "You can see and correct your details in the app. Owners can export all their salon’s data at any time (More → Backup & recovery). You can delete your account in the app (More → Delete my account): your sign-in and name are removed straight away. A salon’s customers and staff should contact the salon first, as it controls those records; we help it answer. Under the UAE Personal Data Protection Law you may also ask how your data is used and object to it."
+      },
+      "security": {
+        "title": "How we protect it",
+        "body": "Connections are encrypted, passwords and PINs are kept only as secure hashes, every salon’s records are kept apart, and access inside a salon follows each person’s role. Money records cannot be deleted or quietly changed: every correction leaves a history."
+      },
+      "children": {
+        "title": "Children",
+        "body": "The service is for businesses and people aged 18 or over. We do not knowingly collect children’s data through it."
+      },
+      "changes": {
+        "title": "Changes",
+        "body": "If we change this policy we update the date above and tell owners in the app about important changes."
+      }
+    },
+    "terms": {
+      "title": "Terms of use",
+      "intro": "These terms apply when you use {{app}}, the app and the website. By creating an account or using the service you agree to them.",
+      "service": {
+        "title": "The service",
+        "body": "{{app}} helps barber shops and ladies salons run their day: queue and bookings, sales and receipts, stock and purchases, expenses, cash closing, staff and payroll, UAE compliance, VAT and reports. It is a tool: you remain responsible for your business, your records, your tax returns and your staff’s pay."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "body": "Owners create the salon and their team’s logins, and are responsible for how they are used. Keep passwords and PINs private and tell us if you think an account has been misused. You must be 18 or over and allowed to act for the business."
+      },
+      "plans": {
+        "title": "Plans and payment",
+        "body": "Setting up is free. Using the features (queue, sales and the rest) needs an active plan, charged per branch per month at the price shown on our website. Plans are paid in advance, switch on when the payment is received and do not renew by themselves. Paid months are not refunded, except where the law requires. If a plan ends your data stays: you can still sign in, view it and export it."
+      },
+      "data": {
+        "title": "Your data",
+        "body": "Your salon’s data belongs to you. You allow us to store and process it only to provide the service. You are responsible for being allowed to record your customers’ and staff’s details (for example, their agreement to receive WhatsApp receipts). You can export it at any time."
+      },
+      "fairUse": {
+        "title": "Fair use",
+        "body": "Do not use the service for anything unlawful, to send spam, to reach other salons’ data, or to disrupt or copy the service."
+      },
+      "availability": {
+        "title": "Availability",
+        "body": "We work to keep the service running and your data safe, but cannot promise it will never be interrupted, so keep your own backups (More → Backup & recovery). We may improve or change features, and will tell owners in advance of a change that reduces what a paid plan includes."
+      },
+      "liability": {
+        "title": "Liability",
+        "body": "The service is provided as it is. As far as the law allows, we are not liable for indirect losses such as lost profit, and our total liability is limited to what you paid us in the three months before the claim. Figures, reports and VAT summaries are aids: check them with your accountant before filing."
+      },
+      "ending": {
+        "title": "Ending",
+        "body": "You can stop at any time by deleting your account in the app. We may suspend an account that breaks these terms or is not paid, after telling the owner when we reasonably can."
+      },
+      "law": {
+        "title": "Law",
+        "body": "These terms are governed by the laws of the United Arab Emirates as applied in the Emirate of Dubai, and the courts of Dubai decide any dispute."
+      },
+      "changes": {
+        "title": "Changes",
+        "body": "We may update these terms; the date above shows the current version. Using the service after a change means the new terms apply."
+      }
+    }
   }
 }

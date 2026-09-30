@@ -97,8 +97,26 @@ npx eas submit --platform ios
 Store listings (screenshots, description, privacy answers) are filled in on Google Play Console and App Store
 Connect. The screenshots in `e2e-results/screens/` (made by the test suite for both salon types) are a good start.
 
+### What the stores ask for, and where it is
+
+| Store asks for | In the app |
+|---|---|
+| Privacy policy URL | `https://<your website>/privacy` (open without signing in) |
+| Terms / EULA URL (optional) | `https://<your website>/terms` |
+| Account deletion inside the app | More → Delete my account (Google Play also wants a web link: the same page after signing in on the website) |
+| Support email | Put a real one in `src/config/brand.json` → `supportEmail` first; the legal pages and the landing page show it |
+| Subscriptions | The phone apps sell nothing: they show whether the plan is on. Plans are bought on the website. In App Store Connect answer "no in-app purchases"; if a reviewer asks, the app is for businesses and the plan is sold to the salon outside the app (guideline 3.1.3(c)). |
+| App icon | `assets/images/icon.png` (1024 × 1024, no transparency); regenerate all sizes with `node scripts/make-icons.mjs` |
+
+**Before you submit:** set your company's legal name and a real support email in `src/config/brand.json`, and have
+a lawyer read `/privacy` and `/terms` (the wording is a sensible start, not legal advice).
+
+Privacy answers ("data safety" / "App privacy"): the app collects name, email, phone numbers (customers), purchase
+and financial records (the salon's), and a push token; nothing is used for tracking or advertising, nothing is sold,
+data is encrypted in transit, and people can delete their account in the app.
+
 ## Things that are fixed once the app is in a store
 
-- The identifier `com.saloncontrol.app` (in `src/config/brand.ts`). Change it **before** the first upload if
+- The identifier `com.saloncontrol.app` (in `src/config/brand.json`). Change it **before** the first upload if
   the final brand name is different; after that it can never change.
-- The app name can change later (brand.ts `appName`), with a new build.
+- The app name can change later (brand.json `appName`), with a new build.

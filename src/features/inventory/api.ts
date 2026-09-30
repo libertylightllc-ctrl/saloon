@@ -102,7 +102,22 @@ export interface ItemInput {
   next_service_date: string | null;
   assigned_to: string | null;
   montaji_reg_no: string | null;
+  /** What one pack or bottle holds, in the item's unit (1 L bottle = 1000 ml); purchase bills start from it. */
+  pack_size?: number;
   active?: boolean;
+}
+
+/** The item's usual pack size (not part of inventory_levels()). */
+export function useItemPackSize(businessId: string, itemId: string | undefined) {
+  return useQuery({
+    enabled: Boolean(itemId),
+    queryKey: [...keys.catalog(businessId), 'pack', itemId],
+    queryFn: async (): Promise<number> => {
+      const { data, error } = await supabase.from('inventory_items').select('pack_size').eq('id', itemId!).single();
+      if (error) throw error;
+      return Number(data.pack_size);
+    },
+  });
 }
 
 export function useSaveItem(branchId: string, businessId: string) {

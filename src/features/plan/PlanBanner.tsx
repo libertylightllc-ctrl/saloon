@@ -9,8 +9,12 @@ import { semantic, spacing } from '@/theme';
 import { Card, Icon, PromoBanner, Text } from '@/ui';
 
 import { usePlanStatus } from './api';
+import { canOfferPlans } from './storePolicy';
 
-/** On Home while the salon has no active plan: the owner is shown the way to switch it on, everyone else why. */
+/**
+ * On Home while the salon has no active plan: on the website the owner is shown the way to switch it on; everyone
+ * else (and the owner in the phone apps, see storePolicy) is told why nothing new can be saved.
+ */
 export function PlanBanner() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -19,7 +23,7 @@ export function PlanBanner() {
   if (!plan.data || plan.data.active) return null;
   const price = formatMoney(plan.data.price_per_branch_minor);
 
-  if (can(role, 'requestPlan')) {
+  if (can(role, 'requestPlan') && canOfferPlans) {
     return (
       <View testID="plan-banner">
         <PromoBanner
@@ -38,7 +42,7 @@ export function PlanBanner() {
       <View style={styles.flex}>
         <Text variant="h4">{t('plan.banner.staffTitle')}</Text>
         <Text variant="small" color="textSecondary">
-          {t('plan.banner.staffBody')}
+          {t(can(role, 'requestPlan') ? 'plan.store.inactiveBody' : 'plan.banner.staffBody')}
         </Text>
       </View>
     </Card>

@@ -164,6 +164,10 @@ export default function Welcome() {
             {t('auth.landing.contact', { email: brand.supportEmail })}
           </Text>
         ) : null}
+        <View style={styles.legal}>
+          <Button variant="ghost" size="sm" label={t('legal.privacy.title')} onPress={() => router.push('/privacy')} testID="landing-privacy" />
+          <Button variant="ghost" size="sm" label={t('legal.terms.title')} onPress={() => router.push('/terms')} testID="landing-terms" />
+        </View>
         <Text variant="small" color="textSecondary" align="center">
           {`© ${new Date().getFullYear()} ${brand.appName}`}
         </Text>
@@ -194,4 +198,5 @@ const styles = StyleSheet.create({
   typesRow: { flexDirection: 'row' },
   steps: { padding: spacing.xl, gap: spacing.lg },
   footer: { gap: spacing.sm, alignItems: 'center', paddingTop: spacing['2xl'] },
+  legal: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: spacing.sm },
 });

@@ -10,6 +10,7 @@ import { semantic, spacing, useTheme } from '@/theme';
 import { Button, Card, FormError, HeaderBand, Icon, PillTabs, QueryState, Screen, StatusPill, Text, TextField, useToast, type IconName } from '@/ui';
 
 import { usePlanStatus, useRequestPlan } from './api';
+import { canOfferPlans } from './storePolicy';
 
 const MONTHS = [1, 3, 6, 12] as const;
 const INCLUDED: { key: string; icon: IconName }[] = [
@@ -32,7 +33,7 @@ export function PlanScreen() {
   const request = useRequestPlan(business.id);
   const [months, setMonths] = useState<(typeof MONTHS)[number]>(1);
   const [note, setNote] = useState('');
-  const owner = can(role, 'requestPlan');
+  const owner = can(role, 'requestPlan') && canOfferPlans;
 
   return (
     <Screen
@@ -53,17 +54,19 @@ export function PlanScreen() {
               <Text color="textSecondary">
                 {p.active && p.paid_until
                   ? t('plan.paidUntil', { date: dates.day(p.paid_until, 'd MMMM yyyy') })
-                  : t('plan.notActiveBody')}
+                  : t(canOfferPlans ? 'plan.notActiveBody' : 'plan.store.inactiveBody')}
               </Text>
-              <View style={[styles.price, { backgroundColor: theme.colors.primary50, borderRadius: theme.radius.md }]}>
-                <Text variant="display" tabular testID="plan-price">
-                  {formatMoney(p.price_per_branch_minor)}
-                </Text>
-                <Text color="textSecondary">{t('plan.perBranchMonth')}</Text>
-                <Text variant="small" color="textSecondary">
-                  {t('plan.forBranches', { count: p.branches, total: formatMoney(p.monthly_minor) })}
-                </Text>
-              </View>
+              {canOfferPlans ? (
+                <View style={[styles.price, { backgroundColor: theme.colors.primary50, borderRadius: theme.radius.md }]}>
+                  <Text variant="display" tabular testID="plan-price">
+                    {formatMoney(p.price_per_branch_minor)}
+                  </Text>
+                  <Text color="textSecondary">{t('plan.perBranchMonth')}</Text>
+                  <Text variant="small" color="textSecondary">
+                    {t('plan.forBranches', { count: p.branches, total: formatMoney(p.monthly_minor) })}
+                  </Text>
+                </View>
+              ) : null}
               <View style={styles.list}>
                 {INCLUDED.map((i) => (
                   <View key={i.key} style={styles.row}>

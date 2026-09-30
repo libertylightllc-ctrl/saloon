@@ -92,7 +92,8 @@ update storage.objects set name = name || '.old' where bucket_id = 'receipts';
 select is((select count(*)::int from storage.objects where bucket_id = 'receipts' and name not like '%.old'), 2,
   'renaming changes nothing (no one may update a photo)');
 select pg_temp.as_admin();
-select is((select count(*)::int from audit_log where entity_type = 'expense' and action = 'attach'), 1,
+select is((select count(*)::int from audit_log where business_id = current_setting('t.b')::uuid and entity_type = 'expense'
+  and action = 'attach'), 1,
   'attaching is in the history');
 select ok((select not public from storage.buckets where id = 'receipts'), 'the bucket is private');
 

@@ -42,6 +42,13 @@ export function MoneyInput({
   const { t } = useTranslation();
   const [text, setText] = useState(() => toText(value, currency));
   const invalid = text.trim() !== '' && parseMoney(text, currency) === null;
+  // Follow a value set from outside (a VAT worked out from the price, a total that changed), but never rewrite what
+  // the person is typing: their own keystrokes come back as the same value.
+  const [shown, setShown] = useState(value);
+  if (value !== shown) {
+    setShown(value);
+    if (value !== (text.trim() === '' ? null : parseMoney(text, currency))) setText(toText(value, currency));
+  }
 
   return (
     <TextField
@@ -59,8 +66,10 @@ export function MoneyInput({
         </Text>
       }
       onChangeText={(next) => {
+        const parsed = next.trim() === '' ? null : parseMoney(next, currency);
         setText(next);
-        onChange(next.trim() === '' ? null : parseMoney(next, currency));
+        setShown(parsed);
+        onChange(parsed);
       }}
       onBlur={() => {
         const parsed = parseMoney(text, currency);

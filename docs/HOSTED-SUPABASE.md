@@ -52,7 +52,8 @@ that the tools on this Mac can update the hosted database, and I never see the p
 
 1. `npx supabase db push`: creates all tables, security rules and functions (`supabase/migrations`),
    and the private `receipts` photo bucket with its rules (nothing to click in Storage).
-2. `npx supabase functions deploy create-staff-login manage-staff-login send-push`: staff logins and push delivery
+2. `npx supabase functions deploy create-staff-login manage-staff-login send-push delete-account`: staff logins, push
+   delivery and account deletion
    (`push-sink` is a local stand-in and is never deployed). Supabase gives functions their own service key
    automatically; it never leaves Supabase.
    Then, once, so the every-minute push job can reach `send-push` (both values are public; this is the anon key,

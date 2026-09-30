@@ -486,6 +486,7 @@ export type Database = {
       };
       businesses: {
         Row: {
+          closed_at: string | null;
           code: string;
           country_code: string;
           created_at: string;
@@ -497,6 +498,7 @@ export type Database = {
           timezone: string;
         };
         Insert: {
+          closed_at?: string | null;
           code: string;
           country_code?: string;
           created_at?: string;
@@ -508,6 +510,7 @@ export type Database = {
           timezone?: string;
         };
         Update: {
+          closed_at?: string | null;
           code?: string;
           country_code?: string;
           created_at?: string;
@@ -1109,6 +1112,7 @@ export type Database = {
           montaji_reg_no: string | null;
           name: string;
           next_service_date: string | null;
+          pack_size: number;
           reorder_level: number;
           sell_price_minor: number | null;
           unit: string;
@@ -1126,6 +1130,7 @@ export type Database = {
           montaji_reg_no?: string | null;
           name: string;
           next_service_date?: string | null;
+          pack_size?: number;
           reorder_level?: number;
           sell_price_minor?: number | null;
           unit?: string;
@@ -1143,6 +1148,7 @@ export type Database = {
           montaji_reg_no?: string | null;
           name?: string;
           next_service_date?: string | null;
+          pack_size?: number;
           reorder_level?: number;
           sell_price_minor?: number | null;
           unit?: string;
@@ -1806,30 +1812,39 @@ export type Database = {
           description: string;
           id: string;
           item_id: string | null;
+          packs: number | null;
           qty: number;
           total_minor: number;
           unit_cost_minor: number;
+          unit_price_minor: number | null;
           update_stock: boolean;
+          vat_minor: number;
         };
         Insert: {
           bill_id: string;
           description: string;
           id?: string;
           item_id?: string | null;
+          packs?: number | null;
           qty: number;
           total_minor: number;
           unit_cost_minor: number;
+          unit_price_minor?: number | null;
           update_stock?: boolean;
+          vat_minor?: number;
         };
         Update: {
           bill_id?: string;
           description?: string;
           id?: string;
           item_id?: string | null;
+          packs?: number | null;
           qty?: number;
           total_minor?: number;
           unit_cost_minor?: number;
+          unit_price_minor?: number | null;
           update_stock?: boolean;
+          vat_minor?: number;
         };
         Relationships: [
           {
@@ -3221,6 +3236,7 @@ export type Database = {
       create_sale: { Args: { p: Json }; Returns: Json };
       current_member_id: { Args: { p_business: string }; Returns: string };
       dashboard_today: { Args: { p_branch: string }; Returns: Json };
+      delete_account_data: { Args: { p_user: string }; Returns: Json };
       dismiss_refund_request: { Args: { p_id: string; p_note: string }; Returns: undefined };
       dispatch_push: { Args: Record<PropertyKey, never>; Returns: number };
       expected_cash: { Args: { p_branch: string; p_date?: string }; Returns: number };

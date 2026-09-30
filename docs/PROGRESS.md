@@ -1,6 +1,6 @@
 # Progress
 
-Updated: 2026-09-29
+Updated: 2026-09-30
 
 ## Current milestone: M4 — Books & finish. M3 ✅ built (hand-over: docs/M3-HANDOVER.md), M2 ✅ done
 
@@ -16,6 +16,12 @@ Updated: 2026-09-29
   Texts remain machine drafts for a native speaker to review.
 - ✅ Store builds prepared — `eas.json`, `app.config.ts`, `docs/STORE-RELEASE.md`. Building needs the owner's
   Expo / Apple / Google accounts.
+- ✅ Owner feedback (2026-09-30) — optional service time, staff name on sales and receipts, show password, VAT on
+  bills and expenses, VAT report (SQL `15_feedback_vat`, e2e flow 30); panels reopen after a tap outside (flow 31).
+- ✅ Launch items (2026-09-30) — purchase entry in the invoice format (packs, unit price, VAT 5% per line, subtotal /
+  VAT / grand total / paid / supplier balance, PUR-00001, Print / PDF), pack sizes; privacy policy and terms;
+  Delete my account (closes the salon for an owner); phone apps show the plan without selling it; installable
+  website with a real app icon. SQL `16_launch_purchases`, e2e flow 32.
 - ⏳ Proof — full suite 3 runs in a row and the button sweep: see docs/M4-HANDOVER.md.
 
 

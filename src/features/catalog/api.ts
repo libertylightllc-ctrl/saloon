@@ -5,7 +5,7 @@ import type { Tables } from '@/lib/database.types';
 import { asJson, supabase } from '@/lib/supabase';
 
 export type Category = Tables<'service_categories'>;
-export type InventoryItem = Pick<Tables<'inventory_items'>, 'id' | 'name' | 'unit'>;
+export type InventoryItem = Pick<Tables<'inventory_items'>, 'id' | 'name' | 'unit' | 'pack_size'>;
 export interface RecipeLine {
   item_id: string;
   qty: number;
@@ -31,7 +31,7 @@ export function useCatalog(businessId: string) {
           .select('*, service_recipe_items(qty, item_id, inventory_items(name, unit))')
           .eq('business_id', businessId)
           .order('name'),
-        supabase.from('inventory_items').select('id, name, unit').eq('business_id', businessId).eq('active', true).order('name'),
+        supabase.from('inventory_items').select('id, name, unit, pack_size').eq('business_id', businessId).eq('active', true).order('name'),
       ]);
       for (const r of [categories, services, items]) if (r.error) throw r.error;
       return {
