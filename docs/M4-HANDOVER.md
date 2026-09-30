@@ -35,8 +35,9 @@ live at the Vercel link with hosted Supabase
 - **Launch items**: Privacy policy and Terms (/privacy, /terms); **Delete my account** (an owner's closes the salon;
   records are kept 5 years as the law requires); the phone apps show the plan but do not sell it (store rules);
   the website installs to the home screen with its own icon.
-- **One person, one record**: a login joins the person's Staff & payroll record (Create login on their page, or
-  pick them in Team & logins → New); people already recorded twice were merged.
+- **Staff is one place** for people, pay and logins (Team & logins is gone): Add staff has a "Can sign in to the app"
+  switch; each person's page has an App login card; an outside accountant can be added as login only. People who had
+  been recorded twice were merged.
 
 ## How it is proven
 | Check | Command | Result |

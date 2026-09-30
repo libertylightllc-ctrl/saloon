@@ -34,7 +34,7 @@ import { ClockCard } from '@/features/staff/ClockCard';
 
 const SETUP_STEPS: { key: keyof NonNullable<Dashboard['setup']>; href: Href }[] = [
   { key: 'services', href: '/services' },
-  { key: 'staff', href: '/settings/team' },
+  { key: 'staff', href: '/staff' },
   { key: 'tax', href: '/settings/branch' },
   { key: 'opening_cash', href: '/settings/branch' },
   { key: 'opening_stock', href: '/inventory/opening' },

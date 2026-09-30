@@ -1,7 +1,7 @@
-import { createOwner, createStaff } from './support/api';
+import { admin, createOwner, createStaff } from './support/api';
 import { uid } from './support/env';
 import { expect, test, THEME } from './support/fixtures';
-import { expectTheme, field, id, idStarts, ownerOn, snap, staffOn, tab, text, visibleTabs } from './support/ui';
+import { expectTheme, id, idStarts, ownerOn, snap, staffOn, tab, text, visibleTabs } from './support/ui';
 
 test('owner creates a cashier login; the cashier sees cashier tabs in the branch theme', async ({ page, mode, device }) => {
   const owner = await createOwner(mode);
@@ -10,28 +10,36 @@ test('owner creates a cashier login; the cashier sees cashier tabs in the branch
   await ownerOn(page, mode, owner.email, owner.password);
   await tab(page, 'more');
   await expect(id(page, 'more-salon-code')).toContainText(owner.code);
-  await id(page, 'more-team').click();
+  // Staff is the one place for people and their logins: added with their job and a login in one form.
+  await id(page, 'more-staff').click();
   await expect(id(page, 'team-salon-code')).toHaveText(owner.code);
-  await id(page, 'team-new').click();
-
+  await id(page, 'staff-add').click();
   const username = `cash${uid().slice(-6)}`;
-  await id(page, 'create-login').click();
-  await expect(text(page, 'Required').first()).toBeVisible();
-  await field(page, 'display_name').fill('Faisal Cashier');
-  await id(page, 'role-cashier').click();
-  await field(page, 'username').fill(username);
-  await field(page, 'password').fill('Cash1234!');
-  await id(page, 'create-login').click();
-  await expect(id(page, `member-${username}`)).toBeVisible();
+  await id(page, 'staff-name').fill('Faisal Cashier');
+  await id(page, 'staff-title-cashier').click();
+  await id(page, 'staff-can-login').click();
+  await expect(id(page, 'role-cashier')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(page, 'staff-save')).toBeDisabled();
+  await id(page, 'login-username').fill(username);
+  await id(page, 'login-password').fill('Cash1234!');
+  await id(page, 'staff-save').click();
+  await expect(text(page, `Faisal Cashier saved, with login ${username}`)).toBeVisible();
+  await expect(id(page, 'staff-login-card')).toContainText(`@${username}`);
 
-  // Same username again is refused with a clear message.
-  await id(page, 'team-new').click();
-  await field(page, 'display_name').fill('Someone Else');
-  await field(page, 'username').fill(username);
-  await field(page, 'password').fill('Cash1234!');
-  await id(page, 'create-login').click();
+  // Same username again is refused with a clear message; the person is kept and Save again adds only the login.
+  await page.goto('/staff/form');
+  await id(page, 'staff-name').fill('Someone Else');
+  await id(page, 'staff-can-login').click();
+  await id(page, 'login-username').fill(username);
+  await id(page, 'login-password').fill('Cash1234!');
+  await id(page, 'staff-save').click();
   await expect(id(page, 'form-error')).toContainText('That username is taken');
-  await page.keyboard.press('Escape');
+  await expect(text(page, /Someone Else is saved/)).toBeVisible();
+  await id(page, 'login-username').fill(`${username}x`);
+  await id(page, 'staff-save').click();
+  await expect(id(page, 'staff-login-card')).toContainText(`@${username}x`);
+  const { count } = await admin.from('employees').select('id', { count: 'exact', head: true }).eq('business_id', owner.businessId).eq('full_name', 'Someone Else');
+  expect(count).toBe(1);
 
   // The cashier's phone picked the other salon type; the branch's type wins after sign-in.
   const phone = await device();

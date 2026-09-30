@@ -7,8 +7,9 @@ import { asJson, supabase } from '@/lib/supabase';
 
 export type TeamMember = Tables<'members'> & { employees: Pick<Tables<'employees'>, 'commission_bps' | 'colour'> | null };
 
-export function useTeam(businessId: string) {
+export function useTeam(businessId: string, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: keys.team(businessId),
     queryFn: async (): Promise<TeamMember[]> => {
       const { data, error } = await supabase

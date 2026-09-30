@@ -116,7 +116,7 @@ visits count, last visit, preference, risk StatusPill, actions Book / New sale. 
 Profile card at top (name, role, branch switcher if more than one branch), then grouped MenuRows
 (reference: Barber kit Profile list with coloured icon squares):
 - Catalogue & stock: Services · Inventory & tools · Purchases & suppliers · Expenses
-- People & compliance: Staff & payroll · Attendance · Compliance
+- People & compliance: Staff (people, pay, shifts and app logins in one place; payroll from it) · Attendance · Compliance
 - Money & reports: Cash closing · Accounting · Reports
 - System: Setup · Settings · Notifications · Language · Log out
 Hidden rows for roles without access.

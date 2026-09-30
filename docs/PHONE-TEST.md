@@ -28,11 +28,11 @@ allow incoming connections for "node", or switch the firewall off for the test.
 
 ## 2 · Cashier login (A creates, B signs in, 2 min)
 
-1. A: **More → Team & logins**. Note the **salon code** (e.g. `testgents`). **New** → name `Faisal`,
-   role **Cashier**, username `faisal`, password `Cash1234!` → **Create login**.
+1. A: **More → Staff**. Note the **salon code** at the top (e.g. `testgents`). **Add staff** → name `Faisal`,
+   job **Cashier**, switch on **Can sign in to the app** → username `faisal`, password `Cash1234!` → **Save**.
 2. B: tap **Ladies salon & spa** on purpose → **Staff** tab → salon code, `faisal`, `Cash1234!` → **Sign in**.
 3. ✅ B turns **violet** (the branch is gents), tabs: Home · Queue · Sale · Customers · More.
-   B's More has **no** Team or Branch settings.
+   B's More has **no** Staff or Branch settings.
 
 ## 3 · Walk-in, live on both phones (2 min)
 
@@ -64,9 +64,9 @@ A: More → **Branch settings** → tap **Ladies salon & spa** → **Switch to L
 
 ## 7 · Disabled login (1 min)
 
-1. A: More → Team & logins → Faisal → **Disable login**.
+1. A: More → Staff → Faisal → **Password & sign-in** → **Disable login**.
    ✅ B is signed out by itself: "This login is disabled. Ask the owner."
-2. A: **Enable login** again; B can sign in again (salon code is remembered).
+2. A: **Password & sign-in** → **Enable login** again; B can sign in again (salon code is remembered).
 
 ## 8 · Owner's books (A, 1 min)
 
@@ -129,18 +129,18 @@ If anything does not match a ✅, note the step number and what you saw.
 
 # M3 add-on: people, pay, compliance and notifications (10 minutes)
 
-Same two phones. Phone A = owner, phone B = the barber/stylist login from step 2 (or add one in Team & logins).
+Same two phones. Phone A = owner, phone B = the barber/stylist login from step 2 (or add one in More → Staff).
 
 ## 14 · Roster and a late clock-in (3 min)
 
-1. A: More → **Staff & payroll** → the barber → **Edit** → salary `3500`, commission `10`, **WPS** on → Save.
+1. A: More → **Staff** → the barber → **Edit** → salary `3500`, commission `10`, **WPS** on → Save.
 2. A: **Weekly roster → Edit** → switch on today, start = one hour ago, end `22:00` → **Save roster**.
 3. B: Home shows **My day** with that shift → **Clock in**. ✅ "Clocked in — 60 min late" (roughly).
-4. A: Staff & payroll → **Attendance** → ✅ the barber shows **In** and **Late**.
+4. A: Staff → **Attendance** → ✅ the barber shows **In** and **Late**.
 
 ## 15 · Payroll (3 min)
 
-1. A: Staff & payroll → **Payroll** → **Bonuses & advances** → New → the barber, **Advance** `100`, Cash → Save.
+1. A: Staff → **Payroll** → **Bonuses & advances** → New → the barber, **Advance** `100`, Cash → Save.
    ✅ Home's expected cash drops by 100.
 2. Back → **Work out payroll** → ✅ the barber's line = 3,500 + commission − 100.
    **Approve payroll** → tap the barber → **Pay … by bank** → **Choose photo** (any screenshot) → ✅ "WPS proven".
@@ -236,9 +236,10 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 1. iPhone Safari: open the Vercel link → Share → **Add to Home Screen** → ✅ the scissors icon; it opens full-screen.
 2. Android Chrome: ⋮ → **Install app** → ✅ the same.
 
-## 27 · One person, one record (2 min)
+## 27 · Staff and their logins in one place (2 min)
 
-1. A: More → **Staff & payroll** → **Add staff** → a name and salary → Save → on their page **Create login** →
-   username + password → ✅ "Login: …" on their page; the Staff list shows them once.
-2. Add another person the same way but without a login → More → **Team & logins** → **New** → ✅ "Who is this login
-   for?" lists them → pick them → username + password → ✅ still one record in Staff & payroll, now with the login.
+1. A: More → **Staff** → **Add staff** → a name, job and salary, switch on **Can sign in to the app** → username +
+   password → Save → ✅ their page shows the pay and **App login @username**; the Staff list shows them once.
+2. **Add staff** → another person without the switch → Save → on their page **Create login** → ✅ the login joins them
+   (still one entry in the list). **Password & sign-in** resets the password or turns sign-in off.
+3. **Add staff** → **Accountant (login only)** → name, username, password → ✅ listed under **Login only**.

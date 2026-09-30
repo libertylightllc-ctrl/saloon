@@ -63,11 +63,12 @@ test('staff: wrong password; disabled while signed in → signed out with a clea
   await id(phone, 'sign-in-submit').click();
   await expect(id(phone, 'tab-index')).toBeVisible({ timeout: 30_000 });
 
-  // The owner disables the login from Team & logins.
+  // The owner turns the login off on the person's page (Staff → the person → Password & sign-in).
   await ownerOn(page, mode, owner.email, owner.password);
   await tab(page, 'more');
-  await id(page, 'more-team').click();
-  await id(page, `member-${staff.username}`).click();
+  await id(page, 'more-staff').click();
+  await id(page, `staff-${staff.name}`).click();
+  await id(page, 'staff-manage-login').click();
   await id(page, 'toggle-active').click();
   await expect(text(page, `${staff.name} can no longer sign in`)).toBeVisible();
 
@@ -82,7 +83,7 @@ test('staff: wrong password; disabled while signed in → signed out with a clea
   await expect(id(phone, 'form-error')).toContainText('This login is disabled.');
 
   // Enabled again → can sign in.
-  await id(page, `member-${staff.username}`).click();
+  await id(page, 'staff-manage-login').click();
   await id(page, 'toggle-active').click();
   await expect(text(page, `${staff.name} can sign in again`)).toBeVisible();
   await signInStaff(phone, owner.code, staff.username, staff.password);

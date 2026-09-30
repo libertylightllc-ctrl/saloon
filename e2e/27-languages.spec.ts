@@ -18,7 +18,7 @@ const LANGUAGES = [
 const SCREENS = [
   '/', '/queue', '/sale', '/customers', '/more', '/services', '/sales', '/expenses', '/purchases', '/cash-closing',
   '/inventory', '/staff', '/attendance', '/payroll', '/compliance', '/accounts', '/accounts/close-period', '/reports',
-  '/reports?type=staff', '/settings/branch', '/settings/team', '/settings/backup', '/notifications',
+  '/reports?type=staff', '/settings/branch', '/settings/backup', '/notifications',
 ];
 
 /** Text that looks like an i18n key (e.g. "reports.kpi.sales") means a missing translation. */

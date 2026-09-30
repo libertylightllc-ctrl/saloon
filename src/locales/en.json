@@ -135,7 +135,7 @@
       "action": "Continue setup",
       "steps": {
         "services": "check your services",
-        "staff": "add a staff login",
+        "staff": "add your staff",
         "tax": "confirm tax settings",
         "opening_cash": "set opening cash",
         "opening_stock": "count your opening stock",
@@ -391,7 +391,7 @@
       "inventory": "Inventory & tools",
       "purchases": "Purchases & suppliers",
       "expenses": "Expenses",
-      "staff": "Staff & payroll",
+      "staff": "Staff",
       "attendance": "Attendance",
       "compliance": "Compliance",
       "cashClosing": "Cash closing",
@@ -401,7 +401,6 @@
       "settings": "Settings",
       "notifications": "Notifications",
       "sales": "Sales",
-      "team": "Team & logins",
       "branch": "Branch settings",
       "accounts": "Accounts & history",
       "backup": "Backup & recovery",
@@ -838,9 +837,7 @@
     "iconOption": "Icon {{n}}"
   },
   "team": {
-    "title": "Team & logins",
     "codeExplain": "Staff sign in with this salon code plus their username.",
-    "newLogin": "New login",
     "create": "Create login",
     "created": "Login created: {{username}} at salon {{code}}",
     "fields": {
@@ -866,10 +863,7 @@
     "disabledToast": "{{name}} can no longer sign in",
     "enabledToast": "{{name}} can sign in again",
     "loginFor": "Login for {{name}}",
-    "whoFor": "Who is this login for?",
-    "someoneNew": "Someone new",
-    "pickHint": "Already in Staff & payroll? Pick them, so they are not added twice.",
-    "fromStaff": "The login goes on {{name}}’s record in Staff & payroll, with their pay, roster and WPS."
+    "fromStaff": "The login goes on {{name}}’s staff record, with their pay, roster and WPS."
   },
   "branch": {
     "title": "Branch settings",
@@ -1364,8 +1358,8 @@
     "failedLater": "Saved. The photo did not upload — add it from the details."
   },
   "staff": {
-    "title": "Staff & payroll",
-    "subtitle": "Pay terms, rosters and attendance",
+    "title": "Staff",
+    "subtitle": "Pay, shifts and app logins",
     "add": "Add staff",
     "empty": "No staff yet.",
     "people": "People",
@@ -1414,7 +1408,21 @@
       "activeHint": "People who left are hidden but keep their history."
     },
     "createLogin": "Create login",
-    "loginAfterSave": "Will they use the app? After saving, give them a login on their page (Create login)."
+    "who": {
+      "staff": "Staff member",
+      "accountant": "Accountant (login only)"
+    },
+    "accountantHint": "For an accountant who is not on your payroll: they can read money and reports, and cannot sell.",
+    "canLogin": "Can sign in to the app",
+    "canLoginHint": "Leave it off for people who never use the app; they can still be on the roster and be paid.",
+    "appAccess": "What they can do in the app",
+    "loginTitle": "App login",
+    "salonCode": "salon code {{code}}",
+    "noLoginBody": "No app login. They can still be on the roster, clock in at the counter and be paid.",
+    "manageLogin": "Password & sign-in",
+    "loginOnly": "Login only",
+    "savedWithLogin": "{{name}} saved, with login {{username}}",
+    "savedLoginFailed": "{{name}} is saved. Change the username and press Save again to add the login."
   },
   "attendance": {
     "title": "Attendance",

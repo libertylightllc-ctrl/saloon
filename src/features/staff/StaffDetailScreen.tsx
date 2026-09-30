@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
-import { CreateLoginSheet } from '@/features/settings/CreateLoginSheet';
 import { formatBps, formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
@@ -13,6 +12,7 @@ import { Avatar, Button, Card, EmptyState, HeaderBand, QueryState, Screen, Secti
 
 import { useAttendanceHistory, useStaffDirectory } from './api';
 import { useRoleTitle, WEEKDAYS } from './labels';
+import { LoginCard } from './LoginCard';
 import { RosterSheet } from './RosterSheet';
 
 function Row({ label, value, testID }: { label: string; value: string; testID?: string }) {
@@ -39,7 +39,6 @@ export function StaffDetailScreen() {
   const staff = useStaffDirectory(business.id);
   const history = useAttendanceHistory(id);
   const [editingRoster, setEditingRoster] = useState(false);
-  const [creatingLogin, setCreatingLogin] = useState(false);
   const person = staff.data?.find((s) => s.employee_id === id);
   const owner = can(role, 'manageStaff');
 
@@ -75,17 +74,9 @@ export function StaffDetailScreen() {
                       testID="staff-edit"
                     />
                   ) : null}
-                  {!person.username && can(role, 'manageUsers') ? (
-                    <Button
-                      label={t('staff.createLogin')}
-                      icon="keyRound"
-                      variant="secondary"
-                      size="md"
-                      onPress={() => setCreatingLogin(true)}
-                      testID="staff-create-login"
-                    />
-                  ) : null}
                 </Card>
+
+                <LoginCard person={person} />
 
                 <SectionHeader
                   title={t('staff.roster')}
@@ -125,13 +116,6 @@ export function StaffDetailScreen() {
         </QueryState>
       </Screen>
       {person ? <RosterSheet person={person} open={editingRoster} onClose={() => setEditingRoster(false)} /> : null}
-      {person && !person.username ? (
-        <CreateLoginSheet
-          open={creatingLogin}
-          onClose={() => setCreatingLogin(false)}
-          person={{ employee_id: person.employee_id, full_name: person.full_name, role_title: person.role_title }}
-        />
-      ) : null}
     </>
   );
 }
