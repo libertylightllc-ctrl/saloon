@@ -3,24 +3,22 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { forget } from '@/features/auth/quickSwitch';
-import { useSession, useWorkspace } from '@/features/auth/session';
+import { useWorkspace } from '@/features/auth/session';
 import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
-import { BottomSheet, Button, FormError, Text, TextField, useToast } from '@/ui';
+import { BottomSheet, Button, FormError, Text, TextField } from '@/ui';
 
 import { useDeleteAccount } from './api';
 
 /**
  * Deleting one's own account, as the app stores require. The owner is told it closes the salon; everyone is told the
- * salon's records are kept (UAE law). The person types a word to confirm, then is signed out.
+ * salon's records are kept (UAE law). The person types a word to confirm; they end on the sign-in page, told the
+ * account was deleted.
  */
 export function DeleteAccountSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useTranslation();
   const router = useRouter();
-  const toast = useToast();
-  const { signOut } = useSession();
-  const { member, business, role } = useWorkspace();
+  const { business, role } = useWorkspace();
   const remove = useDeleteAccount();
   const [typed, setTyped] = useState('');
   const word = t('account.delete.word');
@@ -63,15 +61,7 @@ export function DeleteAccountSheet({ open, onClose }: { open: boolean; onClose: 
           label={t('account.delete.action')}
           disabled={!confirmed}
           loading={remove.isPending}
-          onPress={() =>
-            remove.mutate(undefined, {
-              onSuccess: async () => {
-                await forget(member.id).catch(() => undefined);
-                toast(t('account.delete.done'));
-                await signOut();
-              },
-            })
-          }
+          onPress={() => remove.mutate()}
           testID="delete-account-submit"
         />
         <Button variant="ghost" label={t('common.cancel')} onPress={close} testID="delete-account-cancel" />

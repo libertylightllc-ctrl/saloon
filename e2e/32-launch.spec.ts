@@ -138,8 +138,22 @@ test('a barber deletes their login; then the owner deletes theirs, which closes 
   await expect(id(page, 'delete-account-submit')).toBeDisabled();
   await id(page, 'delete-account-confirm').fill('delete');
   await snap(page, 'delete-account-staff', mode);
+  // The server switches the login off before it answers. Hold its answer back until the phone has already signed
+  // itself out on hearing that (the order a busy server produces): the person must still be told the account was
+  // deleted, never "This login is disabled".
+  let seen: (text: string) => void = () => undefined;
+  const firstNotice = new Promise<string>((resolve) => (seen = resolve));
+  await page.route('**/functions/v1/delete-account', async (route) => {
+    const response = await route.fetch();
+    await expect(id(page, 'session-notice')).toBeVisible({ timeout: 15_000 });
+    seen(await id(page, 'session-notice').innerText());
+    // Signing out may have dropped the waiting request already; the server has done its work either way.
+    await route.fulfill({ response }).catch(() => undefined);
+  });
   await id(page, 'delete-account-submit').click();
-  await expect(text(page, 'Your account has been deleted.')).toBeVisible();
+  expect(await firstNotice).toBe('Your account has been deleted.');
+  await expect(id(page, 'session-notice')).toHaveText('Your account has been deleted.');
+  await page.unroute('**/functions/v1/delete-account');
   await expect(id(page, 'sign-in-submit')).toBeVisible();
   const { data: gone } = await admin
     .from('members')

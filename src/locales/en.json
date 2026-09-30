@@ -750,7 +750,8 @@
     "wrong_pin": "That PIN is not right.",
     "switch_expired": "That person needs to sign in again with their password.",
     "plan_required": "Your salon’s plan isn’t active, so this can’t be saved yet. The owner can switch it on under More → Plan & billing.",
-    "employee_has_login": "This person already has a login."
+    "employee_has_login": "This person already has a login.",
+    "account_deleted": "Your account has been deleted."
   },
   "sales": {
     "title": "Sales",
@@ -1895,8 +1896,7 @@
       "backupFirst": "Make a backup first",
       "typeLabel": "Type {{word}} to confirm",
       "word": "DELETE",
-      "action": "Delete my account",
-      "done": "Your account has been deleted."
+      "action": "Delete my account"
     }
   },
   "legal": {

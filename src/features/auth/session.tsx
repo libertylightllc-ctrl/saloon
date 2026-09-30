@@ -8,7 +8,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { Platform } from 'react-native';
 
 import type { Tables } from '@/lib/database.types';
-import { errorCode, type ErrorCode } from '@/lib/errors';
+import { errorCode, functionError, type ErrorCode } from '@/lib/errors';
 import type { BranchRules, Role } from '@/lib/permissions';
 import { queryClient } from '@/lib/queryClient';
 import { forget } from './quickSwitch';
@@ -35,6 +35,8 @@ interface SessionValue {
   clearNotice: () => void;
   reload: () => Promise<void>;
   signOut: () => Promise<void>;
+  /** Deletes the signed-in person's account (delete-account function), then signs them out. */
+  deleteAccount: () => Promise<void>;
 }
 
 const SessionContext = createContext<SessionValue | null>(null);
@@ -86,6 +88,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const generation = useRef(0);
   const currentUser = useRef<string | null>(null);
   const currentMember = useRef<string | null>(null);
+  /**
+   * Set while this person deletes their own account. The server switches their login off before it answers, and the
+   * live member watch can sign them out first: that is then expected, and they are told the account was deleted
+   * (not "This login is disabled").
+   */
+  const deleting = useRef(false);
 
   const signOut = useCallback(async () => {
     // The audit row is sent with the current token; the local session is cleared right away so a
@@ -117,7 +125,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       const next = await loadMembership(userId);
       if (stale()) return;
       if (next.member && !next.member.active) {
-        setNotice('disabled');
+        setNotice(deleting.current ? 'account_deleted' : 'disabled');
         await signOut();
         return;
       }
@@ -201,6 +209,18 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     };
   }, [branchId, memberId, reload]);
 
+  const deleteAccount = useCallback(async () => {
+    deleting.current = true;
+    try {
+      const { error } = await supabase.functions.invoke('delete-account', { body: { confirm: 'DELETE' } });
+      if (error) throw await functionError(error);
+      setNotice('account_deleted');
+      await signOut();
+    } finally {
+      deleting.current = false;
+    }
+  }, [signOut]);
+
   const value = useMemo<SessionValue>(() => {
     const settings = (loaded.branch?.settings ?? {}) as Record<string, unknown>;
     return {
@@ -213,8 +233,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       clearNotice: () => setNotice(null),
       reload,
       signOut,
+      deleteAccount,
     };
-  }, [status, session, loaded, notice, reload, signOut]);
+  }, [status, session, loaded, notice, reload, signOut, deleteAccount]);
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

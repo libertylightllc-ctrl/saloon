@@ -1,15 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { functionError } from '@/lib/errors';
-import { supabase } from '@/lib/supabase';
+import { useSession } from '@/features/auth/session';
 
-/** Deletes the signed-in person's account on the server (the delete-account Edge Function). */
+/**
+ * Deletes the signed-in person's account. The session does the work (so the "deleted" message survives this screen
+ * closing when the person is signed out) and ends on the sign-in page with that message.
+ */
 export function useDeleteAccount() {
-  return useMutation({
-    mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke('delete-account', { body: { confirm: 'DELETE' } });
-      if (error) throw await functionError(error);
-      return data as { ok: true; business_closed: boolean };
-    },
-  });
+  const { deleteAccount } = useSession();
+  return useMutation({ mutationFn: deleteAccount });
 }

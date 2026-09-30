@@ -12,7 +12,7 @@ import { rememberedSalonCode, rememberedSignInAs, signInOwner, signInStaff } fro
 import { AuthShell } from '@/features/auth/AuthShell';
 import { GoogleButton } from '@/features/auth/GoogleButton';
 import { useSession } from '@/features/auth/session';
-import { AppError } from '@/lib/errors';
+import { SessionNotice } from '@/features/auth/SessionNotice';
 import { spacing } from '@/theme';
 import { Button, FormError, FormTextField, SegmentTabs, Text } from '@/ui';
 
@@ -56,7 +56,7 @@ export default function SignIn() {
         }}
         testID="sign-in-as"
       />
-      {notice ? <FormError error={new AppError(notice)} testID="session-notice" /> : null}
+      {notice ? <SessionNotice code={notice} /> : null}
       {who === 'owner' ? <OwnerForm /> : <StaffForm />}
       <Link href="/welcome" asChild>
         <Button label={t('auth.landing.about', { app: brand.appName })} variant="ghost" size="sm" icon="sparkles" testID="link-about" />
