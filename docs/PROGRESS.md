@@ -1,6 +1,6 @@
 # Progress
 
-Updated: 2026-09-30
+Updated: 2026-10-01
 
 ## Current milestone: M4 — Books & finish. M3 ✅ built (hand-over: docs/M3-HANDOVER.md), M2 ✅ done
 
@@ -25,7 +25,7 @@ Updated: 2026-09-30
 - ✅ One place for staff (2026-09-30): Staff & payroll and Team & logins merged into **Staff** — Add staff with an
   optional login, App login card on each person, login-only accountants; one record per person (earlier duplicates
   merged). SQL `17_one_person_one_record`, e2e flows 02, 09, 33.
-- ✅ Proof (2026-09-30, ad3a182) — full suite 112 / 112 three runs in a row, button sweep 6 / 6 (1871 buttons, 0 dead): docs/M4-HANDOVER.md.
+- ✅ Proof (2026-10-01, 5d92e8f) — full suite 112 / 112 three runs in a row, button sweep 6 / 6 (1863 buttons, 0 dead): docs/M4-HANDOVER.md.
 
 
 ### M3 status

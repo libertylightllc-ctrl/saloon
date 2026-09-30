@@ -17,10 +17,10 @@
 | Reports tab | Cash shortage | shows "Short days" |
 | Reports tab | Customer list | shows "Customers" |
 | Reports tab | VAT | shows "VAT collected" |
-| Reports tab | Previous month | shows "August 2026" |
-| Reports tab | Next month | shows "October 2026" |
+| Reports tab | Previous month | shows "September 2026" |
+| Reports tab | Next month | shows "November 2026" |
 | Reports tab | Print / PDF | prints the receipt ("Monthly business") |
-| Reports tab | Export CSV | downloads e2e-ladies-muocotcouqj1-monthly-2026-09.csv |
+| Reports tab | Export CSV | downloads e2e-ladies-muor7lmwv02w-monthly-2026-10.csv |
 | Reports tab | Home | opens / |
 | Reports tab | Reports | already selected |
 | Reports tab | Accounting | opens /accounts-tab |
@@ -33,23 +33,23 @@
 | Reports · customers | Cash shortage | shows "Short days" |
 | Reports · customers | Customer list | already selected |
 | Reports · customers | VAT | shows "VAT collected" |
-| Reports · customers | Previous month | shows "August 2026" |
-| Reports · customers | Next month | shows "October 2026" |
+| Reports · customers | Previous month | shows "September 2026" |
+| Reports · customers | Next month | shows "November 2026" |
 | Reports · customers | Print / PDF | prints the receipt ("Customer list") |
-| Reports · customers | Export CSV | downloads e2e-ladies-muocotcouqj1-customers-2026-09.csv |
+| Reports · customers | Export CSV | downloads e2e-ladies-muor7lmwv02w-customers-2026-10.csv |
 | Accounting tab | Months | opens /accounts/close-period |
 | Accounting tab | Overview | already selected |
 | Accounting tab | Journal | shows "Opening stock" |
 | Accounting tab | Trial balance | shows "All debits equal all credits." |
 | Accounting tab | History | shows "Activity" |
-| Accounting tab | Previous month | shows "August 2026" |
-| Accounting tab | Next month | shows "October 2026" |
+| Accounting tab | Previous month | shows "September 2026" |
+| Accounting tab | Next month | shows "November 2026" |
 | Accounting tab | Home | opens / |
 | Accounting tab | Reports | opens /reports-tab |
 | Accounting tab | Accounting | already selected |
 | Accounting tab | More | opens /more |
 | Close month | Back | opens /accounts |
-| Close month | Export ledger CSV | downloads e2e-ladies-muocotcouqj1-ledger.csv |
+| Close month | Export ledger CSV | downloads e2e-ladies-muor7lmwv02w-ledger.csv |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
 | More | Sales | opens /sales |
@@ -58,7 +58,7 @@
 | More | Cash closing | opens /cash-closing |
 | More | Accounts & history | opens /accounts |
 | More | Reports | opens /reports |
-| More | Staff & payroll | opens /staff |
+| More | Staff | opens /staff |
 | More | Attendance | opens /attendance |
 | More | Plan & billing | opens /plan |
 | More | Language, English | shows "العربية" |
@@ -71,18 +71,18 @@
 | More | Accounting | opens /accounts-tab |
 | More | More | already selected |
 | Expenses | Back | opens /more |
-| Expenses | Previous month | shows "August 2026" |
-| Expenses | Next month | shows "October 2026" |
-| Expenses | Tea & Food | opens /expenses/8aa44798-6c61-4ebc-baf0-267f87697d7a |
+| Expenses | Previous month | shows "September 2026" |
+| Expenses | Next month | shows "November 2026" |
+| Expenses | Tea & Food | opens /expenses/d3d2c372-fa68-4cd4-a1bc-39dea263b692 |
 | Purchases | Back | opens /more |
 | Purchases | Bills | already selected |
 | Purchases | Suppliers | shows "30 days to pay" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/6170fa7d-66f7-4297-8402-2396699698a8 |
-| Staff & payroll | Back | opens /more |
-| Staff & payroll | Attendance | opens /attendance |
-| Staff & payroll | Payroll | opens /payroll |
-| Staff & payroll | Aisha E2E | opens /staff/ef1e0d5c-32a2-4713-aaed-d214901f4a5a |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/2d8736f4-a703-4917-8c01-52bd63b5c463 |
+| Staff | Back | opens /more |
+| Staff | Attendance | opens /attendance |
+| Staff | Payroll | opens /payroll |
+| Staff | Aisha E2E | opens /staff/1abc5bfa-9067-4ed8-881d-b269b8d58b88 |
 | Payroll | Back | opens /more |
-| Payroll | Previous month | shows "August 2026" |
-| Payroll | Next month | shows "October 2026" |
+| Payroll | Previous month | shows "September 2026" |
+| Payroll | Next month | shows "November 2026" |
 | Plan & billing | Back | opens / |

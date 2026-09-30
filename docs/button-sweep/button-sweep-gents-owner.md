@@ -13,7 +13,7 @@
 | Home | Expense | opens /expenses/new |
 | Home | Stock | opens /inventory |
 | Home | Open queue | opens /queue |
-| Home | Start | shows "Started 20:14" |
+| Home | Start | shows "Started 02:54" |
 | Home | View audit trail | opens /accounts |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
@@ -67,8 +67,7 @@
 | New booking | Shave · AED 15.00 | shows "23:30" |
 | New booking | Any barber | already selected |
 | New booking | Rafiq E2E | selects it |
-| New booking | Wednesday 30 September | already selected |
-| New booking | Thursday 1 October | selects it |
+| New booking | Thursday 1 October | already selected |
 | New booking | Friday 2 October | selects it |
 | New booking | Saturday 3 October | selects it |
 | New booking | Sunday 4 October | selects it |
@@ -81,6 +80,7 @@
 | New booking | Sunday 11 October | selects it |
 | New booking | Monday 12 October | selects it |
 | New booking | Tuesday 13 October | selects it |
+| New booking | Wednesday 14 October | selects it |
 | New booking | 00:00 | disabled until the form is valid / state allows |
 | New booking | 00:30 | disabled until the form is valid / state allows |
 | New booking | 01:00 | disabled until the form is valid / state allows |
@@ -88,41 +88,41 @@
 | New booking | 02:00 | disabled until the form is valid / state allows |
 | New booking | 02:30 | disabled until the form is valid / state allows |
 | New booking | 03:00 | disabled until the form is valid / state allows |
-| New booking | 03:30 | disabled until the form is valid / state allows |
-| New booking | 04:00 | disabled until the form is valid / state allows |
-| New booking | 04:30 | disabled until the form is valid / state allows |
-| New booking | 05:00 | disabled until the form is valid / state allows |
-| New booking | 05:30 | disabled until the form is valid / state allows |
-| New booking | 06:00 | disabled until the form is valid / state allows |
-| New booking | 06:30 | disabled until the form is valid / state allows |
-| New booking | 07:00 | disabled until the form is valid / state allows |
-| New booking | 07:30 | disabled until the form is valid / state allows |
-| New booking | 08:00 | disabled until the form is valid / state allows |
-| New booking | 08:30 | disabled until the form is valid / state allows |
-| New booking | 09:00 | disabled until the form is valid / state allows |
-| New booking | 09:30 | disabled until the form is valid / state allows |
-| New booking | 10:00 | disabled until the form is valid / state allows |
-| New booking | 10:30 | disabled until the form is valid / state allows |
-| New booking | 11:00 | disabled until the form is valid / state allows |
-| New booking | 11:30 | disabled until the form is valid / state allows |
-| New booking | 12:00 | disabled until the form is valid / state allows |
-| New booking | 12:30 | disabled until the form is valid / state allows |
-| New booking | 13:00 | disabled until the form is valid / state allows |
-| New booking | 13:30 | disabled until the form is valid / state allows |
-| New booking | 14:00 | disabled until the form is valid / state allows |
-| New booking | 14:30 | disabled until the form is valid / state allows |
-| New booking | 15:00 | disabled until the form is valid / state allows |
-| New booking | 15:30 | disabled until the form is valid / state allows |
-| New booking | 16:00 | disabled until the form is valid / state allows |
-| New booking | 16:30 | disabled until the form is valid / state allows |
-| New booking | 17:00 | disabled until the form is valid / state allows |
-| New booking | 17:30 | disabled until the form is valid / state allows |
-| New booking | 18:00 | disabled until the form is valid / state allows |
-| New booking | 18:30 | disabled until the form is valid / state allows |
-| New booking | 19:00 | disabled until the form is valid / state allows |
-| New booking | 19:30 | disabled until the form is valid / state allows |
-| New booking | 20:00 | disabled until the form is valid / state allows |
-| New booking | 20:30 | disabled until the form is valid / state allows |
+| New booking | 03:30 | selects it |
+| New booking | 04:00 | selects it |
+| New booking | 04:30 | selects it |
+| New booking | 05:00 | selects it |
+| New booking | 05:30 | selects it |
+| New booking | 06:00 | selects it |
+| New booking | 06:30 | selects it |
+| New booking | 07:00 | selects it |
+| New booking | 07:30 | selects it |
+| New booking | 08:00 | selects it |
+| New booking | 08:30 | selects it |
+| New booking | 09:00 | selects it |
+| New booking | 09:30 | selects it |
+| New booking | 10:00 | selects it |
+| New booking | 10:30 | selects it |
+| New booking | 11:00 | selects it |
+| New booking | 11:30 | selects it |
+| New booking | 12:00 | selects it |
+| New booking | 12:30 | selects it |
+| New booking | 13:00 | selects it |
+| New booking | 13:30 | selects it |
+| New booking | 14:00 | selects it |
+| New booking | 14:30 | selects it |
+| New booking | 15:00 | selects it |
+| New booking | 15:30 | selects it |
+| New booking | 16:00 | selects it |
+| New booking | 16:30 | selects it |
+| New booking | 17:00 | selects it |
+| New booking | 17:30 | selects it |
+| New booking | 18:00 | selects it |
+| New booking | 18:30 | selects it |
+| New booking | 19:00 | selects it |
+| New booking | 19:30 | selects it |
+| New booking | 20:00 | selects it |
+| New booking | 20:30 | selects it |
 | New booking | 21:00 | selects it |
 | New booking | 21:30 | selects it |
 | New booking | 22:00 | selects it |
@@ -183,7 +183,7 @@
 | Checkout | Save sale · AED 25.00 | shows "Nothing added yet" |
 | Checkout | Close | updates the screen |
 | Customers | New | opens /customers/form |
-| Customers | Sweep Customer | opens /customers/b7a27d95-95e8-4c38-b47f-9ac5222ff08f |
+| Customers | Sweep Customer | opens /customers/44a3a4da-cb51-406f-9f2a-8b2525affe95 |
 | Customers | Home | opens / |
 | Customers | Queue | opens /queue |
 | Customers | Sale | opens /sale |
@@ -205,10 +205,9 @@
 | More | Cash closing | opens /cash-closing |
 | More | Accounts & history | opens /accounts |
 | More | Reports | opens /reports |
-| More | Staff & payroll | opens /staff |
+| More | Staff | opens /staff |
 | More | Attendance | opens /attendance |
 | More | Compliance | opens /compliance |
-| More | Team & logins | opens /settings/team |
 | More | Branch settings | opens /settings/branch |
 | More | Backup & recovery | opens /settings/backup |
 | More | Plan & billing | opens /plan |
@@ -262,14 +261,11 @@
 | Categories | Face | shows "Edit category" |
 | Categories | Massage | shows "Edit category" |
 | Sales | Back | opens /more |
-| Sales | Sale #1002 | opens /sales/8ed04f87-add4-434c-b47c-85d1841d81ae |
-| Sales | Sale #1001 | opens /sales/aa14d671-5cca-4301-ae11-b0424e562e5d |
+| Sales | Sale #1002 | opens /sales/9ff15c6d-ad35-4bb8-8b8a-6fd23afd7eac |
+| Sales | Sale #1001 | opens /sales/bddfc8d4-31c8-43dc-8b32-ebfa8bff7bcb |
 | Sale detail | Back | opens /sales |
-| Sale detail | Print receipt | prints the receipt ("E2E gents muob1ad4exz5") |
+| Sale detail | Print receipt | prints the receipt ("E2E gents muopbfskd8pk") |
 | Sale detail | Refund | shows "Refund sale #1001" |
-| Team & logins | Back | opens /more |
-| Team & logins | New | shows "New login" |
-| Team & logins | Rafiq E2E | shows "New password" |
 | Branch settings | Back | opens /more |
 | Branch settings | Gents salon Barber shops and gents salons | already selected |
 | Branch settings | Ladies salon & spa Ladies salons, beauty and spa | shows "Switch to Ladies salon & spa" |
@@ -283,13 +279,13 @@
 | Accounts & history | Journal | shows "Sale #1002" |
 | Accounts & history | Trial balance | shows "All debits equal all credits." |
 | Accounts & history | History | shows "Activity" |
-| Accounts & history | Previous month | shows "August 2026" |
-| Accounts & history | Next month | shows "October 2026" |
+| Accounts & history | Previous month | shows "September 2026" |
+| Accounts & history | Next month | shows "November 2026" |
 | Expenses | Back | opens /more |
 | Expenses | New | opens /expenses/new |
-| Expenses | Previous month | shows "August 2026" |
-| Expenses | Next month | shows "October 2026" |
-| Expenses | Tea & Food | opens /expenses/bba753b8-d984-4b2c-8259-515aa337a7be |
+| Expenses | Previous month | shows "September 2026" |
+| Expenses | Next month | shows "November 2026" |
+| Expenses | Tea & Food | opens /expenses/fea2e8d3-fc12-4e3e-9121-9c5ca9714462 |
 | New expense | Back | opens /expenses |
 | New expense | Tea & Food | selects it |
 | New expense | Electricity | selects it |
@@ -311,7 +307,6 @@
 | New expense | Cash | already selected |
 | New expense | Card | shows "Paid from the bank; the drawer is not affected." |
 | New expense | Bank transfer | shows "Paid from the bank; the drawer is not affected." |
-| New expense | Thursday 17 September | selects it |
 | New expense | Friday 18 September | selects it |
 | New expense | Saturday 19 September | selects it |
 | New expense | Sunday 20 September | selects it |
@@ -324,7 +319,8 @@
 | New expense | Sunday 27 September | selects it |
 | New expense | Monday 28 September | selects it |
 | New expense | Tuesday 29 September | selects it |
-| New expense | Wednesday 30 September | already selected |
+| New expense | Wednesday 30 September | selects it |
+| New expense | Thursday 1 October | already selected |
 | New expense | Choose photo | opens the photo picker |
 | New expense | Save expense | disabled until the form is valid / state allows |
 | Expense detail | Back | opens /expenses |
@@ -334,11 +330,10 @@
 | Purchases | New bill | opens /purchases/new |
 | Purchases | Bills | already selected |
 | Purchases | Suppliers | shows "New supplier" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/643bab64-b06f-4440-b355-b4aeffc29a60 |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/a4b0cf8c-79a0-49d5-ab72-05938fde2b75 |
 | New bill | Back | opens /purchases |
 | New bill | Sweep Supplier | selects it |
 | New bill | New supplier | shows "Supplier name" |
-| New bill | Thursday 17 September | selects it |
 | New bill | Friday 18 September | selects it |
 | New bill | Saturday 19 September | selects it |
 | New bill | Sunday 20 September | selects it |
@@ -351,7 +346,8 @@
 | New bill | Sunday 27 September | selects it |
 | New bill | Monday 28 September | selects it |
 | New bill | Tuesday 29 September | selects it |
-| New bill | Wednesday 30 September | already selected |
+| New bill | Wednesday 30 September | selects it |
+| New bill | Thursday 1 October | already selected |
 | New bill | Credit | already selected |
 | New bill | Cash | shows "Paid now: recorded as a payment to the supplier." |
 | New bill | Card | shows "Paid now: recorded as a payment to the supplier." |
@@ -362,15 +358,15 @@
 | New bill | Save bill · AED 0.00 | disabled until the form is valid / state allows |
 | Bill detail | Back | opens /purchases |
 | Bill detail | Choose photo | opens the photo picker |
-| Bill detail | Print / PDF | prints the receipt ("E2E gents muob1ad4exz5") |
+| Bill detail | Print / PDF | prints the receipt ("E2E gents muopbfskd8pk") |
 | Bill detail | Pay supplier | shows "AED 30.00 left to pay." |
 | Bill detail | Reverse bill | shows "Only unpaid bills can be reversed. Stock it added " |
 | Cash closing | Back | opens /more |
 | Cash closing | Count notes & coins | shows "Notes & coins" |
-| Cash closing | Owner exz5 | already selected |
+| Cash closing | Owner d8pk | already selected |
 | Cash closing | Save draft | shows "Draft" |
 | Cash closing | Approve closing | disabled until the form is valid / state allows |
-| Cash closing | Wed 30 Sep | opens /cash-closing/2026-09-30 |
+| Cash closing | Thu 1 Oct | opens /cash-closing/2026-10-01 |
 | Inventory | Back | opens /more |
 | Inventory | Add item | opens /inventory/form |
 | Inventory | All | already selected |
@@ -381,16 +377,16 @@
 | Inventory | Stock count | opens /inventory/count |
 | Inventory | Opening stock | opens /inventory/opening |
 | Inventory | Order | opens /purchases/new |
-| Inventory | Beard Color | opens /inventory/8c895e6c-5c6a-49bc-9a32-926458439602 |
-| Inventory | Blades | opens /inventory/612109ad-5b3d-489f-8d97-48d9115f8540 |
-| Inventory | Developer 20 Vol | opens /inventory/05696a07-29a0-4333-be6f-930497049448 |
-| Inventory | Gloves | opens /inventory/ec2211f5-6b7f-465a-a3df-9dbd86d90b92 |
-| Inventory | Hair Color | opens /inventory/5bf7173f-0bba-45ec-83ec-e1c194243ea2 |
-| Inventory | Hair Oil | opens /inventory/44e5d5fc-c133-4cab-add8-4078f43d29b4 |
-| Inventory | Neck strips | opens /inventory/8cc5ef1e-ef9c-47bc-b1ac-775c8726942b |
-| Inventory | Shaving Foam | opens /inventory/d2a31286-501b-4432-9c11-728602c02a25 |
-| Inventory | Sweep Oil | opens /inventory/523a0026-e8fd-421a-92d2-5cd7313ab055 |
-| Inventory | Tissues | opens /inventory/1d2f443a-b814-4042-820c-661cd823519b |
+| Inventory | Beard Color | opens /inventory/f7e62395-649b-4216-b6f8-a6d70cc93e10 |
+| Inventory | Blades | opens /inventory/cd0041fa-d8ef-4c9d-85ea-52ac674f282c |
+| Inventory | Developer 20 Vol | opens /inventory/d5acc3f6-bf04-4f5c-99a9-6e4315b1bea0 |
+| Inventory | Gloves | opens /inventory/d124a04d-c58d-4a70-953e-e6caa225339e |
+| Inventory | Hair Color | opens /inventory/62c8a25d-8f88-4da7-bbb0-06ba7ed9966d |
+| Inventory | Hair Oil | opens /inventory/c8464bc2-dd16-4826-9553-eb1f542ba439 |
+| Inventory | Neck strips | opens /inventory/8feacf82-374c-4698-805c-a31567702e06 |
+| Inventory | Shaving Foam | opens /inventory/0b851488-8e95-44ea-ae31-d9f2c29aa663 |
+| Inventory | Sweep Oil | opens /inventory/474a8d4c-1380-496b-ae63-0133a131fb67 |
+| Inventory | Tissues | opens /inventory/324ac16c-9c4d-495b-a624-e96b0baff6a8 |
 | Item detail | Back | opens /inventory |
 | Item detail | Adjust stock | shows "On hand now: 5 pc. Every change needs a reason." |
 | Item detail | Edit | opens /inventory/form |
@@ -407,13 +403,14 @@
 | Stock count | Save count (0) | disabled until the form is valid / state allows |
 | Opening stock | Back | opens /inventory |
 | Opening stock | Save opening stock · AED 0.00 | disabled until the form is valid / state allows |
-| Staff & payroll | Back | opens /more |
-| Staff & payroll | Add staff | opens /staff/form |
-| Staff & payroll | Attendance | opens /attendance |
-| Staff & payroll | Payroll | opens /payroll |
-| Staff & payroll | Rafiq E2E | opens /staff/87ee8ee9-ee99-40ec-a946-03bee90a179b |
+| Staff | Back | opens /more |
+| Staff | Add staff | opens /staff/form |
+| Staff | Attendance | opens /attendance |
+| Staff | Payroll | opens /payroll |
+| Staff | Rafiq E2E | opens /staff/386b8677-d059-4a45-85f3-67a5170b045b |
 | Staff profile | Back | opens /staff |
 | Staff profile | Edit | opens /staff/form |
+| Staff profile | Password & sign-in | shows "Staff · @stafmgcjp0" |
 | Staff form | Back | opens /staff |
 | Staff form | Barber | already selected |
 | Staff form | Therapist | selects it |
@@ -421,7 +418,6 @@
 | Staff form | Manager | selects it |
 | Staff form | Save | shows "Staff saved" |
 | Attendance | Back | opens /more |
-| Attendance | Thursday 17 September | shows "Thursday 17 September" |
 | Attendance | Friday 18 September | shows "Friday 18 September" |
 | Attendance | Saturday 19 September | shows "Saturday 19 September" |
 | Attendance | Sunday 20 September | shows "Sunday 20 September" |
@@ -434,12 +430,13 @@
 | Attendance | Sunday 27 September | shows "Sunday 27 September" |
 | Attendance | Monday 28 September | shows "Monday 28 September" |
 | Attendance | Tuesday 29 September | shows "Tuesday 29 September" |
-| Attendance | Wednesday 30 September | already selected |
+| Attendance | Wednesday 30 September | shows "Wednesday 30 September" |
+| Attendance | Thursday 1 October | already selected |
 | Attendance | Clock in | shows "Clock in Rafiq E2E" |
 | Payroll | Back | opens /more |
 | Payroll | Bonuses & advances | opens /payroll/adjustments |
-| Payroll | Previous month | shows "August 2026" |
-| Payroll | Next month | shows "October 2026" |
+| Payroll | Previous month | shows "September 2026" |
+| Payroll | Next month | shows "November 2026" |
 | Payroll | Work out payroll | shows "Waiting for approval" |
 | Bonuses & advances | Back | opens /payroll |
 | Bonuses & advances | New | shows "Bonus, deduction or advance" |
@@ -461,18 +458,18 @@
 | Compliance · binder | Inspection binder | already selected |
 | Compliance · binder | Hygiene log | shows "Today's checklist" |
 | Compliance · binder | WPS & Montaji | shows "No paid payroll month yet." |
-| Compliance · binder | Export PDF | prints the receipt ("Inspection binder — E2E gents muob1ad4ex") |
+| Compliance · binder | Export PDF | prints the receipt ("Inspection binder — E2E gents muopbfskd8") |
 | Compliance · hygiene | Back | opens /more |
 | Compliance · hygiene | Expiry register | shows "Inspection readiness" |
 | Compliance · hygiene | Inspection binder | shows "Show this to an inspector, or export it as a PDF." |
 | Compliance · hygiene | Hygiene log | already selected |
 | Compliance · hygiene | WPS & Montaji | shows "No paid payroll month yet." |
 | Compliance · hygiene | Choose photo | opens the photo picker |
-| Compliance · hygiene | Sign the log | shows "Signed by Owner exz5" |
+| Compliance · hygiene | Sign the log | shows "Signed by Owner d8pk" |
 | Compliance · WPS & Montaji | Back | opens /more |
 | Compliance · WPS & Montaji | Expiry register | shows "Inspection readiness" |
 | Compliance · WPS & Montaji | Inspection binder | shows "Show this to an inspector, or export it as a PDF." |
-| Compliance · WPS & Montaji | Hygiene log | shows "Signed by Owner exz5" |
+| Compliance · WPS & Montaji | Hygiene log | shows "Signed by Owner d8pk" |
 | Compliance · WPS & Montaji | WPS & Montaji | already selected |
 | Compliance · WPS & Montaji | Beard Color | opens /inventory/form |
 | Compliance · WPS & Montaji | Blades | opens /inventory/form |
@@ -498,10 +495,10 @@
 | Reports | Cash shortage | shows "Short days" |
 | Reports | Customer list | shows "Customers" |
 | Reports | VAT | shows "VAT collected" |
-| Reports | Previous month | shows "August 2026" |
-| Reports | Next month | shows "October 2026" |
+| Reports | Previous month | shows "September 2026" |
+| Reports | Next month | shows "November 2026" |
 | Reports | Print / PDF | prints the receipt ("Monthly business") |
-| Reports | Export CSV | downloads e2e-gents-muob1ad4exz5-monthly-2026-09.csv |
+| Reports | Export CSV | downloads e2e-gents-muopbfskd8pk-monthly-2026-10.csv |
 | Reports · staff sales | Back | opens / |
 | Reports · staff sales | Monthly business | shows "AED 50.00" |
 | Reports · staff sales | Staff sales | already selected |
@@ -510,10 +507,10 @@
 | Reports · staff sales | Cash shortage | shows "Short days" |
 | Reports · staff sales | Customer list | shows "Customers" |
 | Reports · staff sales | VAT | shows "VAT collected" |
-| Reports · staff sales | Previous month | shows "August 2026" |
-| Reports · staff sales | Next month | shows "October 2026" |
+| Reports · staff sales | Previous month | shows "September 2026" |
+| Reports · staff sales | Next month | shows "November 2026" |
 | Reports · staff sales | Print / PDF | prints the receipt ("Staff sales") |
-| Reports · staff sales | Export CSV | downloads e2e-gents-muob1ad4exz5-staff-2026-09.csv |
+| Reports · staff sales | Export CSV | downloads e2e-gents-muopbfskd8pk-staff-2026-10.csv |
 | Reports · daily closing | Back | opens / |
 | Reports · daily closing | Monthly business | shows "Sales" |
 | Reports · daily closing | Staff sales | shows "Sales" |
@@ -522,10 +519,10 @@
 | Reports · daily closing | Cash shortage | shows "Short days" |
 | Reports · daily closing | Customer list | shows "Customers" |
 | Reports · daily closing | VAT | shows "VAT collected" |
-| Reports · daily closing | Previous month | shows "August 2026" |
-| Reports · daily closing | Next month | shows "October 2026" |
+| Reports · daily closing | Previous month | shows "September 2026" |
+| Reports · daily closing | Next month | shows "November 2026" |
 | Reports · daily closing | Print / PDF | prints the receipt ("Daily closing") |
-| Reports · daily closing | Export CSV | downloads e2e-gents-muob1ad4exz5-closing-2026-09.csv |
+| Reports · daily closing | Export CSV | downloads e2e-gents-muopbfskd8pk-closing-2026-10.csv |
 | Reports · stock | Back | opens / |
 | Reports · stock | Monthly business | shows "Sales" |
 | Reports · stock | Staff sales | shows "Sales" |
@@ -534,10 +531,10 @@
 | Reports · stock | Cash shortage | shows "Short days" |
 | Reports · stock | Customer list | shows "Customers" |
 | Reports · stock | VAT | shows "VAT collected" |
-| Reports · stock | Previous month | shows "August 2026" |
-| Reports · stock | Next month | shows "October 2026" |
+| Reports · stock | Previous month | shows "September 2026" |
+| Reports · stock | Next month | shows "November 2026" |
 | Reports · stock | Print / PDF | prints the receipt ("Stock movement") |
-| Reports · stock | Export CSV | downloads e2e-gents-muob1ad4exz5-stock-2026-09.csv |
+| Reports · stock | Export CSV | downloads e2e-gents-muopbfskd8pk-stock-2026-10.csv |
 | Reports · cash shortage | Back | opens / |
 | Reports · cash shortage | Monthly business | shows "Sales" |
 | Reports · cash shortage | Staff sales | shows "Sales" |
@@ -546,10 +543,10 @@
 | Reports · cash shortage | Cash shortage | already selected |
 | Reports · cash shortage | Customer list | shows "Customers" |
 | Reports · cash shortage | VAT | shows "VAT collected" |
-| Reports · cash shortage | Previous month | shows "August 2026" |
-| Reports · cash shortage | Next month | shows "October 2026" |
+| Reports · cash shortage | Previous month | shows "September 2026" |
+| Reports · cash shortage | Next month | shows "November 2026" |
 | Reports · cash shortage | Print / PDF | prints the receipt ("Cash shortage") |
-| Reports · cash shortage | Export CSV | downloads e2e-gents-muob1ad4exz5-shortages-2026-09.csv |
+| Reports · cash shortage | Export CSV | downloads e2e-gents-muopbfskd8pk-shortages-2026-10.csv |
 | Reports · customers | Back | opens / |
 | Reports · customers | Monthly business | shows "Sales" |
 | Reports · customers | Staff sales | shows "Sales" |
@@ -558,10 +555,10 @@
 | Reports · customers | Cash shortage | shows "Short days" |
 | Reports · customers | Customer list | already selected |
 | Reports · customers | VAT | shows "VAT collected" |
-| Reports · customers | Previous month | shows "August 2026" |
-| Reports · customers | Next month | shows "October 2026" |
+| Reports · customers | Previous month | shows "September 2026" |
+| Reports · customers | Next month | shows "November 2026" |
 | Reports · customers | Print / PDF | prints the receipt ("Customer list") |
-| Reports · customers | Export CSV | downloads e2e-gents-muob1ad4exz5-customers-2026-09.csv |
+| Reports · customers | Export CSV | downloads e2e-gents-muopbfskd8pk-customers-2026-10.csv |
 | Reports · VAT | Back | opens / |
 | Reports · VAT | Monthly business | shows "AED 50.00" |
 | Reports · VAT | Staff sales | shows "Services" |
@@ -570,17 +567,17 @@
 | Reports · VAT | Cash shortage | shows "Short days" |
 | Reports · VAT | Customer list | shows "Customers" |
 | Reports · VAT | VAT | already selected |
-| Reports · VAT | Previous month | shows "August 2026" |
-| Reports · VAT | Next month | shows "October 2026" |
+| Reports · VAT | Previous month | shows "September 2026" |
+| Reports · VAT | Next month | shows "November 2026" |
 | Reports · VAT | Print / PDF | prints the receipt ("VAT") |
-| Reports · VAT | Export CSV | downloads e2e-gents-muob1ad4exz5-vat-2026-09.csv |
+| Reports · VAT | Export CSV | downloads e2e-gents-muopbfskd8pk-vat-2026-10.csv |
 | Close month | Back | opens /accounts |
-| Close month | Export ledger CSV | downloads e2e-gents-muob1ad4exz5-ledger.csv |
+| Close month | Export ledger CSV | downloads e2e-gents-muopbfskd8pk-ledger.csv |
 | Backup & recovery | Back | opens /more |
-| Backup & recovery | Download backup (ZIP) | downloads e2e-gents-muob1ad4exz5-backup-2026-09-30.zip |
+| Backup & recovery | Download backup (ZIP) | updates the screen |
 | Plan & billing | Back | opens / |
 | Plan & billing | 1 month | already selected |
 | Plan & billing | 3 months | shows "Total: AED 297.00" |
 | Plan & billing | 6 months | shows "Total: AED 594.00" |
 | Plan & billing | 12 months | shows "Total: AED 1,188.00" |
-| Plan & billing | Ask to add months | shows "You asked for 1 month(s) on 30 Sep 2026. It switch" |
+| Plan & billing | Ask to add months | shows "You asked for 1 month(s) on 1 Oct 2026. It switche" |

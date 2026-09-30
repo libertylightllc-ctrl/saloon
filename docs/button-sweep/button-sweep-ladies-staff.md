@@ -5,7 +5,7 @@
 | Home | Notifications, 0 unread | opens /notifications |
 | Home | Walk-in | opens /appointment/new |
 | Home | Book | opens /appointment/new |
-| Home | Clock in | shows "No roster · In 20:56 · Out …" |
+| Home | Clock in | shows "No roster · In 03:42 · Out …" |
 | Home | Open queue | opens /queue |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
@@ -23,7 +23,7 @@
 | Queue | No-show 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Cancelled 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Any stylist | already selected |
-| Queue | Staff 72h | shows "No one is waiting. Add a walk-in." |
+| Queue | Staff p5b | shows "No one is waiting. Add a walk-in." |
 | Queue | More actions for Sweep Walk-in | updates the screen |
 | Queue | Home | opens / |
 | Queue | Queue | already selected |
@@ -50,19 +50,19 @@
 | Inventory | Consumables | updates the screen |
 | Inventory | Retail | updates the screen |
 | Inventory | Tools | shows "No items here yet." |
-| Inventory | Black soap | opens /inventory/0c55030f-c58c-4dfc-957b-86b16c40cd42 |
-| Inventory | Developer 20 Vol | opens /inventory/88263197-e680-4f66-9edb-7182c031b80d |
-| Inventory | Face masks | opens /inventory/afb41eda-9614-4eb5-a9e9-bc8ff5d4c4e1 |
-| Inventory | Gel polish | opens /inventory/500703c3-3a81-4f21-8267-049a266f9e21 |
-| Inventory | Gloves | opens /inventory/f8c3132f-5af2-4cbc-aa59-34f087ba3b2a |
-| Inventory | Hair Color | opens /inventory/edfe11e0-49be-4066-b6a1-a637465382e1 |
-| Inventory | Heat spray | opens /inventory/4c16b1de-cc98-4e6c-91a1-f1811ff2cc39 |
-| Inventory | Massage oil | opens /inventory/22d38182-0d16-4cbf-b6e5-27f870f9ce00 |
-| Inventory | Nail polish | opens /inventory/5c124b52-bba3-45cf-ba0b-e71efeb82a95 |
-| Inventory | Styling cream | opens /inventory/87c94932-6525-41b6-b81c-b10110e4d379 |
-| Inventory | Sweep Oil | opens /inventory/759fbd46-3959-4b88-a9ff-29e6e72e74f6 |
-| Inventory | Thread | opens /inventory/10dbc518-48dd-49b9-a866-60797d872053 |
-| Inventory | Wax | opens /inventory/03577dff-6a0c-449c-9ba7-0329c5c13d70 |
+| Inventory | Black soap | opens /inventory/d575cccd-e942-4030-b667-30eb04b0a16c |
+| Inventory | Developer 20 Vol | opens /inventory/d9f67050-19a6-4bba-bf30-a7ce43b7051d |
+| Inventory | Face masks | opens /inventory/c34be505-4263-444f-a9d6-1ebebcdcad4a |
+| Inventory | Gel polish | opens /inventory/393df2f6-ff20-4e0a-9ce1-02875b87519e |
+| Inventory | Gloves | opens /inventory/490757b8-77fa-45c9-8b5a-b3ce268c02df |
+| Inventory | Hair Color | opens /inventory/89031a13-7cb3-4cee-8a17-013a0bb62d25 |
+| Inventory | Heat spray | opens /inventory/5b939e26-9ef7-44f6-bc92-b97c51e7fe96 |
+| Inventory | Massage oil | opens /inventory/d2eef59c-bfbc-4249-84bf-530b277ac23e |
+| Inventory | Nail polish | opens /inventory/ea006b0a-bb7f-478b-bae6-12b843d0e2e7 |
+| Inventory | Styling cream | opens /inventory/4adadd62-63f3-42f1-8a63-fedeae28a7c3 |
+| Inventory | Sweep Oil | opens /inventory/dac69a11-cf15-41fe-b20f-cda82919bc29 |
+| Inventory | Thread | opens /inventory/3d4366ca-e6a1-46a5-9675-5e97d83326ab |
+| Inventory | Wax | opens /inventory/f671e196-9f9e-480e-aaf5-ff39f62ed15c |
 | Item detail | Back | opens /inventory |
 | My pay | Home | opens / |
 | My pay | Queue | opens /queue |
