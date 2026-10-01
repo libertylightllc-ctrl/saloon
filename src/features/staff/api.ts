@@ -34,7 +34,9 @@ export interface StaffMember {
   roster: Shift[];
 }
 
-export type AttendanceStatus = 'on_shift' | 'done' | 'not_in' | 'off';
+export type AttendanceStatus = 'on_shift' | 'on_break' | 'done' | 'not_in' | 'off';
+/** Clock in / out, a break, or back to work after clocking out (the time away counts as a break). */
+export type ClockAction = 'in' | 'out' | 'break_start' | 'break_end' | 'resume';
 
 export interface AttendanceRow {
   employee_id: string;
@@ -48,6 +50,9 @@ export interface AttendanceRow {
   clock_out: string | null;
   late: boolean;
   late_minutes: number;
+  /** When the break running now started (on a break), and all of the day's breaks so far. */
+  break_started_at: string | null;
+  break_minutes: number;
 }
 
 export function useStaffDirectory(businessId: string, enabled = true) {
@@ -145,7 +150,7 @@ export function useSetRoster(businessId: string, branchId: string) {
 export function useClock(businessId: string, branchId: string) {
   const done = useInvalidateStaff(businessId, branchId);
   return useMutation({
-    mutationFn: async (input: { employee_id: string; action: 'in' | 'out'; at?: string }) => {
+    mutationFn: async (input: { employee_id: string; action: ClockAction; at?: string }) => {
       const { data, error } = await supabase.rpc('clock', { p: asJson(input) });
       if (error) throw error;
       return data as { late: boolean; late_minutes: number; clock_in: string; clock_out: string | null };

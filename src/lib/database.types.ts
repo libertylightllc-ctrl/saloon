@@ -367,6 +367,78 @@ export type Database = {
           },
         ];
       };
+      attendance_breaks: {
+        Row: {
+          attendance_id: string;
+          branch_id: string;
+          business_id: string;
+          created_at: string;
+          ended_at: string | null;
+          ended_by: string | null;
+          id: string;
+          started_at: string;
+          started_by: string | null;
+        };
+        Insert: {
+          attendance_id: string;
+          branch_id: string;
+          business_id: string;
+          created_at?: string;
+          ended_at?: string | null;
+          ended_by?: string | null;
+          id?: string;
+          started_at: string;
+          started_by?: string | null;
+        };
+        Update: {
+          attendance_id?: string;
+          branch_id?: string;
+          business_id?: string;
+          created_at?: string;
+          ended_at?: string | null;
+          ended_by?: string | null;
+          id?: string;
+          started_at?: string;
+          started_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'attendance_breaks_attendance_id_fkey';
+            columns: ['attendance_id'];
+            isOneToOne: false;
+            referencedRelation: 'attendance';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'attendance_breaks_branch_id_fkey';
+            columns: ['branch_id'];
+            isOneToOne: false;
+            referencedRelation: 'branches';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'attendance_breaks_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'attendance_breaks_ended_by_fkey';
+            columns: ['ended_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'attendance_breaks_started_by_fkey';
+            columns: ['started_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       audit_log: {
         Row: {
           action: string;
@@ -3153,6 +3225,8 @@ export type Database = {
       attendance_day: {
         Args: { p_branch: string; p_date?: string };
         Returns: {
+          break_minutes: number;
+          break_started_at: string;
           clock_in: string;
           clock_out: string;
           colour: string;
@@ -3239,6 +3313,7 @@ export type Database = {
       delete_account_data: { Args: { p_user: string }; Returns: Json };
       dismiss_refund_request: { Args: { p_id: string; p_note: string }; Returns: undefined };
       dispatch_push: { Args: Record<PropertyKey, never>; Returns: number };
+      employee_has_history: { Args: { p_id: string }; Returns: boolean };
       expected_cash: { Args: { p_branch: string; p_date?: string }; Returns: number };
       fmt_money: { Args: { p_currency?: string; p_minor: number }; Returns: string };
       generate_payroll: { Args: { p_business: string; p_period: string }; Returns: string };
@@ -3276,6 +3351,7 @@ export type Database = {
       log_access: { Args: { p_device: string; p_event: string }; Returns: undefined };
       mark_no_show: { Args: { p_id: string }; Returns: undefined };
       mark_notifications_read: { Args: { p_ids?: string[] }; Returns: number };
+      merge_duplicate_employees: { Args: Record<PropertyKey, never>; Returns: number };
       method_account: {
         Args: { p_method: Database['public']['Enums']['payment_method'] };
         Returns: string;
@@ -3365,6 +3441,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      purchase_no: { Args: { p_number: number }; Returns: string };
       record_adjustment: { Args: { p: Json }; Returns: Json };
       record_expense: { Args: { p: Json }; Returns: Json };
       record_stock_count: { Args: { p: Json }; Returns: Json };

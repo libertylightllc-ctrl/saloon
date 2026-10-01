@@ -18,16 +18,32 @@ import {
   ListRow,
   QueryState,
   Screen,
+  SegmentTabs,
   StatusPill,
   TextField,
   useToast,
   type StatusKey,
 } from '@/ui';
 
-import { useAttendanceDay, useClock, type AttendanceRow, type AttendanceStatus } from './api';
+import { useAttendanceDay, useClock, type AttendanceRow, type AttendanceStatus, type ClockAction } from './api';
 import { TIME } from './labels';
 
-const STATUS: Record<AttendanceStatus, StatusKey> = { on_shift: 'in_progress', done: 'completed', not_in: 'waiting', off: 'cancelled' };
+const STATUS: Record<AttendanceStatus, StatusKey> = {
+  on_shift: 'in_progress',
+  on_break: 'pending_approval',
+  done: 'completed',
+  not_in: 'waiting',
+  off: 'cancelled',
+};
+
+/** What the front desk can record for someone in each state; the first is offered on the row. */
+const ACTIONS: Record<AttendanceStatus, ClockAction[]> = {
+  not_in: ['in'],
+  off: ['in'],
+  on_shift: ['out', 'break_start'],
+  on_break: ['break_end', 'out'],
+  done: ['resume'],
+};
 
 /** The day's attendance board: who is in, who is late, who is off. The owner and cashier record for others. */
 export function AttendanceScreen() {
@@ -37,7 +53,7 @@ export function AttendanceScreen() {
   const today = businessDate(new Date(), business.timezone);
   const [date, setDate] = useState<BusinessDate>(today);
   const board = useAttendanceDay(branch.id, date);
-  const [recording, setRecording] = useState<{ row: AttendanceRow; action: 'in' | 'out' } | null>(null);
+  const [recording, setRecording] = useState<AttendanceRow | null>(null);
   const canRecord = can(role, 'recordAttendance') && date === today;
 
   return (
@@ -60,6 +76,7 @@ export function AttendanceScreen() {
                     title={r.full_name}
                     meta={[
                       r.shift_start ? t('attendance.shift', { from: r.shift_start, to: r.shift_end }) : r.status === 'off' ? t('staff.off') : t('attendance.noShift'),
+                      ...(r.break_minutes > 0 ? [t('attendance.breaksTotal', { n: r.break_minutes })] : []),
                       ...(r.clock_in
                         ? [
                             t('attendance.inOut', {
@@ -76,13 +93,13 @@ export function AttendanceScreen() {
                       </View>
                     }
                     trailing={
-                      canRecord && r.status !== 'done' ? (
+                      canRecord ? (
                         <Button
-                          label={t(r.status === 'on_shift' ? 'attendance.clockOut' : 'attendance.clockIn')}
+                          label={t(`attendance.actions.${ACTIONS[r.status][0]!}`)}
                           size="sm"
                           variant="secondary"
-                          onPress={() => setRecording({ row: r, action: r.status === 'on_shift' ? 'out' : 'in' })}
-                          testID={`attendance-${r.full_name}-${r.status === 'on_shift' ? 'out' : 'in'}`}
+                          onPress={() => setRecording(r)}
+                          testID={`attendance-${r.full_name}-${ACTIONS[r.status][0]!}`}
                         />
                       ) : undefined
                     }
@@ -96,21 +113,23 @@ export function AttendanceScreen() {
       <BottomSheet
         open={recording !== null}
         onClose={() => setRecording(null)}
-        title={recording ? t(recording.action === 'in' ? 'attendance.recordIn' : 'attendance.recordOut', { name: recording.row.full_name }) : ''}
+        title={recording ? t('attendance.recordFor', { name: recording.full_name }) : ''}
       >
-        {recording ? <RecordForm row={recording.row} action={recording.action} onDone={() => setRecording(null)} /> : null}
+        {recording ? <RecordForm row={recording} onDone={() => setRecording(null)} /> : null}
       </BottomSheet>
     </>
   );
 }
 
-/** When it happened (defaults to now), for someone who clocked in or out without the app. */
-function RecordForm({ row, action, onDone }: { row: AttendanceRow; action: 'in' | 'out'; onDone: () => void }) {
+/** What happened and when (defaults to now), for someone without the app: clock in or out, a break, back to work. */
+function RecordForm({ row, onDone }: { row: AttendanceRow; onDone: () => void }) {
   const { t } = useTranslation();
   const toast = useToast();
   const dates = useDates();
   const { business, branch } = useWorkspace();
   const clock = useClock(business.id, branch.id);
+  const choices = ACTIONS[row.status];
+  const [action, setAction] = useState<ClockAction>(choices[0]!);
   const [time, setTime] = useState(() => dates.at(new Date(), business.timezone, 'HH:mm'));
   const valid = TIME.test(time);
   const at = () => {
@@ -122,10 +141,18 @@ function RecordForm({ row, action, onDone }: { row: AttendanceRow; action: 'in' 
   };
   return (
     <>
+      {choices.length > 1 ? (
+        <SegmentTabs<ClockAction>
+          items={choices.map((a) => ({ key: a, label: t(`attendance.actions.${a}`) }))}
+          value={action}
+          onChange={setAction}
+          testID="attendance-action"
+        />
+      ) : null}
       <TextField label={t('attendance.time')} hint={t('attendance.timeHint')} value={time} onChangeText={setTime} maxLength={5} testID="attendance-time" />
       <FormError error={clock.error} />
       <Button
-        label={t(action === 'in' ? 'attendance.clockIn' : 'attendance.clockOut')}
+        label={t(`attendance.actions.${action}`)}
         disabled={!valid}
         loading={clock.isPending}
         onPress={() =>
@@ -136,9 +163,11 @@ function RecordForm({ row, action, onDone }: { row: AttendanceRow; action: 'in' 
                 toast(
                   action === 'out'
                     ? t('attendance.clockedOut', { name: row.full_name })
-                    : r.late
-                      ? t('attendance.clockedInLate', { name: row.full_name, n: r.late_minutes })
-                      : t('attendance.clockedIn', { name: row.full_name }),
+                    : action === 'in'
+                      ? r.late
+                        ? t('attendance.clockedInLate', { name: row.full_name, n: r.late_minutes })
+                        : t('attendance.clockedIn', { name: row.full_name })
+                      : t(`attendance.recorded.${action}`, { name: row.full_name }),
                 );
                 onDone();
               },

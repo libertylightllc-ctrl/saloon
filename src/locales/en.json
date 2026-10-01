@@ -751,7 +751,9 @@
     "switch_expired": "That person needs to sign in again with their password.",
     "plan_required": "Your salon’s plan isn’t active, so this can’t be saved yet. The owner can switch it on under More → Plan & billing.",
     "employee_has_login": "This person already has a login.",
-    "account_deleted": "Your account has been deleted."
+    "account_deleted": "Your account has been deleted.",
+    "on_break": "Already on a break.",
+    "not_on_break": "Not on a break."
   },
   "sales": {
     "title": "Sales",
@@ -1435,13 +1437,12 @@
       "on_shift": "In",
       "done": "Done",
       "not_in": "Not in yet",
-      "off": "Day off"
+      "off": "Day off",
+      "on_break": "On break"
     },
     "lateBy": "Late {{n}} min",
     "clockIn": "Clock in",
     "clockOut": "Clock out",
-    "recordIn": "Clock in {{name}}",
-    "recordOut": "Clock out {{name}}",
     "time": "Time",
     "timeHint": "When it happened today, like 09:20.",
     "clockedIn": "{{name}} clocked in",
@@ -1451,7 +1452,32 @@
     "clockedInMe": "Clocked in",
     "clockedInMeLate": "Clocked in — {{n}} min late",
     "clockedOutMe": "Clocked out. See you tomorrow!",
-    "dayDone": "Your day is done."
+    "dayDone": "Your day is done.",
+    "startBreak": "Start break",
+    "endBreak": "End break",
+    "backToWork": "Back to work",
+    "backHint": "Clocked out by mistake, or back after a while? The day carries on; the time away counts as a break.",
+    "confirmOutTitle": "Clock out for the day?",
+    "confirmOutBody": "This ends your day. Going out for a while? Take a break instead.",
+    "takeBreak": "Take a break instead",
+    "onBreakSince": "On break since {{time}}",
+    "breaksTotal": "Breaks {{n}} min",
+    "breakStartedMe": "Break started",
+    "breakEndedMe": "Welcome back",
+    "backAtWorkMe": "Back at work",
+    "recordFor": "Attendance · {{name}}",
+    "actions": {
+      "in": "Clock in",
+      "out": "Clock out",
+      "break_start": "Start break",
+      "break_end": "End break",
+      "resume": "Back to work"
+    },
+    "recorded": {
+      "break_start": "{{name}} is on a break",
+      "break_end": "{{name}} is back from a break",
+      "resume": "{{name}} is back at work"
+    }
   },
   "payroll": {
     "title": "Payroll",

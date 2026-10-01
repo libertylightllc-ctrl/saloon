@@ -23,8 +23,10 @@ async function splitSale(page: Page, mode: Mode, vatOn: boolean, split: [string,
   await id(page, `tile-${svc.name}-plus`).click();
   await expectMoney(page, 'basket-total', subtotal);
   await id(page, 'checkout').click();
-  await id(page, 'discount').fill((DISCOUNT / 100).toFixed(2));
-  await id(page, 'tip').fill((TIP / 100).toFixed(2));
+  // Typed key by key, as a person does (a box that rewrote "1" as "1.00" let nobody type 10).
+  await id(page, 'discount').pressSequentially((DISCOUNT / 100).toFixed(2));
+  await id(page, 'tip').pressSequentially((TIP / 100).toFixed(2));
+  await expect(id(page, 'discount')).toHaveValue((DISCOUNT / 100).toFixed(2));
   await expectMoney(page, 'checkout-due', due);
   if (vatOn) await expect(id(page, 'checkout-vat')).toContainText((vatInclusive(net) / 100).toFixed(2));
   else await expect(id(page, 'checkout-vat')).not.toContainText('AED');

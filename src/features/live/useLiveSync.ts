@@ -56,6 +56,7 @@ export function useLiveSync(businessId: string, branchId: string, memberId: stri
       cash_closings: [keys.closing(branchId), keys.dashboard(branchId), ['accounts', businessId], ['reports', branchId]],
       tip_payouts: [keys.closing(branchId), keys.dashboard(branchId), ['accounts', businessId], ['reports', branchId]],
       attendance: [keys.attendance(branchId), keys.dashboard(branchId), ['attendance-history'], ['reports', branchId]],
+      attendance_breaks: [keys.attendance(branchId), keys.dashboard(branchId), ['attendance-history']],
       rosters: [keys.attendance(branchId), keys.team(businessId)],
       payroll_runs: [keys.payroll(businessId), keys.dashboard(branchId)],
       payroll_lines: [keys.payroll(businessId), keys.closing(branchId)],

@@ -42,12 +42,15 @@ export function MoneyInput({
   const { t } = useTranslation();
   const [text, setText] = useState(() => toText(value, currency));
   const invalid = text.trim() !== '' && parseMoney(text, currency) === null;
-  // Follow a value set from outside (a VAT worked out from the price, a total that changed), but never rewrite what
-  // the person is typing: their own keystrokes come back as the same value.
-  const [shown, setShown] = useState(value);
-  if (value !== shown) {
-    setShown(value);
-    if (value !== (text.trim() === '' ? null : parseMoney(text, currency))) setText(toText(value, currency));
+  // Follow a value set from outside (a VAT worked out from the price, a total that changed), but never while the person
+  // is typing here: inside a sheet the parent's copy of each keystroke arrives a render or more later, and taking such
+  // a late, older value for a change rewrote "1" as "1.00", so the next digit made "1.000" (owner report: a tip could
+  // not be 10). Out of the box, the text follows the value whenever the value changes.
+  const [focused, setFocused] = useState(false);
+  const [prop, setProp] = useState(value);
+  if (value !== prop) {
+    setProp(value);
+    if (!focused && value !== (text.trim() === '' ? null : parseMoney(text, currency))) setText(toText(value, currency));
   }
 
   return (
@@ -66,12 +69,12 @@ export function MoneyInput({
         </Text>
       }
       onChangeText={(next) => {
-        const parsed = next.trim() === '' ? null : parseMoney(next, currency);
         setText(next);
-        setShown(parsed);
-        onChange(parsed);
+        onChange(next.trim() === '' ? null : parseMoney(next, currency));
       }}
+      onFocus={() => setFocused(true)}
       onBlur={() => {
+        setFocused(false);
         const parsed = parseMoney(text, currency);
         if (parsed !== null) setText(toText(parsed, currency));
       }}

@@ -2,7 +2,7 @@
  * the board flags it; the owner records someone who has no phone; cashiers see attendance but never pay. */
 import { createOwner, createStaff } from './support/api';
 import { expect, test } from './support/fixtures';
-import { back, expectMoney, id, ownerOn, staffOn, tab, text } from './support/ui';
+import { back, expectMoney, id, ownerOn, snap, staffOn, tab, text } from './support/ui';
 
 const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
@@ -78,11 +78,39 @@ test('owner sets pay and a roster; the barber clocks in late from Home; the boar
   await expect(text(page, 'Sameer Khan clocked in')).toBeVisible();
   await expect(id(page, 'attendance-Sameer Khan')).toContainText('In');
 
-  // The barber clocks out; the day shows done.
+  // A break: the board shows it live; ending it brings the barber back on shift.
+  await id(phone, 'clock-break-start').click();
+  await expect(text(phone, 'Break started')).toBeVisible();
+  await expect(id(phone, 'clock-card')).toContainText('On break since');
+  await expect(id(page, `attendance-${barber.name}`)).toContainText('On break');
+  await id(phone, 'clock-break-end').click();
+  await expect(text(phone, 'Welcome back')).toBeVisible();
+  await expect(id(page, `attendance-${barber.name}`)).toContainText('In');
+
+  // The front desk records a break for Sameer (no app) from the board.
+  await id(page, 'attendance-Sameer Khan-out').click();
+  await id(page, 'attendance-action-break_start').click();
+  await id(page, 'attendance-confirm').click();
+  await expect(text(page, 'Sameer Khan is on a break')).toBeVisible();
+  await expect(id(page, 'attendance-Sameer Khan')).toContainText('On break');
+
+  // Clock out asks first (a stray tap no longer ends the day); then the day shows done.
   await id(phone, 'clock-out').click();
+  await expect(text(phone, 'Clock out for the day?')).toBeVisible();
+  await id(phone, 'clock-out-cancel').click();
+  await expect(id(phone, 'clock-break-start')).toBeVisible();
+  await id(phone, 'clock-out').click();
+  await id(phone, 'clock-out-confirm').click();
   await expect(text(phone, 'Clocked out. See you tomorrow!')).toBeVisible();
   await expect(id(phone, 'clock-card')).toContainText('Your day is done.');
   await expect(id(page, `attendance-${barber.name}`)).toContainText('Done');
+
+  // Clocked out by mistake: back to work, and the time away counts as a break.
+  await id(phone, 'clock-resume').click();
+  await expect(text(phone, 'Back at work')).toBeVisible();
+  await expect(id(phone, 'clock-out')).toBeVisible();
+  await expect(id(page, `attendance-${barber.name}`)).toContainText('In');
+  await snap(phone, 'clock-card-breaks', mode);
 });
 
 test('cashier records attendance but never sees pay; staff see only their own day', async ({ page, mode, device }) => {

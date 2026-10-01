@@ -243,3 +243,11 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 2. **Add staff** → another person without the switch → Save → on their page **Create login** → ✅ the login joins them
    (still one entry in the list). **Password & sign-in** resets the password or turns sign-in off.
 3. **Add staff** → **Accountant (login only)** → name, username, password → ✅ listed under **Login only**.
+
+## 28 · Breaks and clocking out (2 min)
+
+1. B (barber, clocked in): Home → **Start break** → ✅ "On break since …"; A's Attendance shows **On break**.
+2. B: **End break** → ✅ "Welcome back"; the card shows "Breaks N min".
+3. B: **Clock out** → ✅ it asks "Clock out for the day?" → **Cancel** → still on shift. **Clock out** → **Clock out**
+   → ✅ "Your day is done." → **Back to work** → ✅ on shift again; the time away is added to the breaks.
+4. A: Attendance → Sameer (no app) → **Clock out** → choose **Start break** → ✅ "Sameer … is on a break".
