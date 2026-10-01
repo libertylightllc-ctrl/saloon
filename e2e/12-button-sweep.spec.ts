@@ -212,7 +212,13 @@ test.describe.configure({ timeout: 2_400_000 });
 // The sweep writes its own report; a trace over hundreds of page loads runs to gigabytes.
 test.use({ trace: 'off', screenshot: 'off' });
 
-test('owner: every button on every screen does something visible', { tag: '@sweep' }, async ({ page, mode }) => {
+/**
+ * The owner's screens, in two halves so each runs well inside its time limit as the app grows (2026-10-01: one owner
+ * sweep of every screen ran past 40 minutes). Every screen is still swept; each half signs in and seeds its own salon.
+ */
+const OWNER_PARTS = ['day to day', 'back office'] as const;
+
+async function ownerSweep(page: Page, mode: Mode, part: (typeof OWNER_PARTS)[number]) {
   const owner = await createOwner(mode, { openingCash: 10_000 });
   await createStaff(owner, 'staff', { name: SERVICE[mode].staff });
   const s = await seed(owner, mode);
@@ -225,67 +231,77 @@ test('owner: every button on every screen does something visible', { tag: '@swee
     await id(p, 'checkout').click();
     await expect(id(p, 'save-sale')).toBeVisible();
   };
-
+  const screens: Record<(typeof OWNER_PARTS)[number], [string, string, ((p: Page) => Promise<void>)?][]> = {
+    'day to day': [
+      ['Home', '/'],
+      ['Queue', '/queue'],
+      ['New walk-in', '/appointment/new?kind=walk_in'],
+      ['New booking', '/appointment/new?kind=booking'],
+      ['Quick sale', '/sale'],
+      ['Quick sale (basket)', '/sale', addToBasket],
+      ['Checkout', '/sale', openCheckout],
+      ['Customers', '/customers'],
+      ['Customer profile', `/customers/${s.customerId}`],
+      ['Customer form', `/customers/form?id=${s.customerId}`],
+      ['More', '/more'],
+      ['Services', '/services'],
+      ['Service form', `/services/form?id=${s.serviceId}`],
+      ['Categories', '/services/categories'],
+      ['Sales', '/sales'],
+      ['Sale detail', `/sales/${s.saleId}`],
+      ['Branch settings', '/settings/branch'],
+      ['Expenses', '/expenses'],
+      ['New expense', '/expenses/new'],
+      ['Expense detail', `/expenses/${s.expenseId}`],
+      ['Purchases', '/purchases'],
+      ['New bill', '/purchases/new'],
+      ['Bill detail', `/purchases/${s.billId}`],
+      ['Cash closing', '/cash-closing'],
+      ['Inventory', '/inventory'],
+      ['Item detail', `/inventory/${s.itemId}`],
+      ['Item form', `/inventory/form?id=${s.itemId}`],
+      ['Stock count', '/inventory/count'],
+      ['Opening stock', '/inventory/opening'],
+    ],
+    'back office': [
+      ['Accounts & history', '/accounts'],
+      ['Staff', '/staff'],
+      ['Staff profile', `/staff/${s.employeeId}`],
+      ['Staff form', `/staff/form?id=${s.employeeId}`],
+      ['Attendance', '/attendance'],
+      ['Payroll', '/payroll'],
+      ['Bonuses & advances', '/payroll/adjustments'],
+      ['Compliance', '/compliance'],
+      ['Compliance · binder', '/compliance?tab=binder'],
+      ['Compliance · hygiene', '/compliance?tab=hygiene'],
+      ['Compliance · WPS & Montaji', '/compliance?tab=wps'],
+      ['Compliance record', '/compliance/doc?type=trade_licence&branch=' + s.branchId],
+      ['Notifications', '/notifications'],
+      ['Reports', '/reports'],
+      ['Reports · staff sales', '/reports?type=staff'],
+      ['Reports · daily closing', '/reports?type=closing'],
+      ['Reports · stock', '/reports?type=stock'],
+      ['Reports · cash shortage', '/reports?type=shortages'],
+      ['Reports · customers', '/reports?type=customers'],
+      ['Reports · VAT', '/reports?type=vat'],
+      ['Close month', '/accounts/close-period'],
+      ['Backup & recovery', '/settings/backup'],
+      ['Plan & billing', '/plan'],
+      ['Privacy policy', '/privacy'],
+      ['Terms of use', '/terms'],
+    ],
+  };
   const rows: Row[] = [];
-  const screens: [string, string, ((p: Page) => Promise<void>)?][] = [
-    ['Home', '/'],
-    ['Queue', '/queue'],
-    ['New walk-in', '/appointment/new?kind=walk_in'],
-    ['New booking', '/appointment/new?kind=booking'],
-    ['Quick sale', '/sale'],
-    ['Quick sale (basket)', '/sale', addToBasket],
-    ['Checkout', '/sale', openCheckout],
-    ['Customers', '/customers'],
-    ['Customer profile', `/customers/${s.customerId}`],
-    ['Customer form', `/customers/form?id=${s.customerId}`],
-    ['More', '/more'],
-    ['Services', '/services'],
-    ['Service form', `/services/form?id=${s.serviceId}`],
-    ['Categories', '/services/categories'],
-    ['Sales', '/sales'],
-    ['Sale detail', `/sales/${s.saleId}`],
-    ['Branch settings', '/settings/branch'],
-    ['Accounts & history', '/accounts'],
-    ['Expenses', '/expenses'],
-    ['New expense', '/expenses/new'],
-    ['Expense detail', `/expenses/${s.expenseId}`],
-    ['Purchases', '/purchases'],
-    ['New bill', '/purchases/new'],
-    ['Bill detail', `/purchases/${s.billId}`],
-    ['Cash closing', '/cash-closing'],
-    ['Inventory', '/inventory'],
-    ['Item detail', `/inventory/${s.itemId}`],
-    ['Item form', `/inventory/form?id=${s.itemId}`],
-    ['Stock count', '/inventory/count'],
-    ['Opening stock', '/inventory/opening'],
-    ['Staff', '/staff'],
-    ['Staff profile', `/staff/${s.employeeId}`],
-    ['Staff form', `/staff/form?id=${s.employeeId}`],
-    ['Attendance', '/attendance'],
-    ['Payroll', '/payroll'],
-    ['Bonuses & advances', '/payroll/adjustments'],
-    ['Compliance', '/compliance'],
-    ['Compliance · binder', '/compliance?tab=binder'],
-    ['Compliance · hygiene', '/compliance?tab=hygiene'],
-    ['Compliance · WPS & Montaji', '/compliance?tab=wps'],
-    ['Compliance record', '/compliance/doc?type=trade_licence&branch=' + s.branchId],
-    ['Notifications', '/notifications'],
-    // M4
-    ['Reports', '/reports'],
-    ['Reports · staff sales', '/reports?type=staff'],
-    ['Reports · daily closing', '/reports?type=closing'],
-    ['Reports · stock', '/reports?type=stock'],
-    ['Reports · cash shortage', '/reports?type=shortages'],
-    ['Reports · customers', '/reports?type=customers'],
-    ['Reports · VAT', '/reports?type=vat'],
-    ['Close month', '/accounts/close-period'],
-    ['Backup & recovery', '/settings/backup'],
-    ['Plan & billing', '/plan'],
-  ];
-  for (const [screen, url, prepare] of screens) await sweepScreen(page, rows, screen, url, prepare);
-  report(mode, 'owner', rows);
+  for (const [screen, url, prepare] of screens[part]) await sweepScreen(page, rows, screen, url, prepare);
+  report(mode, `owner-${part.replace(/ /g, '-')}`, rows);
   expect(rows.filter((r) => !r.ok), 'buttons that failed').toEqual([]);
-});
+}
+
+for (const part of OWNER_PARTS) {
+  test(`owner (${part}): every button on every screen does something visible`, { tag: '@sweep' }, async ({ page, mode }) => {
+    await ownerSweep(page, mode, part);
+  });
+}
 
 test('cashier and staff: their buttons work and none hit a permission error', { tag: '@sweep' }, async ({ page, mode, device }) => {
   const owner = await createOwner(mode, { openingCash: 10_000 });

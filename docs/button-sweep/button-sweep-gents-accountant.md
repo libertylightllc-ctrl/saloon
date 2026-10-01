@@ -20,7 +20,7 @@
 | Reports tab | Previous month | shows "September 2026" |
 | Reports tab | Next month | shows "November 2026" |
 | Reports tab | Print / PDF | prints the receipt ("Monthly business") |
-| Reports tab | Export CSV | downloads e2e-gents-muopv1yj8sun-monthly-2026-10.csv |
+| Reports tab | Export CSV | downloads e2e-gents-mups9n5ej674-monthly-2026-10.csv |
 | Reports tab | Home | opens / |
 | Reports tab | Reports | already selected |
 | Reports tab | Accounting | opens /accounts-tab |
@@ -36,7 +36,7 @@
 | Reports · customers | Previous month | shows "September 2026" |
 | Reports · customers | Next month | shows "November 2026" |
 | Reports · customers | Print / PDF | prints the receipt ("Customer list") |
-| Reports · customers | Export CSV | downloads e2e-gents-muopv1yj8sun-customers-2026-10.csv |
+| Reports · customers | Export CSV | downloads e2e-gents-mups9n5ej674-customers-2026-10.csv |
 | Accounting tab | Months | opens /accounts/close-period |
 | Accounting tab | Overview | already selected |
 | Accounting tab | Journal | shows "Opening stock" |
@@ -49,7 +49,7 @@
 | Accounting tab | Accounting | already selected |
 | Accounting tab | More | opens /more |
 | Close month | Back | opens /accounts |
-| Close month | Export ledger CSV | downloads e2e-gents-muopv1yj8sun-ledger.csv |
+| Close month | Export ledger CSV | downloads e2e-gents-mups9n5ej674-ledger.csv |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
 | More | Sales | opens /sales |
@@ -73,15 +73,15 @@
 | Expenses | Back | opens /more |
 | Expenses | Previous month | shows "September 2026" |
 | Expenses | Next month | shows "November 2026" |
-| Expenses | Tea & Food | opens /expenses/d2d1308c-6cee-4038-ac30-575818d18ed3 |
+| Expenses | Tea & Food | opens /expenses/c9f5f93a-e7bc-482c-9559-b4f93953deb3 |
 | Purchases | Back | opens /more |
 | Purchases | Bills | already selected |
 | Purchases | Suppliers | shows "30 days to pay" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/5fced3ea-caeb-4c57-8d90-624eb5456d6a |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/da3d9487-ca05-407e-8087-619bed7b4ade |
 | Staff | Back | opens /more |
 | Staff | Attendance | opens /attendance |
 | Staff | Payroll | opens /payroll |
-| Staff | Rafiq E2E | opens /staff/a16971be-9ab8-4baf-8cae-d6190d4bc363 |
+| Staff | Rafiq E2E | opens /staff/3f5d7df7-fda8-49c8-8047-777d2d724c90 |
 | Payroll | Back | opens /more |
 | Payroll | Previous month | shows "September 2026" |
 | Payroll | Next month | shows "November 2026" |
