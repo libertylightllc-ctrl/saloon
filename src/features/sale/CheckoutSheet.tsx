@@ -169,7 +169,13 @@ export function CheckoutSheet(props: {
           <MoneyInput label={t('sale.discount')} value={discount} onChange={setDiscount} testID="discount" />
         </View>
         <View style={styles.flex}>
-          <MoneyInput label={t('sale.tip')} value={tip} onChange={setTip} testID="tip" />
+          <MoneyInput
+            label={t('sale.tip')}
+            hint={t('sale.tipHint', { staff: terms.staff.toLocaleLowerCase() })}
+            value={tip}
+            onChange={setTip}
+            testID="tip"
+          />
         </View>
       </View>
       {totals.due > 0 ? (

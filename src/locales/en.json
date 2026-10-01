@@ -338,7 +338,8 @@
     "products": "Products",
     "inStock": "{{qty}} in stock",
     "noProducts": "No products for sale yet.",
-    "sendWhatsApp": "Send on WhatsApp"
+    "sendWhatsApp": "Send on WhatsApp",
+    "tipHint": "The {{staff}} keeps the whole tip. No commission is taken on tips."
   },
   "customers": {
     "subtitle": "Profiles, visits and notes.",
@@ -1404,7 +1405,7 @@
       "salary": "Base salary per month",
       "salaryHint": "Only you and the accountant see this.",
       "commission": "Commission %",
-      "commissionHint": "On services, after discount, without VAT or tips.",
+      "commissionHint": "On services, after discount and without VAT. Never on tips: the whole tip goes to them.",
       "wpsHint": "Salary goes through the bank; payroll asks for the transfer proof.",
       "phone": "Phone",
       "active": "Working here",
