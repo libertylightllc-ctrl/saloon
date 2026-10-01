@@ -2,18 +2,24 @@
 # The proof: 3 full e2e runs in a row, then the button sweep, each run started on a quiet Mac. A run counts only if
 # every test passes. An attempt that fails while the Mac was overloaded by other work (sign-in or server timeouts
 # under high load) is recorded as discarded and restarted after the next quiet period; any other failure stops for
-# investigation. Logs and the summary go to $PROOF_DIR (default: /tmp/salon-proof).
+# investigation. A run during which the Mac slept (e.g. the battery ran out) is likewise discarded. Runs start only
+# on mains power and the Mac is kept awake meanwhile. Logs and the summary go to $PROOF_DIR (default: /tmp/salon-proof).
 #   sh scripts/proof.sh
+# Keep the Mac awake for the whole proof (on mains power; nothing stops a flat battery).
+if [ -z "$PROOF_AWAKE" ]; then PROOF_AWAKE=1 exec caffeinate -ims "$0" "$@"; fi
 S=${PROOF_DIR:-/tmp/salon-proof}
 mkdir -p "$S"
 cd "$(dirname "$0")/.." || exit 1
 load1() { sysctl -n vm.loadavg | awk '{print $2}'; }
 load5() { sysctl -n vm.loadavg | awk '{print $3}'; }
+on_ac() { pmset -g batt | grep -q "AC Power"; }
+# Sleep events (system sleep, including a flat battery) logged since the given "YYYY-MM-DD HH:MM:SS".
+slept_since() { pmset -g log | awk -v from="$1" 'substr($0,1,19) >= from && / Sleep  /' | wc -l | tr -d ' '; }
 wait_quiet() {
-  echo "$(date +%H:%M) waiting for a quiet Mac (load under 12 for 3 minutes)" >> "$S/proof-status.txt"
+  echo "$(date +%H:%M) waiting for a quiet Mac on mains power (load under 12 for 3 minutes)" >> "$S/proof-status.txt"
   local ok=0
   while [ $ok -lt 6 ]; do
-    if awk -v a="$(load1)" -v b="$(load5)" 'BEGIN{exit !(a < 16 && b < 12)}'; then ok=$((ok+1)); else ok=0; fi
+    if on_ac && awk -v a="$(load1)" -v b="$(load5)" 'BEGIN{exit !(a < 16 && b < 12)}'; then ok=$((ok+1)); else ok=0; fi
     sleep 30
   done
   echo "$(date +%H:%M) quiet; starting" >> "$S/proof-status.txt"
@@ -32,12 +38,18 @@ while [ $attempt -lt 5 ]; do
     ( maxl=0; while true; do l=$(load5); awk -v l="$l" -v m="$maxl" 'BEGIN{exit !(l > m)}' && maxl=$l && echo $maxl > "$S/maxload"; sleep 30; done ) &
     watcher=$!
     echo 0 > "$S/maxload"
+    run_start=$(date "+%Y-%m-%d %H:%M:%S")
     E2E_WORKERS=2 npx playwright test --grep-invert @sweep --reporter=line > "$S/final-a${attempt}-run$i.log" 2>&1
     kill $watcher 2>/dev/null
     res=$(grep -E '^\s+[0-9]+ (passed|failed|flaky|skipped)' "$S/final-a${attempt}-run$i.log" | tr -s ' ' | tr '\n' ' ')
     timeouts=$(grep -cE "504 POST|AuthRetryableFetchError|Gateway Timeout|server_busy" "$S/final-a${attempt}-run$i.log")
     echo "attempt $attempt run $i: $res (peak 5-min load $(cat "$S/maxload"), sign-in timeouts $timeouts)" >> "$S/final-summary.txt"
+    slept=$(slept_since "$run_start")
     if grep -q " failed" "$S/final-a${attempt}-run$i.log"; then
+      if [ "$slept" -gt 0 ]; then
+        echo "attempt $attempt discarded: the Mac went to sleep during the run ($slept sleep events)" >> "$S/final-summary.txt"
+        continue 2
+      fi
       if [ "$timeouts" -gt 0 ] && awk -v m="$(cat "$S/maxload")" 'BEGIN{exit !(m > 12)}'; then
         echo "attempt $attempt discarded: the Mac was overloaded by other work" >> "$S/final-summary.txt"
         continue 2
