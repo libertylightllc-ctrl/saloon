@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { businessDate } from '@/lib/dates';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
@@ -16,7 +17,9 @@ export function AppointmentActions({ item, onClose }: { item: Appointment | null
   const { t } = useTranslation();
   const router = useRouter();
   const toast = useToast();
-  const { branch, role, rules } = useWorkspace();
+  const { business, branch, role, rules } = useWorkspace();
+  /** A no-show can be undone the same day (a mistaken tap); after that it stays. */
+  const today = businessDate(new Date(), business.timezone);
   const action = useQueueAction(branch.id);
   const [cancelling, setCancelling] = useState(false);
   const [reason, setReason] = useState('');
@@ -32,7 +35,7 @@ export function AppointmentActions({ item, onClose }: { item: Appointment | null
   const cutoff = Number((branch.settings as Record<string, unknown>).cancel_cutoff_hours ?? 12);
   const name = item?.customer_name ?? t('queue.guest');
 
-  const run = (kind: 'start' | 'noShow' | 'cancel') => {
+  const run = (kind: 'start' | 'noShow' | 'undoNoShow' | 'cancel') => {
     if (!item) return;
     action.mutate(
       { action: kind, id: item.id, reason },
@@ -103,6 +106,16 @@ export function AppointmentActions({ item, onClose }: { item: Appointment | null
                 testID="action-cancel"
               />
             </>
+          ) : null}
+          {item?.status === 'no_show' && item.business_date === today && can(role, 'noShowOrCancel') ? (
+            <Button
+              label={t('queue.actions.undoNoShow')}
+              icon="rotate"
+              variant="outline"
+              loading={action.isPending}
+              onPress={() => run('undoNoShow')}
+              testID="action-undo-no-show"
+            />
           ) : null}
           {item?.sale_id && can(role, 'viewSales') ? (
             <Button

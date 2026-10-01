@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { appointmentFor, createOwner, dubaiDate, journalTotals } from './support/api';
+import { admin, appointmentFor, createOwner, dubaiDate, journalTotals } from './support/api';
 import { SERVICE } from './support/catalog';
 import { uid } from './support/env';
 import { expect, test } from './support/fixtures';
@@ -79,4 +79,31 @@ test('a deposit is kept on no-show (+1 no-show) and refunded on an early cancel'
   await expectMoney(page, 'kpi-expected-cash-value', DEPOSIT);
   const books = await journalTotals(owner.businessId);
   expect(books.debit).toBe(books.credit);
+});
+
+test('a no-show marked by mistake is undone the same day: the walk-in is back in the queue', async ({ page, mode }) => {
+  const owner = await createOwner(mode);
+  const { data: service } = await admin
+    .from('services')
+    .select('id')
+    .eq('business_id', owner.businessId)
+    .eq('name', SERVICE[mode].name)
+    .single();
+  const guest = `Oops ${uid().slice(-4)}`;
+  await owner.client.rpc('create_appointment', {
+    p: { branch_id: owner.branchId, kind: 'walk_in', guest_name: guest, service_ids: [service!.id] },
+  });
+  await ownerOn(page, mode, owner.email, owner.password);
+
+  await openMenu(page, guest);
+  await id(page, 'action-no-show').click();
+  await expect(text(page, `Marked ${guest} as no-show`)).toBeVisible();
+  expect((await appointmentFor(owner.branchId, guest)).status).toBe('no_show');
+
+  // The same row's menu now offers Undo.
+  const row = idStarts(page, 'queue-row-').filter({ hasText: guest });
+  await row.locator('[data-testid^="queue-more-"]').click();
+  await id(page, 'action-undo-no-show').click();
+  await expect(text(page, `${guest} is back in the queue`)).toBeVisible();
+  expect((await appointmentFor(owner.branchId, guest)).status).toBe('waiting');
 });

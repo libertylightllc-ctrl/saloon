@@ -3643,6 +3643,7 @@ export type Database = {
           owed_minor: number;
         }[];
       };
+      undo_no_show: { Args: { p_id: string }; Returns: undefined };
       unique_business_code: { Args: { p_name: string }; Returns: string };
       unregister_push_token: { Args: { p_token: string }; Returns: undefined };
       update_branch: { Args: { p: Json; p_branch: string }; Returns: undefined };

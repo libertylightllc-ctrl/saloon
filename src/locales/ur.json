@@ -247,7 +247,8 @@
       "complete": "مکمل کریں",
       "rebook": "دوبارہ بک کریں",
       "noShow": "نہیں آئے",
-      "cancel": "منسوخ"
+      "cancel": "منسوخ",
+      "undoNoShow": "نو شو واپس لیں"
     },
     "toast": {
       "checkIn": "{{name}} کا چیک اِن ہو گیا",
@@ -260,7 +261,8 @@
       "cancel": "{{name}} منسوخ",
       "cancel_refund": "{{name}} منسوخ۔ ڈپازٹ واپس۔",
       "cancel_forfeit": "{{name}} منسوخ۔ ڈپازٹ رکھا گیا۔",
-      "cancel_none": "{{name}} منسوخ"
+      "cancel_none": "{{name}} منسوخ",
+      "undoNoShow": "{{name}} دوبارہ قطار میں ہیں"
     },
     "moreActions": "{{name}} کے لیے مزید کام",
     "empty": "کوئی انتظار میں نہیں۔ واک اِن شامل کریں۔",
@@ -993,7 +995,8 @@
       "staff_advance": "عملے کے ایڈوانس",
       "staff_advance_reversal": "واپس ایڈوانس",
       "payroll": "پے رول",
-      "payroll_payment": "ادا کی گئی تنخواہیں"
+      "payroll_payment": "ادا کی گئی تنخواہیں",
+      "deposit_forfeit_reversal": "رکھی گئی جمع رقم (واپس لی گئی)"
     },
     "months": "مہینے",
     "exportLedger": "لیجر CSV برآمد",

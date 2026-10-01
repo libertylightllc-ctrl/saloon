@@ -247,7 +247,8 @@
       "complete": "إنهاء",
       "rebook": "إعادة الحجز",
       "noShow": "تسجيل عدم حضور",
-      "cancel": "إلغاء"
+      "cancel": "إلغاء",
+      "undoNoShow": "التراجع عن عدم الحضور"
     },
     "toast": {
       "checkIn": "تم تسجيل حضور {{name}}",
@@ -260,7 +261,8 @@
       "cancel": "أُلغي موعد {{name}}",
       "cancel_refund": "أُلغي موعد {{name}}. استُرد العربون.",
       "cancel_forfeit": "أُلغي موعد {{name}}. احتُفظ بالعربون.",
-      "cancel_none": "أُلغي موعد {{name}}"
+      "cancel_none": "أُلغي موعد {{name}}",
+      "undoNoShow": "عاد {{name}} إلى الطابور"
     },
     "moreActions": "إجراءات أخرى لـ {{name}}",
     "empty": "لا أحد في الانتظار. أضف زبونًا حضوريًا.",
@@ -993,7 +995,8 @@
       "staff_advance": "سلف الموظفين",
       "staff_advance_reversal": "سلف معكوسة",
       "payroll": "الرواتب",
-      "payroll_payment": "رواتب مدفوعة"
+      "payroll_payment": "رواتب مدفوعة",
+      "deposit_forfeit_reversal": "عربون محتفظ به (تم التراجع)"
     },
     "months": "الأشهر",
     "exportLedger": "تصدير دفتر الأستاذ CSV",

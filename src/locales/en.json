@@ -246,7 +246,8 @@
       "complete": "Complete",
       "rebook": "Rebook",
       "noShow": "Mark no-show",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "undoNoShow": "Undo no-show"
     },
     "toast": {
       "checkIn": "Checked in {{name}}",
@@ -259,7 +260,8 @@
       "cancel": "Cancelled {{name}}",
       "cancel_refund": "Cancelled {{name}}. Deposit refunded.",
       "cancel_forfeit": "Cancelled {{name}}. Deposit kept.",
-      "cancel_none": "Cancelled {{name}}"
+      "cancel_none": "Cancelled {{name}}",
+      "undoNoShow": "{{name}} is back in the queue"
     },
     "moreActions": "More actions for {{name}}",
     "empty": "No one is waiting. Add a walk-in.",
@@ -992,7 +994,8 @@
       "staff_advance": "Staff advances",
       "staff_advance_reversal": "Reversed advances",
       "payroll": "Payroll",
-      "payroll_payment": "Salaries paid"
+      "payroll_payment": "Salaries paid",
+      "deposit_forfeit_reversal": "Deposits kept (undone)"
     },
     "months": "Months",
     "exportLedger": "Export ledger CSV",

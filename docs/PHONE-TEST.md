@@ -251,3 +251,8 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 3. B: **Clock out** → ✅ it asks "Clock out for the day?" → **Cancel** → still on shift. **Clock out** → **Clock out**
    → ✅ "Your day is done." → **Back to work** → ✅ on shift again; the time away is added to the breaks.
 4. A: Attendance → Sameer (no app) → **Clock out** → choose **Start break** → ✅ "Sameer … is on a break".
+
+## 29 · Undo a no-show (1 min)
+
+1. A: Queue → a walk-in → **…** → **Mark no-show** → ✅ it moves to No-show.
+2. **…** on it → **Undo no-show** → ✅ "… is back in the queue"; a kept deposit is held again.

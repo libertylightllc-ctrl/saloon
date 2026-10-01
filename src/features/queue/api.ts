@@ -147,7 +147,7 @@ export function useCreateAppointment(branchId: string) {
   });
 }
 
-export type QueueAction = 'checkIn' | 'start' | 'noShow' | 'cancel';
+export type QueueAction = 'checkIn' | 'start' | 'noShow' | 'undoNoShow' | 'cancel';
 
 export function useQueueAction(branchId: string) {
   const invalidate = useInvalidateQueue(branchId);
@@ -160,7 +160,9 @@ export function useQueueAction(branchId: string) {
             ? await supabase.rpc('start_service', { p_id: id })
             : action === 'noShow'
               ? await supabase.rpc('mark_no_show', { p_id: id })
-              : await supabase.rpc('cancel_appointment', { p_id: id, p_reason: reason ?? '' });
+              : action === 'undoNoShow'
+                ? await supabase.rpc('undo_no_show', { p_id: id })
+                : await supabase.rpc('cancel_appointment', { p_id: id, p_reason: reason ?? '' });
       if (result.error) throw result.error;
       return result.data;
     },

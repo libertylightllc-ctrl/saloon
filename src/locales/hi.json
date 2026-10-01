@@ -247,7 +247,8 @@
       "complete": "पूरा करें",
       "rebook": "फिर से बुक करें",
       "noShow": "नहीं आए",
-      "cancel": "रद्द करें"
+      "cancel": "रद्द करें",
+      "undoNoShow": "नो-शो वापस लें"
     },
     "toast": {
       "checkIn": "{{name}} चेक इन हुए",
@@ -260,7 +261,8 @@
       "cancel": "{{name}} रद्द",
       "cancel_refund": "{{name}} रद्द। डिपॉज़िट वापस।",
       "cancel_forfeit": "{{name}} रद्द। डिपॉज़िट रखा गया।",
-      "cancel_none": "{{name}} रद्द"
+      "cancel_none": "{{name}} रद्द",
+      "undoNoShow": "{{name}} फिर से कतार में हैं"
     },
     "moreActions": "{{name}} के लिए और कार्य",
     "empty": "कोई प्रतीक्षा में नहीं है। वॉक-इन जोड़ें।",
@@ -993,7 +995,8 @@
       "staff_advance": "स्टाफ़ एडवांस",
       "staff_advance_reversal": "पलटे एडवांस",
       "payroll": "पेरोल",
-      "payroll_payment": "दिए गए वेतन"
+      "payroll_payment": "दिए गए वेतन",
+      "deposit_forfeit_reversal": "रखी गई जमा राशि (वापस ली गई)"
     },
     "months": "महीने",
     "exportLedger": "लेजर CSV निर्यात",

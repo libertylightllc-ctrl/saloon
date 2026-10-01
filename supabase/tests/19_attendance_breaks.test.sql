@@ -29,9 +29,6 @@ $$;
 create function pg_temp.clock(p_action text, p_share numeric) returns jsonb language sql as $$
   select clock(jsonb_build_object('employee_id', current_setting('t.emp'), 'action', p_action, 'at', pg_temp.at(p_share)))
 $$;
-create function pg_temp.mins(p_from numeric, p_to numeric) returns int language sql as $$
-  select floor(extract(epoch from pg_temp.at(p_to) - pg_temp.at(p_from)) / 60)::int
-$$;
 
 select pg_temp.as_user('00000000-0000-0000-0000-0000000019a0');
 select set_config('t.b', (create_business('{"business_name":"Break Salon","owner_name":"Owner","mode":"gents"}')
@@ -57,7 +54,9 @@ select lives_ok($$ select pg_temp.clock('break_start', 0.50) $$, 'a second break
 select lives_ok($$ select pg_temp.clock('out', 0.60) $$, 'clocking out while on it');
 select results_eq($$ select status, break_minutes from attendance_day(current_setting('t.br')::uuid)
   where employee_id = current_setting('t.emp')::uuid $$,
-  $$ select 'done'::text, pg_temp.mins(0.30, 0.40) + pg_temp.mins(0.50, 0.60) $$, 'ends the break; both breaks add up');
+  $$ select 'done'::text, floor((extract(epoch from pg_temp.at(0.40) - pg_temp.at(0.30))
+                                + extract(epoch from pg_temp.at(0.60) - pg_temp.at(0.50))) / 60)::int $$,
+  'ends the break; both breaks add up (whole minutes of their total)');
 
 -- Clocked out by mistake: back to work, the time away becomes a break.
 select lives_ok($$ select pg_temp.clock('resume', 0.80) $$, 'back to work');
