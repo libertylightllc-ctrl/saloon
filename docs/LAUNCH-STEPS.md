@@ -1,6 +1,6 @@
 # Launch steps that need your accounts
 
-Everything else is built, tested and live at https://saloqo.com. These steps need your own logins, so
+Everything else is built, tested and live at https://www.saloqo.com. These steps need your own logins, so
 they are yours. **You type every password and secret yourself, in the website or your Terminal. Never send them to
 anyone, including me.** After each step, tell me "done" and I check and test it end to end.
 
@@ -15,27 +15,33 @@ the site answers at saloqo.com and every later record (email sender, Google) can
 
 1. https://hpanel.hostinger.com → **Domains** → `saloqo.com` → **DNS / Nameservers** → **Change nameservers**.
 2. Choose **custom nameservers** and enter `ns1.vercel-dns.com` and `ns2.vercel-dns.com` (remove any others) → **Save**.
-3. Wait (usually under an hour, at most a day). https://saloqo.com then opens the app with its own secure padlock.
+3. Wait (usually under an hour, at most a day). https://saloqo.com then opens the app with its own secure padlock
+   (it moves to **www.saloqo.com**, the main address). ✅ Done 2026-10-03.
 
 ## A · Email sender — most important (15 min)
 
 Without it, sign-up confirmation and password-reset emails only reach your own Supabase team's addresses, so new
-salon owners who sign up with email never get the confirmation.
+salon owners who sign up with email never get the confirmation. With saloqo.com, the app sends from
+`no-reply@saloqo.com` through **Resend** (free plan to start), and I add Resend's DNS records for you.
 
-1. Open the Gmail account the emails should come from → https://myaccount.google.com/security → turn on
-   **2-Step Verification** if it is off.
-2. https://myaccount.google.com/apppasswords → name it `Saloqo` → **Create** → copy the 16-letter password.
-3. Supabase → your project → **Authentication → Emails → SMTP Settings** → **Enable custom SMTP**:
-   - Sender email: that Gmail address · Sender name: `Saloqo`
-   - Host: `smtp.gmail.com` · Port: `465`
-   - Username: that Gmail address · Password: the 16-letter app password
+1. https://resend.com → sign up → **Domains → Add domain** → `saloqo.com` → **Add**. Resend lists a few DNS records.
+2. **Tell me "Resend domain added"** — I read nothing from your account; just copy the record list from that page
+   into the chat (names and values are public DNS records, not secrets) and I add them in Vercel DNS.
+3. Back in Resend → the domain → **Verify** (a few minutes after I add the records).
+4. Resend → **API Keys → Create API key** (permission: *Sending access*). Copy it — it is a secret: **do not send it
+   to me**; paste it only in the next step.
+5. Supabase → your project → **Authentication → Emails → SMTP Settings** → **Enable custom SMTP**:
+   - Sender email: `no-reply@saloqo.com` · Sender name: `Saloqo`
+   - Host: `smtp.resend.com` · Port: `465`
+   - Username: `resend` · Password: the API key from step 4
    - **Save**.
-4. Same section → **Templates → Reset password** → replace everything with the contents of
-   `supabase/templates/recovery.html` (in the salon-app folder; ask me and I put it on your clipboard) → **Save**.
-   The app asks for the 6-digit code from this email.
+6. Same section → **Templates → Reset password** → replace everything with the contents of
+   `supabase/templates/recovery.html` (ask me and I put it on your clipboard) → **Save**.
 
-(Gmail allows about 500 emails a day. Later, for emails from your own domain such as `hello@yourdomain.com`, use
-Resend or Postmark instead — same SMTP page.)
+**Receiving mail at support@saloqo.com** (for customers to write to): the simplest is free forwarding to your Gmail
+with a forwarding service such as ImprovMX — sign up, add `saloqo.com`, forward `support@` to your Gmail, and send me
+the MX/SPF records it shows; I add them. (A full mailbox — Google Workspace or Zoho — works too; same: send me its
+records.)
 
 ## B · "Continue with Google" (20 min)
 
@@ -44,13 +50,13 @@ Resend or Postmark instead — same SMTP page.)
    your support email, developer email → save. **Audience**: External → **Publish app** (in "Testing" only listed
    test users can sign in).
 3. **Clients → Create client** → *Web application* → name `Saloqo web`:
-   - Authorized JavaScript origins: `https://saloqo.com`
+   - Authorized JavaScript origins: `https://www.saloqo.com` and `https://saloqo.com`
    - Authorized redirect URIs: `https://djgxvfbsxnimzblpxcst.supabase.co/auth/v1/callback`
    - **Create** → copy the **Client ID** and **Client secret**.
 4. Supabase → **Authentication → Sign In / Providers → Google** → enable → paste the Client ID and secret → **Save**.
 5. Supabase → **Authentication → URL Configuration**:
-   - Site URL: `https://saloqo.com`
-   - Redirect URLs → add `https://saloqo.com/**` and `saloqo://auth-callback` → **Save**.
+   - Site URL: `https://www.saloqo.com`
+   - Redirect URLs → add `https://www.saloqo.com/**`, `https://saloqo.com/**` and `saloqo://auth-callback` → **Save**.
 
 The "Continue with Google" button then appears on the sign-in and sign-up pages by itself.
 

@@ -101,8 +101,8 @@ Connect. The screenshots in `e2e-results/screens/` (made by the test suite for b
 
 | Store asks for | In the app |
 |---|---|
-| Privacy policy URL | `https://<your website>/privacy` (open without signing in) |
-| Terms / EULA URL (optional) | `https://<your website>/terms` |
+| Privacy policy URL | `https://www.saloqo.com/privacy` (open without signing in) |
+| Terms / EULA URL (optional) | `https://www.saloqo.com/terms` |
 | Account deletion inside the app | More → Delete my account (Google Play also wants a web link: the same page after signing in on the website) |
 | Support email | Put a real one in `src/config/brand.json` → `supportEmail` first; the legal pages and the landing page show it |
 | Subscriptions | The phone apps sell nothing: they show whether the plan is on. Plans are bought on the website. In App Store Connect answer "no in-app purchases"; if a reviewer asks, the app is for businesses and the plan is sold to the salon outside the app (guideline 3.1.3(c)). |
