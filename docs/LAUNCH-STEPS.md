@@ -8,6 +8,15 @@ Supabase project: **Salon Control** (`djgxvfbsxnimzblpxcst`), at https://supabas
 
 ---
 
+## 0 · Point saloqo.com at the website (5 min, once)
+
+The domain is bought at Hostinger and already added to the website project on Vercel. Hand its DNS to Vercel, so
+the site answers at saloqo.com and every later record (email sender, Google) can be set from here without you:
+
+1. https://hpanel.hostinger.com → **Domains** → `saloqo.com` → **DNS / Nameservers** → **Change nameservers**.
+2. Choose **custom nameservers** and enter `ns1.vercel-dns.com` and `ns2.vercel-dns.com` (remove any others) → **Save**.
+3. Wait (usually under an hour, at most a day). https://saloqo.com then opens the app with its own secure padlock.
+
 ## A · Email sender — most important (15 min)
 
 Without it, sign-up confirmation and password-reset emails only reach your own Supabase team's addresses, so new
