@@ -14,13 +14,14 @@ import { Button, FormError, FormTextField, Text, useToast } from '@/ui';
 const emailSchema = z.object({ email: z.string().trim().min(1, 'validation.required').email('validation.email') });
 const resetSchema = z
   .object({
-    code: z.string().trim().regex(/^\d{6}$/, 'validation.code'),
+    // Supabase sends 6 to 10 digits depending on the project's "Email OTP length" (saloqo.com: 8).
+    code: z.string().trim().regex(/^\d{6,10}$/, 'validation.code'),
     password: z.string().min(8, 'validation.passwordMin'),
     confirm: z.string(),
   })
   .refine((v) => v.password === v.confirm, { message: 'validation.passwordMatch', path: ['confirm'] });
 
-/** Owner password reset with a 6-digit code by email (works the same on phones and the web). */
+/** Owner password reset with a code by email (works the same on phones and the web). */
 export default function ForgotPassword() {
   const { t } = useTranslation();
   const toast = useToast();
@@ -78,7 +79,7 @@ export default function ForgotPassword() {
             keyboardType="number-pad"
             autoComplete="one-time-code"
             textContentType="oneTimeCode"
-            maxLength={6}
+            maxLength={10}
           />
           <FormTextField
             control={resetForm.control}

@@ -24,11 +24,13 @@ test('owner: wrong password, no internet, sign out to the themed sign-in, forgot
   await expect(id(page, 'sign-in-submit')).toBeVisible();
   await expect(id(page, 'sign-in-submit')).toHaveCSS('background-color', THEME[mode].primaryAction);
 
-  // Forgot password: a 6-digit code by email (local mail catcher), then a new password.
+  // Forgot password: a code by email (8 digits, as on the hosted project; local mail catcher), then a new password.
+  // The test checks the length so a project set to 8 can never again meet an app that only takes 6.
   await id(page, 'link-forgot').click();
   await field(page, 'email').fill(owner.email);
   await id(page, 'forgot-send').click();
   const code = await latestCode(owner.email);
+  expect(code).toHaveLength(8);
   await field(page, 'code').fill('000000');
   await field(page, 'password').fill('NewPass123!');
   await field(page, 'confirm').fill('NewPass123!');

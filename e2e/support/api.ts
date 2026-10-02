@@ -147,7 +147,7 @@ export async function latestCode(email: string): Promise<string> {
     const id = list.messages?.[0]?.ID;
     if (id) {
       const msg = (await (await fetch(`${MAILPIT_URL}/api/v1/message/${id}`)).json()) as { Text?: string; HTML?: string };
-      const code = `${msg.Text ?? ''} ${msg.HTML ?? ''}`.match(/\b(\d{6})\b/)?.[1];
+      const code = `${msg.Text ?? ''} ${msg.HTML ?? ''}`.match(/\b(\d{6,10})\b/)?.[1];
       if (code) return code;
     }
     await new Promise((r) => setTimeout(r, 500));

@@ -505,7 +505,7 @@
       "passwordHint": "At least 8 characters",
       "confirmPassword": "Confirm password",
       "newPassword": "New password",
-      "code": "6-digit code",
+      "code": "Code from the email",
       "salonCode": "Salon code",
       "salonCodeHint": "Your owner can see it under More",
       "username": "Username"
@@ -527,7 +527,7 @@
     },
     "forgot": {
       "title": "Reset password",
-      "subtitle": "We will email you a 6-digit code.",
+      "subtitle": "We will email you a code.",
       "send": "Send code",
       "enterCode": "Enter the code we sent to {{email}}.",
       "reset": "Set new password",
@@ -664,7 +664,7 @@
     "passwordMin": "At least 8 characters",
     "passwordLength": "At least 8 characters",
     "passwordMatch": "Passwords do not match",
-    "code": "Enter the 6-digit code",
+    "code": "Enter the code from the email",
     "salonCode": "4 to 12 letters or numbers",
     "username": "3 to 20 letters, numbers, dots or dashes",
     "name": "Enter a name",
