@@ -1,6 +1,6 @@
 {
-  "name": "Salon Control",
-  "short_name": "Salon Control",
+  "name": "Saloqo",
+  "short_name": "Saloqo",
   "description": "Queue, sales, cash closing, stock, staff, payroll and UAE VAT for barber shops and ladies salons.",
   "start_url": "/",
   "scope": "/",

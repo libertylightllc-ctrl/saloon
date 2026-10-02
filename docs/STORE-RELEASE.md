@@ -71,7 +71,7 @@ EAS asks to sign in to your Apple Developer account and creates the certificates
 ## 5 · Push notifications on real phones
 
 - **iPhone:** EAS sets up the Apple push key during the iOS build (answer "yes" when it asks).
-- **Android:** create a Firebase project, add an Android app with the package `com.saloncontrol.app`,
+- **Android:** create a Firebase project, add an Android app with the package `com.saloqo.app`,
   download its service-account key (Project settings → Service accounts), then upload it:
 
 ```bash
@@ -117,6 +117,6 @@ data is encrypted in transit, and people can delete their account in the app.
 
 ## Things that are fixed once the app is in a store
 
-- The identifier `com.saloncontrol.app` (in `src/config/brand.json`). Change it **before** the first upload if
+- The identifier `com.saloqo.app` (in `src/config/brand.json`). Change it **before** the first upload if
   the final brand name is different; after that it can never change.
 - The app name can change later (brand.json `appName`), with a new build.

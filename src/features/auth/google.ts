@@ -2,7 +2,7 @@
  * "Continue with Google" (docs/06). The button shows only when Google is switched on in Supabase
  * (Authentication → Providers → Google), read from the public auth settings.
  * Web: the page goes to Google and comes back with the session in the address (detectSessionInUrl).
- * Phones: Google opens in an in-app browser and returns to saloncontrol://auth-callback.
+ * Phones: Google opens in an in-app browser and returns to saloqo://auth-callback.
  */
 import { useMutation, useQuery } from '@tanstack/react-query';
 import * as Linking from 'expo-linking';

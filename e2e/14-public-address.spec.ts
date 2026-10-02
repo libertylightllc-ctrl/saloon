@@ -12,7 +12,7 @@ test('a public address with no hosted database shows "being set up", never a sig
   for (const path of ['/', '/sign-in', '/accounts']) {
     await page.goto(`http://live.salon.test:${port}${path}`);
     await expect(id(page, 'setting-up')).toBeVisible({ timeout: 30_000 });
-    await expect(page.getByText('Salon Control is being set up')).toBeVisible();
+    await expect(page.getByText('Saloqo is being set up')).toBeVisible();
     await expect(id(page, 'sign-in-submit')).toHaveCount(0);
   }
   await snap(page, 'setting-up', mode);

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Salon Control",
-    "slug": "salon-control",
+    "name": "Saloqo",
+    "slug": "saloqo",
     "version": "0.1.0",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
-    "scheme": "saloncontrol",
+    "scheme": "saloqo",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true

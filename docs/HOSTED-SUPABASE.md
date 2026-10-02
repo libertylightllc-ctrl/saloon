@@ -60,7 +60,7 @@ that the tools on this Mac can update the hosted database, and I never see the p
    never the service_role key): `select configure_push('https://<ref>.supabase.co', '<anon key>');` run as the
    service role (dashboard → SQL editor runs as postgres; I run it through the API with the function's own key).
 3. **Auth settings** (dashboard → Authentication):
-   - *URL configuration:* Site URL `saloncontrol://` (the app) and your web address if you use the web build.
+   - *URL configuration:* Site URL `saloqo://` (the app) and your web address if you use the web build.
    - *Email templates → Reset password:* the 6-digit code template from `supabase/templates/recovery.html`.
    - *Email:* keep **Confirm email** on for owner sign-ups (the app already says "check your email").
    - *SMTP:* connect a mail provider (for example Resend or Postmark). Supabase's built-in mailer
@@ -115,7 +115,7 @@ completely unreachable, the only certain way is a new repository.
 3. Copy the **Client ID** and **Client secret**, then in Supabase → **Authentication → Sign In / Providers → Google**:
    switch it on and paste both (you type the secret there yourself; never send it to me).
 4. Supabase → **Authentication → URL Configuration**: Site URL `https://saloon-virid.vercel.app`; Redirect URLs
-   `https://saloon-virid.vercel.app/**` and `saloncontrol://auth-callback`.
+   `https://saloon-virid.vercel.app/**` and `saloqo://auth-callback`.
 
 The "Continue with Google" button appears on the sign-in and sign-up pages by itself once step 3 is saved.
 

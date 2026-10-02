@@ -1,6 +1,6 @@
 # Launch steps that need your accounts
 
-Everything else is built, tested and live at https://saloon-virid.vercel.app. These steps need your own logins, so
+Everything else is built, tested and live at https://saloqo.com. These steps need your own logins, so
 they are yours. **You type every password and secret yourself, in the website or your Terminal. Never send them to
 anyone, including me.** After each step, tell me "done" and I check and test it end to end.
 
@@ -15,9 +15,9 @@ salon owners who sign up with email never get the confirmation.
 
 1. Open the Gmail account the emails should come from → https://myaccount.google.com/security → turn on
    **2-Step Verification** if it is off.
-2. https://myaccount.google.com/apppasswords → name it `Salon Control` → **Create** → copy the 16-letter password.
+2. https://myaccount.google.com/apppasswords → name it `Saloqo` → **Create** → copy the 16-letter password.
 3. Supabase → your project → **Authentication → Emails → SMTP Settings** → **Enable custom SMTP**:
-   - Sender email: that Gmail address · Sender name: `Salon Control`
+   - Sender email: that Gmail address · Sender name: `Saloqo`
    - Host: `smtp.gmail.com` · Port: `465`
    - Username: that Gmail address · Password: the 16-letter app password
    - **Save**.
@@ -30,18 +30,18 @@ Resend or Postmark instead — same SMTP page.)
 
 ## B · "Continue with Google" (20 min)
 
-1. https://console.cloud.google.com → top bar → **New project** → `Salon Control` → **Create** (select it).
-2. **Google Auth Platform → Branding** (or *APIs & Services → OAuth consent screen*): app name `Salon Control`,
+1. https://console.cloud.google.com → top bar → **New project** → `Saloqo` → **Create** (select it).
+2. **Google Auth Platform → Branding** (or *APIs & Services → OAuth consent screen*): app name `Saloqo`,
    your support email, developer email → save. **Audience**: External → **Publish app** (in "Testing" only listed
    test users can sign in).
-3. **Clients → Create client** → *Web application* → name `Salon Control web`:
-   - Authorized JavaScript origins: `https://saloon-virid.vercel.app`
+3. **Clients → Create client** → *Web application* → name `Saloqo web`:
+   - Authorized JavaScript origins: `https://saloqo.com`
    - Authorized redirect URIs: `https://djgxvfbsxnimzblpxcst.supabase.co/auth/v1/callback`
    - **Create** → copy the **Client ID** and **Client secret**.
 4. Supabase → **Authentication → Sign In / Providers → Google** → enable → paste the Client ID and secret → **Save**.
 5. Supabase → **Authentication → URL Configuration**:
-   - Site URL: `https://saloon-virid.vercel.app`
-   - Redirect URLs → add `https://saloon-virid.vercel.app/**` and `saloncontrol://auth-callback` → **Save**.
+   - Site URL: `https://saloqo.com`
+   - Redirect URLs → add `https://saloqo.com/**` and `saloqo://auth-callback` → **Save**.
 
 The "Continue with Google" button then appears on the sign-in and sign-up pages by itself.
 
@@ -84,6 +84,6 @@ documents; takes a few days). Tell me when it is approved.
 ## G · Before the stores
 
 - Decide the final **app name** (search the App Store and Play Store: it must not be taken) and the app ID
-  (`com.saloncontrol.app` now; it can never change after the first upload). Tell me if either changes.
+  (`com.saloqo.app` now; it can never change after the first upload). Tell me if either changes.
 - A lawyer reads `/privacy` and `/terms`.
 - A native speaker reads the Arabic, Hindi and Urdu texts (machine drafts now).
