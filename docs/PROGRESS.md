@@ -1,6 +1,6 @@
 # Progress
 
-Updated: 2026-10-01
+Updated: 2026-10-03
 
 ## Current milestone: M4 — Books & finish. M3 ✅ built (hand-over: docs/M3-HANDOVER.md), M2 ✅ done
 
@@ -25,6 +25,8 @@ Updated: 2026-10-01
 - ✅ One place for staff (2026-09-30): Staff & payroll and Team & logins merged into **Staff** — Add staff with an
   optional login, App login card on each person, login-only accountants; one record per person (earlier duplicates
   merged). SQL `17_one_person_one_record`, e2e flows 02, 09, 33.
+- ✅ Live on **www.saloqo.com** (2026-10-03): app renamed Saloqo (`com.saloqo.app`); emails from no-reply@saloqo.com
+  through Resend (sign-up confirmation and 8-digit reset codes, tested by the owner); Continue with Google on.
 - ✅ Proof (2026-10-01, 51c183e) — full suite 114 / 114 three runs in a row, button sweep 8 / 8 (1869 buttons, 0 dead): docs/M4-HANDOVER.md.
 
 

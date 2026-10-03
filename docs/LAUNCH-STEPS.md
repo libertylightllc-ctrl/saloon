@@ -18,7 +18,7 @@ the site answers at saloqo.com and every later record (email sender, Google) can
 3. Wait (usually under an hour, at most a day). https://saloqo.com then opens the app with its own secure padlock
    (it moves to **www.saloqo.com**, the main address). ✅ Done 2026-10-03.
 
-## A · Email sender — most important (15 min)
+## A · Email sender — ✅ done 2026-10-03 (Resend, no-reply@saloqo.com; sign-up and reset emails tested)
 
 Without it, sign-up confirmation and password-reset emails only reach your own Supabase team's addresses, so new
 salon owners who sign up with email never get the confirmation. With saloqo.com, the app sends from
@@ -43,7 +43,7 @@ with a forwarding service such as ImprovMX — sign up, add `saloqo.com`, forwar
 the MX/SPF records it shows; I add them. (A full mailbox — Google Workspace or Zoho — works too; same: send me its
 records.)
 
-## B · "Continue with Google" (20 min)
+## B · "Continue with Google" — ✅ done 2026-10-03 (tested end to end)
 
 1. https://console.cloud.google.com → top bar → **New project** → `Saloqo` → **Create** (select it).
 2. **Google Auth Platform → Branding** (or *APIs & Services → OAuth consent screen*): app name `Saloqo`,
