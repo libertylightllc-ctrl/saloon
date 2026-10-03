@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { keys } from '@/features/live/useLiveSync';
 import type { BusinessDate } from '@/lib/dates';
+import { functionError } from '@/lib/errors';
 import { asJson, supabase } from '@/lib/supabase';
 
 export type RoleTitle = 'staff' | 'therapist' | 'cashier' | 'manager';
@@ -108,6 +109,22 @@ function useInvalidateStaff(businessId: string, branchId: string) {
       void client.invalidateQueries({ queryKey });
     }
   };
+}
+
+/**
+ * Remove someone from the staff, or bring an archived person back (remove-staff Edge Function, owner). Someone with
+ * nothing on record is removed completely; anyone with records is archived (hidden, login off, records kept).
+ */
+export function useRemoveStaff(businessId: string, branchId: string) {
+  const done = useInvalidateStaff(businessId, branchId);
+  return useMutation({
+    mutationFn: async (input: { employee_id: string; action: 'remove' | 'restore' }) => {
+      const { data, error } = await supabase.functions.invoke('remove-staff', { body: input });
+      if (error) throw await functionError(error);
+      return data as { mode: 'removed' | 'archived' | 'restored' };
+    },
+    onSuccess: done,
+  });
 }
 
 export interface EmployeeInput {

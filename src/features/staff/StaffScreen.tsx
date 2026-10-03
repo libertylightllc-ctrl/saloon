@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
@@ -85,38 +85,40 @@ export function StaffScreen() {
                     <Button label={t('attendance.title')} icon="clock" variant="outline" size="md" onPress={() => router.push('/attendance')} testID="staff-attendance" />
                     <Button label={t('payroll.title')} icon="wallet" variant="outline" size="md" onPress={() => router.push('/payroll')} testID="staff-payroll" />
                   </View>
-                  {rows.map((s) => (
-                    <ListRow
-                      key={s.employee_id}
-                      testID={`staff-${s.full_name}`}
-                      leading={<Avatar name={s.full_name} size={44} />}
-                      title={s.full_name}
-                      meta={[
-                        [roleTitle(s.role_title), s.employee_code].filter(Boolean).join(' · '),
-                        s.username ? t('staff.login', { username: s.username }) : t('staff.noLogin'),
-                      ]}
-                      badges={
-                        <View style={styles.badges}>
-                          {!s.active ? <StatusPill status="archived" label={t('staff.inactive')} /> : null}
-                          {s.wps_required ? <StatusPill tone="info" label={t('staff.wps')} /> : null}
-                          {s.roster.length === 0 ? <StatusPill tone="neutral" label={t('staff.noRoster')} /> : null}
-                        </View>
-                      }
-                      trailing={
-                        <View style={styles.trailing}>
-                          <Text variant="bodyStrong" tabular>
-                            {formatMoney(s.base_salary_minor)}
-                          </Text>
-                          {s.commission_bps ? (
-                            <Text variant="small" color="textSecondary">
-                              {t('staff.commissionShort', { pct: formatBps(s.commission_bps) })}
+                  {[...rows.filter((s) => s.active), ...rows.filter((s) => !s.active)].map((s, i, all) => (
+                    <Fragment key={s.employee_id}>
+                      {!s.active && (i === 0 || all[i - 1]!.active) ? <SectionHeader title={t('staff.archivedSection')} /> : null}
+                      <ListRow
+                        testID={`staff-${s.full_name}`}
+                        leading={<Avatar name={s.full_name} size={44} />}
+                        title={s.full_name}
+                        meta={[
+                          [roleTitle(s.role_title), s.employee_code].filter(Boolean).join(' · '),
+                          s.username ? t('staff.login', { username: s.username }) : t('staff.noLogin'),
+                        ]}
+                        badges={
+                          <View style={styles.badges}>
+                            {!s.active ? <StatusPill status="archived" label={t('staff.inactive')} /> : null}
+                            {s.wps_required ? <StatusPill tone="info" label={t('staff.wps')} /> : null}
+                            {s.roster.length === 0 ? <StatusPill tone="neutral" label={t('staff.noRoster')} /> : null}
+                          </View>
+                        }
+                        trailing={
+                          <View style={styles.trailing}>
+                            <Text variant="bodyStrong" tabular>
+                              {formatMoney(s.base_salary_minor)}
                             </Text>
-                          ) : null}
-                        </View>
-                      }
-                      chevron
-                      onPress={() => router.push({ pathname: '/staff/[id]', params: { id: s.employee_id } })}
-                    />
+                            {s.commission_bps ? (
+                              <Text variant="small" color="textSecondary">
+                                {t('staff.commissionShort', { pct: formatBps(s.commission_bps) })}
+                              </Text>
+                            ) : null}
+                          </View>
+                        }
+                        chevron
+                        onPress={() => router.push({ pathname: '/staff/[id]', params: { id: s.employee_id } })}
+                      />
+                    </Fragment>
                   ))}
                   {loginOnly.length ? <SectionHeader title={t('staff.loginOnly')} /> : null}
                   {loginOnly.map((m) => (

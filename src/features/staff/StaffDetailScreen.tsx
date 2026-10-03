@@ -8,11 +8,12 @@ import { formatBps, formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
-import { Avatar, Button, Card, EmptyState, HeaderBand, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
+import { Avatar, Button, Card, EmptyState, FormError, HeaderBand, QueryState, Screen, SectionHeader, StatusPill, Text, useToast } from '@/ui';
 
-import { useAttendanceHistory, useStaffDirectory } from './api';
+import { useAttendanceHistory, useRemoveStaff, useStaffDirectory } from './api';
 import { useRoleTitle, WEEKDAYS } from './labels';
 import { LoginCard } from './LoginCard';
+import { RemoveStaffSheet } from './RemoveStaffSheet';
 import { RosterSheet } from './RosterSheet';
 
 function Row({ label, value, testID }: { label: string; value: string; testID?: string }) {
@@ -35,12 +36,15 @@ export function StaffDetailScreen() {
   const dates = useDates();
   const roleTitle = useRoleTitle();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { business, role } = useWorkspace();
+  const { business, branch, role } = useWorkspace();
   const staff = useStaffDirectory(business.id);
   const history = useAttendanceHistory(id);
   const [editingRoster, setEditingRoster] = useState(false);
+  const [removing, setRemoving] = useState(false);
   const person = staff.data?.find((s) => s.employee_id === id);
   const owner = can(role, 'manageStaff');
+  const toast = useToast();
+  const restore = useRemoveStaff(business.id, branch.id);
 
   return (
     <>
@@ -110,12 +114,36 @@ export function StaffDetailScreen() {
                     </Card>
                   )}
                 </QueryState>
+
+                {owner && person.active ? (
+                  <Button label={t('staff.remove.button')} icon="trash" variant="ghost" onPress={() => setRemoving(true)} testID="staff-remove" />
+                ) : null}
+                {owner && !person.active ? (
+                  <Card variant="outlined" style={styles.card} testID="staff-archived">
+                    <Text color="textSecondary">{t('staff.remove.archivedBody')}</Text>
+                    <FormError error={restore.error} />
+                    <Button
+                      label={t('staff.remove.restore')}
+                      icon="repeat"
+                      variant="secondary"
+                      loading={restore.isPending}
+                      onPress={() =>
+                        restore.mutate(
+                          { employee_id: person.employee_id, action: 'restore' },
+                          { onSuccess: () => toast(t('staff.remove.restored', { name: person.full_name })) },
+                        )
+                      }
+                      testID="staff-restore"
+                    />
+                  </Card>
+                ) : null}
               </View>
             )
           }
         </QueryState>
       </Screen>
       {person ? <RosterSheet person={person} open={editingRoster} onClose={() => setEditingRoster(false)} /> : null}
+      {person && owner ? <RemoveStaffSheet person={person} open={removing} onClose={() => setRemoving(false)} /> : null}
     </>
   );
 }

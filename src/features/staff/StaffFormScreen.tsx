@@ -51,7 +51,8 @@ function StaffForm({ person }: { person: StaffMember | null }) {
   const [commission, setCommission] = useState(person ? formatBps(person.commission_bps).replace('%', '') : '');
   const [wps, setWps] = useState(person?.wps_required ?? false);
   const [phone, setPhone] = useState(person?.phone ?? '');
-  const [active, setActive] = useState(person?.active ?? true);
+  // Archiving and bringing back are on the person's page (Remove from staff / Bring back).
+  const active = person?.active ?? true;
   const [canLogin, setCanLogin] = useState(false);
   const [login, setLogin] = useState<LoginDraft>({ access: 'staff', username: '', password: '' });
   const [accessTouched, setAccessTouched] = useState(false);
@@ -163,9 +164,6 @@ function StaffForm({ person }: { person: StaffMember | null }) {
             error={phoneOk ? undefined : t('validation.phone')}
             testID="staff-phone"
           />
-          {person && !person.member_id ? (
-            <SwitchRow label={t('staff.fields.active')} hint={t('staff.fields.activeHint')} value={active} onChange={setActive} testID="staff-active" />
-          ) : null}
           {!person ? (
             <SwitchRow
               label={t('staff.canLogin')}

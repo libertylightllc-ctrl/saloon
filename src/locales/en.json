@@ -1374,7 +1374,7 @@
     "salaries": "Base salaries / month",
     "login": "Login: {{username}}",
     "noLogin": "No login",
-    "inactive": "Inactive",
+    "inactive": "Archived",
     "wps": "WPS",
     "wpsYes": "Paid through WPS",
     "wpsNo": "Not on WPS",
@@ -1410,9 +1410,7 @@
       "commission": "Commission %",
       "commissionHint": "On services, after discount and without VAT. Never on tips: the whole tip goes to them.",
       "wpsHint": "Salary goes through the bank; payroll asks for the transfer proof.",
-      "phone": "Phone",
-      "active": "Working here",
-      "activeHint": "People who left are hidden but keep their history."
+      "phone": "Phone"
     },
     "createLogin": "Create login",
     "who": {
@@ -1429,7 +1427,20 @@
     "manageLogin": "Password & sign-in",
     "loginOnly": "Login only",
     "savedWithLogin": "{{name}} saved, with login {{username}}",
-    "savedLoginFailed": "{{name}} is saved. Change the username and press Save again to add the login."
+    "savedLoginFailed": "{{name}} is saved. Change the username and press Save again to add the login.",
+    "remove": {
+      "button": "Remove from staff",
+      "title": "Remove {{name}}?",
+      "body": "If they have no sales, attendance or pay on record, they are removed completely, with their login.",
+      "archiveNote": "If they have any, those records must be kept by law: they are archived instead — hidden from the lists, the queue and attendance, their login switched off. You can bring them back later.",
+      "action": "Remove",
+      "removed": "{{name}} removed",
+      "archived": "{{name}} archived (records kept)",
+      "archivedBody": "Archived: not on the lists, the queue or attendance, and their login is off. Their records are kept.",
+      "restore": "Bring back",
+      "restored": "{{name}} is back on the staff"
+    },
+    "archivedSection": "Archived"
   },
   "attendance": {
     "title": "Attendance",

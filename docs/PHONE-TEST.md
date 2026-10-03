@@ -256,3 +256,10 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 
 1. A: Queue → a walk-in → **…** → **Mark no-show** → ✅ it moves to No-show.
 2. **…** on it → **Undo no-show** → ✅ "… is back in the queue"; a kept deposit is held again.
+
+## 30 · Remove someone from the staff (1 min)
+
+1. A: More → Staff → **Add staff** → "Typo Name" → Save → on their page **Remove from staff** → **Remove** →
+   ✅ "Typo Name removed"; gone from the list.
+2. A barber who has sales → **Remove from staff** → **Remove** → ✅ "… archived (records kept)"; listed under
+   **Archived**, and their login no longer signs in. **Bring back** → ✅ back on the staff, login works again.
