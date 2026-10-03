@@ -209,7 +209,8 @@
       "hygiene": "Today's hygiene log is not signed",
       "hygieneSub": "Tools, towels, surfaces, floors, waste"
     },
-    "attentionClose": "Close"
+    "attentionClose": "Close",
+    "viewClosing": "Cash closing"
   },
   "queue": {
     "title": "Queue",

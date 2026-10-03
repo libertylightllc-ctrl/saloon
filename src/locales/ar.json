@@ -210,7 +210,8 @@
       "hygiene": "سجل النظافة لليوم غير موقّع",
       "hygieneSub": "الأدوات، المناشف، الأسطح، الأرضيات، النفايات"
     },
-    "attentionClose": "إغلاق"
+    "attentionClose": "إغلاق",
+    "viewClosing": "إغلاق النقدية"
   },
   "queue": {
     "title": "الطابور",

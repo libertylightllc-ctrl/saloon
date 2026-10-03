@@ -157,6 +157,8 @@ test('the accountant has Reports and Accounting tabs, reads and exports, but can
   await sale(owner, { price: 9_000 });
 
   await staffOn(page, mode, owner.code, accountant.username, accountant.password);
+  // The accountant can look at cash closings but not close a day, and Home says so.
+  await expect(id(page, 'home-close-day')).toHaveText('Cash closing');
   expect(await visibleTabs(page)).toEqual(['index', 'reports-tab', 'accounts-tab', 'more']);
   await id(page, 'tab-reports-tab').click();
   await expect(id(page, 'report-kpi-sales-value')).toContainText('AED 90.00');

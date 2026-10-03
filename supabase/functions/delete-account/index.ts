@@ -1,6 +1,6 @@
-// A person deletes their own account (the app stores require it). Their details and sign-in go; the salon's records
-// of what they did stay, as UAE law requires records to be kept. An owner deleting their account closes the salon,
-// and its staff logins go too. See delete_account_data() in the database.
+// An owner deletes their own account (the app stores require it for accounts people create themselves). Their details
+// and sign-in go; the salon's records stay, as UAE law requires records to be kept. Deleting it closes the salon, and
+// its staff logins go too. Staff logins are the owner's to remove. See delete_account_data() in the database.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 import { callerOf, cors, fail, json } from '../_shared/staff.ts';
@@ -23,6 +23,11 @@ Deno.serve(async (req) => {
   }
   // The app sends this only after the person has confirmed on screen.
   if (body.confirm !== 'DELETE') return fail('not_confirmed');
+
+  // Only an owner (or someone who signed up and has not set up a salon yet) deletes their own account. Staff,
+  // cashier and accountant logins belong to the salon: the owner removes them (Staff → the person → Remove).
+  const { data: memberships } = await admin.from('members').select('role').eq('user_id', caller.id);
+  if (memberships?.length && !memberships.some((m) => m.role === 'owner')) return fail('not_allowed', 403);
 
   const { data, error } = await admin.rpc('delete_account_data', { p_user: caller.id });
   if (error) return fail('delete_failed', 500);

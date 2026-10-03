@@ -109,22 +109,25 @@ export function MoreScreen() {
           </MenuGroup>
           <MenuGroup title={t('more.account')}>
             <MenuRow icon="shield" index={0} label={t('legal.privacy.title')} onPress={() => router.push('/privacy')} testID="more-privacy" />
-            <MenuRow icon="fileText" index={1} label={t('legal.terms.title')} onPress={() => router.push('/terms')} testID="more-terms" />
-            <MenuRow
-              icon="trash"
-              danger
-              last
-              label={t('account.delete.row')}
-              onPress={() => setDeleteOpen(true)}
-              testID="more-delete-account"
-            />
+            <MenuRow icon="fileText" index={1} last={role !== 'owner'} label={t('legal.terms.title')} onPress={() => router.push('/terms')} testID="more-terms" />
+            {/* Only the owner deletes an account; staff logins are the owner's to remove (Staff → the person). */}
+            {role === 'owner' ? (
+              <MenuRow
+                icon="trash"
+                danger
+                last
+                label={t('account.delete.row')}
+                onPress={() => setDeleteOpen(true)}
+                testID="more-delete-account"
+              />
+            ) : null}
           </MenuGroup>
         </View>
       </Screen>
       <LanguageSheet open={language} onClose={() => setLanguage(false)} />
       <PinSheet open={pinOpen} onClose={() => setPinOpen(false)} />
       <SwitchUserSheet open={switchOpen} onClose={() => setSwitchOpen(false)} />
-      <DeleteAccountSheet open={deleteOpen} onClose={() => setDeleteOpen(false)} />
+      {role === 'owner' ? <DeleteAccountSheet open={deleteOpen} onClose={() => setDeleteOpen(false)} /> : null}
     </>
   );
 }

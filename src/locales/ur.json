@@ -210,7 +210,8 @@
       "hygiene": "آج کا صفائی لاگ دستخط شدہ نہیں",
       "hygieneSub": "اوزار، تولیے، سطحیں، فرش، کچرا"
     },
-    "attentionClose": "بند کریں"
+    "attentionClose": "بند کریں",
+    "viewClosing": "کیش کلوزنگ"
   },
   "queue": {
     "title": "قطار",

@@ -210,7 +210,8 @@
       "hygiene": "आज का स्वच्छता लॉग साइन नहीं",
       "hygieneSub": "औज़ार, तौलिये, सतहें, फ़र्श, कचरा"
     },
-    "attentionClose": "बंद करें"
+    "attentionClose": "बंद करें",
+    "viewClosing": "कैश क्लोज़िंग"
   },
   "queue": {
     "title": "कतार",

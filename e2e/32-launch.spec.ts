@@ -124,23 +124,33 @@ test('the privacy policy and terms are open to everyone, from the landing page a
   await expect(id(page, 'legal-privacy')).toBeVisible();
 });
 
-test('a barber deletes their login; then the owner deletes theirs, which closes the salon', async ({
-  page,
-  mode,
-}) => {
+test('only the owner can delete an account; doing so closes the salon and its staff logins', async ({ page, mode }) => {
   const owner = await createOwner(mode);
   const barber = await createStaff(owner, 'staff');
 
+  // A barber's login belongs to the salon: no "Delete my account", and the server refuses one anyway.
   await staffOn(page, mode, owner.code, barber.username, barber.password);
   await tab(page, 'more');
+  await expect(id(page, 'more-privacy')).toBeVisible();
+  await expect(id(page, 'more-delete-account')).toHaveCount(0);
+  const barberClient = await userClient(staffEmail(owner.code, barber.username), barber.password);
+  const tried = await barberClient.functions.invoke('delete-account', { body: { confirm: 'DELETE' } });
+  expect((tried.error as { context?: Response } | null)?.context?.status).toBe(403);
+  await expect(userClient(staffEmail(owner.code, barber.username), barber.password)).resolves.toBeTruthy();
+  await tab(page, 'more');
+  await id(page, 'sign-out').click();
+
+  // The owner deletes theirs. The server switches the login off before it answers; hold its answer back until the
+  // phone has already signed itself out on hearing that (the order a busy server produces): the owner must still be
+  // told the account was deleted, never "This login is disabled".
+  await signInOwner(page, owner.email, owner.password);
+  await tab(page, 'more');
   await id(page, 'more-delete-account').click();
-  await expect(id(page, 'delete-account-sheet')).toContainText('carries on without you');
+  await expect(id(page, 'delete-account-sheet')).toContainText('This closes');
+  await expect(id(page, 'delete-account-backup')).toBeVisible();
   await expect(id(page, 'delete-account-submit')).toBeDisabled();
   await id(page, 'delete-account-confirm').fill('delete');
-  await snap(page, 'delete-account-staff', mode);
-  // The server switches the login off before it answers. Hold its answer back until the phone has already signed
-  // itself out on hearing that (the order a busy server produces): the person must still be told the account was
-  // deleted, never "This login is disabled".
+  await snap(page, 'delete-account-owner', mode);
   let seen: (text: string) => void = () => undefined;
   const firstNotice = new Promise<string>((resolve) => (seen = resolve));
   await page.route('**/functions/v1/delete-account', async (route) => {
@@ -155,30 +165,7 @@ test('a barber deletes their login; then the owner deletes theirs, which closes 
   await expect(id(page, 'session-notice')).toHaveText('Your account has been deleted.');
   await page.unroute('**/functions/v1/delete-account');
   await expect(id(page, 'sign-in-submit')).toBeVisible();
-  const { data: gone } = await admin
-    .from('members')
-    .select('active, display_name')
-    .eq('id', barber.memberId)
-    .single();
-  expect(gone).toEqual({ active: false, display_name: 'Deleted user' });
-  await expect(
-    userClient(staffEmail(owner.code, barber.username), barber.password),
-  ).rejects.toThrow();
-
-  await signInOwner(page, owner.email, owner.password);
-  await tab(page, 'more');
-  await id(page, 'more-delete-account').click();
-  await expect(id(page, 'delete-account-sheet')).toContainText('This closes');
-  await expect(id(page, 'delete-account-backup')).toBeVisible();
-  await id(page, 'delete-account-confirm').fill('DELETE');
-  await id(page, 'delete-account-submit').click();
-  await expect(text(page, 'Your account has been deleted.')).toBeVisible();
-  await expect(id(page, 'sign-in-submit')).toBeVisible();
-  const { data: business } = await admin
-    .from('businesses')
-    .select('closed_at')
-    .eq('id', owner.businessId)
-    .single();
+  const { data: business } = await admin.from('businesses').select('closed_at').eq('id', owner.businessId).single();
   expect(business!.closed_at).not.toBeNull();
   const { count } = await admin
     .from('members')
@@ -187,4 +174,6 @@ test('a barber deletes their login; then the owner deletes theirs, which closes 
     .eq('active', true);
   expect(count).toBe(0);
   await expect(userClient(owner.email, owner.password)).rejects.toThrow();
+  await expect(userClient(staffEmail(owner.code, barber.username), barber.password)).rejects.toThrow();
 });
+

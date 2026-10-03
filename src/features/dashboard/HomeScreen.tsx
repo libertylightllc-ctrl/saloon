@@ -209,7 +209,7 @@ function MoneyCards({ data }: { data: Dashboard }) {
         action={
           can(role, 'viewClosing') ? (
             <Button
-              label={t('home.closeDay')}
+              label={t(can(role, 'countCash') ? 'home.closeDay' : 'home.viewClosing')}
               size="sm"
               variant={closed === 'approved' ? 'ghost' : 'secondary'}
               icon="banknote"
