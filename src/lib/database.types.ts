@@ -1815,6 +1815,7 @@ export type Database = {
       };
       plan_events: {
         Row: {
+          alerted_at: string | null;
           amount_minor: number | null;
           business_id: string;
           created_at: string;
@@ -1827,6 +1828,7 @@ export type Database = {
           paid_until: string | null;
         };
         Insert: {
+          alerted_at?: string | null;
           amount_minor?: number | null;
           business_id: string;
           created_at?: string;
@@ -1839,6 +1841,7 @@ export type Database = {
           paid_until?: string | null;
         };
         Update: {
+          alerted_at?: string | null;
           amount_minor?: number | null;
           business_id?: string;
           created_at?: string;
@@ -1877,24 +1880,42 @@ export type Database = {
       };
       platform_settings: {
         Row: {
+          bank_account_name: string | null;
+          bank_iban: string | null;
+          bank_name: string | null;
+          bank_swift: string | null;
           currency: string;
           id: boolean;
           intl_currency: string;
           intl_price_per_branch_minor: number;
+          pay_link_url: string | null;
+          pay_note: string | null;
           price_per_branch_minor: number;
         };
         Insert: {
+          bank_account_name?: string | null;
+          bank_iban?: string | null;
+          bank_name?: string | null;
+          bank_swift?: string | null;
           currency?: string;
           id?: boolean;
           intl_currency?: string;
           intl_price_per_branch_minor?: number;
+          pay_link_url?: string | null;
+          pay_note?: string | null;
           price_per_branch_minor?: number;
         };
         Update: {
+          bank_account_name?: string | null;
+          bank_iban?: string | null;
+          bank_name?: string | null;
+          bank_swift?: string | null;
           currency?: string;
           id?: boolean;
           intl_currency?: string;
           intl_price_per_branch_minor?: number;
+          pay_link_url?: string | null;
+          pay_note?: string | null;
           price_per_branch_minor?: number;
         };
         Relationships: [];
@@ -3205,6 +3226,7 @@ export type Database = {
           timezone: string;
         }[];
       };
+      admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
       allocate_minor: { Args: { p_total: number; p_weights: number[] }; Returns: number[] };
       appointment_for_update: {
         Args: { p_id: string };
@@ -3296,6 +3318,24 @@ export type Database = {
       };
       check_in: { Args: { p_id: string }; Returns: undefined };
       check_pin: { Args: { p_member: string; p_pin: string }; Returns: boolean };
+      claim_plan_alerts: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          admin_emails: string[];
+          branches: number;
+          code: string;
+          country_code: string;
+          currency: string;
+          event_id: string;
+          months: number;
+          note: string;
+          owner_email: string;
+          owner_name: string;
+          price_per_branch_minor: number;
+          requested_at: string;
+          salon: string;
+        }[];
+      };
       clock: { Args: { p: Json }; Returns: Json };
       close_period: { Args: { p_business: string; p_month: string }; Returns: undefined };
       closing_history: {
@@ -3344,7 +3384,9 @@ export type Database = {
       dashboard_today: { Args: { p_branch: string }; Returns: Json };
       delete_account_data: { Args: { p_user: string }; Returns: Json };
       dismiss_refund_request: { Args: { p_id: string; p_note: string }; Returns: undefined };
+      dispatch_plan_alerts: { Args: Record<PropertyKey, never>; Returns: number };
       dispatch_push: { Args: Record<PropertyKey, never>; Returns: number };
+      doc_label: { Args: { p_type: string }; Returns: string };
       employee_has_history: { Args: { p_id: string }; Returns: boolean };
       expected_cash: { Args: { p_branch: string; p_date?: string }; Returns: number };
       fmt_money: { Args: { p_currency?: string; p_minor: number }; Returns: string };
@@ -3680,6 +3722,7 @@ export type Database = {
           owed_minor: number;
         }[];
       };
+      unclaim_plan_alert: { Args: { p_event: string }; Returns: undefined };
       undo_no_show: { Args: { p_id: string }; Returns: undefined };
       unique_business_code: { Args: { p_name: string }; Returns: string };
       unregister_push_token: { Args: { p_token: string }; Returns: undefined };

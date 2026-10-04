@@ -612,6 +612,19 @@
       "action": "Continue with Google",
       "or": "or with email",
       "mark": "G"
+    },
+    "checkInbox": {
+      "title": "Check your inbox",
+      "body": "We sent a link to {{email}}. Open it to confirm your account, then sign in.",
+      "spam": "Not there after a minute? Look in Spam or Promotions.",
+      "resend": "Send the email again",
+      "resent": "Sent again",
+      "signIn": "Go to sign in"
+    },
+    "alreadyRegistered": {
+      "title": "This email already has an account",
+      "body": "{{email}} is already signed up. Sign in, continue with Google, or reset your password.",
+      "reset": "Reset my password"
     }
   },
   "setup": {
@@ -771,7 +784,10 @@
     "on_break": "Already on a break.",
     "not_on_break": "Not on a break.",
     "invalid_country": "That country, currency or time zone isn’t recognised.",
-    "invalid_tax_rate": "Enter a tax rate from 0 to 30%."
+    "invalid_tax_rate": "Enter a tax rate from 0 to 30%.",
+    "invalid_iban": "That IBAN does not look right. It starts with two letters and two numbers, like AE07 0331 2345 6789 0123 456.",
+    "invalid_swift": "A SWIFT / BIC code has 8 or 11 letters and numbers.",
+    "invalid_link": "The payment link must start with https://"
   },
   "sales": {
     "title": "Sales",
@@ -1927,6 +1943,17 @@
     "extendAction": "Ask to add months",
     "store": {
       "inactiveBody": "This salon’s plan isn’t active, so nothing new can be saved for now. Everything already saved can still be viewed."
+    },
+    "pay": {
+      "title": "How to pay",
+      "byCard": "Pay by card",
+      "byTransfer": "Bank transfer",
+      "bank": "Bank",
+      "accountName": "Account name",
+      "iban": "IBAN",
+      "swift": "SWIFT / BIC",
+      "reference": "Reference",
+      "referenceHint": "Put your salon code as the payment reference, then tap “Ask to switch on” below. Your plan starts as soon as the payment arrives."
     }
   },
   "admin": {
@@ -1944,7 +1971,23 @@
     "activated": "{{name}}: plan switched on",
     "endPlan": "End plan (note needed)",
     "ended": "{{name}}: plan ended",
-    "hint": "The plan runs from today, or from its current end if it is still running. Ending it keeps all the salon’s data."
+    "hint": "The plan runs from today, or from its current end if it is still running. Ending it keeps all the salon’s data.",
+    "pay": {
+      "button": "Payment details",
+      "title": "Where salons pay",
+      "hint": "Shown on every salon’s Plan page on the website. Fill in a bank account, a card payment link (Stripe, PayPal, Ziina…), or both; empty fields are not shown.",
+      "transfer": "Bank transfer",
+      "card": "Card payment link",
+      "fields": {
+        "bank_name": "Bank",
+        "bank_account_name": "Account name",
+        "bank_iban": "IBAN",
+        "bank_swift": "SWIFT / BIC (optional)",
+        "pay_link_url": "Payment link (https://…)",
+        "pay_note": "Note for salons (optional)"
+      },
+      "saved": "Payment details saved"
+    }
   },
   "account": {
     "delete": {
@@ -2083,5 +2126,10 @@
     "short": {
       "cashClosing": "Closing"
     }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This address does not exist. It may have been mistyped or moved.",
+    "home": "Go to the home page"
   }
 }

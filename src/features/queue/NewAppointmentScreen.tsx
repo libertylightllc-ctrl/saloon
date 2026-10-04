@@ -7,6 +7,7 @@ import { useWorkspace } from '@/features/auth/session';
 import { useCatalog } from '@/features/catalog/api';
 import { CustomerPicker, type PickedCustomer } from '@/features/customers/CustomerPicker';
 import { useTerms } from '@/features/mode/useTerms';
+import { can } from '@/lib/permissions';
 import { businessDate, shiftBusinessDate } from '@/lib/dates';
 import { formatMoney, sum, type Minor } from '@/lib/money';
 import { spacing } from '@/theme';
@@ -37,11 +38,12 @@ export function NewAppointmentScreen() {
   const router = useRouter();
   const toast = useToast();
   const params = useLocalSearchParams<{ kind?: string; customer?: string; customerName?: string }>();
-  const { business, branch } = useWorkspace();
+  const { business, branch, role } = useWorkspace();
+  const canBook = can(role, 'book');
   const settings = branch.settings as Record<string, unknown>;
   const today = businessDate(new Date(), business.timezone);
 
-  const [kind, setKind] = useState<Kind>(params.kind === 'booking' ? 'booking' : 'walk_in');
+  const [kind, setKind] = useState<Kind>(params.kind === 'booking' && canBook ? 'booking' : 'walk_in');
   const [customer, setCustomer] = useState<PickedCustomer | null>(
     params.customer ? { id: params.customer, name: params.customerName ?? '' } : null,
   );
@@ -110,15 +112,17 @@ export function NewAppointmentScreen() {
       }
     >
       <View style={styles.body}>
-        <SegmentTabs<Kind>
-          items={[
-            { key: 'walk_in', label: t('queue.walkIn') },
-            { key: 'booking', label: t('queue.appointment') },
-          ]}
-          value={kind}
-          onChange={setKind}
-          testID="appt-kind"
-        />
+        {canBook ? (
+          <SegmentTabs<Kind>
+            items={[
+              { key: 'walk_in', label: t('queue.walkIn') },
+              { key: 'booking', label: t('queue.appointment') },
+            ]}
+            value={kind}
+            onChange={setKind}
+            testID="appt-kind"
+          />
+        ) : null}
 
         <Section title={t('sale.customer')}>
           <CustomerPicker value={customer} onChange={setCustomer} guestName={guestName} onGuestName={setGuestName} />

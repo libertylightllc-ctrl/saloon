@@ -9,7 +9,7 @@ export { ContourPattern } from './ContourPattern';
 export { DateStrip, MonthSwitcher, TimeSlotGrid, type TimeSlot } from './DatePickers';
 export { EmptyState } from './EmptyState';
 export { HeaderBand } from './HeaderBand';
-export { useHeaderOverlap, useOnBand } from './layoutContext';
+export { NavRootsContext, useHeaderOverlap, useOnBand } from './layoutContext';
 export { Icon, icons, type IconName } from './Icon';
 export { IconButton } from './IconButton';
 export { Illustration, type IllustrationName } from './Illustration';

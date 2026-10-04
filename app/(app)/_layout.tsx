@@ -5,7 +5,8 @@ import { Gate } from '@/features/auth/Gate';
 import { useKeepRemembered } from '@/features/auth/useKeepRemembered';
 import { useWorkspace } from '@/features/auth/session';
 import { useLiveSync } from '@/features/live/useLiveSync';
-import { SideNav } from '@/features/nav/SideNav';
+import { SideNav, useNavRoots } from '@/features/nav/SideNav';
+import { NavRootsContext } from '@/ui';
 import { usePush } from '@/features/notifications/usePush';
 
 function LiveStack() {
@@ -13,14 +14,17 @@ function LiveStack() {
   useLiveSync(business.id, branch.id, member.id, role === 'owner' || role === 'accountant');
   usePush(business.id);
   useKeepRemembered();
+  const roots = useNavRoots();
   // Tablets and computers: the side navigation stays put while pages change beside it (phones: the tab bar).
   return (
-    <View style={styles.row}>
-      <SideNav />
-      <View style={styles.page}>
-        <Stack screenOptions={{ headerShown: false }} />
+    <NavRootsContext.Provider value={roots}>
+      <View style={styles.row}>
+        <SideNav />
+        <View style={styles.page}>
+          <Stack screenOptions={{ headerShown: false }} />
+        </View>
       </View>
-    </View>
+    </NavRootsContext.Provider>
   );
 }
 

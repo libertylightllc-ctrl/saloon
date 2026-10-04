@@ -7,6 +7,7 @@ import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
 import { signUpOwner } from '@/features/auth/api';
+import { SignUpDone } from '@/features/auth/SignUpDone';
 import { AuthShell } from '@/features/auth/AuthShell';
 import { spacing } from '@/theme';
 import { Button, FormError, FormTextField, Text } from '@/ui';
@@ -33,6 +34,15 @@ export default function SignUp() {
   });
   const signUp = useMutation({ mutationFn: (v: Values) => signUpOwner(v.name, v.email, v.password) });
   const submit = form.handleSubmit((values) => signUp.mutate(values));
+
+  // No session yet (email confirmation on): "check your inbox", or this address already has an account.
+  if (signUp.data === 'check_email' || signUp.data === 'already_registered') {
+    return (
+      <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack>
+        <SignUpDone outcome={signUp.data} email={form.getValues('email').trim().toLowerCase()} />
+      </AuthShell>
+    );
+  }
 
   return (
     <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack>

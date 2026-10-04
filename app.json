@@ -27,7 +27,12 @@
       [
         "expo-router",
         {
-          "root": "./app"
+          "root": "./app",
+          "sitemap": false,
+          "asyncRoutes": {
+            "web": "production",
+            "default": "development"
+          }
         }
       ],
       "expo-font",

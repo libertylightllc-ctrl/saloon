@@ -45,15 +45,33 @@ export async function signInStaff(salonCode: string, username: string, password:
   AsyncStorage.setItem(SIGN_IN_AS_KEY, 'staff').catch(() => undefined);
 }
 
-export async function signUpOwner(name: string, email: string, password: string): Promise<void> {
+export type SignUpOutcome = 'signed_in' | 'check_email' | 'already_registered';
+
+/**
+ * What a sign-up led to. With email confirmation on (hosted) there is no session until the link is clicked; an address
+ * that already has an account gets no email and a stand-in user with no identities (Supabase hides that the address
+ * exists), so we say so instead of "check your email".
+ */
+export function signUpOutcome(data: { session: unknown; user: { identities?: unknown[] | null } | null }): SignUpOutcome {
+  if (data.session) return 'signed_in';
+  if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) return 'already_registered';
+  return 'check_email';
+}
+
+export async function signUpOwner(name: string, email: string, password: string): Promise<SignUpOutcome> {
   const { data, error } = await supabase.auth.signUp({
     email: email.trim().toLowerCase(),
     password,
     options: { data: { display_name: name.trim() } },
   });
   if (error) raise(error);
-  // A hosted project with email confirmation on returns no session until the link is clicked.
-  if (!data.session) throw new AppError('confirm_email');
+  return signUpOutcome(data);
+}
+
+/** Sends the confirmation email again (Supabase limits how often). */
+export async function resendSignUpEmail(email: string): Promise<void> {
+  const { error } = await supabase.auth.resend({ type: 'signup', email: email.trim().toLowerCase() });
+  if (error) raise(error);
 }
 
 export async function sendResetCode(email: string): Promise<void> {

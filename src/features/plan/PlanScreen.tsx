@@ -11,6 +11,7 @@ import { semantic, spacing, useTheme } from '@/theme';
 import { Button, Card, FormError, HeaderBand, Icon, PillTabs, QueryState, Screen, StatusPill, Text, TextField, useToast, type IconName } from '@/ui';
 
 import { usePlanStatus, useRequestPlan } from './api';
+import { HowToPay } from './HowToPay';
 import { canOfferPlans } from './storePolicy';
 
 const MONTHS = [1, 3, 6, 12] as const;
@@ -81,6 +82,8 @@ export function PlanScreen() {
               </View>
             </Card>
 
+            {/* Pay first, then tell us (the request below). */}
+            {owner ? <HowToPay code={business.code} /> : null}
             {owner ? (
               <Card variant="outlined" style={styles.card}>
                 <Text variant="h4">{t(p.active ? 'plan.extendTitle' : 'plan.requestTitle')}</Text>
@@ -111,9 +114,6 @@ export function PlanScreen() {
                   }
                   testID="plan-request"
                 />
-                <Text variant="small" color="textSecondary">
-                  {t('plan.howToPay')}
-                </Text>
               </Card>
             ) : null}
           </View>

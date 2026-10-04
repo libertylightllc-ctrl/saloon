@@ -107,9 +107,11 @@ export function StaffToday({ data }: { data: Dashboard }) {
           meta={[t('home.staffLine', { services: Number(person.services), sales: formatMoney(person.sales_minor) })]}
           trailing={
             <>
-              <Text variant="bodyStrong" weight="semibold" tabular>
-                {formatMoney(person.commission_minor)}
-              </Text>
+              {person.commission_minor !== null ? (
+                <Text variant="bodyStrong" weight="semibold" tabular>
+                  {formatMoney(person.commission_minor)}
+                </Text>
+              ) : null}
               <StatusPill
                 tone={person.busy ? 'info' : 'success'}
                 label={t(person.busy ? 'home.staffState.with_client' : 'home.staffState.available')}

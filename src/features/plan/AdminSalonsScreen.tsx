@@ -24,7 +24,8 @@ import {
   useToast,
 } from '@/ui';
 
-import { useAdminPlanAction, useAdminSalons, useIsPlatformAdmin, type AdminSalon } from './api';
+import { useAdminPlanAction, useAdminSalons, useIsPlatformAdmin, usePaymentDetails, type AdminSalon } from './api';
+import { PaymentDetailsSheet } from './PaymentDetailsSheet';
 
 const MONTHS = [1, 3, 6, 12] as const;
 
@@ -35,6 +36,8 @@ export function AdminSalonsScreen() {
   const admin = useIsPlatformAdmin();
   const salons = useAdminSalons();
   const [open, setOpen] = useState<AdminSalon | null>(null);
+  const [paying, setPaying] = useState(false);
+  const payment = usePaymentDetails();
 
   if (admin.data === false) return <Redirect href="/" />;
   return (
@@ -42,7 +45,16 @@ export function AdminSalonsScreen() {
       <Screen
         refreshing={salons.isRefetching}
         onRefresh={() => void salons.refetch()}
-        header={<HeaderBand title={t('admin.title')} subtitle={t('admin.subtitle')} onBack />}
+        header={
+          <HeaderBand
+            title={t('admin.title')}
+            subtitle={t('admin.subtitle')}
+            onBack
+            right={
+              <Button label={t('admin.pay.button')} icon="creditCard" size="sm" variant="secondary" onPress={() => setPaying(true)} testID="admin-pay" />
+            }
+          />
+        }
       >
         <QueryState query={salons} isEmpty={(rows) => rows.length === 0} empty={<EmptyState illustration="no-results" message={t('admin.empty')} />}>
           {(rows) => (
@@ -77,6 +89,7 @@ export function AdminSalonsScreen() {
           )}
         </QueryState>
       </Screen>
+      <PaymentDetailsSheet open={paying} onClose={() => setPaying(false)} current={payment.data} />
       <BottomSheet open={open !== null} onClose={() => setOpen(null)} title={open?.name ?? ''}>
         {open ? <SalonPlanForm salon={open} onDone={() => setOpen(null)} /> : null}
       </BottomSheet>

@@ -370,6 +370,9 @@ deno_version = 2
 [edge_runtime.secrets]
 # Local only: send-push talks to the push-sink stand-in instead of Expo's push service.
 PUSH_ENDPOINT = "http://kong:8000/functions/v1/push-sink"
+# Local only: plan-alert emails the mail-sink stand-in instead of Resend (the key is a placeholder, not a real key).
+EMAIL_ENDPOINT = "http://kong:8000/functions/v1/mail-sink"
+RESEND_API_KEY = "local-mail-sink"
 
 [analytics]
 # Off locally: the log pipeline is heavy on a 2-CPU Colima VM and unused in development.
@@ -392,4 +395,7 @@ s3_access_key = "env(S3_ACCESS_KEY)"
 s3_secret_key = "env(S3_SECRET_KEY)"
 
 [functions.push-sink]
+verify_jwt = false
+
+[functions.mail-sink]
 verify_jwt = false

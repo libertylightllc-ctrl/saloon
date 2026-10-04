@@ -102,3 +102,28 @@ documents; takes a few days). Tell me when it is approved.
   (`com.saloqo.app` now; it can never change after the first upload). Tell me if either changes.
 - A lawyer reads `/privacy` and `/terms`.
 - A native speaker reads the Arabic, Hindi and Urdu texts (machine drafts now).
+
+## H · Getting paid by salons (10 min)
+
+Salons see **How to pay** on their Plan page (website), pay you, and tap **Ask to switch on**; you get an email and
+switch their plan on. Card payments inside the app come later.
+
+1. **Be the platform owner on the live site.** Tell me the email you signed in with on www.saloqo.com; I add it once.
+   You then have **More → Salons & plans**.
+2. **Your payment details** (you type them; salons see them): More → Salons & plans → **Payment details** → bank,
+   account name, IBAN, SWIFT, and/or a card payment link (for example a Stripe Payment Link, PayPal, Ziina or
+   Network International pay-by-link) → **Save**.
+3. **Email alerts.** https://resend.com → **API Keys → Create API key** (Sending access) → copy it. It is a secret:
+   **do not send it to me.** In Terminal:
+
+```bash
+cd ~/salon-app
+```
+
+```bash
+npx supabase secrets set RESEND_API_KEY=PASTE_THE_KEY_HERE --project-ref djgxvfbsxnimzblpxcst
+```
+
+   (replace `PASTE_THE_KEY_HERE` with the key before pressing Enter). From then on every request emails the platform
+   owner's sign-in address; requests made before that are emailed within 10 minutes.
+4. When the money arrives: More → Salons & plans → the salon → **Record payment**. Their plan starts at once.

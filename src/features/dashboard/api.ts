@@ -18,7 +18,8 @@ export interface Dashboard {
     colour: string | null;
     services: number;
     sales_minor: number;
-    commission_minor: number;
+    /** Null for cashiers (no payroll on their Home). */
+    commission_minor: number | null;
     busy: boolean;
   }[];
   activity?: { summary: string; at: string; actor: string | null }[];

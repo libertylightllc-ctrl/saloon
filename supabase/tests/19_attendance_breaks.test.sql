@@ -4,6 +4,12 @@ begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
 select plan(14);
+-- The checks below work out dates and codes with internal helpers that the app's sign-in roles cannot call (migration
+-- 33); they are allowed here, inside this test's transaction only (rolled back at the end).
+grant execute on function public.branch_today(uuid), public.branch_tz(uuid), public.business_today(uuid),
+  public.compliance_readiness(uuid), public.plan_active(uuid), public.unique_business_code(text),
+  public.post_journal(uuid, uuid, date, text, uuid, text, uuid, jsonb), public.branch_setting(uuid, text, jsonb)
+  to authenticated;
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)

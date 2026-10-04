@@ -121,6 +121,23 @@ function SidebarItem({ item, active, onPress }: { item: NavItem; active: boolean
   );
 }
 
+/** The paths the side navigation opens directly on this screen size (their headers drop the back arrow). */
+export function useNavRoots(): ReadonlySet<string> | null {
+  const size = useLayoutSize();
+  const sections = useNavSections();
+  const all = sections.flatMap((s) => s.items);
+  if (size === 'phone') return null;
+  const items = size === 'desktop' ? all : railItems(sections, all);
+  return new Set([...items.map((i) => (typeof i.href === 'string' ? i.href : String(i.href.pathname))), '/more']);
+}
+
+function railItems(sections: ReturnType<typeof useNavSections>, all: NavItem[]): NavItem[] {
+  return [
+    ...(sections.find((s) => s.key === 'today')?.items ?? []),
+    ...all.filter((i) => i.key === 'cashClosing' || i.key === 'reports'),
+  ];
+}
+
 /** Tablet rail: the day's pages, cash closing and reports when allowed, then everything else under More. */
 function Rail() {
   const theme = useTheme();
@@ -130,12 +147,7 @@ function Rail() {
   const go = useGo();
   const sections = useNavSections();
   const all = sections.flatMap((s) => s.items);
-  const counter = [
-    ...(sections.find((s) => s.key === 'today')?.items ?? []),
-    ...all
-      .filter((i) => i.key === 'cashClosing' || i.key === 'reports')
-      .map((i) => (i.key === 'cashClosing' ? { ...i, label: t('nav.short.cashClosing') } : i)),
-  ];
+  const counter = railItems(sections, all).map((i) => (i.key === 'cashClosing' ? { ...i, label: t('nav.short.cashClosing') } : i));
   const items: NavItem[] = [...counter, { key: 'more', icon: 'grid', href: '/more', label: t('tabs.more') }];
   // A page that is not on the rail lights More, where it lives.
   const active = activeKey(pathname, items) ?? (activeKey(pathname, all) ? 'more' : null);

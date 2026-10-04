@@ -18,6 +18,8 @@ const MATRIX = {
   viewCustomers: ['owner', 'cashier', 'accountant'],
   manageCustomers: ['owner', 'cashier'],
   addToQueue: ['owner', 'cashier', 'staff'],
+  // Staff add walk-ins only; bookings (and their deposits) are for the owner and cashier (01-PRODUCT §2).
+  book: ['owner', 'cashier'],
   noShowOrCancel: ['owner', 'cashier'],
   manageUsers: ['owner'],
   manageBranch: ['owner'],

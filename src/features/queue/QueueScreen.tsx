@@ -173,7 +173,7 @@ export function QueueScreen() {
           listView
         )}
       </Screen>
-      <AppointmentActions item={handlers.menuFor} onClose={handlers.closeMenu} />
+      <AppointmentActions item={handlers.menuItem(query.data)} onClose={handlers.closeMenu} />
     </>
   );
 }

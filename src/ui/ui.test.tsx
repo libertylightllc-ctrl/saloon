@@ -105,6 +105,13 @@ describe('initials', () => {
     expect(initials('Rafiq')).toBe('R');
     expect(initials('  ')).toBe('');
   });
+
+  it('uses letters only (a numbered name keeps its letter)', () => {
+    expect(initials('Red 001')).toBe('R');
+    expect(initials('Staff 2 Noor')).toBe('SN');
+    expect(initials('007')).toBe('');
+    expect(initials('مريم')).toBe('م');
+  });
 });
 
 describe('SuccessCheck', () => {

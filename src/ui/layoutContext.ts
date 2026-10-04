@@ -17,6 +17,12 @@ export function usePageWidth(): number | null {
   return useContext(PageWidthContext);
 }
 
+/**
+ * The pages the side navigation opens directly (tablets and computers). They are top-level there, so their header
+ * shows no back arrow. Null on phones.
+ */
+export const NavRootsContext = createContext<ReadonlySet<string> | null>(null);
+
 /** How far the screen body is pulled up over the band (Home's hero card). Set by <Screen>. */
 export const HeaderOverlapContext = createContext(0);
 

@@ -67,7 +67,7 @@ export function HomeScreen() {
 
   const quick: { key: string; icon: IconName; href: Href; show: boolean }[] = [
     { key: 'walkIn', icon: 'userPlus', href: { pathname: '/appointment/new', params: { kind: 'walk_in' } }, show: can(role, 'addToQueue') },
-    { key: 'book', icon: 'calendarPlus', href: { pathname: '/appointment/new', params: { kind: 'booking' } }, show: can(role, 'addToQueue') },
+    { key: 'book', icon: 'calendarPlus', href: { pathname: '/appointment/new', params: { kind: 'booking' } }, show: can(role, 'book') },
     { key: 'newSale', icon: 'receipt', href: '/sale', show: can(role, 'sell', rules) },
     { key: 'customer', icon: 'contact', href: '/customers/form', show: can(role, 'manageCustomers') },
     { key: 'expense', icon: 'coins', href: '/expenses/new', show: can(role, 'addExpense') },
@@ -214,7 +214,7 @@ export function HomeScreen() {
           }}
         </QueryState>
       </Screen>
-      <AppointmentActions item={handlers.menuFor} onClose={handlers.closeMenu} />
+      <AppointmentActions item={handlers.menuItem(today.data)} onClose={handlers.closeMenu} />
     </>
   );
 }

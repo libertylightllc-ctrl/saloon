@@ -36,5 +36,12 @@ export function useQueueHandlers() {
     );
   };
 
-  return { onAction, busyId, menuFor, openMenu: setMenuFor, closeMenu: () => setMenuFor(null) };
+  /**
+   * The visit the "…" menu is open for, as it is now: looked up by id in the latest list, so the menu follows changes
+   * (marking a no-show turns its options into "Undo no-show") instead of keeping the copy it was opened with.
+   */
+  const menuItem = (latest: readonly Appointment[] | undefined) =>
+    menuFor ? (latest?.find((a) => a.id === menuFor.id) ?? menuFor) : null;
+
+  return { onAction, busyId, menuFor, menuItem, openMenu: setMenuFor, closeMenu: () => setMenuFor(null) };
 }

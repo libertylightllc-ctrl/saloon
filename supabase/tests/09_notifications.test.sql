@@ -5,6 +5,12 @@ create extension if not exists pgtap with schema extensions;
 -- Paid plans are tested in 14_plans; here every salon may work.
 select set_config('salon.plan_check', 'off', false);
 select plan(30);
+-- The checks below work out dates and codes with internal helpers that the app's sign-in roles cannot call (migration
+-- 33); they are allowed here, inside this test's transaction only (rolled back at the end).
+grant execute on function public.branch_today(uuid), public.branch_tz(uuid), public.business_today(uuid),
+  public.compliance_readiness(uuid), public.plan_active(uuid), public.unique_business_code(text),
+  public.post_journal(uuid, uuid, date, text, uuid, text, uuid, jsonb), public.branch_setting(uuid, text, jsonb)
+  to authenticated;
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -48,8 +54,8 @@ select set_config('t.emp', (register_staff_member(jsonb_build_object('business_i
   'branch_id', current_setting('t.br'), 'user_id', '00000000-0000-0000-0000-00000000080d', 'username', 'ntstaff',
   'display_name', 'Rafiq', 'role', 'staff')) ->> 'employee_id'), false);
 
--- ── Booking → owner and cashier ───────────────────────────────────────────────────────────
-select pg_temp.as_user('00000000-0000-0000-0000-00000000080d');
+-- ── Booking → owner and cashier (the cashier books it; staff add walk-ins only) ─────────────────────
+select pg_temp.as_user('00000000-0000-0000-0000-00000000080c');
 select create_appointment(jsonb_build_object('branch_id', current_setting('t.br'), 'kind', 'booking', 'guest_name', 'Omar',
   'scheduled_at', now() + interval '2 days', 'service_ids', jsonb_build_array((select id from services
   where business_id = current_setting('t.b')::uuid and status = 'active' limit 1))));

@@ -108,3 +108,38 @@ export function useAdminPlanAction() {
     onSettled: () => client.invalidateQueries({ queryKey: ['platform'] }),
   });
 }
+
+/** Where salons pay (set by the platform owner): bank transfer details and/or a card payment link. */
+export interface PaymentDetails {
+  bank_name: string | null;
+  bank_account_name: string | null;
+  bank_iban: string | null;
+  bank_swift: string | null;
+  pay_link_url: string | null;
+  pay_note: string | null;
+}
+
+export function usePaymentDetails() {
+  return useQuery({
+    queryKey: ['platform', 'payment-details'],
+    queryFn: async (): Promise<PaymentDetails> => {
+      const { data, error } = await supabase
+        .from('platform_settings')
+        .select('bank_name, bank_account_name, bank_iban, bank_swift, pay_link_url, pay_note')
+        .single();
+      if (error) throw error;
+      return data as PaymentDetails;
+    },
+  });
+}
+
+export function useSetPaymentDetails() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (v: Record<keyof PaymentDetails, string>) => {
+      const { error } = await supabase.rpc('admin_set_payment_details', { p: v });
+      if (error) throw error;
+    },
+    onSettled: () => client.invalidateQueries({ queryKey: ['platform', 'payment-details'] }),
+  });
+}

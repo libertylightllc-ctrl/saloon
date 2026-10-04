@@ -4,14 +4,15 @@
  *   white title and back arrow, 28-px rounded bottom corners.
  * - ladies: light header on blush, centred dark title, coral square back button.
  */
-import type { ReactNode } from 'react';
+import { usePathname } from 'expo-router';
+import { useContext, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { screenPadding, spacing, tapTarget, useTheme } from '@/theme';
 
 import { BackButton } from './BackButton';
 import { ContourPattern } from './ContourPattern';
-import { OnBandContext, useHeaderOverlap, usePageWidth } from './layoutContext';
+import { NavRootsContext, OnBandContext, useHeaderOverlap, usePageWidth } from './layoutContext';
 import { useWide } from './layoutSize';
 import { Text } from './Text';
 
@@ -32,6 +33,8 @@ export function HeaderBand({ title, subtitle, onBack, right, top, children }: He
   const overlap = useHeaderOverlap();
   const wide = useWide();
   const pageWidth = usePageWidth();
+  const roots = useContext(NavRootsContext);
+  const pathname = usePathname();
   const band = theme.variants.header === 'band';
 
   // Tablets and computers: a page header — title at the start, actions at the end — lined up with the body.
@@ -40,7 +43,8 @@ export function HeaderBand({ title, subtitle, onBack, right, top, children }: He
       <View style={[styles.page, pageWidth !== null && { maxWidth: pageWidth, alignSelf: 'flex-start', width: '100%' }]}>
         {top ?? (
           <View style={styles.pageTitleRow}>
-            {onBack ? <BackButton onPress={onBack === true ? undefined : onBack} /> : null}
+            {/* A page the side navigation opens directly is top-level here: no back arrow. */}
+            {onBack && !roots?.has(pathname) ? <BackButton onPress={onBack === true ? undefined : onBack} /> : null}
             <View style={styles.title}>
               <Text variant="display" numberOfLines={1} accessibilityRole="header">
                 {title}
