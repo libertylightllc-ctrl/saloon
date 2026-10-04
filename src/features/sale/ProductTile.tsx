@@ -13,16 +13,19 @@ export function ProductTile({
   index,
   qty,
   onChange,
+  width,
 }: {
   item: StockItem;
   index: number;
   qty: number;
   onChange: (n: number) => void;
+  /** Wider screens: the tile's exact width, so every row lines up; phones: two per row. */
+  width?: number;
 }) {
   const theme = useTheme();
   const { t } = useTranslation();
   return (
-    <Card variant="outlined" padding={spacing.md} style={[styles.tile, qty > 0 && { borderColor: theme.colors.primary400 }]}>
+    <Card variant="outlined" padding={spacing.md} style={[styles.tile, width ? { flexBasis: width, flexGrow: 0, width } : null, qty > 0 && { borderColor: theme.colors.primary400 }]}>
       <View style={styles.top}>
         <Thumb icon="package" index={index} size={44} />
         <View style={styles.flex}>

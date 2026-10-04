@@ -6,11 +6,12 @@ import {
 } from '@gorhom/bottom-sheet';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { screenPadding, spacing, useTheme } from '@/theme';
 
+import { useWide } from './layoutSize';
 import { Text } from './Text';
 
 export interface BottomSheetProps {
@@ -27,6 +28,8 @@ export function BottomSheet({ open, onClose, title, children, snapPoints }: Bott
   const theme = useTheme();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const wide = useWide();
+  const { width } = useWindowDimensions();
   const ref = useRef<BottomSheetModal>(null);
   /** Whether the modal is on screen right now (not what the parent asked for). */
   const visible = useRef(false);
@@ -54,6 +57,8 @@ export function BottomSheet({ open, onClose, title, children, snapPoints }: Bott
       }}
       snapPoints={snapPoints}
       enableDynamicSizing={!snapPoints}
+      // Tablets and computers: a centred panel of a readable width, not a strip across the whole screen.
+      style={wide ? { marginHorizontal: Math.max(spacing['2xl'], (width - SHEET_MAX_WIDTH) / 2) } : undefined}
       backdropComponent={(props: BottomSheetBackdropProps) => (
         <BottomSheetBackdrop
           {...props}
@@ -83,6 +88,8 @@ export function BottomSheet({ open, onClose, title, children, snapPoints }: Bott
     </BottomSheetModal>
   );
 }
+
+const SHEET_MAX_WIDTH = 640;
 
 const styles = StyleSheet.create({
   content: { paddingHorizontal: screenPadding, paddingTop: spacing.sm, gap: spacing.lg },

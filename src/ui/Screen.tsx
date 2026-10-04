@@ -15,7 +15,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { screenPadding, spacing, useTheme } from '@/theme';
 
-import { HeaderOverlapContext } from './layoutContext';
+import { HeaderOverlapContext, PageWidthContext } from './layoutContext';
+import { PAGE_MAX_WIDTH, useWide } from './layoutSize';
 
 export interface ScreenProps {
   header?: ReactNode;
@@ -35,6 +36,11 @@ export interface ScreenProps {
   /** Pad for the home indicator. Off inside tabs, where the tab bar does it. */
   insetBottom?: boolean;
   bodyStyle?: StyleProp<ViewStyle>;
+  /**
+   * Tablets and computers: 'page' keeps lists and forms at a readable width, centred; 'full' uses the whole width
+   * beside the navigation (Home, Queue, Quick sale).
+   */
+  width?: 'page' | 'full';
 }
 
 /** Distance the body overlaps the band when `overlapHeader` is on. */
@@ -51,11 +57,15 @@ export function Screen({
   overlapHeader,
   insetBottom = true,
   bodyStyle,
+  width = 'page',
 }: ScreenProps) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const wide = useWide();
   const gradient = background === 'gradient' ? theme.backgroundGradient : null;
-  const band = Boolean(header) && theme.variants.header === 'band';
+  // Wider screens draw a page header instead of the phone's band (see HeaderBand).
+  const band = Boolean(header) && theme.variants.header === 'band' && !wide;
+  const maxWidth = wide && width === 'page' ? PAGE_MAX_WIDTH : null;
   const sheet = theme.variants.body === 'sheet';
   const overlap = band && overlapHeader ? OVERLAP : 0;
   const bottomPad = insetBottom && !footer ? insets.bottom : 0;
@@ -73,6 +83,8 @@ export function Screen({
         },
         { marginTop: -overlap, paddingTop: overlap ? 0 : spacing['2xl'] },
         { paddingBottom: spacing['2xl'] + bottomPad },
+        wide && styles.wideBody,
+        maxWidth !== null && { maxWidth, alignSelf: 'center', width: '100%' },
         bodyStyle,
       ]}
     >
@@ -82,8 +94,10 @@ export function Screen({
 
   const content = (
     <HeaderOverlapContext.Provider value={overlap}>
-      {header}
-      {body}
+      <PageWidthContext.Provider value={maxWidth}>
+        {header}
+        {body}
+      </PageWidthContext.Provider>
     </HeaderOverlapContext.Provider>
   );
 
@@ -138,9 +152,10 @@ export function Screen({
                 borderTopColor: theme.colors.divider,
                 paddingBottom: spacing.md + (insetBottom ? insets.bottom : 0),
               },
+              wide && styles.wideBody,
             ]}
           >
-            {footer}
+            <View style={maxWidth !== null ? { maxWidth, alignSelf: 'center', width: '100%' } : undefined}>{footer}</View>
           </View>
         ) : null}
       </KeyboardAvoidingView>
@@ -152,6 +167,7 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   grow: { flexGrow: 1 },
   body: { flexGrow: 1, paddingHorizontal: screenPadding },
+  wideBody: { paddingHorizontal: spacing['3xl'] },
   fill: { flex: 1, minHeight: 0 },
   footer: {
     paddingHorizontal: screenPadding,

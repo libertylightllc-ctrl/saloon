@@ -20,9 +20,7 @@ import { basketTotals, type BasketLine } from './basket';
 type Method = PaymentMethod | 'split';
 const METHODS: Method[] = ['cash', 'card', 'wallet', 'split'];
 
-export function CheckoutSheet(props: {
-  open: boolean;
-  onClose: () => void;
+export interface CheckoutProps {
   lines: BasketLine[];
   onQtyChange: (key: string, qty: number) => void;
   customer: PickedCustomer | null;
@@ -35,7 +33,20 @@ export function CheckoutSheet(props: {
   deposit: Minor;
   /** method is 'deposit' when the held deposit covered the whole bill. */
   onSaved: (result: SaleResult, method: string) => void;
-}) {
+}
+
+/** Phones: checkout in a sheet over Quick sale. */
+export function CheckoutSheet({ open, onClose, ...props }: CheckoutProps & { open: boolean; onClose: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <BottomSheet open={open} onClose={onClose} title={t('sale.checkout')} snapPoints={['92%']}>
+      <CheckoutForm {...props} />
+    </BottomSheet>
+  );
+}
+
+/** Customer, staff, the lines, discount and tip, payment and totals, and Save (the sheet, or the side panel). */
+export function CheckoutForm(props: CheckoutProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const terms = useTerms();
@@ -127,7 +138,7 @@ export function CheckoutSheet(props: {
   );
 
   return (
-    <BottomSheet open={props.open} onClose={props.onClose} title={t('sale.checkout')} snapPoints={['92%']}>
+    <>
       <View style={styles.section}>
         <Text variant="bodyStrong">{t('sale.customer')}</Text>
         <CustomerPicker
@@ -240,7 +251,7 @@ export function CheckoutSheet(props: {
         onPress={save}
         testID="save-sale"
       />
-    </BottomSheet>
+    </>
   );
 }
 

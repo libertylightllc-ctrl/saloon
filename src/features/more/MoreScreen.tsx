@@ -6,11 +6,10 @@ import { StyleSheet, View } from 'react-native';
 import { DeleteAccountSheet } from '@/features/account/DeleteAccountSheet';
 import { PinSheet, SwitchUserSheet } from '@/features/auth/QuickSwitchSheets';
 import { useHasPin } from '@/features/auth/quickSwitch';
-import { useIsPlatformAdmin } from '@/features/plan/api';
 import { useSession, useWorkspace } from '@/features/auth/session';
+import { useBusinessRows } from '@/features/nav/navItems';
 import { LanguageSheet } from '@/features/settings/LanguageSheet';
 import { LANGUAGES } from '@/lib/i18n';
-import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
 import { Avatar, Card, HeaderBand, MenuGroup, MenuRow, Screen, Text } from '@/ui';
 
@@ -24,27 +23,8 @@ export function MoreScreen() {
   const [switchOpen, setSwitchOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const hasPin = useHasPin(business.id);
-  const platformAdmin = useIsPlatformAdmin();
   const [signingOut, setSigningOut] = useState(false);
-
-  const business_rows = [
-    { key: 'services', icon: 'scissors', href: '/services', show: can(role, 'viewServices') },
-    { key: 'inventory', icon: 'boxes', href: '/inventory', show: can(role, 'viewInventory') },
-    { key: 'sales', icon: 'receipt', href: '/sales', show: can(role, 'viewSales') },
-    { key: 'expenses', icon: 'coins', href: '/expenses', show: can(role, 'viewExpenses') },
-    { key: 'purchases', icon: 'truck', href: '/purchases', show: can(role, 'viewPurchases') },
-    { key: 'cashClosing', icon: 'banknote', href: '/cash-closing', show: can(role, 'viewClosing') },
-    { key: 'accounts', icon: 'calculator', href: '/accounts', show: can(role, 'viewAccounting') },
-    { key: 'reports', icon: 'chart', href: '/reports', show: can(role, 'viewReports') },
-    { key: 'staff', icon: 'users', href: '/staff', show: can(role, 'viewStaff') },
-    { key: 'attendance', icon: 'clock', href: '/attendance', show: can(role, 'viewAttendance') },
-    { key: 'compliance', icon: 'shield', href: '/compliance', show: can(role, 'viewCompliance') },
-    { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch') },
-    { key: 'backup', icon: 'archive', href: '/settings/backup', show: can(role, 'backup') },
-    { key: 'plan', icon: 'creditCard', href: '/plan', show: can(role, 'viewPlan') },
-    { key: 'admin', icon: 'building', href: '/admin', show: platformAdmin.data === true },
-  ] as const;
-  const shown = business_rows.filter((r) => r.show);
+  const shown = useBusinessRows();
 
   return (
     <>

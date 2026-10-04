@@ -7,8 +7,9 @@ import { brand } from '@/config/brand';
 import { useWorkspace } from '@/features/auth/session';
 import { useUnreadCount } from '@/features/notifications/api';
 import { businessDate, formatDayLabel } from '@/lib/dates';
+import { can } from '@/lib/permissions';
 import { spacing, useTheme } from '@/theme';
-import { Avatar, IconButton, Text } from '@/ui';
+import { Avatar, Button, IconButton, Text, useWide } from '@/ui';
 
 export function partOfDay(timeZone: string, at = new Date()): 'morning' | 'afternoon' | 'evening' {
   const hour = Number(formatInTimeZone(at, timeZone, 'H'));
@@ -37,9 +38,37 @@ function Bell({ variant }: { variant: 'surface' | 'plain' }) {
 export function HomeTop({ subline }: { subline: string }) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
-  const { member, business, branch } = useWorkspace();
+  const router = useRouter();
+  const wide = useWide();
+  const { member, business, branch, role } = useWorkspace();
   const greeting = t(`home.greeting.${partOfDay(business.timezone)}`, { name: member.display_name });
   const place = `${branch.name} · ${formatDayLabel(businessDate(new Date(), business.timezone), i18n.language)}`;
+
+  // Tablets and computers: a dashboard title row; the walk-in button sits where the eye starts.
+  if (wide) {
+    return (
+      <View style={styles.wide}>
+        <View style={styles.flex}>
+          <Text variant="display" numberOfLines={1} testID="home-greeting">
+            {greeting}
+          </Text>
+          <Text color="textSecondary" numberOfLines={1}>
+            {`${place} · ${subline}`}
+          </Text>
+        </View>
+        <Bell variant="surface" />
+        {can(role, 'addToQueue') ? (
+          <Button
+            label={t('home.quick.walkIn')}
+            icon="userPlus"
+            size="md"
+            onPress={() => router.push({ pathname: '/appointment/new', params: { kind: 'walk_in' } })}
+            testID="home-add-walk-in"
+          />
+        ) : null}
+      </View>
+    );
+  }
 
   if (theme.variants.homeTop === 'profile') {
     return (
@@ -83,6 +112,7 @@ export function HomeTop({ subline }: { subline: string }) {
 }
 
 const styles = StyleSheet.create({
+  wide: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   flex: { flex: 1 },
   profile: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingTop: spacing.md },
   wordmarkBlock: { gap: 2, paddingTop: spacing.md },

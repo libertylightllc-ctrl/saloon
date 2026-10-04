@@ -289,7 +289,10 @@
     "depositAmount": "Deposit amount (optional)",
     "notes": "Notes",
     "summaryLine": "{{minutes}} min · {{amount}}",
-    "guestName": "Guest name (optional)"
+    "guestName": "Guest name (optional)",
+    "pickVisit": "Pick a visit in the list to see it here.",
+    "customerRecord": "Customer record",
+    "moreActionsShort": "More actions"
   },
   "sale": {
     "title": "Quick sale",
@@ -342,7 +345,9 @@
     "inStock": "{{qty}} in stock",
     "noProducts": "No products for sale yet.",
     "sendWhatsApp": "Send on WhatsApp",
-    "tipHint": "The {{staff}} keeps the whole tip. No commission is taken on tips."
+    "tipHint": "The {{staff}} keeps the whole tip. No commission is taken on tips.",
+    "current": "Current sale",
+    "clear": "Clear"
   },
   "customers": {
     "subtitle": "Profiles, visits and notes.",
@@ -2066,6 +2071,17 @@
       "number": "{{taxId}}",
       "numberUae": "{{taxId}} (15 digits)",
       "numberHint": "Printed on receipts. Leave it empty if you don’t have one yet."
+    }
+  },
+  "nav": {
+    "today": "Today",
+    "money": "Money",
+    "business": "Business",
+    "settings": "Settings",
+    "label": "Main menu",
+    "account": "Your account and app settings",
+    "short": {
+      "cashClosing": "Closing"
     }
   }
 }

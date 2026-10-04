@@ -1,7 +1,10 @@
 # 03 — Screens & navigation
 
-Phone first (375–430 pt wide). On tablets (≥ 768 pt) Queue, Quick Sale and Cash Closing use a two-pane layout
-because a tablet at the counter is a common setup. All screens work in RTL.
+Phone first (375–430 pt wide). Wider screens (owner's choice 2026-10-04, see DECISIONS): tablets (≥ 768 pt) get an
+icon rail, computers (≥ 1200 pt) a sidebar with every page in sections; both replace the bottom tab bar. Once the
+page beside the navigation is at least 900 pt wide, Home is a two-column dashboard, Quick sale keeps the sale panel
+open beside the services, and Queue shows the list beside the picked visit (a tablet at the counter is a common
+setup). Lists and forms keep a readable 960 pt width. All screens work in RTL.
 
 ## 1. Navigation map
 

@@ -29,6 +29,8 @@ export interface ListRowProps {
   onPress?: () => void;
   accessibilityLabel?: string;
   testID?: string;
+  /** The row shown in the pane beside the list (tablets and computers). */
+  selected?: boolean;
 }
 
 /** Gents: bordered card rows (Nearby Salons). Ladies: plain rows on the white sheet (Services). */
@@ -43,6 +45,7 @@ export function ListRow({
   onPress,
   accessibilityLabel,
   testID,
+  selected,
 }: ListRowProps) {
   const theme = useTheme();
   const card = theme.variants.listRow === 'card';
@@ -101,6 +104,10 @@ export function ListRow({
           borderBottomWidth: StyleSheet.hairlineWidth,
           borderBottomColor: theme.colors.border,
         },
+    selected &&
+      (card
+        ? { borderColor: theme.colors.primary400, borderWidth: 2, padding: spacing.md - 1 }
+        : { backgroundColor: theme.colors.primary50, paddingHorizontal: spacing.md, borderRadius: theme.radius.md }),
   ];
 
   if (!onPress)
@@ -115,6 +122,7 @@ export function ListRow({
       testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
+      accessibilityState={selected === undefined ? undefined : { selected }}
       style={({ pressed }) => [look, pressed && styles.pressed]}
     >
       {content}

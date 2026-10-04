@@ -1,14 +1,13 @@
 import { useTranslation } from 'react-i18next';
 
 import { useTerms } from '@/features/mode/useTerms';
-import { minutesBetween } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
-import { useDates } from '@/lib/useDates';
 import { semantic } from '@/theme';
 import { Avatar, Button, IconButton, ListRow, StatusPill } from '@/ui';
 
 import type { Appointment } from './api';
 import { primaryAction, type RowAction } from './actions';
+import { useVisitWhen } from './visitText';
 
 export function QueueRow({
   item,
@@ -19,6 +18,8 @@ export function QueueRow({
   onAction,
   onMore,
   canSell = true,
+  onPress,
+  selected,
 }: {
   item: Appointment;
   now: Date;
@@ -29,28 +30,16 @@ export function QueueRow({
   onMore?: (item: Appointment) => void;
   /** False for staff when the branch does not let them take payments. */
   canSell?: boolean;
+  /** Two panes (tablets, computers): the row selects the visit; its actions are in the pane beside the list. */
+  onPress?: () => void;
+  selected?: boolean;
 }) {
   const { t } = useTranslation();
-  const dates = useDates();
   const terms = useTerms();
+  const visitWhen = useVisitWhen();
   const name = item.customer_name ?? t('queue.guest');
-  const time = dates.at(new Date(item.scheduled_at), timeZone, 'HH:mm');
-  const action = onAction ? primaryAction(item.status, canSell) : null;
-
-  const when = (() => {
-    if (item.status === 'waiting') {
-      const since = new Date(item.checked_in_at ?? item.scheduled_at);
-      return `${time} · ${t('queue.waitingFor', { minutes: Math.max(0, minutesBetween(since, now)) })}`;
-    }
-    if (item.status === 'booked') {
-      const until = minutesBetween(now, new Date(item.scheduled_at));
-      return `${time} · ${until >= 0 ? t('queue.inMinutes', { minutes: until }) : t('queue.late', { minutes: -until })}`;
-    }
-    if (item.status === 'in_progress' && item.started_at) {
-      return t('queue.startedAt', { time: dates.at(new Date(item.started_at), timeZone, 'HH:mm') });
-    }
-    return time;
-  })();
+  const action = onAction && !onPress ? primaryAction(item.status, canSell) : null;
+  const when = visitWhen(item, now, timeZone);
 
   const services = item.appointment_services.map((s) => s.name_snapshot).join(' + ');
   const price = sum(item.appointment_services.map((s) => s.price_minor));
@@ -92,8 +81,10 @@ export function QueueRow({
         )
       }
       trailing={compact ? actionButton : <StatusPill status={item.status} />}
+      onPress={onPress}
+      selected={onPress ? selected : undefined}
       footer={
-        compact || (!actionButton && !onMore) ? undefined : (
+        compact || onPress || (!actionButton && !onMore) ? undefined : (
           <>
             {actionButton}
             {onMore ? (

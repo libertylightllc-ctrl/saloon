@@ -1,24 +1,15 @@
 import { Tabs } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 
 import { useWorkspace } from '@/features/auth/session';
+import { useTabItems } from '@/features/nav/navItems';
 import { tabsFor, type TabKey } from '@/lib/permissions';
 import { TabBar, type TabBarItem } from '@/ui';
 
 export default function TabsLayout() {
-  const { t } = useTranslation();
   const { role, rules } = useWorkspace();
   const allowed = new Set<TabKey>(tabsFor(role, rules));
-  const items: Record<TabKey, TabBarItem> = {
-    index: { icon: 'home', label: t('tabs.home') },
-    queue: { icon: 'users', label: t('tabs.queue') },
-    sale: { icon: 'receipt', label: t('tabs.sale'), prominent: true },
-    customers: { icon: 'contact', label: t('tabs.customers') },
-    pay: { icon: 'wallet', label: t('tabs.pay') },
-    'reports-tab': { icon: 'chart', label: t('tabs.reportsTab') },
-    'accounts-tab': { icon: 'calculator', label: t('tabs.accountsTab') },
-    more: { icon: 'grid', label: t('tabs.more') },
-  };
+  const tabItems = useTabItems();
+  const items: Record<TabKey, TabBarItem> = { ...tabItems, sale: { ...tabItems.sale, prominent: true } };
   const visible = Object.fromEntries(Object.entries(items).filter(([key]) => allowed.has(key as TabKey)));
   return (
     <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <TabBar {...props} items={visible} />}>

@@ -276,3 +276,14 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 5. ✅ Staff has no WPS switch; Compliance asks for a business licence and the lease (no Ejari, no WPS & Montaji tab).
 6. Another owner → **Kuwait** → ✅ prices like "KWD 2.100"; Close day → **Count notes** lists KWD 20 … 0.25 notes and
    coins down to 0.005.
+
+## 32 · On a computer and a tablet (3 min)
+
+1. Computer browser (window wider than 1200 px) → https://www.saloqo.com → sign in → ✅ a sidebar on the left (Today,
+   Money, Business, Settings), no tabs at the bottom; Home shows four cards across and two columns below.
+2. Sidebar → **Sale** → add two services → ✅ the sale panel on the right fills in; **Save sale** works without a
+   pop-up.
+3. Sidebar → **Queue** → click a visit → ✅ its details and **Start** / **Complete** appear on the right.
+4. iPad (landscape) → ✅ a slim icon rail; Queue and Sale in two panes. Turn it upright → ✅ one pane, Checkout opens
+   as a sheet again.
+5. Phone → ✅ exactly as before.

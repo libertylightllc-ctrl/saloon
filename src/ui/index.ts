@@ -40,3 +40,16 @@ export { FormTextField } from './form/FormTextField';
 export { QueryState } from './QueryState';
 export { SwitchRow } from './SwitchRow';
 export { CheckRow } from './CheckRow';
+export {
+  DESKTOP_MIN,
+  NAV_WIDTH,
+  PAGE_MAX_WIDTH,
+  TABLET_MIN,
+  TWO_PANE_MIN,
+  layoutFor,
+  useContentWidth,
+  useLayoutSize,
+  useTwoPane,
+  useWide,
+  type LayoutSize,
+} from './layoutSize';

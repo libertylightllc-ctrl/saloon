@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { spacing, useTheme } from '@/theme';
 
 import { Icon, type IconName } from './Icon';
+import { useLayoutSize } from './layoutSize';
 import { Text } from './Text';
 
 export interface TabBarItem {
@@ -25,7 +26,10 @@ export function TabBar({
 }: BottomTabBarProps & { items: Record<string, TabBarItem> }) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const size = useLayoutSize();
   const { colors } = theme;
+  // Tablets and computers navigate from the side (SideNav).
+  if (size !== 'phone') return null;
 
   return (
     <View

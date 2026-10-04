@@ -14,12 +14,15 @@ export function ServiceTile({
   index,
   qty,
   onChange,
+  width,
 }: {
   service: Service;
   icon: IconName;
   index: number;
   qty: number;
   onChange: (n: number) => void;
+  /** Wider screens: the tile's exact width, so every row lines up; phones: two per row. */
+  width?: number;
 }) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -28,7 +31,7 @@ export function ServiceTile({
     <Card
       variant="outlined"
       padding={spacing.md}
-      style={[styles.tile, qty > 0 && { borderColor: theme.colors.primary400 }]}
+      style={[styles.tile, width ? { flexBasis: width, flexGrow: 0, width } : null, qty > 0 && { borderColor: theme.colors.primary400 }]}
     >
       <View style={styles.tileTop}>
         <Thumb icon={icon} index={index} size={44} />

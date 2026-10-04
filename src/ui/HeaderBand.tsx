@@ -11,7 +11,8 @@ import { screenPadding, spacing, tapTarget, useTheme } from '@/theme';
 
 import { BackButton } from './BackButton';
 import { ContourPattern } from './ContourPattern';
-import { OnBandContext, useHeaderOverlap } from './layoutContext';
+import { OnBandContext, useHeaderOverlap, usePageWidth } from './layoutContext';
+import { useWide } from './layoutSize';
 import { Text } from './Text';
 
 export interface HeaderBandProps {
@@ -29,7 +30,31 @@ export interface HeaderBandProps {
 export function HeaderBand({ title, subtitle, onBack, right, top, children }: HeaderBandProps) {
   const theme = useTheme();
   const overlap = useHeaderOverlap();
+  const wide = useWide();
+  const pageWidth = usePageWidth();
   const band = theme.variants.header === 'band';
+
+  // Tablets and computers: a page header — title at the start, actions at the end — lined up with the body.
+  if (wide) {
+    return (
+      <View style={[styles.page, pageWidth !== null && { maxWidth: pageWidth, alignSelf: 'center', width: '100%' }]}>
+        {top ?? (
+          <View style={styles.pageTitleRow}>
+            {onBack ? <BackButton onPress={onBack === true ? undefined : onBack} /> : null}
+            <View style={styles.title}>
+              <Text variant="display" numberOfLines={1} accessibilityRole="header">
+                {title}
+              </Text>
+              {subtitle ? <Text color="textSecondary">{subtitle}</Text> : null}
+            </View>
+            {right ? <View style={[styles.side, styles.sideEnd]}>{right}</View> : null}
+          </View>
+        )}
+        {top && subtitle ? <Text color="textSecondary">{subtitle}</Text> : null}
+        {children}
+      </View>
+    );
+  }
 
   const content = (
     <>
@@ -92,4 +117,6 @@ const styles = StyleSheet.create({
   sideEnd: { justifyContent: 'flex-end', gap: spacing.sm },
   title: { flex: 1 },
   subtitle: { paddingHorizontal: spacing.lg },
+  page: { paddingHorizontal: spacing['3xl'], paddingTop: spacing['2xl'], gap: spacing.lg },
+  pageTitleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 48 },
 });
