@@ -42,7 +42,7 @@ function Sidebar() {
       aria-label={t('nav.label')}
       style={[styles.sidebar, { backgroundColor: colors.surface, borderEndColor: colors.divider, paddingTop: insets.top }]}
     >
-      <ScrollView contentContainerStyle={styles.sidebarBody} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={[styles.sidebarBody, { paddingBottom: spacing.lg + insets.bottom }]} showsVerticalScrollIndicator={false}>
         <View style={styles.brand}>
           <View style={[styles.logo, { backgroundColor: colors.primaryAction }]}>
             <Icon name="scissors" size={20} color={colors.onPrimary} />
@@ -67,32 +67,32 @@ function Sidebar() {
             ))}
           </View>
         ))}
+        <View style={styles.flex} />
+        <Pressable
+          onPress={() => go('/more')}
+          accessibilityRole="link"
+          accessibilityLabel={t('nav.account')}
+          testID="nav-more"
+          style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
+            styles.me,
+            {
+              backgroundColor: pathname === '/more' || pressed || hovered ? colors.primary50 : colors.background,
+              borderRadius: theme.radius.md,
+              },
+          ]}
+        >
+          <Avatar name={member.display_name} size={36} />
+          <View style={styles.flex}>
+            <Text variant="bodyStrong" numberOfLines={1}>
+              {member.display_name}
+            </Text>
+            <Text variant="small" color="textSecondary" numberOfLines={1}>
+              {t(`roles.${role}`)}
+            </Text>
+          </View>
+          <Icon name="grid" size={18} color={colors.textSecondary} />
+        </Pressable>
       </ScrollView>
-      <Pressable
-        onPress={() => go('/more')}
-        accessibilityRole="link"
-        accessibilityLabel={t('nav.account')}
-        testID="nav-more"
-        style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
-          styles.me,
-          {
-            backgroundColor: pathname === '/more' || pressed || hovered ? colors.primary50 : colors.background,
-            borderRadius: theme.radius.md,
-            marginBottom: spacing.lg + insets.bottom,
-          },
-        ]}
-      >
-        <Avatar name={member.display_name} size={36} />
-        <View style={styles.flex}>
-          <Text variant="bodyStrong" numberOfLines={1}>
-            {member.display_name}
-          </Text>
-          <Text variant="small" color="textSecondary" numberOfLines={1}>
-            {t(`roles.${role}`)}
-          </Text>
-        </View>
-        <Icon name="grid" size={18} color={colors.textSecondary} />
-      </Pressable>
     </View>
   );
 }
@@ -178,14 +178,14 @@ function Rail() {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   sidebar: { width: NAV_WIDTH.desktop, borderEndWidth: StyleSheet.hairlineWidth },
-  sidebarBody: { paddingHorizontal: spacing.lg, paddingVertical: spacing['2xl'], gap: spacing.xl },
+  sidebarBody: { flexGrow: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.xl, gap: spacing.lg },
   brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.sm },
   logo: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   branch: { borderWidth: 1, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, gap: 2 },
   section: { gap: 2 },
   sectionTitle: { paddingHorizontal: spacing.md, paddingBottom: spacing.xs },
-  item: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.md, minHeight: 44 },
-  me: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, marginHorizontal: spacing.lg },
+  item: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.md, minHeight: 40 },
+  me: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md },
   rail: { width: NAV_WIDTH.tablet, alignItems: 'center', gap: spacing.lg, borderEndWidth: StyleSheet.hairlineWidth },
   railLogo: { width: 40, height: 40, borderRadius: 12 },
   railItems: { alignItems: 'center', gap: spacing.xs },

@@ -84,7 +84,7 @@ export function Screen({
         { marginTop: -overlap, paddingTop: overlap ? 0 : spacing['2xl'] },
         { paddingBottom: spacing['2xl'] + bottomPad },
         wide && styles.wideBody,
-        maxWidth !== null && { maxWidth, alignSelf: 'center', width: '100%' },
+        maxWidth !== null && { maxWidth, alignSelf: 'flex-start', width: '100%' },
         bodyStyle,
       ]}
     >
@@ -152,10 +152,11 @@ export function Screen({
                 borderTopColor: theme.colors.divider,
                 paddingBottom: spacing.md + (insetBottom ? insets.bottom : 0),
               },
-              wide && styles.wideBody,
+              // Wider screens: the bar's content sits in the same column as the body above it.
+              wide && styles.wideFooter,
             ]}
           >
-            <View style={maxWidth !== null ? { maxWidth, alignSelf: 'center', width: '100%' } : undefined}>{footer}</View>
+            <View style={wide ? [styles.wideBody, maxWidth !== null && { maxWidth, width: '100%' }] : undefined}>{footer}</View>
           </View>
         ) : null}
       </KeyboardAvoidingView>
@@ -168,6 +169,7 @@ const styles = StyleSheet.create({
   grow: { flexGrow: 1 },
   body: { flexGrow: 1, paddingHorizontal: screenPadding },
   wideBody: { paddingHorizontal: spacing['3xl'] },
+  wideFooter: { paddingHorizontal: 0 },
   fill: { flex: 1, minHeight: 0 },
   footer: {
     paddingHorizontal: screenPadding,

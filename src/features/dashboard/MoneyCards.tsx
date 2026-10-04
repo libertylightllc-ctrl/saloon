@@ -24,10 +24,13 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
   const yesterday = data.expected_cash_yesterday ?? 0;
   const change = yesterday > 0 ? Math.round(((cash - yesterday) / yesterday) * 100) : null;
   const a = data.appointments;
+  // Side by side, every card fills its cell so the row's bottoms line up.
+  const fill = row ? styles.fill : undefined;
 
   const hero = (
     <KpiCard
       hero
+      style={fill}
       icon="banknote"
       label={t('home.expectedCash')}
       value={formatMoney(cash)}
@@ -59,6 +62,7 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
   const others: ReactNode[] = [
     <KpiCard
       key="sales"
+      style={fill}
       icon="receipt"
       label={t('home.salesToday')}
       value={formatMoney(data.sales?.total_minor ?? 0)}
@@ -68,6 +72,7 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
     data.money_out ? (
       <KpiCard
         key="out"
+        style={fill}
         icon="coins"
         label={t('home.moneyOut')}
         value={formatMoney(data.money_out.expenses_minor + data.money_out.supplier_payments_minor)}
@@ -81,6 +86,7 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
     a ? (
       <KpiCard
         key="visits"
+        style={fill}
         icon="calendar"
         label={t('home.appointmentsToday')}
         value={t('home.doneCount', { n: a.completed })}
@@ -116,4 +122,5 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.lg },
   cell: { flexGrow: 1, flexBasis: 220 },
   heroCell: { flexGrow: 1.5, flexBasis: 300 },
+  fill: { flexGrow: 1 },
 });

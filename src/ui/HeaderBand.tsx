@@ -37,7 +37,7 @@ export function HeaderBand({ title, subtitle, onBack, right, top, children }: He
   // Tablets and computers: a page header — title at the start, actions at the end — lined up with the body.
   if (wide) {
     return (
-      <View style={[styles.page, pageWidth !== null && { maxWidth: pageWidth, alignSelf: 'center', width: '100%' }]}>
+      <View style={[styles.page, pageWidth !== null && { maxWidth: pageWidth, alignSelf: 'flex-start', width: '100%' }]}>
         {top ?? (
           <View style={styles.pageTitleRow}>
             {onBack ? <BackButton onPress={onBack === true ? undefined : onBack} /> : null}

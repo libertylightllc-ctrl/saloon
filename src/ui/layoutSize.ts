@@ -10,7 +10,7 @@ export const TABLET_MIN = 768;
 export const DESKTOP_MIN = 1200;
 /** Width of the side navigation: icon rail on tablets, sidebar with labels on computers. */
 export const NAV_WIDTH: Record<LayoutSize, number> = { phone: 0, tablet: 84, desktop: 248 };
-/** Lists and forms stay readable on a big screen; dashboards use the whole width. */
+/** Lists and forms stay readable on a big screen (from the same left edge as every page); dashboards use the whole width. */
 export const PAGE_MAX_WIDTH = 960;
 
 export function layoutFor(width: number): LayoutSize {

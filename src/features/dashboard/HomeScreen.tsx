@@ -73,18 +73,20 @@ export function HomeScreen() {
     { key: 'expense', icon: 'coins', href: '/expenses/new', show: can(role, 'addExpense') },
     { key: 'stock', icon: 'boxes', href: '/inventory', show: can(role, 'viewInventory') && role !== 'staff' },
   ];
+  // Phones: one row across the screen. Wider screens: three to a row in the narrow side column, so none is cut off.
   const quickRow = (
-    <View style={styles.circles}>
+    <View style={wide ? styles.circleGrid : styles.circles}>
       {quick
         .filter((q) => q.show)
         .map((q, i) => (
-          <CategoryCircle
-            key={q.key}
-            icon={q.icon}
-            index={i}
-            label={t(`home.quick.${q.key}` as 'home.quick.walkIn')}
-            onPress={() => router.push(q.href)}
-          />
+          <View key={q.key} style={wide ? styles.circleCell : undefined}>
+            <CategoryCircle
+              icon={q.icon}
+              index={i}
+              label={t(`home.quick.${q.key}` as 'home.quick.walkIn')}
+              onPress={() => router.push(q.href)}
+            />
+          </View>
         ))}
     </View>
   );
@@ -221,6 +223,8 @@ const styles = StyleSheet.create({
   sections: { gap: spacing['2xl'] },
   block: { gap: spacing.md },
   circles: { flexDirection: 'row', justifyContent: 'space-around' },
+  circleGrid: { flexDirection: 'row', flexWrap: 'wrap', rowGap: spacing.lg },
+  circleCell: { width: '33.33%', alignItems: 'center' },
   kpiRow: { gap: spacing.md, paddingVertical: spacing.xs, paddingHorizontal: 2 },
   columns: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing['2xl'] },
   mainColumn: { flex: 2, minWidth: 0, gap: spacing['2xl'] },

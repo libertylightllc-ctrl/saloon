@@ -9,7 +9,7 @@ export function useOnBand(): boolean {
 
 /**
  * On tablets and computers: the widest the page's header and body may grow (null: the whole width beside the
- * navigation). Set by <Screen>, so its header lines up with its body.
+ * navigation). Set by <Screen>, so its header lines up with its body; every page starts at the same left edge.
  */
 export const PageWidthContext = createContext<number | null>(null);
 
