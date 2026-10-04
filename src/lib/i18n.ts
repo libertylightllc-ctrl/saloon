@@ -61,6 +61,32 @@ const rtlIsolation: FormatterModule = {
   addCached: () => {},
 };
 
+/**
+ * The branch's tax in any text: {{tax}} (VAT, GST, Sales tax), {{taxId}} (TRN, EIN, GST number) and {{rate}} ("5%").
+ * The usual VAT and TRN show in the reader's language; any other name the owner chose shows as written.
+ */
+const taxTerms = { name: 'VAT', idLabel: 'TRN', rate: '5%' };
+const termVariables: Record<string, string> = { tax: 'VAT', taxId: 'TRN', rate: '5%' };
+
+function refreshTermVariables() {
+  termVariables.tax = taxTerms.name === 'VAT' ? i18n.t('tax.vat') : taxTerms.name;
+  termVariables.taxId = taxTerms.idLabel === 'TRN' ? i18n.t('tax.trn') : taxTerms.idLabel;
+  termVariables.rate = taxTerms.rate;
+}
+
+/** Returns whether anything changed (the caller then tells the screens to redraw, see redrawTexts). */
+export function setTaxTerms(next: { name: string; idLabel: string; rate: string }): boolean {
+  if (next.name === taxTerms.name && next.idLabel === taxTerms.idLabel && next.rate === taxTerms.rate) return false;
+  Object.assign(taxTerms, next);
+  if (i18n.isInitialized) refreshTermVariables();
+  return true;
+}
+
+/** Every translated text draws again (as on a language change). */
+export function redrawTexts() {
+  if (i18n.isInitialized) void i18n.emit('languageChanged', i18n.language);
+}
+
 export async function initI18n(language: Language): Promise<typeof i18n> {
   if (i18n.isInitialized) {
     await i18n.changeLanguage(language);
@@ -76,8 +102,11 @@ export async function initI18n(language: Language): Promise<typeof i18n> {
       interpolation: {
         escapeValue: false, // React already escapes
         alwaysFormat: true, // run every value through rtlIsolation
+        defaultVariables: termVariables,
       },
       returnNull: false,
     });
+  refreshTermVariables();
+  i18n.on('languageChanged', refreshTermVariables);
   return i18n;
 }

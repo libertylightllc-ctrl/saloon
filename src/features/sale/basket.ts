@@ -1,11 +1,15 @@
 /**
- * The basket and its totals. Same maths as the create_sale RPC (VAT inclusive 5/105, discount
- * capped at the subtotal, deposit applied up to the total), so what the screen shows is what the
- * server charges. The server stays the authority.
+ * The basket and its totals. Same maths as the create_sale RPC (the branch's tax either included in the prices, 5/105
+ * for 5% VAT, or added on top; discount capped at the subtotal; deposit applied up to the total), so what the screen
+ * shows is what the server charges. The server stays the authority.
  */
-import { multiply, subtract, sum, vatFromInclusive, type Minor } from '@/lib/money';
+import { multiply, subtract, sum, vatFromInclusive, vatOnTop, type Minor, type TaxRate } from '@/lib/money';
 
-export const VAT_BPS = 500;
+/** The tax checkout charges: a rate, included in the prices or added at the till. */
+export interface TaxRule {
+  rateBps: TaxRate;
+  inclusive: boolean;
+}
 
 export interface BasketLine {
   key: string;
@@ -22,8 +26,11 @@ export interface BasketLine {
 export interface Totals {
   subtotal: Minor;
   discount: Minor;
+  /** After discount, with any tax added at the till. */
   net: Minor;
   vat: Minor;
+  /** The tax was added on top of the prices (not included in them). */
+  taxAdded: boolean;
   tip: Minor;
   total: Minor;
   depositApplied: Minor;
@@ -33,12 +40,15 @@ export interface Totals {
 
 export function basketTotals(
   lines: readonly BasketLine[],
-  opts: { discount?: Minor | null; tip?: Minor | null; vatOn: boolean; deposit?: Minor | null },
+  opts: { discount?: Minor | null; tip?: Minor | null; tax: TaxRule | null; deposit?: Minor | null },
 ): Totals {
   const subtotal = sum(lines.map((l) => multiply(l.unitPriceMinor, l.qty)));
   const discount = Math.min(Math.max(opts.discount ?? 0, 0), subtotal);
-  const net = subtract(subtotal, discount);
-  const vat = opts.vatOn ? vatFromInclusive(net, VAT_BPS) : 0;
+  const afterDiscount = subtract(subtotal, discount);
+  const tax = opts.tax && opts.tax.rateBps > 0 ? opts.tax : null;
+  const taxAdded = tax !== null && !tax.inclusive;
+  const vat = !tax ? 0 : tax.inclusive ? vatFromInclusive(afterDiscount, tax.rateBps) : vatOnTop(afterDiscount, tax.rateBps);
+  const net = taxAdded ? afterDiscount + vat : afterDiscount;
   const tip = Math.max(opts.tip ?? 0, 0);
   const total = net + tip;
   const depositApplied = Math.min(Math.max(opts.deposit ?? 0, 0), total);
@@ -47,6 +57,7 @@ export function basketTotals(
     discount,
     net,
     vat,
+    taxAdded,
     tip,
     total,
     depositApplied,

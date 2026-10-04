@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { useInventory } from '@/features/inventory/api';
 import { shareReceipt } from '@/features/sales/receipt';
+import { isUae } from '@/lib/countries';
 import { isLanguage, isRtlLanguage } from '@/lib/i18n';
 import { useDates } from '@/lib/useDates';
 import { spacing, useTheme } from '@/theme';
@@ -24,7 +25,8 @@ export function BinderTab() {
   const { business, branch } = useWorkspace();
   const slots = useCompliance(business.id);
   const hygiene = useHygieneLogs(branch.id);
-  const wps = useWpsStatus(business.id, true);
+  const uae = isUae(business.country_code);
+  const wps = useWpsStatus(business.id, uae);
   const items = useInventory(branch.id);
 
   const exportPdf = useMutation({
@@ -48,10 +50,10 @@ export function BinderTab() {
         </table>
         <h2>${esc(t('compliance.hygiene.history'))}</h2>
         <table>${(hygiene.data ?? []).slice(0, 7).map((l) => `<tr>${cell(dates.day(l.business_date, 'EEE d MMM'))}${cell(l.members?.display_name ?? '')}${cell(`${Object.values(l.checklist).filter(Boolean).length}/${HYGIENE_ITEMS.length}`)}</tr>`).join('') || `<tr>${cell(t('compliance.hygiene.none'))}</tr>`}</table>
-        <h2>${esc(t('compliance.wps.title'))}</h2>
+        ${uae ? `<h2>${esc(t('compliance.wps.title'))}</h2>
         <div>${wps.data?.period ? esc(t('compliance.wps.proven', { proven: wps.data.proven, required: wps.data.required })) : esc(t('compliance.wps.none'))}</div>
         <h2>${esc(t('compliance.montaji.title'))}</h2>
-        <table>${(items.data ?? []).filter((i) => i.active && i.kind !== 'tool').map((i) => `<tr>${cell(i.name)}${cell(i.montaji_reg_no ?? t('compliance.montaji.missing'))}</tr>`).join('')}</table>
+        <table>${(items.data ?? []).filter((i) => i.active && i.kind !== 'tool').map((i) => `<tr>${cell(i.name)}${cell(i.montaji_reg_no ?? t('compliance.montaji.missing'))}</tr>`).join('')}</table>` : ''}
       </body></html>`;
       await shareReceipt(html, t('compliance.binder.export'));
     },

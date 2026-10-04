@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { isUae } from '@/lib/countries';
 import { isBusinessDate } from '@/lib/dates';
 import { normalizeDigits } from '@/lib/money';
 import { spacing } from '@/theme';
@@ -123,7 +124,7 @@ function ItemForm({ item, packSize }: { item: StockItem | null; packSize: number
           <TextField label={t('inventory.assigned')} placeholder={t('inventory.fields.assignedHint')} value={assigned} onChangeText={setAssigned} maxLength={60} testID="item-assigned" />
         </>
       ) : null}
-      {kind !== 'tool' ? (
+      {kind !== 'tool' && isUae(business.country_code) ? (
         <TextField label={t('inventory.fields.montaji')} hint={t('inventory.fields.montajiHint')} value={montaji} onChangeText={setMontaji} maxLength={40} testID="item-montaji" />
       ) : null}
       {item ? <SwitchRow label={t('inventory.fields.active')} hint={t('inventory.fields.activeHint')} value={active} onChange={setActive} testID="item-active" /> : null}

@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { useCreateStaffLogin } from '@/features/team/api';
+import { isUae } from '@/lib/countries';
 import { formatBps, parsePercent } from '@/lib/money';
 import { spacing } from '@/theme';
 import { Button, Chip, FormError, HeaderBand, MoneyInput, QueryState, Screen, SegmentTabs, SwitchRow, Text, TextField, useToast } from '@/ui';
@@ -99,7 +100,7 @@ function StaffForm({ person }: { person: StaffMember | null }) {
         role_title: title,
         base_salary_minor: salary ?? 0,
         commission_bps: bps ?? 0,
-        wps_required: wps,
+        wps_required: wps && isUae(business.country_code),
         phone: phone.trim() || null,
         active,
       });
@@ -155,7 +156,9 @@ function StaffForm({ person }: { person: StaffMember | null }) {
             error={bps === null ? t('validation.range') : undefined}
             testID="staff-commission"
           />
-          <SwitchRow label={t('staff.wps')} hint={t('staff.fields.wpsHint')} value={wps} onChange={setWps} testID="staff-wps" />
+          {isUae(business.country_code) ? (
+            <SwitchRow label={t('staff.wps')} hint={t('staff.fields.wpsHint')} value={wps} onChange={setWps} testID="staff-wps" />
+          ) : null}
           <TextField
             label={t('staff.fields.phone')}
             value={phone}

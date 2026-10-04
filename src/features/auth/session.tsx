@@ -9,6 +9,8 @@ import { Platform } from 'react-native';
 
 import type { Tables } from '@/lib/database.types';
 import { errorCode, functionError, type ErrorCode } from '@/lib/errors';
+import { redrawTexts, setTaxTerms } from '@/lib/i18n';
+import { formatBps, setActiveCurrency } from '@/lib/money';
 import type { BranchRules, Role } from '@/lib/permissions';
 import { queryClient } from '@/lib/queryClient';
 import { forget } from './quickSwitch';
@@ -129,6 +131,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         await signOut();
         return;
       }
+      // Before the screens draw: every amount shows in this salon's currency.
+      setActiveCurrency(next.business?.currency);
       setLoaded(next);
       setStatus(next.member ? 'ready' : 'needsSetup');
     } catch (error) {
@@ -155,6 +159,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       follow(next);
       if (!next) {
         loadedFor.current = null;
+        setActiveCurrency(null);
         setLoaded({ member: null, business: null, branch: null, employeeId: null });
         setStatus('signedOut');
       }
@@ -220,6 +225,16 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       deleting.current = false;
     }
   }, [signOut]);
+
+  // The branch's tax words in every text ({{tax}}, {{taxId}}, {{rate}}): set before the screens draw; screens that
+  // did not redraw for the branch change draw again.
+  const taxName = loaded.branch?.tax_name ?? 'VAT';
+  const taxIdLabel = loaded.branch?.tax_id_label ?? 'TRN';
+  const taxRate = formatBps(loaded.branch?.tax_rate_bps ?? 500);
+  const taxChanged = useMemo(() => setTaxTerms({ name: taxName, idLabel: taxIdLabel, rate: taxRate }), [taxName, taxIdLabel, taxRate]);
+  useEffect(() => {
+    if (taxChanged) redrawTexts();
+  }, [taxChanged, taxName, taxIdLabel, taxRate]);
 
   const value = useMemo<SessionValue>(() => {
     const settings = (loaded.branch?.settings ?? {}) as Record<string, unknown>;

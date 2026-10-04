@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { useWorkspace } from '@/features/auth/session';
+import { countryName } from '@/lib/countries';
 import { formatMoney } from '@/lib/money';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
@@ -24,18 +24,16 @@ import {
   useToast,
 } from '@/ui';
 
-import { useAdminPlanAction, useAdminSalons, useIsPlatformAdmin, usePlanStatus, type AdminSalon } from './api';
+import { useAdminPlanAction, useAdminSalons, useIsPlatformAdmin, type AdminSalon } from './api';
 
 const MONTHS = [1, 3, 6, 12] as const;
 
 /** For the platform owner only: every salon, who asked for a plan, and recording a payment or ending a plan. */
 export function AdminSalonsScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dates = useDates();
-  const { business } = useWorkspace();
   const admin = useIsPlatformAdmin();
   const salons = useAdminSalons();
-  const price = usePlanStatus(business.id).data?.price_per_branch_minor ?? 9900;
   const [open, setOpen] = useState<AdminSalon | null>(null);
 
   if (admin.data === false) return <Redirect href="/" />;
@@ -56,7 +54,8 @@ export function AdminSalonsScreen() {
                   title={s.name}
                   meta={[
                     [s.owner_name, s.owner_email].filter(Boolean).join(' · '),
-                    t('admin.meta', { code: s.code, branches: s.branches, date: dates.at(s.created_at, 'Asia/Dubai', 'd MMM yyyy') }),
+                    t('admin.meta', { code: s.code, branches: s.branches, date: dates.at(s.created_at, s.timezone, 'd MMM yyyy') }),
+                    countryName(s.country_code, i18n.language),
                     ...(s.requested_at
                       ? [t('admin.requested', { months: s.requested_months ?? 1, note: s.request_note ?? '' }).trim()]
                       : []),
@@ -79,13 +78,16 @@ export function AdminSalonsScreen() {
         </QueryState>
       </Screen>
       <BottomSheet open={open !== null} onClose={() => setOpen(null)} title={open?.name ?? ''}>
-        {open ? <SalonPlanForm salon={open} price={price} onDone={() => setOpen(null)} /> : null}
+        {open ? <SalonPlanForm salon={open} onDone={() => setOpen(null)} /> : null}
       </BottomSheet>
     </>
   );
 }
 
-function SalonPlanForm({ salon, price, onDone }: { salon: AdminSalon; price: number; onDone: () => void }) {
+function SalonPlanForm({ salon, onDone }: { salon: AdminSalon; onDone: () => void }) {
+  // The salon's own price: AED in the UAE, USD elsewhere.
+  const price = salon.price_per_branch_minor;
+  const currency = salon.plan_currency;
   const { t } = useTranslation();
   const toast = useToast();
   const action = useAdminPlanAction();
@@ -104,11 +106,11 @@ function SalonPlanForm({ salon, price, onDone }: { salon: AdminSalon; price: num
         }}
         testID="admin-months"
       />
-      <MoneyInput label={t('admin.amount')} value={amount} onChange={setAmount} testID="admin-amount" />
+      <MoneyInput label={t('admin.amount')} value={amount} onChange={setAmount} currency={currency} testID="admin-amount" />
       <TextField label={t('admin.note')} placeholder={t('admin.notePlaceholder')} value={note} onChangeText={setNote} testID="admin-note" />
       <FormError error={action.error} />
       <Button
-        label={t('admin.recordPayment', { total: formatMoney(amount ?? 0) })}
+        label={t('admin.recordPayment', { total: formatMoney(amount ?? 0, currency) })}
         loading={action.isPending}
         disabled={amount === null}
         onPress={() =>

@@ -31,10 +31,23 @@ export interface Owner {
   code: string;
 }
 
+/** A salon outside the UAE, as the setup wizard sends it (default: the UAE). */
+export interface Country {
+  country_code: string;
+  currency: string;
+  timezone: string;
+  tax_name?: string;
+  tax_rate_bps?: number;
+  tax_inclusive?: boolean;
+  tax_id_label?: string;
+}
+
+export const KUWAIT: Country = { country_code: 'KW', currency: 'KWD', timezone: 'Asia/Kuwait', tax_name: 'VAT', tax_rate_bps: 0 };
+
 /** An owner with a set-up business, created the way the setup wizard does it. */
 export async function createOwner(
   mode: Mode,
-  opts: { vat?: boolean; openingCash?: number; businessName?: string; plan?: boolean } = {},
+  opts: { vat?: boolean; openingCash?: number; businessName?: string; plan?: boolean; country?: Country } = {},
 ): Promise<Owner> {
   const id = uid();
   const email = `owner-${id}@e2e.test`;
@@ -58,8 +71,9 @@ export async function createOwner(
       phone: '+971 50 000 0000',
       opening_hours: { open: '00:00', close: '23:59', days: [0, 1, 2, 3, 4, 5, 6] },
       vat_mode: opts.vat ? 'on' : 'off',
-      trn: opts.vat ? '100234567800003' : null,
+      trn: opts.vat && !opts.country ? '100234567800003' : null,
       opening_cash_minor: opts.openingCash ?? 0,
+      ...opts.country,
     },
   });
   if (rpcError) throw rpcError;

@@ -5,7 +5,7 @@ import { id, snap, text } from './support/ui';
 test('a new visitor reads what the app does, picks a salon type and lands on the owner sign-up in that look', async ({ page, mode }) => {
   await page.goto('/');
   await expect(text(page, 'Run your salon from your phone')).toBeVisible();
-  for (const feature of ['Walk-ins and bookings', 'Daily cash closing', 'UAE compliance', 'Books and reports']) {
+  for (const feature of ['Walk-ins and bookings', 'Daily cash closing', 'Licences and inspections', 'Books and reports']) {
     await expect(text(page, feature, true)).toBeVisible();
   }
   await expect(text(page, 'Which salon are you?')).toBeVisible();

@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import type { InventoryItem } from '@/features/catalog/api';
-import { VAT_BPS } from '@/features/sale/basket';
 import { qtyText } from '@/features/inventory/labels';
-import { formatMoney, multiply, normalizeDigits, vatOnTop, type Minor } from '@/lib/money';
+import { formatMoney, multiply, normalizeDigits, vatOnTop, type Minor, type TaxRate } from '@/lib/money';
 import { spacing } from '@/theme';
 import { Button, Card, Chip, IconButton, MoneyInput, SwitchRow, Text, TextField } from '@/ui';
 
@@ -31,14 +30,15 @@ const qtyOk = (s: string) => s.trim() !== '' && Number.isFinite(num(s)) && num(s
 
 export const lineNet = (l: LineDraft): Minor =>
   l.price_minor !== null && qtyOk(l.qty) ? multiply(l.price_minor, num(l.qty)) : 0;
-export const lineVat = (l: LineDraft, withVat: boolean): Minor =>
-  withVat ? (l.vat_edited ?? vatOnTop(lineNet(l), VAT_BPS)) : 0;
-export const lineValid = (l: LineDraft, withVat: boolean) =>
+/** The supplier's tax on a line, at the branch's rate unless typed in from the invoice. */
+export const lineVat = (l: LineDraft, withVat: boolean, rate: TaxRate): Minor =>
+  withVat ? (l.vat_edited ?? vatOnTop(lineNet(l), rate)) : 0;
+export const lineValid = (l: LineDraft, withVat: boolean, rate: TaxRate) =>
   l.description.trim().length > 0 &&
   qtyOk(l.qty) &&
   l.price_minor !== null &&
   (!l.item_id || qtyOk(l.pack)) &&
-  lineVat(l, withVat) <= lineNet(l);
+  lineVat(l, withVat, rate) <= lineNet(l);
 /** How much goes into stock, in the item's unit: 10 packs of 1000 ml = 10,000 ml. */
 export const stockQty = (l: LineDraft) =>
   qtyOk(l.qty) ? num(l.qty) * (l.item_id && qtyOk(l.pack) ? num(l.pack) : 1) : 0;
@@ -64,12 +64,14 @@ interface Props {
   value: LineDraft[];
   onChange: (lines: LineDraft[]) => void;
   withVat: boolean;
+  /** The branch's tax rate. */
+  rate: TaxRate;
   /** VAT the salon can claim back stays out of stock cost; otherwise it is part of it. */
   vatRecoverable: boolean;
 }
 
 /** What was bought, as on the supplier's invoice: stock items (added to stock) or anything else ("Delivery"). */
-export function BillLines({ items, value, onChange, withVat, vatRecoverable }: Props) {
+export function BillLines({ items, value, onChange, withVat, rate, vatRecoverable }: Props) {
   const { t } = useTranslation();
   const [picking, setPicking] = useState(false);
   const update = (key: string, patch: Partial<LineDraft>) =>
@@ -80,7 +82,7 @@ export function BillLines({ items, value, onChange, withVat, vatRecoverable }: P
     <View style={styles.box}>
       {value.map((l, i) => {
         const net = lineNet(l);
-        const vat = lineVat(l, withVat);
+        const vat = lineVat(l, withVat, rate);
         const qty = stockQty(l);
         const cost =
           qty > 0 && l.price_minor !== null ? (net + (vatRecoverable ? 0 : vat)) / qty : null;

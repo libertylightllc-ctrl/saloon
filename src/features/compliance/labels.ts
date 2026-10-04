@@ -4,7 +4,18 @@ import type { StatusKey } from '@/ui';
 
 import type { DocStatus } from './api';
 
-export const TEMPLATE_TYPES = ['trade_licence', 'ejari', 'pest_control', 'civil_defence', 'health_card', 'visa', 'vaccination'] as const;
+export const TEMPLATE_TYPES = [
+  'trade_licence',
+  'ejari',
+  'pest_control',
+  'civil_defence',
+  'health_card',
+  'visa',
+  'vaccination',
+  // Outside the UAE
+  'business_licence',
+  'lease',
+] as const;
 
 export const DOC_STATUS: Record<DocStatus, StatusKey> = {
   valid: 'valid',

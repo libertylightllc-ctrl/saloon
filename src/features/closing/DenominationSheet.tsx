@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { formatMoney, normalizeDigits } from '@/lib/money';
+import { activeCurrency, formatMoney, normalizeDigits } from '@/lib/money';
 import { spacing } from '@/theme';
 import { BottomSheet, Button, Text, TextField } from '@/ui';
 
-import { AED_DENOMINATIONS, COIN_FROM, countTotal, type Denominations } from './count';
+import { countTotal, denominationsFor, type Denominations } from './count';
 
 /** Count notes and coins; the total becomes the counted cash. */
 export function DenominationSheet({
@@ -31,23 +31,25 @@ export function DenominationSheet({
 function Counter({ initial, onDone }: { initial: Denominations; onDone: (counts: Denominations, total: number) => void }) {
   const { t } = useTranslation();
   const [counts, setCounts] = useState<Denominations>(initial);
-  const total = countTotal(counts);
+  const [list] = useState(() => denominationsFor());
+  const total = countTotal(counts, list);
+  const currency = activeCurrency();
   return (
     <>
       <View style={styles.grid}>
-        {AED_DENOMINATIONS.map((value) => (
-          <View key={value} style={styles.cell}>
+        {list.map((d) => (
+          <View key={d.key} style={styles.cell}>
             <TextField
-              label={value >= COIN_FROM ? t('closing.note', { value: value / 100 }) : t('closing.coin', { value: (value / 100).toFixed(2) })}
-              value={counts[String(value)] ? String(counts[String(value)]) : ''}
+              label={t(d.coin ? 'closing.coin' : 'closing.note', { currency, value: d.label })}
+              value={counts[d.key] ? String(counts[d.key]) : ''}
               onChangeText={(text) => {
                 const n = Number.parseInt(normalizeDigits(text).replace(/\D/g, ''), 10);
-                setCounts((c) => ({ ...c, [String(value)]: Number.isFinite(n) ? n : 0 }));
+                setCounts((c) => ({ ...c, [d.key]: Number.isFinite(n) ? n : 0 }));
               }}
               keyboardType="number-pad"
               placeholder="0"
               maxLength={5}
-              testID={`denom-${value}`}
+              testID={`denom-${d.key}`}
             />
           </View>
         ))}

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
-import { formatMoney } from '@/lib/money';
+import { formatBps, formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
@@ -83,8 +83,14 @@ export function SaleDetailScreen() {
                   <Row label={t('sale.subtotal')} value={formatMoney(sale.subtotal_minor)} />
                   {sale.discount_minor ? <Row label={t('sale.discount')} value={formatMoney(-sale.discount_minor)} /> : null}
                   <Row
-                    label={t('sale.vat')}
-                    value={sale.vat_mode === 'on' ? t('sale.vatIncluded', { amount: formatMoney(sale.vat_minor) }) : t('sale.vatNotApplied')}
+                    label={sale.vat_mode === 'on' ? t('tax.withRate', { rate: formatBps(sale.tax_rate_bps) }) : t('sale.vat')}
+                    value={
+                      sale.vat_mode !== 'on'
+                        ? t('sale.vatNotApplied')
+                        : sale.tax_inclusive
+                          ? t('sale.vatIncluded', { amount: formatMoney(sale.vat_minor) })
+                          : formatMoney(sale.vat_minor)
+                    }
                   />
                   {sale.tip_minor ? <Row label={t('sale.tip')} value={formatMoney(sale.tip_minor)} /> : null}
                   <Row label={t('receipt.total')} value={formatMoney(sale.total_minor)} strong testID="sale-total" />

@@ -1,6 +1,7 @@
 /** The salon's paid plan (docs/06): its status, the owner's request, and the platform owner's tools. */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { isCurrency, type CurrencyCode } from '@/lib/currencies';
 import { supabase } from '@/lib/supabase';
 
 export const planKey = (businessId: string) => ['plan', businessId] as const;
@@ -11,7 +12,8 @@ export interface PlanStatus {
   branches: number;
   price_per_branch_minor: number;
   monthly_minor: number;
-  currency: string;
+  /** AED in the UAE, USD elsewhere. */
+  currency: CurrencyCode;
   requested_at: string | null;
   requested_months: number | null;
 }
@@ -28,6 +30,7 @@ export function usePlanStatus(businessId: string) {
         price_per_branch_minor: Number(r.price_per_branch_minor),
         monthly_minor: Number(r.monthly_minor),
         branches: Number(r.branches),
+        currency: isCurrency(r.currency) ? r.currency : 'AED',
       };
     },
   });
@@ -69,6 +72,10 @@ export interface AdminSalon {
   requested_at: string | null;
   requested_months: number | null;
   request_note: string | null;
+  country_code: string;
+  timezone: string;
+  price_per_branch_minor: number;
+  plan_currency: CurrencyCode;
 }
 
 export function useAdminSalons() {
@@ -77,7 +84,11 @@ export function useAdminSalons() {
     queryFn: async (): Promise<AdminSalon[]> => {
       const { data, error } = await supabase.rpc('admin_salons');
       if (error) throw error;
-      return (data ?? []) as AdminSalon[];
+      return (data ?? []).map((s) => ({
+        ...s,
+        price_per_branch_minor: Number(s.price_per_branch_minor),
+        plan_currency: isCurrency(s.plan_currency) ? s.plan_currency : 'AED',
+      }));
     },
   });
 }

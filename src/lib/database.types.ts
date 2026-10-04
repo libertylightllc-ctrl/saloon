@@ -515,6 +515,10 @@ export type Database = {
           opening_hours: NonNullable<Json>;
           phone: string | null;
           settings: NonNullable<Json>;
+          tax_id_label: string;
+          tax_inclusive: boolean;
+          tax_name: string;
+          tax_rate_bps: number;
           trn: string | null;
           vat_mode: Database['public']['Enums']['vat_mode'];
         };
@@ -529,6 +533,10 @@ export type Database = {
           opening_hours?: NonNullable<Json>;
           phone?: string | null;
           settings?: NonNullable<Json>;
+          tax_id_label?: string;
+          tax_inclusive?: boolean;
+          tax_name?: string;
+          tax_rate_bps?: number;
           trn?: string | null;
           vat_mode?: Database['public']['Enums']['vat_mode'];
         };
@@ -543,6 +551,10 @@ export type Database = {
           opening_hours?: NonNullable<Json>;
           phone?: string | null;
           settings?: NonNullable<Json>;
+          tax_id_label?: string;
+          tax_inclusive?: boolean;
+          tax_name?: string;
+          tax_rate_bps?: number;
           trn?: string | null;
           vat_mode?: Database['public']['Enums']['vat_mode'];
         };
@@ -1807,6 +1819,7 @@ export type Database = {
           business_id: string;
           created_at: string;
           created_by: string | null;
+          currency: string | null;
           id: string;
           kind: string;
           months: number | null;
@@ -1818,6 +1831,7 @@ export type Database = {
           business_id: string;
           created_at?: string;
           created_by?: string | null;
+          currency?: string | null;
           id?: string;
           kind: string;
           months?: number | null;
@@ -1829,6 +1843,7 @@ export type Database = {
           business_id?: string;
           created_at?: string;
           created_by?: string | null;
+          currency?: string | null;
           id?: string;
           kind?: string;
           months?: number | null;
@@ -1864,16 +1879,22 @@ export type Database = {
         Row: {
           currency: string;
           id: boolean;
+          intl_currency: string;
+          intl_price_per_branch_minor: number;
           price_per_branch_minor: number;
         };
         Insert: {
           currency?: string;
           id?: boolean;
+          intl_currency?: string;
+          intl_price_per_branch_minor?: number;
           price_per_branch_minor?: number;
         };
         Update: {
           currency?: string;
           id?: boolean;
+          intl_currency?: string;
+          intl_price_per_branch_minor?: number;
           price_per_branch_minor?: number;
         };
         Relationships: [];
@@ -2504,6 +2525,8 @@ export type Database = {
           refunded_minor: number;
           status: Database['public']['Enums']['sale_status'];
           subtotal_minor: number;
+          tax_inclusive: boolean;
+          tax_rate_bps: number;
           tip_employee_id: string | null;
           tip_minor: number;
           total_minor: number;
@@ -2529,6 +2552,8 @@ export type Database = {
           refunded_minor?: number;
           status?: Database['public']['Enums']['sale_status'];
           subtotal_minor: number;
+          tax_inclusive?: boolean;
+          tax_rate_bps?: number;
           tip_employee_id?: string | null;
           tip_minor?: number;
           total_minor: number;
@@ -2554,6 +2579,8 @@ export type Database = {
           refunded_minor?: number;
           status?: Database['public']['Enums']['sale_status'];
           subtotal_minor?: number;
+          tax_inclusive?: boolean;
+          tax_rate_bps?: number;
           tip_employee_id?: string | null;
           tip_minor?: number;
           total_minor?: number;
@@ -3164,14 +3191,18 @@ export type Database = {
           branches: number;
           business_id: string;
           code: string;
+          country_code: string;
           created_at: string;
           name: string;
           owner_email: string;
           owner_name: string;
           paid_until: string;
+          plan_currency: string;
+          price_per_branch_minor: number;
           request_note: string;
           requested_at: string;
           requested_months: number;
+          timezone: string;
         }[];
       };
       allocate_minor: { Args: { p_total: number; p_weights: number[] }; Returns: number[] };
@@ -3308,6 +3339,7 @@ export type Database = {
       create_appointment: { Args: { p: Json }; Returns: string };
       create_business: { Args: { p: Json }; Returns: Json };
       create_sale: { Args: { p: Json }; Returns: Json };
+      currency_decimals: { Args: { p_currency: string }; Returns: number };
       current_member_id: { Args: { p_business: string }; Returns: string };
       dashboard_today: { Args: { p_branch: string }; Returns: Json };
       delete_account_data: { Args: { p_user: string }; Returns: Json };
@@ -3413,6 +3445,7 @@ export type Database = {
         }[];
       };
       plan_active: { Args: { p_business: string }; Returns: boolean };
+      plan_price: { Args: { p_business: string }; Returns: Record<string, unknown> };
       plan_status: { Args: { p_business: string }; Returns: Json };
       post_journal: {
         Args: {
@@ -3451,6 +3484,7 @@ export type Database = {
         Returns: undefined;
       };
       register_staff_member: { Args: { p: Json }; Returns: Json };
+      remove_staff: { Args: { p_actor: string; p_employee: string }; Returns: Json };
       reopen_period: {
         Args: { p_business: string; p_month: string; p_reason: string };
         Returns: undefined;
@@ -3558,6 +3592,7 @@ export type Database = {
         };
       };
       require_plan: { Args: { p_business: string }; Returns: undefined };
+      restore_staff: { Args: { p_actor: string; p_employee: string }; Returns: Json };
       return_cash_closing: { Args: { p_id: string; p_reason: string }; Returns: Json };
       reverse_adjustment: { Args: { p_id: string; p_reason: string }; Returns: undefined };
       reverse_expense: { Args: { p_id: string; p_reason: string }; Returns: undefined };
@@ -3621,7 +3656,9 @@ export type Database = {
           wps_required: boolean;
         }[];
       };
+      staff_has_records: { Args: { p_employee: string }; Returns: boolean };
       start_service: { Args: { p_id: string }; Returns: undefined };
+      starter_price: { Args: { p_aed_fils: number; p_currency: string }; Returns: number };
       submit_cash_count: { Args: { p: Json }; Returns: Json };
       supplier_balances: {
         Args: { p_business: string };

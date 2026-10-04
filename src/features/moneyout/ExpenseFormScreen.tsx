@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
-import { VAT_BPS } from '@/features/sale/basket';
 import { vatFromInclusive } from '@/lib/money';
 import { businessDate, shiftBusinessDate } from '@/lib/dates';
 import { can } from '@/lib/permissions';
@@ -64,11 +63,11 @@ export function ExpenseFormScreen() {
   const [clientRef] = useState(() => Crypto.randomUUID());
   const [newCategory, setNewCategory] = useState<string | null>(null);
 
-  // VAT inside what was paid (5/105 of it), from a tax invoice; only for a VAT-registered salon; editable.
+  // Tax inside what was paid (5/105 of it for 5% VAT), from a tax invoice; only for a tax-registered salon; editable.
   const vatRegistered = branch.vat_mode === 'on';
   const [withVat, setWithVat] = useState(false);
   const [vatEdited, setVatEdited] = useState<number | null>(null);
-  const vat = vatRegistered && withVat && amount ? (vatEdited ?? vatFromInclusive(amount, VAT_BPS)) : 0;
+  const vat = vatRegistered && withVat && amount ? (vatEdited ?? vatFromInclusive(amount, branch.tax_rate_bps)) : 0;
   const ready = Boolean(amount && amount > 0 && categoryId) && vat < (amount ?? 0);
   const save = () =>
     record.mutate(

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -7,7 +7,10 @@ import { z } from 'zod';
 
 import { useSession, useWorkspace } from '@/features/auth/session';
 import { ModeCard } from '@/features/setup/ModeCard';
+import { TaxFields, taxShape, trnValid } from '@/features/tax/TaxFields';
 import { useSetBranchMode, useUpdateBranch } from '@/features/team/api';
+import { isUae } from '@/lib/countries';
+import { activeCurrency, formatBps, parseTaxRate } from '@/lib/money';
 import { spacing, type Mode } from '@/theme';
 import {
   Button,
@@ -32,30 +35,36 @@ const whole = (min: number, max: number) =>
     .regex(/^\d+$/, 'validation.number')
     .refine((v) => Number(v) >= min && Number(v) <= max, 'validation.range');
 
-const schema = z
-  .object({
-    name: z.string().trim().min(2, 'validation.required').max(80, 'validation.tooLong'),
-    address: z.string().trim().max(200),
-    phone: z.string().trim().regex(/^$|^\+?[0-9 ]{7,20}$/, 'validation.phone'),
-    vat_on: z.boolean(),
-    trn: z.string().trim(),
-    waiting_target_min: whole(1, 240),
-    cancel_cutoff_hours: whole(0, 168),
-    default_deposit_minor: z.number().int().min(0).nullable(),
-    staff_can_sell: z.boolean(),
-    block_insufficient_stock: z.boolean(),
-    late_grace_min: whole(0, 120),
-    require_hygiene_evidence: z.boolean(),
-    receipt_mode: z.enum(['off', 'simple', 'whatsapp']),
-  })
-  .refine((v) => !v.vat_on || /^[0-9]{15}$/.test(v.trn), { path: ['trn'], message: 'validation.trn' });
-type Values = z.infer<typeof schema>;
+const schemaFor = (uae: boolean) =>
+  z
+    .object({
+      name: z.string().trim().min(2, 'validation.required').max(80, 'validation.tooLong'),
+      address: z.string().trim().max(200),
+      phone: z.string().trim().regex(/^$|^\+?[0-9 ]{7,20}$/, 'validation.phone'),
+      vat_on: z.boolean(),
+      ...taxShape,
+      waiting_target_min: whole(1, 240),
+      cancel_cutoff_hours: whole(0, 168),
+      default_deposit_minor: z.number().int().min(0).nullable(),
+      staff_can_sell: z.boolean(),
+      block_insufficient_stock: z.boolean(),
+      late_grace_min: whole(0, 120),
+      require_hygiene_evidence: z.boolean(),
+      receipt_mode: z.enum(['off', 'simple', 'whatsapp']),
+    })
+    .refine((v) => !v.vat_on || trnValid(v.trn, uae), { path: ['trn'], message: uae ? 'validation.trn' : 'validation.taxNumber' });
+type Values = z.infer<ReturnType<typeof schemaFor>>;
+
+/** 887.5 → "8.875" for the rate field. */
+const rateText = (bps: number) => formatBps(bps).replace('%', '');
 
 export function BranchSettingsScreen() {
   const { t } = useTranslation();
   const toast = useToast();
   const { reload } = useSession();
-  const { branch } = useWorkspace();
+  const { business, branch } = useWorkspace();
+  const uae = isUae(business.country_code);
+  const schema = useMemo(() => schemaFor(uae), [uae]);
   const settings = branch.settings as Record<string, unknown>;
   const update = useUpdateBranch(branch.id);
   const setMode = useSetBranchMode(branch.id);
@@ -69,6 +78,10 @@ export function BranchSettingsScreen() {
       phone: branch.phone ?? '',
       vat_on: branch.vat_mode === 'on',
       trn: branch.trn ?? '',
+      tax_name: branch.tax_name,
+      tax_rate: rateText(branch.tax_rate_bps),
+      tax_inclusive: branch.tax_inclusive,
+      tax_id_label: branch.tax_id_label,
       waiting_target_min: String(settings.waiting_target_min ?? 10),
       cancel_cutoff_hours: String(settings.cancel_cutoff_hours ?? 12),
       default_deposit_minor: Number(settings.default_deposit_minor ?? 0) || null,
@@ -89,6 +102,10 @@ export function BranchSettingsScreen() {
         phone: v.phone,
         vat_mode: v.vat_on ? 'on' : 'off',
         trn: v.trn,
+        tax_name: v.tax_name,
+        tax_rate_bps: parseTaxRate(v.tax_rate),
+        tax_inclusive: v.tax_inclusive,
+        tax_id_label: v.tax_id_label,
         settings: {
           waiting_target_min: Number(v.waiting_target_min),
           cancel_cutoff_hours: Number(v.cancel_cutoff_hours),
@@ -167,9 +184,7 @@ export function BranchSettingsScreen() {
               <SwitchRow label={t('branch.fields.vat')} hint={t('branch.fields.vatHint')} value={field.value} onChange={field.onChange} testID="branch-vat" />
             )}
           />
-          {vatOn ? (
-            <FormTextField control={form.control} name="trn" label={t('branch.fields.trn')} keyboardType="number-pad" maxLength={15} />
-          ) : null}
+          {vatOn ? <TaxFields control={form.control} uae={uae} currency={activeCurrency()} /> : null}
           <Text variant="bodyStrong">{t('branch.receipt')}</Text>
           <Text variant="small" color="textSecondary">
             {t('branch.receiptHint')}

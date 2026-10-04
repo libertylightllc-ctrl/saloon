@@ -263,3 +263,16 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
    ✅ "Typo Name removed"; gone from the list.
 2. A barber who has sales → **Remove from staff** → **Remove** → ✅ "… archived (records kept)"; listed under
    **Archived**, and their login no longer signs in. **Bring back** → ✅ back on the staff, login works again.
+
+## 31 · A salon outside the UAE (4 min)
+
+1. New owner email → sign up → **Where is your salon?** → search "united" → **United States** → ✅ the card reads
+   "USD · no sales tax · America/New_York" (pick another time zone from the chips if needed).
+2. … → **Tax and cash** → switch on **Registered for Sales tax** → rate `8.875`, **Added at the till** → ✅ "A USD
+   100.00 service: the customer pays USD 108.88". Create.
+3. ✅ Home in dollars; More → **Plan & billing** shows **USD 29.00** (the UAE salons still see AED 99.00).
+4. Once the plan is on: sell a service → ✅ Checkout shows "Sales tax 8.875%" with the tax added to the total; the
+   receipt says "Sales tax (8.875%)".
+5. ✅ Staff has no WPS switch; Compliance asks for a business licence and the lease (no Ejari, no WPS & Montaji tab).
+6. Another owner → **Kuwait** → ✅ prices like "KWD 2.100"; Close day → **Count notes** lists KWD 20 … 0.25 notes and
+   coins down to 0.005.

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { isUae } from '@/lib/countries';
 import { formatBps, formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
@@ -66,7 +67,9 @@ export function StaffDetailScreen() {
                   {person.employee_code ? <Row label={t('staff.fields.code')} value={person.employee_code} /> : null}
                   <Row label={t('staff.fields.salary')} value={formatMoney(person.base_salary_minor)} testID="staff-detail-salary" />
                   <Row label={t('staff.fields.commission')} value={`${formatBps(person.commission_bps)}`} testID="staff-detail-commission" />
-                  <Row label={t('staff.wps')} value={person.wps_required ? t('staff.wpsYes') : t('staff.wpsNo')} />
+                  {isUae(business.country_code) ? (
+                    <Row label={t('staff.wps')} value={person.wps_required ? t('staff.wpsYes') : t('staff.wpsNo')} />
+                  ) : null}
                   {person.phone ? <Row label={t('staff.fields.phone')} value={person.phone} /> : null}
                   {owner ? (
                     <Button

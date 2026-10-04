@@ -1,13 +1,13 @@
-import { AED_DENOMINATIONS, compact, countTotal, varianceKind } from './count';
+import { compact, countTotal, denominationsFor, varianceKind } from './count';
 
 describe('drawer count', () => {
   it('adds notes and coins in fils', () => {
     // 2 × 100 + 2 × 20 + 1 × 5 + 3 × 0.25 = 245.75
-    expect(countTotal({ '10000': 2, '2000': 2, '500': 1, '25': 3 })).toBe(24575);
+    expect(countTotal({ '10000': 2, '2000': 2, '500': 1, '25': 3 }, denominationsFor('AED'))).toBe(24575);
   });
 
   it('ignores blanks, negatives and fractions', () => {
-    expect(countTotal({ '10000': 0, '5000': -2, '1000': 1.5, '100': Number.NaN })).toBe(0);
+    expect(countTotal({ '10000': 0, '5000': -2, '1000': 1.5, '100': Number.NaN }, denominationsFor('AED'))).toBe(0);
   });
 
   it('keeps only what was counted', () => {
@@ -15,8 +15,22 @@ describe('drawer count', () => {
   });
 
   it('covers every UAE note and coin from 1000 down to 25 fils', () => {
-    expect(AED_DENOMINATIONS[0]).toBe(100000);
-    expect(AED_DENOMINATIONS.at(-1)).toBe(25);
+    const aed = denominationsFor('AED');
+    expect(aed.map((d) => d.key)).toEqual(['100000', '50000', '20000', '10000', '5000', '2000', '1000', '500', '100', '50', '25']);
+    expect(aed.find((d) => d.minor === 25)).toMatchObject({ coin: true, label: '0.25' });
+    expect(aed[0]).toMatchObject({ coin: false, label: '1,000' });
+  });
+
+  it('counts other currencies in their own notes and coins', () => {
+    // Kuwait: 3 decimals. 1 × KWD 20 + 2 × KWD 0.250 = 20.500
+    const kwd = denominationsFor('KWD');
+    expect(countTotal({ '20000': 1, '250': 2 }, kwd)).toBe(20500);
+    expect(kwd.find((d) => d.minor === 250)?.label).toBe('0.25');
+    // India: a 20 note and a 20 coin are counted apart.
+    const inr = denominationsFor('INR');
+    expect(countTotal({ '2000': 1, c2000: 3 }, inr)).toBe(8000);
+    // Japan: no decimals.
+    expect(denominationsFor('JPY')[0]).toMatchObject({ minor: 10000, label: '10,000' });
   });
 
   it('names the difference', () => {

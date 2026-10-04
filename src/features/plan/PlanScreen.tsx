@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { isUae } from '@/lib/countries';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
@@ -34,6 +35,7 @@ export function PlanScreen() {
   const [months, setMonths] = useState<(typeof MONTHS)[number]>(1);
   const [note, setNote] = useState('');
   const owner = can(role, 'requestPlan') && canOfferPlans;
+  const uae = isUae(business.country_code);
 
   return (
     <Screen
@@ -59,11 +61,11 @@ export function PlanScreen() {
               {canOfferPlans ? (
                 <View style={[styles.price, { backgroundColor: theme.colors.primary50, borderRadius: theme.radius.md }]}>
                   <Text variant="display" tabular testID="plan-price">
-                    {formatMoney(p.price_per_branch_minor)}
+                    {formatMoney(p.price_per_branch_minor, p.currency)}
                   </Text>
                   <Text color="textSecondary">{t('plan.perBranchMonth')}</Text>
                   <Text variant="small" color="textSecondary">
-                    {t('plan.forBranches', { count: p.branches, total: formatMoney(p.monthly_minor) })}
+                    {t('plan.forBranches', { count: p.branches, total: formatMoney(p.monthly_minor, p.currency) })}
                   </Text>
                 </View>
               ) : null}
@@ -71,7 +73,9 @@ export function PlanScreen() {
                 {INCLUDED.map((i) => (
                   <View key={i.key} style={styles.row}>
                     <Icon name={i.icon} size={18} color={semantic.success.main} />
-                    <Text style={styles.flex}>{t(`plan.included.${i.key}` as 'plan.included.queue')}</Text>
+                    <Text style={styles.flex}>
+                      {t(`plan.included.${i.key}${uae && (i.key === 'people' || i.key === 'compliance') ? 'Uae' : ''}` as 'plan.included.queue')}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -95,7 +99,7 @@ export function PlanScreen() {
                   testID="plan-months"
                 />
                 <Text variant="bodyStrong" testID="plan-total">
-                  {t('plan.total', { total: formatMoney(p.monthly_minor * months) })}
+                  {t('plan.total', { total: formatMoney(p.monthly_minor * months, p.currency) })}
                 </Text>
                 <TextField label={t('plan.note')} placeholder={t('plan.notePlaceholder')} value={note} onChangeText={setNote} testID="plan-note" />
                 <FormError error={request.error} />

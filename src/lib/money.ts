@@ -1,5 +1,6 @@
 /**
- * Money maths and formatting. All amounts are integers in minor units (fils: AED 1 = 100).
+ * Money maths and formatting. All amounts are integers in minor units (fils: AED 1 = 100; 1000 for KWD; 1 for JPY).
+ * Amounts show in the signed-in salon's currency (setActiveCurrency, set by the session) unless one is given.
  * Percentages are basis points (12% = 1200). Never use floats for money.
  *
  * Rounding is half away from zero, the same as Postgres round(numeric), so the app and the
@@ -7,21 +8,22 @@
  * multiplied by rates cannot lose precision.
  */
 
+import { CURRENCIES, isCurrency, type CurrencyCode } from './currencies';
+
+export type { CurrencyCode } from './currencies';
 export type Minor = number;
 export type Bps = number;
 
-export const CURRENCY_DECIMALS = {
-  AED: 2,
-  SAR: 2,
-  QAR: 2,
-  KWD: 3,
-  BHD: 3,
-  OMR: 3,
-} as const;
-
-export type CurrencyCode = keyof typeof CURRENCY_DECIMALS;
-
 export const DEFAULT_CURRENCY: CurrencyCode = 'AED';
+
+let active: CurrencyCode = DEFAULT_CURRENCY;
+/** The signed-in salon's currency; everything formats and parses in it by default. */
+export function setActiveCurrency(code: string | null | undefined): void {
+  active = code && isCurrency(code) ? code : DEFAULT_CURRENCY;
+}
+export function activeCurrency(): CurrencyCode {
+  return active;
+}
 export const BPS_PER_WHOLE = 10_000;
 
 /** Quantities are numeric(12,3) in the database. */
@@ -35,7 +37,7 @@ export function assertMinor(value: number, label = 'amount'): asserts value is M
 }
 
 export function decimalsOf(currency: CurrencyCode): number {
-  return CURRENCY_DECIMALS[currency];
+  return CURRENCIES[currency].decimals;
 }
 
 function toSafeNumber(value: bigint, label: string): Minor {
@@ -91,17 +93,31 @@ export function percentOf(amount: Minor, bps: Bps): Minor {
   return toSafeNumber(divRound(BigInt(amount) * BigInt(bps), BigInt(BPS_PER_WHOLE)), 'percent');
 }
 
-/** VAT contained in a VAT-inclusive amount: 5% of AED 105.00 inclusive → AED 5.00. */
-export function vatFromInclusive(gross: Minor, rateBps: Bps): Minor {
-  assertMinor(gross);
-  assertMinor(rateBps, 'rate');
-  const denominator = BigInt(BPS_PER_WHOLE + rateBps);
-  return toSafeNumber(divRound(BigInt(gross) * BigInt(rateBps), denominator), 'vat');
+/**
+ * A tax rate in basis points with up to one decimal, for rates like New York's 8.875% (887.5). Kept exact by working
+ * in tenths of a basis point.
+ */
+export type TaxRate = number;
+
+function tenthsOfBps(rate: TaxRate): bigint {
+  const tenths = Math.round(rate * 10);
+  if (!Number.isSafeInteger(tenths) || tenths < 0 || Math.abs(rate * 10 - tenths) > 1e-6) {
+    throw new RangeError(`rate must be basis points with at most one decimal, got ${rate}`);
+  }
+  return BigInt(tenths);
 }
 
-/** VAT added on top of a net amount. */
-export function vatOnTop(net: Minor, rateBps: Bps): Minor {
-  return percentOf(net, rateBps);
+/** Tax contained in a tax-inclusive amount: 5% of AED 105.00 inclusive → AED 5.00. Same rounding as create_sale. */
+export function vatFromInclusive(gross: Minor, rate: TaxRate): Minor {
+  assertMinor(gross);
+  const r = tenthsOfBps(rate);
+  return toSafeNumber(divRound(BigInt(gross) * r, BigInt(BPS_PER_WHOLE * 10) + r), 'vat');
+}
+
+/** Tax added on top of a net amount: 8.875% of USD 100.00 → USD 8.88. */
+export function vatOnTop(net: Minor, rate: TaxRate): Minor {
+  assertMinor(net);
+  return toSafeNumber(divRound(BigInt(net) * tenthsOfBps(rate), BigInt(BPS_PER_WHOLE * 10)), 'vat');
 }
 
 /**
@@ -172,7 +188,7 @@ function parseScaled(input: string, decimals: number): bigint | null {
  * Parses what a person typed ("1,240.5", "AED 25", "٢٥") into minor units.
  * Returns null when it is not a valid amount for the currency (e.g. 3 decimals for AED).
  */
-export function parseMoney(input: string, currency: CurrencyCode = DEFAULT_CURRENCY): Minor | null {
+export function parseMoney(input: string, currency: CurrencyCode = activeCurrency()): Minor | null {
   const cleaned = normalizeDigits(input)
     .replace(new RegExp(`^\\s*(-)?\\s*${currency}\\s*`, 'i'), '$1')
     .replace(/[,\s]/g, '');
@@ -189,6 +205,13 @@ export function parsePercent(input: string): Bps | null {
   return Number(scaled);
 }
 
+/** A tax rate: "8.875" → 887.5, "5" → 500. Up to 3 decimals, 0–30%. */
+export function parseTaxRate(input: string): TaxRate | null {
+  const scaled = parseScaled(normalizeDigits(input).replace(/%\s*$/, ''), PERCENT_DECIMALS + 1);
+  if (scaled === null || scaled < 0n || scaled > 30_000n) return null;
+  return Number(scaled) / 10;
+}
+
 // ── Formatting (always Latin digits, see 01-PRODUCT §3.18) ───────────────────
 
 function groupThousands(digits: string): string {
@@ -203,7 +226,7 @@ export interface FormatOptions {
 /** 124000 → "1,240.00" (no currency code). */
 export function formatAmount(
   amount: Minor,
-  currency: CurrencyCode = DEFAULT_CURRENCY,
+  currency: CurrencyCode = activeCurrency(),
   { grouping = true }: FormatOptions = {},
 ): string {
   assertMinor(amount);
@@ -211,22 +234,23 @@ export function formatAmount(
   const digits = String(Math.abs(amount)).padStart(decimals + 1, '0');
   const whole = digits.slice(0, digits.length - decimals);
   const fraction = digits.slice(digits.length - decimals);
-  const body = `${grouping ? groupThousands(whole) : whole}.${fraction}`;
+  const grouped = grouping ? groupThousands(whole) : whole;
+  const body = decimals > 0 ? `${grouped}.${fraction}` : grouped;
   return amount < 0 ? `-${body}` : body;
 }
 
 /** 124000 → "AED 1,240.00"; -500 → "-AED 5.00". */
-export function formatMoney(amount: Minor, currency: CurrencyCode = DEFAULT_CURRENCY): string {
+export function formatMoney(amount: Minor, currency: CurrencyCode = activeCurrency()): string {
   const body = formatAmount(Math.abs(amount), currency);
   return amount < 0 ? `-${currency} ${body}` : `${currency} ${body}`;
 }
 
-/** 1200 → "12%", 1250 → "12.5%", 25 → "0.25%". */
-export function formatBps(bps: Bps): string {
-  assertMinor(bps, 'bps');
-  const whole = Math.trunc(Math.abs(bps) / 100);
-  const fraction = String(Math.abs(bps) % 100)
-    .padStart(2, '0')
+/** 1200 → "12%", 1250 → "12.5%", 25 → "0.25%"; a tax rate 887.5 → "8.875%". */
+export function formatBps(bps: Bps | TaxRate): string {
+  const tenths = Math.abs(Number(tenthsOfBps(Math.abs(bps))));
+  const whole = Math.trunc(tenths / 1000);
+  const fraction = String(tenths % 1000)
+    .padStart(3, '0')
     .replace(/0+$/, '');
   const body = fraction ? `${whole}.${fraction}` : String(whole);
   return `${bps < 0 ? '-' : ''}${body}%`;

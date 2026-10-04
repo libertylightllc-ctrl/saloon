@@ -1,18 +1,36 @@
-/** Counting the drawer: UAE dirham notes and coins in fils, and how a count compares with expected. */
-import { multiply, sum, type Minor } from '@/lib/money';
+/** Counting the drawer: the salon currency's notes and coins, and how a count compares with expected. */
+import { denominationsOf, type CurrencyCode } from '@/lib/currencies';
+import { activeCurrency, formatAmount, multiply, sum, type Minor } from '@/lib/money';
 
-/** AED 1000 … 5 notes, then 1, 0.50 and 0.25 coins. */
-export const AED_DENOMINATIONS = [100000, 50000, 20000, 10000, 5000, 2000, 1000, 500, 100, 50, 25] as const;
-export const COIN_FROM = 100;
+export interface Denomination {
+  /** Key in a stored count: the value in minor units ("10000" = AED 100); "c2000" for a coin with the same value as a note. */
+  key: string;
+  minor: Minor;
+  coin: boolean;
+  /** "100", "0.25" (major units, no needless decimals). */
+  label: string;
+}
+
+/** Notes then coins, largest first: AED 1000 … 5 notes, then 1, 0.50 and 0.25 coins. */
+export function denominationsFor(currency: CurrencyCode = activeCurrency()): Denomination[] {
+  const list = denominationsOf(currency);
+  const noteValues = new Set(list.filter((d) => !d.coin).map((d) => d.minor));
+  return list.map((d) => ({
+    key: d.coin && noteValues.has(d.minor) ? `c${d.minor}` : String(d.minor),
+    minor: d.minor,
+    coin: d.coin,
+    label: formatAmount(d.minor, currency).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''),
+  }));
+}
 
 export type Denominations = Record<string, number>;
 
 /** Total of a denomination count; blank or bad entries count as zero. */
-export function countTotal(counts: Denominations): Minor {
+export function countTotal(counts: Denominations, list: Denomination[] = denominationsFor()): Minor {
   return sum(
-    AED_DENOMINATIONS.map((value) => {
-      const n = counts[String(value)] ?? 0;
-      return Number.isInteger(n) && n > 0 ? multiply(value, n) : 0;
+    list.map((d) => {
+      const n = counts[d.key] ?? 0;
+      return Number.isInteger(n) && n > 0 ? multiply(d.minor, n) : 0;
     }),
   );
 }

@@ -5,11 +5,21 @@ import { formatMoney } from '@/lib/money';
 import type { SaleDetail } from './api';
 import { staffNames } from './staff';
 
-/** "+971 50 111 0000" / "050 111 0000" / "00971…" → "971501110000" (wa.me wants the country code, digits only). */
+/**
+ * wa.me wants the country code, digits only. With the salon's country code (971 in the UAE):
+ * "+971 50 111 0000" / "00971…" / "971501110000" stay; "050 111 0000" and "50 111 0000" get it ("971501110000").
+ * A number without + or 00 counts as already international when it starts with the code and has 11+ digits (local
+ * numbers are 10 digits at most). Without a known code, only international numbers are used.
+ */
 export function waNumber(phone: string | null | undefined, countryCode = '971'): string {
-  let d = (phone ?? '').replace(/\D/g, '');
-  if (d.startsWith('00')) d = d.slice(2);
+  const raw = (phone ?? '').trim();
+  let d = raw.replace(/\D/g, '');
+  if (raw.startsWith('+')) {
+    // already international
+  } else if (d.startsWith('00')) d = d.slice(2);
+  else if (!countryCode) return '';
   else if (d.startsWith('0')) d = countryCode + d.slice(1);
+  else if (!(d.startsWith(countryCode) && d.length >= 11)) d = countryCode + d;
   return d.length >= 8 ? d : '';
 }
 

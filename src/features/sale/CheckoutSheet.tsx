@@ -10,6 +10,7 @@ import { CustomerPicker, type PickedCustomer } from '@/features/customers/Custom
 import { useTerms } from '@/features/mode/useTerms';
 import { useEmployees } from '@/features/queue/api';
 import { useCreateSale, type PaymentMethod, type SaleResult } from '@/features/sales/api';
+import { useTax } from '@/features/tax/useTax';
 import { formatMoney, sum, type Minor } from '@/lib/money';
 import { spacing, useTheme } from '@/theme';
 import { BottomSheet, Button, Card, Chip, FormError, Icon, MoneyInput, SegmentTabs, Stepper, Text } from '@/ui';
@@ -39,6 +40,7 @@ export function CheckoutSheet(props: {
   const theme = useTheme();
   const terms = useTerms();
   const { business, branch } = useWorkspace();
+  const tax = useTax();
   const employees = useEmployees(branch.id);
   const catalog = useCatalog(business.id);
   const create = useCreateSale(business.id, branch.id);
@@ -52,7 +54,7 @@ export function CheckoutSheet(props: {
   const [clientRef, setClientRef] = useState(() => Crypto.randomUUID());
 
   const totals = basketTotals(props.lines, {
-    vatOn: branch.vat_mode === 'on',
+    tax: tax.rule,
     discount,
     tip,
     deposit: props.deposit,
@@ -209,8 +211,12 @@ export function CheckoutSheet(props: {
         {row(t('sale.subtotal'), formatMoney(totals.subtotal))}
         {totals.discount ? row(t('sale.discount'), formatMoney(-totals.discount)) : null}
         {row(
-          t('sale.vat'),
-          branch.vat_mode === 'on' ? t('sale.vatIncluded', { amount: formatMoney(totals.vat) }) : t('sale.vatNotApplied'),
+          tax.rule ? tax.label : t('sale.vat'),
+          !tax.rule
+            ? t('sale.vatNotApplied')
+            : totals.taxAdded
+              ? formatMoney(totals.vat)
+              : t('sale.vatIncluded', { amount: formatMoney(totals.vat) }),
           false,
           'checkout-vat',
         )}

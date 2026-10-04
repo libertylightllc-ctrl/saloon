@@ -21,7 +21,7 @@ export function PlanBanner() {
   const { business, role } = useWorkspace();
   const plan = usePlanStatus(business.id);
   if (!plan.data || plan.data.active) return null;
-  const price = formatMoney(plan.data.price_per_branch_minor);
+  const price = formatMoney(plan.data.price_per_branch_minor, plan.data.currency);
 
   if (can(role, 'requestPlan') && canOfferPlans) {
     return (

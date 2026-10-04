@@ -10,6 +10,7 @@ import type { PickedCustomer } from '@/features/customers/CustomerPicker';
 import { modeConfig } from '@/features/mode/modeConfig';
 import { useAppointment } from '@/features/queue/api';
 import type { SaleResult } from '@/features/sales/api';
+import { useTax } from '@/features/tax/useTax';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { spacing, useThemeMode } from '@/theme';
@@ -37,6 +38,7 @@ export function SaleScreen() {
   const router = useRouter();
   const { mode } = useThemeMode();
   const { business, branch, role } = useWorkspace();
+  const tax = useTax();
   const params = useLocalSearchParams<{ appointment?: string; customer?: string; customerName?: string }>();
   const catalog = useCatalog(business.id);
   const appointment = useAppointment(branch.id, params.appointment);
@@ -85,7 +87,7 @@ export function SaleScreen() {
     (categories.find((c) => c.id === s.category_id)?.icon as IconName | undefined) ??
     modeConfig[mode].defaultCategories[0]!.icon;
   const deposit = appt?.deposit_status === 'held' ? appt.deposit_minor : 0;
-  const totals = basketTotals(lines, { vatOn: branch.vat_mode === 'on', deposit });
+  const totals = basketTotals(lines, { tax: tax.rule, deposit });
   const qtyOf = (id: string) => lines.find((l) => l.serviceId === id)?.qty ?? 0;
   const qtyOfItem = (id: string) => lines.find((l) => l.itemId === id)?.qty ?? 0;
 

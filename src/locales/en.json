@@ -313,7 +313,7 @@
       "deposit": "Deposit"
     },
     "subtotal": "Subtotal",
-    "vat": "VAT",
+    "vat": "{{tax}}",
     "vatNotApplied": "Not applied",
     "vatIncluded": "{{amount}} included",
     "amountDue": "Amount due",
@@ -452,7 +452,7 @@
     "fullName": "Full name",
     "fullNamePlaceholder": "Enter full name",
     "phone": "Phone",
-    "phoneError": "Enter a full UAE number, like 050 123 4567.",
+    "phoneError": "Enter a full number, like +971 50 123 4567.",
     "cashCounted": "Actual cash counted",
     "cashHint": "Count with the drawer closed to sales.",
     "sampleService": "Haircut",
@@ -539,7 +539,7 @@
     "landing": {
       "signIn": "Sign in",
       "headline": "Run your salon from your phone",
-      "lead": "Walk-ins and bookings, quick sales, daily cash closing, staff pay and UAE compliance — one app for barber shops and ladies salons & spas.",
+      "lead": "Walk-ins and bookings, quick sales, daily cash closing, staff pay and licence reminders — one app for barber shops and ladies salons & spas, wherever you are.",
       "create": "Create your salon — free",
       "staffNote": "Owners create the salon. Staff sign in with the username the owner gives them.",
       "choose": "Choose",
@@ -549,7 +549,7 @@
         "private": "Each salon's data is private"
       },
       "featuresTitle": "Everything the counter needs",
-      "featuresLead": "Built from how UAE salons really run a day — from the first walk-in to the closing count.",
+      "featuresLead": "Built from how salons really run a day — from the first walk-in to the closing count.",
       "features": {
         "queue": {
           "title": "Walk-ins and bookings",
@@ -557,7 +557,7 @@
         },
         "sale": {
           "title": "Quick sale and receipts",
-          "body": "Services and products, split payments, tips and 5% VAT; print, share or WhatsApp the receipt."
+          "body": "Services and products, split payments, tips and your sales tax (VAT, GST…); print, share or WhatsApp the receipt."
         },
         "closing": {
           "title": "Daily cash closing",
@@ -565,11 +565,11 @@
         },
         "staff": {
           "title": "Staff, attendance and pay",
-          "body": "Rosters, clock-in with late flags, commission, advances, payroll and WPS salary proof."
+          "body": "Rosters, clock-in with late flags, commission, advances and payroll — with WPS salary proof in the UAE."
         },
         "compliance": {
-          "title": "UAE compliance",
-          "body": "Trade licence, Ejari, health cards and visas with expiry reminders, a hygiene log and an inspection binder."
+          "title": "Licences and inspections",
+          "body": "Licences, leases, health cards and visas with expiry reminders, a hygiene log and an inspection binder — the UAE checklist built in."
         },
         "stock": {
           "title": "Stock, suppliers and expenses",
@@ -587,7 +587,7 @@
       "typeTitle": "Which salon are you?",
       "stepsTitle": "Up and running in minutes",
       "steps": {
-        "1": "Create your salon: name, branch, opening hours and VAT.",
+        "1": "Create your salon: country, branch, opening hours and tax.",
         "2": "Add your services, prices and your team's logins.",
         "3": "Take your first walk-in, sell, and close the day."
       },
@@ -619,7 +619,7 @@
         "subtitle": "Step 1 of 5"
       },
       "country": {
-        "title": "Country",
+        "title": "Where is your salon?",
         "subtitle": "Step 2 of 5"
       },
       "mode": {
@@ -636,8 +636,14 @@
       }
     },
     "country": {
-      "uae": "United Arab Emirates",
-      "detail": "Dirham (AED), 5% VAT, Dubai time"
+      "detail": "{{currency}} · {{tax}} · {{zone}}",
+      "noTax": "no sales tax",
+      "other": "Other country",
+      "otherDetail": "Pick your currency and time zone",
+      "currency": "Currency",
+      "timezone": "Time zone",
+      "timezoneHint": "Like Europe/London or America/New_York",
+      "search": "Search countries"
     },
     "fields": {
       "businessName": "Business name",
@@ -648,15 +654,13 @@
       "opens": "Opens",
       "closes": "Closes",
       "days": "Open days",
-      "trn": "Tax registration number (TRN)",
       "openingCash": "Cash in the drawer now",
       "openingCashHint": "Optional. You can set it later in branch settings."
     },
     "tax": {
-      "off": "Not VAT registered",
-      "on": "VAT registered",
-      "offDetail": "Prices have no VAT. Receipts do not show a TRN.",
-      "onDetail": "Prices include 5% VAT. Receipts become tax invoices with your TRN."
+      "on": "Registered for {{tax}}",
+      "offDetail": "Prices have no {{tax}}. Receipts do not show a {{taxId}}.",
+      "onDetail": "Checkout charges it and receipts become tax invoices with your {{taxId}}. You can change all of this later in Branch settings."
     }
   },
   "validation": {
@@ -669,7 +673,7 @@
     "salonCode": "4 to 12 letters or numbers",
     "username": "3 to 20 letters, numbers, dots or dashes",
     "name": "Enter a name",
-    "phone": "Enter a phone number like +971 50 123 4567",
+    "phone": "Enter a phone number: digits and spaces, with + and the country code if you like",
     "trn": "The TRN has 15 digits",
     "time": "Use hh:mm, for example 09:00",
     "hours": "Closing must be after opening",
@@ -679,14 +683,17 @@
     "percent": "Enter a percentage like 10 or 12.5",
     "pickCategory": "Pick a category",
     "recipeQty": "Enter how much of each item is used",
-    "tooLong": "Too long"
+    "tooLong": "Too long",
+    "taxNumber": "Letters, numbers, spaces, dots, dashes or slashes",
+    "taxRate": "Enter a rate from 0 to 30, like 5 or 8.875",
+    "timezone": "Use a time zone name like Europe/London"
   },
   "errors": {
     "not_signed_in": "Your session ended. Please sign in again.",
     "not_allowed": "Your role cannot do this. Ask the owner.",
     "already_has_business": "This account already has a salon.",
     "mode_required": "Choose a salon type.",
-    "trn_required": "VAT needs a 15-digit TRN.",
+    "trn_required": "{{tax}} needs a 15-digit {{taxId}}.",
     "invalid_amount": "Check the amount.",
     "opening_cash_already_set": "Opening cash is already recorded.",
     "category_required": "Pick a category.",
@@ -757,7 +764,9 @@
     "employee_has_login": "This person already has a login.",
     "account_deleted": "Your account has been deleted.",
     "on_break": "Already on a break.",
-    "not_on_break": "Not on a break."
+    "not_on_break": "Not on a break.",
+    "invalid_country": "That country, currency or time zone isn’t recognised.",
+    "invalid_tax_rate": "Enter a tax rate from 0 to 30%."
   },
   "sales": {
     "title": "Sales",
@@ -788,14 +797,15 @@
     "receipt": "Receipt",
     "taxInvoice": "Tax invoice",
     "sale": "Sale",
-    "vatIncluded": "VAT included (5%)",
+    "vatIncluded": "{{tax}} included ({{rate}})",
     "deposit": "Deposit used",
     "total": "Total",
     "paid": "Paid",
     "refunded": "Refunded",
-    "trn": "TRN",
+    "trn": "{{taxId}}",
     "thanks": "Thank you for visiting.",
-    "staff": "Served by"
+    "staff": "Served by",
+    "vatAdded": "{{tax}} ({{rate}})"
   },
   "services": {
     "title": "Services",
@@ -880,16 +890,15 @@
     "switchTo": "Switch to {{mode}}",
     "modeSwitched": "Switched to {{mode}}",
     "details": "Details",
-    "tax": "VAT",
+    "tax": "Tax",
     "queue": "Queue and bookings",
     "rules": "Rules",
     "fields": {
       "name": "Branch name",
       "address": "Address",
       "phone": "Phone",
-      "vat": "VAT registered",
-      "vatHint": "Prices include 5% VAT and receipts show your TRN.",
-      "trn": "TRN (15 digits)",
+      "vat": "Registered for {{tax}}",
+      "vatHint": "Checkout charges it and receipts show your {{taxId}}.",
       "waitTarget": "Wait target (min)",
       "cutoff": "Free cancel (hours before)",
       "deposit": "Default deposit",
@@ -934,7 +943,7 @@
     "revenue": "Revenue",
     "costs": "Costs",
     "result": "Result (revenue − costs)",
-    "vatCollected": "VAT collected (owed to FTA)",
+    "vatCollected": "{{tax}} collected (owed to the tax office)",
     "tipsCollected": "Tips collected (owed to staff)",
     "balancedYes": "Balanced: Yes",
     "balancedNo": "Balanced: No",
@@ -961,7 +970,7 @@
       "deposits_held": "Deposits held",
       "tips_payable": "Tips owed to staff",
       "salaries_payable": "Salaries owed",
-      "vat_payable": "VAT owed",
+      "vat_payable": "{{tax}} owed",
       "owner_equity": "Owner's capital",
       "owner_drawings": "Owner drawings",
       "service_revenue": "Service revenue",
@@ -1087,9 +1096,9 @@
       "staff_welfare": "Staff Welfare",
       "other": "Other"
     },
-    "withVat": "The bill includes VAT (5%)",
-    "withVatHint": "From a tax invoice. You can claim it back in your VAT return.",
-    "vatAmount": "VAT included"
+    "withVat": "The bill includes {{tax}} ({{rate}})",
+    "withVatHint": "From a tax invoice. You can claim it back in your {{tax}} return.",
+    "vatAmount": "{{tax}} included"
   },
   "purchases": {
     "title": "Purchases & suppliers",
@@ -1149,31 +1158,31 @@
     },
     "perUnit": "= {{amount}} per {{unit}}",
     "perUnitAbout": "≈ {{amount}} per {{unit}}",
-    "withVat": "The supplier charges VAT (5%)",
-    "withVatHint": "From their tax invoice. You can claim it back in your VAT return.",
+    "withVat": "The supplier charges {{tax}} ({{rate}})",
+    "withVatHint": "From their tax invoice. You can claim it back in your {{tax}} return.",
     "numberLater": "The purchase number is given when you save",
     "qtyPacks": "Qty (packs)",
     "packHolds": "One pack holds ({{unit}})",
     "unitPrice": "Unit price",
-    "lineVat": "VAT 5%",
+    "lineVat": "{{tax}} {{rate}}",
     "vatTooMuch": "More than the line itself",
     "intoStock": "{{qty}} into stock",
     "lineTotal": "Total",
-    "lineTotalVat": "Total (incl. VAT)",
+    "lineTotalVat": "Total (incl. {{tax}})",
     "payment": {
       "title": "Payment",
       "credit": "Credit",
       "creditHint": "Pay later: the amount is added to what you owe this supplier.",
       "paidHint": "Paid now: recorded as a payment to the supplier."
     },
-    "withVatCostHint": "Your salon isn’t VAT-registered, so the VAT is part of what the goods cost.",
+    "withVatCostHint": "Your salon isn’t registered for {{tax}}, so the {{tax}} is part of what the goods cost.",
     "photo": "Photo of the supplier’s invoice",
     "summary": "Purchase summary",
     "subtotal": "Subtotal",
-    "vatTotal": "VAT 5%",
+    "vatTotal": "{{tax}} {{rate}}",
     "grandTotal": "Grand total",
     "balance": "Supplier balance",
-    "afterSave": "When you save: stock goes up, the supplier’s balance is updated, the purchase cost and the VAT are recorded, and the invoice photo is kept with the bill.",
+    "afterSave": "When you save: stock goes up, the supplier’s balance is updated, the purchase cost and the {{tax}} are recorded, and the invoice photo is kept with the bill.",
     "packsOf": "{{n}} × {{pack}}",
     "each": "{{amount}} each",
     "print": "Print / PDF",
@@ -1192,8 +1201,8 @@
     "counted": "Actual cash counted",
     "countNotes": "Count notes & coins",
     "denominations": "Notes & coins",
-    "note": "AED {{value}} notes",
-    "coin": "AED {{value}} coins",
+    "note": "{{currency}} {{value}} notes",
+    "coin": "{{currency}} {{value}} coins",
     "denominationTotal": "Total {{amount}}",
     "useCount": "Use this count",
     "variance": {
@@ -1409,7 +1418,7 @@
       "salary": "Base salary per month",
       "salaryHint": "Only you and the accountant see this.",
       "commission": "Commission %",
-      "commissionHint": "On services, after discount and without VAT. Never on tips: the whole tip goes to them.",
+      "commissionHint": "On services, after discount and without {{tax}}. Never on tips: the whole tip goes to them.",
       "wpsHint": "Salary goes through the bank; payroll asks for the transfer proof.",
       "phone": "Phone"
     },
@@ -1575,7 +1584,9 @@
       "civil_defence": "Civil defence certificate",
       "health_card": "Occupational health card",
       "visa": "Visa / residence permit",
-      "vaccination": "Vaccination record"
+      "vaccination": "Vaccination record",
+      "business_licence": "Business licence",
+      "lease": "Lease / rental agreement"
     },
     "status": {
       "valid": "Valid",
@@ -1722,7 +1733,7 @@
       "stock": "Stock movement",
       "shortages": "Cash shortage",
       "customers": "Customer list",
-      "vat": "VAT"
+      "vat": "{{tax}}"
     },
     "kpi": {
       "sales": "Sales",
@@ -1744,10 +1755,10 @@
       "customers": "Customers",
       "cameThisMonth": "Came this month",
       "spentThisMonth": "Spent this month",
-      "vatOutput": "VAT collected",
-      "vatInput": "VAT paid (claimable)",
-      "vatDue": "VAT to pay",
-      "vatRefund": "VAT to get back"
+      "vatOutput": "{{tax}} collected",
+      "vatInput": "{{tax}} paid (claimable)",
+      "vatDue": "{{tax}} to pay",
+      "vatRefund": "{{tax}} to get back"
     },
     "chart": {
       "salesByDay": "Sales by day",
@@ -1755,7 +1766,7 @@
       "differenceByDay": "Cash difference by day",
       "valueByItem": "Stock value by item",
       "topCustomers": "Top customers this month",
-      "vatByKind": "VAT by kind"
+      "vatByKind": "{{tax}} by kind"
     },
     "col": {
       "date": "Date",
@@ -1794,8 +1805,8 @@
       "thisMonth": "This month",
       "visitsThisMonth": "Visits this month",
       "entries": "Entries",
-      "taxable": "Amount without VAT",
-      "vat": "VAT"
+      "taxable": "Amount without {{tax}}",
+      "vat": "{{tax}}"
     },
     "status": {
       "open": "Not closed",
@@ -1810,7 +1821,7 @@
       "stock": "No stock items yet.",
       "shortages": "No cash differences in this month.",
       "customers": "No customers yet.",
-      "vat": "No VAT this month. VAT is recorded when the branch is VAT-registered (Branch settings)."
+      "vat": "No {{tax}} this month. {{tax}} is recorded when the branch is registered for it (Branch settings)."
     },
     "daysLate": "{{days}} days · {{late}} late",
     "print": "Print",
@@ -1830,10 +1841,10 @@
     },
     "moreRows": "Showing the first {{shown}} of {{total}} rows. The PDF and CSV have them all.",
     "vatKinds": {
-      "sales": "Sales (output VAT)",
+      "sales": "Sales (output {{tax}})",
       "refunds": "Refunds",
-      "purchases": "Supplier bills (input VAT)",
-      "expenses": "Expenses (input VAT)"
+      "purchases": "Supplier bills (input {{tax}})",
+      "expenses": "Expenses (input {{tax}})"
     }
   },
   "backup": {
@@ -1878,9 +1889,11 @@
       "queue": "Walk-ins, bookings and the live queue",
       "sale": "Quick sale, receipts and refunds",
       "money": "Expenses, purchases, stock and cash closing",
-      "people": "Staff, attendance, payroll and WPS",
-      "compliance": "UAE compliance and hygiene log",
-      "books": "Books, reports, backups and all languages"
+      "people": "Staff, attendance and payroll",
+      "compliance": "Licence reminders and hygiene log",
+      "books": "Books, reports, backups and all languages",
+      "peopleUae": "Staff, attendance, payroll and WPS",
+      "complianceUae": "UAE compliance and hygiene log"
     },
     "requestTitle": "Switch on your plan",
     "extendTitle": "Pay for more months",
@@ -1934,7 +1947,7 @@
       "title": "Delete your account",
       "ownerBody": "This closes {{salon}}. Every login for it stops working, your team’s too, and its plan ends. Nothing new can be added after that.",
       "staffBody": "Your login stops working and your name is taken off it. {{salon}} carries on without you.",
-      "kept": "The salon’s records (sales, VAT, expenses, purchases and payroll) are kept for five years, as UAE tax law requires, and then deleted.",
+      "kept": "The salon’s records (sales, tax, expenses, purchases and payroll) are kept for at least five years, as tax law requires, and then deleted.",
       "backupFirst": "Make a backup first",
       "typeLabel": "Type {{word}} to confirm",
       "word": "DELETE",
@@ -1950,7 +1963,7 @@
     },
     "privacy": {
       "title": "Privacy policy",
-      "intro": "This policy explains what {{app}} collects, why, and the choices you have. {{app}} is software that barber shops and ladies salons in the UAE use to run their day: queue, sales, stock, staff, payroll and VAT.",
+      "intro": "This policy explains what {{app}} collects, why, and the choices you have. {{app}} is software that barber shops and ladies salons use to run their day: queue, sales, stock, staff, payroll and tax.",
       "who": {
         "title": "Who we are",
         "body": "{{app}} (“we”) provides the app and the website. For the details a salon keeps about its own customers and staff, the salon decides what is recorded and why; we store and process them for the salon, on its instructions."
@@ -1965,7 +1978,7 @@
       },
       "where": {
         "title": "Where it is kept",
-        "body": "With our hosting providers: Supabase (database, sign-in and file storage) and Vercel (the website). Notifications to phones go through Expo and Apple or Google, and Google handles “Continue with Google”. These providers may keep data outside the UAE and must keep it confidential and secure."
+        "body": "With our hosting providers: Supabase (database, sign-in and file storage) and Vercel (the website). Notifications to phones go through Expo and Apple or Google, and Google handles “Continue with Google”. These providers may keep data outside your country and must keep it confidential and secure."
       },
       "share": {
         "title": "Who we share it with",
@@ -1973,11 +1986,11 @@
       },
       "keep": {
         "title": "How long we keep it",
-        "body": "Your account details stay until you delete your account. A salon’s financial records (sales, VAT, expenses, purchases and payroll) are kept for at least five years, as UAE tax law requires, even after an account is deleted or a salon closes. After that they are deleted."
+        "body": "Your account details stay until you delete your account. A salon’s financial records (sales, tax, expenses, purchases and payroll) are kept for at least five years, or longer where the salon’s country requires it, even after an account is deleted or a salon closes. After that they are deleted."
       },
       "rights": {
         "title": "Your choices and rights",
-        "body": "You can see and correct your details in the app. Owners can export all their salon’s data at any time (More → Backup & recovery). You can delete your account in the app (More → Delete my account): your sign-in and name are removed straight away. A salon’s customers and staff should contact the salon first, as it controls those records; we help it answer. Under the UAE Personal Data Protection Law you may also ask how your data is used and object to it."
+        "body": "You can see and correct your details in the app. Owners can export all their salon’s data at any time (More → Backup & recovery). You can delete your account in the app (More → Delete my account): your sign-in and name are removed straight away. A salon’s customers and staff should contact the salon first, as it controls those records; we help it answer. Under the UAE Personal Data Protection Law, and similar laws in other countries, you may also ask how your data is used and object to it."
       },
       "security": {
         "title": "How we protect it",
@@ -1997,7 +2010,7 @@
       "intro": "These terms apply when you use {{app}}, the app and the website. By creating an account or using the service you agree to them.",
       "service": {
         "title": "The service",
-        "body": "{{app}} helps barber shops and ladies salons run their day: queue and bookings, sales and receipts, stock and purchases, expenses, cash closing, staff and payroll, UAE compliance, VAT and reports. It is a tool: you remain responsible for your business, your records, your tax returns and your staff’s pay."
+        "body": "{{app}} helps barber shops and ladies salons run their day: queue and bookings, sales and receipts, stock and purchases, expenses, cash closing, staff and payroll, licence reminders, tax and reports. It is a tool: you remain responsible for your business, your records, your tax returns and your staff’s pay."
       },
       "accounts": {
         "title": "Accounts",
@@ -2021,7 +2034,7 @@
       },
       "liability": {
         "title": "Liability",
-        "body": "The service is provided as it is. As far as the law allows, we are not liable for indirect losses such as lost profit, and our total liability is limited to what you paid us in the three months before the claim. Figures, reports and VAT summaries are aids: check them with your accountant before filing."
+        "body": "The service is provided as it is. As far as the law allows, we are not liable for indirect losses such as lost profit, and our total liability is limited to what you paid us in the three months before the claim. Figures, reports and tax summaries are aids: check them with your accountant before filing."
       },
       "ending": {
         "title": "Ending",
@@ -2035,6 +2048,24 @@
         "title": "Changes",
         "body": "We may update these terms; the date above shows the current version. Using the service after a change means the new terms apply."
       }
+    }
+  },
+  "tax": {
+    "vat": "VAT",
+    "trn": "TRN",
+    "name": "{{tax}}",
+    "withRate": "{{tax}} {{rate}}",
+    "inclusive": "Included in prices",
+    "added": "Added at the till",
+    "exampleIncluded": "A {{price}} service: the customer pays {{price}}, of which {{amount}} is {{tax}}.",
+    "exampleAdded": "A {{price}} service: the customer pays {{total}} ({{amount}} {{tax}} added).",
+    "fields": {
+      "name": "Tax name",
+      "rate": "Rate (%)",
+      "idLabel": "Your tax number is called",
+      "number": "{{taxId}}",
+      "numberUae": "{{taxId}} (15 digits)",
+      "numberHint": "Printed on receipts. Leave it empty if you don’t have one yet."
     }
   }
 }

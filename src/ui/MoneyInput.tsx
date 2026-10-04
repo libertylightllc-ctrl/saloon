@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { numericFontFamily } from '@/lib/fonts';
 import {
-  DEFAULT_CURRENCY,
+  activeCurrency,
   formatAmount,
   parseMoney,
   type CurrencyCode,
@@ -33,7 +33,7 @@ export function MoneyInput({
   label,
   value,
   onChange,
-  currency = DEFAULT_CURRENCY,
+  currency = activeCurrency(),
   error,
   hint,
   placeholder,

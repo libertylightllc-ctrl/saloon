@@ -8,6 +8,7 @@ import {
   normalizeDigits,
   parseMoney,
   parsePercent,
+  parseTaxRate,
   percentOf,
   subtract,
   sum,
@@ -171,5 +172,24 @@ describe('percentages', () => {
     expect(formatBps(1250)).toBe('12.5%');
     expect(formatBps(25)).toBe('0.25%');
     expect(formatBps(0)).toBe('0%');
+  });
+});
+
+describe('tax rates with a decimal basis point', () => {
+  it('parses and formats rates like 8.875%', () => {
+    expect(parseTaxRate('8.875')).toBe(887.5);
+    expect(parseTaxRate('5')).toBe(500);
+    expect(parseTaxRate('٥')).toBe(500);
+    expect(parseTaxRate('8.8755')).toBeNull();
+    expect(parseTaxRate('31')).toBeNull();
+    expect(formatBps(887.5)).toBe('8.875%');
+    expect(formatBps(500)).toBe('5%');
+  });
+
+  it('works out tax the same way as create_sale', () => {
+    expect(vatOnTop(10000, 887.5)).toBe(888);
+    expect(vatFromInclusive(10888, 887.5)).toBe(888);
+    expect(vatFromInclusive(11000, 1000)).toBe(1000);
+    expect(() => vatOnTop(100, 887.55)).toThrow(RangeError);
   });
 });

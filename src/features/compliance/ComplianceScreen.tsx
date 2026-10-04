@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { isUae } from '@/lib/countries';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
@@ -23,7 +24,8 @@ export function ComplianceScreen() {
   const params = useLocalSearchParams<{ tab?: string }>();
   const { business, role } = useWorkspace();
   const owner = can(role, 'manageCompliance');
-  const tabs: Tab[] = owner ? ['register', 'binder', 'hygiene', 'wps'] : ['hygiene'];
+  // WPS salary proof and Montaji product numbers are UAE rules.
+  const tabs: Tab[] = owner ? ['register', 'binder', 'hygiene', ...(isUae(business.country_code) ? (['wps'] as const) : [])] : ['hygiene'];
   const [tab, setTab] = useState<Tab>(tabs.includes(params.tab as Tab) ? (params.tab as Tab) : tabs[0]!);
   const slots = useCompliance(business.id, owner);
 

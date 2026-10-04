@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm, useWatch, type FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -8,31 +8,39 @@ import { z } from 'zod';
 
 import { useSalonType } from '@/features/auth/salonType';
 import { useSession } from '@/features/auth/session';
+import { TaxFields, taxShape, trnValid, useTaxWords } from '@/features/tax/TaxFields';
+import { isUae } from '@/lib/countries';
+import { isCurrency } from '@/lib/currencies';
+import { parseTaxRate, setActiveCurrency } from '@/lib/money';
 import { asJson, supabase } from '@/lib/supabase';
-import { spacing, useTheme } from '@/theme';
+import { spacing } from '@/theme';
 import {
   Button,
-  Card,
   Chip,
   FormError,
   FormMoneyField,
   FormTextField,
   HeaderBand,
-  Icon,
   ProgressDashes,
   Screen,
-  SegmentTabs,
+  SwitchRow,
   Text,
 } from '@/ui';
 
+import { CountryStep, countryDefaults, guessCountry } from './CountryStep';
 import { ModeCard } from './ModeCard';
 
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
+/** "Asia/Dubai", "America/Argentina/Buenos_Aires", "UTC"; the server checks it is a real one. */
+const ZONE = /^(UTC|[A-Za-z_]+(\/[A-Za-z0-9_+-]+)+)$/;
 
 const schema = z
   .object({
     businessName: z.string().trim().min(2, 'validation.name'),
     ownerName: z.string().trim().min(2, 'validation.name'),
+    country: z.string().regex(/^[A-Z]{2}$/),
+    currency: z.string().regex(/^[A-Z]{3}$/, 'validation.required'),
+    timezone: z.string().trim().regex(ZONE, 'validation.timezone'),
     mode: z.enum(['gents', 'ladies']),
     branchName: z.string().trim().max(80),
     address: z.string().trim().max(160),
@@ -41,39 +49,42 @@ const schema = z
     closes: z.string().regex(TIME, 'validation.time'),
     days: z.array(z.number()).min(1, 'validation.days'),
     vat: z.enum(['off', 'on']),
-    trn: z.string().trim(),
+    ...taxShape,
     openingCash: z.number().int().min(0).nullable(),
   })
   .refine((v) => v.closes > v.opens, { message: 'validation.hours', path: ['closes'] })
-  .refine((v) => v.vat === 'off' || /^\d{15}$/.test(v.trn), { message: 'validation.trn', path: ['trn'] });
+  .refine((v) => v.vat === 'off' || !isUae(v.country) || trnValid(v.trn, true), { message: 'validation.trn', path: ['trn'] })
+  .refine((v) => v.vat === 'off' || isUae(v.country) || trnValid(v.trn, false), { message: 'validation.taxNumber', path: ['trn'] });
 
 type Values = z.infer<typeof schema>;
 
 const STEPS: { key: 'business' | 'country' | 'mode' | 'branch' | 'tax'; fields: FieldPath<Values>[] }[] = [
   { key: 'business', fields: ['businessName', 'ownerName'] },
-  { key: 'country', fields: [] },
+  { key: 'country', fields: ['country', 'currency', 'timezone'] },
   { key: 'mode', fields: ['mode'] },
   { key: 'branch', fields: ['branchName', 'address', 'phone', 'opens', 'closes', 'days'] },
-  { key: 'tax', fields: ['vat', 'trn', 'openingCash'] },
+  { key: 'tax', fields: ['vat', 'tax_name', 'tax_rate', 'tax_inclusive', 'tax_id_label', 'trn', 'openingCash'] },
 ];
 
 const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
 export function SetupWizard() {
   const { t } = useTranslation();
-  const theme = useTheme();
   const { session, reload, signOut } = useSession();
   const { salonType, setSalonType } = useSalonType();
   const [step, setStep] = useState(0);
   // Email sign-up stores display_name; Google gives full_name / name.
   const meta = session?.user.user_metadata ?? {};
   const suggestedName = String(meta.display_name ?? meta.full_name ?? meta.name ?? '');
+  // The country where the phone is, with its currency, time zone and sales tax; the owner can pick another.
+  const [where] = useState(() => countryDefaults(guessCountry()));
 
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
       businessName: '',
       ownerName: suggestedName,
+      ...where,
       mode: salonType ?? 'gents',
       branchName: '',
       address: '',
@@ -86,6 +97,7 @@ export function SetupWizard() {
       openingCash: null,
     },
   });
+  useEffect(() => setActiveCurrency(where.currency), [where.currency]);
 
   const create = useMutation({
     mutationFn: async (v: Values) => {
@@ -98,7 +110,14 @@ export function SetupWizard() {
           address: v.address,
           phone: v.phone,
           opening_hours: { open: v.opens, close: v.closes, days: v.days },
+          country_code: v.country,
+          currency: v.currency,
+          timezone: v.timezone,
           vat_mode: v.vat,
+          tax_name: v.tax_name,
+          tax_rate_bps: parseTaxRate(v.tax_rate),
+          tax_inclusive: v.tax_inclusive,
+          tax_id_label: isUae(v.country) ? 'TRN' : v.tax_id_label,
           trn: v.vat === 'on' ? v.trn : null,
           opening_cash_minor: v.openingCash ?? 0,
         }),
@@ -116,6 +135,8 @@ export function SetupWizard() {
     else setStep(step + 1);
   };
   const vat = useWatch({ control: form.control, name: 'vat' });
+  const [country, currency] = useWatch({ control: form.control, name: ['country', 'currency'] });
+  const words = useTaxWords(form.control);
 
   return (
     <Screen
@@ -150,18 +171,7 @@ export function SetupWizard() {
           </>
         ) : null}
 
-        {current.key === 'country' ? (
-          <Card variant="outlined" style={styles.row}>
-            <Icon name="mapPin" size={22} color={theme.colors.primary500} />
-            <View style={styles.flex}>
-              <Text variant="h4">{t('setup.country.uae')}</Text>
-              <Text variant="small" color="textSecondary">
-                {t('setup.country.detail')}
-              </Text>
-            </View>
-            <Icon name="check" size={20} color={theme.colors.primary500} />
-          </Card>
-        ) : null}
+        {current.key === 'country' ? <CountryStep control={form.control} setValue={form.setValue} /> : null}
 
         {current.key === 'mode' ? (
           <Controller
@@ -240,28 +250,17 @@ export function SetupWizard() {
               control={form.control}
               name="vat"
               render={({ field }) => (
-                <SegmentTabs<'off' | 'on'>
-                  items={[
-                    { key: 'off', label: t('setup.tax.off') },
-                    { key: 'on', label: t('setup.tax.on') },
-                  ]}
-                  value={field.value}
-                  onChange={field.onChange}
+                <SwitchRow
+                  label={t('setup.tax.on', words)}
+                  hint={t(field.value === 'on' ? 'setup.tax.onDetail' : 'setup.tax.offDetail', words)}
+                  value={field.value === 'on'}
+                  onChange={(on) => field.onChange(on ? 'on' : 'off')}
                   testID="setup-vat"
                 />
               )}
             />
-            <Text variant="small" color="textSecondary">
-              {t(vat === 'on' ? 'setup.tax.onDetail' : 'setup.tax.offDetail')}
-            </Text>
             {vat === 'on' ? (
-              <FormTextField
-                control={form.control}
-                name="trn"
-                label={t('setup.fields.trn')}
-                keyboardType="number-pad"
-                maxLength={15}
-              />
+              <TaxFields control={form.control} uae={isUae(country)} currency={isCurrency(currency) ? currency : 'AED'} />
             ) : null}
             <FormMoneyField
               control={form.control}
@@ -280,7 +279,6 @@ export function SetupWizard() {
 const styles = StyleSheet.create({
   body: { gap: spacing.lg },
   dashes: { alignItems: 'center' },
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   flex: { flex: 1 },
   modes: { gap: spacing.md },
   pair: { flexDirection: 'row', gap: spacing.md },

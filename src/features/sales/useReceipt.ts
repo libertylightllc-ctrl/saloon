@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useWorkspace } from '@/features/auth/session';
 import { isLanguage, isRtlLanguage } from '@/lib/i18n';
+import { formatBps } from '@/lib/money';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/theme';
 
@@ -42,7 +43,7 @@ export function useShareReceipt() {
           staff: t('receipt.staff'),
           subtotal: t('sale.subtotal'),
           discount: t('sale.discount'),
-          vat: t('receipt.vatIncluded'),
+          vat: t(sale.tax_inclusive ? 'receipt.vatIncluded' : 'receipt.vatAdded', { rate: formatBps(sale.tax_rate_bps) }),
           tip: t('sale.tip'),
           deposit: t('receipt.deposit'),
           total: t('receipt.total'),

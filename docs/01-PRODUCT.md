@@ -6,7 +6,10 @@ A phone-and-tablet app that a salon owner, cashier and staff use every day to ru
 It replaces paper registers, the cash notebook, the stock list and the "documents folder".
 
 First market: **United Arab Emirates** (AED, optional 5% VAT, Dubai Municipality rules, WPS).
-Build the country bits behind a `country_profile` so other countries can be added later.
+**Any country** (owner, 2026-10-04): the owner picks the salon's country at setup (about 50 listed, or "Other"); it
+brings the currency, time zone and sales tax (name, rate, included in prices or added at the till, what the tax
+number is called), all editable. UAE-only rules — 15-digit TRN, WPS, Montaji, the UAE document checklist — apply only
+to UAE salons. The plan costs AED 99 per branch in the UAE and USD 29 elsewhere. Languages stay en, ar, hi, ur.
 
 It is **multi-tenant**: one business can have several branches; we can sell the app to other salons.
 
@@ -181,7 +184,7 @@ the compliance template for that mode. Owner can edit everything after.
   Dashboard target: 85% of WPS proven by day 5 of the month (setting).
 - Tips: recorded per line/sale for the staff member; paid out in cash from Cash Closing ("Pay out tips").
 
-### 3.11 Compliance (UAE profile)
+### 3.11 Compliance (UAE profile; elsewhere the checklist is a business licence and the lease, plus the owner's own)
 
 - **Expiry register:** document type, holder (company / premises / employee), number, expiry date, renewal cost,
   evidence file, reminder (default 30 days before), version history (renewing creates a new version).
@@ -223,8 +226,10 @@ and an "Owner control summary" line (latest close variance, supplier balances, l
 
 ### 3.15 Settings
 
-- Tax & receipt: VAT off (internal records, no TRN / VAT fields) or VAT on (TRN, invoice numbering, 5% inclusive
-  display, VAT on reports); customer receipt: disabled / simple / WhatsApp (WhatsApp API later — for now share sheet).
+- Tax & receipt: tax off (internal records, no tax number fields) or on: the tax's name (VAT, GST, Sales tax…), rate
+  (up to 3 decimals, e.g. 8.875%), included in prices (UAE: 5% VAT inclusive) or added at the till (US, Canada,
+  Malaysia), the tax number (UAE: 15-digit TRN) and what it is called; invoice numbering, tax on reports. Each sale
+  keeps the rate it was charged at. Customer receipt: disabled / simple / WhatsApp (WhatsApp API later — for now share sheet).
 - Inventory: track service inventory; block sales when recipe stock is insufficient.
 - Compliance: require evidence before signing logs.
 - Queue: waiting-time target, cancellation cut-off hours, default deposit.

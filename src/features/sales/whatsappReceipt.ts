@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { dialCodeOf } from '@/lib/countries';
+import { formatBps } from '@/lib/money';
 import { supabase } from '@/lib/supabase';
 
 import { SALE_WITH_STAFF, type SaleDetail } from './api';
@@ -31,7 +33,7 @@ export function useWhatsAppReceipt() {
           title: t(sale.vat_mode === 'on' ? 'receipt.taxInvoice' : 'receipt.receipt'),
           sale: t('receipt.sale'),
           staff: t('receipt.staff'),
-          vat: t('receipt.vatIncluded'),
+          vat: t(sale.tax_inclusive ? 'receipt.vatIncluded' : 'receipt.vatAdded', { rate: formatBps(sale.tax_rate_bps) }),
           tip: t('sale.tip'),
           total: t('receipt.total'),
           paid: t('receipt.paid'),
@@ -41,7 +43,7 @@ export function useWhatsAppReceipt() {
           methods: { cash: t('sale.methods.cash'), card: t('sale.methods.card'), wallet: t('sale.methods.wallet') },
         },
       );
-      const to = waNumber(sale.customers?.phone);
+      const to = waNumber(sale.customers?.phone, dialCodeOf(business.country_code));
       await Linking.openURL(`https://wa.me/${to}?text=${encodeURIComponent(text)}`);
     },
   });

@@ -82,18 +82,19 @@ export function BillFormScreen() {
   const attach = useAttachReceipt('bill', business.id);
   const [photo, setPhoto] = useState<PickedPhoto | null>(null);
 
-  // Most UAE suppliers charge 5% VAT. A VAT-registered salon claims it back; for any other it is part of the cost.
+  // Suppliers charge the local tax (5% VAT in the UAE). A tax-registered salon claims it back; for any other it is part of the cost.
   const vatRegistered = branch.vat_mode === 'on';
   const [withVat, setWithVat] = useState(true);
   const subtotal = sum(lines.map(lineNet));
-  const vat = sum(lines.map((l) => lineVat(l, withVat)));
+  const rate = branch.tax_rate_bps;
+  const vat = sum(lines.map((l) => lineVat(l, withVat, rate)));
   const total = subtotal + vat;
   const paying =
     owner && payment !== 'credit' ? (paidAmount === undefined ? total : (paidAmount ?? 0)) : 0;
   const ready =
     Boolean(supplierId) &&
     lines.length > 0 &&
-    lines.every((l) => lineValid(l, withVat)) &&
+    lines.every((l) => lineValid(l, withVat, rate)) &&
     subtotal > 0 &&
     paying <= total &&
     (payment === 'credit' || paying > 0);
@@ -112,7 +113,7 @@ export function BillFormScreen() {
           packs: packsOf(l),
           ...(packOf(l) !== undefined ? { pack_size: packOf(l) } : {}),
           unit_price_minor: l.price_minor!,
-          vat_minor: lineVat(l, withVat),
+          vat_minor: lineVat(l, withVat, rate),
           update_stock: Boolean(l.item_id) && l.update_stock,
         })),
         ...(paying > 0 && payment !== 'credit'
@@ -228,6 +229,7 @@ export function BillFormScreen() {
                   value={lines}
                   onChange={setLines}
                   withVat={withVat}
+                  rate={rate}
                   vatRecoverable={vatRegistered}
                 />
               )}
