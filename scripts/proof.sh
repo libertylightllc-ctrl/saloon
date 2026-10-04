@@ -2,8 +2,9 @@
 # The proof: 3 full e2e runs in a row, then the button sweep, each run started on a quiet Mac. A run counts only if
 # every test passes. An attempt that fails while the Mac was overloaded by other work (sign-in or server timeouts
 # under high load) is recorded as discarded and restarted after the next quiet period; any other failure stops for
-# investigation. A run during which the Mac slept (e.g. the battery ran out) is likewise discarded. Runs start only
-# on mains power and the Mac is kept awake meanwhile. Logs and the summary go to $PROOF_DIR (default: /tmp/salon-proof).
+# investigation. A run during which the Mac slept (e.g. the battery ran out) or the disk filled up (video exports and
+# other work; the dev server crashes with ENOSPC) is likewise discarded. Runs start only on mains power with at least
+# 10 GB of free disk, and the Mac is kept awake meanwhile. Logs and the summary go to $PROOF_DIR (default: /tmp/salon-proof).
 #   sh scripts/proof.sh
 # Keep the Mac awake for the whole proof (on mains power; nothing stops a flat battery).
 if [ -z "$PROOF_AWAKE" ]; then PROOF_AWAKE=1 exec caffeinate -ims "$0" "$@"; fi
@@ -13,13 +14,14 @@ cd "$(dirname "$0")/.." || exit 1
 load1() { sysctl -n vm.loadavg | awk '{print $2}'; }
 load5() { sysctl -n vm.loadavg | awk '{print $3}'; }
 on_ac() { pmset -g batt | grep -q "AC Power"; }
+free_gb() { df -g /System/Volumes/Data | awk 'NR==2 {print $4}'; }
 # Sleep events (system sleep, including a flat battery) logged since the given "YYYY-MM-DD HH:MM:SS".
 slept_since() { pmset -g log | awk -v from="$1" 'substr($0,1,19) >= from && / Sleep  /' | wc -l | tr -d ' '; }
 wait_quiet() {
-  echo "$(date +%H:%M) waiting for a quiet Mac on mains power (load under 12 for 3 minutes)" >> "$S/proof-status.txt"
+  echo "$(date +%H:%M) waiting for a quiet Mac on mains power with 10 GB free (load under 12 for 3 minutes; free now $(free_gb) GB)" >> "$S/proof-status.txt"
   local ok=0
   while [ $ok -lt 6 ]; do
-    if on_ac && awk -v a="$(load1)" -v b="$(load5)" 'BEGIN{exit !(a < 16 && b < 12)}'; then ok=$((ok+1)); else ok=0; fi
+    if on_ac && [ "$(free_gb)" -ge 10 ] && awk -v a="$(load1)" -v b="$(load5)" 'BEGIN{exit !(a < 16 && b < 12)}'; then ok=$((ok+1)); else ok=0; fi
     sleep 30
   done
   echo "$(date +%H:%M) quiet; starting" >> "$S/proof-status.txt"
@@ -46,6 +48,10 @@ while [ $attempt -lt 5 ]; do
     echo "attempt $attempt run $i: $res (peak 5-min load $(cat "$S/maxload"), sign-in timeouts $timeouts)" >> "$S/final-summary.txt"
     slept=$(slept_since "$run_start")
     if grep -q " failed" "$S/final-a${attempt}-run$i.log"; then
+      if grep -q "ENOSPC" "$S/final-a${attempt}-run$i.log"; then
+        echo "attempt $attempt discarded: the disk filled up during the run (free now $(free_gb) GB)" >> "$S/final-summary.txt"
+        continue 2
+      fi
       if [ "$slept" -gt 0 ]; then
         echo "attempt $attempt discarded: the Mac went to sleep during the run ($slept sleep events)" >> "$S/final-summary.txt"
         continue 2
