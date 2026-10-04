@@ -4,7 +4,7 @@
 # under high load) is recorded as discarded and restarted after the next quiet period; any other failure stops for
 # investigation. A run during which the Mac slept (e.g. the battery ran out) or the disk filled up (video exports and
 # other work; the dev server crashes with ENOSPC) is likewise discarded. Runs start only on mains power with at least
-# 10 GB of free disk, and the Mac is kept awake meanwhile. Logs and the summary go to $PROOF_DIR (default: /tmp/salon-proof).
+# 5 GB of free disk (a run needs about 2 GB), and the Mac is kept awake meanwhile. Logs and the summary go to $PROOF_DIR (default: /tmp/salon-proof).
 #   sh scripts/proof.sh
 # Keep the Mac awake for the whole proof (on mains power; nothing stops a flat battery).
 if [ -z "$PROOF_AWAKE" ]; then PROOF_AWAKE=1 exec caffeinate -ims "$0" "$@"; fi
@@ -18,10 +18,10 @@ free_gb() { df -g /System/Volumes/Data | awk 'NR==2 {print $4}'; }
 # Sleep events (system sleep, including a flat battery) logged since the given "YYYY-MM-DD HH:MM:SS".
 slept_since() { pmset -g log | awk -v from="$1" 'substr($0,1,19) >= from && / Sleep  /' | wc -l | tr -d ' '; }
 wait_quiet() {
-  echo "$(date +%H:%M) waiting for a quiet Mac on mains power with 10 GB free (load under 12 for 3 minutes; free now $(free_gb) GB)" >> "$S/proof-status.txt"
+  echo "$(date +%H:%M) waiting for a quiet Mac on mains power with 5 GB free (load under 12 for 3 minutes; free now $(free_gb) GB)" >> "$S/proof-status.txt"
   local ok=0
   while [ $ok -lt 6 ]; do
-    if on_ac && [ "$(free_gb)" -ge 10 ] && awk -v a="$(load1)" -v b="$(load5)" 'BEGIN{exit !(a < 16 && b < 12)}'; then ok=$((ok+1)); else ok=0; fi
+    if on_ac && [ "$(free_gb)" -ge 5 ] && awk -v a="$(load1)" -v b="$(load5)" 'BEGIN{exit !(a < 16 && b < 12)}'; then ok=$((ok+1)); else ok=0; fi
     sleep 30
   done
   echo "$(date +%H:%M) quiet; starting" >> "$S/proof-status.txt"
