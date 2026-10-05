@@ -32,7 +32,7 @@ test('services without a time, and who did each sale on the list, the sale and t
   await id(page, 'appointment-submit').click();
   // Back on the queue, with the walk-in on it.
   await expect(page).toHaveURL(/\/queue$/);
-  await expect(text(page, /Quick fringe · AED 20\.00/).first()).toBeVisible();
+  await expect(text(page, /Quick fringe · AED\s20\.00/).first()).toBeVisible(); // a no-break space keeps "AED 20.00" together
 
   // Sales: the list and the sale show who did it; the printed receipt says "Served by".
   await page.goto('/sales');
