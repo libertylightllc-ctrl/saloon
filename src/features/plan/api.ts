@@ -119,6 +119,22 @@ export interface PaymentDetails {
   pay_note: string | null;
 }
 
+/** The plan prices, for the website (visitors may read these four columns only, migration 39). */
+export function usePublicPrices() {
+  return useQuery({
+    queryKey: ['platform', 'prices'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('platform_settings')
+        .select('price_per_branch_minor, currency, intl_price_per_branch_minor, intl_currency')
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    staleTime: 60 * 60 * 1000,
+  });
+}
+
 export function usePaymentDetails() {
   return useQuery({
     queryKey: ['platform', 'payment-details'],

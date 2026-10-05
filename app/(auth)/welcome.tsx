@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { brand } from '@/config/brand';
 import { AppPreview, FeatureCard, Step, TypeCard } from '@/features/auth/LandingParts';
+import { LandingPricing } from '@/features/auth/LandingPricing';
 import { useSalonType } from '@/features/auth/salonType';
 import { LanguageLink } from '@/features/settings/LanguageSheet';
 import { screenPadding, spacing, useTheme, type Mode } from '@/theme';
@@ -153,6 +154,11 @@ export default function Welcome() {
             <Step key={n} n={n} text={t(`auth.landing.steps.${n}` as 'auth.landing.steps.1')} />
           ))}
         </View>
+      </View>
+
+      {/* Pricing */}
+      <View style={[styles.inner, styles.section]}>
+        <LandingPricing wide={wide} />
       </View>
 
       {/* Footer */}

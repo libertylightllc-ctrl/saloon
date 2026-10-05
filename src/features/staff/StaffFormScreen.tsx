@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -25,18 +25,19 @@ export function StaffFormScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const { business } = useWorkspace();
   const staff = useStaffDirectory(business.id);
-  return (
-    <Screen header={<HeaderBand title={t(id ? 'staff.editTitle' : 'staff.newTitle')} onBack />}>
-      {id ? (
-        <QueryState query={staff}>{(rows) => <StaffForm person={rows.find((s) => s.employee_id === id) ?? null} />}</QueryState>
-      ) : (
-        <StaffForm person={null} />
-      )}
-    </Screen>
-  );
+  const header = <HeaderBand title={t(id ? 'staff.editTitle' : 'staff.newTitle')} onBack />;
+  if (!id) return <StaffForm header={header} person={null} />;
+  if (!staff.data) {
+    return (
+      <Screen header={header}>
+        <QueryState query={staff}>{() => null}</QueryState>
+      </Screen>
+    );
+  }
+  return <StaffForm header={header} person={staff.data.find((s) => s.employee_id === id) ?? null} />;
 }
 
-function StaffForm({ person }: { person: StaffMember | null }) {
+function StaffForm({ header, person }: { header: ReactNode; person: StaffMember | null }) {
   const { t } = useTranslation();
   const toast = useToast();
   const router = useRouter();
@@ -119,81 +120,8 @@ function StaffForm({ person }: { person: StaffMember | null }) {
     }
   };
 
-  return (
-    <View style={styles.body}>
-      {!person ? (
-        <SegmentTabs<Who>
-          items={[
-            { key: 'staff', label: t('staff.who.staff') },
-            { key: 'accountant', label: t('staff.who.accountant') },
-          ]}
-          value={who}
-          onChange={setWho}
-          testID="staff-who"
-        />
-      ) : null}
-      <TextField label={t('staff.fields.name')} value={name} onChangeText={setName} maxLength={60} testID="staff-name" />
-      {accountant ? (
-        <Text variant="small" color="textSecondary">
-          {t('staff.accountantHint')}
-        </Text>
-      ) : (
-        <>
-          <Text variant="bodyStrong">{t('staff.fields.title')}</Text>
-          <View style={styles.chips}>
-            {ROLE_TITLES.map((r) => (
-              <Chip key={r} label={roleTitle(r)} selected={title === r} onPress={() => chooseTitle(r)} testID={`staff-title-${r}`} />
-            ))}
-          </View>
-          <TextField label={t('staff.fields.code')} value={code} onChangeText={setCode} maxLength={20} testID="staff-code" />
-          <MoneyInput label={t('staff.fields.salary')} hint={t('staff.fields.salaryHint')} value={salary} onChange={setSalary} testID="staff-salary" />
-          <TextField
-            label={t('staff.fields.commission')}
-            hint={t('staff.fields.commissionHint')}
-            value={commission}
-            onChangeText={setCommission}
-            keyboardType="decimal-pad"
-            error={bps === null ? t('validation.range') : undefined}
-            testID="staff-commission"
-          />
-          {isUae(business.country_code) ? (
-            <SwitchRow label={t('staff.wps')} hint={t('staff.fields.wpsHint')} value={wps} onChange={setWps} testID="staff-wps" />
-          ) : null}
-          <TextField
-            label={t('staff.fields.phone')}
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="phone-pad"
-            error={phoneOk ? undefined : t('validation.phone')}
-            testID="staff-phone"
-          />
-          {!person ? (
-            <SwitchRow
-              label={t('staff.canLogin')}
-              hint={t('staff.canLoginHint')}
-              value={canLogin}
-              onChange={setCanLogin}
-              testID="staff-can-login"
-            />
-          ) : null}
-        </>
-      )}
-      {withLogin ? (
-        <LoginFields
-          value={login}
-          onChange={(next) => {
-            if (next.access !== login.access) setAccessTouched(true);
-            setLogin(next);
-          }}
-          choices={accountant ? ['accountant'] : undefined}
-        />
-      ) : null}
-      {savedId && createLogin.isError ? (
-        <Text variant="small" color="textSecondary">
-          {t('staff.savedLoginFailed', { name: name.trim() })}
-        </Text>
-      ) : null}
-      <FormError error={save.error ?? createLogin.error} />
+  // Save stays pinned at the bottom, like the other forms.
+  const saveButton = (
       <Button
         label={t(accountant ? 'team.create' : 'common.save')}
         disabled={!ok}
@@ -201,7 +129,85 @@ function StaffForm({ person }: { person: StaffMember | null }) {
         onPress={() => void submit()}
         testID="staff-save"
       />
-    </View>
+  );
+  return (
+    <Screen header={header} footer={saveButton}>
+      <View style={styles.body}>
+        {!person ? (
+          <SegmentTabs<Who>
+            items={[
+              { key: 'staff', label: t('staff.who.staff') },
+              { key: 'accountant', label: t('staff.who.accountant') },
+            ]}
+            value={who}
+            onChange={setWho}
+            testID="staff-who"
+          />
+        ) : null}
+        <TextField label={t('staff.fields.name')} value={name} onChangeText={setName} maxLength={60} testID="staff-name" />
+        {accountant ? (
+          <Text variant="small" color="textSecondary">
+            {t('staff.accountantHint')}
+          </Text>
+        ) : (
+          <>
+            <Text variant="bodyStrong">{t('staff.fields.title')}</Text>
+            <View style={styles.chips}>
+              {ROLE_TITLES.map((r) => (
+                <Chip key={r} label={roleTitle(r)} selected={title === r} onPress={() => chooseTitle(r)} testID={`staff-title-${r}`} />
+              ))}
+            </View>
+            <TextField label={t('staff.fields.code')} value={code} onChangeText={setCode} maxLength={20} testID="staff-code" />
+            <MoneyInput label={t('staff.fields.salary')} hint={t('staff.fields.salaryHint')} value={salary} onChange={setSalary} testID="staff-salary" />
+            <TextField
+              label={t('staff.fields.commission')}
+              hint={t('staff.fields.commissionHint')}
+              value={commission}
+              onChangeText={setCommission}
+              keyboardType="decimal-pad"
+              error={bps === null ? t('validation.range') : undefined}
+              testID="staff-commission"
+            />
+            {isUae(business.country_code) ? (
+              <SwitchRow label={t('staff.wps')} hint={t('staff.fields.wpsHint')} value={wps} onChange={setWps} testID="staff-wps" />
+            ) : null}
+            <TextField
+              label={t('staff.fields.phone')}
+              value={phone}
+              onChangeText={setPhone}
+              keyboardType="phone-pad"
+              error={phoneOk ? undefined : t('validation.phone')}
+              testID="staff-phone"
+            />
+            {!person ? (
+              <SwitchRow
+                label={t('staff.canLogin')}
+                hint={t('staff.canLoginHint')}
+                value={canLogin}
+                onChange={setCanLogin}
+                testID="staff-can-login"
+              />
+            ) : null}
+          </>
+        )}
+        {withLogin ? (
+          <LoginFields
+            value={login}
+            onChange={(next) => {
+              if (next.access !== login.access) setAccessTouched(true);
+              setLogin(next);
+            }}
+            choices={accountant ? ['accountant'] : undefined}
+          />
+        ) : null}
+        {savedId && createLogin.isError ? (
+          <Text variant="small" color="textSecondary">
+            {t('staff.savedLoginFailed', { name: name.trim() })}
+          </Text>
+        ) : null}
+        <FormError error={save.error ?? createLogin.error} />
+      </View>
+    </Screen>
   );
 }
 

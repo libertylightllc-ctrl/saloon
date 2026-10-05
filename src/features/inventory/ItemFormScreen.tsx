@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -22,22 +22,19 @@ export function ItemFormScreen() {
   const { business, branch } = useWorkspace();
   const items = useInventory(branch.id);
   const pack = useItemPackSize(business.id, id);
-  return (
-    <Screen header={<HeaderBand title={t(id ? 'inventory.editTitle' : 'inventory.newTitle')} onBack />}>
-      {id ? (
-        <QueryState query={items}>
-          {(rows) => (
-            <QueryState query={pack}>{(packSize) => <ItemForm item={rows.find((i) => i.item_id === id) ?? null} packSize={packSize} />}</QueryState>
-          )}
-        </QueryState>
-      ) : (
-        <ItemForm item={null} packSize={1} />
-      )}
-    </Screen>
-  );
+  const header = <HeaderBand title={t(id ? 'inventory.editTitle' : 'inventory.newTitle')} onBack />;
+  if (!id) return <ItemForm header={header} item={null} packSize={1} />;
+  if (!items.data || pack.data === undefined) {
+    return (
+      <Screen header={header}>
+        <QueryState query={items.data ? pack : items}>{() => null}</QueryState>
+      </Screen>
+    );
+  }
+  return <ItemForm header={header} item={items.data.find((i) => i.item_id === id) ?? null} packSize={pack.data} />;
 }
 
-function ItemForm({ item, packSize }: { item: StockItem | null; packSize: number }) {
+function ItemForm({ header, item, packSize }: { header: ReactNode; item: StockItem | null; packSize: number }) {
   const { t } = useTranslation();
   const toast = useToast();
   const router = useRouter();
@@ -64,71 +61,8 @@ function ItemForm({ item, packSize }: { item: StockItem | null; packSize: number
   const packOk = Number.isFinite(packN) && packN > 0;
   const ok = name.trim().length > 0 && reorderOk && dateOk && priceOk && packOk;
 
-  return (
-    <View style={styles.body}>
-      <TextField label={t('inventory.fields.name')} value={name} onChangeText={setName} maxLength={60} testID="item-name" />
-      <Text variant="bodyStrong">{t('inventory.fields.kind')}</Text>
-      <SegmentTabs<ItemKind> items={KINDS.map((k) => ({ key: k, label: t(`inventory.kinds.${k}`) }))} value={kind} onChange={setKind} testID="item-kind" />
-      <Text variant="bodyStrong">{t('inventory.fields.unit')}</Text>
-      <View style={styles.chips}>
-        {UNITS.map((u) => (
-          <Chip key={u} label={t(`inventory.units.${u}`)} selected={unit === u} onPress={() => setUnit(u)} testID={`item-unit-${u}`} />
-        ))}
-      </View>
-      {kind !== 'tool' ? (
-        <TextField
-          label={t('inventory.fields.reorder')}
-          hint={t('inventory.fields.reorderHint')}
-          value={reorder}
-          onChangeText={setReorder}
-          keyboardType="decimal-pad"
-          error={reorderOk ? undefined : t('validation.range')}
-          testID="item-reorder"
-        />
-      ) : null}
-      {kind !== 'tool' ? (
-        <TextField
-          label={t('inventory.fields.packSize', { unit: t(`inventory.units.${unit}`) })}
-          hint={t('inventory.fields.packSizeHint')}
-          value={pack}
-          onChangeText={setPack}
-          keyboardType="decimal-pad"
-          error={packOk ? undefined : t('validation.range')}
-          testID="item-pack"
-        />
-      ) : null}
-      {kind === 'retail' ? (
-        <MoneyInput label={t('inventory.fields.price')} value={price} onChange={setPrice} testID="item-price" />
-      ) : null}
-      <TextField label={t('inventory.fields.location')} placeholder={t('inventory.fields.locationHint')} value={location} onChangeText={setLocation} maxLength={40} testID="item-location" />
-      {kind === 'tool' ? (
-        <>
-          <Text variant="bodyStrong">{t('inventory.condition')}</Text>
-          <SegmentTabs<'good' | 'needs_service'>
-            items={[
-              { key: 'good', label: t('inventory.conditions.good') },
-              { key: 'needs_service', label: t('inventory.conditions.needs_service') },
-            ]}
-            value={condition}
-            onChange={setCondition}
-            testID="item-condition"
-          />
-          <TextField
-            label={t('inventory.nextService')}
-            placeholder="2026-10-31"
-            value={serviceDate}
-            onChangeText={setServiceDate}
-            error={dateOk ? undefined : t('inventory.fields.dateFormat')}
-            testID="item-service-date"
-          />
-          <TextField label={t('inventory.assigned')} placeholder={t('inventory.fields.assignedHint')} value={assigned} onChangeText={setAssigned} maxLength={60} testID="item-assigned" />
-        </>
-      ) : null}
-      {kind !== 'tool' && isUae(business.country_code) ? (
-        <TextField label={t('inventory.fields.montaji')} hint={t('inventory.fields.montajiHint')} value={montaji} onChangeText={setMontaji} maxLength={40} testID="item-montaji" />
-      ) : null}
-      {item ? <SwitchRow label={t('inventory.fields.active')} hint={t('inventory.fields.activeHint')} value={active} onChange={setActive} testID="item-active" /> : null}
-      <FormError error={save.error} />
+  // Save stays pinned at the bottom, like the other forms.
+  const saveButton = (
       <Button
         label={t('common.save')}
         disabled={!ok}
@@ -162,7 +96,75 @@ function ItemForm({ item, packSize }: { item: StockItem | null; packSize: number
         }
         testID="item-save"
       />
-    </View>
+  );
+  return (
+    <Screen header={header} footer={saveButton}>
+      <View style={styles.body}>
+        <TextField label={t('inventory.fields.name')} value={name} onChangeText={setName} maxLength={60} testID="item-name" />
+        <Text variant="bodyStrong">{t('inventory.fields.kind')}</Text>
+        <SegmentTabs<ItemKind> items={KINDS.map((k) => ({ key: k, label: t(`inventory.kinds.${k}`) }))} value={kind} onChange={setKind} testID="item-kind" />
+        <Text variant="bodyStrong">{t('inventory.fields.unit')}</Text>
+        <View style={styles.chips}>
+          {UNITS.map((u) => (
+            <Chip key={u} label={t(`inventory.units.${u}`)} selected={unit === u} onPress={() => setUnit(u)} testID={`item-unit-${u}`} />
+          ))}
+        </View>
+        {kind !== 'tool' ? (
+          <TextField
+            label={t('inventory.fields.reorder')}
+            hint={t('inventory.fields.reorderHint')}
+            value={reorder}
+            onChangeText={setReorder}
+            keyboardType="decimal-pad"
+            error={reorderOk ? undefined : t('validation.range')}
+            testID="item-reorder"
+          />
+        ) : null}
+        {kind !== 'tool' ? (
+          <TextField
+            label={t('inventory.fields.packSize', { unit: t(`inventory.units.${unit}`) })}
+            hint={t('inventory.fields.packSizeHint')}
+            value={pack}
+            onChangeText={setPack}
+            keyboardType="decimal-pad"
+            error={packOk ? undefined : t('validation.range')}
+            testID="item-pack"
+          />
+        ) : null}
+        {kind === 'retail' ? (
+          <MoneyInput label={t('inventory.fields.price')} value={price} onChange={setPrice} testID="item-price" />
+        ) : null}
+        <TextField label={t('inventory.fields.location')} placeholder={t('inventory.fields.locationHint')} value={location} onChangeText={setLocation} maxLength={40} testID="item-location" />
+        {kind === 'tool' ? (
+          <>
+            <Text variant="bodyStrong">{t('inventory.condition')}</Text>
+            <SegmentTabs<'good' | 'needs_service'>
+              items={[
+                { key: 'good', label: t('inventory.conditions.good') },
+                { key: 'needs_service', label: t('inventory.conditions.needs_service') },
+              ]}
+              value={condition}
+              onChange={setCondition}
+              testID="item-condition"
+            />
+            <TextField
+              label={t('inventory.nextService')}
+              placeholder="2026-10-31"
+              value={serviceDate}
+              onChangeText={setServiceDate}
+              error={dateOk ? undefined : t('inventory.fields.dateFormat')}
+              testID="item-service-date"
+            />
+            <TextField label={t('inventory.assigned')} placeholder={t('inventory.fields.assignedHint')} value={assigned} onChangeText={setAssigned} maxLength={60} testID="item-assigned" />
+          </>
+        ) : null}
+        {kind !== 'tool' && isUae(business.country_code) ? (
+          <TextField label={t('inventory.fields.montaji')} hint={t('inventory.fields.montajiHint')} value={montaji} onChangeText={setMontaji} maxLength={40} testID="item-montaji" />
+        ) : null}
+        {item ? <SwitchRow label={t('inventory.fields.active')} hint={t('inventory.fields.activeHint')} value={active} onChange={setActive} testID="item-active" /> : null}
+        <FormError error={save.error} />
+      </View>
+    </Screen>
   );
 }
 

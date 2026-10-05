@@ -29,7 +29,8 @@ export function useCustomer(businessId: string, id: string | undefined) {
     queryKey: [...keys.customers(businessId), 'one', id],
     queryFn: async () => {
       const [customer, sales, appointments] = await Promise.all([
-        supabase.from('customers').select('*').eq('id', id!).single(),
+        // A link to a customer that no longer exists (or another salon's) finds nothing: shown as "no longer exists".
+        supabase.from('customers').select('*').eq('id', id!).maybeSingle(),
         supabase
           .from('sales')
           .select('id, number, total_minor, business_date, status, created_at')
@@ -44,7 +45,7 @@ export function useCustomer(businessId: string, id: string | undefined) {
           .order('scheduled_at'),
       ]);
       for (const r of [customer, sales, appointments]) if (r.error) throw r.error;
-      return { customer: customer.data!, sales: sales.data ?? [], upcoming: appointments.data ?? [] };
+      return { customer: customer.data, sales: sales.data ?? [], upcoming: appointments.data ?? [] };
     },
   });
 }

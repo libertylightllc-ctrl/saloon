@@ -608,6 +608,13 @@
         "2": "Adicione seus serviços, preços e os logins da sua equipe.",
         "3": "Atenda o primeiro cliente da fila, venda e feche o dia."
       },
+      "pricing": {
+        "title": "Preços simples",
+        "uae": "Nos Emirados",
+        "elsewhere": "Em todos os outros lugares",
+        "per": "por filial por mês",
+        "note": "A configuração é grátis: serviços, equipe e estoque. Pague mês a mês por filial quando começar a vender; nada é renovado sozinho."
+      },
       "contact": "Dúvidas? Escreva para {{email}}",
       "preview": {
         "expected": "Dinheiro esperado hoje",

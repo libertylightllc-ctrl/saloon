@@ -105,6 +105,9 @@ test('the privacy policy and terms are open to everyone, from the landing page a
   mode,
 }) => {
   await page.goto('/');
+  // The price the terms point to, read from the same settings salons are billed from.
+  await expect(id(page, 'landing-price-uae')).toHaveText('AED 50.00');
+  await expect(id(page, 'landing-price-elsewhere')).toHaveText('USD 13.99');
   await id(page, 'landing-privacy').click();
   await expect(id(page, 'legal-privacy')).toBeVisible();
   await expect(text(page, /Personal Data Protection Law/)).toBeVisible();
