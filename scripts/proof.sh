@@ -6,8 +6,8 @@
 # other work; the dev server crashes with ENOSPC) is likewise discarded. Runs start only on mains power with at least
 # 5 GB of free disk (a run needs about 2 GB), and the Mac is kept awake meanwhile. Logs and the summary go to $PROOF_DIR (default: /tmp/salon-proof).
 #   sh scripts/proof.sh
-# Keep the Mac awake for the whole proof (on mains power; nothing stops a flat battery).
-if [ -z "$PROOF_AWAKE" ]; then PROOF_AWAKE=1 exec caffeinate -ims "$0" "$@"; fi
+# The Mac is kept awake only while tests run (caffeinate around each run); while waiting for mains power or a quiet
+# Mac it may sleep, so an unplugged Mac is never held awake until its battery runs flat.
 S=${PROOF_DIR:-/tmp/salon-proof}
 mkdir -p "$S"
 cd "$(dirname "$0")/.." || exit 1
@@ -41,7 +41,7 @@ while [ $attempt -lt 5 ]; do
     watcher=$!
     echo 0 > "$S/maxload"
     run_start=$(date "+%Y-%m-%d %H:%M:%S")
-    E2E_WORKERS=2 npx playwright test --grep-invert @sweep --reporter=line > "$S/final-a${attempt}-run$i.log" 2>&1
+    E2E_WORKERS=2 caffeinate -ims npx playwright test --grep-invert @sweep --reporter=line > "$S/final-a${attempt}-run$i.log" 2>&1
     kill $watcher 2>/dev/null
     res=$(grep -E '^\s+[0-9]+ (passed|failed|flaky|skipped)' "$S/final-a${attempt}-run$i.log" | tr -s ' ' | tr '\n' ' ')
     timeouts=$(grep -cE "504 POST|AuthRetryableFetchError|Gateway Timeout|server_busy" "$S/final-a${attempt}-run$i.log")
@@ -65,7 +65,7 @@ while [ $attempt -lt 5 ]; do
     fi
   done
   echo "3 runs in a row passed (attempt $attempt). Realtime rebalancing lines during the runs: $(docker logs --since "$(cat "$S/final-start.txt")" supabase_realtime_salon-app 2>&1 | grep -cE 'Rebalancing|Zero region')" >> "$S/final-summary.txt"
-  E2E_WORKERS=2 npx playwright test --grep @sweep --reporter=line > "$S/final-sweep.log" 2>&1
+  E2E_WORKERS=2 caffeinate -ims npx playwright test --grep @sweep --reporter=line > "$S/final-sweep.log" 2>&1
   echo "sweep: $(grep -E '^\s+[0-9]+ (passed|failed)' "$S/final-sweep.log" | tr -s ' ' | tr '\n' ' ')" >> "$S/final-summary.txt"
   echo DONE >> "$S/final-summary.txt"
   exit 0
