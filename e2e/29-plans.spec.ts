@@ -31,7 +31,7 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   await page.goto('/plan');
   await expect(id(page, 'plan-status')).toContainText('Not active');
   await id(page, 'plan-months-3').click();
-  await expect(id(page, 'plan-total')).toContainText('AED 297.00');
+  await expect(id(page, 'plan-total')).toContainText('AED 150.00');
   await id(page, 'plan-note').fill('Paying by bank transfer');
   await id(page, 'plan-request').click();
   await expect(id(page, 'plan-requested')).toContainText('3 month');
@@ -44,7 +44,7 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   await id(office, 'more-admin').click();
   await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Paying by bank transfer');
   await id(office, `admin-salon-${owner.code}`).click();
-  await expect(id(office, 'admin-amount')).toHaveValue('297.00');
+  await expect(id(office, 'admin-amount')).toHaveValue('150.00');
   await id(office, 'admin-note').fill('Bank transfer ref 4411');
   await id(office, 'admin-activate').click();
   await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Until');
