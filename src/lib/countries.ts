@@ -115,7 +115,6 @@ export const COUNTRIES: readonly Country[] = [
   { code: 'TJ', name: 'Tajikistan', currency: 'TJS', timezones: ['Asia/Dushanbe'], tax: vat(1400, 'INN'), dial: '+992' },
   { code: 'TM', name: 'Turkmenistan', currency: 'TMT', timezones: ['Asia/Ashgabat'], tax: vat(1500, 'INN'), dial: '+993' },
   { code: 'MN', name: 'Mongolia', currency: 'MNT', timezones: ['Asia/Ulaanbaatar', 'Asia/Hovd'], tax: vat(1000, 'TIN'), dial: '+976' },
-  { code: 'RU', name: 'Russia', currency: 'RUB', timezones: ['Europe/Moscow', 'Europe/Kaliningrad', 'Europe/Samara', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Novosibirsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Yakutsk', 'Asia/Vladivostok', 'Asia/Magadan', 'Asia/Kamchatka'], tax: vat(2200, 'INN'), dial: '+7' },
   { code: 'IQ', name: 'Iraq', currency: 'IQD', timezones: ['Asia/Baghdad'], tax: none('Sales tax'), dial: '+964' },
   { code: 'LB', name: 'Lebanon', currency: 'LBP', timezones: ['Asia/Beirut'], tax: vat(1100, 'VAT number'), dial: '+961' },
   { code: 'IL', name: 'Israel', currency: 'ILS', timezones: ['Asia/Jerusalem'], tax: vat(1800, 'VAT number'), dial: '+972' },

@@ -28,7 +28,7 @@ declare
     when 'CZK' then 6.1 when 'HUF' then 98 when 'RON' then 1.22 when 'ISK' then 37 when 'UAH' then 11.2
     when 'RSD' then 28.6 when 'ALL' then 25 when 'MKD' then 15.2 when 'BAM' then 0.49 when 'MDL' then 4.8
     when 'GEL' then 0.73 when 'AMD' then 106 when 'AZN' then 0.46 when 'KZT' then 141 when 'UZS' then 3400
-    when 'KGS' then 23.7 when 'TJS' then 2.86 when 'TMT' then 0.95 when 'MNT' then 938 when 'RUB' then 23
+    when 'KGS' then 23.7 when 'TJS' then 2.86 when 'TMT' then 0.95 when 'MNT' then 938
     when 'IQD' then 356 when 'LBP' then 24300 when 'ILS' then 0.98 when 'DZD' then 36 when 'LYD' then 1.5
     when 'ARS' then 326 when 'PEN' then 0.98 when 'UYU' then 10.9 when 'PYG' then 2120 when 'BOB' then 1.88
     when 'CRC' then 137 when 'GTQ' then 2.1 when 'HNL' then 7.1 when 'NIO' then 10 when 'DOP' then 16.9

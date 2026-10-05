@@ -72,7 +72,6 @@ export const CURRENCIES = {
   TJS: { decimals: 2, notes: [500, 200, 100, 50, 20, 10, 5, 3, 1], coins: [5, 3, 1, 0.5, 0.25, 0.2, 0.1] },
   TMT: { decimals: 2, notes: [500, 100, 50, 20, 10, 5, 1], coins: [2, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01] },
   MNT: { decimals: 2, notes: [20000, 10000, 5000, 1000, 500, 100, 50, 20, 10], coins: [] },
-  RUB: { decimals: 2, notes: [5000, 2000, 1000, 500, 200, 100, 50], coins: [10, 5, 2, 1] },
   // The dinar and the Lebanese pound have no coins in use: whole units (ISO lists 3 and 2 decimals).
   IQD: { decimals: 0, notes: [50000, 25000, 10000, 5000, 1000, 500, 250], coins: [] },
   LBP: { decimals: 0, notes: [100000, 50000, 20000, 10000, 5000, 1000], coins: [] },
