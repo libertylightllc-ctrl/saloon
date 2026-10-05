@@ -6,7 +6,7 @@
  * Business dates are plain 'YYYY-MM-DD' strings, matching Postgres `date` columns.
  */
 import { format, type Locale } from 'date-fns';
-import { ar, enGB, es, fr, hi, ptBR, ru } from 'date-fns/locale';
+import { ar, enGB, es, fr, hi, ptBR } from 'date-fns/locale';
 import { formatInTimeZone, fromZonedTime } from 'date-fns-tz';
 
 import { ur } from './dateLocales/ur';
@@ -94,7 +94,7 @@ export function minutesBetween(from: Date, to: Date): number {
 }
 
 /** Day and month names follow the app language; unknown languages fall back to English. */
-const LOCALES: Record<string, Locale> = { en: enGB, ar, hi, ur, es, fr, pt: ptBR, ru };
+const LOCALES: Record<string, Locale> = { en: enGB, ar, hi, ur, es, fr, pt: ptBR };
 
 export function dateLocale(language?: string): Locale {
   return LOCALES[language?.split('-')[0] ?? 'en'] ?? enGB;

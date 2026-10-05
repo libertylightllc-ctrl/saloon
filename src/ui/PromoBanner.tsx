@@ -49,7 +49,7 @@ export function PromoBanner({
           {title}
         </Text>
         {body ? (
-          <Text variant="small" color={band ? 'onPrimary' : 'textOnTint'} numberOfLines={4}>
+          <Text variant="small" color={band ? 'onPrimary' : 'textOnTint'} numberOfLines={5}>
             {body}
           </Text>
         ) : null}

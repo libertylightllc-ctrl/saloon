@@ -38,7 +38,7 @@ If a doc is silent, choose the simplest option, write it down in `docs/DECISIONS
 - **Charts:** `react-native-gifted-charts`
 - **Lists:** `@shopify/flash-list` for long lists
 - **Bottom sheets:** `@gorhom/bottom-sheet`
-- **i18n:** `i18next` + `react-i18next` + `expo-localization`; languages en, ar, hi, ur, es, fr, pt, ru; RTL for ar and ur
+- **i18n:** `i18next` + `react-i18next` + `expo-localization`; languages en, ar, hi, ur, es, fr, pt; RTL for ar and ur
 - **Dates:** `date-fns` + `date-fns-tz` (branch timezone, default `Asia/Dubai`)
 - **Exports:** `expo-print` (PDF), `expo-file-system` + `expo-sharing` (CSV / share sheet)
 - **Push:** `expo-notifications`

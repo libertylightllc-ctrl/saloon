@@ -9,7 +9,6 @@ import { reloadAppAsync } from 'expo';
 import { getLocales } from 'expo-localization';
 import { I18nManager, Platform } from 'react-native';
 
-import { loadFontsFor } from './fonts';
 import { DEFAULT_LANGUAGE, initI18n, isLanguage, isRtlLanguage, type Language } from './i18n';
 
 const LANGUAGE_KEY = 'settings.language';
@@ -56,7 +55,7 @@ export async function bootstrapLanguage(): Promise<Language> {
     stored,
     getLocales().map((l) => l.languageCode),
   );
-  await Promise.all([initI18n(language), loadFontsFor(language)]);
+  await initI18n(language);
 
   if (applyDirection(language)) {
     const alreadyTried = (await readStored(DIRECTION_RELOAD_KEY)) === language;
@@ -73,7 +72,6 @@ export async function bootstrapLanguage(): Promise<Language> {
 /** The language picker calls this. The app reloads if the direction flips. */
 export async function changeLanguage(language: Language): Promise<void> {
   await AsyncStorage.setItem(LANGUAGE_KEY, language);
-  await loadFontsFor(language);
   await initI18n(language);
   if (applyDirection(language)) {
     await AsyncStorage.setItem(DIRECTION_RELOAD_KEY, language);

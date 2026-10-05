@@ -1,6 +1,6 @@
 /**
  * Poppins covers Latin and Devanagari (English, Spanish, French, Portuguese, Hindi). IBM Plex Sans Arabic covers Arabic
- * and Urdu. Montserrat — geometric like Poppins — covers Cyrillic (Russian) and loads only for Russian (loadFontsFor). Custom fonts on React Native are picked by family name, not by fontWeight, so each
+ * and Urdu. Custom fonts on React Native are picked by family name, not by fontWeight, so each
  * weight is its own family.
  *
  * Poppins has no tabular figures (its digits range from 320 to 677 units wide), so money and
@@ -13,19 +13,11 @@ import {
   IBMPlexSansArabic_700Bold,
 } from '@expo-google-fonts/ibm-plex-sans-arabic';
 import {
-  Montserrat_400Regular,
-  Montserrat_500Medium,
-  Montserrat_600SemiBold,
-  Montserrat_700Bold,
-} from '@expo-google-fonts/montserrat';
-import {
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_600SemiBold,
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
-
-import { loadAsync } from 'expo-font';
 
 import type { FontWeightName } from '@/theme/tokens';
 
@@ -42,17 +34,9 @@ export const fontAssets = {
   IBMPlexSansArabic_700Bold,
 };
 
-/** Cyrillic for Russian, loaded only when the app is in Russian. */
-export const cyrillicFontAssets = {
-  Montserrat_400Regular,
-  Montserrat_500Medium,
-  Montserrat_600SemiBold,
-  Montserrat_700Bold,
-};
+type FontFamily = keyof typeof fontAssets;
 
-type FontFamily = keyof typeof fontAssets | keyof typeof cyrillicFontAssets;
-
-const FAMILIES: Record<'latin' | 'arabic' | 'cyrillic', Record<FontWeightName, FontFamily>> = {
+const FAMILIES: Record<'latin' | 'arabic', Record<FontWeightName, FontFamily>> = {
   latin: {
     regular: 'Poppins_400Regular',
     medium: 'Poppins_500Medium',
@@ -65,26 +49,10 @@ const FAMILIES: Record<'latin' | 'arabic' | 'cyrillic', Record<FontWeightName, F
     semibold: 'IBMPlexSansArabic_600SemiBold',
     bold: 'IBMPlexSansArabic_700Bold',
   },
-  cyrillic: {
-    regular: 'Montserrat_400Regular',
-    medium: 'Montserrat_500Medium',
-    semibold: 'Montserrat_600SemiBold',
-    bold: 'Montserrat_700Bold',
-  },
 };
 
 export function fontFamily(language: Language, weight: FontWeightName = 'regular'): FontFamily {
-  return FAMILIES[isRtlLanguage(language) ? 'arabic' : language === 'ru' ? 'cyrillic' : 'latin'][weight];
-}
-
-/** Loads the fonts a language needs beyond the ones every device loads at start (Cyrillic for Russian). */
-export async function loadFontsFor(language: Language): Promise<void> {
-  if (language !== 'ru') return;
-  try {
-    await loadAsync(cyrillicFontAssets);
-  } catch {
-    // The system font shows the text until the next start.
-  }
+  return FAMILIES[isRtlLanguage(language) ? 'arabic' : 'latin'][weight];
 }
 
 /** Family for money and counts: fixed-width digits in every language. */

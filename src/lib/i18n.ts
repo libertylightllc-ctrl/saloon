@@ -8,7 +8,6 @@ import es from '@/locales/es.json';
 import fr from '@/locales/fr.json';
 import hi from '@/locales/hi.json';
 import pt from '@/locales/pt.json';
-import ru from '@/locales/ru.json';
 import ur from '@/locales/ur.json';
 
 /** Native names are shown untranslated so people can always find their own language. */
@@ -17,11 +16,10 @@ export const LANGUAGES = [
   { code: 'ar', nativeName: 'العربية', rtl: true },
   { code: 'hi', nativeName: 'हिन्दी', rtl: false },
   { code: 'ur', nativeName: 'اردو', rtl: true },
-  // Europe, Central Asia and the Americas (owner, 2026-10-05).
+  // Europe and the Americas (owner, 2026-10-05; Russian dropped 2026-10-06).
   { code: 'es', nativeName: 'Español', rtl: false },
   { code: 'fr', nativeName: 'Français', rtl: false },
   { code: 'pt', nativeName: 'Português', rtl: false },
-  { code: 'ru', nativeName: 'Русский', rtl: false },
 ] as const;
 
 export type Language = (typeof LANGUAGES)[number]['code'];
@@ -39,7 +37,6 @@ export const resources = {
   es: { translation: es },
   fr: { translation: fr },
   pt: { translation: pt },
-  ru: { translation: ru },
 } as const;
 
 export function isLanguage(value: unknown): value is Language {

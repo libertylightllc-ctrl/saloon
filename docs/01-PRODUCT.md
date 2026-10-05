@@ -10,7 +10,8 @@ First market: **United Arab Emirates** (AED, optional 5% VAT, Dubai Municipality
 brings the currency, time zone and sales tax (name, rate, included in prices or added at the till, what the tax
 number is called), all editable. UAE-only rules — 15-digit TRN, WPS, Montaji, the UAE document checklist — apply only
 to UAE salons. The plan costs AED 99 per branch in the UAE and USD 29 elsewhere.
-**Languages** (owner, 2026-10-05): English, Arabic, Hindi, Urdu, Spanish, French, Portuguese and Russian; a new device
+**Languages** (owner, 2026-10-05): English, Arabic, Hindi, Urdu, Spanish, French and Portuguese (Russian dropped by the
+owner, 2026-10-06); a new device
 opens in its own language when the app has it. **Times** show in each person's own 12- or 24-hour clock, as their phone
 or computer is set; the day itself always follows the salon's time zone.
 

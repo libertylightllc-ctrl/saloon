@@ -4,7 +4,6 @@ import es from './es.json';
 import fr from './fr.json';
 import hi from './hi.json';
 import pt from './pt.json';
-import ru from './ru.json';
 import ur from './ur.json';
 
 type Tree = { [key: string]: string | Tree };
@@ -32,7 +31,7 @@ const placeholders = (tree: Tree) =>
   );
 
 const english = en as Tree;
-const translations = { ar, hi, ur, es, fr, pt, ru } as Record<string, Tree>;
+const translations = { ar, hi, ur, es, fr, pt } as Record<string, Tree>;
 
 describe.each(Object.entries(translations))('%s locale', (_code, tree) => {
   it('has exactly the same keys as English', () => {
