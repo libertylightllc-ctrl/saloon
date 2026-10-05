@@ -8,7 +8,7 @@ import { isUae } from '@/lib/countries';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
-import { Button, HeaderBand, KpiCard, ListRow, QueryState, Screen, SectionHeader, SegmentTabs, StatusPill } from '@/ui';
+import { Button, HeaderBand, KpiCard, KpiGrid, ListRow, QueryState, Screen, SectionHeader, SegmentTabs, StatusPill } from '@/ui';
 
 import { useCompliance, type Slot } from './api';
 import { BinderTab } from './BinderTab';
@@ -86,9 +86,9 @@ function Register() {
         );
         return (
           <View style={styles.body}>
-            <View style={styles.kpis}>
+            <KpiGrid>
               <KpiCard icon="shield" label={t('compliance.readiness')} value={`${readiness}%`} sub={t('compliance.readinessSub', { ok, total: rows.length })} testID="compliance-readiness" />
-            </View>
+            </KpiGrid>
             <Button label={t('compliance.addOther')} icon="plus" variant="ghost" size="md" onPress={() => router.push({ pathname: '/compliance/doc', params: { new: '1' } })} testID="doc-new" />
             <SectionHeader title={t('compliance.salon')} />
             {rows.filter((s) => s.holder_type !== 'employee').map(row)}
@@ -103,5 +103,4 @@ function Register() {
 
 const styles = StyleSheet.create({
   body: { gap: spacing.sm },
-  kpis: { flexDirection: 'row', marginBottom: spacing.sm },
 });

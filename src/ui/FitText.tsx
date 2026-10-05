@@ -5,14 +5,22 @@ import { typeScale } from '@/theme';
 
 import { Text, type TextProps } from './Text';
 
-/** Never shrink below this share of the variant's size; past it the text is cut with "…" as before. */
-const MIN_SCALE = 0.6;
 
 /**
  * One line that shrinks to fit its width instead of being cut off — a big amount in a narrow card. Native shrinks by
  * itself (`adjustsFontSizeToFit`); the web measures the text at full size and sets a smaller font when it overflows.
  */
-export function FitText({ children, variant = 'body', style, ...rest }: Omit<TextProps, 'numberOfLines'> & { children: string }) {
+export function FitText({
+  children,
+  variant = 'body',
+  minScale = 0.6,
+  style,
+  ...rest
+}: Omit<TextProps, 'numberOfLines'> & {
+  children: string;
+  /** Never smaller than this share of the variant's size; past it the text is cut with "…" as before. */
+  minScale?: number;
+}) {
   const ref = useRef<RNText>(null);
   const base = typeScale[variant].fontSize;
   const [fontSize, setFontSize] = useState<number>();
@@ -23,12 +31,12 @@ export function FitText({ children, variant = 'body', style, ...rest }: Omit<Tex
     const current = fontSize ?? base;
     // scrollWidth is the whole text's width at the current size, even where it is cut off.
     if (el.scrollWidth > el.clientWidth + 1) {
-      const next = Math.max(base * MIN_SCALE, Math.floor((current * el.clientWidth) / el.scrollWidth));
+      const next = Math.max(base * minScale, Math.floor((current * el.clientWidth) / el.scrollWidth));
       if (next < current) setFontSize(next);
     } else if (fontSize && (el.scrollWidth * base) / fontSize <= el.clientWidth) {
       setFontSize(undefined); // room again for the full size
     }
-  }, [base, fontSize]);
+  }, [base, fontSize, minScale]);
   useLayoutEffect(fit, [fit, children]);
 
   return (
@@ -37,6 +45,7 @@ export function FitText({ children, variant = 'body', style, ...rest }: Omit<Tex
       variant={variant}
       numberOfLines={1}
       adjustsFontSizeToFit
+      minimumFontScale={minScale}
       onLayout={fit}
       style={[style, fontSize ? { fontSize } : null]}
       {...rest}

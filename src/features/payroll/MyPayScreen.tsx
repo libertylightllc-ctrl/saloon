@@ -8,7 +8,7 @@ import { businessMonth } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
-import { BottomSheet, EmptyState, HeaderBand, KpiCard, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
+import { BottomSheet, EmptyState, HeaderBand, KpiCard, KpiGrid, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
 import { useMyPay, type Payslip } from './api';
 import { SlipBreakdown } from './PayslipSheet';
@@ -40,10 +40,10 @@ export function MyPayScreen() {
             const total = (kind: string) => sum(thisMonth.filter((a) => a.kind === kind).map((a) => a.amount_minor));
             return (
               <View style={styles.body}>
-                <View style={styles.kpis}>
+                <KpiGrid>
                   <KpiCard icon="coins" label={t('myPay.commission')} value={formatMoney(dashboard.data?.me?.commission_month_minor ?? 0)} testID="mypay-commission" />
                   <KpiCard icon="wallet" label={t('myPay.advances')} value={formatMoney(total('advance'))} testID="mypay-advances" />
-                </View>
+                </KpiGrid>
                 {thisMonth.length ? (
                   <View style={styles.block}>
                     <SectionHeader title={t('myPay.thisMonth')} />
@@ -92,7 +92,6 @@ export function MyPayScreen() {
 
 const styles = StyleSheet.create({
   body: { gap: spacing.lg },
-  kpis: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   block: { gap: spacing.sm },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   flex: { flex: 1 },

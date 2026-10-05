@@ -9,9 +9,17 @@ type CardElement = ReactElement<{ style?: StyleProp<ViewStyle> }>;
  * Number cards that wrap instead of sliding sideways (owner's call 2026-10-05): two to a row on phones — an odd last
  * card takes the whole row — and more to a row where there is room. Each card fills its cell, so a row's bottoms line up.
  */
-export function KpiGrid({ children, minCell = 140 }: { children: ReactNode; minCell?: number }) {
+export function KpiGrid({
+  children,
+  minCell = 140,
+  style,
+}: {
+  children: ReactNode;
+  minCell?: number;
+  style?: StyleProp<ViewStyle>;
+}) {
   return (
-    <View style={styles.grid}>
+    <View style={[styles.grid, style]}>
       {Children.toArray(children)
         .filter((card): card is CardElement => isValidElement(card))
         .map((card, i) => (

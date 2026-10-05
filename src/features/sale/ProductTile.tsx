@@ -38,16 +38,20 @@ export function ProductTile({
         </View>
       </View>
       {item.low ? <StatusPill status={item.qty <= 0 ? 'out_of_stock' : 'low'} /> : null}
-      <Text variant="h4" weight="bold" tabular numberOfLines={1}>
-        {formatMoney(item.sell_price_minor ?? 0)}
-      </Text>
-      <Stepper value={qty} onChange={onChange} itemLabel={item.name} fullWidth testID={`product-${item.name}`} />
+      {/* Price and stepper sit at the tile's foot, so a row of tiles lines up when one name takes two lines. */}
+      <View style={styles.foot}>
+        <Text variant="h4" weight="bold" tabular numberOfLines={1}>
+          {formatMoney(item.sell_price_minor ?? 0)}
+        </Text>
+        <Stepper value={qty} onChange={onChange} itemLabel={item.name} fullWidth testID={`product-${item.name}`} />
+      </View>
     </Card>
   );
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  tile: { flexBasis: '46%', flexGrow: 1, gap: spacing.sm, justifyContent: 'center' },
+  tile: { flexBasis: '46%', flexGrow: 1, gap: spacing.sm },
+  foot: { marginTop: 'auto', gap: spacing.sm },
   top: { flexDirection: 'row', gap: spacing.sm },
 });

@@ -12,6 +12,7 @@ import { screenPadding, spacing, tapTarget, useTheme } from '@/theme';
 
 import { BackButton } from './BackButton';
 import { ContourPattern } from './ContourPattern';
+import { FitText } from './FitText';
 import { NavRootsContext, OnBandContext, useHeaderOverlap, usePageWidth } from './layoutContext';
 import { useWide } from './layoutSize';
 import { Text } from './Text';
@@ -67,16 +68,17 @@ export function HeaderBand({ title, subtitle, onBack, right, top, children }: He
           <View style={styles.side}>
             {onBack ? <BackButton onPress={onBack === true ? undefined : onBack} /> : null}
           </View>
-          <Text
+          {/* A long title shrinks a little before it is cut off beside the actions ("Purchases & suppliers"). */}
+          <FitText
             variant="h3"
             align="center"
-            numberOfLines={1}
+            minScale={0.8}
             color={band ? 'onPrimary' : 'text'}
             accessibilityRole="header"
             style={styles.title}
           >
-            {title}
-          </Text>
+            {title ?? ''}
+          </FitText>
           <View style={[styles.side, styles.sideEnd]}>{right}</View>
         </View>
       )}

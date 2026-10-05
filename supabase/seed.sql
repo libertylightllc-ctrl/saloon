@@ -63,9 +63,11 @@ begin
 end;
 $$;
 
--- Move a sale and everything it wrote p_days_ago back (demo history only).
+-- Move a sale and everything it wrote p_days_ago back (demo history only), at a believable time of day.
 create function pg_temp.backdate_sale(p_sale uuid, p_days_ago int) returns void
 language plpgsql as $$
+declare
+  v_at timestamptz;
 begin
   if p_days_ago > 0 then
     update sales set business_date = business_date - p_days_ago,
@@ -79,6 +81,18 @@ begin
     update stock_movements set created_at = created_at - make_interval(days => p_days_ago)
     where ref_type = 'sale' and ref_id = p_sale;
   end if;
+  -- Spread over opening hours (10:00–21:30) by the sale's number, not all at the minute the seed ran; today's
+  -- sales stay in the past.
+  select (s.business_date + time '10:00' + make_interval(mins => (s.number * 47) % 690)) at time zone b.timezone
+    into v_at
+  from sales s join businesses b on b.id = s.business_id where s.id = p_sale;
+  if v_at > now() then
+    v_at := now() - make_interval(mins => 5 + (select number from sales where id = p_sale) * 13 % 240);
+  end if;
+  update sales set created_at = v_at where id = p_sale;
+  update journal_entries set created_at = v_at where source_type = 'sale' and source_id = p_sale;
+  update audit_log set created_at = v_at where entity_type = 'sale' and entity_id = p_sale;
+  update stock_movements set created_at = v_at where ref_type = 'sale' and ref_id = p_sale;
 end;
 $$;
 
@@ -168,14 +182,15 @@ begin
 end;
 $$;
 
--- Opening stock for every recipe item: p_qty of each at p_cost fils per unit.
+-- Opening stock for every recipe item: p_qty of each (60 ml or g per unit for liquids and creams, so a month of
+-- colour and developer never runs below zero) at p_cost fils per unit (per 10 ml or g).
 create function pg_temp.stock_up(p_branch uuid, p_owner uuid, p_qty numeric, p_cost numeric) returns void
 language plpgsql as $$
 begin
   perform pg_temp.act_as(p_owner);
   perform public.set_opening_stock(p_branch, (
     select jsonb_agg(jsonb_build_object('item_id', i.id, 'qty',
-      case i.unit when 'ml' then p_qty * 10 when 'g' then p_qty * 10 else p_qty end,
+      case i.unit when 'ml' then p_qty * 60 when 'g' then p_qty * 60 else p_qty end,
       'unit_cost_minor', case i.unit when 'ml' then p_cost / 10 when 'g' then p_cost / 10 else p_cost end))
     from inventory_items i where i.business_id = (select business_id from branches where id = p_branch)));
 end;
@@ -411,7 +426,7 @@ begin
     'user_id', '11111111-0000-4000-8000-000000000005', 'username', 'imran', 'display_name', 'Imran', 'role', 'staff',
     'commission_bps', 1100, 'colour', '#1E90D6', 'actor_member_id', owner_member));
 
-  perform pg_temp.stock_up(br, owner, 40, 150);
+  perform pg_temp.stock_up(br, owner, 80, 150);
 
   insert into customers (business_id, name, phone, preferences, created_by) values
     (biz, 'Ahmed Khan', '+971 50 111 2233', 'Skin fade, beard line', owner_member),
@@ -509,7 +524,7 @@ begin
     'user_id', '22222222-0000-4000-8000-000000000005', 'username', 'leila', 'display_name', 'Leila', 'role', 'staff',
     'commission_bps', 1200, 'colour', '#E0A800', 'actor_member_id', owner_member));
 
-  perform pg_temp.stock_up(br, owner, 30, 300);
+  perform pg_temp.stock_up(br, owner, 60, 300);
 
   insert into customers (business_id, name, phone, preferences, risk_flags, created_by) values
     (biz, 'Fatima Al Mansoori', '+971 50 222 3344', 'Prefers Leila, warm oil', '{}', owner_member),

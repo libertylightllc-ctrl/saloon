@@ -31,7 +31,7 @@ export function CustomersScreen() {
       leading={<Avatar name={c.name} size={44} />}
       meta={[
         t('customers.visitsLine', {
-          n: c.visit_count,
+          count: c.visit_count,
           last: c.last_visit_at ? dates.at(new Date(c.last_visit_at), business.timezone, 'd MMM') : '—',
         }),
         ...(c.preferences ? [c.preferences] : []),
@@ -43,7 +43,7 @@ export function CustomersScreen() {
               <StatusPill key={f} tone={f === 'no_show' ? 'error' : 'warning'} label={t(`customers.risk.${f}` as 'customers.risk.allergy')} />
             ))}
             {c.no_show_count > 0 && !c.risk_flags.includes('no_show') ? (
-              <StatusPill tone="error" label={t('customers.noShows', { n: c.no_show_count })} />
+              <StatusPill tone="error" label={t('customers.noShows', { count: c.no_show_count })} />
             ) : null}
           </>
         ) : undefined

@@ -18,20 +18,20 @@ import {
 
 describe('formatMoney', () => {
   it('formats AED with code, grouping and two decimals', () => {
-    expect(formatMoney(124000)).toBe('AED 1,240.00');
-    expect(formatMoney(2500)).toBe('AED 25.00');
-    expect(formatMoney(5)).toBe('AED 0.05');
-    expect(formatMoney(0)).toBe('AED 0.00');
-    expect(formatMoney(123456789)).toBe('AED 1,234,567.89');
+    expect(formatMoney(124000)).toBe('AED\u00a01,240.00');
+    expect(formatMoney(2500)).toBe('AED\u00a025.00');
+    expect(formatMoney(5)).toBe('AED\u00a00.05');
+    expect(formatMoney(0)).toBe('AED\u00a00.00');
+    expect(formatMoney(123456789)).toBe('AED\u00a01,234,567.89');
   });
 
   it('puts the minus sign before the currency', () => {
-    expect(formatMoney(-500)).toBe('-AED 5.00');
+    expect(formatMoney(-500)).toBe('-AED\u00a05.00');
   });
 
   it('uses three decimals for KWD, BHD and OMR', () => {
-    expect(formatMoney(1500, 'KWD')).toBe('KWD 1.500');
-    expect(formatMoney(1234567, 'BHD')).toBe('BHD 1,234.567');
+    expect(formatMoney(1500, 'KWD')).toBe('KWD\u00a01.500');
+    expect(formatMoney(1234567, 'BHD')).toBe('BHD\u00a01,234.567');
   });
 
   it('refuses floats', () => {

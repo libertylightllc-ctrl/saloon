@@ -17,6 +17,18 @@ function axisLabel(label: string): string {
   return String(Math.round(n));
 }
 
+/** A round step for the axis (1, 1.5, 2, 2.5, 3, 4, 5, 6 or 8 × a power of ten): lines read 0 · 250 · 500 · 750 · 1k. */
+export function niceStep(rough: number): number {
+  if (rough <= 0) return 1;
+  const power = 10 ** Math.floor(Math.log10(rough));
+  const step = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find((f) => f * power >= rough) ?? 10;
+  return step * power;
+}
+
+const SECTIONS = 4;
+/** Room after the last bar, so its label is not cut off at the card's edge. */
+const END_SPACE = 16;
+
 /** The report's bar chart. Negative bars (a short till) are drawn below the line in the error colour. */
 export function ReportChart({ chart }: { chart: ReportView['chart'] }) {
   const theme = useTheme();
@@ -26,7 +38,11 @@ export function ReportChart({ chart }: { chart: ReportView['chart'] }) {
   const values = bars.map((b) => b.value / unit);
   const max = Math.max(0, ...values);
   const min = Math.min(0, ...values);
-  const slot = bars.length ? Math.max(10, Math.min(36, (width - 48) / bars.length)) : 0;
+  const plot = width - 48 - spacing.sm - END_SPACE;
+  const slot = bars.length ? Math.max(10, Math.min(36, plot / bars.length)) : 0;
+  const step = niceStep(Math.max(max, -min) / SECTIONS);
+  // Below the line (a short till): whole steps of the same size.
+  const below = min < 0 ? Math.ceil(-min / step) : 0;
   const barWidth = Math.max(6, slot * 0.6);
   const everyNth = Math.ceil(bars.length / Math.max(1, Math.floor((width - 48) / 28)));
   const summary = bars
@@ -56,11 +72,13 @@ export function ReportChart({ chart }: { chart: ReportView['chart'] }) {
             barWidth={barWidth}
             spacing={Math.max(2, slot - barWidth)}
             initialSpacing={spacing.sm}
+            endSpacing={END_SPACE}
             barBorderRadius={3}
-            noOfSections={4}
-            maxValue={max > 0 ? max * 1.1 : undefined}
-            mostNegativeValue={min < 0 ? min * 1.1 : undefined}
-            noOfSectionsBelowXAxis={min < 0 ? 2 : 0}
+            noOfSections={SECTIONS}
+            maxValue={max > 0 ? step * SECTIONS : undefined}
+            stepValue={max > 0 ? step : undefined}
+            mostNegativeValue={below ? -step * below : undefined}
+            noOfSectionsBelowXAxis={below}
             formatYLabel={axisLabel}
             yAxisLabelWidth={40}
             yAxisThickness={0}

@@ -72,7 +72,10 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
       icon="receipt"
       label={t('home.salesToday')}
       value={formatMoney(data.sales?.total_minor ?? 0)}
-      sub={t('home.salesSub', { services: Number(data.sales?.services ?? 0), sales: data.sales?.count ?? 0 })}
+      sub={t('home.salesSub', {
+        services: t('home.servicesCount', { count: Number(data.sales?.services ?? 0) }),
+        sales: t('home.salesCount', { count: data.sales?.count ?? 0 }),
+      })}
       testID="kpi-sales"
     />,
     a ? (

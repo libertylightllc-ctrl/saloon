@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { spacing, useTheme, type Tone } from '@/theme';
+import { semantic, spacing, useTheme, type Tone } from '@/theme';
 
 import { Icon, type IconName } from './Icon';
 import { Text } from './Text';
@@ -11,11 +11,14 @@ export interface ListMeta {
   icon?: IconName;
   /** Colour the icon (e.g. green map pin like the Barber kit). */
   iconColor?: string;
-  tone?: Extract<Tone, 'primary'>;
+  /** primary: coloured like a link; error: something overdue or wrong. */
+  tone?: Extract<Tone, 'primary' | 'error'>;
 }
 
 export interface ListRowProps {
   title: string;
+  /** Lines the title may take before it is cut off (default 1). */
+  titleLines?: number;
   leading?: ReactNode;
   /** Small lines under the title. */
   meta?: (string | ListMeta)[];
@@ -36,6 +39,7 @@ export interface ListRowProps {
 /** Gents: bordered card rows (Nearby Salons). Ladies: plain rows on the white sheet (Services). */
 export function ListRow({
   title,
+  titleLines = 1,
   leading,
   meta = [],
   badges,
@@ -55,7 +59,7 @@ export function ListRow({
       <View style={styles.main}>
         {leading}
         <View style={styles.body}>
-          <Text variant="h4" numberOfLines={1}>
+          <Text variant="h4" numberOfLines={titleLines}>
             {title}
           </Text>
           {meta.map((line, i) => {
@@ -73,7 +77,7 @@ export function ListRow({
                   variant="small"
                   color={item.tone === 'primary' ? 'primaryText' : 'textSecondary'}
                   numberOfLines={2}
-                  style={styles.flex}
+                  style={[styles.flex, item.tone === 'error' && { color: semantic.error.hover }]}
                 >
                   {item.text}
                 </Text>

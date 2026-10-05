@@ -54,17 +54,21 @@ export function ServiceTile({
           {recipe}
         </Text>
       ) : null}
-      <Text variant="h4" weight="bold" tabular numberOfLines={1}>
-        {formatMoney(service.price_minor)}
-      </Text>
-      <Stepper value={qty} onChange={onChange} itemLabel={service.name} fullWidth testID={`tile-${service.name}`} />
+      {/* Price and stepper sit at the tile's foot, so a row of tiles lines up when one name takes two lines. */}
+      <View style={styles.foot}>
+        <Text variant="h4" weight="bold" tabular numberOfLines={1}>
+          {formatMoney(service.price_minor)}
+        </Text>
+        <Stepper value={qty} onChange={onChange} itemLabel={service.name} fullWidth testID={`tile-${service.name}`} />
+      </View>
     </Card>
   );
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  tile: { flexBasis: '46%', flexGrow: 1, gap: spacing.sm, justifyContent: 'center' },
+  tile: { flexBasis: '46%', flexGrow: 1, gap: spacing.sm },
+  foot: { marginTop: 'auto', gap: spacing.sm },
   tileTop: { flexDirection: 'row', gap: spacing.sm },
   duration: { flexDirection: 'row', alignItems: 'center', gap: 4 },
 });

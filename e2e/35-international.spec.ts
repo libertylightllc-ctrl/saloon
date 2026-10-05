@@ -88,7 +88,7 @@ test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt
   await page.goto('/sales');
   await id(page, `sale-row-${sale.number}`).click();
   await page.getByRole('button', { name: 'Print receipt' }).click();
-  const receipt = () => page.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? '');
+  const receipt = () => page.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? '').then((t) => t.replace(/\u00a0/g, ' '));
   await expect.poll(receipt).toContain('Sales tax (8.875%)');
   await expect.poll(receipt).toContain(`USD ${((price + tax) / 100).toFixed(2)}`);
 });

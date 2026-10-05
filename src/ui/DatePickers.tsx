@@ -1,6 +1,7 @@
 /** MonthSwitcher, DateStrip and TimeSlotGrid — the Barber kit's "Select Date & Time". */
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { shiftMonth, type BusinessDate, type MonthKey } from '@/lib/dates';
 import { useDates } from '@/lib/useDates';
@@ -46,6 +47,8 @@ export function MonthSwitcher({
   );
 }
 
+const DAY_WIDTH = 56;
+
 export function DateStrip({
   dates,
   value,
@@ -58,11 +61,27 @@ export function DateStrip({
   const theme = useTheme();
   const { colors } = theme;
   const names = useDates();
+  const scroll = useRef<ScrollView>(null);
+  const placed = useRef(false);
+  // Opens with the chosen day in view (today sits at the end of a strip of past days), once, not on every tap.
+  const showChosen = (viewport: number) => {
+    const index = dates.indexOf(value);
+    if (placed.current || index < 0 || !viewport) return;
+    placed.current = true;
+    const step = DAY_WIDTH + spacing.sm;
+    const content = dates.length * step - spacing.sm;
+    const x = Math.min(Math.max(0, index * step - (viewport - DAY_WIDTH) / 2), Math.max(0, content - viewport));
+    // Right-to-left on the web scrolls with negative offsets from the start (the right edge).
+    const rtlWeb = Platform.OS === 'web' && document.documentElement.dir === 'rtl';
+    scroll.current?.scrollTo({ x: rtlWeb ? -x : x, animated: false });
+  };
   return (
     <ScrollView
+      ref={scroll}
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.strip}
+      onLayout={(e) => showChosen(e.nativeEvent.layout.width)}
     >
       {dates.map((date) => {
         const selected = date === value;
@@ -180,7 +199,7 @@ const styles = StyleSheet.create({
   month: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   flex: { flex: 1 },
   strip: { gap: spacing.sm },
-  day: { width: 56, height: 72, borderWidth: 1, justifyContent: 'center', gap: 2 },
+  day: { width: DAY_WIDTH, height: 72, borderWidth: 1, justifyContent: 'center', gap: 2 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   slot: { flexBasis: '22%', flexGrow: 1, height: 44, borderWidth: 1, justifyContent: 'center' },
   strike: { textDecorationLine: 'line-through' },

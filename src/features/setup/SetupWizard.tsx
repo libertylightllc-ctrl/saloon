@@ -281,7 +281,8 @@ const styles = StyleSheet.create({
   dashes: { alignItems: 'center' },
   flex: { flex: 1 },
   modes: { gap: spacing.md },
-  pair: { flexDirection: 'row', gap: spacing.md },
+  // Inputs line up even when one label takes two lines.
+  pair: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.md },
   days: { gap: spacing.sm },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
 });

@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
   body: { gap: spacing.lg },
   section: { gap: spacing.sm },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  pair: { flexDirection: 'row', gap: spacing.md },
+  // Inputs line up even when one label takes two lines.
+  pair: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.md },
   flex: { flex: 1 },
 });

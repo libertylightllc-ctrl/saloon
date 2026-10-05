@@ -104,7 +104,7 @@ export function StaffToday({ data }: { data: Dashboard }) {
           key={person.employee_id}
           title={person.name}
           leading={<Avatar name={person.name} color={person.colour ?? undefined} size={44} />}
-          meta={[t('home.staffLine', { services: Number(person.services), sales: formatMoney(person.sales_minor) })]}
+          meta={[t('home.staffLine', { services: t('home.servicesCount', { count: Number(person.services) }), sales: formatMoney(person.sales_minor) })]}
           trailing={
             <>
               {person.commission_minor !== null ? (

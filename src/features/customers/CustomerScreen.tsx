@@ -13,6 +13,7 @@ import {
   Card,
   HeaderBand,
   KpiCard,
+  KpiGrid,
   ListRow,
   QueryState,
   Screen,
@@ -77,7 +78,7 @@ export function CustomerScreen() {
       <QueryState query={query}>
         {({ customer, sales, upcoming }) => (
           <View style={styles.body}>
-            <View style={styles.kpis}>
+            <KpiGrid>
               <KpiCard icon="users" label={t('customers.visits')} value={String(customer.visit_count)} testID="customer-visits" />
               <KpiCard
                 icon="calendar"
@@ -89,7 +90,7 @@ export function CustomerScreen() {
                 }
               />
               <KpiCard icon="alert" label={t('customers.noShowsLabel')} value={String(customer.no_show_count)} testID="customer-no-shows" />
-            </View>
+            </KpiGrid>
             {customer.risk_flags.length ? (
               <View style={styles.wrap}>
                 {customer.risk_flags.map((f) => (
@@ -179,7 +180,6 @@ export function CustomerScreen() {
 const styles = StyleSheet.create({
   profile: { alignItems: 'center', gap: spacing.xs },
   body: { gap: spacing.lg },
-  kpis: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   card: { gap: spacing.xs },
   actions: { flexDirection: 'row', gap: spacing.md, flexWrap: 'wrap' },

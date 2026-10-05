@@ -123,7 +123,8 @@ export function TaxFields<T extends FieldValues & TaxValues>({
 
 const styles = StyleSheet.create({
   box: { gap: spacing.md },
-  pair: { flexDirection: 'row', gap: spacing.md },
+  // Inputs line up even when one label takes two lines.
+  pair: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.md },
   wide: { flex: 2 },
   flex: { flex: 1 },
 });

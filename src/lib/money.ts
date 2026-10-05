@@ -240,9 +240,12 @@ export function formatAmount(
 }
 
 /** 124000 → "AED 1,240.00"; -500 → "-AED 5.00". */
+/** No-break space: "AED" and the number never end up on two lines. */
+const NBSP = '\u00a0';
+
 export function formatMoney(amount: Minor, currency: CurrencyCode = activeCurrency()): string {
   const body = formatAmount(Math.abs(amount), currency);
-  return amount < 0 ? `-${currency} ${body}` : `${currency} ${body}`;
+  return amount < 0 ? `-${currency}${NBSP}${body}` : `${currency}${NBSP}${body}`;
 }
 
 /** 1200 → "12%", 1250 → "12.5%", 25 → "0.25%"; a tax rate 887.5 → "8.875%". */

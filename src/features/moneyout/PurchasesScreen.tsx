@@ -14,6 +14,7 @@ import {
   EmptyState,
   HeaderBand,
   KpiCard,
+  KpiGrid,
   ListRow,
   QueryState,
   Screen,
@@ -90,7 +91,7 @@ export function PurchasesScreen() {
         }
       >
         {seesBalances && suppliers.data && bills.data ? (
-          <View style={styles.kpis}>
+          <KpiGrid style={styles.kpis}>
             <KpiCard
               icon="wallet"
               label={t('purchases.owed')}
@@ -115,7 +116,7 @@ export function PurchasesScreen() {
               )}
               testID="purchases-month"
             />
-          </View>
+          </KpiGrid>
         ) : null}
         {tab === 'bills' ? (
           <QueryState
@@ -139,7 +140,7 @@ export function PurchasesScreen() {
                                 b.due_date < today ? 'purchases.overdueSince' : 'purchases.dueOn',
                                 { date: dates.day(b.due_date, 'd MMM') },
                               ),
-                              tone: b.due_date < today ? ('primary' as const) : undefined,
+                              tone: b.due_date < today ? ('error' as const) : undefined,
                             },
                           ]
                         : []),
@@ -189,7 +190,7 @@ export function PurchasesScreen() {
                       testID={`supplier-${s.name}`}
                       title={s.name}
                       meta={[
-                        [s.phone, t('purchases.termsDays', { n: s.terms_days })]
+                        [s.phone, t('purchases.termsDays', { count: s.terms_days })]
                           .filter(Boolean)
                           .join(' · '),
                       ]}
@@ -223,7 +224,7 @@ export function PurchasesScreen() {
 }
 
 const styles = StyleSheet.create({
-  kpis: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap', marginBottom: spacing.lg },
+  kpis: { marginBottom: spacing.lg },
   list: { gap: spacing.sm },
   balance: { alignItems: 'flex-end', gap: 4 },
 });

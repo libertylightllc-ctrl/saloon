@@ -32,13 +32,13 @@ describe('countries and currencies', () => {
 
   it('amounts show and parse in the salon currency, including 0 and 3 decimals', () => {
     setActiveCurrency('JPY');
-    expect(formatMoney(15000)).toBe('JPY 15,000');
+    expect(formatMoney(15000)).toBe('JPY\u00a015,000');
     expect(parseMoney('1,500')).toBe(1500);
     expect(parseMoney('1.5')).toBeNull();
     setActiveCurrency('KWD');
-    expect(formatMoney(1250)).toBe('KWD 1.250');
+    expect(formatMoney(1250)).toBe('KWD\u00a01.250');
     setActiveCurrency('XYZ');
-    expect(formatMoney(100)).toBe('AED 1.00'); // unknown → the default
+    expect(formatMoney(100)).toBe('AED\u00a01.00'); // unknown → the default
     setActiveCurrency(null);
   });
 });

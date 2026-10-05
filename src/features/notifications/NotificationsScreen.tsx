@@ -99,6 +99,7 @@ export function NotificationsScreen() {
                     </View>
                   }
                   title={w.title}
+                  titleLines={2}
                   meta={[w.body, dates.at(n.created_at, business.timezone, 'd MMM · HH:mm')]}
                   chevron
                   onPress={() => {

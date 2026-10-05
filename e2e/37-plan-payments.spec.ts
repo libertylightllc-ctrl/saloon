@@ -36,7 +36,7 @@ test('the platform owner sets where to pay; a salon owner sees it, asks for the 
   const shop = await device();
   await ownerOn(shop, mode, owner.email, owner.password);
   await shop.goto('/plan');
-  await expect(id(shop, 'plan-pay-iban')).toHaveText('AE070331234567890123456');
+  await expect(id(shop, 'plan-pay-iban')).toHaveText('AE07 0331 2345 6789 0123 456'); // in groups of four
   await expect(id(shop, 'plan-pay-account')).toHaveText('Saloqo FZ-LLC');
   await expect(id(shop, 'plan-pay-reference')).toHaveText(owner.code);
   const popup = shop.context().waitForEvent('page');

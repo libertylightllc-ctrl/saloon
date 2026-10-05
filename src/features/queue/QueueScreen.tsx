@@ -143,12 +143,13 @@ export function QueueScreen() {
               onChange={setDay}
               testID="queue-day"
             />
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
+            {/* The day at a glance wraps instead of sliding, so every number is in view. */}
+            <View style={styles.summary}>
               <Chip tone="warning" icon="hourglass" label={t('queue.summary.waiting', { n: count('waiting'), minutes: longest })} />
               <Chip tone="primary" icon="calendar" label={t('queue.summary.booked', { n: count('booked') })} />
               <Chip tone="success" icon="circleCheck" label={t('queue.summary.completed', { n: count('completed') })} />
               {held > 0 ? <Chip tone="neutral" icon="coins" label={t('queue.summary.deposits', { amount: formatMoney(held) })} /> : null}
-            </ScrollView>
+            </View>
           </HeaderBand>
         }
       >
@@ -181,6 +182,7 @@ export function QueueScreen() {
 const styles = StyleSheet.create({
   body: { gap: spacing.lg },
   row: { gap: spacing.sm },
+  summary: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   list: { gap: spacing.md },
   flex: { flex: 1 },
   split: { flex: 1, minHeight: 0, flexDirection: 'row', gap: spacing['2xl'] },

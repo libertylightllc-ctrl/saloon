@@ -252,6 +252,7 @@ export function BranchSettingsScreen() {
 const styles = StyleSheet.create({
   body: { gap: spacing['2xl'] },
   section: { gap: spacing.md },
-  pair: { flexDirection: 'row', gap: spacing.md },
+  // Inputs line up even when one label takes two lines.
+  pair: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.md },
   flex: { flex: 1 },
 });

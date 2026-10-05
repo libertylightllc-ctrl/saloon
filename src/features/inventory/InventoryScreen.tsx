@@ -22,6 +22,7 @@ import {
   StatusPill,
   Text,
   Thumb,
+  useWide,
   type IconName,
 } from '@/ui';
 
@@ -43,6 +44,7 @@ export function InventoryScreen() {
   const [filter, setFilter] = useState<Filter>(FILTERS.includes(params.filter as Filter) ? (params.filter as Filter) : 'all');
   const [search, setSearch] = useState('');
   const owner = can(role, 'manageInventory');
+  const cell = useWide() ? undefined : styles.actionCell;
   const today = dates.day;
 
   const matches = (i: StockItem) =>
@@ -86,17 +88,28 @@ export function InventoryScreen() {
                 ) : null}
                 <KpiCard icon="alert" label={t('inventory.lowCount')} value={String(active.filter((i) => i.low).length)} testID="inventory-low" />
                 <KpiCard icon="package" label={t('inventory.activeItems')} value={String(active.length)} />
-                <KpiCard icon="rotate" label={t('inventory.movements')} value={String(sum(active.map((i) => i.movements_30d)))} />
+                <KpiCard
+                  icon="rotate"
+                  label={t('inventory.movements')}
+                  value={String(sum(active.map((i) => i.movements_30d)))}
+                  sub={t('inventory.movementsSub')}
+                />
               </KpiGrid>
               <View style={styles.actions}>
                 {can(role, 'countStock') ? (
-                  <Button label={t('inventory.count')} icon="clipboard" variant="outline" size="md" onPress={() => router.push('/inventory/count')} testID="inventory-count" />
+                  <View style={cell}>
+                    <Button label={t('inventory.count')} icon="clipboard" variant="outline" size="md" onPress={() => router.push('/inventory/count')} testID="inventory-count" />
+                  </View>
                 ) : null}
                 {owner ? (
-                  <Button label={t('inventory.opening.title')} icon="boxes" variant="outline" size="md" onPress={() => router.push('/inventory/opening')} testID="inventory-opening" />
+                  <View style={cell}>
+                    <Button label={t('inventory.opening.title')} icon="boxes" variant="outline" size="md" onPress={() => router.push('/inventory/opening')} testID="inventory-opening" />
+                  </View>
                 ) : null}
                 {can(role, 'addPurchase') ? (
-                  <Button label={t('inventory.order')} icon="truck" variant="outline" size="md" onPress={() => router.push('/purchases/new')} testID="inventory-order" />
+                  <View style={cell}>
+                    <Button label={t('inventory.order')} icon="truck" variant="outline" size="md" onPress={() => router.push('/purchases/new')} testID="inventory-order" />
+                  </View>
                 ) : null}
               </View>
               <SearchBar value={search} onChangeText={setSearch} placeholder={t('inventory.search')} testID="inventory-search" />
@@ -153,5 +166,7 @@ export function InventoryScreen() {
 const styles = StyleSheet.create({
   body: { gap: spacing.md },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  // Phones: the buttons share the width evenly (two to a row, an odd last one takes the row) instead of a ragged row.
+  actionCell: { flexGrow: 1, flexBasis: 140 },
   trailing: { alignItems: 'flex-end', gap: 2 },
 });

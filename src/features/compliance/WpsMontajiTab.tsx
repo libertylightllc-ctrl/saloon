@@ -6,7 +6,7 @@ import { useWorkspace } from '@/features/auth/session';
 import { useInventory } from '@/features/inventory/api';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
-import { Card, KpiCard, ListRow, QueryState, SectionHeader, StatusPill, Text } from '@/ui';
+import { Card, KpiCard, KpiGrid, ListRow, QueryState, SectionHeader, StatusPill, Text } from '@/ui';
 
 import { useWpsStatus } from './api';
 
@@ -28,9 +28,9 @@ export function WpsMontajiTab() {
             <Card variant="outlined" style={styles.card}>
               {w.period ? (
                 <>
-                  <View style={styles.kpis}>
+                  <KpiGrid>
                     <KpiCard icon="shield" label={dates.day(`${w.period}-01`, 'MMMM yyyy')} value={`${pct}%`} sub={t('compliance.wps.proven', { proven: w.proven, required: w.required })} testID="wps-pct" />
-                  </View>
+                  </KpiGrid>
                   <StatusPill status={pct >= w.target_pct ? 'valid' : 'due_soon'} label={t('compliance.wps.target', { pct: w.target_pct })} />
                 </>
               ) : (
@@ -70,6 +70,5 @@ export function WpsMontajiTab() {
 const styles = StyleSheet.create({
   body: { gap: spacing.md },
   card: { gap: spacing.sm },
-  kpis: { flexDirection: 'row' },
   list: { gap: spacing.sm },
 });

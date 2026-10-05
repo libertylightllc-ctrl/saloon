@@ -14,6 +14,7 @@ import {
   EmptyState,
   HeaderBand,
   KpiCard,
+  KpiGrid,
   ListRow,
   MonthSwitcher,
   QueryState,
@@ -86,7 +87,7 @@ export function ExpensesScreen() {
           const days = [...new Set(rows.map((e) => e.business_date))];
           return (
             <View style={styles.body}>
-              <View style={styles.kpis}>
+              <KpiGrid>
                 <KpiCard icon="coins" label={t('expenses.today')} value={formatMoney(todayTotal)} testID="expenses-today" />
                 <KpiCard
                   icon="calendar"
@@ -95,7 +96,7 @@ export function ExpensesScreen() {
                   sub={t('expenses.lastMonth', { amount: formatMoney(lastMonth) })}
                   testID="expenses-month"
                 />
-              </View>
+              </KpiGrid>
               {biggest ? (
                 <Text color="textSecondary" testID="expenses-biggest">
                   {t('expenses.biggest', { category: biggest.label, amount: formatMoney(biggest.total) })}
@@ -137,6 +138,5 @@ export function ExpensesScreen() {
 
 const styles = StyleSheet.create({
   body: { gap: spacing.lg },
-  kpis: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   group: { gap: spacing.sm },
 });

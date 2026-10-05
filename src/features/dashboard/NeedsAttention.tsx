@@ -58,7 +58,7 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
   if (stock && stock.low > 0 && role !== 'accountant') {
     items.push({
       key: 'low-stock',
-      title: t('home.attention.lowStock', { n: stock.low }),
+      title: t('home.attention.lowStock', { count: stock.low }),
       sub: stock.low_items.slice(0, 3).join(', '),
       status: 'low',
       action: can(role, 'addPurchase') ? t('home.attentionActions.order') : t('home.attentionActions.review'),
@@ -68,7 +68,7 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
   if (stock && stock.tools_due > 0 && can(role, 'manageInventory')) {
     items.push({
       key: 'tools-due',
-      title: t('home.attention.toolsDue', { n: stock.tools_due }),
+      title: t('home.attention.toolsDue', { count: stock.tools_due }),
       sub: t('home.attention.toolsDueSub'),
       status: 'due_soon',
       action: t('home.attentionActions.review'),
@@ -80,7 +80,7 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
     if (bills.overdue_count > 0) {
       items.push({
         key: 'bills-overdue',
-        title: t('home.attention.billsOverdue', { n: bills.overdue_count }),
+        title: t('home.attention.billsOverdue', { count: bills.overdue_count }),
         sub: t('home.attention.billsSub', { amount: formatMoney(bills.overdue_minor) }),
         status: 'overdue',
         action: t('home.attentionActions.pay'),
@@ -90,7 +90,7 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
     if (bills.due_soon_count > 0) {
       items.push({
         key: 'bills-due',
-        title: t('home.attention.billsDue', { n: bills.due_soon_count }),
+        title: t('home.attention.billsDue', { count: bills.due_soon_count }),
         sub: t('home.attention.billsSub', { amount: formatMoney(bills.due_soon_minor) }),
         status: 'due_soon',
         action: t('home.attentionActions.pay'),
@@ -113,7 +113,7 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
     if (payroll.wps_missing > 0) {
       items.push({
         key: 'wps-missing',
-        title: t('home.attention.wpsMissing', { n: payroll.wps_missing }),
+        title: t('home.attention.wpsMissing', { count: payroll.wps_missing }),
         sub: t('home.attention.wpsMissingSub'),
         status: 'due_soon',
         action: t('home.attentionActions.review'),
@@ -124,7 +124,7 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
   if (data.compliance && data.compliance.attention > 0) {
     items.push({
       key: 'compliance',
-      title: t('home.attention.compliance', { n: data.compliance.attention }),
+      title: t('home.attention.compliance', { count: data.compliance.attention }),
       sub: t('home.attention.complianceSub', { pct: data.compliance.readiness }),
       status: data.compliance.expired > 0 ? 'expired' : 'due_soon',
       action: t('home.attentionActions.renew'),

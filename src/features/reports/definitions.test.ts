@@ -26,10 +26,10 @@ describe('buildReport', () => {
       { t, day },
     );
     expect(view.kpis.map((k) => [k.key, k.value])).toEqual([
-      ['sales', 'AED 167.50'],
-      ['revenue', 'AED 130.00'],
-      ['costs', 'AED 15.00'],
-      ['result', 'AED 115.00'],
+      ['sales', 'AED\u00a0167.50'],
+      ['revenue', 'AED\u00a0130.00'],
+      ['costs', 'AED\u00a015.00'],
+      ['result', 'AED\u00a0115.00'],
     ]);
     expect(view.kpis[1]!.delta).toEqual({ label: '30%', trend: 'up', good: true });
     // Lower costs are good news.
@@ -84,14 +84,14 @@ describe('buildReport', () => {
       { t, day },
     );
     expect(view.kpis.map((k) => [k.key, k.label.split(':')[0], k.value])).toEqual([
-      ['output', 'reports.kpi.vatOutput', 'AED 29.00'],
-      ['input', 'reports.kpi.vatInput', 'AED 7.25'],
-      ['due', 'reports.kpi.vatDue', 'AED 21.75'],
+      ['output', 'reports.kpi.vatOutput', 'AED\u00a029.00'],
+      ['input', 'reports.kpi.vatInput', 'AED\u00a07.25'],
+      ['due', 'reports.kpi.vatDue', 'AED\u00a021.75'],
     ]);
     expect(view.rows[1]!.csv).toEqual(['reports.vatKinds.refunds:{}', 1, '-20.00', '-1.00']);
     expect(view.rows[0]!.csv.length).toBe(csvHeader('vat', t).length);
 
     const refund = buildReport({ type: 'vat', data: [{ kind: 'purchases', entries: 1, taxable_minor: 4_500, vat_minor: 225 }] }, { t, day });
-    expect(refund.kpis[2]).toMatchObject({ label: 'reports.kpi.vatRefund:{}', value: 'AED 2.25' });
+    expect(refund.kpis[2]).toMatchObject({ label: 'reports.kpi.vatRefund:{}', value: 'AED\u00a02.25' });
   });
 });

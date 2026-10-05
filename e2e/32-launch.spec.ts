@@ -69,7 +69,7 @@ test('a purchase entered like the supplier’s invoice: 10 bottles of 1 L, deliv
           ?.contentDocument?.body?.innerText ?? '',
     );
   await expect.poll(printed).toContain('PUR-00001');
-  const paper = await printed();
+  const paper = (await printed()).replace(/\u00a0/g, ' '); // amounts keep "AED" and the number together
   for (const part of [
     'Purchase entry',
     'Gulf Salon Supplies',

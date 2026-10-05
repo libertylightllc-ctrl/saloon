@@ -10,6 +10,11 @@ import { usePaymentDetails } from './api';
  * Where to pay for the plan, as the platform owner set it (Admin → Payment details): a card payment link and/or bank
  * transfer details, with the salon code as the reference so the payment is matched to the salon.
  */
+/** An IBAN in groups of four, as banks print it: easier to read out and to check, and it wraps on a narrow phone. */
+export function groupIban(iban: string): string {
+  return iban.replace(/\s+/g, '').replace(/(.{4})(?=.)/g, '$1 ');
+}
+
 export function HowToPay({ code }: { code: string }) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -51,11 +56,14 @@ export function HowToPay({ code }: { code: string }) {
           <Text variant="bodyStrong">{t('plan.pay.byTransfer')}</Text>
           {row(t('plan.pay.bank'), d.bank_name, 'plan-pay-bank')}
           {row(t('plan.pay.accountName'), d.bank_account_name, 'plan-pay-account')}
-          {row(t('plan.pay.iban'), d.bank_iban, 'plan-pay-iban')}
+          {row(t('plan.pay.iban'), d.bank_iban && groupIban(d.bank_iban), 'plan-pay-iban')}
           {row(t('plan.pay.swift'), d.bank_swift, 'plan-pay-swift')}
+          {/* The reference with the bank details, so its value starts in the same column. */}
+          {row(t('plan.pay.reference'), code, 'plan-pay-reference')}
         </View>
-      ) : null}
-      {row(t('plan.pay.reference'), code, 'plan-pay-reference')}
+      ) : (
+        row(t('plan.pay.reference'), code, 'plan-pay-reference')
+      )}
       <Text variant="small" color="textSecondary">
         {t('plan.pay.referenceHint')}
       </Text>
@@ -67,7 +75,7 @@ export function HowToPay({ code }: { code: string }) {
 const styles = StyleSheet.create({
   card: { gap: spacing.md },
   bank: { gap: spacing.sm, padding: spacing.md },
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  row: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md },
   label: { width: 120 },
   flex: { flex: 1 },
 });

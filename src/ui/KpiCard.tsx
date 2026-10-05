@@ -49,15 +49,7 @@ export function KpiCard({ label, value, delta, sub, icon, hero, action, style, t
           {label}
         </Text>
       </View>
-      {/* Without a line under it, the value sits at the card's foot, so values line up across a row of cards even
-          when one label takes two lines. */}
-      <FitText
-        variant={hero ? 'display' : 'h3'}
-        weight="bold"
-        tabular
-        style={!sub && !delta && !action ? styles.foot : undefined}
-        testID={testID ? `${testID}-value` : undefined}
-      >
+      <FitText variant={hero ? 'display' : 'h3'} weight="bold" tabular testID={testID ? `${testID}-value` : undefined}>
         {value}
       </FitText>
       <View style={styles.footer}>
@@ -93,7 +85,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flex: { flexShrink: 1 },
-  foot: { marginTop: 'auto' },
   footer: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   subRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flex: 1 },
   delta: { borderRadius: 999, paddingHorizontal: spacing.sm, paddingVertical: 2 },

@@ -108,10 +108,11 @@ export function StaffDetailScreen() {
                       {rows.map((a) => (
                         <View key={a.id} style={styles.row} testID={`staff-day-${a.business_date}`}>
                           <Text style={styles.flex}>{dates.day(a.business_date, 'EEE d MMM')}</Text>
+                          {/* The late pill before the times, so every day's times end in the same column. */}
+                          {a.late ? <StatusPill tone="warning" label={t('attendance.lateBy', { n: a.late_minutes })} /> : null}
                           <Text tabular>
                             {dates.at(a.clock_in, business.timezone, 'HH:mm')}–{a.clock_out ? dates.at(a.clock_out, business.timezone, 'HH:mm') : '…'}
                           </Text>
-                          {a.late ? <StatusPill tone="warning" label={t('attendance.lateBy', { n: a.late_minutes })} /> : null}
                         </View>
                       ))}
                     </Card>
