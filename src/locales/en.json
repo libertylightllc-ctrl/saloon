@@ -799,7 +799,8 @@
     "invalid_tax_rate": "Enter a tax rate from 0 to 30%.",
     "invalid_iban": "That IBAN does not look right. It starts with two letters and two numbers, like AE07 0331 2345 6789 0123 456.",
     "invalid_swift": "A SWIFT / BIC code has 8 or 11 letters and numbers.",
-    "invalid_link": "The payment link must start with https://"
+    "invalid_link": "The payment link must start with https://",
+    "document_exists": "There is already a record with that name for them."
   },
   "sales": {
     "title": "Sales",
@@ -1707,7 +1708,21 @@
       "missing": "No Montaji number",
       "registered": "Registered",
       "add": "Add number"
-    }
+    },
+    "editDetails": "Edit",
+    "editHint": "Fixes a mistake in these details. For a new licence or card, use Renew.",
+    "changesSaved": "Changes saved",
+    "delete": "Delete",
+    "deleteTitle": "Delete {{name}}?",
+    "deleteBody": "It leaves the register and no longer counts towards inspection readiness. Nothing is lost: you can put it back, with its details, from “Removed” at the end of the register.",
+    "deleteReason": "Reason (optional)",
+    "deleteReasonHint": "e.g. not needed for this branch",
+    "deleted": "Deleted from the register",
+    "removed": "Removed",
+    "removedLine": "Deleted {{date}}",
+    "restore": "Put back",
+    "restored": "Back on the register",
+    "actionsFor": "Actions for {{name}}"
   },
   "notifications": {
     "title": "Notifications",

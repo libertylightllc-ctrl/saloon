@@ -191,6 +191,10 @@ the compliance template for that mode. Owner can edit everything after.
   Default types: Trade licence, Ejari / tenancy contract, Pest control certificate, Occupational health card (per staff),
   Staff visa / residence permit (per staff), Staff vaccination record (per staff), Civil defence certificate.
   Status: Valid / Due soon / Expired / Missing date / Evidence missing.
+  Every item can be **edited** (corrects the current version in place, photo included; the owner's own records can be
+  renamed) and **deleted** (from the row's ⋯ or the record's page, with an optional reason). A deleted item leaves the
+  register and readiness but is kept: it is listed under **Removed** and **Put back** restores it with its details;
+  adding details to a deleted checklist item also brings it back.
 - **Hygiene log:** daily checklist (tools sterilised, towels changed, surfaces cleaned, waste disposed…) signed by a user;
   setting "Require evidence" forces a photo.
 - **Inspection binder:** one screen that lists everything an inspector asks for, with status, and exports a PDF.

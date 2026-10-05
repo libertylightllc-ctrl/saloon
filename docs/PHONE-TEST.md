@@ -287,3 +287,12 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 4. iPad (landscape) → ✅ a slim icon rail; Queue and Sale in two panes. Turn it upright → ✅ one pane, Checkout opens
    as a sheet again.
 5. Phone → ✅ exactly as before.
+
+## 33 · Edit and delete a compliance record (2 min)
+
+1. More → **Compliance** → **Trade licence** row → **⋯** → **Add details** → number `CN-1234`, an expiry date → Save.
+2. **⋯** again → **Edit** → change the number to `CN-12345` → Save → ✅ "Changes saved"; the row shows CN-12345 and its
+   page still says version 1.
+3. Open the row → **Delete** → reason `Held by the head office` → **Delete** → ✅ back on the register, the licence is gone
+   and listed under **Removed** with the reason; readiness counts one record fewer.
+4. **Put back** → ✅ the licence returns with CN-12345.

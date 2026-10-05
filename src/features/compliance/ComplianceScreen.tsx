@@ -8,12 +8,14 @@ import { isUae } from '@/lib/countries';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
-import { Button, HeaderBand, KpiCard, KpiGrid, ListRow, QueryState, Screen, SectionHeader, SegmentTabs, StatusPill } from '@/ui';
+import { Button, HeaderBand, IconButton, KpiCard, KpiGrid, ListRow, QueryState, Screen, SectionHeader, SegmentTabs, StatusPill } from '@/ui';
 
 import { useCompliance, type Slot } from './api';
 import { BinderTab } from './BinderTab';
+import { DocumentActions } from './DocumentActions';
 import { HygieneTab } from './HygieneTab';
 import { DOC_STATUS, useDocName } from './labels';
+import { RemovedList } from './RemovedList';
 import { WpsMontajiTab } from './WpsMontajiTab';
 
 type Tab = 'register' | 'binder' | 'hygiene' | 'wps';
@@ -56,6 +58,8 @@ function Register() {
   const docName = useDocName();
   const { business } = useWorkspace();
   const slots = useCompliance(business.id);
+  // The item whose "⋯" was tapped (by key, so the sheet always shows its latest details).
+  const [menuKey, setMenuKey] = useState<string | null>(null);
   const open = (s: Slot) =>
     router.push({
       pathname: '/compliance/doc',
@@ -80,6 +84,15 @@ function Register() {
                 : []),
             ]}
             badges={<StatusPill status={DOC_STATUS[s.status]} label={t(`compliance.status.${s.status}`)} />}
+            action={
+              <IconButton
+                icon="ellipsis"
+                variant="plain"
+                accessibilityLabel={t('compliance.actionsFor', { name: docName(s.doc_type) })}
+                onPress={() => setMenuKey(s.slot_key)}
+                testID={`doc-menu-${s.doc_type}-${s.holder_name}`}
+              />
+            }
             chevron
             onPress={() => open(s)}
           />
@@ -94,6 +107,8 @@ function Register() {
             {rows.filter((s) => s.holder_type !== 'employee').map(row)}
             <SectionHeader title={t('compliance.staff')} />
             {rows.filter((s) => s.holder_type === 'employee').map(row)}
+            <RemovedList />
+            <DocumentActions slot={rows.find((s) => s.slot_key === menuKey) ?? null} onClose={() => setMenuKey(null)} />
           </View>
         );
       }}

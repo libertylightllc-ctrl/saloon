@@ -62,6 +62,7 @@ export function useLiveSync(businessId: string, branchId: string, memberId: stri
       payroll_lines: [keys.payroll(businessId), keys.closing(branchId)],
       payroll_adjustments: [keys.payroll(businessId), keys.closing(branchId)],
       compliance_documents: [keys.compliance(businessId), keys.dashboard(branchId), ['reports', branchId]],
+      compliance_removals: [keys.compliance(businessId), keys.dashboard(branchId), ['reports', branchId]],
       hygiene_logs: [keys.hygiene(branchId), keys.dashboard(branchId)],
       refund_requests: [['refund-request']],
       notifications: [keys.notifications(memberId)],

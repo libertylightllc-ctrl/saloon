@@ -172,3 +172,87 @@ export function useSignHygiene(businessId: string, branchId: string) {
     onSuccess: done,
   });
 }
+
+/** Correct the current version in place (Renew makes a new one); the owner's own records can be renamed. */
+export function useUpdateDocument(businessId: string, branchId: string) {
+  const done = useInvalidateCompliance(businessId, branchId);
+  return useMutation({
+    mutationFn: async (input: Omit<DocumentInput, 'branch_id' | 'employee_id'> & { id: string; photo?: PickedPhoto | null }) => {
+      const { photo, ...doc } = input;
+      const { error } = await supabase.rpc('update_document', { p: asJson(doc) });
+      if (error) throw error;
+      if (photo) {
+        const path = await uploadPhoto('documents', `${businessId}/compliance`, input.id, photo);
+        const { error: e2 } = await supabase.rpc('attach_document_evidence', { p_document: input.id, p_path: path });
+        if (e2) throw e2;
+      }
+    },
+    onSuccess: done,
+  });
+}
+
+/** Delete an item from the register (kept, and listed under Removed so it can be put back). */
+export function useRemoveDocument(businessId: string, branchId: string) {
+  const done = useInvalidateCompliance(businessId, branchId);
+  return useMutation({
+    mutationFn: async ({ slot, reason }: { slot: Slot; reason: string }) => {
+      const { error } = await supabase.rpc('remove_document_slot', {
+        p: asJson({
+          business_id: businessId,
+          doc_type: slot.doc_type,
+          holder_type: slot.holder_type,
+          branch_id: slot.branch_id,
+          employee_id: slot.employee_id,
+          reason: reason.trim() || null,
+        }),
+      });
+      if (error) throw error;
+    },
+    onSuccess: done,
+  });
+}
+
+export function useRestoreDocument(businessId: string, branchId: string) {
+  const done = useInvalidateCompliance(businessId, branchId);
+  return useMutation({
+    mutationFn: async (removalId: string) => {
+      const { error } = await supabase.rpc('restore_document_slot', { p_removal: removalId });
+      if (error) throw error;
+    },
+    onSuccess: done,
+  });
+}
+
+export interface Removal {
+  id: string;
+  doc_type: string;
+  holder_name: string;
+  /** It had details when deleted; putting it back brings them back. */
+  had_details: boolean;
+  reason: string | null;
+  created_at: string;
+}
+
+/** Items deleted from the register, newest first. */
+export function useRemovals(businessId: string, enabled = true) {
+  return useQuery({
+    enabled,
+    queryKey: [...keys.compliance(businessId), 'removed'],
+    queryFn: async (): Promise<Removal[]> => {
+      const { data, error } = await supabase
+        .from('compliance_removals')
+        .select('id, doc_type, document_id, reason, created_at, employees(full_name), branches(name)')
+        .eq('business_id', businessId)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data.map((r) => ({
+        id: r.id,
+        doc_type: r.doc_type,
+        holder_name: r.employees?.full_name ?? r.branches?.name ?? '',
+        had_details: r.document_id !== null,
+        reason: r.reason,
+        created_at: r.created_at,
+      }));
+    },
+  });
+}

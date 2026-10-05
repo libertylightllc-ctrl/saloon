@@ -9,9 +9,10 @@ import { useReceiptUrl } from '@/features/moneyout/receipts';
 import { formatMoney } from '@/lib/money';
 import { useDates } from '@/lib/useDates';
 import { spacing, useTheme } from '@/theme';
-import { BottomSheet, Button, Card, EmptyState, FormError, HeaderBand, QueryState, Screen, SectionHeader, StatusPill, Text, useToast } from '@/ui';
+import { Button, Card, EmptyState, FormError, HeaderBand, QueryState, Screen, SectionHeader, StatusPill, Text, useToast } from '@/ui';
 
 import { useAttachEvidence, useCompliance, useVersions } from './api';
+import { DocumentActions, type DocumentStage } from './DocumentActions';
 import { DocumentForm } from './DocumentForm';
 import { DOC_STATUS, useDocName } from './labels';
 
@@ -28,7 +29,7 @@ function Row({ label, value, testID }: { label: string; value: string; testID?: 
   );
 }
 
-/** One record: current version, its scan, earlier versions; add details or renew. Owner. */
+/** One record: current version, its scan, earlier versions; add details, renew, edit or delete it. Owner. */
 export function DocumentScreen() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -39,7 +40,7 @@ export function DocumentScreen() {
   const params = useLocalSearchParams<{ type?: string; branch?: string; employee?: string; new?: string }>();
   const { business, branch } = useWorkspace();
   const slots = useCompliance(business.id);
-  const [editing, setEditing] = useState(false);
+  const [sheet, setSheet] = useState<DocumentStage | null>(null);
   const slot =
     params.new === '1'
       ? null
@@ -86,9 +87,22 @@ export function DocumentScreen() {
                     label={t(slot.document_id ? 'compliance.renew' : 'compliance.addDetails')}
                     icon={slot.document_id ? 'rotate' : 'plus'}
                     size="md"
-                    onPress={() => setEditing(true)}
+                    onPress={() => setSheet(slot.document_id ? 'renew' : 'add')}
                     testID="doc-edit"
                   />
+                  <View style={styles.actions}>
+                    {slot.document_id ? (
+                      <Button
+                        label={t('compliance.editDetails')}
+                        icon="pencil"
+                        variant="secondary"
+                        size="md"
+                        onPress={() => setSheet('edit')}
+                        testID="doc-edit-details"
+                      />
+                    ) : null}
+                    <Button label={t('compliance.delete')} icon="trash" variant="ghost" size="md" onPress={() => setSheet('delete')} testID="doc-delete" />
+                  </View>
                 </Card>
                 {slot.document_id ? (
                   <View style={styles.card}>
@@ -128,9 +142,16 @@ export function DocumentScreen() {
           }
         </QueryState>
       </Screen>
-      <BottomSheet open={editing} onClose={() => setEditing(false)} title={slot ? docName(slot.doc_type) : ''}>
-        {editing && slot ? <DocumentForm slot={slot} onDone={() => setEditing(false)} /> : null}
-      </BottomSheet>
+      <DocumentActions
+        slot={sheet ? slot : null}
+        start={sheet ?? 'menu'}
+        onClose={() => setSheet(null)}
+        onDeleted={() => router.back()}
+        // A renamed record keeps its page.
+        onSaved={(docType) => {
+          if (docType !== params.type) router.setParams({ type: docType });
+        }}
+      />
     </>
   );
 }
@@ -139,6 +160,7 @@ const styles = StyleSheet.create({
   body: { gap: spacing.lg },
   card: { gap: spacing.sm },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   flex: { flex: 1 },
   thumb: { width: 160, height: 160 },
 });

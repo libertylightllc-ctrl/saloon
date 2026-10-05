@@ -745,6 +745,9 @@ export type Database = {
           number: string | null;
           previous_id: string | null;
           reminder_days: number;
+          remove_reason: string | null;
+          removed_at: string | null;
+          removed_by: string | null;
           renewal_cost_minor: number | null;
           version: number;
         };
@@ -764,6 +767,9 @@ export type Database = {
           number?: string | null;
           previous_id?: string | null;
           reminder_days?: number;
+          remove_reason?: string | null;
+          removed_at?: string | null;
+          removed_by?: string | null;
           renewal_cost_minor?: number | null;
           version?: number;
         };
@@ -783,6 +789,9 @@ export type Database = {
           number?: string | null;
           previous_id?: string | null;
           reminder_days?: number;
+          remove_reason?: string | null;
+          removed_at?: string | null;
+          removed_by?: string | null;
           renewal_cost_minor?: number | null;
           version?: number;
         };
@@ -820,6 +829,88 @@ export type Database = {
             columns: ['previous_id'];
             isOneToOne: false;
             referencedRelation: 'compliance_documents';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'compliance_documents_removed_by_fkey';
+            columns: ['removed_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      compliance_removals: {
+        Row: {
+          branch_id: string | null;
+          business_id: string;
+          created_at: string;
+          doc_type: string;
+          document_id: string | null;
+          employee_id: string | null;
+          holder_type: string;
+          id: string;
+          reason: string | null;
+          removed_by: string | null;
+        };
+        Insert: {
+          branch_id?: string | null;
+          business_id: string;
+          created_at?: string;
+          doc_type: string;
+          document_id?: string | null;
+          employee_id?: string | null;
+          holder_type: string;
+          id?: string;
+          reason?: string | null;
+          removed_by?: string | null;
+        };
+        Update: {
+          branch_id?: string | null;
+          business_id?: string;
+          created_at?: string;
+          doc_type?: string;
+          document_id?: string | null;
+          employee_id?: string | null;
+          holder_type?: string;
+          id?: string;
+          reason?: string | null;
+          removed_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'compliance_removals_branch_id_fkey';
+            columns: ['branch_id'];
+            isOneToOne: false;
+            referencedRelation: 'branches';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'compliance_removals_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'compliance_removals_document_id_fkey';
+            columns: ['document_id'];
+            isOneToOne: false;
+            referencedRelation: 'compliance_documents';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'compliance_removals_employee_id_fkey';
+            columns: ['employee_id'];
+            isOneToOne: false;
+            referencedRelation: 'employees';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'compliance_removals_removed_by_fkey';
+            columns: ['removed_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
             referencedColumns: ['id'];
           },
         ];
@@ -3375,6 +3466,13 @@ export type Database = {
           version: number;
         }[];
       };
+      compliance_template: {
+        Args: { p_business: string };
+        Returns: {
+          doc_type: string;
+          holder_type: string;
+        }[];
+      };
       configure_push: { Args: { p_anon_key: string; p_project_url: string }; Returns: undefined };
       create_appointment: { Args: { p: Json }; Returns: string };
       create_business: { Args: { p: Json }; Returns: Json };
@@ -3526,6 +3624,7 @@ export type Database = {
         Returns: undefined;
       };
       register_staff_member: { Args: { p: Json }; Returns: Json };
+      remove_document_slot: { Args: { p: Json }; Returns: undefined };
       remove_staff: { Args: { p_actor: string; p_employee: string }; Returns: Json };
       reopen_period: {
         Args: { p_business: string; p_month: string; p_reason: string };
@@ -3634,6 +3733,7 @@ export type Database = {
         };
       };
       require_plan: { Args: { p_business: string }; Returns: undefined };
+      restore_document_slot: { Args: { p_removal: string }; Returns: undefined };
       restore_staff: { Args: { p_actor: string; p_employee: string }; Returns: Json };
       return_cash_closing: { Args: { p_id: string; p_reason: string }; Returns: Json };
       reverse_adjustment: { Args: { p_id: string; p_reason: string }; Returns: undefined };
@@ -3727,6 +3827,7 @@ export type Database = {
       unique_business_code: { Args: { p_name: string }; Returns: string };
       unregister_push_token: { Args: { p_token: string }; Returns: undefined };
       update_branch: { Args: { p: Json; p_branch: string }; Returns: undefined };
+      update_document: { Args: { p: Json }; Returns: undefined };
       wps_status: { Args: { p_business: string }; Returns: Json };
       write_audit: {
         Args: {

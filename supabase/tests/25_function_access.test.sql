@@ -62,6 +62,7 @@ insert into reviewed values
     ('record_stock_count'),
     ('refund_sale'),
     ('register_push_token'),
+    ('remove_document_slot'),
     ('reopen_period'),
     ('report_closing'),
     ('report_customers'),
@@ -73,6 +74,7 @@ insert into reviewed values
     ('request_plan'),
     ('request_refund'),
     ('require_member'),
+    ('restore_document_slot'),
     ('return_cash_closing'),
     ('reverse_adjustment'),
     ('reverse_expense'),
@@ -97,6 +99,7 @@ insert into reviewed values
     ('undo_no_show'),
     ('unregister_push_token'),
     ('update_branch'),
+    ('update_document'),
     ('wps_status');
 
 select is(

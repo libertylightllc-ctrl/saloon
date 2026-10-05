@@ -28,6 +28,11 @@ export interface ListRowProps {
   trailing?: ReactNode;
   /** A row of actions under the content. */
   footer?: ReactNode;
+  /**
+   * A button beside the row (a "⋯" menu), outside the row's own tap area — a web page cannot put a button inside a
+   * button. It sits before the chevron.
+   */
+  action?: ReactNode;
   chevron?: boolean;
   onPress?: () => void;
   accessibilityLabel?: string;
@@ -45,6 +50,7 @@ export function ListRow({
   badges,
   trailing,
   footer,
+  action,
   chevron,
   onPress,
   accessibilityLabel,
@@ -54,6 +60,7 @@ export function ListRow({
   const theme = useTheme();
   const card = theme.variants.listRow === 'card';
 
+  const chevronIcon = <Icon name="chevronRight" size={20} color={theme.colors.textSecondary} />;
   const content = (
     <>
       <View style={styles.main}>
@@ -87,7 +94,7 @@ export function ListRow({
           {badges ? <View style={styles.badges}>{badges}</View> : null}
         </View>
         {trailing ? <View style={styles.trailing}>{trailing}</View> : null}
-        {chevron ? <Icon name="chevronRight" size={20} color={theme.colors.textSecondary} /> : null}
+        {chevron && !action ? chevronIcon : null}
       </View>
       {footer ? <View style={styles.footer}>{footer}</View> : null}
     </>
@@ -120,6 +127,27 @@ export function ListRow({
         {content}
       </View>
     );
+  if (action)
+    return (
+      <View style={[look, styles.withAction]} testID={testID}>
+        <Pressable
+          onPress={onPress}
+          accessibilityRole="button"
+          accessibilityLabel={accessibilityLabel ?? title}
+          accessibilityState={selected === undefined ? undefined : { selected }}
+          style={({ pressed }) => [styles.grow, styles.row, pressed && styles.pressed]}
+        >
+          {content}
+        </Pressable>
+        {action}
+        {chevron ? (
+          // The chevron opens the row too; the row's own button already says so to a screen reader.
+          <Pressable onPress={onPress} aria-hidden focusable={false} importantForAccessibility="no-hide-descendants">
+            {chevronIcon}
+          </Pressable>
+        ) : null}
+      </View>
+    );
   return (
     <Pressable
       onPress={onPress}
@@ -136,6 +164,8 @@ export function ListRow({
 
 const styles = StyleSheet.create({
   row: { gap: spacing.md },
+  withAction: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  grow: { flex: 1 },
   main: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   body: { flex: 1, gap: 2 },
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
