@@ -71,9 +71,10 @@ wizard into that theme.
 │ │ Expected cash today   AED 1,240.00│ │  ← KPI hero card overlapping the band
 │ │ ▲12% vs yesterday     [Close day] │ │
 │ └───────────────────────────────────┘ │
-│ [Sales today] [Appointments] [Money out]  ← horizontal KPI cards
+│ [Sales today] [Appointments]           │  ← KPI cards in a grid, two to a row;
+│ [Money out                           ] │    an odd last card takes the row (never slides)
 │ PromoBanner: setup 4/6 or top "needs attention" item
-│ Quick actions (CategoryCircle row): Walk-in · Book · New sale · Expense · Stock
+│ Quick actions (CategoryCircle grid, up to 4 across, else 3 to a row): Walk-in · Book · New sale · Customer · Expense · Stock
 │ Needs attention  (ListRows with action button)
 │ Today's queue    (next 5 + "Open queue")
 │ Revenue · 7 days (bar chart)  |  Payment mix today

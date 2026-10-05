@@ -1,19 +1,19 @@
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
-import { Button, KpiCard } from '@/ui';
+import { Button, KpiCard, KpiGrid } from '@/ui';
 
 import type { Dashboard } from './api';
 
 /**
- * Expected cash (the hero card), sales, money out and the day's visits. Phones: the hero card over a scrolling strip.
- * `row` (wider screens): the four side by side.
+ * Expected cash (the hero card), sales, the day's visits and money out. Phones: the hero card over the others two to a
+ * row (money out, the longest line, gets a row of its own). `row` (wider screens): the four side by side.
  */
 export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
   const { t } = useTranslation();
@@ -69,6 +69,16 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
       sub={t('home.salesSub', { services: Number(data.sales?.services ?? 0), sales: data.sales?.count ?? 0 })}
       testID="kpi-sales"
     />,
+    a ? (
+      <KpiCard
+        key="visits"
+        style={fill}
+        icon="calendar"
+        label={t('home.appointmentsToday')}
+        value={t('home.doneCount', { n: a.completed })}
+        sub={t('home.appointmentsSub', { waiting: a.waiting + a.in_progress, booked: a.booked, noShow: a.no_show })}
+      />
+    ) : null,
     data.money_out ? (
       <KpiCard
         key="out"
@@ -81,16 +91,6 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
           expenses: formatMoney(data.money_out.expenses_minor),
         })}
         testID="kpi-money-out"
-      />
-    ) : null,
-    a ? (
-      <KpiCard
-        key="visits"
-        style={fill}
-        icon="calendar"
-        label={t('home.appointmentsToday')}
-        value={t('home.doneCount', { n: a.completed })}
-        sub={t('home.appointmentsSub', { waiting: a.waiting + a.in_progress, booked: a.booked, noShow: a.no_show })}
       />
     ) : null,
   ].filter(Boolean);
@@ -110,15 +110,12 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
   return (
     <>
       {hero}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.strip}>
-        {others}
-      </ScrollView>
+      <KpiGrid>{others}</KpiGrid>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  strip: { gap: spacing.md, paddingVertical: spacing.xs, paddingHorizontal: 2 },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.lg },
   cell: { flexGrow: 1, flexBasis: 220 },
   heroCell: { flexGrow: 1.5, flexBasis: 300 },

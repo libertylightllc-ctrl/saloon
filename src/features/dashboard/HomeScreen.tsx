@@ -1,6 +1,6 @@
 import { useRouter, type Href } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { useAppointments } from '@/features/queue/api';
@@ -16,6 +16,7 @@ import {
   EmptyState,
   HeaderBand,
   KpiCard,
+  KpiGrid,
   PromoBanner,
   QueryState,
   Screen,
@@ -73,21 +74,22 @@ export function HomeScreen() {
     { key: 'expense', icon: 'coins', href: '/expenses/new', show: can(role, 'addExpense') },
     { key: 'stock', icon: 'boxes', href: '/inventory', show: can(role, 'viewInventory') && role !== 'staff' },
   ];
-  // Phones: one row across the screen. Wider screens: three to a row in the narrow side column, so none is cut off.
+  const shown = quick.filter((q) => q.show);
+  // A grid, never a sliding or cut-off row: up to four across a phone, otherwise three to a row (always three in the
+  // narrow side column of wider screens).
+  const perRow = !wide && shown.length <= 4 ? shown.length : 3;
   const quickRow = (
-    <View style={wide ? styles.circleGrid : styles.circles}>
-      {quick
-        .filter((q) => q.show)
-        .map((q, i) => (
-          <View key={q.key} style={wide ? styles.circleCell : undefined}>
-            <CategoryCircle
-              icon={q.icon}
-              index={i}
-              label={t(`home.quick.${q.key}` as 'home.quick.walkIn')}
-              onPress={() => router.push(q.href)}
-            />
-          </View>
-        ))}
+    <View style={styles.circleGrid}>
+      {shown.map((q, i) => (
+        <View key={q.key} style={[styles.circleCell, { width: `${100 / perRow}%` }]}>
+          <CategoryCircle
+            icon={q.icon}
+            index={i}
+            label={t(`home.quick.${q.key}` as 'home.quick.walkIn')}
+            onPress={() => router.push(q.href)}
+          />
+        </View>
+      ))}
     </View>
   );
 
@@ -128,11 +130,11 @@ export function HomeScreen() {
               />
             ) : null;
             const mine_ = data.me ? (
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.kpiRow}>
+              <KpiGrid>
                 <KpiCard icon="scissors" label={t('home.me.services')} value={String(Number(data.me.services_today))} />
                 <KpiCard icon="receipt" label={t('home.me.sales')} value={formatMoney(data.me.sales_today_minor)} />
                 <KpiCard icon="coins" label={t('home.me.commission')} value={formatMoney(data.me.commission_month_minor)} />
-              </ScrollView>
+              </KpiGrid>
             ) : null;
             const clock = role === 'staff' || role === 'cashier' ? <ClockCard /> : null;
             const quickBlock =
@@ -222,10 +224,8 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   sections: { gap: spacing['2xl'] },
   block: { gap: spacing.md },
-  circles: { flexDirection: 'row', justifyContent: 'space-around' },
   circleGrid: { flexDirection: 'row', flexWrap: 'wrap', rowGap: spacing.lg },
-  circleCell: { width: '33.33%', alignItems: 'center' },
-  kpiRow: { gap: spacing.md, paddingVertical: spacing.xs, paddingHorizontal: 2 },
+  circleCell: { alignItems: 'center' },
   columns: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing['2xl'] },
   mainColumn: { flex: 2, minWidth: 0, gap: spacing['2xl'] },
   sideColumn: { flex: 1, minWidth: 0, gap: spacing['2xl'] },

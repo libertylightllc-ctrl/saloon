@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { formatMoney, sum } from '@/lib/money';
@@ -13,6 +13,7 @@ import {
   EmptyState,
   HeaderBand,
   KpiCard,
+  KpiGrid,
   ListRow,
   PillTabs,
   QueryState,
@@ -79,14 +80,14 @@ export function InventoryScreen() {
           const value = sum(active.map((i) => i.value_minor ?? 0));
           return (
             <View style={styles.body}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.kpis}>
+              <KpiGrid>
                 {can(role, 'viewMoney') ? (
                   <KpiCard icon="wallet" label={t('inventory.value')} value={formatMoney(value)} testID="inventory-value" />
                 ) : null}
                 <KpiCard icon="alert" label={t('inventory.lowCount')} value={String(active.filter((i) => i.low).length)} testID="inventory-low" />
                 <KpiCard icon="package" label={t('inventory.activeItems')} value={String(active.length)} />
                 <KpiCard icon="rotate" label={t('inventory.movements')} value={String(sum(active.map((i) => i.movements_30d)))} />
-              </ScrollView>
+              </KpiGrid>
               <View style={styles.actions}>
                 {can(role, 'countStock') ? (
                   <Button label={t('inventory.count')} icon="clipboard" variant="outline" size="md" onPress={() => router.push('/inventory/count')} testID="inventory-count" />
@@ -151,7 +152,6 @@ export function InventoryScreen() {
 
 const styles = StyleSheet.create({
   body: { gap: spacing.md },
-  kpis: { gap: spacing.md, paddingVertical: spacing.xs, paddingHorizontal: 2 },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   trailing: { alignItems: 'flex-end', gap: 2 },
 });

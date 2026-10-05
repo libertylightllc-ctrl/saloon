@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { useTeam, type TeamMember } from '@/features/team/api';
@@ -9,7 +9,7 @@ import { businessDate } from '@/lib/dates';
 import { formatBps, formatMoney, sum } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
-import { Avatar, Button, Card, EmptyState, HeaderBand, KpiCard, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
+import { Avatar, Button, Card, EmptyState, HeaderBand, KpiCard, KpiGrid, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
 import { useAttendanceDay, useStaffDirectory, type StaffMember } from './api';
 import { useRoleTitle } from './labels';
@@ -76,11 +76,11 @@ export function StaffScreen() {
               const onShift = (today.data ?? []).filter((a) => a.status === 'on_shift').length;
               return (
                 <View style={styles.body}>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.kpis}>
+                  <KpiGrid>
                     <KpiCard icon="users" label={t('staff.people')} value={String(active.length)} testID="staff-count" />
                     <KpiCard icon="userCheck" label={t('staff.inToday')} value={String(onShift)} testID="staff-in" />
                     <KpiCard icon="wallet" label={t('staff.salaries')} value={formatMoney(sum(active.map((s) => s.base_salary_minor)))} testID="staff-salaries" />
-                  </ScrollView>
+                  </KpiGrid>
                   <View style={styles.actions}>
                     <Button label={t('attendance.title')} icon="clock" variant="outline" size="md" onPress={() => router.push('/attendance')} testID="staff-attendance" />
                     <Button label={t('payroll.title')} icon="wallet" variant="outline" size="md" onPress={() => router.push('/payroll')} testID="staff-payroll" />
@@ -147,7 +147,6 @@ export function StaffScreen() {
 const styles = StyleSheet.create({
   body: { gap: spacing.md },
   code: { gap: spacing.xs },
-  kpis: { gap: spacing.md, paddingVertical: spacing.xs, paddingHorizontal: 2 },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   badges: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
   trailing: { alignItems: 'flex-end', gap: 2 },

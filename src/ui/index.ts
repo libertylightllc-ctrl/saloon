@@ -14,6 +14,7 @@ export { Icon, icons, type IconName } from './Icon';
 export { IconButton } from './IconButton';
 export { Illustration, type IllustrationName } from './Illustration';
 export { KpiCard, type KpiDelta } from './KpiCard';
+export { KpiGrid } from './KpiGrid';
 export { ListRow, type ListMeta } from './ListRow';
 export { MenuGroup } from './MenuGroup';
 export { MenuRow } from './MenuRow';
