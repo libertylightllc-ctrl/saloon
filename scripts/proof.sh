@@ -65,9 +65,29 @@ while [ $attempt -lt 5 ]; do
     fi
   done
   echo "3 runs in a row passed (attempt $attempt). Realtime rebalancing lines during the runs: $(docker logs --since "$(cat "$S/final-start.txt")" supabase_realtime_salon-app 2>&1 | grep -cE 'Rebalancing|Zero region')" >> "$S/final-summary.txt"
-  E2E_WORKERS=2 caffeinate -ims npx playwright test --grep @sweep --reporter=line > "$S/final-sweep.log" 2>&1
-  echo "sweep: $(grep -E '^\s+[0-9]+ (passed|failed)' "$S/final-sweep.log" | tr -s ' ' | tr '\n' ' ')" >> "$S/final-summary.txt"
-  echo DONE >> "$S/final-summary.txt"
-  exit 0
+  # The button sweep, on the same terms: a sweep spoiled by sleep, a full disk or overload is run again (up to 3 times).
+  sweeps=0
+  while [ $sweeps -lt 3 ]; do
+    sweeps=$((sweeps+1))
+    wait_quiet
+    sweep_start=$(date "+%Y-%m-%d %H:%M:%S")
+    E2E_WORKERS=2 caffeinate -ims npx playwright test --grep @sweep --reporter=line > "$S/final-sweep.log" 2>&1
+    echo "sweep: $(grep -E '^\s+[0-9]+ (passed|failed)' "$S/final-sweep.log" | tr -s ' ' | tr '\n' ' ')" >> "$S/final-summary.txt"
+    grep -q " failed" "$S/final-sweep.log" || { echo DONE >> "$S/final-summary.txt"; exit 0; }
+    slept=$(slept_since "$sweep_start")
+    timeouts=$(grep -cE "504 POST|AuthRetryableFetchError|Gateway Timeout|server_busy" "$S/final-sweep.log")
+    if grep -q "ENOSPC" "$S/final-sweep.log"; then
+      echo "sweep discarded: the disk filled up" >> "$S/final-summary.txt"
+    elif [ "$slept" -gt 0 ]; then
+      echo "sweep discarded: the Mac went to sleep during it ($slept sleep events)" >> "$S/final-summary.txt"
+    elif [ "$timeouts" -gt 0 ] && [ "$(awk -v l="$(load5)" 'BEGIN{print (l > 12)}')" = 1 ]; then
+      echo "sweep discarded: the Mac was overloaded by other work" >> "$S/final-summary.txt"
+    else
+      echo "STOPPED: the sweep failed and not from sleep, disk or overload — needs investigation" >> "$S/final-summary.txt"
+      exit 1
+    fi
+  done
+  echo "GAVE UP: 3 sweeps spoiled by sleep, disk or overload" >> "$S/final-summary.txt"
+  exit 1
 done
 echo "GAVE UP after 5 attempts" >> "$S/final-summary.txt"
