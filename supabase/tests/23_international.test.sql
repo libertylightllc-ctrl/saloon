@@ -1,6 +1,6 @@
 -- Salons in any country (owner, 2026-10-04): the country brings the currency, time zone and sales tax; tax is either
 -- included in prices or added on top; a 3-decimal currency counts in thousandths; UAE-only rules stay with the UAE;
--- the plan is USD 29 outside the UAE.
+-- the plan is USD 13.99 (about AED 50) outside the UAE.
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
@@ -57,7 +57,7 @@ select lives_ok(format($$ select refund_sale(jsonb_build_object('sale_id', '%s',
   'reason', 'Wrong customer')) $$, current_setting('t.sale')), 'a full refund goes through');
 select is((select fmt_money(-2500)), '-USD 25.00', 'money without a currency is the salon''s');
 select is(plan_status(current_setting('t.us')::uuid) ->> 'currency', 'USD', 'the plan is priced in dollars');
-select is((plan_status(current_setting('t.us')::uuid) ->> 'price_per_branch_minor')::bigint, 2900::bigint, 'USD 29 a branch');
+select is((plan_status(current_setting('t.us')::uuid) ->> 'price_per_branch_minor')::bigint, 1399::bigint, 'USD 13.99 a branch');
 select is((select count(*)::int from compliance_status(current_setting('t.us')::uuid)
            where doc_type in ('business_licence', 'lease')), 2, 'the checklist asks for a business licence and the lease');
 select is((select count(*)::int from compliance_status(current_setting('t.us')::uuid)

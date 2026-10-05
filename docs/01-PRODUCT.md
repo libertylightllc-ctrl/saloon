@@ -9,7 +9,7 @@ First market: **United Arab Emirates** (AED, optional 5% VAT, Dubai Municipality
 **Any country** (owner, 2026-10-04): the owner picks the salon's country at setup (about 110 listed — the Middle East, Europe, the Caucasus and Central Asia, the Americas, South Asia and more — or "Other"); it
 brings the currency, time zone and sales tax (name, rate, included in prices or added at the till, what the tax
 number is called), all editable. The country itself can change in Branch settings until the first money is recorded. UAE-only rules — 15-digit TRN, WPS, Montaji, the UAE document checklist — apply only
-to UAE salons. The plan costs AED 99 per branch in the UAE and USD 29 elsewhere.
+to UAE salons. The plan costs AED 50 per branch a month in the UAE and USD 13.99 elsewhere (owner, 2026-10-06).
 **Languages** (owner, 2026-10-05): English, Arabic, Hindi, Urdu, Spanish, French and Portuguese (Russian dropped by the
 owner, 2026-10-06); a new device
 opens in its own language when the app has it. **Times** show in each person's own 12- or 24-hour clock, as their phone

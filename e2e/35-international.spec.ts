@@ -1,7 +1,7 @@
 /**
  * Salons in any country (owner, 2026-10-04): the country chosen at setup brings the currency, time zone and sales
  * tax; tax can be added at the till (US) instead of included in prices; a 3-decimal currency (KWD) counts in
- * thousandths; UAE-only features (WPS, Montaji, the UAE document checklist) stay with UAE salons; the plan is USD 29.
+ * thousandths; UAE-only features (WPS, Montaji, the UAE document checklist) stay with UAE salons; the plan is USD 13.99.
  */
 import type { Page } from '@playwright/test';
 
@@ -23,7 +23,7 @@ async function sellStarter(page: Page, mode: Mode) {
   await id(page, 'checkout').click();
 }
 
-test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt and a USD 29 plan', async ({ page, mode }) => {
+test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt and a USD 13.99 plan', async ({ page, mode }) => {
   const email = `ny-${uid()}@e2e.test`;
   const name = `Brooklyn ${mode} ${uid().slice(-6)}`;
   await chooseType(page, mode);
@@ -64,10 +64,10 @@ test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt
   expect(biz).toMatchObject({ country_code: 'US', currency: 'USD', timezone: 'America/New_York' });
   expect(biz!.branches[0]).toMatchObject({ tax_name: 'Sales tax', tax_rate_bps: 887.5, tax_inclusive: false, vat_mode: 'on' });
 
-  // The plan outside the UAE: USD 29 a branch. The platform owner switches it on.
+  // The plan outside the UAE: USD 13.99 a branch (about AED 50). The platform owner switches it on.
   await tab(page, 'more');
   await id(page, 'more-plan').click();
-  await expect(id(page, 'plan-price')).toHaveText('USD 29.00');
+  await expect(id(page, 'plan-price')).toHaveText('USD 13.99');
   await admin.from('subscriptions').upsert({ business_id: biz!.id, paid_until: '2099-12-31' });
   await expect(text(page, 'Paid until 31 December 2099.')).toBeVisible();
   await page.goto('/');

@@ -52,7 +52,7 @@ select register_staff_member(jsonb_build_object('business_id', current_setting('
 -- ── …but not used without a plan ─────────────────────────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-0000000014aa');
 select is((plan_status(current_setting('t.b')::uuid) ->> 'active')::boolean, false, 'no plan yet');
-select is((plan_status(current_setting('t.b')::uuid) ->> 'monthly_minor')::bigint, 9900::bigint, 'AED 99 for one branch');
+select is((plan_status(current_setting('t.b')::uuid) ->> 'monthly_minor')::bigint, 5000::bigint, 'AED 50 for one branch');
 select throws_ok(format($$ select create_sale(jsonb_build_object('branch_id', '%s', 'client_ref', 'p1',
   'lines', '[{"kind":"custom","name":"Fade","unit_price_minor":5000}]'::jsonb,
   'payments', '[{"method":"cash","amount_minor":5000}]'::jsonb)) $$, current_setting('t.br')), 'PT402', 'plan_required',
@@ -86,7 +86,7 @@ select is((select requested_months from admin_salons() where business_id = curre
   'the platform owner sees the request');
 select is(admin_activate(current_setting('t.b')::uuid, 3, 29700, 'Bank transfer ref 1234'),
   (business_today(current_setting('t.b')::uuid) - 1 + interval '3 months')::date, 'paid for 3 months from today');
-select is(admin_activate(current_setting('t.b')::uuid, 1, 9900, null),
+select is(admin_activate(current_setting('t.b')::uuid, 1, 5000, null),
   (business_today(current_setting('t.b')::uuid) - 1 + interval '4 months')::date, 'another month extends it from its end');
 
 select pg_temp.as_user('00000000-0000-0000-0000-0000000014aa');

@@ -13,7 +13,7 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   // No plan: Home says so, and new work is refused with a clear message.
   await ownerOn(page, mode, owner.email, owner.password);
   await expect(id(page, 'plan-banner')).toContainText('Switch on your plan');
-  await expect(id(page, 'plan-banner')).toContainText('AED 99.00');
+  await expect(id(page, 'plan-banner')).toContainText('AED 50.00');
   await tab(page, 'queue');
   await id(page, 'queue-new').click();
   await id(page, `pick-service-${SERVICE[mode].name}`).click();
