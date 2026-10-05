@@ -800,7 +800,8 @@
     "invalid_iban": "Ese IBAN no parece correcto. Empieza con dos letras y dos números, como AE07 0331 2345 6789 0123 456.",
     "invalid_swift": "Un código SWIFT / BIC tiene 8 u 11 letras y números.",
     "invalid_link": "El enlace de pago debe empezar con https://",
-    "document_exists": "Ya hay un registro con ese nombre para esta persona."
+    "document_exists": "Ya hay un registro con ese nombre para esta persona.",
+    "country_locked": "El país ya no puede cambiar: hay dinero registrado en este salón."
   },
   "sales": {
     "title": "Ventas",
@@ -957,6 +958,14 @@
       "off": "Ninguno",
       "simple": "Imprimir / compartir",
       "whatsapp": "WhatsApp"
+    },
+    "country": {
+      "title": "País",
+      "change": "Cambiar país",
+      "save": "Cambiar país",
+      "changed": "País cambiado",
+      "locked": "Se eligió al crear el salón. Ya no puede cambiar porque hay dinero registrado (una venta, un gasto, una compra o el efectivo inicial).",
+      "hint": "Esto cambia la moneda, la zona horaria y el impuesto de todas las sucursales. Los precios, salarios y anticipos que ingresaste se convierten de forma aproximada a la nueva moneda; revísalos después en Servicios, Inventario y Personal."
     }
   },
   "accounts": {

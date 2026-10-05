@@ -53,9 +53,12 @@ export function countryDefaults(c: Country): CountryValues {
 export function CountryStep<T extends CountryValues>({
   control,
   setValue,
+  preview = true,
 }: {
   control: Control<T>;
   setValue: UseFormSetValue<T>;
+  /** Setup shows the next steps' amounts in the picked currency at once; Branch settings waits for the save. */
+  preview?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -76,7 +79,7 @@ export function CountryStep<T extends CountryValues>({
   const pick = (next: Country) => {
     const v = countryDefaults(next);
     (Object.keys(v) as (keyof CountryValues)[]).forEach((k) => set(k, v[k], { shouldValidate: true }));
-    setActiveCurrency(next.currency);
+    if (preview) setActiveCurrency(next.currency);
   };
   const pickOther = () => {
     set('country', OTHER_COUNTRY);
@@ -87,7 +90,7 @@ export function CountryStep<T extends CountryValues>({
   };
   const pickCurrency = (next: string) => {
     set('currency', next);
-    if (isCurrency(next)) setActiveCurrency(next);
+    if (preview && isCurrency(next)) setActiveCurrency(next);
   };
 
   return (

@@ -8,7 +8,7 @@ It replaces paper registers, the cash notebook, the stock list and the "document
 First market: **United Arab Emirates** (AED, optional 5% VAT, Dubai Municipality rules, WPS).
 **Any country** (owner, 2026-10-04): the owner picks the salon's country at setup (about 110 listed — the Middle East, Europe, the Caucasus and Central Asia, the Americas, South Asia and more — or "Other"); it
 brings the currency, time zone and sales tax (name, rate, included in prices or added at the till, what the tax
-number is called), all editable. UAE-only rules — 15-digit TRN, WPS, Montaji, the UAE document checklist — apply only
+number is called), all editable. The country itself can change in Branch settings until the first money is recorded. UAE-only rules — 15-digit TRN, WPS, Montaji, the UAE document checklist — apply only
 to UAE salons. The plan costs AED 99 per branch in the UAE and USD 29 elsewhere.
 **Languages** (owner, 2026-10-05): English, Arabic, Hindi, Urdu, Spanish, French and Portuguese (Russian dropped by the
 owner, 2026-10-06); a new device

@@ -800,7 +800,8 @@
     "invalid_iban": "That IBAN does not look right. It starts with two letters and two numbers, like AE07 0331 2345 6789 0123 456.",
     "invalid_swift": "A SWIFT / BIC code has 8 or 11 letters and numbers.",
     "invalid_link": "The payment link must start with https://",
-    "document_exists": "There is already a record with that name for them."
+    "document_exists": "There is already a record with that name for them.",
+    "country_locked": "The country can no longer change: money has been recorded in this salon."
   },
   "sales": {
     "title": "Sales",
@@ -957,6 +958,14 @@
       "off": "None",
       "simple": "Print / share",
       "whatsapp": "WhatsApp"
+    },
+    "country": {
+      "title": "Country",
+      "change": "Change country",
+      "save": "Change country",
+      "changed": "Country changed",
+      "locked": "Set when the salon was created. It can no longer change, because money has been recorded (a sale, expense, purchase or opening cash).",
+      "hint": "This changes the currency, time zone and tax for every branch. Prices, salaries and deposits you have entered are converted roughly into the new currency — check them in Services, Inventory and Staff afterwards."
     }
   },
   "accounts": {

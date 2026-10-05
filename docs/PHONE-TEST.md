@@ -309,3 +309,10 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 2. A phone set to 12-hour time → ✅ times read like 9:30 PM; set to 24-hour → ✅ 21:30.
 3. Sign up a test salon → Country → pick **Kazakhstan** / **Argentina** / **Romania** → ✅ the currency, tax (VAT 16%,
    IVA 21%, TVA 21%) and time zone fill in.
+
+## 36 · Change the country (2 min)
+
+1. A new test salon (no sales yet) → More → Branch settings → **Country** → **Change country** → search "Kazakh" →
+   Kazakhstan → **Change country** → ✅ "Country changed"; the card says KZT · Asia/Almaty; Services prices are now in
+   tenge (about 3,500 for a 25-dirham haircut).
+2. Make one sale → back to Branch settings → ✅ the country is fixed, with a line saying why.

@@ -3318,6 +3318,7 @@ export type Database = {
         }[];
       };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
+      aed_rate: { Args: { p_currency: string }; Returns: number };
       allocate_minor: { Args: { p_total: number; p_weights: number[] }; Returns: number[] };
       appointment_for_update: {
         Args: { p_id: string };
@@ -3407,6 +3408,7 @@ export type Database = {
           kind: string;
         }[];
       };
+      change_country: { Args: { p: Json }; Returns: undefined };
       check_in: { Args: { p_id: string }; Returns: undefined };
       check_pin: { Args: { p_member: string; p_pin: string }; Returns: boolean };
       claim_plan_alerts: {
@@ -3474,6 +3476,8 @@ export type Database = {
         }[];
       };
       configure_push: { Args: { p_anon_key: string; p_project_url: string }; Returns: undefined };
+      convert_rough: { Args: { p_from: string; p_minor: number; p_to: string }; Returns: number };
+      country_change_allowed: { Args: { p_business: string }; Returns: boolean };
       create_appointment: { Args: { p: Json }; Returns: string };
       create_business: { Args: { p: Json }; Returns: Json };
       create_sale: { Args: { p: Json }; Returns: Json };

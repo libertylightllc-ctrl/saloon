@@ -73,6 +73,36 @@ export function useUpdateBranch(branchId: string) {
   });
 }
 
+/** Whether the salon's country can still change: nothing recorded in the books yet. Owner. */
+export function useCountryChangeAllowed(businessId: string) {
+  return useQuery({
+    queryKey: ['country-change-allowed', businessId],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('country_change_allowed', { p_business: businessId });
+      if (error) throw error;
+      return Boolean(data);
+    },
+  });
+}
+
+/** A new country with its currency, time zone and tax; amounts already typed in are converted roughly. */
+export function useChangeCountry(businessId: string) {
+  return useMutation({
+    mutationFn: async (input: {
+      country_code: string;
+      currency: string;
+      timezone: string;
+      tax_name: string;
+      tax_rate_bps: number;
+      tax_inclusive: boolean;
+      tax_id_label: string;
+    }) => {
+      const { error } = await supabase.rpc('change_country', { p: asJson({ ...input, business_id: businessId }) });
+      if (error) throw error;
+    },
+  });
+}
+
 export function useSetBranchMode(branchId: string) {
   return useMutation({
     mutationFn: async (mode: 'gents' | 'ladies') => {

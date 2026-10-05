@@ -26,6 +26,7 @@ import {
   useToast,
 } from '@/ui';
 
+import { CountryCard } from './CountryCard';
 import { OpeningCashCard } from './OpeningCashCard';
 
 const whole = (min: number, max: number) =>
@@ -173,6 +174,11 @@ export function BranchSettingsScreen() {
           <FormTextField control={form.control} name="name" label={t('branch.fields.name')} />
           <FormTextField control={form.control} name="address" label={t('branch.fields.address')} />
           <FormTextField control={form.control} name="phone" label={t('branch.fields.phone')} keyboardType="phone-pad" />
+        </View>
+
+        <View style={styles.section}>
+          <SectionHeader title={t('branch.country.title')} />
+          <CountryCard />
         </View>
 
         <View style={styles.section}>
