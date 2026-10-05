@@ -99,7 +99,7 @@
   },
   "language": {
     "title": "Language",
-    "restartNote": "Switching between English or Hindi and Arabic or Urdu restarts the app to flip the layout."
+    "restartNote": "Switching between Arabic or Urdu and any other language restarts the app to flip the layout."
   },
   "dev": {
     "gents": "Gents",
@@ -561,7 +561,7 @@
       "staffNote": "Owners create the salon. Staff sign in with the username the owner gives them.",
       "choose": "Choose",
       "facts": {
-        "languages": "English · العربية · हिन्दी · اردو",
+        "languages": "English · العربية · हिन्दी · اردو · Español · Français · Português · Русский",
         "devices": "Phone, tablet and web",
         "private": "Each salon's data is private"
       },

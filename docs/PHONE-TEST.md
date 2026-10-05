@@ -302,3 +302,11 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 1. Home → the **↻** button beside the bell → ✅ the app reloads and you are still signed in (on the web this also loads
    the newest version).
 2. More → App → **Refresh app** → ✅ the same.
+
+## 35 · Spanish, French, Portuguese, Russian and the clock (3 min)
+
+1. More → Language → **Español** → ✅ the app is in Spanish; repeat with Français, Português and **Русский** (✅ Russian
+   letters in a clean geometric font, not a fallback).
+2. A phone set to 12-hour time → ✅ times read like 9:30 PM; set to 24-hour → ✅ 21:30.
+3. Sign up a test salon → Country → pick **Kazakhstan** / **Argentina** / **Romania** → ✅ the currency, tax (НДС 16%,
+   IVA 21%, TVA 21%) and time zone fill in.

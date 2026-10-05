@@ -28,12 +28,12 @@ describe('pickLanguage', () => {
   });
 
   it('falls back to the first supported device language', () => {
-    expect(pickLanguage(null, ['fr', 'ar', 'en'])).toBe('ar');
+    expect(pickLanguage(null, ['de', 'ar', 'en'])).toBe('ar');
     expect(pickLanguage('xx', [null, 'hi'])).toBe('hi');
   });
 
   it('falls back to English', () => {
-    expect(pickLanguage(null, ['fr', null])).toBe('en');
+    expect(pickLanguage(null, ['de', null])).toBe('en');
     expect(pickLanguage(null, [])).toBe('en');
   });
 });

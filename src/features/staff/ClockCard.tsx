@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { clockText } from '@/lib/clock';
 import { businessDate } from '@/lib/dates';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
@@ -51,7 +52,7 @@ export function ClockCard() {
   const busy = (action: ClockAction) => clock.isPending && clock.variables?.action === action;
 
   const summary = [
-    me.shift_start ? t('attendance.shift', { from: me.shift_start, to: me.shift_end }) : me.status === 'off' ? t('staff.off') : t('attendance.noShift'),
+    me.shift_start ? t('attendance.shift', { from: clockText(me.shift_start), to: clockText(me.shift_end ?? '') }) : me.status === 'off' ? t('staff.off') : t('attendance.noShift'),
     me.clock_in ? t('attendance.inOut', { in: time(me.clock_in), out: me.clock_out ? time(me.clock_out) : '…' }) : null,
     me.break_minutes > 0 ? t('attendance.breaksTotal', { n: me.break_minutes }) : null,
   ]

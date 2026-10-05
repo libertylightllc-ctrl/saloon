@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
+import { clockText } from '@/lib/clock';
 import { shiftMonth, type BusinessDate, type MonthKey } from '@/lib/dates';
 import { useDates } from '@/lib/useDates';
 import { spacing, useTheme } from '@/theme';
@@ -153,7 +154,7 @@ export function TimeSlotGrid({
             accessibilityRole="button"
             aria-selected={selected}
             aria-disabled={!slot.available}
-            accessibilityLabel={slot.time}
+            accessibilityLabel={clockText(slot.time)}
             style={[
               styles.slot,
               {
@@ -186,7 +187,7 @@ export function TimeSlotGrid({
                 !slot.available && styles.strike,
               ]}
             >
-              {slot.time}
+              {clockText(slot.time)}
             </Text>
           </Pressable>
         );

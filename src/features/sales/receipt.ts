@@ -2,6 +2,7 @@
  * Receipt as HTML → PDF. Phones share the PDF through the share sheet (WhatsApp, email…);
  * the web build opens the print dialog. Colours come from the theme, text from i18n.
  */
+import { clockPattern } from '@/lib/clock';
 import { formatAt } from '@/lib/dates';
 import { escapeHtml as escape, sharePdf } from '@/lib/exportFile';
 import { formatMoney } from '@/lib/money';
@@ -64,7 +65,7 @@ export function receiptHtml(sale: SaleDetail, ctx: ReceiptContext): string {
 <div class="muted">${escape([ctx.branchName, ctx.address, ctx.phone].filter(Boolean).join(' · '))}</div>
 ${ctx.trn ? `<div class="muted">${escape(L.trn)} ${escape(ctx.trn)}</div>` : ''}
 <p><strong>${escape(L.title)}</strong> · ${escape(L.sale)} #${sale.number}<br>
-<span class="muted">${formatAt(sale.created_at, ctx.timeZone, 'dd MMM yyyy HH:mm', ctx.language)}</span>
+<span class="muted">${formatAt(sale.created_at, ctx.timeZone, clockPattern('dd MMM yyyy HH:mm'), ctx.language)}</span>
 ${sale.customer_name ? `<br>${escape(L.customer)}: ${escape(sale.customer_name)}` : ''}
 ${staffNames(sale) ? `<br>${escape(L.staff)}: ${escape(staffNames(sale))}` : ''}</p>
 <table>${lines}

@@ -37,7 +37,7 @@ describe('day and month names follow the app language', () => {
   });
 
   it('falls back to English for other languages, and keeps machine dates untouched', () => {
-    expect(dateLocale('fr').code).toBe('en-GB');
+    expect(dateLocale('de').code).toBe('en-GB');
     expect(dateLocale('ar-AE').code).toBe('ar');
     expect(formatAt(AT, TZ, 'EEE d MMM', undefined)).toBe('Fri 25 Sep');
     // Stored business dates never use a locale.

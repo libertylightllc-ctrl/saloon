@@ -1,4 +1,5 @@
 /** The receipt as WhatsApp text, and phone numbers the way wa.me wants them (pure; tested). */
+import { clockPattern } from '@/lib/clock';
 import { formatAt } from '@/lib/dates';
 import { formatMoney } from '@/lib/money';
 
@@ -31,7 +32,7 @@ export function receiptText(
   const lines = [
     `*${ctx.businessName}* · ${ctx.branchName}`,
     ...(ctx.trn ? [`${L.trn} ${ctx.trn}`] : []),
-    `${L.title} · ${L.sale} #${sale.number} · ${formatAt(sale.created_at, ctx.timeZone, 'd MMM yyyy HH:mm', ctx.language)}`,
+    `${L.title} · ${L.sale} #${sale.number} · ${formatAt(sale.created_at, ctx.timeZone, clockPattern('d MMM yyyy HH:mm'), ctx.language)}`,
     ...(staffNames(sale) ? [`${L.staff}: ${staffNames(sale)}`] : []),
     '',
     ...sale.sale_lines.map((l) => `${Number(l.qty)} × ${l.name_snapshot} — ${formatMoney(Math.round(l.unit_price_minor * Number(l.qty)))}`),

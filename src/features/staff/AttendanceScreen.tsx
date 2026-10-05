@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
-import { businessDate, shiftBusinessDate, type BusinessDate } from '@/lib/dates';
+import { clockText } from '@/lib/clock';
+import { businessDate, formatAt, shiftBusinessDate, type BusinessDate } from '@/lib/dates';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
@@ -75,7 +76,7 @@ export function AttendanceScreen() {
                     leading={<Avatar name={r.full_name} size={40} />}
                     title={r.full_name}
                     meta={[
-                      r.shift_start ? t('attendance.shift', { from: r.shift_start, to: r.shift_end }) : r.status === 'off' ? t('staff.off') : t('attendance.noShift'),
+                      r.shift_start ? t('attendance.shift', { from: clockText(r.shift_start), to: clockText(r.shift_end ?? '') }) : r.status === 'off' ? t('staff.off') : t('attendance.noShift'),
                       ...(r.break_minutes > 0 ? [t('attendance.breaksTotal', { n: r.break_minutes })] : []),
                       ...(r.clock_in
                         ? [
@@ -130,12 +131,12 @@ function RecordForm({ row, onDone }: { row: AttendanceRow; onDone: () => void })
   const clock = useClock(business.id, branch.id);
   const choices = ACTIONS[row.status];
   const [action, setAction] = useState<ClockAction>(choices[0]!);
-  const [time, setTime] = useState(() => dates.at(new Date(), business.timezone, 'HH:mm'));
+  const [time, setTime] = useState(() => formatAt(new Date(), business.timezone, 'HH:mm', dates.language));
   const valid = TIME.test(time);
   const at = () => {
     // The chosen time today, in the branch's time zone.
     const now = new Date();
-    const current = dates.at(now, business.timezone, 'HH:mm');
+    const current = formatAt(now, business.timezone, 'HH:mm', dates.language);
     const minutes = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
     return new Date(now.getTime() - (minutes(current) - minutes(time)) * 60_000).toISOString();
   };

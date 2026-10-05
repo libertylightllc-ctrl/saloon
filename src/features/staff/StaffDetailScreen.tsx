@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { clockText } from '@/lib/clock';
 import { isUae } from '@/lib/countries';
 import { formatBps, formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
@@ -96,7 +97,7 @@ export function StaffDetailScreen() {
                   {person.roster.length > 0
                     ? WEEKDAYS.map((d, i) => {
                         const shift = person.roster.find((r) => r.weekday === i);
-                        return <Row key={d} label={t(`common.days.${d}`)} value={shift ? `${shift.start}–${shift.end}` : t('staff.off')} />;
+                        return <Row key={d} label={t(`common.days.${d}`)} value={shift ? `${clockText(shift.start)}–${clockText(shift.end)}` : t('staff.off')} />;
                       })
                     : null}
                 </Card>

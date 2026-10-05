@@ -8,6 +8,8 @@
 #   sh scripts/proof.sh
 # The Mac is kept awake only while tests run (caffeinate around each run); while waiting for mains power or a quiet
 # Mac it may sleep, so an unplugged Mac is never held awake until its battery runs flat.
+# Overload signs: sign-in or gateway timeouts, and a server function that times out (route.fetch) — each only counts
+# when the 5-minute load went above 12 during the run.
 S=${PROOF_DIR:-/tmp/salon-proof}
 mkdir -p "$S"
 cd "$(dirname "$0")/.." || exit 1
@@ -44,7 +46,7 @@ while [ $attempt -lt 5 ]; do
     E2E_WORKERS=2 caffeinate -ims npx playwright test --grep-invert @sweep --reporter=line > "$S/final-a${attempt}-run$i.log" 2>&1
     kill $watcher 2>/dev/null
     res=$(grep -E '^\s+[0-9]+ (passed|failed|flaky|skipped)' "$S/final-a${attempt}-run$i.log" | tr -s ' ' | tr '\n' ' ')
-    timeouts=$(grep -cE "504 POST|AuthRetryableFetchError|Gateway Timeout|server_busy" "$S/final-a${attempt}-run$i.log")
+    timeouts=$(grep -cE "504 POST|AuthRetryableFetchError|Gateway Timeout|server_busy|route.fetch: Timeout" "$S/final-a${attempt}-run$i.log")
     echo "attempt $attempt run $i: $res (peak 5-min load $(cat "$S/maxload"), sign-in timeouts $timeouts)" >> "$S/final-summary.txt"
     slept=$(slept_since "$run_start")
     if grep -q " failed" "$S/final-a${attempt}-run$i.log"; then
@@ -75,7 +77,7 @@ while [ $attempt -lt 5 ]; do
     echo "sweep: $(grep -E '^\s+[0-9]+ (passed|failed)' "$S/final-sweep.log" | tr -s ' ' | tr '\n' ' ')" >> "$S/final-summary.txt"
     grep -q " failed" "$S/final-sweep.log" || { echo DONE >> "$S/final-summary.txt"; exit 0; }
     slept=$(slept_since "$sweep_start")
-    timeouts=$(grep -cE "504 POST|AuthRetryableFetchError|Gateway Timeout|server_busy" "$S/final-sweep.log")
+    timeouts=$(grep -cE "504 POST|AuthRetryableFetchError|Gateway Timeout|server_busy|route.fetch: Timeout" "$S/final-sweep.log")
     if grep -q "ENOSPC" "$S/final-sweep.log"; then
       echo "sweep discarded: the disk filled up" >> "$S/final-summary.txt"
     elif [ "$slept" -gt 0 ]; then
