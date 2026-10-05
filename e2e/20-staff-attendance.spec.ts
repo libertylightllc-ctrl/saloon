@@ -4,6 +4,10 @@ import { createOwner, createStaff } from './support/api';
 import { expect, test } from './support/fixtures';
 import { back, expectMoney, id, ownerOn, snap, staffOn, tab, text } from './support/ui';
 
+// Times show in each device's own clock (12- or 24-hour); this flow reads rosters and clock-ins as 24-hour, as a
+// UK-set browser shows them. The 12-hour form is covered in src/lib/clock.test.ts.
+test.use({ locale: 'en-GB' });
+
 const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 /** Dubai clock now: weekday key and minutes since midnight. */
