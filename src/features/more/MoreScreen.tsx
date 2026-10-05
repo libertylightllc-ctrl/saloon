@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { DeleteAccountSheet } from '@/features/account/DeleteAccountSheet';
+import { useRefreshApp } from '@/features/app/RefreshButton';
 import { PinSheet, SwitchUserSheet } from '@/features/auth/QuickSwitchSheets';
 import { useHasPin } from '@/features/auth/quickSwitch';
 import { useSession, useWorkspace } from '@/features/auth/session';
@@ -17,6 +18,7 @@ export function MoreScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const { signOut } = useSession();
+  const { refresh } = useRefreshApp();
   const { member, business, branch, role } = useWorkspace();
   const [language, setLanguage] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
@@ -70,9 +72,10 @@ export function MoreScreen() {
               onPress={() => setLanguage(true)}
               testID="more-language"
             />
-            <MenuRow icon="keyRound" index={1} label={t('more.rows.pin')} onPress={() => setPinOpen(true)} testID="more-pin" />
+            <MenuRow icon="rotate" index={1} label={t('app.refresh')} onPress={refresh} testID="more-refresh" />
+            <MenuRow icon="keyRound" index={2} label={t('more.rows.pin')} onPress={() => setPinOpen(true)} testID="more-pin" />
             {hasPin.data ? (
-              <MenuRow icon="repeat" index={2} label={t('more.rows.switch')} onPress={() => setSwitchOpen(true)} testID="more-switch" />
+              <MenuRow icon="repeat" index={3} label={t('more.rows.switch')} onPress={() => setSwitchOpen(true)} testID="more-switch" />
             ) : null}
             <MenuRow
               icon="logOut"

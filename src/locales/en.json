@@ -2164,5 +2164,9 @@
     "title": "Page not found",
     "body": "This address does not exist. It may have been mistyped or moved.",
     "home": "Go to the home page"
+  },
+  "app": {
+    "refresh": "Refresh app",
+    "refreshed": "Up to date"
   }
 }

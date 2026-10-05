@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { brand } from '@/config/brand';
+import { RefreshButton } from '@/features/app/RefreshButton';
 import { useWorkspace } from '@/features/auth/session';
 import { useUnreadCount } from '@/features/notifications/api';
 import { businessDate, formatDayLabel } from '@/lib/dates';
@@ -56,6 +57,7 @@ export function HomeTop({ subline }: { subline: string }) {
             {`${place} · ${subline}`}
           </Text>
         </View>
+        <RefreshButton variant="surface" />
         <Bell variant="surface" />
         {can(role, 'addToQueue') ? (
           <Button
@@ -85,6 +87,7 @@ export function HomeTop({ subline }: { subline: string }) {
             {subline}
           </Text>
         </View>
+        <RefreshButton variant="surface" />
         <Bell variant="surface" />
       </View>
     );
@@ -95,6 +98,7 @@ export function HomeTop({ subline }: { subline: string }) {
         <Text variant="h3" weight="bold" style={[styles.flex, { color: theme.colors.primary500 }]} numberOfLines={1}>
           {brand.appName.toLocaleUpperCase()}
         </Text>
+        <RefreshButton variant="plain" />
         <Bell variant="plain" />
         <Avatar name={member.display_name} size={36} />
       </View>

@@ -1761,3 +1761,5 @@ nav.short.cashClosing,Closing,الإغلاق,क्लोज़िंग,کلو�
 notFound.title,Page not found,الصفحة غير موجودة,पेज नहीं मिला,صفحہ نہیں ملا,
 notFound.body,This address does not exist. It may have been mistyped or moved.,هذا العنوان غير موجود. ربما كُتب خطأ أو نُقل.,यह पता मौजूद नहीं है। शायद गलत लिखा गया या हटाया गया।,یہ پتہ موجود نہیں ہے۔ شاید غلط لکھا گیا یا منتقل ہو گیا۔,
 notFound.home,Go to the home page,اذهب إلى الصفحة الرئيسية,होम पेज पर जाएँ,ہوم پیج پر جائیں,
+app.refresh,Refresh app,تحديث التطبيق,ऐप रीफ़्रेश करें,ایپ ریفریش کریں,
+app.refreshed,Up to date,محدَّث,अप टू डेट,تازہ ترین,

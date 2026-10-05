@@ -296,3 +296,9 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 3. Open the row → **Delete** → reason `Held by the head office` → **Delete** → ✅ back on the register, the licence is gone
    and listed under **Removed** with the reason; readiness counts one record fewer.
 4. **Put back** → ✅ the licence returns with CN-12345.
+
+## 34 · Refresh the app (30 s)
+
+1. Home → the **↻** button beside the bell → ✅ the app reloads and you are still signed in (on the web this also loads
+   the newest version).
+2. More → App → **Refresh app** → ✅ the same.
