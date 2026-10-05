@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Platform,
@@ -27,6 +28,7 @@ export interface TextProps extends RNTextProps {
   align?: 'start' | 'center' | 'end';
   /** Tabular figures for money and counts. */
   tabular?: boolean;
+  ref?: Ref<RNText>;
 }
 
 /**

@@ -95,7 +95,7 @@ home.vsYesterday,vs yesterday,مقارنة بالأمس,कल की तुल�
 home.closeDay,Close day,إغلاق اليوم,दिन बंद करें,دن بند کریں,
 home.salesToday,Sales today,مبيعات اليوم,आज की बिक्री,آج کی فروخت,
 home.salesSub,{{services}} services · {{sales}} sales,{{services}} خدمة · {{sales}} عملية بيع,{{services}} सेवाएँ · {{sales}} बिक्री,{{services}} خدمات · {{sales}} فروخت,
-home.appointmentsToday,Appointments today,مواعيد اليوم,आज की अपॉइंटमेंट,آج کی ملاقاتیں,
+home.appointmentsToday,Visits today,مواعيد اليوم,आज की अपॉइंटमेंट,آج کی ملاقاتیں,
 home.doneCount,{{n}} done,{{n}} مكتمل,{{n}} पूरे,{{n}} مکمل,
 home.appointmentsSub,{{waiting}} waiting · {{booked}} booked · {{noShow}} no-show,{{waiting}} ينتظر · {{booked}} محجوز · {{noShow}} لم يحضر,{{waiting}} इंतज़ार में · {{booked}} बुक · {{noShow}} नहीं आए,{{waiting}} منتظر · {{booked}} بک · {{noShow}} نہیں آئے,
 home.moneyOut,Money out today,المصروف اليوم,आज का ख़र्च,آج کا خرچ,

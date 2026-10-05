@@ -124,7 +124,7 @@
     "closeDay": "Close day",
     "salesToday": "Sales today",
     "salesSub": "{{services}} services · {{sales}} sales",
-    "appointmentsToday": "Appointments today",
+    "appointmentsToday": "Visits today",
     "doneCount": "{{n}} done",
     "appointmentsSub": "{{waiting}} waiting · {{booked}} booked · {{noShow}} no-show",
     "moneyOut": "Money out today",

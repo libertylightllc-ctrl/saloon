@@ -4,6 +4,7 @@ import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { semantic, spacing, useTheme } from '@/theme';
 
 import { Card } from './Card';
+import { FitText } from './FitText';
 import { Icon, type IconName } from './Icon';
 import { Text } from './Text';
 
@@ -44,20 +45,21 @@ export function KpiCard({ label, value, delta, sub, icon, hero, action, style, t
             <Icon name={icon} size={16} color={theme.colors.primary500} />
           </View>
         ) : null}
-        <Text variant="small" color="textSecondary" numberOfLines={1} style={styles.flex}>
+        <Text variant="small" color="textSecondary" numberOfLines={2} style={styles.flex}>
           {label}
         </Text>
       </View>
-      <Text
+      {/* Without a line under it, the value sits at the card's foot, so values line up across a row of cards even
+          when one label takes two lines. */}
+      <FitText
         variant={hero ? 'display' : 'h3'}
         weight="bold"
         tabular
-        numberOfLines={1}
-        adjustsFontSizeToFit
+        style={!sub && !delta && !action ? styles.foot : undefined}
         testID={testID ? `${testID}-value` : undefined}
       >
         {value}
-      </Text>
+      </FitText>
       <View style={styles.footer}>
         <View style={[styles.flex, styles.subRow]}>
           {delta ? (
@@ -91,6 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flex: { flexShrink: 1 },
+  foot: { marginTop: 'auto' },
   footer: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   subRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flex: 1 },
   delta: { borderRadius: 999, paddingHorizontal: spacing.sm, paddingVertical: 2 },

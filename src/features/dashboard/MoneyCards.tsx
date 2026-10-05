@@ -7,18 +7,23 @@ import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
-import { Button, KpiCard, KpiGrid } from '@/ui';
+import { Button, KpiCard, KpiGrid, useContentWidth } from '@/ui';
 
 import type { Dashboard } from './api';
 
+/** Content width (beside the side navigation) from which the four cards fit side by side without squeezing. */
+const FOUR_ACROSS_MIN = 1100;
+
 /**
  * Expected cash (the hero card), sales, the day's visits and money out. Phones: the hero card over the others two to a
- * row (money out, the longest line, gets a row of its own). `row` (wider screens): the four side by side.
+ * row (money out, the longest line, gets a row of its own). `row` (wider screens): the four side by side where they
+ * fit, otherwise two by two — never three and a lone one.
  */
 export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
   const { t } = useTranslation();
   const router = useRouter();
   const { role } = useWorkspace();
+  const contentWidth = useContentWidth();
   const closed = data.closing?.today_status;
   const cash = data.expected_cash ?? 0;
   const yesterday = data.expected_cash_yesterday ?? 0;
@@ -29,6 +34,7 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
 
   const hero = (
     <KpiCard
+      key="cash"
       hero
       style={fill}
       icon="banknote"
@@ -95,6 +101,9 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
     ) : null,
   ].filter(Boolean);
 
+  if (row && contentWidth < FOUR_ACROSS_MIN) {
+    return <KpiGrid minCell={360}>{[hero, ...others]}</KpiGrid>;
+  }
   if (row) {
     return (
       <View style={styles.row}>

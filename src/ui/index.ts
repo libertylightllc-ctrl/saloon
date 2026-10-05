@@ -8,6 +8,7 @@ export { Chip } from './Chip';
 export { ContourPattern } from './ContourPattern';
 export { DateStrip, MonthSwitcher, TimeSlotGrid, type TimeSlot } from './DatePickers';
 export { EmptyState } from './EmptyState';
+export { FitText } from './FitText';
 export { HeaderBand } from './HeaderBand';
 export { NavRootsContext, useHeaderOverlap, useOnBand } from './layoutContext';
 export { Icon, icons, type IconName } from './Icon';
