@@ -39,11 +39,12 @@ export function ReportChart({ chart }: { chart: ReportView['chart'] }) {
   const max = Math.max(0, ...values);
   const min = Math.min(0, ...values);
   const plot = width - 48 - spacing.sm - END_SPACE;
-  const slot = bars.length ? Math.max(10, Math.min(36, plot / bars.length)) : 0;
+  // Every bar fits the card: a 31-day month on a phone gets thin bars rather than losing its last week off the edge.
+  const slot = bars.length ? Math.max(4, Math.min(36, plot / bars.length)) : 0;
   const step = niceStep(Math.max(max, -min) / SECTIONS);
   // Below the line (a short till): whole steps of the same size.
   const below = min < 0 ? Math.ceil(-min / step) : 0;
-  const barWidth = Math.max(6, slot * 0.6);
+  const barWidth = Math.max(3, slot * 0.6);
   const everyNth = Math.ceil(bars.length / Math.max(1, Math.floor((width - 48) / 28)));
   const summary = bars
     .filter((b) => b.value !== 0)

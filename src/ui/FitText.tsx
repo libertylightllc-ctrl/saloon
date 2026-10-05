@@ -5,7 +5,6 @@ import { typeScale } from '@/theme';
 
 import { Text, type TextProps } from './Text';
 
-
 /**
  * One line that shrinks to fit its width instead of being cut off — a big amount in a narrow card. Native shrinks by
  * itself (`adjustsFontSizeToFit`); the web measures the text at full size and sets a smaller font when it overflows.
