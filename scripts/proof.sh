@@ -4,7 +4,7 @@
 # under high load) is recorded as discarded and restarted after the next quiet period; any other failure stops for
 # investigation. A run during which the Mac slept (e.g. the battery ran out) or the disk filled up (video exports and
 # other work; the dev server crashes with ENOSPC) is likewise discarded. Runs start only on mains power with at least
-# 5 GB of free disk (a run needs about 2 GB), and the Mac is kept awake meanwhile. Logs and the summary go to $PROOF_DIR (default: /tmp/salon-proof).
+# 5 GB of free disk (a run needs about 2 GB). Logs and the summary go to $PROOF_DIR (default: /tmp/salon-proof).
 #   sh scripts/proof.sh
 # The Mac is kept awake only while tests run (caffeinate around each run); while waiting for mains power or a quiet
 # Mac it may sleep, so an unplugged Mac is never held awake until its battery runs flat.
