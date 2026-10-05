@@ -1,5 +1,4 @@
 {
-  "_review": "TODO review: machine-drafted translation",
   "common": {
     "add": "Agregar",
     "addItem": "Agregar {{item}}",
@@ -2041,14 +2040,15 @@
     "agree": "Al crear una cuenta, aceptas los términos y la política de privacidad.",
     "contact": {
       "title": "Contacto",
-      "body": "Preguntas o solicitudes: {{email}}"
+      "body": "Preguntas o solicitudes, incluidas las relacionadas con tus datos: {{email}}. Esta dirección es también nuestro contacto de protección de datos (en Brasil, nuestro “encarregado”)."
     },
     "privacy": {
       "title": "Política de privacidad",
       "intro": "Esta política explica qué recopila {{app}}, por qué lo hace y qué opciones tienes. {{app}} es un software que usan barberías y salones de damas para gestionar su día a día: fila, ventas, stock, personal, nómina e impuestos.",
       "who": {
         "title": "Quiénes somos",
-        "body": "{{app}} (“nosotros”) proporciona la app y el sitio web. En cuanto a los datos que un salón guarda sobre sus propios clientes y personal, es el salón quien decide qué se registra y por qué; nosotros los almacenamos y tratamos por cuenta del salón y siguiendo sus instrucciones."
+        "body": "{{company}} (“nosotros”) proporciona {{app}}, la app y el sitio web. En lo que respecta a tu cuenta y a cómo usas {{app}}, nosotros decidimos cómo se usan tus datos: somos el “responsable del tratamiento”. En cuanto a los datos que un salón guarda sobre sus propios clientes y su personal, el responsable del tratamiento es el salón: decide qué se registra y por qué, y nosotros los almacenamos y tratamos por su cuenta, siguiendo sus instrucciones, conforme a las condiciones de tratamiento de datos de nuestros términos de uso.",
+        "address": "Dirección: {{address}}"
       },
       "collect": {
         "title": "Qué recopilamos",
@@ -2058,9 +2058,13 @@
         "title": "Cómo lo usamos",
         "body": "Solo para prestar el servicio: para iniciar tu sesión, guardar y mostrar los registros de tu salón, enviar las notificaciones que actives, generar recibos, informes y copias de seguridad, mantener el servicio seguro, responder a solicitudes de soporte y cumplir obligaciones legales, como conservar los registros fiscales."
       },
+      "basis": {
+        "title": "Por qué podemos usarlo (bases legales)",
+        "body": "• Para prestar el servicio al que tú o tu salón se suscribieron (un contrato).\n• Para cumplir obligaciones legales, como conservar los registros fiscales y financieros (una obligación legal).\n• Para mantener el servicio seguro, evitar usos indebidos y corregir fallos, lo cual responde a nuestro interés legítimo y al de nuestros usuarios; puedes oponerte a ello.\n• Para las notificaciones en el teléfono y cualquier mensaje opcional, porque lo aceptaste; puedes desactivarlos en cualquier momento (consentimiento).\nEn Brasil, estas son las bases legales correspondientes de la LGPD (artículo 7)."
+      },
       "where": {
         "title": "Dónde se guarda",
-        "body": "Con nuestros proveedores de alojamiento: Supabase (base de datos, inicio de sesión y almacenamiento de archivos) y Vercel (el sitio web). Las notificaciones a los teléfonos pasan por Expo y por Apple o Google, y Google gestiona “Continuar con Google”. Estos proveedores pueden guardar datos fuera de tu país y deben mantenerlos confidenciales y seguros."
+        "body": "Tus datos se almacenan en Supabase (base de datos, inicio de sesión y almacenamiento de archivos), en Corea del Sur. El sitio web y la app se entregan a través de Vercel desde servidores cercanos a ti. Los correos electrónicos pasan por nuestro proveedor de correo electrónico, las notificaciones a los teléfonos pasan por Expo y por Apple o Google, y Google gestiona “Continuar con Google”. Estos proveedores tratan los datos solo por nuestra cuenta, conforme a condiciones de tratamiento de datos, y deben mantenerlos confidenciales y seguros.\nLa Unión Europea y el Reino Unido reconocen que Corea del Sur protege adecuadamente los datos personales. Cuando un proveedor trata datos en un país que no cuenta con ese reconocimiento, como Estados Unidos, la transferencia está amparada por las cláusulas contractuales tipo de la Comisión Europea junto con la adenda del Reino Unido y, en el caso de Brasil, por las garantías que permite la LGPD, como las cláusulas contractuales tipo."
       },
       "share": {
         "title": "Con quién lo compartimos",
@@ -2072,7 +2076,11 @@
       },
       "rights": {
         "title": "Tus opciones y derechos",
-        "body": "Puedes ver y corregir tus datos en la app. Los dueños pueden exportar todos los datos de su salón en cualquier momento (Más → Copia de seguridad y recuperación). Puedes eliminar tu cuenta en la app (Más → Eliminar mi cuenta): tu inicio de sesión y tu nombre se eliminan de inmediato. Los clientes y el personal de un salón deben contactar primero con el salón, ya que este controla esos registros; nosotros le ayudamos a responder. Según la Ley de Protección de Datos Personales de los EAU y leyes similares de otros países, también puedes preguntar cómo se usan tus datos y oponerte a ese uso."
+        "body": "• Puedes ver y corregir tus datos en la app. Los dueños pueden exportar todos los datos de su salón en cualquier momento (Más → Copia de seguridad y recuperación).\n• Puedes eliminar tu cuenta en la app (Más → Eliminar mi cuenta): tu inicio de sesión y tu nombre se eliminan de inmediato; los registros que la ley nos obliga a conservar se conservan según se describe arriba.\n• Si te encuentras en la Unión Europea, el Reino Unido o Brasil, también puedes: obtener una copia de tus datos y saber cómo se usan; pedir que se corrijan o se supriman; limitar su uso u oponerte a él; recibirlos en un formato que puedas transferir; y retirar tu consentimiento en cualquier momento (esto no afecta a lo que se haya hecho antes). En Brasil también puedes preguntar si tratamos tus datos, pedir que los datos innecesarios se anonimicen o se bloqueen, y saber con quién los compartimos. La Ley de Protección de Datos Personales de los EAU y leyes similares de otros países te otorgan derechos comparables.\n• Para ejercer estos derechos, escribe a la dirección que aparece abajo. Respondemos en el plazo de un mes, y en el plazo de 15 días cuando se trata de una copia completa de tus datos en Brasil. Podemos pedirte que confirmes tu identidad. No tomamos decisiones sobre las personas únicamente por medios automatizados.\n• Los clientes y el personal de un salón deben contactar primero con el salón, ya que este controla esos registros; nosotros le ayudamos a responder.\n• También puedes presentar una reclamación ante una autoridad de protección de datos: en la Unión Europea, la del lugar donde vives o trabajas; en el Reino Unido, la Information Commissioner’s Office (ico.org.uk); y en Brasil, la ANPD (gov.br/anpd)."
+      },
+      "cookies": {
+        "title": "Cookies y almacenamiento en el dispositivo",
+        "body": "La app y el sitio web guardan en tu dispositivo solo lo que necesitan: tu inicio de sesión y tu configuración, como el idioma y el tipo de salón. No usamos cookies publicitarias ni de analítica y no te rastreamos en otros sitios."
       },
       "security": {
         "title": "Cómo lo protegemos",
@@ -2085,6 +2093,11 @@
       "changes": {
         "title": "Cambios",
         "body": "Si cambiamos esta política, actualizaremos la fecha indicada arriba e informaremos a los dueños en la app sobre los cambios importantes."
+      },
+      "reps": {
+        "title": "Representantes",
+        "eu": "Nuestro representante en la Unión Europea: {{rep}}",
+        "uk": "Nuestro representante en el Reino Unido: {{rep}}"
       }
     },
     "terms": {
@@ -2105,6 +2118,10 @@
       "data": {
         "title": "Tus datos",
         "body": "Los datos de tu salón te pertenecen. Nos permites almacenarlos y tratarlos solo para prestar el servicio. Eres responsable de contar con autorización para registrar los datos de tus clientes y de tu personal (por ejemplo, su consentimiento para recibir recibos por WhatsApp). Puedes exportarlos en cualquier momento."
+      },
+      "processing": {
+        "title": "Datos de tus clientes y de tu personal (condiciones de tratamiento de datos)",
+        "body": "Cuando tu salón registra los datos de sus clientes y de su personal, tu salón es el responsable del tratamiento y nosotros los tratamos por tu cuenta. Estos términos son nuestro acuerdo de tratamiento de datos (artículo 28 del RGPD y del UK GDPR; artículo 39 de la LGPD):\n• Tratamos los datos solo para prestar el servicio y siguiendo tus instrucciones —la forma en que usas la app es tu instrucción—, salvo que la ley exija otra cosa.\n• Todas las personas que trabajan en el servicio deben mantenerlos confidenciales.\n• Los mantenemos seguros según se describe en nuestra política de privacidad: conexiones cifradas, registros de cada salón separados y acceso según el rol.\n• Recurrimos a los proveedores mencionados en nuestra política de privacidad (subencargados del tratamiento) conforme a condiciones que protegen los datos del mismo modo que estas. Avisamos a los dueños en la app antes de añadir o sustituir alguno, y puedes oponerte.\n• Te ayudamos a responder a las solicitudes de tus clientes y de tu personal (copias, correcciones, eliminaciones) y con cualquier evaluación que exija la ley.\n• Si una violación de la seguridad afecta a los datos de tu salón, te avisamos sin dilación indebida y dentro de las 48 horas siguientes a que tengamos conocimiento de ella.\n• Cuando dejes de usar el servicio, puedes exportar todos tus datos; los eliminamos una vez transcurridos los plazos durante los que la ley nos obliga a conservarlos.\n• Te proporcionamos la información que necesitas para demostrar que se cumplen estos términos y permitimos auditorías razonables.\nConfirmas que cuentas con una base legal para registrar los datos de tus clientes y de tu personal y que les has informado al respecto."
       },
       "fairUse": {
         "title": "Uso justo",
@@ -2169,5 +2186,6 @@
   "app": {
     "refresh": "Actualizar app",
     "refreshed": "Al día"
-  }
+  },
+  "_review": "TODO review: machine-drafted translation"
 }

@@ -127,3 +127,24 @@ npx supabase secrets set RESEND_API_KEY=PASTE_THE_KEY_HERE --project-ref djgxvfb
    (replace `PASTE_THE_KEY_HERE` with the key before pressing Enter). From then on every request emails the platform
    owner's sign-in address; requests made before that are emailed within 10 minutes.
 4. When the money arrives: More → Salons & plans → the salon → **Record payment**. Their plan starts at once.
+
+## I · Privacy for the EU, the UK and Brazil (before signing up salons there)
+
+The privacy policy and terms now have GDPR (EU and UK) and LGPD (Brazil) wording, in every app language — drafts a
+lawyer should check. These details are yours to supply; put them in `src/config/brand.json` and they appear on both
+pages in every language:
+
+1. **`legalName` and `address`** — the company that runs Saloqo (as on its trade licence). GDPR requires them.
+2. **`privacyEmail`** (or a real `supportEmail`) — today it is `support@example.com`, so the pages show no contact at
+   all. One real address, read regularly, e.g. privacy@saloqo.com. It is also the Brazil "encarregado" contact.
+3. **EU and UK representatives** (`euRepresentative`, `ukRepresentative`) — a company outside the EU/UK that serves
+   salons there must name one (GDPR article 27). Services such as Prighter, DataRep or VeraSafe do this for roughly
+   EUR 100–500 a year each. Enter their name and address once appointed.
+4. **Sign the providers' data processing agreements** (the policy says transfers are covered by them):
+   Supabase → Dashboard → Organization → Legal documents → DPA; Vercel → its DPA (vercel.com/legal/dpa);
+   the email provider (Resend or whichever sends sign-up emails) and Expo (expo.dev/privacy) likewise.
+5. **Lawyer review** — ask an EU data-protection lawyer (one review covers the UK too) and a Brazilian one to check
+   `legal.privacy.*` and `legal.terms.processing` (English in `src/locales/en.json`; all languages in
+   `docs/translation-review.csv`). Confirm the 48-hour breach notice to salons and the response times suit you.
+6. Data is stored in **South Korea** (Supabase, Seoul). The EU and the UK recognise Korea as adequate, so no extra step
+   is needed for that; a lawyer may still suggest an EU region later for speed and comfort.

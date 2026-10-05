@@ -1,5 +1,4 @@
 {
-  "_review": "TODO review: machine-drafted translation",
   "common": {
     "add": "Adicionar",
     "addItem": "Adicionar {{item}}",
@@ -2041,14 +2040,15 @@
     "agree": "Ao criar uma conta, você concorda com os termos de uso e a política de privacidade.",
     "contact": {
       "title": "Contato",
-      "body": "Dúvidas ou solicitações: {{email}}"
+      "body": "Dúvidas ou solicitações, inclusive sobre seus dados: {{email}}. Este endereço também é o nosso contato para proteção de dados (no Brasil, nosso “encarregado”)."
     },
     "privacy": {
       "title": "Política de privacidade",
       "intro": "Esta política explica o que o {{app}} coleta, por que coleta e quais escolhas você tem. O {{app}} é um software que barbearias e salões femininos usam para gerenciar o dia a dia: fila, vendas, estoque, equipe, folha de pagamento e impostos.",
       "who": {
         "title": "Quem somos",
-        "body": "O {{app}} (“nós”) fornece o app e o site. Quanto aos dados que um salão mantém sobre os próprios clientes e a própria equipe, é o salão que decide o que é registrado e por quê; nós armazenamos e tratamos esses dados para o salão, de acordo com as instruções dele."
+        "body": "{{company}} (“nós”) fornece o {{app}}, o app e o site. Em relação à sua conta e à forma como você usa o {{app}}, somos nós que decidimos como seus dados são usados: somos o “controlador”. Quanto aos dados que um salão mantém sobre os próprios clientes e a própria equipe, o controlador é o salão: ele decide o que é registrado e por quê, e nós armazenamos e tratamos esses dados para o salão, de acordo com as instruções dele, nos termos de tratamento de dados que constam dos nossos termos de uso.",
+        "address": "Endereço: {{address}}"
       },
       "collect": {
         "title": "O que coletamos",
@@ -2058,9 +2058,13 @@
         "title": "Como usamos os dados",
         "body": "Apenas para operar o serviço: para fazer seu login, salvar e mostrar os registros do seu salão, enviar as notificações que você ativar, gerar recibos, relatórios e backups, manter o serviço seguro, responder a pedidos de suporte e cumprir obrigações legais, como guardar registros fiscais."
       },
+      "basis": {
+        "title": "Por que podemos usar os dados (bases legais)",
+        "body": "• Para prestar o serviço que você ou o seu salão contratou (um contrato).\n• Para cumprir obrigações legais, como guardar registros fiscais e financeiros (uma obrigação legal).\n• Para manter o serviço seguro, evitar uso indevido e corrigir falhas, o que atende ao nosso legítimo interesse e ao dos nossos usuários; você pode se opor a isso.\n• Para notificações no celular e eventuais mensagens opcionais, porque você concordou; você pode desativá-las a qualquer momento (consentimento).\nNo Brasil, essas são as bases legais correspondentes da LGPD (artigo 7)."
+      },
       "where": {
         "title": "Onde os dados ficam guardados",
-        "body": "Com nossos provedores de hospedagem: Supabase (banco de dados, login e armazenamento de arquivos) e Vercel (o site). As notificações para celulares passam pela Expo e pela Apple ou pelo Google, e o Google cuida do “Continuar com Google”. Esses provedores podem guardar dados fora do seu país e devem mantê-los confidenciais e seguros."
+        "body": "Seus dados são armazenados na Supabase (banco de dados, login e armazenamento de arquivos), na Coreia do Sul. O site e o app são entregues pela Vercel a partir de servidores próximos a você. Os e-mails passam pelo nosso provedor de e-mail, as notificações para celulares passam pela Expo e pela Apple ou pelo Google, e o Google cuida do “Continuar com Google”. Esses provedores tratam os dados apenas para nós, sob termos de tratamento de dados, e devem mantê-los confidenciais e seguros.\nA União Europeia e o Reino Unido reconhecem que a Coreia do Sul protege os dados pessoais de forma adequada. Quando um provedor trata dados em um país que não tem esse reconhecimento, como os Estados Unidos, a transferência é amparada pelas cláusulas contratuais padrão da Comissão Europeia, com o adendo do Reino Unido, e, no caso do Brasil, pelas salvaguardas permitidas pela LGPD, como as cláusulas-padrão contratuais."
       },
       "share": {
         "title": "Com quem compartilhamos",
@@ -2072,7 +2076,11 @@
       },
       "rights": {
         "title": "Suas escolhas e direitos",
-        "body": "Você pode ver e corrigir seus dados no app. Os proprietários podem exportar todos os dados do salão a qualquer momento (Mais → Backup e recuperação). Você pode excluir sua conta no app (Mais → Excluir minha conta): seu login e seu nome são removidos na hora. Clientes e funcionários de um salão devem procurar primeiro o salão, pois é ele quem controla esses registros; nós o ajudamos a responder. Pela Lei de Proteção de Dados Pessoais dos Emirados Árabes Unidos, e por leis semelhantes em outros países, você também pode perguntar como seus dados são usados e se opor a esse uso."
+        "body": "• Você pode ver e corrigir seus dados no app. Os proprietários podem exportar todos os dados do salão a qualquer momento (Mais → Backup e recuperação).\n• Você pode excluir sua conta no app (Mais → Excluir minha conta): seu login e seu nome são removidos na hora; os registros que a lei nos obriga a guardar são mantidos conforme descrito acima.\n• Se você estiver na União Europeia, no Reino Unido ou no Brasil, também pode: obter uma cópia dos seus dados e saber como eles são usados; pedir que sejam corrigidos ou eliminados; limitar o uso deles ou se opor a ele; recebê-los em um formato que você possa transferir; e revogar seu consentimento a qualquer momento (isso não afeta o que foi feito antes). No Brasil, você também pode perguntar se tratamos seus dados, pedir a anonimização ou o bloqueio de dados desnecessários e saber com quem os compartilhamos. A Lei de Proteção de Dados Pessoais dos Emirados Árabes Unidos e leis semelhantes em outros países garantem a você direitos comparáveis.\n• Para exercer esses direitos, escreva para o endereço abaixo. Respondemos em até um mês e, no Brasil, em até 15 dias quando se tratar de uma cópia completa dos seus dados. Podemos pedir que você confirme sua identidade. Não tomamos decisões sobre pessoas apenas por meios automatizados.\n• Clientes e funcionários de um salão devem procurar primeiro o salão, pois é ele quem controla esses registros; nós o ajudamos a responder.\n• Você também pode apresentar uma reclamação a uma autoridade de proteção de dados: na União Europeia, a do lugar onde você mora ou trabalha; no Reino Unido, o Information Commissioner’s Office (ico.org.uk); e, no Brasil, a ANPD (gov.br/anpd)."
+      },
+      "cookies": {
+        "title": "Cookies e armazenamento no aparelho",
+        "body": "O app e o site guardam no seu aparelho apenas o que precisam: seu login e configurações como o idioma e o tipo de salão. Não usamos cookies de publicidade nem de análise e não rastreamos você em outros sites."
       },
       "security": {
         "title": "Como protegemos os dados",
@@ -2085,6 +2093,11 @@
       "changes": {
         "title": "Alterações",
         "body": "Se alterarmos esta política, atualizaremos a data acima e avisaremos os proprietários no app sobre mudanças importantes."
+      },
+      "reps": {
+        "title": "Representantes",
+        "eu": "Nosso representante na União Europeia: {{rep}}",
+        "uk": "Nosso representante no Reino Unido: {{rep}}"
       }
     },
     "terms": {
@@ -2105,6 +2118,10 @@
       "data": {
         "title": "Seus dados",
         "body": "Os dados do seu salão pertencem a você. Você nos autoriza a armazená-los e tratá-los apenas para prestar o serviço. Você é responsável por ter autorização para registrar os dados dos seus clientes e da sua equipe (por exemplo, o consentimento deles para receber recibos pelo WhatsApp). Você pode exportá-los a qualquer momento."
+      },
+      "processing": {
+        "title": "Dados dos seus clientes e da sua equipe (termos de tratamento de dados)",
+        "body": "Quando seu salão registra os dados dos clientes e da equipe, seu salão é o controlador e nós tratamos esses dados para você. Estes termos são o nosso acordo de tratamento de dados (artigo 28 do GDPR (RGPD) e do UK GDPR; artigo 39 da LGPD):\n• Tratamos os dados apenas para prestar o serviço e de acordo com as suas instruções — a forma como você usa o app é a sua instrução —, salvo quando a lei exigir o contrário.\n• Todas as pessoas que trabalham no serviço devem manter os dados em sigilo.\n• Mantemos os dados seguros conforme descrito na nossa política de privacidade: conexões criptografadas, registros de cada salão mantidos separados e acesso por função.\n• Usamos os provedores indicados na nossa política de privacidade (suboperadores) sob termos que protegem os dados da mesma forma que estes. Avisamos os proprietários no app antes de adicionar ou substituir algum deles, e você pode se opor.\n• Ajudamos você a responder às solicitações dos seus clientes e da sua equipe (cópias, correções, exclusões) e em qualquer avaliação exigida por lei.\n• Se um incidente de segurança afetar os dados do seu salão, avisamos você sem demora injustificada e em até 48 horas após tomarmos conhecimento dele.\n• Quando você parar de usar o serviço, poderá exportar todos os seus dados; nós os excluímos após os prazos durante os quais a lei nos obriga a guardá-los.\n• Fornecemos a você as informações necessárias para demonstrar que estes termos são cumpridos e permitimos auditorias razoáveis.\nVocê confirma que tem uma base legal para registrar os dados dos seus clientes e da sua equipe e que os informou sobre isso."
       },
       "fairUse": {
         "title": "Uso adequado",
@@ -2169,5 +2186,6 @@
   "app": {
     "refresh": "Atualizar app",
     "refreshed": "Atualizado"
-  }
+  },
+  "_review": "TODO review: machine-drafted translation"
 }

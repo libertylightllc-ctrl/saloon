@@ -2040,14 +2040,15 @@
     "agree": "By creating an account you agree to the terms and the privacy policy.",
     "contact": {
       "title": "Contact",
-      "body": "Questions or requests: {{email}}"
+      "body": "Questions or requests, including about your data: {{email}}. This address is also our data protection contact (in Brazil, our “encarregado”)."
     },
     "privacy": {
       "title": "Privacy policy",
       "intro": "This policy explains what {{app}} collects, why, and the choices you have. {{app}} is software that barber shops and ladies salons use to run their day: queue, sales, stock, staff, payroll and tax.",
       "who": {
         "title": "Who we are",
-        "body": "{{app}} (“we”) provides the app and the website. For the details a salon keeps about its own customers and staff, the salon decides what is recorded and why; we store and process them for the salon, on its instructions."
+        "body": "{{company}} (“we”) provides {{app}}, the app and the website. For your account and how you use {{app}}, we decide how your data is used: we are the “controller”. For the details a salon keeps about its own customers and staff, the salon is the controller: it decides what is recorded and why, and we store and process them for it, on its instructions, under the data processing terms in our terms of use.",
+        "address": "Address: {{address}}"
       },
       "collect": {
         "title": "What we collect",
@@ -2057,9 +2058,13 @@
         "title": "How we use it",
         "body": "Only to run the service: to sign you in, save and show your salon’s records, send the notifications you switch on, produce receipts, reports and backups, keep the service secure, answer support requests and meet legal duties such as keeping tax records."
       },
+      "basis": {
+        "title": "Why we may use it (legal bases)",
+        "body": "• To provide the service you or your salon signed up for (a contract).\n• To meet legal duties, such as keeping tax and financial records (a legal obligation).\n• To keep the service secure, prevent misuse and fix faults, which is in our and our users’ legitimate interest; you can object to this.\n• For phone notifications and any optional messages, because you agreed; you can turn them off at any time (consent).\nIn Brazil these are the matching legal bases of the LGPD (article 7)."
+      },
       "where": {
         "title": "Where it is kept",
-        "body": "With our hosting providers: Supabase (database, sign-in and file storage) and Vercel (the website). Notifications to phones go through Expo and Apple or Google, and Google handles “Continue with Google”. These providers may keep data outside your country and must keep it confidential and secure."
+        "body": "Your data is stored with Supabase (database, sign-in and file storage) in South Korea. The website and app are delivered by Vercel from servers close to you. Emails go through our email provider, notifications to phones through Expo and Apple or Google, and Google handles “Continue with Google”. These providers process data only for us, under data processing terms, and must keep it confidential and secure.\nThe European Union and the United Kingdom recognise South Korea as protecting personal data adequately. Where a provider handles data in a country without such recognition, such as the United States, the transfer is covered by the European Commission’s standard contractual clauses with the UK addendum and, for Brazil, by the safeguards the LGPD allows, such as standard contractual clauses."
       },
       "share": {
         "title": "Who we share it with",
@@ -2071,7 +2076,11 @@
       },
       "rights": {
         "title": "Your choices and rights",
-        "body": "You can see and correct your details in the app. Owners can export all their salon’s data at any time (More → Backup & recovery). You can delete your account in the app (More → Delete my account): your sign-in and name are removed straight away. A salon’s customers and staff should contact the salon first, as it controls those records; we help it answer. Under the UAE Personal Data Protection Law, and similar laws in other countries, you may also ask how your data is used and object to it."
+        "body": "• You can see and correct your details in the app. Owners can export all their salon’s data at any time (More → Backup & recovery).\n• You can delete your account in the app (More → Delete my account): your sign-in and name are removed straight away; records the law requires us to keep are kept as described above.\n• If you are in the European Union, the United Kingdom or Brazil you can also: get a copy of your data and know how it is used; have it corrected or erased; restrict or object to its use; receive it in a format you can move; and withdraw your consent at any time (this does not affect what was done before). In Brazil you can also ask whether we process your data, have unnecessary data anonymised or blocked, and know who we share it with. The UAE Personal Data Protection Law and similar laws in other countries give you comparable rights.\n• To use these rights, write to the address below. We answer within one month, and within 15 days for a full copy of your data in Brazil. We may ask you to confirm who you are. We do not make decisions about people by automated means alone.\n• A salon’s customers and staff should contact the salon first, as it controls those records; we help it answer.\n• You can also complain to a data protection authority: in the European Union the one where you live or work, in the United Kingdom the Information Commissioner’s Office (ico.org.uk), and in Brazil the ANPD (gov.br/anpd)."
+      },
+      "cookies": {
+        "title": "Cookies and device storage",
+        "body": "The app and the website keep only what they need on your device: your sign-in and settings such as your language and salon type. We use no advertising or analytics cookies and do not track you on other sites."
       },
       "security": {
         "title": "How we protect it",
@@ -2084,6 +2093,11 @@
       "changes": {
         "title": "Changes",
         "body": "If we change this policy we update the date above and tell owners in the app about important changes."
+      },
+      "reps": {
+        "title": "Representatives",
+        "eu": "Our representative in the European Union: {{rep}}",
+        "uk": "Our representative in the United Kingdom: {{rep}}"
       }
     },
     "terms": {
@@ -2104,6 +2118,10 @@
       "data": {
         "title": "Your data",
         "body": "Your salon’s data belongs to you. You allow us to store and process it only to provide the service. You are responsible for being allowed to record your customers’ and staff’s details (for example, their agreement to receive WhatsApp receipts). You can export it at any time."
+      },
+      "processing": {
+        "title": "Your customers’ and staff’s data (data processing terms)",
+        "body": "When your salon records its customers’ and staff’s details, your salon is the controller and we process them for you. These terms are our data processing agreement (GDPR and UK GDPR article 28; LGPD article 39):\n• We process the data only to provide the service and on your instructions — how you use the app is your instruction — unless the law requires otherwise.\n• Everyone who works on the service must keep it confidential.\n• We keep it secure as described in our privacy policy: encrypted connections, each salon’s records kept apart and access by role.\n• We use the providers named in our privacy policy (sub-processors) under terms that protect the data as these do. We tell owners in the app before adding or replacing one, and you may object.\n• We help you answer your customers’ and staff’s requests (copies, corrections, deletions) and with any assessment the law requires.\n• We tell you without undue delay, and within 48 hours of learning of it, if a breach affects your salon’s data.\n• When you stop, you can export all your data; we delete it after the periods the law requires us to keep it.\n• We give you the information you need to show these terms are kept, and allow reasonable audits.\nYou confirm you have a lawful basis to record your customers’ and staff’s details and have told them about it."
       },
       "fairUse": {
         "title": "Fair use",

@@ -1,5 +1,4 @@
 {
-  "_review": "TODO review: machine-drafted translation",
   "common": {
     "add": "Ajouter",
     "addItem": "Ajouter {{item}}",
@@ -2041,14 +2040,15 @@
     "agree": "En créant un compte, vous acceptez les conditions d’utilisation et la politique de confidentialité.",
     "contact": {
       "title": "Contact",
-      "body": "Questions ou demandes : {{email}}"
+      "body": "Questions ou demandes, y compris concernant vos données : {{email}}. Cette adresse est également notre contact pour la protection des données (au Brésil, notre « encarregado »)."
     },
     "privacy": {
       "title": "Politique de confidentialité",
       "intro": "Cette politique explique ce que {{app}} collecte, pourquoi, et les choix dont vous disposez. {{app}} est un logiciel que les barbiers et les salons pour femmes utilisent pour gérer leur journée : file d’attente, ventes, stock, équipe, paie et taxes.",
       "who": {
         "title": "Qui nous sommes",
-        "body": "{{app}} (« nous ») fournit l’app et le site web. Pour les informations qu’un salon conserve sur ses propres clients et son personnel, c’est le salon qui décide de ce qui est enregistré et pourquoi ; nous les stockons et les traitons pour le compte du salon, selon ses instructions."
+        "body": "{{company}} (« nous ») fournit {{app}}, l’app et le site web. Pour votre compte et la façon dont vous utilisez {{app}}, c’est nous qui décidons de la manière dont vos données sont utilisées : nous sommes le « responsable du traitement ». Pour les informations qu’un salon conserve sur ses propres clients et son personnel, c’est le salon qui est le responsable du traitement : il décide de ce qui est enregistré et pourquoi, et nous les stockons et les traitons pour son compte, selon ses instructions, conformément aux conditions de traitement des données figurant dans nos conditions d’utilisation.",
+        "address": "Adresse : {{address}}"
       },
       "collect": {
         "title": "Ce que nous collectons",
@@ -2058,9 +2058,13 @@
         "title": "Comment nous les utilisons",
         "body": "Uniquement pour faire fonctionner le service : vous connecter, enregistrer et afficher les données de votre salon, envoyer les notifications que vous activez, produire les reçus, rapports et sauvegardes, assurer la sécurité du service, répondre aux demandes d’assistance et respecter nos obligations légales, comme la conservation des documents fiscaux."
       },
+      "basis": {
+        "title": "Pourquoi nous pouvons les utiliser (bases légales)",
+        "body": "• Pour fournir le service auquel vous ou votre salon avez souscrit (un contrat).\n• Pour respecter nos obligations légales, comme la conservation des documents fiscaux et financiers (une obligation légale).\n• Pour assurer la sécurité du service, prévenir les utilisations abusives et corriger les dysfonctionnements, ce qui relève de notre intérêt légitime et de celui de nos utilisateurs ; vous pouvez vous y opposer.\n• Pour les notifications sur votre téléphone et les éventuels messages facultatifs, parce que vous l’avez accepté ; vous pouvez les désactiver à tout moment (consentement).\nAu Brésil, ce sont les bases légales correspondantes de la LGPD (article 7)."
+      },
       "where": {
         "title": "Où elles sont conservées",
-        "body": "Chez nos hébergeurs : Supabase (base de données, connexion et stockage de fichiers) et Vercel (le site web). Les notifications vers les téléphones passent par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Ces prestataires peuvent conserver des données en dehors de votre pays et sont tenus de les garder confidentielles et sécurisées."
+        "body": "Vos données sont stockées chez Supabase (base de données, connexion et stockage de fichiers) en Corée du Sud. Le site web et l’app sont distribués par Vercel depuis des serveurs proches de vous. Les e-mails passent par notre prestataire d’e-mail, les notifications vers les téléphones par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Ces prestataires traitent les données uniquement pour notre compte, conformément à des conditions de traitement des données, et sont tenus de les garder confidentielles et sécurisées.\nL’Union européenne et le Royaume-Uni reconnaissent que la Corée du Sud protège les données personnelles de manière adéquate. Lorsqu’un prestataire traite des données dans un pays qui ne bénéficie pas d’une telle reconnaissance, comme les États-Unis, le transfert est couvert par les clauses contractuelles types de la Commission européenne, assorties de l’addendum du Royaume-Uni, et, pour le Brésil, par les garanties que permet la LGPD, telles que les clauses contractuelles types."
       },
       "share": {
         "title": "Avec qui nous les partageons",
@@ -2072,7 +2076,11 @@
       },
       "rights": {
         "title": "Vos choix et vos droits",
-        "body": "Vous pouvez consulter et corriger vos informations dans l’app. Les propriétaires peuvent exporter toutes les données de leur salon à tout moment (Plus → Sauvegarde et restauration). Vous pouvez supprimer votre compte dans l’app (Plus → Supprimer mon compte) : votre connexion et votre nom sont retirés immédiatement. Les clients et le personnel d’un salon doivent d’abord contacter le salon, car c’est lui qui contrôle ces données ; nous l’aidons à répondre. En vertu de la loi des Émirats arabes unis sur la protection des données personnelles, et de lois similaires dans d’autres pays, vous pouvez aussi demander comment vos données sont utilisées et vous y opposer."
+        "body": "• Vous pouvez consulter et corriger vos informations dans l’app. Les propriétaires peuvent exporter toutes les données de leur salon à tout moment (Plus → Sauvegarde et restauration).\n• Vous pouvez supprimer votre compte dans l’app (Plus → Supprimer mon compte) : votre connexion et votre nom sont retirés immédiatement ; les données que la loi nous oblige à conserver sont conservées comme décrit ci-dessus.\n• Si vous vous trouvez dans l’Union européenne, au Royaume-Uni ou au Brésil, vous pouvez également : obtenir une copie de vos données et savoir comment elles sont utilisées ; les faire rectifier ou effacer ; en limiter l’utilisation ou vous y opposer ; les recevoir dans un format que vous pouvez transférer ; et retirer votre consentement à tout moment (cela n’affecte pas ce qui a été fait auparavant). Au Brésil, vous pouvez aussi demander si nous traitons vos données, faire anonymiser ou bloquer les données inutiles, et savoir avec qui nous les partageons. La loi des Émirats arabes unis sur la protection des données personnelles et des lois similaires dans d’autres pays vous accordent des droits comparables.\n• Pour exercer ces droits, écrivez à l’adresse ci-dessous. Nous répondons dans un délai d’un mois, et de 15 jours pour une copie complète de vos données au Brésil. Nous pouvons vous demander de confirmer votre identité. Nous ne prenons pas de décisions concernant des personnes uniquement par des moyens automatisés.\n• Les clients et le personnel d’un salon doivent d’abord contacter le salon, car c’est lui qui contrôle ces données ; nous l’aidons à répondre.\n• Vous pouvez aussi introduire une réclamation auprès d’une autorité de protection des données : dans l’Union européenne, celle du lieu où vous vivez ou travaillez ; au Royaume-Uni, l’Information Commissioner’s Office (ico.org.uk) ; et au Brésil, l’ANPD (gov.br/anpd)."
+      },
+      "cookies": {
+        "title": "Cookies et stockage sur l’appareil",
+        "body": "L’app et le site web ne conservent sur votre appareil que ce dont ils ont besoin : votre connexion et vos réglages, comme votre langue et le type de salon. Nous n’utilisons aucun cookie publicitaire ou de mesure d’audience et ne vous suivons pas sur d’autres sites."
       },
       "security": {
         "title": "Comment nous les protégeons",
@@ -2085,6 +2093,11 @@
       "changes": {
         "title": "Modifications",
         "body": "Si nous modifions cette politique, nous mettons à jour la date ci-dessus et informons les propriétaires des changements importants dans l’app."
+      },
+      "reps": {
+        "title": "Représentants",
+        "eu": "Notre représentant dans l’Union européenne : {{rep}}",
+        "uk": "Notre représentant au Royaume-Uni : {{rep}}"
       }
     },
     "terms": {
@@ -2105,6 +2118,10 @@
       "data": {
         "title": "Vos données",
         "body": "Les données de votre salon vous appartiennent. Vous nous autorisez à les stocker et à les traiter uniquement pour fournir le service. Il vous appartient de vous assurer que vous êtes autorisé à enregistrer les informations de vos clients et de votre personnel (par exemple, leur accord pour recevoir des reçus par WhatsApp). Vous pouvez les exporter à tout moment."
+      },
+      "processing": {
+        "title": "Les données de vos clients et de votre personnel (conditions de traitement des données)",
+        "body": "Lorsque votre salon enregistre les informations de ses clients et de son personnel, votre salon est le responsable du traitement et nous les traitons pour votre compte. Ces conditions constituent notre accord de traitement des données (article 28 du RGPD et du UK GDPR ; article 39 de la LGPD) :\n• Nous traitons les données uniquement pour fournir le service et selon vos instructions — la façon dont vous utilisez l’app constitue votre instruction —, sauf si la loi en dispose autrement.\n• Toute personne qui travaille sur le service est tenue de les garder confidentielles.\n• Nous en assurons la sécurité comme décrit dans notre politique de confidentialité : connexions chiffrées, données de chaque salon séparées et accès selon le rôle.\n• Nous faisons appel aux prestataires cités dans notre politique de confidentialité (sous-traitants ultérieurs) dans des conditions qui protègent les données comme le font les présentes. Nous informons les propriétaires dans l’app avant d’en ajouter ou d’en remplacer un, et vous pouvez vous y opposer.\n• Nous vous aidons à répondre aux demandes de vos clients et de votre personnel (copies, rectifications, suppressions), ainsi que pour toute évaluation exigée par la loi.\n• Si une violation de données affecte les données de votre salon, nous vous en informons dans les meilleurs délais, et dans les 48 heures après en avoir pris connaissance.\n• Lorsque vous arrêtez d’utiliser le service, vous pouvez exporter toutes vos données ; nous les supprimons à l’expiration des durées pendant lesquelles la loi nous oblige à les conserver.\n• Nous vous fournissons les informations nécessaires pour démontrer le respect de ces conditions et permettons des audits raisonnables.\nVous confirmez disposer d’une base légale pour enregistrer les informations de vos clients et de votre personnel et les en avoir informés."
       },
       "fairUse": {
         "title": "Utilisation loyale",
@@ -2169,5 +2186,6 @@
   "app": {
     "refresh": "Actualiser l’app",
     "refreshed": "À jour"
-  }
+  },
+  "_review": "TODO review: machine-drafted translation"
 }

@@ -8,17 +8,21 @@ import { spacing } from '@/theme';
 import { Button, HeaderBand, Screen, Text } from '@/ui';
 
 /** The date the current wording took effect; change it with the wording. */
-export const LEGAL_UPDATED = '2026-09-30';
+export const LEGAL_UPDATED = '2026-10-06';
 
 const SECTIONS = {
-  privacy: ['who', 'collect', 'use', 'where', 'share', 'keep', 'rights', 'security', 'children', 'changes'],
-  terms: ['service', 'accounts', 'plans', 'data', 'fairUse', 'availability', 'liability', 'ending', 'law', 'changes'],
+  privacy: ['who', 'collect', 'use', 'basis', 'where', 'share', 'keep', 'rights', 'cookies', 'security', 'children', 'changes'],
+  terms: ['service', 'accounts', 'plans', 'data', 'processing', 'fairUse', 'availability', 'liability', 'ending', 'law', 'changes'],
 } as const;
 
 export type LegalKind = keyof typeof SECTIONS;
 
-/** Whether a real support address has been set (src/config/brand.json); until then no contact line is shown. */
-export const hasSupportEmail = !brand.supportEmail.endsWith('@example.com');
+/** Where privacy questions go: the privacy address if set, else support (src/config/brand.json). */
+const contactEmail = brand.privacyEmail || brand.supportEmail;
+/** Whether a real address has been set; until then no contact line is shown. */
+export const hasSupportEmail = Boolean(contactEmail) && !contactEmail.endsWith('@example.com');
+/** The company behind the app (its legal name once set), for "Who we are". */
+const company = brand.legalName || brand.appName;
 
 /** The privacy policy or the terms: open to everyone, signed in or not (the stores and the website link here). */
 export function LegalScreen({ kind }: { kind: LegalKind }) {
@@ -40,22 +44,35 @@ export function LegalScreen({ kind }: { kind: LegalKind }) {
             <Text variant="h4" accessibilityRole="header">
               {t(`legal.${kind}.${key}.title` as 'legal.privacy.who.title')}
             </Text>
-            {t(`legal.${kind}.${key}.body` as 'legal.privacy.who.body', { app })
+            {t(`legal.${kind}.${key}.body` as 'legal.privacy.who.body', { app, company })
               .split('\n')
               .map((line, i) => (
                 <Text key={i} color="textSecondary">
                   {line}
                 </Text>
               ))}
+            {kind === 'privacy' && key === 'who' && brand.address ? (
+              <Text color="textSecondary">{t('legal.privacy.who.address', { address: brand.address })}</Text>
+            ) : null}
           </View>
         ))}
+        {/* Representatives for people in the EU and the UK (GDPR article 27), once appointed. */}
+        {kind === 'privacy' && (brand.euRepresentative || brand.ukRepresentative) ? (
+          <View style={styles.section}>
+            <Text variant="h4" accessibilityRole="header">
+              {t('legal.privacy.reps.title')}
+            </Text>
+            {brand.euRepresentative ? <Text color="textSecondary">{t('legal.privacy.reps.eu', { rep: brand.euRepresentative })}</Text> : null}
+            {brand.ukRepresentative ? <Text color="textSecondary">{t('legal.privacy.reps.uk', { rep: brand.ukRepresentative })}</Text> : null}
+          </View>
+        ) : null}
         {hasSupportEmail ? (
           <View style={styles.section}>
             <Text variant="h4" accessibilityRole="header">
               {t('legal.contact.title')}
             </Text>
             <Text color="textSecondary" selectable>
-              {t('legal.contact.body', { email: brand.supportEmail })}
+              {t('legal.contact.body', { email: contactEmail })}
             </Text>
           </View>
         ) : null}

@@ -1,5 +1,10 @@
 {
   "appName": "Saloqo",
   "supportEmail": "support@example.com",
-  "bundleId": "com.saloqo.app"
+  "bundleId": "com.saloqo.app",
+  "legalName": "",
+  "address": "",
+  "privacyEmail": "",
+  "euRepresentative": "",
+  "ukRepresentative": ""
 }
