@@ -570,7 +570,9 @@ export type Database = {
       };
       businesses: {
         Row: {
+          close_note: string | null;
           closed_at: string | null;
+          closed_by: string | null;
           code: string;
           country_code: string;
           created_at: string;
@@ -582,7 +584,9 @@ export type Database = {
           timezone: string;
         };
         Insert: {
+          close_note?: string | null;
           closed_at?: string | null;
+          closed_by?: string | null;
           code: string;
           country_code?: string;
           created_at?: string;
@@ -594,7 +598,9 @@ export type Database = {
           timezone?: string;
         };
         Update: {
+          close_note?: string | null;
           closed_at?: string | null;
+          closed_by?: string | null;
           code?: string;
           country_code?: string;
           created_at?: string;
@@ -3326,6 +3332,7 @@ export type Database = {
           summary: string;
         }[];
       };
+      admin_close_salon: { Args: { p_business: string; p_note: string }; Returns: undefined };
       admin_end_plan: { Args: { p_business: string; p_note: string }; Returns: undefined };
       admin_overview: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_plan_events: {

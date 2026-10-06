@@ -3,7 +3,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(11);
+select plan(16);
 grant execute on function public.branch_today(uuid), public.business_today(uuid), public.unique_business_code(text),
   public.post_journal(uuid, uuid, date, text, uuid, text, uuid, jsonb), public.branch_setting(uuid, text, jsonb)
   to authenticated;
@@ -55,6 +55,20 @@ select lives_ok($$ select admin_set_platform_owner('PC-OWNER@test.local', true) 
 select lives_ok($$ select admin_set_platform_owner('pc-owner@test.local', false) $$, 'and removes them again');
 select throws_ok($$ select admin_set_platform_owner('pc-dev@test.local', false) $$, '22023', 'invalid_status',
   'the last platform owner cannot be removed');
+
+-- Closing a salon: its logins switched off, nothing deleted; only platform owners; a reason is needed.
+select pg_temp.as_user('00000000-0000-0000-0000-00000000290b');
+select throws_ok(format($$ select admin_close_salon('%s', 'test') $$, current_setting('t.b')), '42501', null,
+  'a salon owner cannot close a salon');
+select pg_temp.as_user('00000000-0000-0000-0000-00000000290a');
+select throws_ok(format($$ select admin_close_salon('%s', '') $$, current_setting('t.b')), '22023', 'reason_required',
+  'closing needs a reason');
+select lives_ok(format($$ select admin_close_salon('%s', 'Demo salon') $$, current_setting('t.b')), 'the platform owner closes the salon');
+select pg_temp.as_admin();
+select is((select count(*)::int from members where business_id = current_setting('t.b')::uuid and active), 0,
+  'every login of the salon is switched off');
+select ok((select closed_at is not null and close_note = 'Demo salon' from businesses where id = current_setting('t.b')::uuid),
+  'the salon is marked closed, with the reason, and kept');
 
 select * from finish();
 rollback;

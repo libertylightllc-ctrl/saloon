@@ -34,6 +34,8 @@ interface SessionValue {
   rules: BranchRules;
   /** Why the last session ended or failed to load (disabled login, no internet…). */
   notice: ErrorCode | null;
+  /** A platform owner with no open salon (never had one, or theirs was closed): they go to the platform console. */
+  platformOnly: boolean;
   clearNotice: () => void;
   reload: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -78,6 +80,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [status, setStatus] = useState<SessionStatus>('loading');
   const [loaded, setLoaded] = useState<Loaded>({ member: null, business: null, branch: null, employeeId: null });
+  const [platformOnly, setPlatformOnly] = useState(false);
   const [notice, setNotice] = useState<ErrorCode | null>(null);
   const userId = session?.user.id ?? null;
   const loadedFor = useRef<string | null>(null);
@@ -127,10 +130,20 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       const next = await loadMembership(userId);
       if (stale()) return;
       if (next.member && !next.member.active) {
+        // A platform owner whose salon was closed keeps the console; anyone else switched off is signed out.
+        const { data: owner } = deleting.current ? { data: false } : await supabase.rpc('is_platform_admin');
+        if (stale()) return;
+        if (owner === true) {
+          setLoaded({ member: null, business: null, branch: null, employeeId: null });
+          setPlatformOnly(true);
+          setStatus('needsSetup');
+          return;
+        }
         setNotice(deleting.current ? 'account_deleted' : 'disabled');
         await signOut();
         return;
       }
+      setPlatformOnly(false);
       // Before the screens draw: every amount shows in this salon's currency.
       setActiveCurrency(next.business?.currency);
       setLoaded(next);
@@ -245,12 +258,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       role: (loaded.member?.role as Role | undefined) ?? null,
       rules: { staffCanSell: settings.staff_can_sell === true },
       notice,
+      platformOnly,
       clearNotice: () => setNotice(null),
       reload,
       signOut,
       deleteAccount,
     };
-  }, [status, session, loaded, notice, reload, signOut, deleteAccount]);
+  }, [status, session, loaded, notice, platformOnly, reload, signOut, deleteAccount]);
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

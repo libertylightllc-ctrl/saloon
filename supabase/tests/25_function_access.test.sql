@@ -13,6 +13,7 @@ insert into reviewed values
     ('admin_accounts'),
     ('admin_activate'),
     ('admin_activity'),
+    ('admin_close_salon'),
     ('admin_end_plan'),
     ('admin_overview'),
     ('admin_plan_events'),

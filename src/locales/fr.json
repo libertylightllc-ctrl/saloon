@@ -2217,7 +2217,7 @@
     },
     "overview": {
       "salons": "Salons",
-      "salonsSub": "{{active}} avec abonnement · {{branches}} succursales",
+      "salonsSub": "{{active}} avec abonnement · {{closed}} fermés",
       "requests": "Demandes d’abonnement en attente",
       "accounts": "Comptes de connexion",
       "accountsSub": "{{owners}} propriétaires · {{staff}} accès employés · {{none}} sans salon",
@@ -2238,7 +2238,11 @@
       "lastActive": "Dernière connexion : {{date}}",
       "never": "Personne ne s’est encore connecté",
       "closed": "Fermé",
-      "history": "Historique de ce salon"
+      "history": "Historique de ce salon",
+      "close": "Fermer ce salon",
+      "closeHint": "Tous les accès de ce salon sont désactivés et son abonnement prend fin. Rien n’est supprimé : ses données restent, et un propriétaire de la plateforme parmi ses accès garde cette console.",
+      "closeReason": "Motif (obligatoire)",
+      "closedToast": "{{name}} fermé"
     },
     "accounts": {
       "title": "Comptes ({{count}})",

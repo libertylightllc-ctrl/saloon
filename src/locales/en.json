@@ -2216,7 +2216,7 @@
     },
     "overview": {
       "salons": "Salons",
-      "salonsSub": "{{active}} with a plan · {{branches}} branches",
+      "salonsSub": "{{active}} with a plan · {{closed}} closed",
       "requests": "Plan requests waiting",
       "accounts": "Sign-in accounts",
       "accountsSub": "{{owners}} owners · {{staff}} staff logins · {{none}} without a salon",
@@ -2237,7 +2237,11 @@
       "lastActive": "Last signed in {{date}}",
       "never": "Nobody has signed in yet",
       "closed": "Closed",
-      "history": "History of this salon"
+      "history": "History of this salon",
+      "close": "Close this salon",
+      "closeHint": "Every login of this salon is switched off and its plan ends. Nothing is deleted: its records stay, and a platform owner among its logins keeps this console.",
+      "closeReason": "Reason (needed)",
+      "closedToast": "{{name}} closed"
     },
     "accounts": {
       "title": "Accounts ({{count}})",

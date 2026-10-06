@@ -30,13 +30,14 @@ const HOME: Record<Exclude<SessionStatus, 'loading'>, Area> = {
 };
 
 export function Gate({ area, children }: { area: Area; children: ReactNode }) {
-  const { status } = useSession();
+  const { status, platformOnly } = useSession();
   const { salonType, loaded } = useSalonType();
   if (status === 'loading' || !loaded) return <Splash />;
   const target = HOME[status];
   if (target === area) return <>{children}</>;
   if (target === 'auth') return <Redirect href={salonType ? '/sign-in' : '/welcome'} />;
-  if (target === 'setup') return <Redirect href="/setup" />;
+  // A platform owner whose salon was closed has no salon to set up again: the console is their place.
+  if (target === 'setup') return <Redirect href={platformOnly ? '/console' : '/setup'} />;
   return <Redirect href="/" />;
 }
 

@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase';
 
 export interface Overview {
   salons: number;
+  salons_closed: number;
   salons_plan_active: number;
   plan_requests_open: number;
   branches: number;
@@ -101,6 +102,18 @@ export function useSetPlatformOwner() {
   return useMutation({
     mutationFn: async ({ email, on }: { email: string; on: boolean }) => {
       const { error } = await supabase.rpc('admin_set_platform_owner', { p_email: email.trim(), p_on: on });
+      if (error) throw error;
+    },
+    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}
+
+/** Close a salon: every login switched off, the plan ended; nothing deleted. A reason is needed. */
+export function useCloseSalon() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ business, note }: { business: string; note: string }) => {
+      const { error } = await supabase.rpc('admin_close_salon', { p_business: business, p_note: note.trim() });
       if (error) throw error;
     },
     onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),

@@ -61,3 +61,37 @@ test('a dev account with no salon sees everything in the platform console', asyn
   await shop.goto('/console');
   await expect(id(shop, 'tab-index')).toBeVisible({ timeout: 30_000 });
 });
+
+test('the dev account closes a demo salon and then its own salon, and keeps the console', async ({ page, mode, device }) => {
+  const dev = await createOwner(mode);
+  await makePlatformAdmin(dev.email);
+  const demo = await createOwner(mode);
+
+  await ownerOn(page, mode, dev.email, dev.password);
+  await page.goto('/console');
+  await id(page, 'console-tab-salons').click();
+
+  // Another salon: closed with a reason; its owner can no longer sign in.
+  await id(page, 'console-salon-search').fill(demo.code);
+  await id(page, `admin-salon-${demo.code}`).click();
+  await id(page, 'console-close-reason').fill('Demo salon, not a customer');
+  await id(page, 'console-close-salon').click();
+  await expect(id(page, `admin-salon-${demo.code}`)).toContainText('Closed');
+  const shop = await device();
+  await chooseType(shop, mode);
+  await id(shop, 'sign-in-as-owner').click();
+  await field(shop, 'email').fill(demo.email);
+  await field(shop, 'password').fill(demo.password);
+  await id(shop, 'sign-in-submit').click();
+  await expect(shop.getByText('This login is disabled', { exact: false }).first()).toBeVisible({ timeout: 30_000 });
+
+  // Its own salon: the dev account stays signed in and keeps the console.
+  await id(page, 'console-salon-search').fill(dev.code);
+  await id(page, `admin-salon-${dev.code}`).click();
+  await id(page, 'console-close-reason').fill('Demo shop');
+  await id(page, 'console-close-salon').click();
+  await expect(id(page, `admin-salon-${dev.code}`)).toContainText('Closed');
+  await page.goto('/');
+  await expect(page).toHaveURL(/\/console$/, { timeout: 30_000 });
+  await expect(id(page, 'console-salons-value')).toBeVisible();
+});

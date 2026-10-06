@@ -2217,7 +2217,7 @@
     },
     "overview": {
       "salons": "Salões",
-      "salonsSub": "{{active}} com plano · {{branches}} filiais",
+      "salonsSub": "{{active}} com plano · {{closed}} fechados",
       "requests": "Pedidos de plano pendentes",
       "accounts": "Contas de acesso",
       "accountsSub": "{{owners}} proprietários · {{staff}} logins da equipe · {{none}} sem salão",
@@ -2238,7 +2238,11 @@
       "lastActive": "Último acesso: {{date}}",
       "never": "Ninguém entrou ainda",
       "closed": "Fechado",
-      "history": "Histórico deste salão"
+      "history": "Histórico deste salão",
+      "close": "Fechar este salão",
+      "closeHint": "Todos os acessos deste salão são desativados e o plano termina. Nada é excluído: os registros ficam, e um proprietário da plataforma entre os acessos mantém este console.",
+      "closeReason": "Motivo (obrigatório)",
+      "closedToast": "{{name}} fechado"
     },
     "accounts": {
       "title": "Contas ({{count}})",

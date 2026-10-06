@@ -24,7 +24,7 @@ import {
   useToast,
 } from '@/ui';
 
-import { useSalonStats } from './api';
+import { useCloseSalon, useSalonStats } from './api';
 
 const MONTHS = [1, 3, 6, 12] as const;
 
@@ -106,6 +106,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
               testID="console-salon-history"
             />
             <SalonPlanForm salon={open} onDone={() => setOpen(null)} />
+            {stats.data?.get(open.business_id)?.closed ? null : <CloseSalon salon={open} onDone={() => setOpen(null)} />}
           </View>
         ) : null}
       </BottomSheet>
@@ -178,6 +179,43 @@ function SalonPlanForm({ salon, onDone }: { salon: AdminSalon; onDone: () => voi
       <Text variant="small" color="textSecondary">
         {t('admin.hint')}
       </Text>
+    </View>
+  );
+}
+
+/** Close the salon for good: its logins switched off and its plan ended, every record kept. */
+function CloseSalon({ salon, onDone }: { salon: AdminSalon; onDone: () => void }) {
+  const { t } = useTranslation();
+  const toast = useToast();
+  const close = useCloseSalon();
+  const [note, setNote] = useState('');
+  return (
+    <View style={styles.sheet}>
+      <Text variant="bodyStrong">{t('console.salons.close')}</Text>
+      <Text variant="small" color="textSecondary">
+        {t('console.salons.closeHint')}
+      </Text>
+      <TextField label={t('console.salons.closeReason')} value={note} onChangeText={setNote} maxLength={200} testID="console-close-reason" />
+      <FormError error={close.error} />
+      <Button
+        label={t('console.salons.close')}
+        icon="lock"
+        variant="danger"
+        disabled={note.trim().length < 3}
+        loading={close.isPending}
+        onPress={() =>
+          close.mutate(
+            { business: salon.business_id, note },
+            {
+              onSuccess: () => {
+                toast(t('console.salons.closedToast', { name: salon.name }));
+                onDone();
+              },
+            },
+          )
+        }
+        testID="console-close-salon"
+      />
     </View>
   );
 }

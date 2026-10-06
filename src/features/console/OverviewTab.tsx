@@ -20,7 +20,7 @@ export function OverviewTab() {
       {(o) => (
         <View style={styles.body}>
           <KpiGrid>
-            <KpiCard icon="store" label={t('console.overview.salons')} value={String(o.salons)} sub={t('console.overview.salonsSub', { active: o.salons_plan_active, branches: o.branches })} testID="console-salons" />
+            <KpiCard icon="store" label={t('console.overview.salons')} value={String(o.salons)} sub={t('console.overview.salonsSub', { active: o.salons_plan_active, closed: o.salons_closed })} testID="console-salons" />
             <KpiCard icon="creditCard" label={t('console.overview.requests')} value={String(o.plan_requests_open)} />
             <KpiCard icon="users" label={t('console.overview.accounts')} value={String(o.accounts)} sub={t('console.overview.accountsSub', { owners: o.owners, staff: o.staff_logins, none: o.no_salon })} testID="console-accounts" />
             <KpiCard icon="userPlus" label={t('console.overview.signups')} value={String(o.signups_7d)} sub={t('console.overview.signupsSub', { month: o.signups_30d, active: o.signed_in_7d })} />
