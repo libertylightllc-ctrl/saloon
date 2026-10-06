@@ -148,3 +148,11 @@ pages in every language:
    `docs/translation-review.csv`). Confirm the 48-hour breach notice to salons and the response times suit you.
 6. Data is stored in **South Korea** (Supabase, Seoul). The EU and the UK recognise Korea as adequate, so no extra step
    is needed for that; a lawyer may still suggest an EU region later for speed and comfort.
+
+## J · Your dev account (the platform console)
+
+1. Sign up on saloqo.com with the email you want as the dev account (no salon is needed — skip the setup).
+2. An existing platform owner adds it: **More → Platform console → Accounts → Platform owners** → type the email →
+   **Make platform owner**. Today the only platform owner is the Demo Shop owner's account, so add the dev account
+   **before** deleting Demo Shop.
+3. Sign in with the dev account → **Open the platform console**.

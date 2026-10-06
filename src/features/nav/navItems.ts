@@ -68,7 +68,7 @@ export function useBusinessRows() {
     { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch'), section: 'settings' },
     { key: 'backup', icon: 'archive', href: '/settings/backup', show: can(role, 'backup'), section: 'settings' },
     { key: 'plan', icon: 'creditCard', href: '/plan', show: can(role, 'viewPlan'), section: 'settings' },
-    { key: 'admin', icon: 'building', href: '/admin', show: platformAdmin.data === true, section: 'settings' },
+    { key: 'admin', icon: 'building', href: '/console', show: platformAdmin.data === true, section: 'settings' },
   ] as const;
   return rows.filter((r) => r.show);
 }

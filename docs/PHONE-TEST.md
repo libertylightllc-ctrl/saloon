@@ -316,3 +316,12 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
    Kazakhstan → **Change country** → ✅ "Country changed"; the card says KZT · Asia/Almaty; Services prices are now in
    tenge (about 3,500 for a 25-dirham haircut).
 2. Make one sale → back to Branch settings → ✅ the country is fixed, with a line saying why.
+
+## 37 · The platform console (2 min)
+
+1. Sign in with the dev account (a platform owner; no salon needed) → ✅ setup shows **Open the platform console**, or
+   More → **Platform console** from a salon.
+2. **Overview** → ✅ salons, accounts, sign-ups, this month's sales per currency, plan income, countries.
+3. **Salons** → search a salon → ✅ owner, staff, customers, services, sales, last sign-in; tap it → **History of this
+   salon** → ✅ its history.
+4. **Accounts** → ✅ every sign-in; type an email under Platform owners → **Make platform owner** → ✅ badge; Remove.

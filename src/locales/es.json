@@ -428,7 +428,7 @@
       "pin": "PIN de cambio rápido",
       "switch": "Cambiar de usuario",
       "plan": "Plan y facturación",
-      "admin": "Salones y planes (admin)"
+      "admin": "Consola de la plataforma"
     },
     "logOut": "Cerrar sesión",
     "title": "Más",
@@ -2203,5 +2203,74 @@
     "refresh": "Actualizar app",
     "refreshed": "Al día"
   },
-  "_review": "TODO review: machine-drafted translation"
+  "_review": "TODO review: machine-drafted translation",
+  "console": {
+    "open": "Abrir la consola de la plataforma",
+    "title": "Consola de la plataforma",
+    "subtitle": "Todo el servicio: salones, cuentas, planes e historial",
+    "tabs": {
+      "overview": "Resumen",
+      "salons": "Salones",
+      "accounts": "Cuentas",
+      "plans": "Planes",
+      "activity": "Actividad"
+    },
+    "overview": {
+      "salons": "Salones",
+      "salonsSub": "{{active}} con plan · {{branches}} sucursales",
+      "requests": "Solicitudes de plan pendientes",
+      "accounts": "Cuentas de acceso",
+      "accountsSub": "{{owners}} dueños · {{staff}} accesos de personal · {{none}} sin salón",
+      "signups": "Registros esta semana",
+      "signupsSub": "{{month}} en 30 días · {{active}} iniciaron sesión esta semana",
+      "salesMonth": "Ventas de este mes, todos los salones",
+      "salesLine": "{{count}} ventas",
+      "salesLine_one": "{{count}} venta",
+      "planIncome": "Pagos de planes recibidos",
+      "countries": "Salones por país",
+      "none": "Aún no hay nada."
+    },
+    "salons": {
+      "search": "Buscar salones, dueños, códigos",
+      "stats": "{{staff}} empleados · {{customers}} clientes · {{services}} servicios",
+      "sales": "{{count}} ventas en 30 días · {{total}} este mes",
+      "sales_one": "{{count}} venta en 30 días · {{total}} este mes",
+      "lastActive": "Último inicio de sesión: {{date}}",
+      "never": "Nadie ha iniciado sesión todavía",
+      "closed": "Cerrado",
+      "history": "Historial de este salón"
+    },
+    "accounts": {
+      "title": "Cuentas ({{count}})",
+      "search": "Buscar correos, usuarios, nombres, salones",
+      "noSalon": "sin salón",
+      "line": "Alta: {{created}} · último inicio de sesión: {{last}}",
+      "never": "nunca",
+      "inactive": "Desactivada",
+      "unconfirmed": "Correo sin confirmar"
+    },
+    "owners": {
+      "title": "Dueños de la plataforma",
+      "badge": "Dueño de la plataforma",
+      "hint": "Ven esta consola y activan los planes de los salones. Agrega a alguien con el correo con el que inicia sesión; el último no se puede quitar.",
+      "email": "Correo con el que inicia sesión",
+      "add": "Hacer dueño de la plataforma",
+      "added": "Dueño de la plataforma agregado",
+      "remove": "Quitar",
+      "removed": "Dueño de la plataforma quitado"
+    },
+    "plans": {
+      "empty": "Aún no hay solicitudes ni pagos de planes.",
+      "months": "{{count}} meses",
+      "months_one": "{{count}} mes",
+      "kinds": {
+        "request": "Solicitado",
+        "activate": "Pagado",
+        "end": "Terminado"
+      }
+    },
+    "activity": {
+      "empty": "Aún no hay historial."
+    }
+  }
 }

@@ -3291,11 +3291,75 @@ export type Database = {
       };
       acct: { Args: { p_business: string; p_key: string }; Returns: string };
       adjust_stock: { Args: { p: Json }; Returns: Json };
+      admin_accounts: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          active: boolean;
+          business_id: string;
+          confirmed: boolean;
+          created_at: string;
+          display_name: string;
+          email: string;
+          last_sign_in_at: string;
+          platform_owner: boolean;
+          provider: string;
+          role: string;
+          salon: string;
+          user_id: string;
+          username: string;
+        }[];
+      };
       admin_activate: {
         Args: { p_amount_minor: number; p_business: string; p_months: number; p_note: string };
         Returns: string;
       };
+      admin_activity: {
+        Args: { p_business?: string; p_limit?: number };
+        Returns: {
+          action: string;
+          actor: string;
+          business_id: string;
+          created_at: string;
+          entity_type: string;
+          id: string;
+          salon: string;
+          summary: string;
+        }[];
+      };
       admin_end_plan: { Args: { p_business: string; p_note: string }; Returns: undefined };
+      admin_overview: { Args: Record<PropertyKey, never>; Returns: Json };
+      admin_plan_events: {
+        Args: { p_limit?: number };
+        Returns: {
+          amount_minor: number;
+          business_id: string;
+          by_name: string;
+          created_at: string;
+          currency: string;
+          id: string;
+          kind: string;
+          months: number;
+          note: string;
+          paid_until: string;
+          salon: string;
+        }[];
+      };
+      admin_salon_stats: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          business_id: string;
+          closed: boolean;
+          currency: string;
+          customers: number;
+          last_sale_at: string;
+          last_sign_in_at: string;
+          mode: string;
+          sales_30d: number;
+          sales_month_minor: number;
+          services: number;
+          staff: number;
+        }[];
+      };
       admin_salons: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3318,6 +3382,7 @@ export type Database = {
         }[];
       };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
+      admin_set_platform_owner: { Args: { p_email: string; p_on: boolean }; Returns: undefined };
       aed_rate: { Args: { p_currency: string }; Returns: number };
       allocate_minor: { Args: { p_total: number; p_weights: number[] }; Returns: number[] };
       appointment_for_update: {

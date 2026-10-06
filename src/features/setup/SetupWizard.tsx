@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -8,6 +9,7 @@ import { z } from 'zod';
 
 import { useSalonType } from '@/features/auth/salonType';
 import { useSession } from '@/features/auth/session';
+import { useIsPlatformAdmin } from '@/features/plan/api';
 import { TaxFields, taxShape, trnValid, useTaxWords } from '@/features/tax/TaxFields';
 import { isUae } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
@@ -71,6 +73,8 @@ const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 export function SetupWizard() {
   const { t } = useTranslation();
   const { session, reload, signOut } = useSession();
+  const router = useRouter();
+  const platformAdmin = useIsPlatformAdmin();
   const { salonType, setSalonType } = useSalonType();
   const [step, setStep] = useState(0);
   // Email sign-up stores display_name; Google gives full_name / name.
@@ -162,6 +166,10 @@ export function SetupWizard() {
       }
     >
       <View style={styles.body}>
+        {/* A platform owner needs no salon of their own: the console is one tap away. */}
+        {platformAdmin.data && step === 0 ? (
+          <Button label={t('console.open')} icon="building" variant="secondary" onPress={() => router.push('/console')} testID="setup-console" />
+        ) : null}
         <Text variant="h2">{t(`setup.steps.${current.key}.title`)}</Text>
 
         {current.key === 'business' ? (

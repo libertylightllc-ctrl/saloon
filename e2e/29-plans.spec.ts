@@ -42,6 +42,7 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   await ownerOn(office, mode, platform.email, platform.password);
   await tab(office, 'more');
   await id(office, 'more-admin').click();
+  await id(office, 'console-tab-salons').click();
   await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Paying by bank transfer');
   await id(office, `admin-salon-${owner.code}`).click();
   await expect(id(office, 'admin-amount')).toHaveValue('150.00');

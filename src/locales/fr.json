@@ -428,7 +428,7 @@
       "pin": "PIN de changement rapide",
       "switch": "Changer d’utilisateur",
       "plan": "Abonnement et facturation",
-      "admin": "Salons et abonnements (admin)"
+      "admin": "Console de la plateforme"
     },
     "logOut": "Se déconnecter",
     "title": "Plus",
@@ -2203,5 +2203,74 @@
     "refresh": "Actualiser l’app",
     "refreshed": "À jour"
   },
-  "_review": "TODO review: machine-drafted translation"
+  "_review": "TODO review: machine-drafted translation",
+  "console": {
+    "open": "Ouvrir la console de la plateforme",
+    "title": "Console de la plateforme",
+    "subtitle": "Tout le service : salons, comptes, abonnements et historique",
+    "tabs": {
+      "overview": "Vue d’ensemble",
+      "salons": "Salons",
+      "accounts": "Comptes",
+      "plans": "Abonnements",
+      "activity": "Activité"
+    },
+    "overview": {
+      "salons": "Salons",
+      "salonsSub": "{{active}} avec abonnement · {{branches}} succursales",
+      "requests": "Demandes d’abonnement en attente",
+      "accounts": "Comptes de connexion",
+      "accountsSub": "{{owners}} propriétaires · {{staff}} accès employés · {{none}} sans salon",
+      "signups": "Inscriptions cette semaine",
+      "signupsSub": "{{month}} sur 30 jours · {{active}} connectés cette semaine",
+      "salesMonth": "Ventes du mois, tous salons",
+      "salesLine": "{{count}} ventes",
+      "salesLine_one": "{{count}} vente",
+      "planIncome": "Paiements d’abonnement reçus",
+      "countries": "Salons par pays",
+      "none": "Rien pour l’instant."
+    },
+    "salons": {
+      "search": "Rechercher salons, propriétaires, codes",
+      "stats": "{{staff}} employés · {{customers}} clients · {{services}} services",
+      "sales": "{{count}} ventes sur 30 jours · {{total}} ce mois-ci",
+      "sales_one": "{{count}} vente sur 30 jours · {{total}} ce mois-ci",
+      "lastActive": "Dernière connexion : {{date}}",
+      "never": "Personne ne s’est encore connecté",
+      "closed": "Fermé",
+      "history": "Historique de ce salon"
+    },
+    "accounts": {
+      "title": "Comptes ({{count}})",
+      "search": "Rechercher e-mails, noms d’utilisateur, noms, salons",
+      "noSalon": "aucun salon",
+      "line": "Inscrit le {{created}} · dernière connexion : {{last}}",
+      "never": "jamais",
+      "inactive": "Désactivé",
+      "unconfirmed": "E-mail non confirmé"
+    },
+    "owners": {
+      "title": "Propriétaires de la plateforme",
+      "badge": "Propriétaire de la plateforme",
+      "hint": "Ils voient cette console et activent les abonnements des salons. Ajoutez une personne avec l’e-mail qu’elle utilise pour se connecter ; le dernier ne peut pas être retiré.",
+      "email": "E-mail utilisé pour se connecter",
+      "add": "Nommer propriétaire de la plateforme",
+      "added": "Propriétaire de la plateforme ajouté",
+      "remove": "Retirer",
+      "removed": "Propriétaire de la plateforme retiré"
+    },
+    "plans": {
+      "empty": "Aucune demande ni aucun paiement d’abonnement pour l’instant.",
+      "months": "{{count}} mois",
+      "months_one": "{{count}} mois",
+      "kinds": {
+        "request": "Demandé",
+        "activate": "Payé",
+        "end": "Terminé"
+      }
+    },
+    "activity": {
+      "empty": "Aucun historique pour l’instant."
+    }
+  }
 }

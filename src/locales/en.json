@@ -428,7 +428,7 @@
       "pin": "Quick-switch PIN",
       "switch": "Switch user",
       "plan": "Plan & billing",
-      "admin": "Salons & plans (admin)"
+      "admin": "Platform console"
     },
     "logOut": "Log out",
     "title": "More",
@@ -2202,5 +2202,74 @@
   "app": {
     "refresh": "Refresh app",
     "refreshed": "Up to date"
+  },
+  "console": {
+    "open": "Open the platform console",
+    "title": "Platform console",
+    "subtitle": "The whole service: salons, accounts, plans and history",
+    "tabs": {
+      "overview": "Overview",
+      "salons": "Salons",
+      "accounts": "Accounts",
+      "plans": "Plans",
+      "activity": "Activity"
+    },
+    "overview": {
+      "salons": "Salons",
+      "salonsSub": "{{active}} with a plan · {{branches}} branches",
+      "requests": "Plan requests waiting",
+      "accounts": "Sign-in accounts",
+      "accountsSub": "{{owners}} owners · {{staff}} staff logins · {{none}} without a salon",
+      "signups": "Sign-ups this week",
+      "signupsSub": "{{month}} in 30 days · {{active}} signed in this week",
+      "salesMonth": "Sales this month, all salons",
+      "salesLine": "{{count}} sales",
+      "salesLine_one": "{{count}} sale",
+      "planIncome": "Plan payments received",
+      "countries": "Salons by country",
+      "none": "Nothing yet."
+    },
+    "salons": {
+      "search": "Search salons, owners, codes",
+      "stats": "{{staff}} staff · {{customers}} customers · {{services}} services",
+      "sales": "{{count}} sales in 30 days · {{total}} this month",
+      "sales_one": "{{count}} sale in 30 days · {{total}} this month",
+      "lastActive": "Last signed in {{date}}",
+      "never": "Nobody has signed in yet",
+      "closed": "Closed",
+      "history": "History of this salon"
+    },
+    "accounts": {
+      "title": "Accounts ({{count}})",
+      "search": "Search emails, usernames, names, salons",
+      "noSalon": "no salon",
+      "line": "Joined {{created}} · last signed in {{last}}",
+      "never": "never",
+      "inactive": "Switched off",
+      "unconfirmed": "Email not confirmed"
+    },
+    "owners": {
+      "title": "Platform owners",
+      "badge": "Platform owner",
+      "hint": "They see this console and switch salons’ plans on. Add someone by the email they sign in with; the last one cannot be removed.",
+      "email": "Email they sign in with",
+      "add": "Make platform owner",
+      "added": "Platform owner added",
+      "remove": "Remove",
+      "removed": "Platform owner removed"
+    },
+    "plans": {
+      "empty": "No plan requests or payments yet.",
+      "months": "{{count}} months",
+      "months_one": "{{count}} month",
+      "kinds": {
+        "request": "Asked",
+        "activate": "Paid",
+        "end": "Ended"
+      }
+    },
+    "activity": {
+      "empty": "No history yet."
+    }
   }
 }

@@ -428,7 +428,7 @@
       "pin": "PIN de troca rápida",
       "switch": "Trocar de usuário",
       "plan": "Plano e cobrança",
-      "admin": "Salões e planos (admin)"
+      "admin": "Console da plataforma"
     },
     "logOut": "Sair",
     "title": "Mais",
@@ -2203,5 +2203,74 @@
     "refresh": "Atualizar app",
     "refreshed": "Atualizado"
   },
-  "_review": "TODO review: machine-drafted translation"
+  "_review": "TODO review: machine-drafted translation",
+  "console": {
+    "open": "Abrir o console da plataforma",
+    "title": "Console da plataforma",
+    "subtitle": "Todo o serviço: salões, contas, planos e histórico",
+    "tabs": {
+      "overview": "Visão geral",
+      "salons": "Salões",
+      "accounts": "Contas",
+      "plans": "Planos",
+      "activity": "Atividade"
+    },
+    "overview": {
+      "salons": "Salões",
+      "salonsSub": "{{active}} com plano · {{branches}} filiais",
+      "requests": "Pedidos de plano pendentes",
+      "accounts": "Contas de acesso",
+      "accountsSub": "{{owners}} proprietários · {{staff}} logins da equipe · {{none}} sem salão",
+      "signups": "Cadastros nesta semana",
+      "signupsSub": "{{month}} em 30 dias · {{active}} entraram nesta semana",
+      "salesMonth": "Vendas deste mês, todos os salões",
+      "salesLine": "{{count}} vendas",
+      "salesLine_one": "{{count}} venda",
+      "planIncome": "Pagamentos de planos recebidos",
+      "countries": "Salões por país",
+      "none": "Nada ainda."
+    },
+    "salons": {
+      "search": "Pesquisar salões, proprietários, códigos",
+      "stats": "{{staff}} na equipe · {{customers}} clientes · {{services}} serviços",
+      "sales": "{{count}} vendas em 30 dias · {{total}} este mês",
+      "sales_one": "{{count}} venda em 30 dias · {{total}} este mês",
+      "lastActive": "Último acesso: {{date}}",
+      "never": "Ninguém entrou ainda",
+      "closed": "Fechado",
+      "history": "Histórico deste salão"
+    },
+    "accounts": {
+      "title": "Contas ({{count}})",
+      "search": "Pesquisar e-mails, nomes de usuário, nomes, salões",
+      "noSalon": "sem salão",
+      "line": "Cadastro em {{created}} · último acesso: {{last}}",
+      "never": "nunca",
+      "inactive": "Desativada",
+      "unconfirmed": "E-mail não confirmado"
+    },
+    "owners": {
+      "title": "Proprietários da plataforma",
+      "badge": "Proprietário da plataforma",
+      "hint": "Eles veem este console e ativam os planos dos salões. Adicione alguém pelo e-mail que a pessoa usa para entrar; o último não pode ser removido.",
+      "email": "E-mail usado para entrar",
+      "add": "Tornar proprietário da plataforma",
+      "added": "Proprietário da plataforma adicionado",
+      "remove": "Remover",
+      "removed": "Proprietário da plataforma removido"
+    },
+    "plans": {
+      "empty": "Nenhum pedido ou pagamento de plano ainda.",
+      "months": "{{count}} meses",
+      "months_one": "{{count}} mês",
+      "kinds": {
+        "request": "Pedido",
+        "activate": "Pago",
+        "end": "Encerrado"
+      }
+    },
+    "activity": {
+      "empty": "Nenhum histórico ainda."
+    }
+  }
 }
