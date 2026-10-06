@@ -18,12 +18,25 @@ test('remove a mistaken entry completely; archive a barber with sales, then brin
   await id(page, 'staff-Typo Name').click();
   await id(page, 'staff-remove').click();
   await expect(text(page, 'Remove Typo Name?')).toBeVisible();
+  // Live sync drops Typo Name from the staff list as soon as the row goes, which can be before the removal answers
+  // (seen in the proof, 2026-10-07: the page lost the person, the sheet with it, and never went back to Staff). The
+  // answer is held until that refreshed list has arrived, so the page meets them in that order every time.
+  const listWithout = page.waitForResponse(
+    async (r) => r.url().includes('/rpc/staff_directory') && !(await r.text()).includes('Typo Name'),
+  );
+  await page.route('**/functions/v1/remove-staff', async (route) => {
+    const answer = await route.fetch();
+    await listWithout;
+    await route.fulfill({ response: answer });
+  });
   await id(page, 'staff-remove-confirm').click();
   await expect(text(page, 'Typo Name removed')).toBeVisible();
   await expect(page).toHaveURL(/\/staff$/);
   await expect(id(page, 'staff-Typo Name')).toHaveCount(0);
   const { count } = await admin.from('employees').select('id', { count: 'exact', head: true }).eq('business_id', owner.businessId).eq('full_name', 'Typo Name');
   expect(count).toBe(0);
+
+  await page.unroute('**/functions/v1/remove-staff');
 
   // A barber with a sale: archived, login off, the sale keeps its barber.
   await id(page, 'staff-Worked Barber').click();

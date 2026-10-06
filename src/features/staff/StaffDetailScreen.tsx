@@ -12,7 +12,7 @@ import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Avatar, Button, Card, EmptyState, FormError, HeaderBand, QueryState, Screen, SectionHeader, StatusPill, Text, useToast } from '@/ui';
 
-import { useAttendanceHistory, useRemoveStaff, useStaffDirectory } from './api';
+import { useAttendanceHistory, useRemoveStaff, useStaffDirectory, type StaffMember } from './api';
 import { useRoleTitle, WEEKDAYS } from './labels';
 import { LoginCard } from './LoginCard';
 import { RemoveStaffSheet } from './RemoveStaffSheet';
@@ -42,8 +42,11 @@ export function StaffDetailScreen() {
   const staff = useStaffDirectory(business.id);
   const history = useAttendanceHistory(id);
   const [editingRoster, setEditingRoster] = useState(false);
-  const [removing, setRemoving] = useState(false);
+  // The person being removed is held while the sheet is open: live sync drops someone removed completely from the
+  // staff list before the removal answers, and the sheet must stay to finish (message, back to Staff).
+  const [removing, setRemoving] = useState<StaffMember | null>(null);
   const person = staff.data?.find((s) => s.employee_id === id);
+  const removeSheetFor = removing ?? person;
   const owner = can(role, 'manageStaff');
   const toast = useToast();
   const restore = useRemoveStaff(business.id, branch.id);
@@ -121,7 +124,7 @@ export function StaffDetailScreen() {
                 </QueryState>
 
                 {owner && person.active ? (
-                  <Button label={t('staff.remove.button')} icon="trash" variant="ghost" onPress={() => setRemoving(true)} testID="staff-remove" />
+                  <Button label={t('staff.remove.button')} icon="trash" variant="ghost" onPress={() => setRemoving(person)} testID="staff-remove" />
                 ) : null}
                 {owner && !person.active ? (
                   <Card variant="outlined" style={styles.card} testID="staff-archived">
@@ -148,7 +151,7 @@ export function StaffDetailScreen() {
         </QueryState>
       </Screen>
       {person ? <RosterSheet person={person} open={editingRoster} onClose={() => setEditingRoster(false)} /> : null}
-      {person && owner ? <RemoveStaffSheet person={person} open={removing} onClose={() => setRemoving(false)} /> : null}
+      {owner && removeSheetFor ? <RemoveStaffSheet person={removeSheetFor} open={removing !== null} onClose={() => setRemoving(null)} /> : null}
     </>
   );
 }

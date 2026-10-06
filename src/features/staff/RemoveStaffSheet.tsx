@@ -36,8 +36,8 @@ export function RemoveStaffSheet({ person, open, onClose }: { person: StaffMembe
             {
               onSuccess: (r) => {
                 toast(t(r.mode === 'removed' ? 'staff.remove.removed' : 'staff.remove.archived', { name: person.full_name }));
-                close();
                 if (r.mode === 'removed') router.replace('/staff');
+                close();
               },
             },
           )
