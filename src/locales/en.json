@@ -808,7 +808,9 @@
     "invalid_swift": "A SWIFT / BIC code has 8 or 11 letters and numbers.",
     "invalid_link": "The payment link must start with https://",
     "document_exists": "There is already a record with that name for them.",
-    "country_locked": "The country can no longer change: money has been recorded in this salon."
+    "country_locked": "The country can no longer change: money has been recorded in this salon.",
+    "invalid_phone": "That phone number does not look right. Use digits, spaces and an optional + at the start.",
+    "wrong_current_password": "That is not your current password."
   },
   "sales": {
     "title": "Sales",
@@ -2275,5 +2277,29 @@
     "activity": {
       "empty": "No history yet."
     }
+  },
+  "profile": {
+    "title": "Your profile",
+    "open": "Edit profile",
+    "details": "Your details",
+    "name": "Your name",
+    "phone": "Phone (optional)",
+    "save": "Save",
+    "saved": "Profile saved",
+    "staffNote": "Your name and phone also show in the salon’s staff list.",
+    "salon": "Salon",
+    "salonName": "Salon name",
+    "salonSaved": "Salon name saved",
+    "signIn": "Sign-in",
+    "yourEmail": "You sign in with {{email}}",
+    "newEmail": "New email",
+    "changeEmail": "Change email",
+    "emailSent": "Check both inboxes: the change happens once you confirm it from the old and the new address.",
+    "yourUsername": "You sign in with the username {{username}} and the salon code {{code}}.",
+    "password": "Password",
+    "currentPassword": "Current password",
+    "newPassword": "New password (8 or more characters)",
+    "changePassword": "Change password",
+    "passwordChanged": "Password changed"
   }
 }

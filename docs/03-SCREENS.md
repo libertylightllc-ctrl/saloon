@@ -117,7 +117,8 @@ visits count, last visit, preference, risk StatusPill, actions Book / New sale. 
 
 ### 2.8 More
 
-Profile card at top (name, role, branch switcher if more than one branch), then grouped MenuRows
+Profile card at top (name, role, branch switcher if more than one branch; tapping it opens **Your profile**: name,
+phone, salon name for the owner, sign-in email or username, password), then grouped MenuRows
 (reference: Barber kit Profile list with coloured icon squares):
 - Catalogue & stock: Services · Inventory & tools · Purchases & suppliers · Expenses
 - People & compliance: Staff (people, pay, shifts and app logins in one place; payroll from it) · Attendance · Compliance

@@ -325,3 +325,14 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 3. **Salons** → search a salon → ✅ owner, staff, customers, services, sales, last sign-in; tap it → **History of this
    salon** → ✅ its history.
 4. **Accounts** → ✅ every sign-in; type an email under Platform owners → **Make platform owner** → ✅ badge; Remove.
+
+## 38 · Your profile (2 min)
+
+1. More → tap your name at the top → ✅ **Your profile**.
+2. Change your name and phone → **Save** → ✅ "Profile saved"; back on More → ✅ the new name. A phone with letters → ✅
+   "That phone number does not look right" and Save stays grey.
+3. As the owner: change **Salon name** → Save → ✅ "Salon name saved".
+4. **Password**: a wrong current password → ✅ "That is not your current password"; the right one and a new one of 8 or
+   more characters → ✅ "Password changed"; sign out and in with the new one.
+5. As a staff member: ✅ your username and salon code show under Sign-in, no salon name; change your name → ✅ the owner
+   sees the new name in Staff.

@@ -808,7 +808,9 @@
     "invalid_swift": "Un code SWIFT / BIC comporte 8 ou 11 lettres et chiffres.",
     "invalid_link": "Le lien de paiement doit commencer par https://",
     "document_exists": "Un document porte déjà ce nom pour cette personne.",
-    "country_locked": "Le pays ne peut plus changer : de l’argent a été enregistré dans ce salon."
+    "country_locked": "Le pays ne peut plus changer : de l’argent a été enregistré dans ce salon.",
+    "invalid_phone": "Ce numéro de téléphone ne semble pas correct. Utilisez des chiffres, des espaces et, si besoin, un + au début.",
+    "wrong_current_password": "Ce n’est pas votre mot de passe actuel."
   },
   "sales": {
     "title": "Ventes",
@@ -2276,5 +2278,29 @@
     "activity": {
       "empty": "Aucun historique pour l’instant."
     }
+  },
+  "profile": {
+    "title": "Votre profil",
+    "open": "Modifier le profil",
+    "details": "Vos informations",
+    "name": "Votre nom",
+    "phone": "Téléphone (facultatif)",
+    "save": "Enregistrer",
+    "saved": "Profil enregistré",
+    "staffNote": "Votre nom et votre téléphone apparaissent aussi dans la liste de l’équipe du salon.",
+    "salon": "Salon",
+    "salonName": "Nom du salon",
+    "salonSaved": "Nom du salon enregistré",
+    "signIn": "Connexion",
+    "yourEmail": "Vous vous connectez avec {{email}}",
+    "newEmail": "Nouvel e-mail",
+    "changeEmail": "Modifier l’e-mail",
+    "emailSent": "Consultez les deux boîtes de réception : le changement prend effet une fois confirmé depuis l’ancienne et la nouvelle adresse.",
+    "yourUsername": "Vous vous connectez avec le nom d’utilisateur {{username}} et le code du salon {{code}}.",
+    "password": "Mot de passe",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe (8 caractères ou plus)",
+    "changePassword": "Modifier le mot de passe",
+    "passwordChanged": "Mot de passe modifié"
   }
 }

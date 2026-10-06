@@ -1521,6 +1521,7 @@ export type Database = {
           default_branch_id: string | null;
           display_name: string;
           id: string;
+          phone: string | null;
           role: Database['public']['Enums']['member_role'];
           user_id: string;
           username: string | null;
@@ -1532,6 +1533,7 @@ export type Database = {
           default_branch_id?: string | null;
           display_name: string;
           id?: string;
+          phone?: string | null;
           role: Database['public']['Enums']['member_role'];
           user_id: string;
           username?: string | null;
@@ -1543,6 +1545,7 @@ export type Database = {
           default_branch_id?: string | null;
           display_name?: string;
           id?: string;
+          phone?: string | null;
           role?: Database['public']['Enums']['member_role'];
           user_id?: string;
           username?: string | null;
@@ -3702,6 +3705,7 @@ export type Database = {
       register_staff_member: { Args: { p: Json }; Returns: Json };
       remove_document_slot: { Args: { p: Json }; Returns: undefined };
       remove_staff: { Args: { p_actor: string; p_employee: string }; Returns: Json };
+      rename_business: { Args: { p_business: string; p_name: string }; Returns: undefined };
       reopen_period: {
         Args: { p_business: string; p_month: string; p_reason: string };
         Returns: undefined;
@@ -3797,6 +3801,7 @@ export type Database = {
           default_branch_id: string | null;
           display_name: string;
           id: string;
+          phone: string | null;
           role: Database['public']['Enums']['member_role'];
           user_id: string;
           username: string | null;
@@ -3904,6 +3909,7 @@ export type Database = {
       unregister_push_token: { Args: { p_token: string }; Returns: undefined };
       update_branch: { Args: { p: Json; p_branch: string }; Returns: undefined };
       update_document: { Args: { p: Json }; Returns: undefined };
+      update_my_profile: { Args: { p: Json }; Returns: undefined };
       wps_status: { Args: { p_business: string }; Returns: Json };
       write_audit: {
         Args: {

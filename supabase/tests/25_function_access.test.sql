@@ -72,6 +72,7 @@ insert into reviewed values
     ('refund_sale'),
     ('register_push_token'),
     ('remove_document_slot'),
+    ('rename_business'),
     ('reopen_period'),
     ('report_closing'),
     ('report_customers'),
@@ -109,6 +110,7 @@ insert into reviewed values
     ('unregister_push_token'),
     ('update_branch'),
     ('update_document'),
+    ('update_my_profile'),
     ('wps_status');
 
 select is(

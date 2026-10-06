@@ -11,13 +11,14 @@ import { useSession, useWorkspace } from '@/features/auth/session';
 import { useBusinessRows } from '@/features/nav/navItems';
 import { LanguageSheet } from '@/features/settings/LanguageSheet';
 import { LANGUAGES } from '@/lib/i18n';
-import { spacing } from '@/theme';
-import { Avatar, Card, HeaderBand, MenuGroup, MenuRow, Screen, Text } from '@/ui';
+import { spacing, useTheme } from '@/theme';
+import { Avatar, Card, HeaderBand, Icon, MenuGroup, MenuRow, Screen, Text } from '@/ui';
 
 export function MoreScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const { signOut } = useSession();
+  const theme = useTheme();
   const { refresh } = useRefreshApp();
   const { member, business, branch, role } = useWorkspace();
   const [language, setLanguage] = useState(false);
@@ -32,7 +33,8 @@ export function MoreScreen() {
     <>
       <Screen insetBottom={false} header={<HeaderBand title={t('more.title')} />}>
         <View style={styles.body}>
-          <Card style={styles.profile}>
+          {/* The profile card opens the person's own profile: name, phone, sign-in and password. */}
+          <Card style={styles.profile} onPress={() => router.push('/profile')} accessibilityLabel={t('profile.open')} testID="more-profile">
             <Avatar name={member.display_name} size={56} />
             <View style={styles.flex}>
               <Text variant="h4" testID="more-name">
@@ -47,6 +49,7 @@ export function MoreScreen() {
                 </Text>
               ) : null}
             </View>
+            <Icon name="chevronRight" size={20} color={theme.colors.textSecondary} />
           </Card>
           {shown.length ? (
             <MenuGroup title={t('more.business')}>
