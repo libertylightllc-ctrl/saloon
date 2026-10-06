@@ -2,9 +2,10 @@
 
 | Screen | Button | Result |
 |---|---|---|
+| Home | Refresh app | updates the screen |
 | Home | Notifications, 0 unread | opens /notifications |
 | Home | Close day | opens /cash-closing |
-| Home | Clock in | shows "No roster · In 20:55 · Out …" |
+| Home | Clock in | shows "No roster · In 4:42 PM · Out …" |
 | Home | Review | opens /compliance |
 | Home | Walk-in | opens /appointment/new |
 | Home | Book | opens /appointment/new |
@@ -13,7 +14,7 @@
 | Home | Expense | opens /expenses/new |
 | Home | Stock | opens /inventory |
 | Home | Open queue | opens /queue |
-| Home | Start | shows "Started 20:56" |
+| Home | Start | shows "Started 4:43 PM" |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
 | Home | Sale | opens /sale |
@@ -31,7 +32,7 @@
 | Queue | No-show 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Cancelled 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Any barber | already selected |
-| Queue | Staff 1vr | shows "No one is waiting. Add a walk-in." |
+| Queue | Staff ik5 | shows "No one is waiting. Add a walk-in." |
 | Queue | Complete | opens /sale |
 | Queue | More actions for Sweep Walk-in | updates the screen |
 | Queue | Home | opens / |
@@ -61,7 +62,7 @@
 | Quick sale | Customers | opens /customers |
 | Quick sale | More | opens /more |
 | Customers | New | opens /customers/form |
-| Customers | Sweep Customer | opens /customers/2a27c640-4e41-44c0-a145-809f913bd73a |
+| Customers | Sweep Customer | opens /customers/6fd3a4b2-f2fb-453b-b48f-af508b658262 |
 | Customers | Home | opens / |
 | Customers | Queue | opens /queue |
 | Customers | Sale | opens /sale |
@@ -80,11 +81,11 @@
 | More | Attendance | opens /attendance |
 | More | Compliance | opens /compliance |
 | More | Language, English | shows "العربية" |
+| More | Refresh app | updates the screen |
 | More | Quick-switch PIN | shows "On a shared counter phone, switch back to yourself" |
 | More | Sign out | covered by flow 9 |
 | More | Privacy policy | opens /privacy |
 | More | Terms of use | opens /terms |
-| More | Delete my account | shows "Delete your account" |
 | More | Home | opens / |
 | More | Queue | opens /queue |
 | More | Sale | opens /sale |
@@ -94,9 +95,9 @@
 | Services | Active | already selected |
 | Services | Archived | shows "No archived services." |
 | Sales | Back | opens /more |
-| Sales | Sale #1001 | opens /sales/8e99087c-f919-4547-a724-73668663b4a7 |
+| Sales | Sale #1001 | opens /sales/d756e141-4824-40ee-ba52-7fb3cb8b84a5 |
 | Sale detail | Back | opens /sales |
-| Sale detail | Print receipt | prints the receipt ("E2E gents muprzfntzrsa") |
+| Sale detail | Print receipt | prints the receipt ("E2E gents muwo572oevt3") |
 | Sale detail | Ask the owner for a refund | shows "The owner gets a notification and refunds it from " |
 | Expenses | Back | opens /more |
 | Expenses | New | opens /expenses/new |
@@ -135,11 +136,11 @@
 | New bill | Save bill · AED 0.00 | disabled until the form is valid / state allows |
 | Cash closing | Back | opens /more |
 | Cash closing | Count notes & coins | shows "Notes & coins" |
-| Cash closing | Owner zrsa | selects it |
-| Cash closing | Cashier u9s | already selected |
+| Cash closing | Owner evt3 | selects it |
+| Cash closing | Cashier v0t | already selected |
 | Cash closing | Save draft | shows "Draft" |
 | Cash closing | Submit for approval | disabled until the form is valid / state allows |
-| Cash closing | Thu 1 Oct | opens /cash-closing/2026-10-01 |
+| Cash closing | Tue 6 Oct | opens /cash-closing/2026-10-06 |
 | Inventory | Back | opens /more |
 | Inventory | All | already selected |
 | Inventory | Low stock | shows "Nothing is low. Well stocked!" |
@@ -147,23 +148,18 @@
 | Inventory | Retail | updates the screen |
 | Inventory | Tools | shows "No items here yet." |
 | Inventory | Order | opens /purchases/new |
-| Inventory | Beard Color | opens /inventory/972e6491-edee-4d6a-a3f0-d72b2ab8572e |
-| Inventory | Blades | opens /inventory/89d74ace-8809-47a7-83e0-36eee8fc35f2 |
-| Inventory | Developer 20 Vol | opens /inventory/2cfe2f78-0a85-4bef-93f3-fd3e1eac65f9 |
-| Inventory | Gloves | opens /inventory/cdd9f984-c169-4540-9cf4-c5fca566c098 |
-| Inventory | Hair Color | opens /inventory/a36320b9-2241-48c7-9408-c9138161dfcd |
-| Inventory | Hair Oil | opens /inventory/f3d7dae5-323a-4927-83f4-74a53f4d49ce |
-| Inventory | Neck strips | opens /inventory/3e98441b-bcba-429b-9d99-05e08f4dbb35 |
-| Inventory | Shaving Foam | opens /inventory/489317b7-5164-4a1a-9dfc-1acfa1001e58 |
-| Inventory | Sweep Oil | opens /inventory/1a8132a9-a293-4a09-8b0e-7dfdbc9d9498 |
-| Inventory | Tissues | opens /inventory/80690e16-1408-4e10-867d-a23e456b48ff |
+| Inventory | Beard Color | opens /inventory/b2bd3c26-507d-4127-82b2-e7c074fa523b |
+| Inventory | Blades | opens /inventory/5f0d443f-20df-4511-b38f-4df6902f7433 |
+| Inventory | Developer 20 Vol | opens /inventory/63541138-285b-4bfb-9d76-63978799458e |
+| Inventory | Gloves | opens /inventory/22218e24-e0e1-4aa9-8d24-e5859bd5725e |
+| Inventory | Hair Color | opens /inventory/6a7b655c-3157-45ce-9f38-51e3917cd016 |
+| Inventory | Hair Oil | opens /inventory/838b4413-d0c8-4bd0-bb2e-1600293771b1 |
+| Inventory | Neck strips | opens /inventory/ea773235-5fd8-439b-9639-2bf4533c43dc |
+| Inventory | Shaving Foam | opens /inventory/a27633a2-13b6-4efa-ba46-221f6f268120 |
+| Inventory | Sweep Oil | opens /inventory/bc18a9e4-138f-4aba-9c9c-c4890d278e3d |
+| Inventory | Tissues | opens /inventory/8cff6f09-d5bb-4f03-947d-5a16ec43998e |
 | Item detail | Back | opens /inventory |
 | Attendance | Back | opens /more |
-| Attendance | Friday 18 September | shows "Friday 18 September" |
-| Attendance | Saturday 19 September | shows "Saturday 19 September" |
-| Attendance | Sunday 20 September | shows "Sunday 20 September" |
-| Attendance | Monday 21 September | shows "Monday 21 September" |
-| Attendance | Tuesday 22 September | shows "Tuesday 22 September" |
 | Attendance | Wednesday 23 September | shows "Wednesday 23 September" |
 | Attendance | Thursday 24 September | shows "Thursday 24 September" |
 | Attendance | Friday 25 September | shows "Friday 25 September" |
@@ -172,11 +168,16 @@
 | Attendance | Monday 28 September | shows "Monday 28 September" |
 | Attendance | Tuesday 29 September | shows "Tuesday 29 September" |
 | Attendance | Wednesday 30 September | shows "Wednesday 30 September" |
-| Attendance | Thursday 1 October | already selected |
-| Attendance | Clock out | shows "Attendance · Cashier u9s" |
-| Attendance | Clock in | shows "Attendance · Staff 1vr" |
+| Attendance | Thursday 1 October | shows "Thursday 1 October" |
+| Attendance | Friday 2 October | shows "Friday 2 October" |
+| Attendance | Saturday 3 October | shows "Saturday 3 October" |
+| Attendance | Sunday 4 October | shows "Sunday 4 October" |
+| Attendance | Monday 5 October | shows "Monday 5 October" |
+| Attendance | Tuesday 6 October | already selected |
+| Attendance | Clock out | shows "Attendance · Cashier v0t" |
+| Attendance | Clock in | shows "Attendance · Staff ik5" |
 | Compliance · hygiene | Back | opens /more |
 | Compliance · hygiene | Choose photo | opens the photo picker |
-| Compliance · hygiene | Sign the log | shows "Signed by Cashier u9s" |
+| Compliance · hygiene | Sign the log | shows "Signed by Cashier v0t" |
 | Notifications | Back | opens / |
 | Notifications | Mark all as read | disabled until the form is valid / state allows |

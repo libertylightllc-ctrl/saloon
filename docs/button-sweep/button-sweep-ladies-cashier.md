@@ -2,6 +2,7 @@
 
 | Screen | Button | Result |
 |---|---|---|
+| Home | Refresh app | updates the screen |
 | Home | Notifications, 0 unread | opens /notifications |
 | Home | Walk-in | opens /appointment/new |
 | Home | Book | opens /appointment/new |
@@ -10,10 +11,10 @@
 | Home | Expense | opens /expenses/new |
 | Home | Stock | opens /inventory |
 | Home | Close day | opens /cash-closing |
-| Home | Clock in | shows "No roster · In 21:19 · Out …" |
+| Home | Clock in | shows "No roster · In 5:11 PM · Out …" |
 | Home | Review | opens /compliance |
 | Home | Open queue | opens /queue |
-| Home | Start | shows "Started 21:19" |
+| Home | Start | shows "Started 5:11 PM" |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
 | Home | Sale | opens /sale |
@@ -31,7 +32,7 @@
 | Queue | No-show 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Cancelled 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Any stylist | already selected |
-| Queue | Staff 0ae | shows "No one is waiting. Add a walk-in." |
+| Queue | Staff dri | shows "No one is waiting. Add a walk-in." |
 | Queue | Complete | opens /sale |
 | Queue | More actions for Sweep Walk-in | updates the screen |
 | Queue | Home | opens / |
@@ -68,7 +69,7 @@
 | Quick sale | Customers | opens /customers |
 | Quick sale | More | opens /more |
 | Customers | New | opens /customers/form |
-| Customers | Sweep Customer | opens /customers/d28f29e5-6bd4-4ed3-b960-c2b2c2fb1872 |
+| Customers | Sweep Customer | opens /customers/b2a4c994-8074-44a9-8e37-d050733b1b4c |
 | Customers | Home | opens / |
 | Customers | Queue | opens /queue |
 | Customers | Sale | opens /sale |
@@ -87,11 +88,11 @@
 | More | Attendance | opens /attendance |
 | More | Compliance | opens /compliance |
 | More | Language, English | shows "العربية" |
+| More | Refresh app | updates the screen |
 | More | Quick-switch PIN | shows "On a shared counter phone, switch back to yourself" |
 | More | Sign out | covered by flow 9 |
 | More | Privacy policy | opens /privacy |
 | More | Terms of use | opens /terms |
-| More | Delete my account | shows "Delete your account" |
 | More | Home | opens / |
 | More | Queue | opens /queue |
 | More | Sale | opens /sale |
@@ -101,9 +102,9 @@
 | Services | Active | already selected |
 | Services | Archived | shows "No archived services." |
 | Sales | Back | opens /more |
-| Sales | Sale #1001 | opens /sales/8aeabaad-4add-4356-9684-f6645ea471d0 |
+| Sales | Sale #1001 | opens /sales/4152962c-b65c-4502-8f42-a14df09a7c11 |
 | Sale detail | Back | opens /sales |
-| Sale detail | Print receipt | prints the receipt ("E2E ladies mupstlqxjhry") |
+| Sale detail | Print receipt | prints the receipt ("E2E ladies muwp59n1i45g") |
 | Sale detail | Ask the owner for a refund | shows "The owner gets a notification and refunds it from " |
 | Expenses | Back | opens /more |
 | Expenses | New | opens /expenses/new |
@@ -142,11 +143,11 @@
 | New bill | Save bill · AED 0.00 | disabled until the form is valid / state allows |
 | Cash closing | Back | opens /more |
 | Cash closing | Count notes & coins | shows "Notes & coins" |
-| Cash closing | Owner jhry | selects it |
-| Cash closing | Cashier qww | already selected |
+| Cash closing | Owner i45g | selects it |
+| Cash closing | Cashier jmx | already selected |
 | Cash closing | Save draft | shows "Draft" |
 | Cash closing | Submit for approval | disabled until the form is valid / state allows |
-| Cash closing | Thu 1 Oct | opens /cash-closing/2026-10-01 |
+| Cash closing | Tue 6 Oct | opens /cash-closing/2026-10-06 |
 | Inventory | Back | opens /more |
 | Inventory | All | already selected |
 | Inventory | Low stock | shows "Nothing is low. Well stocked!" |
@@ -154,26 +155,21 @@
 | Inventory | Retail | updates the screen |
 | Inventory | Tools | shows "No items here yet." |
 | Inventory | Order | opens /purchases/new |
-| Inventory | Black soap | opens /inventory/8f38c328-d6e6-4454-8e2b-bc93e93e41dd |
-| Inventory | Developer 20 Vol | opens /inventory/21d1d124-8956-4b86-a550-622670d198be |
-| Inventory | Face masks | opens /inventory/69fca91d-c19c-4cf9-8f3c-9350c3cee7a5 |
-| Inventory | Gel polish | opens /inventory/e53c35e5-c43c-4fbd-90b2-319e31000640 |
-| Inventory | Gloves | opens /inventory/92a2c9a4-03b4-4d02-9b56-2274fdd715c9 |
-| Inventory | Hair Color | opens /inventory/ebbbdcc7-aeda-4ee5-a80e-868119512700 |
-| Inventory | Heat spray | opens /inventory/3b0d597e-3d88-4562-8aab-a94c43679413 |
-| Inventory | Massage oil | opens /inventory/c3bc9bc1-604d-41e4-8977-a5bf68a10a6c |
-| Inventory | Nail polish | opens /inventory/fec1b816-f2d2-4066-941e-8e2c3685148a |
-| Inventory | Styling cream | opens /inventory/d03873ae-7690-4938-901d-60b5b78c920e |
-| Inventory | Sweep Oil | opens /inventory/6213aa06-b582-47f9-b047-2cdc86cf638c |
-| Inventory | Thread | opens /inventory/d511fc86-c925-4246-8aa3-54fcc2cc12bc |
-| Inventory | Wax | opens /inventory/63eb0450-b892-4b8b-bf84-95edb37e262e |
+| Inventory | Black soap | opens /inventory/1ab2c7b0-24f0-4e8a-8ad5-76d6f9445585 |
+| Inventory | Developer 20 Vol | opens /inventory/828f2ed3-e858-4c31-adec-fdf41fc28296 |
+| Inventory | Face masks | opens /inventory/105e0a3c-2aa2-4e10-8b85-994e706405d8 |
+| Inventory | Gel polish | opens /inventory/acb1b2b0-f7d1-47bc-a08f-9b9574a4800f |
+| Inventory | Gloves | opens /inventory/4a8c2688-4354-462c-aa9c-48f52bccd597 |
+| Inventory | Hair Color | opens /inventory/c50e41d2-60e8-42ee-9671-4191099891f6 |
+| Inventory | Heat spray | opens /inventory/02642cad-3c64-4a48-b1fa-4a6dfeaebfd2 |
+| Inventory | Massage oil | opens /inventory/d5297222-bd9f-4f7b-a6db-54730b073e17 |
+| Inventory | Nail polish | opens /inventory/f2a210b2-8f25-403c-957d-83b754188888 |
+| Inventory | Styling cream | opens /inventory/92a8e7e4-07a4-48e8-853b-4b9d379a5cee |
+| Inventory | Sweep Oil | opens /inventory/d9fd0499-faed-477f-9f03-9203c756c70e |
+| Inventory | Thread | opens /inventory/b4a0accf-f1ec-480f-977b-77bf28aee3e0 |
+| Inventory | Wax | opens /inventory/044b420b-f456-4aca-8c05-6b6c7fcb4bb4 |
 | Item detail | Back | opens /inventory |
 | Attendance | Back | opens /more |
-| Attendance | Friday 18 September | shows "Friday 18 September" |
-| Attendance | Saturday 19 September | shows "Saturday 19 September" |
-| Attendance | Sunday 20 September | shows "Sunday 20 September" |
-| Attendance | Monday 21 September | shows "Monday 21 September" |
-| Attendance | Tuesday 22 September | shows "Tuesday 22 September" |
 | Attendance | Wednesday 23 September | shows "Wednesday 23 September" |
 | Attendance | Thursday 24 September | shows "Thursday 24 September" |
 | Attendance | Friday 25 September | shows "Friday 25 September" |
@@ -182,11 +178,16 @@
 | Attendance | Monday 28 September | shows "Monday 28 September" |
 | Attendance | Tuesday 29 September | shows "Tuesday 29 September" |
 | Attendance | Wednesday 30 September | shows "Wednesday 30 September" |
-| Attendance | Thursday 1 October | already selected |
-| Attendance | Clock out | shows "Attendance · Cashier qww" |
-| Attendance | Clock in | shows "Attendance · Staff 0ae" |
+| Attendance | Thursday 1 October | shows "Thursday 1 October" |
+| Attendance | Friday 2 October | shows "Friday 2 October" |
+| Attendance | Saturday 3 October | shows "Saturday 3 October" |
+| Attendance | Sunday 4 October | shows "Sunday 4 October" |
+| Attendance | Monday 5 October | shows "Monday 5 October" |
+| Attendance | Tuesday 6 October | already selected |
+| Attendance | Clock out | shows "Attendance · Cashier jmx" |
+| Attendance | Clock in | shows "Attendance · Staff dri" |
 | Compliance · hygiene | Back | opens /more |
 | Compliance · hygiene | Choose photo | opens the photo picker |
-| Compliance · hygiene | Sign the log | shows "Signed by Cashier qww" |
+| Compliance · hygiene | Sign the log | shows "Signed by Cashier jmx" |
 | Notifications | Back | opens / |
 | Notifications | Mark all as read | disabled until the form is valid / state allows |

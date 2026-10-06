@@ -105,9 +105,19 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
   // Exports (CSV, backup ZIP) arrive as a download on the web.
   let downloaded = '';
   const onDownload = (d: { suggestedFilename: () => string }) => (downloaded = d.suggestedFilename());
+  // A payment link opens in a new tab (window.open); the tab is closed again straight away.
+  let opened = '';
+  const onTab = (tab: Page) => {
+    opened = tab.url();
+    void tab.waitForURL(/^https?:/, { timeout: 3_000 }).catch(() => undefined).then(() => {
+      opened = tab.url() || opened;
+      return tab.close();
+    });
+  };
   page.on('pageerror', onError);
   page.on('filechooser', onChooser);
   page.on('download', onDownload);
+  page.context().on('page', onTab);
   await target
     .click({ timeout: 5_000, ...(backdrop ? { position: { x: 12, y: 12 } } : {}) })
     .catch((e: Error) => errors.push(`click: ${e.message.split('\n')[0]}`));
@@ -115,12 +125,14 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
   page.off('pageerror', onError);
   page.off('filechooser', onChooser);
   page.off('download', onDownload);
+  page.context().off('page', onTab);
 
   const after = await perceivable(page);
   const text = after.text;
   if (errors.length) return { ok: false, result: `ERROR ${errors[0]}` };
   if (picker) return { ok: true, result: 'opens the photo picker' };
   if (downloaded) return { ok: true, result: `downloads ${downloaded}` };
+  if (opened) return { ok: true, result: `opens ${opened.startsWith('http') ? new URL(opened).host : 'a link'} in a new tab` };
   if (/Unmatched Route|This screen doesn't exist|doesn't exist/i.test(text)) return { ok: false, result: 'leads to an unbuilt route' };
   if (/Your role cannot do this|Something went wrong/.test(text) && !/Your role cannot do this|Something went wrong/.test(before.text))
     return { ok: false, result: 'shows an error' };

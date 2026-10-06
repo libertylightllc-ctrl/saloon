@@ -2,9 +2,10 @@
 
 | Screen | Button | Result |
 |---|---|---|
+| Home | Refresh app | updates the screen |
 | Home | Notifications, 0 unread | opens /notifications |
 | Home | Stock | opens /inventory |
-| Home | Close day | opens /cash-closing |
+| Home | Cash closing | opens /cash-closing |
 | Home | View audit trail | opens /accounts |
 | Home | Home | already selected |
 | Home | Reports | opens /reports-tab |
@@ -20,7 +21,7 @@
 | Reports tab | Previous month | shows "September 2026" |
 | Reports tab | Next month | shows "November 2026" |
 | Reports tab | Print / PDF | prints the receipt ("Monthly business") |
-| Reports tab | Export CSV | downloads e2e-ladies-mupt6ju7u31l-monthly-2026-10.csv |
+| Reports tab | Export CSV | downloads e2e-ladies-muwpk1elqugf-monthly-2026-10.csv |
 | Reports tab | Home | opens / |
 | Reports tab | Reports | already selected |
 | Reports tab | Accounting | opens /accounts-tab |
@@ -36,7 +37,7 @@
 | Reports · customers | Previous month | shows "September 2026" |
 | Reports · customers | Next month | shows "November 2026" |
 | Reports · customers | Print / PDF | prints the receipt ("Customer list") |
-| Reports · customers | Export CSV | downloads e2e-ladies-mupt6ju7u31l-customers-2026-10.csv |
+| Reports · customers | Export CSV | downloads e2e-ladies-muwpk1elqugf-customers-2026-10.csv |
 | Accounting tab | Months | opens /accounts/close-period |
 | Accounting tab | Overview | already selected |
 | Accounting tab | Journal | shows "Opening stock" |
@@ -49,7 +50,7 @@
 | Accounting tab | Accounting | already selected |
 | Accounting tab | More | opens /more |
 | Close month | Back | opens /accounts |
-| Close month | Export ledger CSV | downloads e2e-ladies-mupt6ju7u31l-ledger.csv |
+| Close month | Export ledger CSV | downloads e2e-ladies-muwpk1elqugf-ledger.csv |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
 | More | Sales | opens /sales |
@@ -62,26 +63,26 @@
 | More | Attendance | opens /attendance |
 | More | Plan & billing | opens /plan |
 | More | Language, English | shows "العربية" |
+| More | Refresh app | updates the screen |
 | More | Quick-switch PIN | shows "On a shared counter phone, switch back to yourself" |
 | More | Sign out | covered by flow 9 |
 | More | Privacy policy | opens /privacy |
 | More | Terms of use | opens /terms |
-| More | Delete my account | shows "Delete your account" |
 | More | Home | opens / |
 | More | Accounting | opens /accounts-tab |
 | More | More | already selected |
 | Expenses | Back | opens /more |
 | Expenses | Previous month | shows "September 2026" |
 | Expenses | Next month | shows "November 2026" |
-| Expenses | Tea & Food | opens /expenses/4739f47b-e497-4af7-b7f7-88412f469fc8 |
+| Expenses | Tea & Food | opens /expenses/6f731371-5b94-4b44-bc2b-2c31f527d58f |
 | Purchases | Back | opens /more |
 | Purchases | Bills | already selected |
 | Purchases | Suppliers | shows "30 days to pay" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/36015510-f50a-46f1-ac42-f9b5e91dc8cc |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/7fd1947f-7f35-4c22-a92f-feea6e6b0273 |
 | Staff | Back | opens /more |
 | Staff | Attendance | opens /attendance |
 | Staff | Payroll | opens /payroll |
-| Staff | Aisha E2E | opens /staff/6f045ed1-5468-445a-a286-ad6cc9643605 |
+| Staff | Aisha E2E | opens /staff/14aae813-e44f-41f3-9cbf-f3a44fe501a1 |
 | Payroll | Back | opens /more |
 | Payroll | Previous month | shows "September 2026" |
 | Payroll | Next month | shows "November 2026" |
