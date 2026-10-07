@@ -69,7 +69,7 @@ export async function createOwner(
       branch_name: `E2E ${mode} branch`,
       address: 'Al Barsha 1, Dubai',
       phone: '+971 50 000 0000',
-      opening_hours: { open: '00:00', close: '23:59', days: [0, 1, 2, 3, 4, 5, 6] },
+      opening_hours: { days: [0, 1, 2, 3, 4, 5, 6] },
       vat_mode: opts.vat ? 'on' : 'off',
       trn: opts.vat && !opts.country ? '100234567800003' : null,
       opening_cash_minor: opts.openingCash ?? 0,

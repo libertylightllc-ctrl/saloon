@@ -336,3 +336,11 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
    more characters → ✅ "Password changed"; sign out and in with the new one.
 5. As a staff member: ✅ your username and salon code show under Sign-in, no salon name; change your name → ✅ the owner
    sees the new name in Staff.
+
+## 39 · Open days, no opening times (1 min)
+
+1. New salon → setup → the branch step asks for **Open days** only (no opening or closing time).
+2. Queue → New → Booking → a date → ✅ times from 00:00 to 23:30 (only from now on, for today).
+3. More → Branch settings → turn a day off → Save → ✅ "Settings saved"; a booking on that day → ✅ "No free times
+   this day".
+4. Staff → a barber → Weekly roster 22:00–02:00 → ✅ that evening and the next morning until 01:30 are offered for them.

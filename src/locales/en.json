@@ -688,8 +688,6 @@
       "branchNameHint": "For example: Al Barsha",
       "address": "Address",
       "phone": "Phone",
-      "opens": "Opens",
-      "closes": "Closes",
       "days": "Open days",
       "openingCash": "Cash in the drawer now",
       "openingCashHint": "Optional. You can set it later in branch settings."
@@ -712,8 +710,6 @@
     "name": "Enter a name",
     "phone": "Enter a phone number: digits and spaces, with + and the country code if you like",
     "trn": "The TRN has 15 digits",
-    "time": "Use hh:mm, for example 09:00",
-    "hours": "Closing must be after opening",
     "days": "Pick at least one day",
     "number": "Whole numbers only",
     "range": "Out of range",
@@ -810,7 +806,8 @@
     "document_exists": "There is already a record with that name for them.",
     "country_locked": "The country can no longer change: money has been recorded in this salon.",
     "invalid_phone": "That phone number does not look right. Use digits, spaces and an optional + at the start.",
-    "wrong_current_password": "That is not your current password."
+    "wrong_current_password": "That is not your current password.",
+    "days_required": "Pick at least one day"
   },
   "sales": {
     "title": "Sales",
@@ -954,7 +951,9 @@
       "lateGrace": "Late after (minutes)",
       "lateGraceHint": "Clocking in this long after the roster start counts as late.",
       "hygienePhoto": "Hygiene log needs a photo",
-      "hygienePhotoHint": "Whoever signs the daily checklist must add a photo."
+      "hygienePhotoHint": "Whoever signs the daily checklist must add a photo.",
+      "openDays": "Open days",
+      "openDaysHint": "Bookings can be made at any time on these days. Once staff have shifts, only shift times are offered."
     },
     "openingCash": "Opening cash",
     "openingCashHint": "Cash in the drawer when you started using the app. Set once.",

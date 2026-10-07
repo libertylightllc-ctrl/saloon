@@ -688,8 +688,6 @@
       "branchNameHint": "Por exemplo: Al Barsha",
       "address": "Endereço",
       "phone": "Telefone",
-      "opens": "Abre",
-      "closes": "Fecha",
       "days": "Dias de funcionamento",
       "openingCash": "Dinheiro na gaveta agora",
       "openingCashHint": "Opcional. Você pode definir depois nas configurações da filial."
@@ -712,8 +710,6 @@
     "name": "Digite um nome",
     "phone": "Digite um telefone: dígitos e espaços, com + e o código do país, se quiser",
     "trn": "O TRN tem 15 dígitos",
-    "time": "Use hh:mm, por exemplo 09:00",
-    "hours": "O fechamento deve ser depois da abertura",
     "days": "Escolha pelo menos um dia",
     "number": "Apenas números inteiros",
     "range": "Fora do intervalo permitido",
@@ -810,7 +806,8 @@
     "document_exists": "Já existe um registro com esse nome para essa pessoa.",
     "country_locked": "O país não pode mais mudar: já há dinheiro registrado neste salão.",
     "invalid_phone": "Esse número de telefone não parece certo. Use dígitos, espaços e, se quiser, um + no início.",
-    "wrong_current_password": "Essa não é sua senha atual."
+    "wrong_current_password": "Essa não é sua senha atual.",
+    "days_required": "Escolha pelo menos um dia"
   },
   "sales": {
     "title": "Vendas",
@@ -954,7 +951,9 @@
       "lateGrace": "Atraso após (minutos)",
       "lateGraceHint": "Registrar a entrada esse tempo depois do início da escala conta como atraso.",
       "hygienePhoto": "Registro de higiene exige foto",
-      "hygienePhotoHint": "Quem assinar o checklist diário deve adicionar uma foto."
+      "hygienePhotoHint": "Quem assinar o checklist diário deve adicionar uma foto.",
+      "openDays": "Dias de funcionamento",
+      "openDaysHint": "É possível agendar a qualquer hora nesses dias. Quando a equipe tem turnos, só os horários de turno são oferecidos."
     },
     "openingCash": "Saldo inicial do caixa",
     "openingCashHint": "Dinheiro na gaveta quando você começou a usar o app. Definido uma única vez.",

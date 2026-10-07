@@ -688,8 +688,6 @@
       "branchNameHint": "Por ejemplo: Al Barsha",
       "address": "Dirección",
       "phone": "Teléfono",
-      "opens": "Abre",
-      "closes": "Cierra",
       "days": "Días de apertura",
       "openingCash": "Efectivo en la caja ahora",
       "openingCashHint": "Opcional. Puedes definirlo más tarde en los ajustes de la sucursal."
@@ -712,8 +710,6 @@
     "name": "Escribe un nombre",
     "phone": "Escribe un número de teléfono: dígitos y espacios, con + y el código de país si quieres",
     "trn": "El TRN tiene 15 dígitos",
-    "time": "Usa hh:mm, por ejemplo 09:00",
-    "hours": "La hora de cierre debe ser posterior a la de apertura",
     "days": "Elige al menos un día",
     "number": "Solo números enteros",
     "range": "Fuera de rango",
@@ -810,7 +806,8 @@
     "document_exists": "Ya hay un registro con ese nombre para esta persona.",
     "country_locked": "El país ya no puede cambiar: hay dinero registrado en este salón.",
     "invalid_phone": "Ese número de teléfono no parece correcto. Usa dígitos, espacios y, si quieres, un + al inicio.",
-    "wrong_current_password": "Esa no es tu contraseña actual."
+    "wrong_current_password": "Esa no es tu contraseña actual.",
+    "days_required": "Elige al menos un día"
   },
   "sales": {
     "title": "Ventas",
@@ -954,7 +951,9 @@
       "lateGrace": "Tarde a partir de (minutos)",
       "lateGraceHint": "Registrar la entrada este tiempo después del inicio del turno cuenta como retraso.",
       "hygienePhoto": "El registro de higiene requiere foto",
-      "hygienePhotoHint": "Quien firme la lista diaria debe agregar una foto."
+      "hygienePhotoHint": "Quien firme la lista diaria debe agregar una foto.",
+      "openDays": "Días de apertura",
+      "openDaysHint": "Se puede reservar a cualquier hora en estos días. Cuando el personal tiene turnos, solo se ofrecen las horas de turno."
     },
     "openingCash": "Efectivo inicial",
     "openingCashHint": "Efectivo que había en la caja cuando empezaste a usar la app. Se define una sola vez.",

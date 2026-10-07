@@ -688,8 +688,6 @@
       "branchNameHint": "Par exemple : Al Barsha",
       "address": "Adresse",
       "phone": "Téléphone",
-      "opens": "Ouverture",
-      "closes": "Fermeture",
       "days": "Jours d’ouverture",
       "openingCash": "Espèces dans le tiroir maintenant",
       "openingCashHint": "Facultatif. Vous pourrez les saisir plus tard dans les paramètres de la succursale."
@@ -712,8 +710,6 @@
     "name": "Saisissez un nom",
     "phone": "Saisissez un numéro de téléphone : chiffres et espaces, avec + et l’indicatif du pays si vous le souhaitez",
     "trn": "Le TRN comporte 15 chiffres",
-    "time": "Utilisez hh:mm, par exemple 09:00",
-    "hours": "La fermeture doit être après l’ouverture",
     "days": "Choisissez au moins un jour",
     "number": "Nombres entiers uniquement",
     "range": "Hors limites",
@@ -810,7 +806,8 @@
     "document_exists": "Un document porte déjà ce nom pour cette personne.",
     "country_locked": "Le pays ne peut plus changer : de l’argent a été enregistré dans ce salon.",
     "invalid_phone": "Ce numéro de téléphone ne semble pas correct. Utilisez des chiffres, des espaces et, si besoin, un + au début.",
-    "wrong_current_password": "Ce n’est pas votre mot de passe actuel."
+    "wrong_current_password": "Ce n’est pas votre mot de passe actuel.",
+    "days_required": "Choisissez au moins un jour"
   },
   "sales": {
     "title": "Ventes",
@@ -954,7 +951,9 @@
       "lateGrace": "En retard après (minutes)",
       "lateGraceHint": "Pointer l’arrivée au-delà de ce délai après le début du planning compte comme un retard.",
       "hygienePhoto": "Photo obligatoire pour le registre d’hygiène",
-      "hygienePhotoHint": "La personne qui signe la liste de contrôle du jour doit ajouter une photo."
+      "hygienePhotoHint": "La personne qui signe la liste de contrôle du jour doit ajouter une photo.",
+      "openDays": "Jours d’ouverture",
+      "openDaysHint": "Les réservations sont possibles à toute heure ces jours-là. Si l’équipe a des horaires, seuls ces créneaux sont proposés."
     },
     "openingCash": "Fond de caisse initial",
     "openingCashHint": "Espèces dans le tiroir quand vous avez commencé à utiliser l’app. À saisir une seule fois.",

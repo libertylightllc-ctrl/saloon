@@ -104,8 +104,8 @@ select is((select jsonb_array_length(roster) from staff_directory(current_settin
 select is((select array_agg(slot order by slot) from available_slots(current_setting('t.br')::uuid,
     branch_today(current_setting('t.br')::uuid) + 7, 60, current_setting('t.emp')::uuid) where available),
   array['09:00','09:30','10:00','10:30','11:00','11:30','12:00'], 'Rafiq can be booked only 09:00–13:00');
-select is((select available from available_slots(current_setting('t.br')::uuid, branch_today(current_setting('t.br')::uuid) + 7,
-    30, null) where slot = '15:00'), false, 'nobody is rostered at 15:00 that day, so "any" is not free');
+select is((select count(*)::int from available_slots(current_setting('t.br')::uuid, branch_today(current_setting('t.br')::uuid) + 7,
+    30, null) where slot = '15:00'), 0, 'nobody is rostered at 15:00 that day, so it is not offered');
 select is((select available from available_slots(current_setting('t.br')::uuid, branch_today(current_setting('t.br')::uuid) + 8,
     30, null) where slot = '15:00'), true, 'the next day Sameer is rostered at 15:00');
 select is((select available from available_slots(current_setting('t.br')::uuid, branch_today(current_setting('t.br')::uuid) + 7,

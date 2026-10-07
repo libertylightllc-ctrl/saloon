@@ -84,7 +84,8 @@ Shown on Home as a progress banner until complete. Six steps:
 6. Suppliers added
 
 Business setup wizard (first run): business name → country (UAE) → **mode choice** (two big cards that
-preview each theme; the app re-themes live when tapped) → branch name, address, opening hours → VAT mode.
+preview each theme; the app re-themes live when tapped) → branch name, address, open days (no opening and closing times: bookings any time of an open day, or within staff
+shifts) → VAT mode.
 Choosing a mode seeds default categories, sample services with stock recipes, expense categories and
 the compliance template for that mode. Owner can edit everything after.
 

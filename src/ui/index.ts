@@ -38,6 +38,7 @@ export { TextField } from './TextField';
 export { Thumb } from './Thumb';
 export { ToastProvider, useToast } from './Toast';
 export { FormError } from './FormError';
+export { FormDaysField } from './form/FormDaysField';
 export { FormMoneyField } from './form/FormMoneyField';
 export { FormTextField } from './form/FormTextField';
 export { QueryState } from './QueryState';

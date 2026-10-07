@@ -237,26 +237,22 @@ select throws_ok(format($$ select create_sale('{"branch_id":"%s","lines":[{"serv
   (select id from services where name = 'Shave' and business_id = current_setting('t.a')::uuid)), '22023', null,
   'blocked when recipe stock is short');
 
--- ── Booking slots: late closing and past-midnight hours ──────────────────────────────────
-select pg_temp.as_admin();
-update branches set opening_hours = '{"open":"00:00","close":"23:59","days":[0,1,2,3,4,5,6]}'
-where id = current_setting('t.a_branch')::uuid;
+-- ── Booking slots: any time of an open day (no opening and closing times) ────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
-select is((select count(*)::int from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)), 47,
-  'open until 23:59: 30-minute slots stop at 23:00 (no wrap past midnight)');
+select is((select count(*)::int from available_slots(current_setting('t.a_branch')::uuid, current_date + 2, 30)), 48,
+  'no opening times: 48 half-hour slots, 00:00 to 23:30');
+select is((select min(slot) from available_slots(current_setting('t.a_branch')::uuid, current_date + 2, 30)), '00:00',
+  'the first slot is midnight');
+select is((select starts_at from available_slots(current_setting('t.a_branch')::uuid, current_date + 2, 30)
+           where slot = '23:30'),
+          ((current_date + 2)::timestamp + time '23:30') at time zone 'Asia/Dubai',
+  'a slot starts at that time in the branch''s time zone');
 select pg_temp.as_admin();
 update branches set opening_hours = '{"open":"18:00","close":"02:00","days":[0,1,2,3,4,5,6]}'
 where id = current_setting('t.a_branch')::uuid;
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
-select is((select max(slot) filter (where slot < '12:00')
-           from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)), '01:30',
-  'open 18:00 to 02:00: the last slot is 01:30');
-select is((select starts_at from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)
-           where slot = '01:30'),
-          ((current_date + 2)::timestamp + time '01:30') at time zone 'Asia/Dubai',
-  'a slot after midnight starts on the next calendar day');
-select is((select count(*)::int from available_slots(current_setting('t.a_branch')::uuid, current_date + 1, 30)), 16,
-  'open 18:00 to 02:00: 16 half-hour slots (18:00 to 01:30)');
+select is((select count(*)::int from available_slots(current_setting('t.a_branch')::uuid, current_date + 2, 30)), 48,
+  'times stored by older versions are ignored');
 
 -- ── Owner's books: read-only accounting, history only for owner/accountant ───────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');

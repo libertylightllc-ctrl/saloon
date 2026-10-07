@@ -18,7 +18,7 @@ import { asJson, supabase } from '@/lib/supabase';
 import { spacing } from '@/theme';
 import {
   Button,
-  Chip,
+  FormDaysField,
   FormError,
   FormMoneyField,
   FormTextField,
@@ -32,7 +32,6 @@ import {
 import { CountryStep, countryDefaults, guessCountry } from './CountryStep';
 import { ModeCard } from './ModeCard';
 
-const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
 /** "Asia/Dubai", "America/Argentina/Buenos_Aires", "UTC"; the server checks it is a real one. */
 const ZONE = /^(UTC|[A-Za-z_]+(\/[A-Za-z0-9_+-]+)+)$/;
 
@@ -47,14 +46,11 @@ const schema = z
     branchName: z.string().trim().max(80),
     address: z.string().trim().max(160),
     phone: z.string().trim().regex(/^$|^\+?[0-9 ]{7,20}$/, 'validation.phone'),
-    opens: z.string().regex(TIME, 'validation.time'),
-    closes: z.string().regex(TIME, 'validation.time'),
     days: z.array(z.number()).min(1, 'validation.days'),
     vat: z.enum(['off', 'on']),
     ...taxShape,
     openingCash: z.number().int().min(0).nullable(),
   })
-  .refine((v) => v.closes > v.opens, { message: 'validation.hours', path: ['closes'] })
   .refine((v) => v.vat === 'off' || !isUae(v.country) || trnValid(v.trn, true), { message: 'validation.trn', path: ['trn'] })
   .refine((v) => v.vat === 'off' || isUae(v.country) || trnValid(v.trn, false), { message: 'validation.taxNumber', path: ['trn'] });
 
@@ -64,11 +60,10 @@ const STEPS: { key: 'business' | 'country' | 'mode' | 'branch' | 'tax'; fields: 
   { key: 'business', fields: ['businessName', 'ownerName'] },
   { key: 'country', fields: ['country', 'currency', 'timezone'] },
   { key: 'mode', fields: ['mode'] },
-  { key: 'branch', fields: ['branchName', 'address', 'phone', 'opens', 'closes', 'days'] },
+  { key: 'branch', fields: ['branchName', 'address', 'phone', 'days'] },
   { key: 'tax', fields: ['vat', 'tax_name', 'tax_rate', 'tax_inclusive', 'tax_id_label', 'trn', 'openingCash'] },
 ];
 
-const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
 export function SetupWizard() {
   const { t } = useTranslation();
@@ -93,8 +88,6 @@ export function SetupWizard() {
       branchName: '',
       address: '',
       phone: '',
-      opens: '09:00',
-      closes: '22:00',
       days: [0, 1, 2, 3, 4, 5, 6],
       vat: 'off',
       trn: '',
@@ -113,7 +106,8 @@ export function SetupWizard() {
           branch_name: v.branchName || v.businessName,
           address: v.address,
           phone: v.phone,
-          opening_hours: { open: v.opens, close: v.closes, days: v.days },
+          // Open days only: no opening and closing times (owner, 2026-10-07).
+          opening_hours: { days: v.days },
           country_code: v.country,
           currency: v.currency,
           timezone: v.timezone,
@@ -214,41 +208,7 @@ export function SetupWizard() {
             />
             <FormTextField control={form.control} name="address" label={t('setup.fields.address')} />
             <FormTextField control={form.control} name="phone" label={t('setup.fields.phone')} keyboardType="phone-pad" />
-            <View style={styles.pair}>
-              <View style={styles.flex}>
-                <FormTextField control={form.control} name="opens" label={t('setup.fields.opens')} placeholder="09:00" />
-              </View>
-              <View style={styles.flex}>
-                <FormTextField control={form.control} name="closes" label={t('setup.fields.closes')} placeholder="22:00" />
-              </View>
-            </View>
-            <Controller
-              control={form.control}
-              name="days"
-              render={({ field, fieldState }) => (
-                <View style={styles.days}>
-                  <Text variant="bodyStrong">{t('setup.fields.days')}</Text>
-                  <View style={styles.wrap}>
-                    {WEEKDAYS.map((day, i) => {
-                      const on = field.value.includes(i);
-                      return (
-                        <Chip
-                          key={day}
-                          label={t(`common.days.${day}`)}
-                          selected={on}
-                          onPress={() => field.onChange(on ? field.value.filter((d) => d !== i) : [...field.value, i])}
-                        />
-                      );
-                    })}
-                  </View>
-                  {fieldState.error?.message ? (
-                    <Text variant="small" color="primaryText">
-                      {t(fieldState.error.message as 'validation.days')}
-                    </Text>
-                  ) : null}
-                </View>
-              )}
-            />
+            <FormDaysField control={form.control} name="days" label={t('setup.fields.days')} />
           </>
         ) : null}
 
@@ -287,10 +247,5 @@ export function SetupWizard() {
 const styles = StyleSheet.create({
   body: { gap: spacing.lg },
   dashes: { alignItems: 'center' },
-  flex: { flex: 1 },
   modes: { gap: spacing.md },
-  // Inputs line up even when one label takes two lines.
-  pair: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.md },
-  days: { gap: spacing.sm },
-  wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
 });

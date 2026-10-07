@@ -14,6 +14,7 @@ import { activeCurrency, formatBps, parseTaxRate } from '@/lib/money';
 import { spacing, type Mode } from '@/theme';
 import {
   Button,
+  FormDaysField,
   FormError,
   FormMoneyField,
   FormTextField,
@@ -42,6 +43,7 @@ const schemaFor = (uae: boolean) =>
       name: z.string().trim().min(2, 'validation.required').max(80, 'validation.tooLong'),
       address: z.string().trim().max(200),
       phone: z.string().trim().regex(/^$|^\+?[0-9 ]{7,20}$/, 'validation.phone'),
+      open_days: z.array(z.number()).min(1, 'validation.days'),
       vat_on: z.boolean(),
       ...taxShape,
       waiting_target_min: whole(1, 240),
@@ -58,6 +60,13 @@ type Values = z.infer<ReturnType<typeof schemaFor>>;
 
 /** 887.5 → "8.875" for the rate field. */
 const rateText = (bps: number) => formatBps(bps).replace('%', '');
+
+/** The open days stored with the branch (weekday numbers, 0 = Sunday); every day if none are stored. */
+function openDays(hours: unknown): number[] {
+  const days = (hours as { days?: unknown } | null)?.days;
+  const valid = Array.isArray(days) ? days.filter((d): d is number => Number.isInteger(d) && d >= 0 && d <= 6) : [];
+  return valid.length ? valid : [0, 1, 2, 3, 4, 5, 6];
+}
 
 export function BranchSettingsScreen() {
   const { t } = useTranslation();
@@ -77,6 +86,7 @@ export function BranchSettingsScreen() {
       name: branch.name,
       address: branch.address ?? '',
       phone: branch.phone ?? '',
+      open_days: openDays(branch.opening_hours),
       vat_on: branch.vat_mode === 'on',
       trn: branch.trn ?? '',
       tax_name: branch.tax_name,
@@ -101,6 +111,7 @@ export function BranchSettingsScreen() {
         name: v.name,
         address: v.address,
         phone: v.phone,
+        open_days: v.open_days,
         vat_mode: v.vat_on ? 'on' : 'off',
         trn: v.trn,
         tax_name: v.tax_name,
@@ -174,6 +185,7 @@ export function BranchSettingsScreen() {
           <FormTextField control={form.control} name="name" label={t('branch.fields.name')} />
           <FormTextField control={form.control} name="address" label={t('branch.fields.address')} />
           <FormTextField control={form.control} name="phone" label={t('branch.fields.phone')} keyboardType="phone-pad" />
+          <FormDaysField control={form.control} name="open_days" label={t('branch.fields.openDays')} hint={t('branch.fields.openDaysHint')} />
         </View>
 
         <View style={styles.section}>

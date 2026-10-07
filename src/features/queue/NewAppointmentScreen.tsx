@@ -67,7 +67,7 @@ export function NewAppointmentScreen() {
   const booking = kind === 'booking';
   const slots = useAvailableSlots(branch.id, date, duration, employeeId, booking);
   const create = useCreateAppointment(branch.id);
-  // The exact instant of the chosen slot (slots after midnight fall on the next calendar day).
+  // The exact instant of the chosen slot, in the branch's time zone.
   const startsAt = slots.data?.find((s) => s.slot === time)?.starts_at ?? null;
   const ready =
     !create.isPending &&
