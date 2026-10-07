@@ -10,7 +10,7 @@ import { LandingPricing } from '@/features/auth/LandingPricing';
 import { useSalonType } from '@/features/auth/salonType';
 import { LanguageLink } from '@/features/settings/LanguageSheet';
 import { screenPadding, spacing, useTheme, type Mode } from '@/theme';
-import { Button, ContourPattern, Icon, Text, type IconName } from '@/ui';
+import { BrandMark, Button, ContourPattern, Icon, Text, type IconName } from '@/ui';
 
 const FEATURES: { key: string; icon: IconName }[] = [
   { key: 'queue', icon: 'users' },
@@ -67,9 +67,7 @@ export default function Welcome() {
         <ContourPattern color={colors.primary300} />
         <View style={[styles.inner, styles.topBar]}>
           <View style={styles.brand}>
-            <View style={[styles.logo, { backgroundColor: colors.onPrimary }]}>
-              <Icon name="scissors" size={18} color={colors.primary500} />
-            </View>
+            <BrandMark size={36} />
             <Text variant="h3" color="onPrimary">
               {brand.appName}
             </Text>
@@ -188,7 +186,6 @@ const styles = StyleSheet.create({
   hero: { overflow: 'hidden', paddingBottom: spacing['2xl'] * 2, gap: spacing['2xl'] },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  logo: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   heroRow: { flexDirection: 'row', alignItems: 'center', gap: spacing['2xl'] * 2 },
   heroColumn: { gap: spacing['2xl'] },
   heroText: { gap: spacing.lg },

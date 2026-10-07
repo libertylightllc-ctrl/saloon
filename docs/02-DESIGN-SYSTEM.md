@@ -192,7 +192,8 @@ Test every component in the gallery with RTL on.
 
 ## 7. Assets the owner will provide later
 
-- App name, logo (square icon + wordmark), splash.
+- App name, logo (square icon + wordmark), splash. The logo is the Saloqo star on navy (#0B0916) from the owner's
+  artwork (docs/brand/saloqo-logo.jpg), the same in both looks; `BrandMark` shows it in the app.
 - Licensed illustration set in two moods (gents / ladies) — the reference kits' own illustrations
   belong to their creators and must not be copied.
 - Optional photography for ladies promo banners.

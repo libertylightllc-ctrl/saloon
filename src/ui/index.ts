@@ -1,5 +1,6 @@
 export { Avatar, initials } from './Avatar';
 export { BackButton } from './BackButton';
+export { BrandMark } from './BrandMark';
 export { BottomSheet } from './BottomSheet';
 export { Button, type ButtonVariant } from './Button';
 export { Card } from './Card';

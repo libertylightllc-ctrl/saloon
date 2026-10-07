@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useWorkspace } from '@/features/auth/session';
 import { brand } from '@/config/brand';
 import { spacing, useTheme } from '@/theme';
-import { Avatar, Icon, NAV_WIDTH, Text, useLayoutSize } from '@/ui';
+import { Avatar, BrandMark, Icon, NAV_WIDTH, Text, useLayoutSize } from '@/ui';
 
 import { activeKey, useNavSections, type NavItem } from './navItems';
 
@@ -44,9 +44,7 @@ function Sidebar() {
     >
       <ScrollView contentContainerStyle={[styles.sidebarBody, { paddingBottom: spacing.lg + insets.bottom }]} showsVerticalScrollIndicator={false}>
         <View style={styles.brand}>
-          <View style={[styles.logo, { backgroundColor: colors.primaryAction }]}>
-            <Icon name="scissors" size={20} color={colors.onPrimary} />
-          </View>
+          <BrandMark size={36} />
           <Text variant="h2">{brand.appName}</Text>
         </View>
         <View style={[styles.branch, { borderColor: colors.border, borderRadius: theme.radius.md }]}>
@@ -159,9 +157,7 @@ function Rail() {
       aria-label={t('nav.label')}
       style={[styles.rail, { backgroundColor: colors.surface, borderEndColor: colors.divider, paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.lg }]}
     >
-      <View style={[styles.logo, styles.railLogo, { backgroundColor: colors.primaryAction }]}>
-        <Icon name="scissors" size={20} color={colors.onPrimary} />
-      </View>
+      <BrandMark size={40} />
       <ScrollView contentContainerStyle={styles.railItems} showsVerticalScrollIndicator={false}>
         {items.map((item) => {
           const on = item.key === active;
@@ -192,14 +188,12 @@ const styles = StyleSheet.create({
   sidebar: { width: NAV_WIDTH.desktop, borderEndWidth: StyleSheet.hairlineWidth },
   sidebarBody: { flexGrow: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.xl, gap: spacing.lg },
   brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.sm },
-  logo: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   branch: { borderWidth: 1, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, gap: 2 },
   section: { gap: 2 },
   sectionTitle: { paddingHorizontal: spacing.md, paddingBottom: spacing.xs },
   item: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.md, minHeight: 40 },
   me: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md },
   rail: { width: NAV_WIDTH.tablet, alignItems: 'center', gap: spacing.lg, borderEndWidth: StyleSheet.hairlineWidth },
-  railLogo: { width: 40, height: 40, borderRadius: 12 },
   railItems: { alignItems: 'center', gap: spacing.xs },
   railItem: { width: 68, minHeight: 56, alignItems: 'center', justifyContent: 'center', gap: 2, paddingHorizontal: 2 },
 });

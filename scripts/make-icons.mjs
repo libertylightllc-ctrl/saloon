@@ -1,55 +1,92 @@
 /**
- * Draws the app icon (white scissors on a violet-to-coral tile: the two salon looks) and writes every size the
- * stores, the phone home screens and the installable website need, and the website's manifest (its name comes
- * from src/config/brand.json). Run: node scripts/make-icons.mjs
+ * Cuts the Saloqo star from the owner's logo artwork (docs/brand/saloqo-logo.jpg, 2026-10-07) and writes every size
+ * the stores, the phone home screens and the installable website need, the in-app brand mark, and the website's
+ * manifest (its name comes from src/config/brand.json). Run: node scripts/make-icons.mjs
+ *
+ * The artwork's ground is one flat navy, so the star is lifted out by turning that navy into transparency; it is then
+ * placed on a navy tile (icons) or left on its own (Android's layered icon, the splash).
  */
 import { chromium } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 
+const NAVY = '#0B0916';
+const NAVY_RGB = [11, 9, 22];
 const VIOLET = '#6C45F2';
-const CORAL = '#F2777A';
-// lucide "scissors" (24 × 24, stroke).
-const SCISSORS = `<circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/>
-  <circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/>`;
+// The star and its glow in the artwork (896 × 1200): a square above the wordmark.
+const CROP = { x: 212, y: 228, side: 471 };
 
-/** glyph: share of the side the scissors take; bg: tile colour ('grad', 'none' or a colour); fg: glyph colour. */
-function svg(size, { glyph, bg, fg = '#FFFFFF', radius = 0 }) {
-  const g = size * glyph;
-  const offset = (size - g) / 2;
-  const fill = bg === 'grad' ? 'url(#g)' : bg;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="${VIOLET}"/><stop offset="1" stop-color="${CORAL}"/></linearGradient></defs>
-    ${bg === 'none' ? '' : `<rect width="${size}" height="${size}" rx="${radius}" fill="${fill}"/>`}
-    <g transform="translate(${offset} ${offset}) scale(${g / 24})" fill="none" stroke="${fg}" stroke-width="1.9"
-       stroke-linecap="round" stroke-linejoin="round">${SCISSORS}</g></svg>`;
-}
-
+/** star: share of the side the star's square takes; bg: tile colour or 'none'; mono: one white shape (Android 13). */
 const OUT = [
   // Store / home-screen icon: a full square (iOS rounds the corners itself and refuses transparency).
-  ['assets/images/icon.png', 1024, { glyph: 0.5, bg: 'grad' }],
-  // Android adaptive icon: the glyph inside the 66% safe circle, on the gradient background.
-  ['assets/images/android-icon-foreground.png', 512, { glyph: 0.34, bg: 'none' }],
-  ['assets/images/android-icon-background.png', 512, { glyph: 0, bg: 'grad' }],
-  ['assets/images/android-icon-monochrome.png', 432, { glyph: 0.34, bg: 'none' }],
-  ['assets/images/splash-icon.png', 512, { glyph: 0.62, bg: 'none', fg: VIOLET }],
-  ['assets/images/favicon.png', 48, { glyph: 0.6, bg: 'grad', radius: 10 }],
+  ['assets/images/icon.png', 1024, { star: 0.78, bg: NAVY }],
+  // Android layered icon: the star's tips stay inside the 66% safe circle, on a navy layer.
+  ['assets/images/android-icon-foreground.png', 512, { star: 0.5, bg: 'none' }],
+  ['assets/images/android-icon-background.png', 512, { star: 0, bg: NAVY }],
+  ['assets/images/android-icon-monochrome.png', 432, { star: 0.5, bg: 'none', mono: true }],
+  // Splash: the star on the navy splash background (app.json).
+  ['assets/images/splash-icon.png', 512, { star: 1, bg: 'none' }],
+  ['assets/images/favicon.png', 48, { star: 0.86, bg: NAVY, radius: 10 }],
+  // In the app: the welcome page and the side navigation (src/ui/BrandMark.tsx rounds the corners).
+  ['assets/images/brand-mark.png', 192, { star: 0.86, bg: NAVY }],
   // Installable website.
-  ['public/icons/icon-192.png', 192, { glyph: 0.5, bg: 'grad', radius: 0 }],
-  ['public/icons/icon-512.png', 512, { glyph: 0.5, bg: 'grad', radius: 0 }],
-  ['public/icons/maskable-512.png', 512, { glyph: 0.4, bg: 'grad' }],
-  ['public/icons/apple-touch-icon.png', 180, { glyph: 0.5, bg: 'grad' }],
+  ['public/icons/icon-192.png', 192, { star: 0.78, bg: NAVY }],
+  ['public/icons/icon-512.png', 512, { star: 0.78, bg: NAVY }],
+  ['public/icons/maskable-512.png', 512, { star: 0.66, bg: NAVY }],
+  ['public/icons/apple-touch-icon.png', 180, { star: 0.78, bg: NAVY }],
 ];
 
 const browser = await chromium.launch({ channel: 'chrome' });
 const page = await browser.newPage();
+
+// The star alone, the navy ground made transparent (colour to alpha), and the same shape in white.
+const artwork = `data:image/jpeg;base64,${readFileSync('docs/brand/saloqo-logo.jpg').toString('base64')}`;
+const [star, mono] = await page.evaluate(
+  async ({ artwork, crop, navy }) => {
+    const img = new Image();
+    img.src = artwork;
+    await img.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = crop.side;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, -crop.x, -crop.y);
+    const colour = ctx.getImageData(0, 0, crop.side, crop.side);
+    const white = ctx.createImageData(crop.side, crop.side);
+    const p = colour.data;
+    for (let i = 0; i < p.length; i += 4) {
+      let a = 0;
+      // The star is lighter than the ground everywhere; anything darker is JPEG noise.
+      for (let k = 0; k < 3; k++) a = Math.max(a, (p[i + k] - navy[k]) / (255 - navy[k]));
+      if (a < 0.012) a = 0;
+      for (let k = 0; k < 3; k++) {
+        p[i + k] = a ? Math.min(255, Math.max(0, navy[k] + (p[i + k] - navy[k]) / a)) : 0;
+        white.data[i + k] = 255;
+      }
+      p[i + 3] = Math.round(a * 255);
+      // One flat shape: the faint glow and the JPEG noise around it would show as grain once tinted.
+      white.data[i + 3] = Math.round(Math.min(1, Math.max(0, (a - 0.08) / 0.4)) * 255);
+    }
+    ctx.putImageData(colour, 0, 0);
+    const starUrl = canvas.toDataURL('image/png');
+    ctx.putImageData(white, 0, 0);
+    return [starUrl, canvas.toDataURL('image/png')];
+  },
+  { artwork, crop: CROP, navy: NAVY_RGB },
+);
+
 for (const [file, size, opts] of OUT) {
+  const s = Math.round(size * opts.star);
   await page.setViewportSize({ width: size, height: size });
   await page.setContent(
-    `<html><body style="margin:0;background:transparent">${svg(size, opts)}</body></html>`,
+    `<html><body style="margin:0;background:transparent">
+      <div id="tile" style="width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;
+        border-radius:${opts.radius ?? 0}px;background:${opts.bg === 'none' ? 'transparent' : opts.bg}">
+        ${s ? `<img src="${opts.mono ? mono : star}" style="width:${s}px;height:${s}px">` : ''}
+      </div></body></html>`,
   );
-  await page.locator('svg').screenshot({ path: file, omitBackground: opts.bg === 'none' });
+  await page
+    .locator('#tile')
+    .screenshot({ path: file, omitBackground: opts.bg === 'none' || Boolean(opts.radius) });
   console.log(file);
 }
 await browser.close();
@@ -71,7 +108,8 @@ const manifest = {
   scope: '/',
   display: 'standalone',
   orientation: 'any',
-  background_color: '#FFFFFF',
+  // The installed website opens on the logo's navy, like the app's splash.
+  background_color: NAVY,
   theme_color: VIOLET,
   icons: [
     { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
