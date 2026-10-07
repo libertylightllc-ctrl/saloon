@@ -105,9 +105,9 @@ test('the privacy policy and terms are open to everyone, from the landing page a
   mode,
 }) => {
   await page.goto('/');
-  // The price the terms point to, read from the same settings salons are billed from.
-  await expect(id(page, 'landing-price-uae')).toHaveText('AED 50.00');
-  await expect(id(page, 'landing-price-elsewhere')).toHaveText('USD 13.99');
+  // The price the terms point to, read from the same settings salons are billed from: in the UAE, the UAE price only.
+  await expect(id(page, 'landing-price')).toHaveText('AED 50.00');
+  await expect(id(page, 'landing-pricing')).not.toContainText('USD');
   await id(page, 'landing-privacy').click();
   await expect(id(page, 'legal-privacy')).toBeVisible();
   await expect(text(page, /Personal Data Protection Law/)).toBeVisible();
@@ -180,3 +180,12 @@ test('only the owner can delete an account; doing so closes the salon and its st
   await expect(userClient(staffEmail(owner.code, barber.username), barber.password)).rejects.toThrow();
 });
 
+test.describe('a visitor outside the UAE', () => {
+  test.use({ timezoneId: 'Europe/Paris' });
+
+  test('sees the international price only', async ({ page }) => {
+    await page.goto('/');
+    await expect(id(page, 'landing-price')).toHaveText('USD 13.99');
+    await expect(id(page, 'landing-pricing')).not.toContainText('AED');
+  });
+});

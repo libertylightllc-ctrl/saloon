@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { usePublicPrices } from '@/features/plan/api';
+import { deviceTimeZone } from '@/features/setup/CountryStep';
+import { countryOf } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
 import { formatMoney } from '@/lib/money';
 import { spacing, useTheme } from '@/theme';
@@ -9,8 +11,14 @@ import { Text } from '@/ui';
 
 /**
  * The plan price on the website — the terms charge "the price shown on our website" — read from the same settings the
- * salons are billed from, so the two never disagree. Hidden until it loads.
+ * salons are billed from, so the two never disagree. Hidden until it loads. One price, the visitor's (owner,
+ * 2026-10-08): the UAE price on a phone or computer set to the UAE's time zone, the international one anywhere else.
  */
+function inUae(): boolean {
+  const zone = deviceTimeZone();
+  return zone !== null && (countryOf('AE')?.timezones.includes(zone) ?? false);
+}
+
 export function LandingPricing({ wide }: { wide: boolean }) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -18,27 +26,17 @@ export function LandingPricing({ wide }: { wide: boolean }) {
   const p = prices.data;
   if (!p) return null;
   const money = (minor: number, currency: string) => (isCurrency(currency) ? formatMoney(minor, currency) : `${currency} ${minor / 100}`);
-  const tiers = [
-    { key: 'uae', price: money(p.price_per_branch_minor, p.currency) },
-    { key: 'elsewhere', price: money(p.intl_price_per_branch_minor, p.intl_currency) },
-  ] as const;
+  const price = inUae() ? money(p.price_per_branch_minor, p.currency) : money(p.intl_price_per_branch_minor, p.intl_currency);
   return (
     <View style={styles.block} testID="landing-pricing">
       <Text variant="h1" align="center">
         {t('auth.landing.pricing.title')}
       </Text>
-      <View style={[styles.tiers, wide && styles.tiersRow]}>
-        {tiers.map((tier) => (
-          <View key={tier.key} style={[styles.tier, wide && styles.flex, { backgroundColor: theme.colors.surface, borderRadius: theme.radius.lg }]}>
-            <Text variant="bodyStrong" color="textSecondary">
-              {t(`auth.landing.pricing.${tier.key}`)}
-            </Text>
-            <Text variant="display" tabular testID={`landing-price-${tier.key}`}>
-              {tier.price}
-            </Text>
-            <Text color="textSecondary">{t('auth.landing.pricing.per')}</Text>
-          </View>
-        ))}
+      <View style={[styles.tier, wide && styles.tierWide, { backgroundColor: theme.colors.surface, borderRadius: theme.radius.lg }]}>
+        <Text variant="display" tabular testID="landing-price">
+          {price}
+        </Text>
+        <Text color="textSecondary">{t('auth.landing.pricing.per')}</Text>
       </View>
       <Text align="center" color="textSecondary">
         {t('auth.landing.pricing.note')}
@@ -49,8 +47,7 @@ export function LandingPricing({ wide }: { wide: boolean }) {
 
 const styles = StyleSheet.create({
   block: { gap: spacing.lg },
-  tiers: { gap: spacing.md },
-  tiersRow: { flexDirection: 'row' },
   tier: { padding: spacing.xl, gap: spacing.xs, alignItems: 'center' },
-  flex: { flex: 1 },
+  // One card, not stretched across a computer screen.
+  tierWide: { alignSelf: 'center', minWidth: 360 },
 });

@@ -604,14 +604,12 @@
       "typeTitle": "Which salon are you?",
       "stepsTitle": "Up and running in minutes",
       "steps": {
-        "1": "Create your salon: country, branch, opening hours and tax.",
+        "1": "Create your salon: country, branch, open days and tax.",
         "2": "Add your services, prices and your team's logins.",
         "3": "Take your first walk-in, sell, and close the day."
       },
       "pricing": {
         "title": "Simple pricing",
-        "uae": "In the UAE",
-        "elsewhere": "Everywhere else",
         "per": "a branch a month",
         "note": "Setting up is free — services, team and stock. Pay month by month for each branch when you start selling; nothing renews by itself."
       },

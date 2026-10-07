@@ -604,14 +604,12 @@
       "typeTitle": "Qual é o seu salão?",
       "stepsTitle": "Funcionando em minutos",
       "steps": {
-        "1": "Crie seu salão: país, filial, horário de funcionamento e imposto.",
+        "1": "Crie seu salão: país, filial, dias de funcionamento e imposto.",
         "2": "Adicione seus serviços, preços e os logins da sua equipe.",
         "3": "Atenda o primeiro cliente da fila, venda e feche o dia."
       },
       "pricing": {
         "title": "Preços simples",
-        "uae": "Nos Emirados",
-        "elsewhere": "Em todos os outros lugares",
         "per": "por filial por mês",
         "note": "A configuração é grátis: serviços, equipe e estoque. Pague mês a mês por filial quando começar a vender; nada é renovado sozinho."
       },

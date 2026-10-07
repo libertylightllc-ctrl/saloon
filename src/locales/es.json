@@ -604,14 +604,12 @@
       "typeTitle": "¿Qué tipo de salón tienes?",
       "stepsTitle": "En marcha en minutos",
       "steps": {
-        "1": "Crea tu salón: país, sucursal, horario y impuestos.",
+        "1": "Crea tu salón: país, sucursal, días de apertura e impuestos.",
         "2": "Agrega tus servicios, precios y los accesos de tu equipo.",
         "3": "Atiende a tu primer cliente sin cita, vende y cierra el día."
       },
       "pricing": {
         "title": "Precios sencillos",
-        "uae": "En los EAU",
-        "elsewhere": "En el resto del mundo",
         "per": "por sucursal al mes",
         "note": "Configurar es gratis: servicios, equipo y stock. Paga mes a mes por cada sucursal cuando empieces a vender; nada se renueva solo."
       },

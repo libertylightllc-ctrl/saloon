@@ -604,14 +604,12 @@
       "typeTitle": "Quel type de salon avez-vous ?",
       "stepsTitle": "Prêt en quelques minutes",
       "steps": {
-        "1": "Créez votre salon : pays, succursale, horaires d’ouverture et taxe.",
+        "1": "Créez votre salon : pays, succursale, jours d’ouverture et taxe.",
         "2": "Ajoutez vos services, vos prix et les accès de votre équipe.",
         "3": "Accueillez votre premier client sans RDV, vendez et clôturez la journée."
       },
       "pricing": {
         "title": "Des prix simples",
-        "uae": "Aux Émirats",
-        "elsewhere": "Partout ailleurs",
         "per": "par succursale et par mois",
         "note": "La configuration est gratuite : services, équipe et stock. Payez mois par mois pour chaque succursale quand vous commencez à vendre ; rien ne se renouvelle tout seul."
       },
