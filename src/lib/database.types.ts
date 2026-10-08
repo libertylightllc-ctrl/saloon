@@ -1985,8 +1985,11 @@ export type Database = {
           bank_name: string | null;
           bank_swift: string | null;
           currency: string;
+          extra_person_minor: number;
           id: boolean;
+          included_people: number;
           intl_currency: string;
+          intl_extra_person_minor: number;
           intl_price_per_branch_minor: number;
           pay_link_url: string | null;
           pay_note: string | null;
@@ -1998,8 +2001,11 @@ export type Database = {
           bank_name?: string | null;
           bank_swift?: string | null;
           currency?: string;
+          extra_person_minor?: number;
           id?: boolean;
+          included_people?: number;
           intl_currency?: string;
+          intl_extra_person_minor?: number;
           intl_price_per_branch_minor?: number;
           pay_link_url?: string | null;
           pay_note?: string | null;
@@ -2011,8 +2017,11 @@ export type Database = {
           bank_name?: string | null;
           bank_swift?: string | null;
           currency?: string;
+          extra_person_minor?: number;
           id?: boolean;
+          included_people?: number;
           intl_currency?: string;
+          intl_extra_person_minor?: number;
           intl_price_per_branch_minor?: number;
           pay_link_url?: string | null;
           pay_note?: string | null;
@@ -3379,12 +3388,13 @@ export type Database = {
           code: string;
           country_code: string;
           created_at: string;
+          monthly_minor: number;
           name: string;
           owner_email: string;
           owner_name: string;
           paid_until: string;
+          people: number;
           plan_currency: string;
-          price_per_branch_minor: number;
           request_note: string;
           requested_at: string;
           requested_months: number;
@@ -3490,16 +3500,19 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: {
           admin_emails: string[];
-          branches: number;
+          base_minor: number;
           code: string;
           country_code: string;
           currency: string;
           event_id: string;
+          extra_person_minor: number;
+          included_people: number;
+          monthly_minor: number;
           months: number;
           note: string;
           owner_email: string;
           owner_name: string;
-          price_per_branch_minor: number;
+          people: number;
           requested_at: string;
           salon: string;
         }[];
@@ -3665,6 +3678,7 @@ export type Database = {
       };
       plan_active: { Args: { p_business: string }; Returns: boolean };
       plan_price: { Args: { p_business: string }; Returns: Record<string, unknown> };
+      plan_quote: { Args: { p_business: string }; Returns: Record<string, unknown> };
       plan_status: { Args: { p_business: string }; Returns: Json };
       post_journal: {
         Args: {

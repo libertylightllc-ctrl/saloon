@@ -610,8 +610,9 @@
       },
       "pricing": {
         "title": "Precios sencillos",
-        "per": "por sucursal al mes",
-        "note": "Configurar es gratis: servicios, equipo y stock. Paga mes a mes por cada sucursal cuando empieces a vender; nada se renueva solo."
+        "per": "al mes, para hasta {{people}} personas",
+        "note": "Un solo precio para todo el salón, sin importar cuántas sucursales tenga. Configurar es gratis: servicios, equipo y stock; paga mes a mes cuando empieces a vender. Nada se renueva solo.",
+        "extra": "luego {{price}} al mes por cada persona adicional que inicie sesión"
       },
       "contact": "¿Tienes preguntas? Escribe a {{email}}",
       "preview": {
@@ -1952,8 +1953,6 @@
     "inactive": "Inactivo",
     "paidUntil": "Pagado hasta el {{date}}.",
     "notActiveBody": "La fila, las ventas y las demás funciones empiezan cuando tu plan esté activo. La configuración (servicios, equipo, artículos) es gratis.",
-    "perBranchMonth": "por sucursal, al mes",
-    "forBranches": "Sucursales: {{count}} · {{total}} al mes",
     "included": {
       "queue": "Clientes sin cita, reservas y la fila en vivo",
       "sale": "Venta rápida, recibos y reembolsos",
@@ -1981,9 +1980,9 @@
     "howToPay": "Pronto podrás pagar con tarjeta en la app. Por ahora te contactamos para cobrar por transferencia bancaria o con un enlace de pago con tarjeta, y luego activamos el plan.",
     "banner": {
       "title": "Activa tu plan",
-      "body": "La fila, las ventas y las demás funciones empiezan cuando tu plan esté activo: {{price}} por sucursal al mes.",
+      "body": "La fila, las ventas y las demás funciones empiezan cuando tu plan esté activo: {{price}} al mes.",
       "requestedTitle": "Plan solicitado",
-      "requestedBody": "Se activa en cuanto recibamos el pago ({{price}} por sucursal al mes).",
+      "requestedBody": "Se activa en cuanto recibamos el pago ({{price}} al mes).",
       "action": "Ver plan",
       "staffTitle": "El plan del salón no está activo",
       "staffBody": "Pide al dueño que lo active. Mientras tanto puedes echar un vistazo."
@@ -2002,7 +2001,12 @@
       "swift": "SWIFT / BIC",
       "reference": "Referencia",
       "referenceHint": "Pon el código de tu salón como referencia del pago y luego toca “Pedir la activación” abajo. Tu plan empieza en cuanto llegue el pago."
-    }
+    },
+    "perMonth": "al mes",
+    "people": "{{count}} personas inician sesión: tú y los accesos de tu personal",
+    "people_one": "{{count}} persona inicia sesión: tú",
+    "pricing": "{{base}} cubre hasta {{included}} personas; cada persona adicional suma {{extra}} al mes. Las sucursales no cuestan nada extra.",
+    "extraPerson": "Tu plan cubre {{included}} personas y ya inician sesión {{people}}, así que este acceso suma {{extra}} al mes."
   },
   "admin": {
     "title": "Salones y planes",
@@ -2128,7 +2132,7 @@
       },
       "plans": {
         "title": "Planes y pagos",
-        "body": "La configuración es gratuita. Para usar las funciones (fila, ventas y el resto) se necesita un plan activo, que se cobra por sucursal y por mes al precio indicado en nuestro sitio web. Los planes se pagan por adelantado, se activan cuando se recibe el pago y no se renuevan solos. Los meses pagados no se reembolsan, salvo cuando la ley lo exija. Si un plan termina, tus datos se conservan: puedes seguir iniciando sesión, consultarlos y exportarlos."
+        "body": "La configuración es gratuita. Para usar las funciones (fila, ventas y el resto) se necesita un plan activo, que se cobra por salón y por mes al precio indicado en nuestro sitio web, que depende de cuántas personas inicien sesión. Los planes se pagan por adelantado, se activan cuando se recibe el pago y no se renuevan solos. Los meses pagados no se reembolsan, salvo cuando la ley lo exija. Si un plan termina, tus datos se conservan: puedes seguir iniciando sesión, consultarlos y exportarlos."
       },
       "data": {
         "title": "Tus datos",
@@ -2241,7 +2245,8 @@
       "close": "Cerrar este salón",
       "closeHint": "Se desactivan todos los accesos de este salón y termina su plan. No se borra nada: sus registros se conservan, y un dueño de la plataforma entre sus accesos conserva esta consola.",
       "closeReason": "Motivo (obligatorio)",
-      "closedToast": "{{name}} cerrado"
+      "closedToast": "{{name}} cerrado",
+      "plan": "{{people}} personas inician sesión · {{price}} al mes"
     },
     "accounts": {
       "title": "Cuentas ({{count}})",

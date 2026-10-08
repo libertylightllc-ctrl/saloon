@@ -16,10 +16,13 @@ interface Alert {
   country_code: string;
   owner_name: string | null;
   owner_email: string | null;
-  branches: number;
+  people: number;
+  included_people: number;
+  base_minor: number;
+  extra_person_minor: number;
+  monthly_minor: number;
   months: number;
   note: string | null;
-  price_per_branch_minor: number;
   currency: string;
   admin_emails: string[] | null;
 }
@@ -32,11 +35,17 @@ function money(minor: number, currency: string): string {
 }
 
 function message(a: Alert) {
-  const total = a.price_per_branch_minor * Math.max(a.branches, 1) * a.months;
+  // Priced by people, per salon: the base covers the first few; each person after that adds the extra.
+  const total = a.monthly_minor * a.months;
+  const extra = Math.max(a.people - a.included_people, 0);
+  const monthly = extra
+    ? `${money(a.base_minor, a.currency)} for ${a.included_people} people + ${extra} × ${money(a.extra_person_minor, a.currency)}`
+    : `${money(a.base_minor, a.currency)} for up to ${a.included_people} people`;
   const lines = [
     `${a.salon} asked to switch on their plan for ${a.months} month(s).`,
     '',
-    `Amount: ${money(total, a.currency)} (${money(a.price_per_branch_minor, a.currency)} × ${Math.max(a.branches, 1)} branch(es) × ${a.months} month(s))`,
+    `Amount: ${money(total, a.currency)} (${monthly} = ${money(a.monthly_minor, a.currency)} a month × ${a.months} month(s))`,
+    `People who sign in: ${a.people}`,
     `Salon code (payment reference): ${a.code}`,
     `Country: ${a.country_code}`,
     `Owner: ${[a.owner_name, a.owner_email].filter(Boolean).join(' · ') || '—'}`,

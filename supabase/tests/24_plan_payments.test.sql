@@ -48,11 +48,11 @@ select is((select bank_iban || ' ' || bank_swift || ' ' || pay_link_url || ' ' |
 -- The owner asks for 3 months: the platform owner's email is queued.
 select request_plan(current_setting('t.b')::uuid, 3, 'Paying by transfer today');
 select pg_temp.as_service();
-select results_eq($$ select salon, code, months, note, price_per_branch_minor, currency,
+select results_eq($$ select salon, code, months, note, monthly_minor, people, currency,
                            array(select e from unnest(admin_emails) e where e like '%@test.local')
                     from claim_plan_alerts() where code = (select code from businesses where id = current_setting('t.b')::uuid) $$,
   $$ values ('Pay Salon'::text, (select code from businesses where id = current_setting('t.b')::uuid), 3,
-             'Paying by transfer today'::text, 5000::bigint, 'AED'::text, array['pay-a0@test.local']::text[]) $$,
+             'Paying by transfer today'::text, 5000::bigint, 1, 'AED'::text, array['pay-a0@test.local']::text[]) $$,
   'the request is handed to plan-alert with the salon, the amount and whom to tell');
 select is((select count(*)::int from claim_plan_alerts()), 0, 'and told only once');
 select isnt((select alerted_at from plan_events where business_id = current_setting('t.b')::uuid and kind = 'request'), null,

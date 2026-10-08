@@ -46,7 +46,8 @@ export function useLiveSync(businessId: string, branchId: string, memberId: stri
       services: [keys.catalog(businessId)],
       service_categories: [keys.catalog(businessId)],
       customers: [keys.customers(businessId), ['reports', branchId]],
-      members: [keys.team(businessId)],
+      // The plan is priced by the people who sign in.
+      members: [keys.team(businessId), ['plan', businessId]],
       employees: [keys.team(businessId), keys.dashboard(branchId)],
       expenses: [keys.moneyOut(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId], ['reports', branchId]],
       supplier_payments: [keys.moneyOut(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId], ['reports', branchId]],

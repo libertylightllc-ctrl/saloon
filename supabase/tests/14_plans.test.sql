@@ -52,7 +52,7 @@ select register_staff_member(jsonb_build_object('business_id', current_setting('
 -- ── …but not used without a plan ─────────────────────────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-0000000014aa');
 select is((plan_status(current_setting('t.b')::uuid) ->> 'active')::boolean, false, 'no plan yet');
-select is((plan_status(current_setting('t.b')::uuid) ->> 'monthly_minor')::bigint, 5000::bigint, 'AED 50 for one branch');
+select is((plan_status(current_setting('t.b')::uuid) ->> 'monthly_minor')::bigint, 5000::bigint, 'AED 50 a month: the owner alone');
 select throws_ok(format($$ select create_sale(jsonb_build_object('branch_id', '%s', 'client_ref', 'p1',
   'lines', '[{"kind":"custom","name":"Fade","unit_price_minor":5000}]'::jsonb,
   'payments', '[{"method":"cash","amount_minor":5000}]'::jsonb)) $$, current_setting('t.br')), 'PT402', 'plan_required',

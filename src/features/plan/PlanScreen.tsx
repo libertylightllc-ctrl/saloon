@@ -62,11 +62,18 @@ export function PlanScreen() {
               {canOfferPlans ? (
                 <View style={[styles.price, { backgroundColor: theme.colors.primary50, borderRadius: theme.radius.md }]}>
                   <Text variant="display" tabular testID="plan-price">
-                    {formatMoney(p.price_per_branch_minor, p.currency)}
+                    {formatMoney(p.monthly_minor, p.currency)}
                   </Text>
-                  <Text color="textSecondary">{t('plan.perBranchMonth')}</Text>
+                  <Text color="textSecondary">{t('plan.perMonth')}</Text>
+                  <Text variant="bodyStrong" testID="plan-people">
+                    {t('plan.people', { count: p.people })}
+                  </Text>
                   <Text variant="small" color="textSecondary">
-                    {t('plan.forBranches', { count: p.branches, total: formatMoney(p.monthly_minor, p.currency) })}
+                    {t('plan.pricing', {
+                      base: formatMoney(p.base_minor, p.currency),
+                      included: p.included_people,
+                      extra: formatMoney(p.extra_person_minor, p.currency),
+                    })}
                   </Text>
                 </View>
               ) : null}

@@ -610,8 +610,9 @@
       },
       "pricing": {
         "title": "Des prix simples",
-        "per": "par succursale et par mois",
-        "note": "La configuration est gratuite : services, équipe et stock. Payez mois par mois pour chaque succursale quand vous commencez à vendre ; rien ne se renouvelle tout seul."
+        "per": "par mois, jusqu’à {{people}} personnes",
+        "note": "Un seul prix pour tout le salon, quel que soit le nombre de succursales. La configuration est gratuite : services, équipe et stock ; payez mois par mois quand vous commencez à vendre. Rien ne se renouvelle tout seul.",
+        "extra": "puis {{price}} par mois pour chaque personne en plus qui se connecte"
       },
       "contact": "Des questions ? Écrivez à {{email}}",
       "preview": {
@@ -1952,8 +1953,6 @@
     "inactive": "Inactif",
     "paidUntil": "Payé jusqu’au {{date}}.",
     "notActiveBody": "La file, les ventes et les autres fonctions démarrent dès que votre abonnement est actif. La configuration (services, équipe, articles) est gratuite.",
-    "perBranchMonth": "par succursale et par mois",
-    "forBranches": "Succursales : {{count}} · {{total}} par mois",
     "included": {
       "queue": "Clients sans RDV, réservations et file en direct",
       "sale": "Vente rapide, reçus et remboursements",
@@ -1981,9 +1980,9 @@
     "howToPay": "Le paiement par carte dans l’app arrive bientôt. En attendant, nous vous contactons pour encaisser le paiement par virement bancaire ou par lien de paiement carte, puis nous activons l’abonnement.",
     "banner": {
       "title": "Activer votre abonnement",
-      "body": "La file, les ventes et les autres fonctions démarrent dès que votre abonnement est actif : {{price}} par succursale et par mois.",
+      "body": "La file, les ventes et les autres fonctions démarrent dès que votre abonnement est actif : {{price}} par mois.",
       "requestedTitle": "Abonnement demandé",
-      "requestedBody": "Il s’active dès réception du paiement ({{price}} par succursale et par mois).",
+      "requestedBody": "Il s’active dès réception du paiement ({{price}} par mois).",
       "action": "Voir l’abonnement",
       "staffTitle": "L’abonnement du salon n’est pas actif",
       "staffBody": "Demandez au propriétaire de l’activer. Vous pouvez quand même consulter l’app."
@@ -2002,7 +2001,12 @@
       "swift": "SWIFT / BIC",
       "reference": "Référence",
       "referenceHint": "Indiquez le code de votre salon comme référence du paiement, puis touchez « Demander l’activation » ci-dessous. Votre abonnement démarre dès réception du paiement."
-    }
+    },
+    "perMonth": "par mois",
+    "people": "{{count}} personnes se connectent : vous et les accès de vos employés",
+    "people_one": "{{count}} personne se connecte : vous",
+    "pricing": "{{base}} couvre jusqu’à {{included}} personnes ; chaque personne en plus ajoute {{extra}} par mois. Les succursales ne coûtent rien de plus.",
+    "extraPerson": "Votre abonnement couvre {{included}} personnes et {{people}} se connectent déjà : cet accès ajoute donc {{extra}} par mois."
   },
   "admin": {
     "title": "Salons et abonnements",
@@ -2128,7 +2132,7 @@
       },
       "plans": {
         "title": "Abonnements et paiement",
-        "body": "La configuration est gratuite. L’utilisation des fonctions (file d’attente, ventes et le reste) nécessite un abonnement actif, facturé par succursale et par mois au prix indiqué sur notre site web. Les abonnements sont payés d’avance, s’activent à la réception du paiement et ne se renouvellent pas automatiquement. Les mois payés ne sont pas remboursés, sauf lorsque la loi l’exige. Si un abonnement prend fin, vos données sont conservées : vous pouvez toujours vous connecter, les consulter et les exporter."
+        "body": "La configuration est gratuite. L’utilisation des fonctions (file d’attente, ventes et le reste) nécessite un abonnement actif, facturé par salon et par mois au prix indiqué sur notre site web, qui dépend du nombre de personnes qui se connectent. Les abonnements sont payés d’avance, s’activent à la réception du paiement et ne se renouvellent pas automatiquement. Les mois payés ne sont pas remboursés, sauf lorsque la loi l’exige. Si un abonnement prend fin, vos données sont conservées : vous pouvez toujours vous connecter, les consulter et les exporter."
       },
       "data": {
         "title": "Vos données",
@@ -2241,7 +2245,8 @@
       "close": "Fermer ce salon",
       "closeHint": "Tous les accès de ce salon sont désactivés et son abonnement prend fin. Rien n’est supprimé : ses données restent, et un propriétaire de la plateforme parmi ses accès garde cette console.",
       "closeReason": "Motif (obligatoire)",
-      "closedToast": "{{name}} fermé"
+      "closedToast": "{{name}} fermé",
+      "plan": "{{people}} personnes se connectent · {{price}} par mois"
     },
     "accounts": {
       "title": "Comptes ({{count}})",

@@ -58,6 +58,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                       [s.owner_name, s.owner_email].filter(Boolean).join(' · '),
                       t('admin.meta', { code: s.code, branches: s.branches, date: dates.at(s.created_at, s.timezone, 'd MMM yyyy') }),
                       [countryName(s.country_code, i18n.language), st?.mode].filter(Boolean).join(' · '),
+                      t('console.salons.plan', { people: s.people, price: formatMoney(s.monthly_minor, s.plan_currency) }),
                       ...(st
                         ? [
                             t('console.salons.stats', { staff: st.staff, customers: st.customers, services: st.services }),
@@ -116,14 +117,14 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
 
 /** Record a plan payment (it runs from today, or from the current end) or end a plan (a note is needed). */
 function SalonPlanForm({ salon, onDone }: { salon: AdminSalon; onDone: () => void }) {
-  // The salon's own price: AED in the UAE, USD elsewhere.
-  const price = salon.price_per_branch_minor;
+  // The salon's own monthly price (by its people): AED in the UAE, USD elsewhere.
+  const price = salon.monthly_minor;
   const currency = salon.plan_currency;
   const { t } = useTranslation();
   const toast = useToast();
   const action = useAdminPlanAction();
   const [months, setMonths] = useState<number>(salon.requested_months ?? 1);
-  const [amount, setAmount] = useState<number | null>(price * Math.max(salon.branches, 1) * (salon.requested_months ?? 1));
+  const [amount, setAmount] = useState<number | null>(price * (salon.requested_months ?? 1));
   const [note, setNote] = useState('');
 
   return (
@@ -133,7 +134,7 @@ function SalonPlanForm({ salon, onDone }: { salon: AdminSalon; onDone: () => voi
         value={String(months)}
         onChange={(v) => {
           setMonths(Number(v));
-          setAmount(price * Math.max(salon.branches, 1) * Number(v));
+          setAmount(price * Number(v));
         }}
         testID="admin-months"
       />

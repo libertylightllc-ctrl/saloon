@@ -57,7 +57,7 @@ select lives_ok(format($$ select refund_sale(jsonb_build_object('sale_id', '%s',
   'reason', 'Wrong customer')) $$, current_setting('t.sale')), 'a full refund goes through');
 select is((select fmt_money(-2500)), '-USD 25.00', 'money without a currency is the salon''s');
 select is(plan_status(current_setting('t.us')::uuid) ->> 'currency', 'USD', 'the plan is priced in dollars');
-select is((plan_status(current_setting('t.us')::uuid) ->> 'price_per_branch_minor')::bigint, 1399::bigint, 'USD 13.99 a branch');
+select is((plan_status(current_setting('t.us')::uuid) ->> 'monthly_minor')::bigint, 1399::bigint, 'USD 13.99 a month for up to 4 people');
 select is((select count(*)::int from compliance_status(current_setting('t.us')::uuid)
            where doc_type in ('business_licence', 'lease')), 2, 'the checklist asks for a business licence and the lease');
 select is((select count(*)::int from compliance_status(current_setting('t.us')::uuid)

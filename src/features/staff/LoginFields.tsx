@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { PlanPeopleNote } from '@/features/plan/PlanPeopleNote';
 import { spacing } from '@/theme';
 import { Chip, Text, TextField } from '@/ui';
 
@@ -71,6 +72,7 @@ export function LoginFields({
         autoCapitalize="none"
         testID="login-password"
       />
+      <PlanPeopleNote />
     </View>
   );
 }

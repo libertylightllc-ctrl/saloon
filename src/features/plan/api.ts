@@ -6,11 +6,15 @@ import { supabase } from '@/lib/supabase';
 
 export const planKey = (businessId: string) => ['plan', businessId] as const;
 
+/** Priced by people, per salon: the base covers `included_people` sign-ins; each one after adds the extra. */
 export interface PlanStatus {
   active: boolean;
   paid_until: string | null;
-  branches: number;
-  price_per_branch_minor: number;
+  /** Everyone who signs in: the owner and every staff login. */
+  people: number;
+  included_people: number;
+  base_minor: number;
+  extra_person_minor: number;
   monthly_minor: number;
   /** AED in the UAE, USD elsewhere. */
   currency: CurrencyCode;
@@ -27,9 +31,11 @@ export function usePlanStatus(businessId: string) {
       const r = data as unknown as PlanStatus;
       return {
         ...r,
-        price_per_branch_minor: Number(r.price_per_branch_minor),
+        people: Number(r.people),
+        included_people: Number(r.included_people),
+        base_minor: Number(r.base_minor),
+        extra_person_minor: Number(r.extra_person_minor),
         monthly_minor: Number(r.monthly_minor),
-        branches: Number(r.branches),
         currency: isCurrency(r.currency) ? r.currency : 'AED',
       };
     },
@@ -74,7 +80,8 @@ export interface AdminSalon {
   request_note: string | null;
   country_code: string;
   timezone: string;
-  price_per_branch_minor: number;
+  people: number;
+  monthly_minor: number;
   plan_currency: CurrencyCode;
 }
 
@@ -86,7 +93,7 @@ export function useAdminSalons() {
       if (error) throw error;
       return (data ?? []).map((s) => ({
         ...s,
-        price_per_branch_minor: Number(s.price_per_branch_minor),
+        monthly_minor: Number(s.monthly_minor),
         plan_currency: isCurrency(s.plan_currency) ? s.plan_currency : 'AED',
       }));
     },
@@ -126,7 +133,7 @@ export function usePublicPrices() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('platform_settings')
-        .select('price_per_branch_minor, currency, intl_price_per_branch_minor, intl_currency')
+        .select('price_per_branch_minor, currency, intl_price_per_branch_minor, intl_currency, included_people, extra_person_minor, intl_extra_person_minor')
         .single();
       if (error) throw error;
       return data;

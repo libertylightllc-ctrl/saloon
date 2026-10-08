@@ -344,3 +344,11 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 3. More → Branch settings → turn a day off → Save → ✅ "Settings saved"; a booking on that day → ✅ "No free times
    this day".
 4. Staff → a barber → Weekly roster 22:00–02:00 → ✅ that evening and the next morning until 01:30 are offered for them.
+
+## 40 · The plan priced by people (2 min)
+
+1. Website (signed out) → **Simple pricing** → ✅ AED 50.00 "a month, for up to 4 people", then AED 10.00 for each
+   extra person (USD 13.99 and USD 2.99 on a phone set to another country's time zone).
+2. A salon with 5 staff logins (6 people) → More → Plan → ✅ AED 70.00 a month, "6 people sign in", and how it is made up.
+3. Staff → Add → turn on App login → ✅ "this login adds AED 10.00 a month".
+4. Platform console → Salons → that salon → ✅ "6 people sign in · AED 70.00 a month"; the amount for 3 months is 210.00.

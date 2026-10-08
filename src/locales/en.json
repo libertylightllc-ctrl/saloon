@@ -610,8 +610,9 @@
       },
       "pricing": {
         "title": "Simple pricing",
-        "per": "a branch a month",
-        "note": "Setting up is free — services, team and stock. Pay month by month for each branch when you start selling; nothing renews by itself."
+        "per": "a month, for up to {{people}} people",
+        "note": "One price for the whole salon, however many branches. Setting up is free — services, team and stock; pay month by month when you start selling. Nothing renews by itself.",
+        "extra": "then {{price}} a month for each extra person who signs in"
       },
       "contact": "Questions? Write to {{email}}",
       "preview": {
@@ -1952,8 +1953,6 @@
     "inactive": "Not active",
     "paidUntil": "Paid until {{date}}.",
     "notActiveBody": "Queue, sales and the other features start once your plan is active. Setting up (services, team, items) is free.",
-    "perBranchMonth": "per branch, per month",
-    "forBranches": "Branches: {{count}} · {{total}} a month",
     "included": {
       "queue": "Walk-ins, bookings and the live queue",
       "sale": "Quick sale, receipts and refunds",
@@ -1981,9 +1980,9 @@
     "howToPay": "Card payments in the app are coming. For now we contact you to take the payment by bank transfer or a card link, then switch the plan on.",
     "banner": {
       "title": "Switch on your plan",
-      "body": "Queue, sales and the other features start once your plan is active: {{price}} per branch a month.",
+      "body": "Queue, sales and the other features start once your plan is active: {{price}} a month.",
       "requestedTitle": "Plan requested",
-      "requestedBody": "It switches on as soon as the payment is received ({{price}} per branch a month).",
+      "requestedBody": "It switches on as soon as the payment is received ({{price}} a month).",
       "action": "See plan",
       "staffTitle": "The salon’s plan isn’t active",
       "staffBody": "Ask the owner to switch it on. You can still look around."
@@ -2002,7 +2001,12 @@
       "swift": "SWIFT / BIC",
       "reference": "Reference",
       "referenceHint": "Put your salon code as the payment reference, then tap “Ask to switch on” below. Your plan starts as soon as the payment arrives."
-    }
+    },
+    "perMonth": "a month",
+    "people": "{{count}} people sign in: you and your staff logins",
+    "people_one": "{{count}} person signs in: you",
+    "pricing": "{{base}} covers up to {{included}} people; each extra person adds {{extra}} a month. Branches cost nothing extra.",
+    "extraPerson": "Your plan covers {{included}} people and {{people}} already sign in, so this login adds {{extra}} a month."
   },
   "admin": {
     "title": "Salons & plans",
@@ -2128,7 +2132,7 @@
       },
       "plans": {
         "title": "Plans and payment",
-        "body": "Setting up is free. Using the features (queue, sales and the rest) needs an active plan, charged per branch per month at the price shown on our website. Plans are paid in advance, switch on when the payment is received and do not renew by themselves. Paid months are not refunded, except where the law requires. If a plan ends your data stays: you can still sign in, view it and export it."
+        "body": "Setting up is free. Using the features (queue, sales and the rest) needs an active plan, charged per salon per month at the price shown on our website, which depends on how many people sign in. Plans are paid in advance, switch on when the payment is received and do not renew by themselves. Paid months are not refunded, except where the law requires. If a plan ends your data stays: you can still sign in, view it and export it."
       },
       "data": {
         "title": "Your data",
@@ -2240,7 +2244,8 @@
       "close": "Close this salon",
       "closeHint": "Every login of this salon is switched off and its plan ends. Nothing is deleted: its records stay, and a platform owner among its logins keeps this console.",
       "closeReason": "Reason (needed)",
-      "closedToast": "{{name}} closed"
+      "closedToast": "{{name}} closed",
+      "plan": "{{people}} people sign in · {{price}} a month"
     },
     "accounts": {
       "title": "Accounts ({{count}})",

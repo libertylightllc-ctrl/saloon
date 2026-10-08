@@ -610,8 +610,9 @@
       },
       "pricing": {
         "title": "Preços simples",
-        "per": "por filial por mês",
-        "note": "A configuração é grátis: serviços, equipe e estoque. Pague mês a mês por filial quando começar a vender; nada é renovado sozinho."
+        "per": "por mês, para até {{people}} pessoas",
+        "note": "Um preço só para o salão inteiro, não importa quantas filiais. A configuração é grátis: serviços, equipe e estoque; pague mês a mês quando começar a vender. Nada é renovado sozinho.",
+        "extra": "depois {{price}} por mês para cada pessoa a mais que entrar no app"
       },
       "contact": "Dúvidas? Escreva para {{email}}",
       "preview": {
@@ -1952,8 +1953,6 @@
     "inactive": "Inativo",
     "paidUntil": "Pago até {{date}}.",
     "notActiveBody": "A fila, as vendas e os outros recursos começam a funcionar quando seu plano estiver ativo. A configuração (serviços, equipe, itens) é gratuita.",
-    "perBranchMonth": "por filial, por mês",
-    "forBranches": "Filiais: {{count}} · {{total}} por mês",
     "included": {
       "queue": "Clientes sem agendamento, agendamentos e a fila ao vivo",
       "sale": "Venda rápida, recibos e reembolsos",
@@ -1981,9 +1980,9 @@
     "howToPay": "Pagamentos com cartão no app estão chegando. Por enquanto, entramos em contato para receber o pagamento por transferência bancária ou link de cartão e depois ativamos o plano.",
     "banner": {
       "title": "Ative seu plano",
-      "body": "A fila, as vendas e os outros recursos começam quando seu plano estiver ativo: {{price}} por filial por mês.",
+      "body": "A fila, as vendas e os outros recursos começam quando seu plano estiver ativo: {{price}} por mês.",
       "requestedTitle": "Plano solicitado",
-      "requestedBody": "Ele é ativado assim que o pagamento for recebido ({{price}} por filial por mês).",
+      "requestedBody": "Ele é ativado assim que o pagamento for recebido ({{price}} por mês).",
       "action": "Ver plano",
       "staffTitle": "O plano do salão não está ativo",
       "staffBody": "Peça ao proprietário para ativá-lo. Você ainda pode explorar o app."
@@ -2002,7 +2001,12 @@
       "swift": "SWIFT / BIC",
       "reference": "Referência",
       "referenceHint": "Use o código do seu salão como referência do pagamento e toque em “Pedir ativação” abaixo. Seu plano começa assim que o pagamento chegar."
-    }
+    },
+    "perMonth": "por mês",
+    "people": "{{count}} pessoas entram no app: você e os logins da sua equipe",
+    "people_one": "{{count}} pessoa entra no app: você",
+    "pricing": "{{base}} cobre até {{included}} pessoas; cada pessoa a mais adiciona {{extra}} por mês. Filiais não custam nada a mais.",
+    "extraPerson": "Seu plano cobre {{included}} pessoas e {{people}} já entram no app, então este login adiciona {{extra}} por mês."
   },
   "admin": {
     "title": "Salões e planos",
@@ -2128,7 +2132,7 @@
       },
       "plans": {
         "title": "Planos e pagamento",
-        "body": "A configuração é gratuita. Usar os recursos (fila, vendas e os demais) exige um plano ativo, cobrado por filial e por mês, pelo preço exibido no nosso site. Os planos são pagos antecipadamente, são ativados quando o pagamento é recebido e não são renovados automaticamente. Meses pagos não são reembolsados, exceto quando a lei exigir. Se um plano terminar, seus dados continuam guardados: você ainda pode entrar, consultá-los e exportá-los."
+        "body": "A configuração é gratuita. Usar os recursos (fila, vendas e os demais) exige um plano ativo, cobrado por salão e por mês, pelo preço exibido no nosso site, que depende de quantas pessoas entram no app. Os planos são pagos antecipadamente, são ativados quando o pagamento é recebido e não são renovados automaticamente. Meses pagos não são reembolsados, exceto quando a lei exigir. Se um plano terminar, seus dados continuam guardados: você ainda pode entrar, consultá-los e exportá-los."
       },
       "data": {
         "title": "Seus dados",
@@ -2241,7 +2245,8 @@
       "close": "Fechar este salão",
       "closeHint": "Todos os acessos deste salão são desativados e o plano termina. Nada é excluído: os registros ficam, e um proprietário da plataforma entre os acessos mantém este console.",
       "closeReason": "Motivo (obrigatório)",
-      "closedToast": "{{name}} fechado"
+      "closedToast": "{{name}} fechado",
+      "plan": "{{people}} pessoas entram no app · {{price}} por mês"
     },
     "accounts": {
       "title": "Contas ({{count}})",

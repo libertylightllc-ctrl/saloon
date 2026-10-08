@@ -3,7 +3,11 @@
 Status: **decided 2026-09-29 and built** (card payments later):
 - Sign-in: **Continue with Google** + an email sender (owner sets both up in Supabase — see HOSTED-SUPABASE.md §7–8).
 - **No trial**: sign up and set up for free; the features need an active plan.
-- **AED 99 per branch per month** (`platform_settings.price_per_branch_minor`).
+- **Priced by people, per salon** (owner, 2026-10-08): **AED 50 a month for up to 4 people who sign in** (the owner
+  and every staff login), **+ AED 10 for each one after**; outside the UAE USD 13.99 + USD 2.99. Branches cost nothing
+  extra. `platform_settings`: `price_per_branch_minor` / `intl_price_per_branch_minor` (the base, named from when it
+  was per branch), `included_people`, `extra_person_minor` / `intl_extra_person_minor`; `plan_quote()` works it out.
+  (Earlier: AED 99, then AED 50 per branch.)
 - Payment provider: **decide later**. Until then the owner asks for a plan in the app (More → Plan & billing) and the
   platform owner records the payment (More → Salons & plans), which switches the plan on for 1–12 months.
 

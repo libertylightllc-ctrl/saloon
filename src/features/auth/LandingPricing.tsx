@@ -26,7 +26,10 @@ export function LandingPricing({ wide }: { wide: boolean }) {
   const p = prices.data;
   if (!p) return null;
   const money = (minor: number, currency: string) => (isCurrency(currency) ? formatMoney(minor, currency) : `${currency} ${minor / 100}`);
-  const price = inUae() ? money(p.price_per_branch_minor, p.currency) : money(p.intl_price_per_branch_minor, p.intl_currency);
+  // Priced by people, per salon (owner, 2026-10-08): the base covers the first few who sign in; each one after adds.
+  const uae = inUae();
+  const price = uae ? money(p.price_per_branch_minor, p.currency) : money(p.intl_price_per_branch_minor, p.intl_currency);
+  const extra = uae ? money(p.extra_person_minor, p.currency) : money(p.intl_extra_person_minor, p.intl_currency);
   return (
     <View style={styles.block} testID="landing-pricing">
       <Text variant="h1" align="center">
@@ -36,7 +39,10 @@ export function LandingPricing({ wide }: { wide: boolean }) {
         <Text variant="display" tabular testID="landing-price">
           {price}
         </Text>
-        <Text color="textSecondary">{t('auth.landing.pricing.per')}</Text>
+        <Text color="textSecondary">{t('auth.landing.pricing.per', { people: p.included_people })}</Text>
+        <Text variant="small" color="textSecondary" align="center" testID="landing-price-extra">
+          {t('auth.landing.pricing.extra', { price: extra })}
+        </Text>
       </View>
       <Text align="center" color="textSecondary">
         {t('auth.landing.pricing.note')}
