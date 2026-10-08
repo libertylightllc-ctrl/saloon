@@ -14,7 +14,7 @@
 | Home | Expense | opens /expenses/new |
 | Home | Stock | opens /inventory |
 | Home | Open queue | opens /queue |
-| Home | Start | shows "Started 4:29 PM" |
+| Home | Start | shows "Started 2:31 AM" |
 | Home | View audit trail | opens /accounts |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
@@ -60,63 +60,57 @@
 | New booking | Appointment | already selected |
 | New booking | New | shows "Name" |
 | New booking | Beard Color · AED 45.00 | shows "30 min · AED 45.00" |
-| New booking | Beard Trim · AED 10.00 | shows "11:30 PM" |
+| New booking | Beard Trim · AED 10.00 | shows "15 min · AED 10.00" |
 | New booking | Facial · AED 60.00 | shows "40 min · AED 60.00" |
 | New booking | Hair Color · AED 80.00 | shows "45 min · AED 80.00" |
 | New booking | Haircut · AED 25.00 | shows "30 min · AED 25.00" |
-| New booking | Head Massage · AED 35.00 | shows "11:30 PM" |
-| New booking | Shave · AED 15.00 | shows "11:30 PM" |
+| New booking | Head Massage · AED 35.00 | shows "20 min · AED 35.00" |
+| New booking | Shave · AED 15.00 | shows "15 min · AED 15.00" |
 | New booking | Any barber | already selected |
 | New booking | Rafiq E2E | selects it |
-| New booking | Tuesday 6 October | already selected |
-| New booking | Wednesday 7 October | selects it |
-| New booking | Thursday 8 October | selects it |
-| New booking | Friday 9 October | selects it |
-| New booking | Saturday 10 October | selects it |
-| New booking | Sunday 11 October | selects it |
-| New booking | Monday 12 October | selects it |
-| New booking | Tuesday 13 October | selects it |
-| New booking | Wednesday 14 October | selects it |
-| New booking | Thursday 15 October | selects it |
-| New booking | Friday 16 October | selects it |
-| New booking | Saturday 17 October | selects it |
-| New booking | Sunday 18 October | selects it |
-| New booking | Monday 19 October | selects it |
-| New booking | 12:00 AM | disabled until the form is valid / state allows |
-| New booking | 12:30 AM | disabled until the form is valid / state allows |
-| New booking | 1:00 AM | disabled until the form is valid / state allows |
-| New booking | 1:30 AM | disabled until the form is valid / state allows |
-| New booking | 2:00 AM | disabled until the form is valid / state allows |
-| New booking | 2:30 AM | disabled until the form is valid / state allows |
+| New booking | Thursday 8 October | already selected |
+| New booking | Friday 9 October | shows "12:00 AM" |
+| New booking | Saturday 10 October | shows "12:00 AM" |
+| New booking | Sunday 11 October | shows "12:00 AM" |
+| New booking | Monday 12 October | shows "12:00 AM" |
+| New booking | Tuesday 13 October | shows "12:00 AM" |
+| New booking | Wednesday 14 October | shows "12:00 AM" |
+| New booking | Thursday 15 October | shows "12:00 AM" |
+| New booking | Friday 16 October | shows "12:00 AM" |
+| New booking | Saturday 17 October | shows "12:00 AM" |
+| New booking | Sunday 18 October | shows "12:00 AM" |
+| New booking | Monday 19 October | shows "12:00 AM" |
+| New booking | Tuesday 20 October | shows "12:00 AM" |
+| New booking | Wednesday 21 October | shows "12:00 AM" |
 | New booking | 3:00 AM | disabled until the form is valid / state allows |
-| New booking | 3:30 AM | disabled until the form is valid / state allows |
-| New booking | 4:00 AM | disabled until the form is valid / state allows |
-| New booking | 4:30 AM | disabled until the form is valid / state allows |
-| New booking | 5:00 AM | disabled until the form is valid / state allows |
-| New booking | 5:30 AM | disabled until the form is valid / state allows |
-| New booking | 6:00 AM | disabled until the form is valid / state allows |
-| New booking | 6:30 AM | disabled until the form is valid / state allows |
-| New booking | 7:00 AM | disabled until the form is valid / state allows |
-| New booking | 7:30 AM | disabled until the form is valid / state allows |
-| New booking | 8:00 AM | disabled until the form is valid / state allows |
-| New booking | 8:30 AM | disabled until the form is valid / state allows |
-| New booking | 9:00 AM | disabled until the form is valid / state allows |
-| New booking | 9:30 AM | disabled until the form is valid / state allows |
-| New booking | 10:00 AM | disabled until the form is valid / state allows |
-| New booking | 10:30 AM | disabled until the form is valid / state allows |
-| New booking | 11:00 AM | disabled until the form is valid / state allows |
-| New booking | 11:30 AM | disabled until the form is valid / state allows |
-| New booking | 12:00 PM | disabled until the form is valid / state allows |
-| New booking | 12:30 PM | disabled until the form is valid / state allows |
-| New booking | 1:00 PM | disabled until the form is valid / state allows |
-| New booking | 1:30 PM | disabled until the form is valid / state allows |
-| New booking | 2:00 PM | disabled until the form is valid / state allows |
-| New booking | 2:30 PM | disabled until the form is valid / state allows |
-| New booking | 3:00 PM | disabled until the form is valid / state allows |
-| New booking | 3:30 PM | disabled until the form is valid / state allows |
-| New booking | 4:00 PM | disabled until the form is valid / state allows |
-| New booking | 4:30 PM | disabled until the form is valid / state allows |
-| New booking | 5:00 PM | disabled until the form is valid / state allows |
+| New booking | 3:30 AM | selects it |
+| New booking | 4:00 AM | selects it |
+| New booking | 4:30 AM | selects it |
+| New booking | 5:00 AM | selects it |
+| New booking | 5:30 AM | selects it |
+| New booking | 6:00 AM | selects it |
+| New booking | 6:30 AM | selects it |
+| New booking | 7:00 AM | selects it |
+| New booking | 7:30 AM | selects it |
+| New booking | 8:00 AM | selects it |
+| New booking | 8:30 AM | selects it |
+| New booking | 9:00 AM | selects it |
+| New booking | 9:30 AM | selects it |
+| New booking | 10:00 AM | selects it |
+| New booking | 10:30 AM | selects it |
+| New booking | 11:00 AM | selects it |
+| New booking | 11:30 AM | selects it |
+| New booking | 12:00 PM | selects it |
+| New booking | 12:30 PM | selects it |
+| New booking | 1:00 PM | selects it |
+| New booking | 1:30 PM | selects it |
+| New booking | 2:00 PM | selects it |
+| New booking | 2:30 PM | selects it |
+| New booking | 3:00 PM | selects it |
+| New booking | 3:30 PM | selects it |
+| New booking | 4:00 PM | selects it |
+| New booking | 4:30 PM | selects it |
+| New booking | 5:00 PM | selects it |
 | New booking | 5:30 PM | selects it |
 | New booking | 6:00 PM | selects it |
 | New booking | 6:30 PM | selects it |
@@ -129,6 +123,7 @@
 | New booking | 10:00 PM | selects it |
 | New booking | 10:30 PM | selects it |
 | New booking | 11:00 PM | selects it |
+| New booking | 11:30 PM | selects it |
 | New booking | Book | disabled until the form is valid / state allows |
 | Quick sale | All | already selected |
 | Quick sale | Hair | updates the screen |
@@ -174,6 +169,7 @@
 | Quick sale (basket) | Customers | opens /customers |
 | Quick sale (basket) | More | opens /more |
 | Checkout | New | shows "Name" |
+| Checkout | Rafiq E2E | shows "Saving updates expected cash, Rafiq E2E's commissi" |
 | Checkout | One less Haircut | shows "Nothing added yet" |
 | Checkout | One more Haircut | shows "2 in the basket" |
 | Checkout | Cash | already selected |
@@ -183,7 +179,7 @@
 | Checkout | Save sale · AED 25.00 | shows "Nothing added yet" |
 | Checkout | Close | updates the screen |
 | Customers | New | opens /customers/form |
-| Customers | Sweep Customer | opens /customers/9872e877-4f4a-40bc-97f2-9ea7a470ec60 |
+| Customers | Sweep Customer | opens /customers/ad4ab0dd-f1ec-4ed8-be38-f4bc067189d4 |
 | Customers | Home | opens / |
 | Customers | Queue | opens /queue |
 | Customers | Sale | opens /sale |
@@ -197,6 +193,7 @@
 | Customer form | Allergy | selects it |
 | Customer form | Needs patch test | selects it |
 | Customer form | Save | shows "Customer saved" |
+| More | Edit profile | opens /profile |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
 | More | Sales | opens /sales |
@@ -262,14 +259,21 @@
 | Categories | Face | shows "Edit category" |
 | Categories | Massage | shows "Edit category" |
 | Sales | Back | opens /more |
-| Sales | Sale #1002 | opens /sales/f5cad204-df02-4547-bd23-c05244d2e194 |
-| Sales | Sale #1001 | opens /sales/41a370a3-c3b5-4aa3-a52d-218aa2040e24 |
+| Sales | Sale #1002 | opens /sales/4ef1aed9-b8db-4157-956f-d185dcd1e0d3 |
+| Sales | Sale #1001 | opens /sales/89fb0d4d-a43b-4ff8-a189-ead8e62323ca |
 | Sale detail | Back | opens /sales |
-| Sale detail | Print receipt | prints the receipt ("E2E gents muwnmw7ut82e") |
+| Sale detail | Print receipt | prints the receipt ("E2E gents muyolm8nm7gb") |
 | Sale detail | Refund | shows "Refund sale #1001" |
 | Branch settings | Back | opens /more |
 | Branch settings | Gents salon Barber shops and gents salons | already selected |
 | Branch settings | Ladies salon & spa Ladies salons, beauty and spa | shows "Switch to Ladies salon & spa" |
+| Branch settings | Sun | already selected |
+| Branch settings | Mon | already selected |
+| Branch settings | Tue | already selected |
+| Branch settings | Wed | already selected |
+| Branch settings | Thu | already selected |
+| Branch settings | Fri | already selected |
+| Branch settings | Sat | already selected |
 | Branch settings | None | selects it |
 | Branch settings | Print / share | already selected |
 | Branch settings | WhatsApp | selects it |
@@ -278,7 +282,7 @@
 | Expenses | New | opens /expenses/new |
 | Expenses | Previous month | shows "September 2026" |
 | Expenses | Next month | shows "November 2026" |
-| Expenses | Tea & Food | opens /expenses/d27811bc-41b3-4611-903d-c4b60c135d4e |
+| Expenses | Tea & Food | opens /expenses/e7976ebb-bc49-4fdf-8afc-98b65aac0b55 |
 | New expense | Back | opens /expenses |
 | New expense | Tea & Food | selects it |
 | New expense | Electricity | selects it |
@@ -300,8 +304,6 @@
 | New expense | Cash | already selected |
 | New expense | Card | shows "Paid from the bank; the drawer is not affected." |
 | New expense | Bank transfer | shows "Paid from the bank; the drawer is not affected." |
-| New expense | Wednesday 23 September | selects it |
-| New expense | Thursday 24 September | selects it |
 | New expense | Friday 25 September | selects it |
 | New expense | Saturday 26 September | selects it |
 | New expense | Sunday 27 September | selects it |
@@ -313,7 +315,9 @@
 | New expense | Saturday 3 October | selects it |
 | New expense | Sunday 4 October | selects it |
 | New expense | Monday 5 October | selects it |
-| New expense | Tuesday 6 October | already selected |
+| New expense | Tuesday 6 October | selects it |
+| New expense | Wednesday 7 October | selects it |
+| New expense | Thursday 8 October | already selected |
 | New expense | Choose photo | opens the photo picker |
 | New expense | Save expense | disabled until the form is valid / state allows |
 | Expense detail | Back | opens /expenses |
@@ -323,12 +327,10 @@
 | Purchases | New bill | opens /purchases/new |
 | Purchases | Bills | already selected |
 | Purchases | Suppliers | shows "New supplier" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/e05196a3-42a8-49ec-9431-c080a2ed53ab |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/9ddc1425-1848-4ec6-b784-502f3159bde0 |
 | New bill | Back | opens /purchases |
 | New bill | Sweep Supplier | selects it |
 | New bill | New supplier | shows "Supplier name" |
-| New bill | Wednesday 23 September | selects it |
-| New bill | Thursday 24 September | selects it |
 | New bill | Friday 25 September | selects it |
 | New bill | Saturday 26 September | selects it |
 | New bill | Sunday 27 September | selects it |
@@ -340,7 +342,9 @@
 | New bill | Saturday 3 October | selects it |
 | New bill | Sunday 4 October | selects it |
 | New bill | Monday 5 October | selects it |
-| New bill | Tuesday 6 October | already selected |
+| New bill | Tuesday 6 October | selects it |
+| New bill | Wednesday 7 October | selects it |
+| New bill | Thursday 8 October | already selected |
 | New bill | Credit | already selected |
 | New bill | Cash | shows "Paid now: recorded as a payment to the supplier." |
 | New bill | Card | shows "Paid now: recorded as a payment to the supplier." |
@@ -351,15 +355,15 @@
 | New bill | Save bill · AED 0.00 | disabled until the form is valid / state allows |
 | Bill detail | Back | opens /purchases |
 | Bill detail | Choose photo | opens the photo picker |
-| Bill detail | Print / PDF | prints the receipt ("E2E gents muwnmw7ut82e") |
+| Bill detail | Print / PDF | prints the receipt ("E2E gents muyolm8nm7gb") |
 | Bill detail | Pay supplier | shows "AED 30.00 left to pay." |
 | Bill detail | Reverse bill | shows "Only unpaid bills can be reversed. Stock it added " |
 | Cash closing | Back | opens /more |
 | Cash closing | Count notes & coins | shows "Notes & coins" |
-| Cash closing | Owner t82e | already selected |
+| Cash closing | Owner m7gb | already selected |
 | Cash closing | Save draft | shows "Draft" |
 | Cash closing | Approve closing | disabled until the form is valid / state allows |
-| Cash closing | Tue 6 Oct | opens /cash-closing/2026-10-06 |
+| Cash closing | Thu 8 Oct | opens /cash-closing/2026-10-08 |
 | Inventory | Back | opens /more |
 | Inventory | Add item | opens /inventory/form |
 | Inventory | All | already selected |
@@ -370,16 +374,16 @@
 | Inventory | Stock count | opens /inventory/count |
 | Inventory | Opening stock | opens /inventory/opening |
 | Inventory | Order | opens /purchases/new |
-| Inventory | Beard Color | opens /inventory/1961d4ee-aabe-4988-a290-ef8adb4396f5 |
-| Inventory | Blades | opens /inventory/b50d3d67-5235-4358-9ac3-594a267939f7 |
-| Inventory | Developer 20 Vol | opens /inventory/2b7a1252-7558-4f53-b41d-44a8184e7cfb |
-| Inventory | Gloves | opens /inventory/6dc5264b-541c-4925-b45d-706259cbc4fa |
-| Inventory | Hair Color | opens /inventory/b875364e-b38f-4a1b-b8ba-3bc92d345a67 |
-| Inventory | Hair Oil | opens /inventory/42ef3685-4939-41b4-846f-302dded1efbc |
-| Inventory | Neck strips | opens /inventory/bd46aa00-def8-47b2-8acd-d8c2de873128 |
-| Inventory | Shaving Foam | opens /inventory/d31171aa-918f-4bac-ab7d-5147b47ebc09 |
-| Inventory | Sweep Oil | opens /inventory/7cf9705c-4d6b-4d0c-b507-9e2f24512514 |
-| Inventory | Tissues | opens /inventory/25213207-db92-44cc-8cf5-4cbcff849c5d |
+| Inventory | Beard Color | opens /inventory/e4c0b81f-089e-4fd1-980f-79bb604ad1f5 |
+| Inventory | Blades | opens /inventory/48d4d44b-79a0-4681-84ce-55d3779b2934 |
+| Inventory | Developer 20 Vol | opens /inventory/26bc808c-335b-4386-a831-e53a8ef5b0a1 |
+| Inventory | Gloves | opens /inventory/43f71051-d367-49e6-99c3-3daa080c4bf0 |
+| Inventory | Hair Color | opens /inventory/092f661e-11e9-4fab-9b32-27c3ef1ef20b |
+| Inventory | Hair Oil | opens /inventory/b0231e3a-1253-40d0-a4d7-65417dfa1f22 |
+| Inventory | Neck strips | opens /inventory/10f265bd-e75c-49fb-a16f-39733e1bda85 |
+| Inventory | Shaving Foam | opens /inventory/69a9efe9-839b-44b6-bd40-f8a872fde96b |
+| Inventory | Sweep Oil | opens /inventory/7fd923ce-9017-40d1-8429-fa76359331c6 |
+| Inventory | Tissues | opens /inventory/90ba5b26-dff5-485c-8ec5-6ca438216e46 |
 | Item detail | Back | opens /inventory |
 | Item detail | Adjust stock | shows "On hand now: 5 pc. Every change needs a reason." |
 | Item detail | Edit | opens /inventory/form |

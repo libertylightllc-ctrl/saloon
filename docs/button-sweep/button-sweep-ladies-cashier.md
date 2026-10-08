@@ -11,10 +11,10 @@
 | Home | Expense | opens /expenses/new |
 | Home | Stock | opens /inventory |
 | Home | Close day | opens /cash-closing |
-| Home | Clock in | shows "No roster · In 5:11 PM · Out …" |
+| Home | Clock in | shows "No roster · In 3:09 AM · Out …" |
 | Home | Review | opens /compliance |
 | Home | Open queue | opens /queue |
-| Home | Start | shows "Started 5:11 PM" |
+| Home | Start | shows "Started 3:09 AM" |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
 | Home | Sale | opens /sale |
@@ -32,7 +32,7 @@
 | Queue | No-show 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Cancelled 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Any stylist | already selected |
-| Queue | Staff dri | shows "No one is waiting. Add a walk-in." |
+| Queue | Staff f6e | shows "No one is waiting. Add a walk-in." |
 | Queue | Complete | opens /sale |
 | Queue | More actions for Sweep Walk-in | updates the screen |
 | Queue | Home | opens / |
@@ -69,7 +69,7 @@
 | Quick sale | Customers | opens /customers |
 | Quick sale | More | opens /more |
 | Customers | New | opens /customers/form |
-| Customers | Sweep Customer | opens /customers/b2a4c994-8074-44a9-8e37-d050733b1b4c |
+| Customers | Sweep Customer | opens /customers/31d72301-788c-49a7-a9d1-f98faef60b51 |
 | Customers | Home | opens / |
 | Customers | Queue | opens /queue |
 | Customers | Sale | opens /sale |
@@ -79,6 +79,7 @@
 | Customer profile | Edit | opens /customers/form |
 | Customer profile | Book | opens /appointment/new |
 | Customer profile | New sale | opens /sale |
+| More | Edit profile | opens /profile |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
 | More | Sales | opens /sales |
@@ -102,9 +103,9 @@
 | Services | Active | already selected |
 | Services | Archived | shows "No archived services." |
 | Sales | Back | opens /more |
-| Sales | Sale #1001 | opens /sales/4152962c-b65c-4502-8f42-a14df09a7c11 |
+| Sales | Sale #1001 | opens /sales/e7d836c8-fdbe-4ad2-ba5c-7fdd55f9092f |
 | Sale detail | Back | opens /sales |
-| Sale detail | Print receipt | prints the receipt ("E2E ladies muwp59n1i45g") |
+| Sale detail | Print receipt | prints the receipt ("E2E ladies muypyh1gllgn") |
 | Sale detail | Ask the owner for a refund | shows "The owner gets a notification and refunds it from " |
 | Expenses | Back | opens /more |
 | Expenses | New | opens /expenses/new |
@@ -143,11 +144,11 @@
 | New bill | Save bill · AED 0.00 | disabled until the form is valid / state allows |
 | Cash closing | Back | opens /more |
 | Cash closing | Count notes & coins | shows "Notes & coins" |
-| Cash closing | Owner i45g | selects it |
-| Cash closing | Cashier jmx | already selected |
+| Cash closing | Owner llgn | selects it |
+| Cash closing | Cashier 3p8 | already selected |
 | Cash closing | Save draft | shows "Draft" |
 | Cash closing | Submit for approval | disabled until the form is valid / state allows |
-| Cash closing | Tue 6 Oct | opens /cash-closing/2026-10-06 |
+| Cash closing | Thu 8 Oct | opens /cash-closing/2026-10-08 |
 | Inventory | Back | opens /more |
 | Inventory | All | already selected |
 | Inventory | Low stock | shows "Nothing is low. Well stocked!" |
@@ -155,23 +156,21 @@
 | Inventory | Retail | updates the screen |
 | Inventory | Tools | shows "No items here yet." |
 | Inventory | Order | opens /purchases/new |
-| Inventory | Black soap | opens /inventory/1ab2c7b0-24f0-4e8a-8ad5-76d6f9445585 |
-| Inventory | Developer 20 Vol | opens /inventory/828f2ed3-e858-4c31-adec-fdf41fc28296 |
-| Inventory | Face masks | opens /inventory/105e0a3c-2aa2-4e10-8b85-994e706405d8 |
-| Inventory | Gel polish | opens /inventory/acb1b2b0-f7d1-47bc-a08f-9b9574a4800f |
-| Inventory | Gloves | opens /inventory/4a8c2688-4354-462c-aa9c-48f52bccd597 |
-| Inventory | Hair Color | opens /inventory/c50e41d2-60e8-42ee-9671-4191099891f6 |
-| Inventory | Heat spray | opens /inventory/02642cad-3c64-4a48-b1fa-4a6dfeaebfd2 |
-| Inventory | Massage oil | opens /inventory/d5297222-bd9f-4f7b-a6db-54730b073e17 |
-| Inventory | Nail polish | opens /inventory/f2a210b2-8f25-403c-957d-83b754188888 |
-| Inventory | Styling cream | opens /inventory/92a8e7e4-07a4-48e8-853b-4b9d379a5cee |
-| Inventory | Sweep Oil | opens /inventory/d9fd0499-faed-477f-9f03-9203c756c70e |
-| Inventory | Thread | opens /inventory/b4a0accf-f1ec-480f-977b-77bf28aee3e0 |
-| Inventory | Wax | opens /inventory/044b420b-f456-4aca-8c05-6b6c7fcb4bb4 |
+| Inventory | Black soap | opens /inventory/573e57ab-af33-43e1-b58b-fa7f55f9e426 |
+| Inventory | Developer 20 Vol | opens /inventory/3ed6be0d-5c47-47b9-b7d3-161634cc827e |
+| Inventory | Face masks | opens /inventory/54ac926f-7bbb-4c82-b3fc-312ee4521e51 |
+| Inventory | Gel polish | opens /inventory/4285f2d0-a059-4e54-b410-3e13757e313d |
+| Inventory | Gloves | opens /inventory/2d3e876b-b1bf-4180-ba2e-6c5724cd1619 |
+| Inventory | Hair Color | opens /inventory/fa5cf878-394c-4d78-9d55-fc03d6949483 |
+| Inventory | Heat spray | opens /inventory/bc211969-71c6-4f9c-a7d7-485a8b4caeb2 |
+| Inventory | Massage oil | opens /inventory/c5177304-0bf5-40d6-b54b-b7da78eb5ebd |
+| Inventory | Nail polish | opens /inventory/d7106ad0-1956-4958-8938-1327f5fb4fcc |
+| Inventory | Styling cream | opens /inventory/5bbbd04e-5025-4e1b-920e-3c27691205f0 |
+| Inventory | Sweep Oil | opens /inventory/a24ea10f-67d2-4559-850d-0c305da2a6b6 |
+| Inventory | Thread | opens /inventory/f2ebcd34-2b64-4a66-9b5e-fa191c255e1f |
+| Inventory | Wax | opens /inventory/862beb2a-f2b0-4f1a-b162-d30b42b2931d |
 | Item detail | Back | opens /inventory |
 | Attendance | Back | opens /more |
-| Attendance | Wednesday 23 September | shows "Wednesday 23 September" |
-| Attendance | Thursday 24 September | shows "Thursday 24 September" |
 | Attendance | Friday 25 September | shows "Friday 25 September" |
 | Attendance | Saturday 26 September | shows "Saturday 26 September" |
 | Attendance | Sunday 27 September | shows "Sunday 27 September" |
@@ -183,11 +182,13 @@
 | Attendance | Saturday 3 October | shows "Saturday 3 October" |
 | Attendance | Sunday 4 October | shows "Sunday 4 October" |
 | Attendance | Monday 5 October | shows "Monday 5 October" |
-| Attendance | Tuesday 6 October | already selected |
-| Attendance | Clock out | shows "Attendance · Cashier jmx" |
-| Attendance | Clock in | shows "Attendance · Staff dri" |
+| Attendance | Tuesday 6 October | shows "Tuesday 6 October" |
+| Attendance | Wednesday 7 October | shows "Wednesday 7 October" |
+| Attendance | Thursday 8 October | already selected |
+| Attendance | Clock out | shows "Attendance · Cashier 3p8" |
+| Attendance | Clock in | shows "Attendance · Staff f6e" |
 | Compliance · hygiene | Back | opens /more |
 | Compliance · hygiene | Choose photo | opens the photo picker |
-| Compliance · hygiene | Sign the log | shows "Signed by Cashier jmx" |
+| Compliance · hygiene | Sign the log | shows "Signed by Cashier 3p8" |
 | Notifications | Back | opens / |
 | Notifications | Mark all as read | disabled until the form is valid / state allows |
