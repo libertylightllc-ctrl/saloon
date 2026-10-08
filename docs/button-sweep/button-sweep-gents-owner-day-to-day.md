@@ -14,7 +14,7 @@
 | Home | Expense | opens /expenses/new |
 | Home | Stock | opens /inventory |
 | Home | Open queue | opens /queue |
-| Home | Start | shows "Started 2:31 AM" |
+| Home | Start | shows "Started 6:53 PM" |
 | Home | View audit trail | opens /accounts |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
@@ -82,39 +82,7 @@
 | New booking | Monday 19 October | shows "12:00 AM" |
 | New booking | Tuesday 20 October | shows "12:00 AM" |
 | New booking | Wednesday 21 October | shows "12:00 AM" |
-| New booking | 3:00 AM | disabled until the form is valid / state allows |
-| New booking | 3:30 AM | selects it |
-| New booking | 4:00 AM | selects it |
-| New booking | 4:30 AM | selects it |
-| New booking | 5:00 AM | selects it |
-| New booking | 5:30 AM | selects it |
-| New booking | 6:00 AM | selects it |
-| New booking | 6:30 AM | selects it |
-| New booking | 7:00 AM | selects it |
-| New booking | 7:30 AM | selects it |
-| New booking | 8:00 AM | selects it |
-| New booking | 8:30 AM | selects it |
-| New booking | 9:00 AM | selects it |
-| New booking | 9:30 AM | selects it |
-| New booking | 10:00 AM | selects it |
-| New booking | 10:30 AM | selects it |
-| New booking | 11:00 AM | selects it |
-| New booking | 11:30 AM | selects it |
-| New booking | 12:00 PM | selects it |
-| New booking | 12:30 PM | selects it |
-| New booking | 1:00 PM | selects it |
-| New booking | 1:30 PM | selects it |
-| New booking | 2:00 PM | selects it |
-| New booking | 2:30 PM | selects it |
-| New booking | 3:00 PM | selects it |
-| New booking | 3:30 PM | selects it |
-| New booking | 4:00 PM | selects it |
-| New booking | 4:30 PM | selects it |
-| New booking | 5:00 PM | selects it |
-| New booking | 5:30 PM | selects it |
-| New booking | 6:00 PM | selects it |
-| New booking | 6:30 PM | selects it |
-| New booking | 7:00 PM | selects it |
+| New booking | 7:00 PM | disabled until the form is valid / state allows |
 | New booking | 7:30 PM | selects it |
 | New booking | 8:00 PM | selects it |
 | New booking | 8:30 PM | selects it |
@@ -169,7 +137,6 @@
 | Quick sale (basket) | Customers | opens /customers |
 | Quick sale (basket) | More | opens /more |
 | Checkout | New | shows "Name" |
-| Checkout | Rafiq E2E | shows "Saving updates expected cash, Rafiq E2E's commissi" |
 | Checkout | One less Haircut | shows "Nothing added yet" |
 | Checkout | One more Haircut | shows "2 in the basket" |
 | Checkout | Cash | already selected |
@@ -179,7 +146,7 @@
 | Checkout | Save sale · AED 25.00 | shows "Nothing added yet" |
 | Checkout | Close | updates the screen |
 | Customers | New | opens /customers/form |
-| Customers | Sweep Customer | opens /customers/ad4ab0dd-f1ec-4ed8-be38-f4bc067189d4 |
+| Customers | Sweep Customer | opens /customers/c1ecc9d4-0b11-4e83-8e75-c8f73b00ae51 |
 | Customers | Home | opens / |
 | Customers | Queue | opens /queue |
 | Customers | Sale | opens /sale |
@@ -259,10 +226,10 @@
 | Categories | Face | shows "Edit category" |
 | Categories | Massage | shows "Edit category" |
 | Sales | Back | opens /more |
-| Sales | Sale #1002 | opens /sales/4ef1aed9-b8db-4157-956f-d185dcd1e0d3 |
-| Sales | Sale #1001 | opens /sales/89fb0d4d-a43b-4ff8-a189-ead8e62323ca |
+| Sales | Sale #1002 | opens /sales/e47e3b17-fe99-4eb4-bd10-d9d47f7b1b1b |
+| Sales | Sale #1001 | opens /sales/017eb4de-e4cb-42b4-94d3-a840716adb18 |
 | Sale detail | Back | opens /sales |
-| Sale detail | Print receipt | prints the receipt ("E2E gents muyolm8nm7gb") |
+| Sale detail | Print receipt | prints the receipt ("E2E gents muznnps2qu5p") |
 | Sale detail | Refund | shows "Refund sale #1001" |
 | Branch settings | Back | opens /more |
 | Branch settings | Gents salon Barber shops and gents salons | already selected |
@@ -282,7 +249,7 @@
 | Expenses | New | opens /expenses/new |
 | Expenses | Previous month | shows "September 2026" |
 | Expenses | Next month | shows "November 2026" |
-| Expenses | Tea & Food | opens /expenses/e7976ebb-bc49-4fdf-8afc-98b65aac0b55 |
+| Expenses | Tea & Food | opens /expenses/47c21429-4e8c-4f1e-b07c-c3199e1b50f0 |
 | New expense | Back | opens /expenses |
 | New expense | Tea & Food | selects it |
 | New expense | Electricity | selects it |
@@ -327,7 +294,7 @@
 | Purchases | New bill | opens /purchases/new |
 | Purchases | Bills | already selected |
 | Purchases | Suppliers | shows "New supplier" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/9ddc1425-1848-4ec6-b784-502f3159bde0 |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/96479782-e5ef-48d0-8ba7-c40d27ac5c45 |
 | New bill | Back | opens /purchases |
 | New bill | Sweep Supplier | selects it |
 | New bill | New supplier | shows "Supplier name" |
@@ -355,12 +322,12 @@
 | New bill | Save bill · AED 0.00 | disabled until the form is valid / state allows |
 | Bill detail | Back | opens /purchases |
 | Bill detail | Choose photo | opens the photo picker |
-| Bill detail | Print / PDF | prints the receipt ("E2E gents muyolm8nm7gb") |
+| Bill detail | Print / PDF | prints the receipt ("E2E gents muznnps2qu5p") |
 | Bill detail | Pay supplier | shows "AED 30.00 left to pay." |
 | Bill detail | Reverse bill | shows "Only unpaid bills can be reversed. Stock it added " |
 | Cash closing | Back | opens /more |
 | Cash closing | Count notes & coins | shows "Notes & coins" |
-| Cash closing | Owner m7gb | already selected |
+| Cash closing | Owner qu5p | already selected |
 | Cash closing | Save draft | shows "Draft" |
 | Cash closing | Approve closing | disabled until the form is valid / state allows |
 | Cash closing | Thu 8 Oct | opens /cash-closing/2026-10-08 |
@@ -374,16 +341,16 @@
 | Inventory | Stock count | opens /inventory/count |
 | Inventory | Opening stock | opens /inventory/opening |
 | Inventory | Order | opens /purchases/new |
-| Inventory | Beard Color | opens /inventory/e4c0b81f-089e-4fd1-980f-79bb604ad1f5 |
-| Inventory | Blades | opens /inventory/48d4d44b-79a0-4681-84ce-55d3779b2934 |
-| Inventory | Developer 20 Vol | opens /inventory/26bc808c-335b-4386-a831-e53a8ef5b0a1 |
-| Inventory | Gloves | opens /inventory/43f71051-d367-49e6-99c3-3daa080c4bf0 |
-| Inventory | Hair Color | opens /inventory/092f661e-11e9-4fab-9b32-27c3ef1ef20b |
-| Inventory | Hair Oil | opens /inventory/b0231e3a-1253-40d0-a4d7-65417dfa1f22 |
-| Inventory | Neck strips | opens /inventory/10f265bd-e75c-49fb-a16f-39733e1bda85 |
-| Inventory | Shaving Foam | opens /inventory/69a9efe9-839b-44b6-bd40-f8a872fde96b |
-| Inventory | Sweep Oil | opens /inventory/7fd923ce-9017-40d1-8429-fa76359331c6 |
-| Inventory | Tissues | opens /inventory/90ba5b26-dff5-485c-8ec5-6ca438216e46 |
+| Inventory | Beard Color | opens /inventory/0cdc9934-4b81-48b9-bccf-22286c343f90 |
+| Inventory | Blades | opens /inventory/bb110f61-22be-4ba0-a2f8-7d1c0b1f4bc6 |
+| Inventory | Developer 20 Vol | opens /inventory/eeb30b73-51e8-48b1-9dba-9b38c9e808f1 |
+| Inventory | Gloves | opens /inventory/82fab8d2-01a2-4006-8171-4d0d1c536693 |
+| Inventory | Hair Color | opens /inventory/430840ea-5056-4997-9fa7-8ee54f988206 |
+| Inventory | Hair Oil | opens /inventory/0efdc378-6c86-4812-be5b-ba71344d6045 |
+| Inventory | Neck strips | opens /inventory/019baf3d-5f87-4234-b3be-f246fa3750a1 |
+| Inventory | Shaving Foam | opens /inventory/456da363-279f-4dfc-a63a-bce111b13a25 |
+| Inventory | Sweep Oil | opens /inventory/dce1ee1f-4b9c-45e0-bf86-65ca83af3b09 |
+| Inventory | Tissues | opens /inventory/b5450d76-7c86-47d3-8169-ad969fd62d89 |
 | Item detail | Back | opens /inventory |
 | Item detail | Adjust stock | shows "On hand now: 5 pc. Every change needs a reason." |
 | Item detail | Edit | opens /inventory/form |

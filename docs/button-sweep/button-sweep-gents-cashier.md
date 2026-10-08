@@ -5,7 +5,7 @@
 | Home | Refresh app | updates the screen |
 | Home | Notifications, 0 unread | opens /notifications |
 | Home | Close day | opens /cash-closing |
-| Home | Clock in | shows "No roster · In 2:42 AM · Out …" |
+| Home | Clock in | shows "No roster · In 7:04 PM · Out …" |
 | Home | Review | opens /compliance |
 | Home | Walk-in | opens /appointment/new |
 | Home | Book | opens /appointment/new |
@@ -14,7 +14,7 @@
 | Home | Expense | opens /expenses/new |
 | Home | Stock | opens /inventory |
 | Home | Open queue | opens /queue |
-| Home | Start | shows "Started 2:43 AM" |
+| Home | Start | shows "Started 7:04 PM" |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
 | Home | Sale | opens /sale |
@@ -32,7 +32,7 @@
 | Queue | No-show 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Cancelled 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Any barber | already selected |
-| Queue | Staff ux8 | shows "No one is waiting. Add a walk-in." |
+| Queue | Staff t5w | shows "No one is waiting. Add a walk-in." |
 | Queue | Complete | opens /sale |
 | Queue | More actions for Sweep Walk-in | updates the screen |
 | Queue | Home | opens / |
@@ -62,7 +62,7 @@
 | Quick sale | Customers | opens /customers |
 | Quick sale | More | opens /more |
 | Customers | New | opens /customers/form |
-| Customers | Sweep Customer | opens /customers/ddd3ec4e-9d11-4efe-8967-190defaee3b9 |
+| Customers | Sweep Customer | opens /customers/bdb25192-e9ed-44e8-91bc-993e0c822eb8 |
 | Customers | Home | opens / |
 | Customers | Queue | opens /queue |
 | Customers | Sale | opens /sale |
@@ -96,9 +96,9 @@
 | Services | Active | already selected |
 | Services | Archived | shows "No archived services." |
 | Sales | Back | opens /more |
-| Sales | Sale #1001 | opens /sales/df180022-9854-48e0-a287-87949b81262b |
+| Sales | Sale #1001 | opens /sales/b7366c75-cd5f-46b8-8732-f56418ed2b64 |
 | Sale detail | Back | opens /sales |
-| Sale detail | Print receipt | prints the receipt ("E2E gents muyp0kslvkvg") |
+| Sale detail | Print receipt | prints the receipt ("E2E gents muzo2xozx17n") |
 | Sale detail | Ask the owner for a refund | shows "The owner gets a notification and refunds it from " |
 | Expenses | Back | opens /more |
 | Expenses | New | opens /expenses/new |
@@ -137,8 +137,8 @@
 | New bill | Save bill · AED 0.00 | disabled until the form is valid / state allows |
 | Cash closing | Back | opens /more |
 | Cash closing | Count notes & coins | shows "Notes & coins" |
-| Cash closing | Owner vkvg | selects it |
-| Cash closing | Cashier sol | already selected |
+| Cash closing | Owner x17n | selects it |
+| Cash closing | Cashier 3f9 | already selected |
 | Cash closing | Save draft | shows "Draft" |
 | Cash closing | Submit for approval | disabled until the form is valid / state allows |
 | Cash closing | Thu 8 Oct | opens /cash-closing/2026-10-08 |
@@ -149,16 +149,16 @@
 | Inventory | Retail | updates the screen |
 | Inventory | Tools | shows "No items here yet." |
 | Inventory | Order | opens /purchases/new |
-| Inventory | Beard Color | opens /inventory/c3b03c14-6ede-41e6-8462-092848539977 |
-| Inventory | Blades | opens /inventory/6f4ae8ab-90ed-43c0-8cc2-ed0a75a45534 |
-| Inventory | Developer 20 Vol | opens /inventory/dc4dc214-ae0c-4043-9822-60773eba7eba |
-| Inventory | Gloves | opens /inventory/cd80b5c8-2210-49ba-b27b-2d3862f81823 |
-| Inventory | Hair Color | opens /inventory/eaf88ca7-b051-44bc-a764-c1171a778cc7 |
-| Inventory | Hair Oil | opens /inventory/f51a502d-b135-4429-884a-142a031205e0 |
-| Inventory | Neck strips | opens /inventory/60eba39e-ce26-40ab-a144-9d227c717a0f |
-| Inventory | Shaving Foam | opens /inventory/41001b01-538d-486f-95fd-b0d4376a9326 |
-| Inventory | Sweep Oil | opens /inventory/15d32597-6ecc-475b-863f-501a2fd7e19b |
-| Inventory | Tissues | opens /inventory/693548e3-bab3-4b81-8996-3961b2bd9a1b |
+| Inventory | Beard Color | opens /inventory/54b55f63-61a2-4f66-b792-ec81d6279909 |
+| Inventory | Blades | opens /inventory/c2f58113-1fc7-4e87-af46-40ffca1e26df |
+| Inventory | Developer 20 Vol | opens /inventory/4cf1cbea-55ad-42f7-87ab-3843bb8d523d |
+| Inventory | Gloves | opens /inventory/fb682b45-6de8-4711-b1d6-ff5c8f2cb2cf |
+| Inventory | Hair Color | opens /inventory/c0d19fe1-6bc6-4bb1-bdcd-8de550e8a0d1 |
+| Inventory | Hair Oil | opens /inventory/35f17469-a6b7-4046-a6b1-9fff5d838679 |
+| Inventory | Neck strips | opens /inventory/dc477526-5d87-4e73-8e24-09ef05e98179 |
+| Inventory | Shaving Foam | opens /inventory/d71ee948-9c91-4fab-8753-6af4b09ec1df |
+| Inventory | Sweep Oil | opens /inventory/5ce3a6bd-3354-42fd-928f-bac65d30193f |
+| Inventory | Tissues | opens /inventory/1fbe4296-dac7-4285-b2eb-d48e3b00378f |
 | Item detail | Back | opens /inventory |
 | Attendance | Back | opens /more |
 | Attendance | Friday 25 September | shows "Friday 25 September" |
@@ -175,10 +175,10 @@
 | Attendance | Tuesday 6 October | shows "Tuesday 6 October" |
 | Attendance | Wednesday 7 October | shows "Wednesday 7 October" |
 | Attendance | Thursday 8 October | already selected |
-| Attendance | Clock out | shows "Attendance · Cashier sol" |
-| Attendance | Clock in | shows "Attendance · Staff ux8" |
+| Attendance | Clock out | shows "Attendance · Cashier 3f9" |
+| Attendance | Clock in | shows "Attendance · Staff t5w" |
 | Compliance · hygiene | Back | opens /more |
 | Compliance · hygiene | Choose photo | opens the photo picker |
-| Compliance · hygiene | Sign the log | shows "Signed by Cashier sol" |
+| Compliance · hygiene | Sign the log | shows "Signed by Cashier 3f9" |
 | Notifications | Back | opens / |
 | Notifications | Mark all as read | disabled until the form is valid / state allows |

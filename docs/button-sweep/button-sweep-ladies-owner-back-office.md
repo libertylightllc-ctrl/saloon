@@ -14,10 +14,10 @@
 | Staff | Add staff | opens /staff/form |
 | Staff | Attendance | opens /attendance |
 | Staff | Payroll | opens /payroll |
-| Staff | Aisha E2E | opens /staff/04b46f56-dbb2-419f-a463-6bed5a87ef05 |
+| Staff | Aisha E2E | opens /staff/506582f4-9d9a-45b1-adc2-fd6af8efdfbd |
 | Staff profile | Back | opens /staff |
 | Staff profile | Edit | opens /staff/form |
-| Staff profile | Password & sign-in | shows "Staff · @stafvt9gn1" |
+| Staff profile | Password & sign-in | shows "Staff · @stafhwc7iz" |
 | Staff profile | Remove from staff | shows "Remove Aisha E2E?" |
 | Staff form | Back | opens /staff |
 | Staff form | Stylist | already selected |
@@ -73,18 +73,18 @@
 | Compliance · binder | Inspection binder | already selected |
 | Compliance · binder | Hygiene log | shows "Today's checklist" |
 | Compliance · binder | WPS & Montaji | shows "No paid payroll month yet." |
-| Compliance · binder | Export PDF | prints the receipt ("Inspection binder — E2E ladies muypjmajm") |
+| Compliance · binder | Export PDF | prints the receipt ("Inspection binder — E2E ladies muzokpl5s") |
 | Compliance · hygiene | Back | opens /more |
 | Compliance · hygiene | Expiry register | shows "Inspection readiness" |
 | Compliance · hygiene | Inspection binder | shows "Show this to an inspector, or export it as a PDF." |
 | Compliance · hygiene | Hygiene log | already selected |
 | Compliance · hygiene | WPS & Montaji | shows "No paid payroll month yet." |
 | Compliance · hygiene | Choose photo | opens the photo picker |
-| Compliance · hygiene | Sign the log | shows "Signed by Owner m5zd" |
+| Compliance · hygiene | Sign the log | shows "Signed by Owner saxs" |
 | Compliance · WPS & Montaji | Back | opens /more |
 | Compliance · WPS & Montaji | Expiry register | shows "Inspection readiness" |
 | Compliance · WPS & Montaji | Inspection binder | shows "Show this to an inspector, or export it as a PDF." |
-| Compliance · WPS & Montaji | Hygiene log | shows "Signed by Owner m5zd" |
+| Compliance · WPS & Montaji | Hygiene log | shows "Signed by Owner saxs" |
 | Compliance · WPS & Montaji | WPS & Montaji | already selected |
 | Compliance · WPS & Montaji | Black soap | opens /inventory/form |
 | Compliance · WPS & Montaji | Developer 20 Vol | opens /inventory/form |
@@ -116,7 +116,7 @@
 | Reports | Previous month | shows "September 2026" |
 | Reports | Next month | shows "November 2026" |
 | Reports | Print / PDF | prints the receipt ("Monthly business") |
-| Reports | Export CSV | downloads e2e-ladies-muypjmajm5zd-monthly-2026-10.csv |
+| Reports | Export CSV | downloads e2e-ladies-muzokpl5saxs-monthly-2026-10.csv |
 | Reports · staff sales | Back | opens / |
 | Reports · staff sales | Monthly business | shows "AED 80.00" |
 | Reports · staff sales | Staff sales | already selected |
@@ -128,7 +128,7 @@
 | Reports · staff sales | Previous month | shows "September 2026" |
 | Reports · staff sales | Next month | shows "November 2026" |
 | Reports · staff sales | Print / PDF | prints the receipt ("Staff sales") |
-| Reports · staff sales | Export CSV | downloads e2e-ladies-muypjmajm5zd-staff-2026-10.csv |
+| Reports · staff sales | Export CSV | downloads e2e-ladies-muzokpl5saxs-staff-2026-10.csv |
 | Reports · daily closing | Back | opens / |
 | Reports · daily closing | Monthly business | shows "Sales" |
 | Reports · daily closing | Staff sales | shows "Sales" |
@@ -140,7 +140,7 @@
 | Reports · daily closing | Previous month | shows "September 2026" |
 | Reports · daily closing | Next month | shows "November 2026" |
 | Reports · daily closing | Print / PDF | prints the receipt ("Daily closing") |
-| Reports · daily closing | Export CSV | downloads e2e-ladies-muypjmajm5zd-closing-2026-10.csv |
+| Reports · daily closing | Export CSV | downloads e2e-ladies-muzokpl5saxs-closing-2026-10.csv |
 | Reports · stock | Back | opens / |
 | Reports · stock | Monthly business | shows "Sales" |
 | Reports · stock | Staff sales | shows "Sales" |
@@ -152,7 +152,7 @@
 | Reports · stock | Previous month | shows "September 2026" |
 | Reports · stock | Next month | shows "November 2026" |
 | Reports · stock | Print / PDF | prints the receipt ("Stock movement") |
-| Reports · stock | Export CSV | downloads e2e-ladies-muypjmajm5zd-stock-2026-10.csv |
+| Reports · stock | Export CSV | downloads e2e-ladies-muzokpl5saxs-stock-2026-10.csv |
 | Reports · cash shortage | Back | opens / |
 | Reports · cash shortage | Monthly business | shows "Sales" |
 | Reports · cash shortage | Staff sales | shows "Sales" |
@@ -164,7 +164,7 @@
 | Reports · cash shortage | Previous month | shows "September 2026" |
 | Reports · cash shortage | Next month | shows "November 2026" |
 | Reports · cash shortage | Print / PDF | prints the receipt ("Cash shortage") |
-| Reports · cash shortage | Export CSV | downloads e2e-ladies-muypjmajm5zd-shortages-2026-10.csv |
+| Reports · cash shortage | Export CSV | downloads e2e-ladies-muzokpl5saxs-shortages-2026-10.csv |
 | Reports · customers | Back | opens / |
 | Reports · customers | Monthly business | shows "Sales" |
 | Reports · customers | Staff sales | shows "Sales" |
@@ -176,7 +176,7 @@
 | Reports · customers | Previous month | shows "September 2026" |
 | Reports · customers | Next month | shows "November 2026" |
 | Reports · customers | Print / PDF | prints the receipt ("Customer list") |
-| Reports · customers | Export CSV | downloads e2e-ladies-muypjmajm5zd-customers-2026-10.csv |
+| Reports · customers | Export CSV | downloads e2e-ladies-muzokpl5saxs-customers-2026-10.csv |
 | Reports · VAT | Back | opens / |
 | Reports · VAT | Monthly business | shows "AED 80.00" |
 | Reports · VAT | Staff sales | shows "Services" |
@@ -188,11 +188,11 @@
 | Reports · VAT | Previous month | shows "September 2026" |
 | Reports · VAT | Next month | shows "November 2026" |
 | Reports · VAT | Print / PDF | prints the receipt ("VAT") |
-| Reports · VAT | Export CSV | downloads e2e-ladies-muypjmajm5zd-vat-2026-10.csv |
+| Reports · VAT | Export CSV | downloads e2e-ladies-muzokpl5saxs-vat-2026-10.csv |
 | Close month | Back | opens /accounts |
-| Close month | Export ledger CSV | downloads e2e-ladies-muypjmajm5zd-ledger.csv |
+| Close month | Export ledger CSV | downloads e2e-ladies-muzokpl5saxs-ledger.csv |
 | Backup & recovery | Back | opens /more |
-| Backup & recovery | Download backup (ZIP) | downloads e2e-ladies-muypjmajm5zd-backup-2026-10-08.zip |
+| Backup & recovery | Download backup (ZIP) | updates the screen |
 | Plan & billing | Back | opens / |
 | Plan & billing | Pay by card | opens buy.stripe.com in a new tab |
 | Plan & billing | 1 month | already selected |
