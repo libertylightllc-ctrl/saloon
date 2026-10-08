@@ -95,6 +95,21 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
     .first();
   await target.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => undefined);
   if (!(await target.count())) return { ok: true, result: 'not present after reload (an earlier tap changed the data)' };
+  // A link opened in a new tab counts the moment the page asks for it (window.open, inside the tap): the tab itself can
+  // take longer to appear than the effect window on a busy browser (proof, 2026-10-08: "Pay by card" missed).
+  await page.evaluate(() => {
+    const w = window as Window & { __opened?: string; __openWatched?: boolean };
+    if (!w.__openWatched) {
+      const open = w.open.bind(w);
+      w.open = (url?: string | URL, target?: string, features?: string) => {
+        w.__opened = String(url ?? '');
+        return open(url, target, features);
+      };
+      w.__openWatched = true;
+    }
+    w.__opened = '';
+  });
+  const pagesBefore = new Set(page.context().pages());
 
   const before = await perceivable(page);
   const errors: string[] = [];
@@ -126,6 +141,10 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
   page.off('filechooser', onChooser);
   page.off('download', onDownload);
   page.context().off('page', onTab);
+  const asked = await page.evaluate(() => (window as Window & { __opened?: string }).__opened ?? '').catch(() => '');
+  if (asked && !opened) opened = asked;
+  // A tab that opened after the window is closed here, so it cannot linger.
+  for (const extra of page.context().pages()) if (!pagesBefore.has(extra)) await extra.close().catch(() => undefined);
 
   const after = await perceivable(page);
   const text = after.text;
