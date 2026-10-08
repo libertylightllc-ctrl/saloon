@@ -108,6 +108,11 @@ test('the privacy policy and terms are open to everyone, from the landing page a
   // The price the terms point to, read from the same settings salons are billed from: in the UAE, the UAE price only.
   await expect(id(page, 'landing-price')).toHaveText('AED 50.00');
   await expect(id(page, 'landing-pricing')).not.toContainText('USD');
+  // The languages come round one at a time (the whole line did not fit a phone); a screen reader hears them all.
+  const languages = id(page, 'landing-languages');
+  await expect(languages).toHaveAttribute('aria-label', 'English · العربية · हिन्दी · اردو · Español · Français · Português');
+  await expect(languages).toContainText('English');
+  await expect(languages).toContainText('العربية');
   await id(page, 'landing-privacy').click();
   await expect(id(page, 'legal-privacy')).toBeVisible();
   await expect(text(page, /Personal Data Protection Law/)).toBeVisible();
@@ -187,5 +192,15 @@ test.describe('a visitor outside the UAE', () => {
     await page.goto('/');
     await expect(id(page, 'landing-price')).toHaveText('USD 13.99');
     await expect(id(page, 'landing-pricing')).not.toContainText('AED');
+  });
+});
+
+test.describe('a visitor with Reduce Motion on', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  test('sees every language at once, wrapped instead of cut off', async ({ page }) => {
+    await page.goto('/');
+    await expect(text(page, 'English · العربية · हिन्दी · اردو · Español · Français · Português')).toBeVisible();
+    await expect(id(page, 'landing-languages')).toHaveCount(0);
   });
 });

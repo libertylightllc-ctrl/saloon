@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { brand } from '@/config/brand';
+import { LanguageTicker } from '@/features/auth/LanguageTicker';
 import { AppPreview, FeatureCard, Step, TypeCard } from '@/features/auth/LandingParts';
 import { LandingPricing } from '@/features/auth/LandingPricing';
 import { useSalonType } from '@/features/auth/salonType';
@@ -100,7 +101,11 @@ export default function Welcome() {
         {FACTS.map((f) => (
           <View key={f.key} style={styles.fact}>
             <Icon name={f.icon} size={18} color={colors.primary500} />
-            <Text variant="bodyStrong">{t(`auth.landing.facts.${f.key}` as 'auth.landing.facts.languages')}</Text>
+            {f.key === 'languages' ? (
+              <LanguageTicker />
+            ) : (
+              <Text variant="bodyStrong">{t(`auth.landing.facts.${f.key}` as 'auth.landing.facts.languages')}</Text>
+            )}
           </View>
         ))}
       </View>
@@ -194,7 +199,7 @@ const styles = StyleSheet.create({
   ctas: { gap: spacing.sm, alignItems: 'flex-start' },
   previewWide: { width: 360 },
   facts: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: spacing.xl, paddingVertical: spacing.xl },
-  fact: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  fact: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flexShrink: 1 },
   section: { gap: spacing.md, paddingTop: spacing['2xl'] },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md, justifyContent: 'space-between', marginTop: spacing.md },
   types: { gap: spacing.lg, marginTop: spacing.md },
