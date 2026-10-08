@@ -62,6 +62,12 @@ while [ $attempt -lt 5 ]; do
         echo "attempt $attempt discarded: the Mac was overloaded by other work" >> "$S/final-summary.txt"
         continue 2
       fi
+      # A run at four times the usual load (about 15) proves nothing either way, timeouts or not (2026-10-08: a 4K video
+      # render took a run to load 309). Discarding never counts as a pass: three clean runs in a row are still needed.
+      if awk -v m="$(cat "$S/maxload")" 'BEGIN{exit !(m > 60)}'; then
+        echo "attempt $attempt discarded: the Mac was overloaded by other work (peak 5-min load $(cat "$S/maxload"))" >> "$S/final-summary.txt"
+        continue 2
+      fi
       echo "STOPPED: a failure that is not overload — needs investigation" >> "$S/final-summary.txt"
       exit 1
     fi
