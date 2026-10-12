@@ -21,6 +21,7 @@ insert into reviewed values
     ('admin_salons'),
     ('admin_set_payment_details'),
     ('admin_set_platform_owner'),
+    ('admin_set_support_assistant'),
     ('admin_support_close'),
     ('admin_support_reply'),
     ('admin_support_thread'),

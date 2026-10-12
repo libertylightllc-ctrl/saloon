@@ -1994,6 +1994,7 @@ export type Database = {
           pay_link_url: string | null;
           pay_note: string | null;
           price_per_branch_minor: number;
+          support_assistant: boolean;
         };
         Insert: {
           bank_account_name?: string | null;
@@ -2010,6 +2011,7 @@ export type Database = {
           pay_link_url?: string | null;
           pay_note?: string | null;
           price_per_branch_minor?: number;
+          support_assistant?: boolean;
         };
         Update: {
           bank_account_name?: string | null;
@@ -2026,6 +2028,7 @@ export type Database = {
           pay_link_url?: string | null;
           pay_note?: string | null;
           price_per_branch_minor?: number;
+          support_assistant?: boolean;
         };
         Relationships: [];
       };
@@ -3263,11 +3266,13 @@ export type Database = {
       support_threads: {
         Row: {
           alerted_at: string | null;
+          assistant_claimed_at: string | null;
           business_id: string | null;
           context: NonNullable<Json>;
           created_at: string;
           email: string | null;
           guest_token_hash: string | null;
+          handover: boolean;
           id: string;
           last_from: string;
           last_message_at: string;
@@ -3279,11 +3284,13 @@ export type Database = {
         };
         Insert: {
           alerted_at?: string | null;
+          assistant_claimed_at?: string | null;
           business_id?: string | null;
           context?: NonNullable<Json>;
           created_at?: string;
           email?: string | null;
           guest_token_hash?: string | null;
+          handover?: boolean;
           id?: string;
           last_from?: string;
           last_message_at?: string;
@@ -3295,11 +3302,13 @@ export type Database = {
         };
         Update: {
           alerted_at?: string | null;
+          assistant_claimed_at?: string | null;
           business_id?: string | null;
           context?: NonNullable<Json>;
           created_at?: string;
           email?: string | null;
           guest_token_hash?: string | null;
+          handover?: boolean;
           id?: string;
           last_from?: string;
           last_message_at?: string;
@@ -3497,6 +3506,7 @@ export type Database = {
       };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
       admin_set_platform_owner: { Args: { p_email: string; p_on: boolean }; Returns: undefined };
+      admin_set_support_assistant: { Args: { p_on: boolean }; Returns: undefined };
       admin_support_close: { Args: { p_thread: string }; Returns: undefined };
       admin_support_reply: { Args: { p_body: string; p_thread: string }; Returns: undefined };
       admin_support_thread: { Args: { p_thread: string }; Returns: Json };
@@ -3506,6 +3516,7 @@ export type Database = {
           context: Json;
           created_at: string;
           email: string;
+          handover: boolean;
           id: string;
           last_from: string;
           last_message_at: string;
@@ -3644,6 +3655,22 @@ export type Database = {
           who: string;
         }[];
       };
+      claim_support_assistant: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          context: Json;
+          country_code: string;
+          messages: Json;
+          modes: string;
+          people: number;
+          plan_active: boolean;
+          role: string;
+          salon: string;
+          signed_in: boolean;
+          thread_id: string;
+          who: string;
+        }[];
+      };
       clock: { Args: { p: Json }; Returns: Json };
       close_period: { Args: { p_business: string; p_month: string }; Returns: undefined };
       closing_history: {
@@ -3703,6 +3730,7 @@ export type Database = {
       dismiss_refund_request: { Args: { p_id: string; p_note: string }; Returns: undefined };
       dispatch_plan_alerts: { Args: Record<PropertyKey, never>; Returns: number };
       dispatch_push: { Args: Record<PropertyKey, never>; Returns: number };
+      dispatch_support_assistant: { Args: Record<PropertyKey, never>; Returns: number };
       doc_label: { Args: { p_type: string }; Returns: string };
       employee_has_history: { Args: { p_id: string }; Returns: boolean };
       expected_cash: { Args: { p_branch: string; p_date?: string }; Returns: number };
@@ -4040,6 +4068,10 @@ export type Database = {
         Args: { p_author: string; p_body: string; p_thread: string };
         Returns: undefined;
       };
+      support_assistant_reply: {
+        Args: { p_body: string; p_handover: boolean; p_thread: string };
+        Returns: boolean;
+      };
       support_context: { Args: { p: Json }; Returns: Json };
       support_guest_send: { Args: { p: Json }; Returns: undefined };
       support_guest_thread: { Args: { p_token: string }; Returns: Json };
@@ -4058,6 +4090,7 @@ export type Database = {
       };
       unclaim_plan_alert: { Args: { p_event: string }; Returns: undefined };
       unclaim_support_alert: { Args: { p_thread: string }; Returns: undefined };
+      unclaim_support_assistant: { Args: { p_thread: string }; Returns: undefined };
       undo_no_show: { Args: { p_id: string }; Returns: undefined };
       unique_business_code: { Args: { p_name: string }; Returns: string };
       unregister_push_token: { Args: { p_token: string }; Returns: undefined };

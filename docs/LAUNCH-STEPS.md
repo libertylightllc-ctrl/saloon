@@ -156,3 +156,27 @@ pages in every language:
    **Make platform owner**. Today the only platform owner is the Demo Shop owner's account, so add the dev account
    **before** deleting Demo Shop.
 3. Sign in with the dev account → **Open the platform console**.
+
+## K · Claude answers Help & support (5 min)
+
+Until this is done, Help & support works without the AI: messages wait for you in Console → Support (and are emailed
+to you after five minutes once the Resend key from step H is set).
+
+1. https://console.anthropic.com → sign in → **Settings → Billing**: add a card and set a **monthly spend limit**
+   (for example USD 20). Each answer costs about 2 US cents.
+2. **Settings → API keys → Create key** → copy it. It is a secret: **do not send it to me** or paste it in a chat.
+   In Terminal:
+
+```bash
+cd ~/salon-app
+```
+
+```bash
+npx supabase secrets set ANTHROPIC_API_KEY=PASTE_THE_KEY_HERE --project-ref djgxvfbsxnimzblpxcst
+```
+
+   (replace `PASTE_THE_KEY_HERE` with the key before pressing Enter).
+3. Test it: More → Help & support → ask "How do I add a service?" → ✅ within a few seconds an answer marked
+   "Saloqo assistant (AI)". Ask for a refund → ✅ it says a person will follow up, and Console → Support shows
+   **Needs you**.
+4. To pause it any time: Console → Support → switch off **AI assistant answers first**.

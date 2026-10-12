@@ -2089,7 +2089,7 @@
       },
       "where": {
         "title": "Where it is kept",
-        "body": "Your data is stored with Supabase (database, sign-in and file storage) in South Korea. The website and app are delivered by Vercel from servers close to you. Emails go through our email provider, notifications to phones through Expo and Apple or Google, and Google handles “Continue with Google”. These providers process data only for us, under data processing terms, and must keep it confidential and secure.\nThe European Union and the United Kingdom recognise South Korea as protecting personal data adequately. Where a provider handles data in a country without such recognition, such as the United States, the transfer is covered by the European Commission’s standard contractual clauses with the UK addendum and, for Brazil, by the safeguards the LGPD allows, such as standard contractual clauses."
+        "body": "Your data is stored with Supabase (database, sign-in and file storage) in South Korea. The website and app are delivered by Vercel from servers close to you. Emails go through our email provider, notifications to phones through Expo and Apple or Google, and Google handles “Continue with Google”. Help & support messages are answered first by an AI assistant, Claude, provided by Anthropic. These providers process data only for us, under data processing terms, and must keep it confidential and secure.\nThe European Union and the United Kingdom recognise South Korea as protecting personal data adequately. Where a provider handles data in a country without such recognition, such as the United States, the transfer is covered by the European Commission’s standard contractual clauses with the UK addendum and, for Brazil, by the safeguards the LGPD allows, such as standard contractual clauses."
       },
       "share": {
         "title": "Who we share it with",
@@ -2296,7 +2296,11 @@
       "send": "Send answer",
       "sent": "Answer sent",
       "close": "Close conversation",
-      "closedToast": "Conversation closed"
+      "closedToast": "Conversation closed",
+      "needsYou": "Needs you",
+      "aiAnswered": "AI answered",
+      "assistantSwitch": "AI assistant answers first",
+      "assistantHint": "Claude answers new messages straight away and hands a conversation to you when it can’t solve it or someone asks for a person. Your own answer takes a conversation over."
     }
   },
   "profile": {
@@ -2325,7 +2329,7 @@
   },
   "support": {
     "title": "Help & support",
-    "intro": "Something not working, or a question? Write to us here. We answer in this chat and you get a notification.",
+    "intro": "Something not working, or a question? Write to us here. Our AI assistant answers straight away, and a person from the Saloqo team steps in when needed. You get a notification for every answer.",
     "attached": "With each message we see your salon, the app version, your device and the screen you were on, to help us fix it.",
     "attachedGuest": "We see the device and app version you write from, to help us fix it. Your conversation stays on this device: come back to this page to read our answer.",
     "message": "Message",
@@ -2337,10 +2341,11 @@
     "newCount": "{{count}} new",
     "newCount_one": "{{count}} new",
     "contactTitle": "Contact us",
-    "contactIntro": "Tell us what’s wrong or ask anything. We answer by email and here on this page.",
+    "contactIntro": "Tell us what’s wrong or ask anything. Our AI assistant answers straight away, and a person from the Saloqo team steps in when needed. Come back to this page on this device to read the answers.",
     "contactLink": "Need help? Contact us",
     "contactSend": "Send message",
     "name": "Your name",
-    "email": "Your email"
+    "email": "Your email",
+    "assistant": "Saloqo assistant (AI)"
   }
 }

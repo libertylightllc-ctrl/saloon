@@ -42,7 +42,8 @@ export function ChatView({
   return (
     <View style={styles.chat}>
       {messages.map((m) => {
-        const own = m.author === mine;
+        // In the console the assistant writes on support's side; its messages always say they are the AI's.
+        const own = m.author === mine || (mine === 'support' && m.author === 'assistant');
         return (
           <View key={m.id} style={[styles.row, own ? styles.own : styles.theirs]}>
             <View
@@ -57,7 +58,8 @@ export function ChatView({
               testID={`${testID}-message-${m.author}`}
             >
               <Text variant="small" color="textSecondary">
-                {own ? t('support.you') : other} · {dates.at(m.created_at, zone, 'd MMM · HH:mm')}
+                {m.author === 'assistant' ? t('support.assistant') : own ? t('support.you') : other}{' '}
+                · {dates.at(m.created_at, zone, 'd MMM · HH:mm')}
               </Text>
               <Text selectable>{m.body}</Text>
             </View>

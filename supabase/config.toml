@@ -373,6 +373,9 @@ PUSH_ENDPOINT = "http://kong:8000/functions/v1/push-sink"
 # Local only: plan-alert emails the mail-sink stand-in instead of Resend (the key is a placeholder, not a real key).
 EMAIL_ENDPOINT = "http://kong:8000/functions/v1/mail-sink"
 RESEND_API_KEY = "local-mail-sink"
+# Local only: support-assistant talks to the claude-sink stand-in instead of Claude (the key is a placeholder).
+ANTHROPIC_BASE_URL = "http://kong:8000/functions/v1/claude-sink"
+ANTHROPIC_API_KEY = "local-claude-sink"
 
 [analytics]
 # Off locally: the log pipeline is heavy on a 2-CPU Colima VM and unused in development.
@@ -398,4 +401,7 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 verify_jwt = false
 
 [functions.mail-sink]
+verify_jwt = false
+
+[functions.claude-sink]
 verify_jwt = false

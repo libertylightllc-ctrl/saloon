@@ -2089,7 +2089,7 @@
       },
       "where": {
         "title": "Où elles sont conservées",
-        "body": "Vos données sont stockées chez Supabase (base de données, connexion et stockage de fichiers) en Corée du Sud. Le site web et l’app sont distribués par Vercel depuis des serveurs proches de vous. Les e-mails passent par notre prestataire d’e-mail, les notifications vers les téléphones par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Ces prestataires traitent les données uniquement pour notre compte, conformément à des conditions de traitement des données, et sont tenus de les garder confidentielles et sécurisées.\nL’Union européenne et le Royaume-Uni reconnaissent que la Corée du Sud protège les données personnelles de manière adéquate. Lorsqu’un prestataire traite des données dans un pays qui ne bénéficie pas d’une telle reconnaissance, comme les États-Unis, le transfert est couvert par les clauses contractuelles types de la Commission européenne, assorties de l’addendum du Royaume-Uni, et, pour le Brésil, par les garanties que permet la LGPD, telles que les clauses contractuelles types."
+        "body": "Vos données sont stockées chez Supabase (base de données, connexion et stockage de fichiers) en Corée du Sud. Le site web et l’app sont distribués par Vercel depuis des serveurs proches de vous. Les e-mails passent par notre prestataire d’e-mail, les notifications vers les téléphones par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Les messages envoyés via Aide et assistance reçoivent d’abord une réponse d’un assistant IA, Claude, fourni par Anthropic. Ces prestataires traitent les données uniquement pour notre compte, conformément à des conditions de traitement des données, et sont tenus de les garder confidentielles et sécurisées.\nL’Union européenne et le Royaume-Uni reconnaissent que la Corée du Sud protège les données personnelles de manière adéquate. Lorsqu’un prestataire traite des données dans un pays qui ne bénéficie pas d’une telle reconnaissance, comme les États-Unis, le transfert est couvert par les clauses contractuelles types de la Commission européenne, assorties de l’addendum du Royaume-Uni, et, pour le Brésil, par les garanties que permet la LGPD, telles que les clauses contractuelles types."
       },
       "share": {
         "title": "Avec qui nous les partageons",
@@ -2297,7 +2297,11 @@
       "send": "Envoyer la réponse",
       "sent": "Réponse envoyée",
       "close": "Fermer la conversation",
-      "closedToast": "Conversation fermée"
+      "closedToast": "Conversation fermée",
+      "needsYou": "Vous attend",
+      "aiAnswered": "Réponse de l’IA",
+      "assistantSwitch": "L’assistant IA répond en premier",
+      "assistantHint": "Claude répond tout de suite aux nouveaux messages et vous transmet une conversation lorsqu’il ne peut pas résoudre le problème ou qu’on demande à parler à une personne. Dès que vous répondez vous-même, vous prenez la main sur la conversation."
     }
   },
   "profile": {
@@ -2326,7 +2330,7 @@
   },
   "support": {
     "title": "Aide et assistance",
-    "intro": "Quelque chose ne fonctionne pas, ou une question ? Écrivez-nous ici. Nous répondons dans ce chat et vous recevez une notification.",
+    "intro": "Quelque chose ne fonctionne pas, ou une question ? Écrivez-nous ici. Notre assistant IA répond tout de suite, et une personne de l’équipe Saloqo prend le relais si nécessaire. Vous recevez une notification à chaque réponse.",
     "attached": "Avec chaque message, nous voyons votre salon, la version de l’app, votre appareil et l’écran où vous étiez, pour nous aider à corriger le problème.",
     "attachedGuest": "Nous voyons l’appareil et la version de l’app depuis lesquels vous écrivez, pour nous aider à corriger le problème. Votre conversation reste sur cet appareil : revenez sur cette page pour lire notre réponse.",
     "message": "Message",
@@ -2338,10 +2342,11 @@
     "newCount": "{{count}} nouveaux",
     "newCount_one": "{{count}} nouveau",
     "contactTitle": "Nous contacter",
-    "contactIntro": "Dites-nous ce qui ne va pas ou posez-nous vos questions. Nous répondons par e-mail et ici, sur cette page.",
+    "contactIntro": "Dites-nous ce qui ne va pas ou posez-nous vos questions. Notre assistant IA répond tout de suite, et une personne de l’équipe Saloqo prend le relais si nécessaire. Revenez sur cette page depuis cet appareil pour lire les réponses.",
     "contactLink": "Besoin d’aide ? Contactez-nous",
     "contactSend": "Envoyer le message",
     "name": "Votre nom",
-    "email": "Votre e-mail"
+    "email": "Votre e-mail",
+    "assistant": "Assistant Saloqo (IA)"
   }
 }

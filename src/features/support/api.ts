@@ -16,7 +16,7 @@ import { lastScreen } from './lastScreen';
 
 export interface SupportMessage {
   id: string;
-  author: 'user' | 'support';
+  author: 'user' | 'support' | 'assistant';
   body: string;
   created_at: string;
 }
@@ -142,7 +142,7 @@ export interface SupportThreadRow {
   status: 'open' | 'closed';
   created_at: string;
   last_message_at: string;
-  last_from: 'user' | 'support';
+  last_from: 'user' | 'support' | 'assistant';
   unread: number;
   who: string | null;
   email: string | null;
@@ -151,6 +151,8 @@ export interface SupportThreadRow {
   role: string | null;
   context: Record<string, string>;
   preview: string | null;
+  /** A person is needed: the assistant handed it over, or a platform owner answered. */
+  handover: boolean;
 }
 
 export function useSupportInbox() {
@@ -202,5 +204,31 @@ export function useSupportClose() {
       if (error) throw error;
     },
     onSuccess: () => client.invalidateQueries({ queryKey: ['platform', 'support'] }),
+  });
+}
+
+/** Whether Claude answers new messages first (platform owners switch it). */
+export function useSupportAssistant() {
+  return useQuery({
+    queryKey: ['platform', 'support-assistant'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('platform_settings')
+        .select('support_assistant')
+        .single();
+      if (error) throw error;
+      return data.support_assistant;
+    },
+  });
+}
+
+export function useSetSupportAssistant() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (on: boolean) => {
+      const { error } = await supabase.rpc('admin_set_support_assistant', { p_on: on });
+      if (error) throw error;
+    },
+    onSettled: () => client.invalidateQueries({ queryKey: ['platform', 'support-assistant'] }),
   });
 }

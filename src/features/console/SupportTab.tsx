@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import {
+  useSetSupportAssistant,
+  useSupportAssistant,
   useSupportClose,
   useSupportInbox,
   useSupportReply,
@@ -20,6 +22,7 @@ import {
   ListRow,
   QueryState,
   StatusPill,
+  SwitchRow,
   Text,
   useToast,
 } from '@/ui';
@@ -30,8 +33,17 @@ export function SupportTab() {
   const dates = useDates();
   const inbox = useSupportInbox();
   const [open, setOpen] = useState<SupportThreadRow | null>(null);
+  const assistant = useSupportAssistant();
+  const setAssistant = useSetSupportAssistant();
   return (
     <>
+      <SwitchRow
+        label={t('console.support.assistantSwitch')}
+        hint={t('console.support.assistantHint')}
+        value={assistant.data ?? true}
+        onChange={(on) => setAssistant.mutate(on)}
+        testID="console-support-assistant"
+      />
       <QueryState
         query={inbox}
         isEmpty={(rows) => rows.length === 0}
@@ -64,6 +76,12 @@ export function SupportTab() {
                         status="pending_approval"
                         label={t('console.support.new', { count: r.unread })}
                       />
+                    ) : null}
+                    {r.status === 'open' && r.handover && r.last_from !== 'support' ? (
+                      <StatusPill status="expired" label={t('console.support.needsYou')} />
+                    ) : null}
+                    {r.last_from === 'assistant' && !r.handover ? (
+                      <StatusPill status="valid" label={t('console.support.aiAnswered')} />
                     ) : null}
                     {r.status === 'closed' ? (
                       <StatusPill status="cancelled" label={t('console.support.closed')} />

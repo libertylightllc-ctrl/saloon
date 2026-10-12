@@ -85,7 +85,9 @@ select is((select type || ' ' || entity_type from notifications where member_id 
 select pg_temp.as_user('00000000-0000-0000-0000-0000000033a0');
 select is(support_unread(), 1, 'one unread answer before opening the chat');
 
--- Platform owners are queued an email for each conversation with a new message.
+-- With the assistant off, platform owners are queued an email for each conversation with a new message.
+select pg_temp.as_admin();
+update platform_settings set support_assistant = false where true;
 select pg_temp.as_service();
 select is((select count(*)::int from claim_support_alerts() where who in ('Omar')), 1, 'the visitor''s message is queued for the platform owners');
 

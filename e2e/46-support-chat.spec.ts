@@ -41,7 +41,7 @@ test('an owner writes to support; the platform owner answers in the console; the
   // The owner: the answer shows in the open chat, and in the bell.
   await expect(id(page, 'support-message-support')).toContainText('Thanks, fixed now.');
   await page.goto('/notifications');
-  await expect(text(page, 'Saloqo support answered')).toBeVisible();
+  await expect(text(page, 'Saloqo support answered').first()).toBeVisible();
 });
 
 test('a visitor who cannot sign in writes from the sign-in screen and reads the answer on the same device', async ({
