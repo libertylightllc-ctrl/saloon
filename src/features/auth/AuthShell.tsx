@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { brand } from '@/config/brand';
-import { LanguageLink } from '@/features/settings/LanguageSheet';
+import { LanguageButton } from '@/features/settings/LanguageSheet';
 import { spacing, tapTarget, useTheme, useThemeMode, type Mode } from '@/theme';
 import { BackButton, BrandMark, Chip, HeaderBand, Screen, Text, useWide } from '@/ui';
 
@@ -41,9 +41,10 @@ function AuthTop({ title, onBack }: { title: string; onBack?: (() => void) | tru
       <View style={styles.wideTop}>
         {back}
         <BrandMark size={48} />
-        <Text variant="display" accessibilityRole="header">
+        <Text variant="display" accessibilityRole="header" style={styles.flex}>
           {title}
         </Text>
+        <LanguageButton />
       </View>
     );
   }
@@ -58,7 +59,9 @@ function AuthTop({ title, onBack }: { title: string; onBack?: (() => void) | tru
             {brand.appName}
           </Text>
         </View>
-        <View style={styles.side} />
+        <View style={[styles.side, styles.sideEnd]}>
+          <LanguageButton onBand={onBand} />
+        </View>
       </View>
       <Text
         variant="h3"
@@ -98,7 +101,6 @@ export function AuthShell({
     >
       <View style={styles.body}>
         {children}
-        <LanguageLink />
       </View>
     </Screen>
   );
@@ -109,7 +111,10 @@ const styles = StyleSheet.create({
   body: { gap: spacing.lg },
   top: { gap: spacing.md, paddingTop: spacing.md },
   topRow: { flexDirection: 'row', alignItems: 'center' },
-  side: { width: tapTarget },
+  // Both sides as wide as the language button, so the logo stays centred with or without a back arrow.
+  side: { width: tapTarget + spacing['2xl'] },
+  sideEnd: { alignItems: 'flex-end' },
+  flex: { flex: 1 },
   lockup: {
     flex: 1,
     flexDirection: 'row',

@@ -2071,7 +2071,7 @@
       },
       "collect": {
         "title": "O que coletamos",
-        "body": "• Sua conta: seu nome, endereço de e-mail e senha (guardada apenas como um hash seguro). Se você continuar com o Google, o Google nos informa seu nome e endereço de e-mail.\n• O que os salões registram: serviços e preços, vendas e recibos, despesas, fornecedores e compras, estoque, contagens de caixa, nomes, telefones e visitas de clientes, nomes, frequência e pagamento da equipe, e documentos como licenças e fotos de recibos.\n• Este aparelho: um token de notificação, se você permitir notificações. Seu idioma e o login memorizado ficam no aparelho.\nNão usamos rastreadores de publicidade e nunca vendemos dados pessoais."
+        "body": "• Sua conta: seu nome, endereço de e-mail e senha (guardada apenas como um hash seguro). Se você continuar com o Google, o Google nos informa seu nome e endereço de e-mail.\n• O que os salões registram: serviços e preços, vendas e recibos, despesas, fornecedores e compras, estoque, contagens de caixa, nomes, telefones e visitas de clientes, nomes, frequência e pagamento da equipe, e documentos como licenças e fotos de recibos.\n• Este aparelho: um token de notificação, se você permitir notificações. Seu idioma e o login memorizado ficam no aparelho.\n• De onde você nos visita: o site identifica seu país pela sua conexão (endereço IP) para mostrar seu idioma e seu preço. Isso não é guardado.\nNão usamos rastreadores de publicidade e nunca vendemos dados pessoais."
       },
       "use": {
         "title": "Como usamos os dados",

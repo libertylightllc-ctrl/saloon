@@ -352,3 +352,10 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 2. A salon with 5 staff logins (6 people) → More → Plan → ✅ AED 70.00 a month, "6 people sign in", and how it is made up.
 3. Staff → Add → turn on App login → ✅ "this login adds AED 10.00 a month".
 4. Platform console → Salons → that salon → ✅ "6 people sign in · AED 70.00 a month"; the amount for 3 months is 210.00.
+
+## 41 · Language and price follow the visitor (1 min)
+
+1. Website (signed out) → ✅ a language button (e.g. "EN") at the top beside Sign in; tap it → Français → ✅ the page is
+   in French and the button says "FR"; open the sign-in page → ✅ the button is at the top there too.
+2. A phone set to a language the app does not have (e.g. German) in Brazil → ✅ the site opens in Portuguese.
+3. A visitor in the UAE → ✅ AED 50.00; elsewhere → ✅ USD 13.99.

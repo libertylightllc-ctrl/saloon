@@ -2071,7 +2071,7 @@
       },
       "collect": {
         "title": "What we collect",
-        "body": "• Your account: your name, email address and password (kept only as a secure hash). If you continue with Google, Google gives us your name and email address.\n• What salons enter: services and prices, sales and receipts, expenses, suppliers and purchases, stock, cash counts, customers’ names, phone numbers and visits, staff names, attendance and pay, and documents such as licences and photos of receipts.\n• This device: a notification token if you allow notifications. Your language and remembered sign-in stay on the device.\nWe use no advertising trackers and we never sell personal data."
+        "body": "• Your account: your name, email address and password (kept only as a secure hash). If you continue with Google, Google gives us your name and email address.\n• What salons enter: services and prices, sales and receipts, expenses, suppliers and purchases, stock, cash counts, customers’ names, phone numbers and visits, staff names, attendance and pay, and documents such as licences and photos of receipts.\n• This device: a notification token if you allow notifications. Your language and remembered sign-in stay on the device.\n• Where you visit from: the website works out the country you are in from your connection (IP address) to show your language and price. It is not stored.\nWe use no advertising trackers and we never sell personal data."
       },
       "use": {
         "title": "How we use it",

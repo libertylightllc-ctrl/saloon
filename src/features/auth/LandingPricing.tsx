@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -5,6 +6,7 @@ import { usePublicPrices } from '@/features/plan/api';
 import { deviceTimeZone } from '@/features/setup/CountryStep';
 import { countryOf } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
+import { visitorCountry } from '@/lib/geo';
 import { formatMoney } from '@/lib/money';
 import { spacing, useTheme } from '@/theme';
 import { Text } from '@/ui';
@@ -12,9 +14,11 @@ import { Text } from '@/ui';
 /**
  * The plan price on the website — the terms charge "the price shown on our website" — read from the same settings the
  * salons are billed from, so the two never disagree. Hidden until it loads. One price, the visitor's (owner,
- * 2026-10-08): the UAE price on a phone or computer set to the UAE's time zone, the international one anywhere else.
+ * 2026-10-08): the UAE price for a visitor in the UAE, the international one anywhere else — where they are by IP
+ * (2026-10-12), or by the device's time zone when that cannot be told.
  */
-function inUae(): boolean {
+function inUae(country: string | null | undefined): boolean {
+  if (country) return country === 'AE';
   const zone = deviceTimeZone();
   return zone !== null && (countryOf('AE')?.timezones.includes(zone) ?? false);
 }
@@ -23,11 +27,12 @@ export function LandingPricing({ wide }: { wide: boolean }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const prices = usePublicPrices();
+  const where = useQuery({ queryKey: ['visitor-country'], queryFn: () => visitorCountry(), staleTime: Infinity });
   const p = prices.data;
-  if (!p) return null;
+  if (!p || where.isPending) return null;
   const money = (minor: number, currency: string) => (isCurrency(currency) ? formatMoney(minor, currency) : `${currency} ${minor / 100}`);
   // Priced by people, per salon (owner, 2026-10-08): the base covers the first few who sign in; each one after adds.
-  const uae = inUae();
+  const uae = inUae(where.data);
   const price = uae ? money(p.price_per_branch_minor, p.currency) : money(p.intl_price_per_branch_minor, p.intl_currency);
   const extra = uae ? money(p.extra_person_minor, p.currency) : money(p.intl_extra_person_minor, p.intl_currency);
   return (

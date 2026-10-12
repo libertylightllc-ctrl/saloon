@@ -4,7 +4,7 @@ import { getLocales } from 'expo-localization';
 import { I18nManager } from 'react-native';
 
 import { i18n, isRtlLanguage } from './i18n';
-import { bootstrapLanguage, changeLanguage, pickLanguage } from './language';
+import { bootstrapLanguage, changeLanguage, countryLanguage, pickLanguage } from './language';
 
 jest.mock('expo', () => ({ reloadAppAsync: jest.fn(() => Promise.resolve()) }));
 jest.mock('expo-localization', () => ({ getLocales: jest.fn(() => [{ languageCode: 'en' }]) }));
@@ -35,6 +35,24 @@ describe('pickLanguage', () => {
   it('falls back to English', () => {
     expect(pickLanguage(null, ['de', null])).toBe('en');
     expect(pickLanguage(null, [])).toBe('en');
+  });
+
+  it('uses the country the device is in only when the phone language is not one of ours', () => {
+    expect(pickLanguage(null, ['de'], 'BR')).toBe('pt');
+    expect(pickLanguage(null, ['en'], 'BR')).toBe('en');
+    expect(pickLanguage('fr', ['de'], 'BR')).toBe('fr');
+    expect(pickLanguage(null, ['de'], 'DE')).toBe('en');
+  });
+});
+
+describe('countryLanguage', () => {
+  it('is the main language of the country, where the app has it', () => {
+    expect(countryLanguage('AE')).toBe('ar');
+    expect(countryLanguage('PK')).toBe('ur');
+    expect(countryLanguage('IN')).toBe('hi');
+    expect(countryLanguage('MX')).toBe('es');
+    expect(countryLanguage('GB')).toBeNull();
+    expect(countryLanguage(null)).toBeNull();
   });
 });
 
@@ -68,6 +86,26 @@ describe('changeLanguage', () => {
 });
 
 describe('bootstrapLanguage', () => {
+  const geo = (country: string) =>
+    jest.fn(() => Promise.resolve({ ok: true, headers: { get: () => 'application/json' }, json: () => Promise.resolve({ country }) }));
+
+  it('does not ask where the device is when its language is one of ours', async () => {
+    const fetchMock = geo('BR');
+    global.fetch = fetchMock as unknown as typeof fetch;
+    await bootstrapLanguage();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(i18n.language).toBe('en');
+  });
+
+  it('opens in the language of the country when the phone language is not one of ours', async () => {
+    jest.mocked(getLocales).mockReturnValueOnce([{ languageCode: 'de' }] as unknown as ReturnType<typeof getLocales>);
+    const fetchMock = geo('BR');
+    global.fetch = fetchMock as unknown as typeof fetch;
+    await bootstrapLanguage();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(i18n.language).toBe('pt');
+  });
+
   it('uses the device language on first launch', async () => {
     jest.mocked(getLocales).mockReturnValueOnce([{ languageCode: 'hi' }] as never);
     expect(await bootstrapLanguage()).toBe('hi');

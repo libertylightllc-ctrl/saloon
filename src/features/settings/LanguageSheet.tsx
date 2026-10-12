@@ -56,6 +56,40 @@ export function LanguageLink() {
   );
 }
 
+/**
+ * The language at the top of the welcome and sign-in pages (owner, 2026-10-12: "the language button on the top"): its
+ * code ("EN", "AR") beside the languages icon; it opens the list. `onBand`: drawn on the coloured header.
+ */
+export function LanguageButton({ onBand = false }: { onBand?: boolean }) {
+  const { i18n, t } = useTranslation();
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const current = LANGUAGES.find((l) => l.code === i18n.language) ?? LANGUAGES[0];
+  const color = onBand ? theme.colors.onPrimary : theme.colors.text;
+  return (
+    <>
+      <Pressable
+        onPress={() => setOpen(true)}
+        accessibilityRole="button"
+        accessibilityLabel={`${t('language.title')}: ${current.nativeName}`}
+        hitSlop={8}
+        style={[
+          styles.button,
+          { height: theme.sizes.buttonSm, borderRadius: theme.radius.button, borderColor: onBand ? color : theme.colors.border },
+        ]}
+        testID="language-button"
+      >
+        <Icon name="languages" size={16} color={color} />
+        <Text variant="bodyStrong" color={onBand ? 'onPrimary' : 'text'}>
+          {current.code.toUpperCase()}
+        </Text>
+      </Pressable>
+      <LanguageSheet open={open} onClose={() => setOpen(false)} />
+    </>
+  );
+}
+
 const styles = StyleSheet.create({
+  button: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.md, borderWidth: 1 },
   link: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, alignSelf: 'center', padding: spacing.sm },
 });

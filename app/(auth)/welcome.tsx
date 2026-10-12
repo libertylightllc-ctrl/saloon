@@ -9,7 +9,7 @@ import { LanguageTicker } from '@/features/auth/LanguageTicker';
 import { AppPreview, FeatureCard, Step, TypeCard } from '@/features/auth/LandingParts';
 import { LandingPricing } from '@/features/auth/LandingPricing';
 import { useSalonType } from '@/features/auth/salonType';
-import { LanguageLink } from '@/features/settings/LanguageSheet';
+import { LanguageButton, LanguageLink } from '@/features/settings/LanguageSheet';
 import { screenPadding, spacing, useTheme, type Mode } from '@/theme';
 import { BrandMark, Button, ContourPattern, Icon, Text, type IconName } from '@/ui';
 
@@ -73,7 +73,10 @@ export default function Welcome() {
               {brand.appName}
             </Text>
           </View>
-          <Button label={t('auth.landing.signIn')} variant="inverse" size="sm" onPress={() => toTypes('/sign-in')} testID="landing-sign-in" />
+          <View style={styles.topActions}>
+            <LanguageButton onBand />
+            <Button label={t('auth.landing.signIn')} variant="inverse" size="sm" onPress={() => toTypes('/sign-in')} testID="landing-sign-in" />
+          </View>
         </View>
         <View style={[styles.inner, wide ? styles.heroRow : styles.heroColumn]}>
           <View style={[styles.heroText, wide && styles.flex]}>
@@ -190,6 +193,7 @@ const styles = StyleSheet.create({
   inner: { width: '100%', maxWidth: 1120, alignSelf: 'center', paddingHorizontal: screenPadding },
   hero: { overflow: 'hidden', paddingBottom: spacing['2xl'] * 2, gap: spacing['2xl'] },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  topActions: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   heroRow: { flexDirection: 'row', alignItems: 'center', gap: spacing['2xl'] * 2 },
   heroColumn: { gap: spacing['2xl'] },
