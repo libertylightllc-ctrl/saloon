@@ -2089,7 +2089,7 @@
       },
       "where": {
         "title": "Où elles sont conservées",
-        "body": "Vos données sont stockées chez Supabase (base de données, connexion et stockage de fichiers) en Corée du Sud. Le site web et l’app sont distribués par Vercel depuis des serveurs proches de vous. Les e-mails passent par notre prestataire d’e-mail, les notifications vers les téléphones par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Les messages envoyés via Aide et assistance reçoivent d’abord une réponse d’un assistant IA, Claude, fourni par Anthropic. Ces prestataires traitent les données uniquement pour notre compte, conformément à des conditions de traitement des données, et sont tenus de les garder confidentielles et sécurisées.\nL’Union européenne et le Royaume-Uni reconnaissent que la Corée du Sud protège les données personnelles de manière adéquate. Lorsqu’un prestataire traite des données dans un pays qui ne bénéficie pas d’une telle reconnaissance, comme les États-Unis, le transfert est couvert par les clauses contractuelles types de la Commission européenne, assorties de l’addendum du Royaume-Uni, et, pour le Brésil, par les garanties que permet la LGPD, telles que les clauses contractuelles types."
+        "body": "Vos données sont stockées chez Supabase (base de données, connexion et stockage de fichiers) en Corée du Sud. Le site web et l’app sont distribués par Vercel depuis des serveurs proches de vous. Les e-mails passent par notre prestataire d’e-mail, les notifications vers les téléphones par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Les messages envoyés via Aide et assistance reçoivent d’abord une réponse d’un assistant IA exploité pour notre compte par Groq ou par Anthropic (Claude) ; ces prestataires n’utilisent les messages que pour y répondre et ne s’en servent pas pour entraîner leurs modèles. Ces prestataires traitent les données uniquement pour notre compte, conformément à des conditions de traitement des données, et sont tenus de les garder confidentielles et sécurisées.\nL’Union européenne et le Royaume-Uni reconnaissent que la Corée du Sud protège les données personnelles de manière adéquate. Lorsqu’un prestataire traite des données dans un pays qui ne bénéficie pas d’une telle reconnaissance, comme les États-Unis, le transfert est couvert par les clauses contractuelles types de la Commission européenne, assorties de l’addendum du Royaume-Uni, et, pour le Brésil, par les garanties que permet la LGPD, telles que les clauses contractuelles types."
       },
       "share": {
         "title": "Avec qui nous les partageons",
@@ -2301,7 +2301,7 @@
       "needsYou": "Vous attend",
       "aiAnswered": "Réponse de l’IA",
       "assistantSwitch": "L’assistant IA répond en premier",
-      "assistantHint": "Claude répond tout de suite aux nouveaux messages et vous transmet une conversation lorsqu’il ne peut pas résoudre le problème ou qu’on demande à parler à une personne. Dès que vous répondez vous-même, vous prenez la main sur la conversation."
+      "assistantHint": "L’assistant IA répond tout de suite aux nouveaux messages et vous transmet une conversation lorsqu’il ne peut pas résoudre le problème ou qu’on demande à parler à une personne. Dès que vous répondez vous-même, vous prenez la main sur la conversation."
     }
   },
   "profile": {
@@ -2347,6 +2347,76 @@
     "contactSend": "Envoyer le message",
     "name": "Votre nom",
     "email": "Votre e-mail",
-    "assistant": "Assistant Saloqo (IA)"
+    "assistant": "Assistant Saloqo (IA)",
+    "faq": {
+      "forgotPassword": {
+        "q": "J’ai oublié mon mot de passe",
+        "a": "Propriétaires : sur la page de connexion, touchez « Mot de passe oublié ? » et saisissez le code reçu par e-mail. Employés : demandez au propriétaire du salon d’en définir un nouveau dans Plus → Équipe → votre nom → Mot de passe et connexion."
+      },
+      "staffPassword": {
+        "q": "Comment donner un nouveau mot de passe à un employé ?",
+        "a": "Plus → Équipe → la personne → Mot de passe et connexion → définissez un nouveau mot de passe, puis communiquez-le-lui."
+      },
+      "staffSignIn": {
+        "q": "Comment l’équipe se connecte-t-elle ?",
+        "a": "Sur la page de connexion, l’employé choisit « Employé » et saisit le code du salon, son nom d’utilisateur et son mot de passe. Le propriétaire trouve le code du salon sur la page Plus et donne un accès à chaque personne dans Plus → Équipe."
+      },
+      "loginDisabled": {
+        "q": "Le message « Cet accès est désactivé » s’affiche",
+        "a": "Le propriétaire du salon a désactivé cet accès ou retiré la personne, ou le salon a été fermé. Demandez au propriétaire : il peut réintégrer la personne dans Plus → Équipe."
+      },
+      "price": {
+        "q": "Combien coûte Saloqo ?",
+        "a": "Un seul prix par salon, quel que soit le nombre de succursales. Aux Émirats arabes unis, AED 50 par mois jusqu’à 4 personnes qui se connectent, puis AED 10 par personne supplémentaire. Ailleurs, USD 13.99 par mois jusqu’à 4 personnes, puis USD 2.99 par personne supplémentaire. La mise en place est gratuite."
+      },
+      "payPlan": {
+        "q": "Comment payer ou activer mon abonnement ?",
+        "a": "Plus → Abonnement et facturation → choisissez 1, 3, 6 ou 12 mois → « Demander l’activation ». Payez par virement bancaire avec le code de votre salon en référence, ou via le lien de paiement par carte affiché à cet endroit. L’abonnement s’active dès réception du paiement."
+      },
+      "planInactive": {
+        "q": "Rien ne s’enregistre, ou mon abonnement n’est pas actif",
+        "a": "Sans abonnement actif, rien de nouveau ne peut être enregistré, mais vos données sont conservées. Le propriétaire ouvre Plus → Abonnement et facturation pour l’activer. Si vous avez déjà payé, écrivez-nous ci-dessous."
+      },
+      "addService": {
+        "q": "Comment ajouter un service ?",
+        "a": "Plus → Services → Ajouter un service : son nom, son prix, sa durée et sa catégorie."
+      },
+      "addStaff": {
+        "q": "Comment ajouter un employé ?",
+        "a": "Plus → Équipe → Ajouter un employé : son nom, son poste et sa rémunération. Activez « Peut se connecter à l’app » pour lui donner un nom d’utilisateur et un mot de passe."
+      },
+      "openDays": {
+        "q": "Comment modifier nos jours d’ouverture ?",
+        "a": "Plus → Paramètres de la succursale → Jours d’ouverture : touchez un jour pour l’activer ou le désactiver, puis Enregistrer. Les réservations suivent les jours d’ouverture et les horaires de l’équipe."
+      },
+      "receipts": {
+        "q": "Le reçu ne s’imprime pas, ou je veux l’envoyer sur WhatsApp",
+        "a": "Plus → Paramètres de la succursale → Reçu client : Aucun, Imprimer / partager ou WhatsApp. Sur un ordinateur, le reçu ouvre la fenêtre d’impression ; sur un téléphone, vous pouvez le partager ou l’envoyer sur WhatsApp."
+      },
+      "refund": {
+        "q": "Comment rembourser une vente ?",
+        "a": "Ouvrez la vente (Plus → Ventes) → Rembourser, avec un motif. Seul le propriétaire rembourse ; un caissier peut le lui demander, et le propriétaire reçoit une notification. Les ventes ne sont jamais supprimées."
+      },
+      "sync": {
+        "q": "Les modifications n’apparaissent pas sur un autre téléphone",
+        "a": "Vérifiez la connexion internet, puis touchez le bouton d’actualisation dans Accueil ou Plus. Les modifications arrivent sur tous les téléphones du salon en quelques secondes."
+      },
+      "language": {
+        "q": "Comment changer la langue ?",
+        "a": "Plus → Langue, ou le bouton de langue en haut du site web et de la page de connexion."
+      },
+      "cashClosing": {
+        "q": "Comment clôturer la journée ?",
+        "a": "Plus → Clôture de caisse → comptez les espèces et touchez « Envoyer pour approbation ». Le propriétaire l’approuve et la journée est verrouillée."
+      },
+      "deleteAccount": {
+        "q": "Comment supprimer mon compte ?",
+        "a": "Seul le propriétaire peut le faire : Plus → Supprimer mon compte. Les documents financiers exigés par la loi sont conservés."
+      }
+    },
+    "faqTitle": "Questions fréquentes",
+    "faqMatches": "Ceci pourrait vous aider",
+    "faqAll": "Voir toutes les questions",
+    "faqNotAnswered": "Pas de réponse ici ? Écrivez votre message ci-dessous."
   }
 }

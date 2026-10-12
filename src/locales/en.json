@@ -2089,7 +2089,7 @@
       },
       "where": {
         "title": "Where it is kept",
-        "body": "Your data is stored with Supabase (database, sign-in and file storage) in South Korea. The website and app are delivered by Vercel from servers close to you. Emails go through our email provider, notifications to phones through Expo and Apple or Google, and Google handles “Continue with Google”. Help & support messages are answered first by an AI assistant, Claude, provided by Anthropic. These providers process data only for us, under data processing terms, and must keep it confidential and secure.\nThe European Union and the United Kingdom recognise South Korea as protecting personal data adequately. Where a provider handles data in a country without such recognition, such as the United States, the transfer is covered by the European Commission’s standard contractual clauses with the UK addendum and, for Brazil, by the safeguards the LGPD allows, such as standard contractual clauses."
+        "body": "Your data is stored with Supabase (database, sign-in and file storage) in South Korea. The website and app are delivered by Vercel from servers close to you. Emails go through our email provider, notifications to phones through Expo and Apple or Google, and Google handles “Continue with Google”. Help & support messages are answered first by an AI assistant run for us by Groq, or by Anthropic (Claude); they use the messages only to answer them and do not train on them. These providers process data only for us, under data processing terms, and must keep it confidential and secure.\nThe European Union and the United Kingdom recognise South Korea as protecting personal data adequately. Where a provider handles data in a country without such recognition, such as the United States, the transfer is covered by the European Commission’s standard contractual clauses with the UK addendum and, for Brazil, by the safeguards the LGPD allows, such as standard contractual clauses."
       },
       "share": {
         "title": "Who we share it with",
@@ -2300,7 +2300,7 @@
       "needsYou": "Needs you",
       "aiAnswered": "AI answered",
       "assistantSwitch": "AI assistant answers first",
-      "assistantHint": "Claude answers new messages straight away and hands a conversation to you when it can’t solve it or someone asks for a person. Your own answer takes a conversation over."
+      "assistantHint": "The AI assistant answers new messages straight away and hands a conversation to you when it can’t solve it or someone asks for a person. Your own answer takes a conversation over."
     }
   },
   "profile": {
@@ -2346,6 +2346,76 @@
     "contactSend": "Send message",
     "name": "Your name",
     "email": "Your email",
-    "assistant": "Saloqo assistant (AI)"
+    "assistant": "Saloqo assistant (AI)",
+    "faq": {
+      "forgotPassword": {
+        "q": "I forgot my password",
+        "a": "Owners: on the sign-in page tap “Forgot password?” and enter the code we email you. Staff: ask the salon owner to set a new one in More → Staff → you → Password & sign-in."
+      },
+      "staffPassword": {
+        "q": "How do I give a staff member a new password?",
+        "a": "More → Staff → the person → Password & sign-in → set a new password, then tell them."
+      },
+      "staffSignIn": {
+        "q": "How do staff sign in?",
+        "a": "On the sign-in page they choose “Staff” and enter the salon code, their username and their password. The owner finds the salon code on the More page and gives each person a login in More → Staff."
+      },
+      "loginDisabled": {
+        "q": "It says “This login is disabled”",
+        "a": "The salon owner switched that login off or removed the person, or the salon was closed. Ask the owner: they can bring the person back in More → Staff."
+      },
+      "price": {
+        "q": "How much does Saloqo cost?",
+        "a": "One price per salon, whatever the number of branches. In the UAE AED 50 a month for up to 4 people who sign in, then AED 10 for each extra person. Elsewhere USD 13.99 a month for up to 4 people, then USD 2.99 for each extra person. Setting up is free."
+      },
+      "payPlan": {
+        "q": "How do I pay or switch on my plan?",
+        "a": "More → Plan & billing → choose 1, 3, 6 or 12 months → ask for the plan. Pay by bank transfer with your salon code as the reference, or with the card link shown there. The plan switches on when the payment arrives."
+      },
+      "planInactive": {
+        "q": "Nothing saves, or my plan isn’t active",
+        "a": "Without an active plan nothing new can be saved, but your data stays. The owner opens More → Plan & billing to switch it on. If you have already paid, write to us below."
+      },
+      "addService": {
+        "q": "How do I add a service?",
+        "a": "More → Services → Add service: its name, price, time and category."
+      },
+      "addStaff": {
+        "q": "How do I add a staff member?",
+        "a": "More → Staff → Add: their name, job and pay. Turn on “Can sign in to the app” to give them a username and password."
+      },
+      "openDays": {
+        "q": "How do I change our open days?",
+        "a": "More → Branch settings → Open days: tap a day to turn it on or off, then Save. Bookings follow the open days and the staff shifts."
+      },
+      "receipts": {
+        "q": "The receipt doesn’t print, or I want to send it on WhatsApp",
+        "a": "More → Branch settings → Customer receipt: none, printed or WhatsApp. On a computer the receipt opens the print window; on a phone you can share it or send it on WhatsApp."
+      },
+      "refund": {
+        "q": "How do I refund a sale?",
+        "a": "Open the sale (More → Sales) → Refund, with a reason. Only the owner refunds; a cashier can ask the owner, who is notified. Sales are never deleted."
+      },
+      "sync": {
+        "q": "Changes don’t show on another phone",
+        "a": "Check the internet connection, then tap the refresh button on Home or More. Changes reach every phone of the salon within seconds."
+      },
+      "language": {
+        "q": "How do I change the language?",
+        "a": "More → Language, or the language button at the top of the website and the sign-in page."
+      },
+      "cashClosing": {
+        "q": "How do I close the day?",
+        "a": "More → Cash closing → count the cash and submit it for approval. The owner approves it and the day locks."
+      },
+      "deleteAccount": {
+        "q": "How do I delete my account?",
+        "a": "Only the owner can: More → Delete my account. Financial records the law requires are kept."
+      }
+    },
+    "faqTitle": "Common questions",
+    "faqMatches": "These might answer it",
+    "faqAll": "Show all questions",
+    "faqNotAnswered": "Not answered here? Write your message below."
   }
 }

@@ -2089,7 +2089,7 @@
       },
       "where": {
         "title": "Onde os dados ficam guardados",
-        "body": "Seus dados são armazenados na Supabase (banco de dados, login e armazenamento de arquivos), na Coreia do Sul. O site e o app são entregues pela Vercel a partir de servidores próximos a você. Os e-mails passam pelo nosso provedor de e-mail, as notificações para celulares passam pela Expo e pela Apple ou pelo Google, e o Google cuida do “Continuar com Google”. As mensagens de Ajuda e suporte são respondidas primeiro por um assistente de IA, o Claude, fornecido pela Anthropic. Esses provedores tratam os dados apenas para nós, sob termos de tratamento de dados, e devem mantê-los confidenciais e seguros.\nA União Europeia e o Reino Unido reconhecem que a Coreia do Sul protege os dados pessoais de forma adequada. Quando um provedor trata dados em um país que não tem esse reconhecimento, como os Estados Unidos, a transferência é amparada pelas cláusulas contratuais padrão da Comissão Europeia, com o adendo do Reino Unido, e, no caso do Brasil, pelas salvaguardas permitidas pela LGPD, como as cláusulas-padrão contratuais."
+        "body": "Seus dados são armazenados na Supabase (banco de dados, login e armazenamento de arquivos), na Coreia do Sul. O site e o app são entregues pela Vercel a partir de servidores próximos a você. Os e-mails passam pelo nosso provedor de e-mail, as notificações para celulares passam pela Expo e pela Apple ou pelo Google, e o Google cuida do “Continuar com Google”. As mensagens de Ajuda e suporte são respondidas primeiro por um assistente de IA operado para nós pela Groq ou pela Anthropic (Claude); esses provedores usam as mensagens apenas para respondê-las e não as utilizam para treinar seus modelos. Esses provedores tratam os dados apenas para nós, sob termos de tratamento de dados, e devem mantê-los confidenciais e seguros.\nA União Europeia e o Reino Unido reconhecem que a Coreia do Sul protege os dados pessoais de forma adequada. Quando um provedor trata dados em um país que não tem esse reconhecimento, como os Estados Unidos, a transferência é amparada pelas cláusulas contratuais padrão da Comissão Europeia, com o adendo do Reino Unido, e, no caso do Brasil, pelas salvaguardas permitidas pela LGPD, como as cláusulas-padrão contratuais."
       },
       "share": {
         "title": "Com quem compartilhamos",
@@ -2301,7 +2301,7 @@
       "needsYou": "Precisa de você",
       "aiAnswered": "Respondida pela IA",
       "assistantSwitch": "O assistente de IA responde primeiro",
-      "assistantHint": "O Claude responde às novas mensagens na hora e passa a conversa para você quando não consegue resolver ou quando alguém pede para falar com uma pessoa. Quando você mesmo responde, assume a conversa."
+      "assistantHint": "O assistente de IA responde às novas mensagens na hora e passa a conversa para você quando não consegue resolver ou quando alguém pede para falar com uma pessoa. Quando você mesmo responde, assume a conversa."
     }
   },
   "profile": {
@@ -2347,6 +2347,76 @@
     "contactSend": "Enviar mensagem",
     "name": "Seu nome",
     "email": "Seu e-mail",
-    "assistant": "Assistente Saloqo (IA)"
+    "assistant": "Assistente Saloqo (IA)",
+    "faq": {
+      "forgotPassword": {
+        "q": "Esqueci minha senha",
+        "a": "Proprietários: na tela de login, toque em “Esqueceu a senha?” e digite o código que enviamos por e-mail. Equipe: peça ao proprietário do salão para definir uma nova em Mais → Equipe → seu nome → Senha e acesso."
+      },
+      "staffPassword": {
+        "q": "Como dou uma nova senha para alguém da equipe?",
+        "a": "Mais → Equipe → a pessoa → Senha e acesso → defina uma nova senha e depois avise a pessoa."
+      },
+      "staffSignIn": {
+        "q": "Como a equipe entra no app?",
+        "a": "Na tela de login, a pessoa escolhe “Equipe” e digita o código do salão, o nome de usuário e a senha. O proprietário encontra o código do salão na página Mais e dá um login para cada pessoa em Mais → Equipe."
+      },
+      "loginDisabled": {
+        "q": "Aparece “Este login está desativado”",
+        "a": "O proprietário do salão desativou esse login ou removeu a pessoa, ou o salão foi encerrado. Fale com o proprietário: ele pode trazer a pessoa de volta em Mais → Equipe."
+      },
+      "price": {
+        "q": "Quanto custa o Saloqo?",
+        "a": "Um único preço por salão, não importa quantas filiais. Nos Emirados Árabes Unidos, AED 50 por mês para até 4 pessoas que entram no app e depois AED 10 por pessoa a mais. Nos outros países, USD 13.99 por mês para até 4 pessoas e depois USD 2.99 por pessoa a mais. A configuração é grátis."
+      },
+      "payPlan": {
+        "q": "Como pago ou ativo meu plano?",
+        "a": "Mais → Plano e cobrança → escolha 1, 3, 6 ou 12 meses → “Pedir ativação”. Pague por transferência bancária usando o código do salão como referência, ou pelo link de pagamento com cartão mostrado ali. O plano é ativado quando o pagamento chega."
+      },
+      "planInactive": {
+        "q": "Nada é salvo, ou meu plano não está ativo",
+        "a": "Sem um plano ativo nada novo pode ser salvo, mas seus dados continuam guardados. O proprietário abre Mais → Plano e cobrança para ativá-lo. Se você já pagou, escreva para a gente abaixo."
+      },
+      "addService": {
+        "q": "Como adiciono um serviço?",
+        "a": "Mais → Serviços → Adicionar serviço: nome, preço, duração e categoria."
+      },
+      "addStaff": {
+        "q": "Como adiciono alguém à equipe?",
+        "a": "Mais → Equipe → Adicionar funcionário: nome, função e pagamento. Ative “Pode entrar no app” para criar um nome de usuário e uma senha para a pessoa."
+      },
+      "openDays": {
+        "q": "Como mudo os dias de funcionamento?",
+        "a": "Mais → Configurações da filial → Dias de funcionamento: toque em um dia para ativá-lo ou desativá-lo e depois em Salvar. Os agendamentos seguem os dias de funcionamento e os turnos da equipe."
+      },
+      "receipts": {
+        "q": "O recibo não imprime, ou quero enviá-lo pelo WhatsApp",
+        "a": "Mais → Configurações da filial → Recibo do cliente: Nenhum, Imprimir / compartilhar ou WhatsApp. No computador, o recibo abre a janela de impressão; no celular, você pode compartilhá-lo ou enviá-lo pelo WhatsApp."
+      },
+      "refund": {
+        "q": "Como reembolso uma venda?",
+        "a": "Abra a venda (Mais → Vendas) → Reembolsar, com um motivo. Só o proprietário faz reembolsos; um caixa pode pedir ao proprietário, que recebe uma notificação. As vendas nunca são excluídas."
+      },
+      "sync": {
+        "q": "As alterações não aparecem em outro celular",
+        "a": "Verifique a conexão com a internet e toque no botão de atualizar em Início ou Mais. As alterações chegam a todos os celulares do salão em segundos."
+      },
+      "language": {
+        "q": "Como mudo o idioma?",
+        "a": "Mais → Idioma, ou o botão de idioma no topo do site e da tela de login."
+      },
+      "cashClosing": {
+        "q": "Como fecho o dia?",
+        "a": "Mais → Fechamento de caixa → conte o dinheiro e toque em “Enviar para aprovação”. O proprietário aprova e o dia fica bloqueado."
+      },
+      "deleteAccount": {
+        "q": "Como excluo minha conta?",
+        "a": "Só o proprietário pode: Mais → Excluir minha conta. Os registros financeiros exigidos por lei são mantidos."
+      }
+    },
+    "faqTitle": "Perguntas frequentes",
+    "faqMatches": "Isto pode ajudar",
+    "faqAll": "Ver todas as perguntas",
+    "faqNotAnswered": "Não encontrou a resposta? Escreva sua mensagem abaixo."
   }
 }

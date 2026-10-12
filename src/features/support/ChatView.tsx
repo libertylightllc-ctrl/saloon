@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -22,6 +22,8 @@ export function ChatView({
   sending,
   error,
   sendLabel,
+  beforeComposer,
+  onDraftChange,
   testID = 'chat',
 }: {
   messages: SupportMessage[];
@@ -31,6 +33,9 @@ export function ChatView({
   sending: boolean;
   error: unknown;
   sendLabel?: string;
+  /** Shown just above the message box (the common questions that match what is being typed). */
+  beforeComposer?: ReactNode;
+  onDraftChange?: (text: string) => void;
   testID?: string;
 }) {
   const { t } = useTranslation();
@@ -66,11 +71,15 @@ export function ChatView({
           </View>
         );
       })}
+      {beforeComposer}
       <TextField
         label={t('support.message')}
         placeholder={t('support.placeholder')}
         value={body}
-        onChangeText={setBody}
+        onChangeText={(text) => {
+          setBody(text);
+          onDraftChange?.(text);
+        }}
         multiline
         maxLength={2000}
         testID={`${testID}-input`}
@@ -81,7 +90,12 @@ export function ChatView({
         icon="send"
         disabled={!body.trim()}
         loading={sending}
-        onPress={() => onSend(body, () => setBody(''))}
+        onPress={() =>
+          onSend(body, () => {
+            setBody('');
+            onDraftChange?.('');
+          })
+        }
         testID={`${testID}-send`}
       />
     </View>

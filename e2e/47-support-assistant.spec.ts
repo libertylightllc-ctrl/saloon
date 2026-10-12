@@ -1,5 +1,5 @@
 /**
- * Claude answers Help & support first (owner, 2026-10-12). Locally the claude-sink stand-in plays Claude: a password
+ * The AI answers Help & support first (owner, 2026-10-12). Locally the ai-sink stand-in plays the AI: a password
  * question gets steps, a refund is handed to a person. The platform owner sees "Needs you" and answers; their answer
  * takes the conversation over.
  */

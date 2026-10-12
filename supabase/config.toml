@@ -373,9 +373,12 @@ PUSH_ENDPOINT = "http://kong:8000/functions/v1/push-sink"
 # Local only: plan-alert emails the mail-sink stand-in instead of Resend (the key is a placeholder, not a real key).
 EMAIL_ENDPOINT = "http://kong:8000/functions/v1/mail-sink"
 RESEND_API_KEY = "local-mail-sink"
-# Local only: support-assistant talks to the claude-sink stand-in instead of Claude (the key is a placeholder).
-ANTHROPIC_BASE_URL = "http://kong:8000/functions/v1/claude-sink"
-ANTHROPIC_API_KEY = "local-claude-sink"
+# Local only: support-assistant talks to the ai-sink stand-in instead of Groq (the key is a placeholder). With the
+# GROQ lines removed it uses the Claude ones (to try the Claude Haiku path).
+GROQ_BASE_URL = "http://kong:8000/functions/v1/ai-sink"
+GROQ_API_KEY = "local-ai-sink"
+ANTHROPIC_BASE_URL = "http://kong:8000/functions/v1/ai-sink"
+ANTHROPIC_API_KEY = "local-ai-sink"
 
 [analytics]
 # Off locally: the log pipeline is heavy on a 2-CPU Colima VM and unused in development.
@@ -403,5 +406,5 @@ verify_jwt = false
 [functions.mail-sink]
 verify_jwt = false
 
-[functions.claude-sink]
+[functions.ai-sink]
 verify_jwt = false

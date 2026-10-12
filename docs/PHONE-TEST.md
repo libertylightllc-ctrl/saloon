@@ -370,10 +370,16 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 4. Signed out: sign-in page → **Need help? Contact us** → name, email, message → Send → ✅ shown; answer it from the
    console → come back to Contact us on the same phone → ✅ the answer is there.
 
-## 43 · Claude answers support (2 min, after launch step K)
+## 43 · The AI answers support (2 min, after launch step K)
 
 1. More → Help & support → "How do I add a service?" → ✅ within seconds an answer marked "Saloqo assistant (AI)", in
    your language.
 2. "I paid but my plan is still off" → ✅ it says a person will follow up; the dev account: Console → Support → ✅
    **Needs you** on that conversation → answer it → ✅ the phone gets your answer; the assistant stays out of it.
 3. Console → Support → switch off **AI assistant answers first** → write again → ✅ no AI answer; switch it back on.
+
+## 44 · Common questions (1 min)
+
+1. More → Help & support → ✅ "Common questions"; tap "How much does Saloqo cost?" → ✅ the answer opens.
+2. Type "the receipt is not printing" in the message box → ✅ "These might answer it" with the receipt question.
+3. Signed out: sign-in page → Need help? Contact us → ✅ the same questions, in the chosen language.

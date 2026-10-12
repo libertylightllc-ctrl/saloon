@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -6,12 +7,14 @@ import { HeaderBand, QueryState, Screen, Text } from '@/ui';
 
 import { useSupportMine, useSupportSend } from './api';
 import { ChatView } from './ChatView';
+import { CommonQuestions } from './CommonQuestions';
 
 /** Help & support for anyone signed in (More → Help & support): one running conversation with Saloqo. */
 export function SupportScreen() {
   const { t } = useTranslation();
   const thread = useSupportMine();
   const send = useSupportSend();
+  const [draft, setDraft] = useState('');
   return (
     <Screen header={<HeaderBand title={t('support.title')} onBack />}>
       <View style={styles.body}>
@@ -31,6 +34,8 @@ export function SupportScreen() {
                 onSend={(body, done) => send.mutate(body, { onSuccess: done })}
                 sending={send.isPending}
                 error={send.error}
+                beforeComposer={<CommonQuestions query={draft} browse={th.messages.length === 0} />}
+                onDraftChange={setDraft}
                 testID="support"
               />
             </View>
