@@ -114,18 +114,12 @@ switch their plan on. Card payments inside the app come later.
    account name, IBAN, SWIFT, and/or a card payment link (for example a Stripe Payment Link, PayPal, Ziina or
    Network International pay-by-link) → **Save**.
 3. **Email alerts.** https://resend.com → **API Keys → Create API key** (Sending access) → copy it. It is a secret:
-   **do not send it to me.** In Terminal:
+   **do not send it to me.**
+   1. Open https://supabase.com/dashboard/project/djgxvfbsxnimzblpxcst/functions/secrets
+   2. **Add new secret** → Name `RESEND_API_KEY` → Value: paste the key → **Save**.
 
-```bash
-cd ~/salon-app
-```
-
-```bash
-npx supabase secrets set RESEND_API_KEY=PASTE_THE_KEY_HERE --project-ref djgxvfbsxnimzblpxcst
-```
-
-   (replace `PASTE_THE_KEY_HERE` with the key before pressing Enter). From then on every request emails the platform
-   owner's sign-in address; requests made before that are emailed within 10 minutes.
+   From then on every request emails the platform owner's sign-in address; requests made before that are emailed
+   within 10 minutes.
 4. When the money arrives: More → Salons & plans → the salon → **Record payment**. Their plan starts at once.
 
 ## I · Privacy for the EU, the UK and Brazil (before signing up salons there)
@@ -159,21 +153,16 @@ pages in every language:
 
 ## K · The AI answers Help & support — free with Groq (5 min)
 
+Secrets go in through the Supabase dashboard only. Do not run `npx supabase secrets set` inside the `salon-app`
+folder: it also uploads the test-only settings from `supabase/config.toml` to the live project (2026-10-12).
+
 Until this is done, Help & support works without the AI: the common questions answer people instantly, and other
 messages wait for you in Console → Support (emailed to you after five minutes once the Resend key from step H is set).
 
 1. https://console.groq.com → sign up (free, no card) → **API Keys → Create API Key** → copy it. It is a secret:
-   **do not send it to me** or paste it in a chat. In Terminal:
-
-```bash
-cd ~/salon-app
-```
-
-```bash
-npx supabase secrets set GROQ_API_KEY=PASTE_THE_KEY_HERE --project-ref djgxvfbsxnimzblpxcst
-```
-
-   (replace `PASTE_THE_KEY_HERE` with the key before pressing Enter).
+   **do not send it to me** or paste it in a chat.
+   1. Open https://supabase.com/dashboard/project/djgxvfbsxnimzblpxcst/functions/secrets
+   2. **Add new secret** → Name `GROQ_API_KEY` → Value: paste the key → **Save**.
 2. Test it: More → Help & support → write "How do I add a service?" → ✅ within a few seconds an answer marked
    "Saloqo assistant (AI)". Ask for a refund → ✅ it says a person will follow up, and Console → Support shows
    **Needs you**.
@@ -182,5 +171,5 @@ npx supabase secrets set GROQ_API_KEY=PASTE_THE_KEY_HERE --project-ref djgxvfbsx
 4. To pause it any time: Console → Support → switch off **AI assistant answers first**.
 
 Instead of Groq you can use Claude Haiku (about USD 1 for 1,000 answers): at https://console.anthropic.com add a card
-with a monthly spend limit, create a key, and set it the same way as `ANTHROPIC_API_KEY`. If both keys are set, Groq
+with a monthly spend limit, create a key, and add it the same way, named `ANTHROPIC_API_KEY`. If both keys are set, Groq
 is used.

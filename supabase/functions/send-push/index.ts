@@ -1,9 +1,10 @@
 // Delivers waiting notifications to the phones of the people they are for (Expo push service).
 // Called every minute by pg_cron (dispatch_push) and safe to call any time: each notification goes out once.
-// PUSH_ENDPOINT overrides the Expo URL (the local stack points it at the push-sink stand-in).
+// PUSH_ENDPOINT overrides the Expo URL on the local stack only (the push-sink stand-in; ../_shared/env.ts).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 import { cors, json } from '../_shared/staff.ts';
+import { localOnly } from '../_shared/env.ts';
 
 const EXPO = 'https://exp.host/--/api/v2/push/send';
 
@@ -55,7 +56,7 @@ Deno.serve(async (req) => {
       message: { to, title: n.title, body: n.body, sound: 'default', data: { id: n.id, type: n.type, entity_type: n.entity_type, entity_id: n.entity_id } },
     })),
   );
-  const endpoint = Deno.env.get('PUSH_ENDPOINT') || EXPO;
+  const endpoint = localOnly('PUSH_ENDPOINT') || EXPO;
   let delivered = 0;
   for (let i = 0; i < messages.length; i += 100) {
     const chunk = messages.slice(i, i + 100);

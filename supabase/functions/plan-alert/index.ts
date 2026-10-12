@@ -2,9 +2,10 @@
 // support (2026-10-12), through Resend from
 // no-reply@saloqo.com. Called by the database when a request is made (dispatch_plan_alerts) and every 10 minutes as a
 // retry; safe to call any time: each request is told once. Needs the RESEND_API_KEY secret (the owner sets it); without
-// it nothing is sent and the requests wait. EMAIL_ENDPOINT overrides Resend (the local stack's mail-sink stand-in).
+// it nothing is sent and the requests wait. EMAIL_ENDPOINT overrides Resend on the local stack only (mail-sink).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
+import { localOnly, secret } from '../_shared/env.ts';
 import { cors, json } from '../_shared/staff.ts';
 
 const RESEND = 'https://api.resend.com/emails';
@@ -83,7 +84,7 @@ function supportMessage(a: SupportAlert) {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
-  const key = Deno.env.get('RESEND_API_KEY');
+  const key = secret('RESEND_API_KEY');
   // Without a key the requests stay waiting (and are sent once the key is set).
   if (!key) return json({ sent: 0, skipped: 'no_key' });
 
@@ -98,7 +99,7 @@ Deno.serve(async (req) => {
   if (support.error) return json({ error: support.error.message }, 500);
   const supportAlerts = (support.data ?? []) as SupportAlert[];
 
-  const endpoint = Deno.env.get('EMAIL_ENDPOINT') || RESEND;
+  const endpoint = localOnly('EMAIL_ENDPOINT') || RESEND;
   const send = (to: string[], subject: string, text: string) =>
     to.length > 0
       ? fetch(endpoint, {
