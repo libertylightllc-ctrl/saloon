@@ -11,7 +11,7 @@ import { Button, EmptyState, HeaderBand, Icon, ListRow, QueryState, Screen, useT
 import { useMarkRead, useNotifications, type AppNotification } from './api';
 import { notificationHref } from './links';
 
-const TYPES = ['new_booking', 'long_wait', 'close_submitted', 'low_stock', 'document_due', 'payroll_generated', 'refund_requested', 'daily_digest'] as const;
+const TYPES = ['new_booking', 'long_wait', 'close_submitted', 'low_stock', 'document_due', 'payroll_generated', 'refund_requested', 'daily_digest', 'support_reply'] as const;
 const ICON: Record<(typeof TYPES)[number], IconName> = {
   new_booking: 'calendarPlus',
   long_wait: 'hourglass',
@@ -21,6 +21,7 @@ const ICON: Record<(typeof TYPES)[number], IconName> = {
   payroll_generated: 'wallet',
   refund_requested: 'rotate',
   daily_digest: 'sparkles',
+  support_reply: 'messageCircle',
 };
 
 /** The words for a notification in the app language (the stored English text is for push). */

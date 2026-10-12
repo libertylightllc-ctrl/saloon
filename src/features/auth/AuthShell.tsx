@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -5,7 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import { brand } from '@/config/brand';
 import { LanguageButton } from '@/features/settings/LanguageSheet';
 import { spacing, tapTarget, useTheme, useThemeMode, type Mode } from '@/theme';
-import { BackButton, BrandMark, Chip, HeaderBand, Screen, Text, useWide } from '@/ui';
+import { BackButton, BrandMark, Button, Chip, HeaderBand, Screen, Text, useWide } from '@/ui';
 
 import { useSalonType } from './salonType';
 
@@ -86,6 +87,8 @@ export function AuthShell({
   onBack?: (() => void) | true;
   children: ReactNode;
 }) {
+  const { t } = useTranslation();
+  const router = useRouter();
   return (
     <Screen
       background="gradient"
@@ -101,6 +104,8 @@ export function AuthShell({
     >
       <View style={styles.body}>
         {children}
+        {/* Someone whose app is not working often cannot sign in: they can still write to us. */}
+        <Button variant="ghost" size="sm" icon="messageCircle" label={t('support.contactLink')} onPress={() => router.push('/contact')} testID="auth-contact" />
       </View>
     </Screen>
   );

@@ -359,3 +359,13 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
    in French and the button says "FR"; open the sign-in page → ✅ the button is at the top there too.
 2. A phone set to a language the app does not have (e.g. German) in Brazil → ✅ the site opens in Portuguese.
 3. A visitor in the UAE → ✅ AED 50.00; elsewhere → ✅ USD 13.99.
+
+## 42 · Help & support chat (3 min)
+
+1. Signed in: More → **Help & support** → write "Test from my phone" → Send → ✅ it shows on the right.
+2. The dev account: Console → **Support (1)** → the conversation shows the salon, code, screen and device → write an
+   answer → **Send answer** → ✅ "Answer sent".
+3. Back on the phone: ✅ the answer appears in the chat, a notification "Saloqo support answered" arrives, and More shows
+   "1 new" until the chat is opened.
+4. Signed out: sign-in page → **Need help? Contact us** → name, email, message → Send → ✅ shown; answer it from the
+   console → come back to Contact us on the same phone → ✅ the answer is there.

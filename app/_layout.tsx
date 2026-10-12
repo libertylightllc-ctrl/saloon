@@ -12,6 +12,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SalonTypeProvider, useSalonType } from '@/features/auth/salonType';
 import { SessionProvider, useSession } from '@/features/auth/session';
 import { SettingUpScreen } from '@/features/setup/SettingUpScreen';
+import { useTrackLastScreen } from '@/features/support/lastScreen';
 import { fontAssets } from '@/lib/fonts';
 import { DEFAULT_LANGUAGE, i18n, initI18n } from '@/lib/i18n';
 import { bootstrapLanguage } from '@/lib/language';
@@ -39,6 +40,7 @@ function AppTheme({ children }: { children: ReactNode }) {
 }
 
 export default function RootLayout() {
+  useTrackLastScreen();
   const [fontsLoaded, fontError] = useFonts(fontAssets);
   const [languageReady, setLanguageReady] = useState(false);
 

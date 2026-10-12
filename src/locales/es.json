@@ -806,7 +806,9 @@
     "country_locked": "El país ya no puede cambiar: hay dinero registrado en este salón.",
     "invalid_phone": "Ese número de teléfono no parece correcto. Usa dígitos, espacios y, si quieres, un + al inicio.",
     "wrong_current_password": "Esa no es tu contraseña actual.",
-    "days_required": "Elige al menos un día"
+    "days_required": "Elige al menos un día",
+    "message_required": "Primero escribe un mensaje.",
+    "invalid_email": "Esa dirección de correo no parece correcta."
   },
   "sales": {
     "title": "Ventas",
@@ -1778,6 +1780,10 @@
       "daily_digest": {
         "title": "Buenos días — {{branch}}",
         "body": "Ayer {{sales_total}} en {{sales}} ventas · {{pending_closes}} cierres por aprobar · {{low_stock}} con poco stock"
+      },
+      "support_reply": {
+        "title": "El soporte de Saloqo respondió",
+        "body": "{{preview}}"
       }
     },
     "markedRead": "{{count}} marcadas como leídas"
@@ -2071,7 +2077,7 @@
       },
       "collect": {
         "title": "Qué recopilamos",
-        "body": "• Tu cuenta: tu nombre, tu dirección de correo electrónico y tu contraseña (guardada solo como un hash seguro). Si continúas con Google, Google nos facilita tu nombre y tu dirección de correo electrónico.\n• Lo que introducen los salones: servicios y precios, ventas y recibos, gastos, proveedores y compras, stock, conteos de caja, nombres, teléfonos y visitas de los clientes, nombres, asistencia y pagos del personal, y documentos como licencias y fotos de recibos.\n• Este dispositivo: un token de notificaciones si permites las notificaciones. Tu idioma y tu inicio de sesión recordado se quedan en el dispositivo.\n• Desde dónde nos visitas: el sitio web deduce tu país a partir de tu conexión (dirección IP) para mostrarte tu idioma y tu precio. No se guarda.\nNo usamos rastreadores publicitarios y nunca vendemos datos personales."
+        "body": "• Tu cuenta: tu nombre, tu dirección de correo electrónico y tu contraseña (guardada solo como un hash seguro). Si continúas con Google, Google nos facilita tu nombre y tu dirección de correo electrónico.\n• Lo que introducen los salones: servicios y precios, ventas y recibos, gastos, proveedores y compras, stock, conteos de caja, nombres, teléfonos y visitas de los clientes, nombres, asistencia y pagos del personal, y documentos como licencias y fotos de recibos.\n• Este dispositivo: un token de notificaciones si permites las notificaciones. Tu idioma y tu inicio de sesión recordado se quedan en el dispositivo.\n• Desde dónde nos visitas: el sitio web deduce tu país a partir de tu conexión (dirección IP) para mostrarte tu idioma y tu precio. No se guarda.\n• Ayuda y soporte: los mensajes que nos envías, con tu salón, la versión de la app, tu dispositivo y la pantalla en la que estabas; si escribes sin iniciar sesión, el nombre y el correo que nos das. Se eliminan con tu cuenta o cuando lo pidas.\nNo usamos rastreadores publicitarios y nunca vendemos datos personales."
       },
       "use": {
         "title": "Cómo lo usamos",
@@ -2216,7 +2222,8 @@
       "salons": "Salones",
       "accounts": "Cuentas",
       "plans": "Planes",
-      "activity": "Actividad"
+      "activity": "Actividad",
+      "support": "Soporte"
     },
     "overview": {
       "salons": "Salones",
@@ -2279,6 +2286,18 @@
     },
     "activity": {
       "empty": "Aún no hay historial."
+    },
+    "support": {
+      "empty": "Aún no hay mensajes.",
+      "someone": "Alguien",
+      "visitor": "Sin iniciar sesión",
+      "new": "{{count}} nuevos",
+      "new_one": "{{count}} nuevo",
+      "closed": "Cerrada",
+      "send": "Enviar respuesta",
+      "sent": "Respuesta enviada",
+      "close": "Cerrar conversación",
+      "closedToast": "Conversación cerrada"
     }
   },
   "profile": {
@@ -2304,5 +2323,25 @@
     "newPassword": "Nueva contraseña (8 caracteres o más)",
     "changePassword": "Cambiar contraseña",
     "passwordChanged": "Contraseña cambiada"
+  },
+  "support": {
+    "title": "Ayuda y soporte",
+    "intro": "¿Algo no funciona o tienes una pregunta? Escríbenos aquí. Te respondemos en este chat y recibes una notificación.",
+    "attached": "Con cada mensaje vemos tu salón, la versión de la app, tu dispositivo y la pantalla en la que estabas, para ayudarnos a solucionarlo.",
+    "attachedGuest": "Vemos el dispositivo y la versión de la app desde los que escribes, para ayudarnos a solucionarlo. Tu conversación se queda en este dispositivo: vuelve a esta página para leer nuestra respuesta.",
+    "message": "Mensaje",
+    "placeholder": "¿Qué pasó o qué necesitas?",
+    "send": "Enviar",
+    "you": "Tú",
+    "team": "Soporte de Saloqo",
+    "closed": "Esta conversación se cerró. Escribe de nuevo para abrirla.",
+    "newCount": "{{count}} nuevos",
+    "newCount_one": "{{count}} nuevo",
+    "contactTitle": "Contáctanos",
+    "contactIntro": "Cuéntanos qué pasa o pregunta lo que quieras. Te respondemos por correo y aquí en esta página.",
+    "contactLink": "¿Necesitas ayuda? Contáctanos",
+    "contactSend": "Enviar mensaje",
+    "name": "Tu nombre",
+    "email": "Tu correo electrónico"
   }
 }

@@ -21,6 +21,10 @@ insert into reviewed values
     ('admin_salons'),
     ('admin_set_payment_details'),
     ('admin_set_platform_owner'),
+    ('admin_support_close'),
+    ('admin_support_reply'),
+    ('admin_support_thread'),
+    ('admin_support_threads'),
     ('approve_cash_closing'),
     ('approve_payroll'),
     ('attach_document_evidence'),
@@ -105,6 +109,11 @@ insert into reviewed values
     ('start_service'),
     ('submit_cash_count'),
     ('supplier_balances'),
+    ('support_guest_send'),
+    ('support_guest_thread'),
+    ('support_mine'),
+    ('support_send'),
+    ('support_unread'),
     ('tips_owed'),
     ('undo_no_show'),
     ('unregister_push_token'),
@@ -123,8 +132,9 @@ select is(
 select is(
   array(select p.proname::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
         where n.nspname = 'public' and p.prosecdef and has_function_privilege('anon', p.oid, 'EXECUTE') order by 1),
-  array[]::text[],
-  'signed-out visitors can call none of them');
+  -- The visitors' support chat only (2026-10-12): reading needs the secret kept on the visitor's device.
+  array['support_guest_send', 'support_guest_thread']::text[],
+  'signed-out visitors can call only the visitor support chat');
 
 select is(
   array(select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace

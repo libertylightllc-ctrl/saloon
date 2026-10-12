@@ -66,7 +66,8 @@ export function useLiveSync(businessId: string, branchId: string, memberId: stri
       compliance_removals: [keys.compliance(businessId), keys.dashboard(branchId), ['reports', branchId]],
       hygiene_logs: [keys.hygiene(branchId), keys.dashboard(branchId)],
       refund_requests: [['refund-request']],
-      notifications: [keys.notifications(memberId)],
+      // A support answer arrives as a notification.
+      notifications: [keys.notifications(memberId), ['support']],
       periods: [['accounts', businessId]],
       subscriptions: [['plan', businessId]],
     };

@@ -10,6 +10,7 @@ import { useHasPin } from '@/features/auth/quickSwitch';
 import { useSession, useWorkspace } from '@/features/auth/session';
 import { useBusinessRows } from '@/features/nav/navItems';
 import { LanguageSheet } from '@/features/settings/LanguageSheet';
+import { useSupportUnread } from '@/features/support/api';
 import { LANGUAGES } from '@/lib/i18n';
 import { spacing, useTheme } from '@/theme';
 import { Avatar, Card, HeaderBand, Icon, MenuGroup, MenuRow, Screen, Text } from '@/ui';
@@ -26,6 +27,7 @@ export function MoreScreen() {
   const [switchOpen, setSwitchOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const hasPin = useHasPin(business.id);
+  const unread = useSupportUnread();
   const [signingOut, setSigningOut] = useState(false);
   const shown = useBusinessRows();
 
@@ -94,6 +96,14 @@ export function MoreScreen() {
             />
           </MenuGroup>
           <MenuGroup title={t('more.account')}>
+            <MenuRow
+              icon="messageCircle"
+              index={3}
+              label={t('support.title')}
+              value={unread.data ? t('support.newCount', { count: unread.data }) : undefined}
+              onPress={() => router.push('/support')}
+              testID="more-support"
+            />
             <MenuRow icon="shield" index={0} label={t('legal.privacy.title')} onPress={() => router.push('/privacy')} testID="more-privacy" />
             <MenuRow icon="fileText" index={1} last={role !== 'owner'} label={t('legal.terms.title')} onPress={() => router.push('/terms')} testID="more-terms" />
             {/* Only the owner deletes an account; staff logins are the owner's to remove (Staff → the person). */}

@@ -806,7 +806,9 @@
     "country_locked": "Le pays ne peut plus changer : de l’argent a été enregistré dans ce salon.",
     "invalid_phone": "Ce numéro de téléphone ne semble pas correct. Utilisez des chiffres, des espaces et, si besoin, un + au début.",
     "wrong_current_password": "Ce n’est pas votre mot de passe actuel.",
-    "days_required": "Choisissez au moins un jour"
+    "days_required": "Choisissez au moins un jour",
+    "message_required": "Écrivez d’abord un message.",
+    "invalid_email": "Cette adresse e-mail ne semble pas correcte."
   },
   "sales": {
     "title": "Ventes",
@@ -1778,6 +1780,10 @@
       "daily_digest": {
         "title": "Bonjour — {{branch}}",
         "body": "Hier : {{sales_total}} sur {{sales}} ventes · {{pending_closes}} clôtures à approuver · {{low_stock}} en stock bas"
+      },
+      "support_reply": {
+        "title": "L’assistance Saloqo a répondu",
+        "body": "{{preview}}"
       }
     },
     "markedRead": "{{count}} marquées comme lues"
@@ -2071,7 +2077,7 @@
       },
       "collect": {
         "title": "Ce que nous collectons",
-        "body": "• Votre compte : votre nom, votre adresse e-mail et votre mot de passe (conservé uniquement sous forme de hachage sécurisé). Si vous continuez avec Google, Google nous transmet votre nom et votre adresse e-mail.\n• Ce que les salons saisissent : services et prix, ventes et reçus, dépenses, fournisseurs et achats, stock, comptages de caisse, noms, numéros de téléphone et visites des clients, noms, présences et paie du personnel, ainsi que des documents tels que des licences et des photos de reçus.\n• Cet appareil : un jeton de notification si vous autorisez les notifications. Votre langue et votre connexion mémorisée restent sur l’appareil.\n• D’où vous nous consultez : le site déduit votre pays de votre connexion (adresse IP) pour afficher votre langue et votre prix. Il n’est pas conservé.\nNous n’utilisons aucun traceur publicitaire et nous ne vendons jamais de données personnelles."
+        "body": "• Votre compte : votre nom, votre adresse e-mail et votre mot de passe (conservé uniquement sous forme de hachage sécurisé). Si vous continuez avec Google, Google nous transmet votre nom et votre adresse e-mail.\n• Ce que les salons saisissent : services et prix, ventes et reçus, dépenses, fournisseurs et achats, stock, comptages de caisse, noms, numéros de téléphone et visites des clients, noms, présences et paie du personnel, ainsi que des documents tels que des licences et des photos de reçus.\n• Cet appareil : un jeton de notification si vous autorisez les notifications. Votre langue et votre connexion mémorisée restent sur l’appareil.\n• D’où vous nous consultez : le site déduit votre pays de votre connexion (adresse IP) pour afficher votre langue et votre prix. Il n’est pas conservé.\n• Aide et assistance : les messages que vous nous envoyez, avec votre salon, la version de l’application, votre appareil et l’écran où vous étiez ; si vous écrivez sans être connecté, le nom et l’e-mail que vous indiquez. Ils sont supprimés avec votre compte ou à votre demande.\nNous n’utilisons aucun traceur publicitaire et nous ne vendons jamais de données personnelles."
       },
       "use": {
         "title": "Comment nous les utilisons",
@@ -2216,7 +2222,8 @@
       "salons": "Salons",
       "accounts": "Comptes",
       "plans": "Abonnements",
-      "activity": "Activité"
+      "activity": "Activité",
+      "support": "Assistance"
     },
     "overview": {
       "salons": "Salons",
@@ -2279,6 +2286,18 @@
     },
     "activity": {
       "empty": "Aucun historique pour l’instant."
+    },
+    "support": {
+      "empty": "Aucun message pour l’instant.",
+      "someone": "Quelqu’un",
+      "visitor": "Non connecté",
+      "new": "{{count}} nouveaux",
+      "new_one": "{{count}} nouveau",
+      "closed": "Fermée",
+      "send": "Envoyer la réponse",
+      "sent": "Réponse envoyée",
+      "close": "Fermer la conversation",
+      "closedToast": "Conversation fermée"
     }
   },
   "profile": {
@@ -2304,5 +2323,25 @@
     "newPassword": "Nouveau mot de passe (8 caractères ou plus)",
     "changePassword": "Modifier le mot de passe",
     "passwordChanged": "Mot de passe modifié"
+  },
+  "support": {
+    "title": "Aide et assistance",
+    "intro": "Quelque chose ne fonctionne pas, ou une question ? Écrivez-nous ici. Nous répondons dans ce chat et vous recevez une notification.",
+    "attached": "Avec chaque message, nous voyons votre salon, la version de l’app, votre appareil et l’écran où vous étiez, pour nous aider à corriger le problème.",
+    "attachedGuest": "Nous voyons l’appareil et la version de l’app depuis lesquels vous écrivez, pour nous aider à corriger le problème. Votre conversation reste sur cet appareil : revenez sur cette page pour lire notre réponse.",
+    "message": "Message",
+    "placeholder": "Que s’est-il passé, ou de quoi avez-vous besoin ?",
+    "send": "Envoyer",
+    "you": "Vous",
+    "team": "Assistance Saloqo",
+    "closed": "Cette conversation a été fermée. Écrivez à nouveau pour la rouvrir.",
+    "newCount": "{{count}} nouveaux",
+    "newCount_one": "{{count}} nouveau",
+    "contactTitle": "Nous contacter",
+    "contactIntro": "Dites-nous ce qui ne va pas ou posez-nous vos questions. Nous répondons par e-mail et ici, sur cette page.",
+    "contactLink": "Besoin d’aide ? Contactez-nous",
+    "contactSend": "Envoyer le message",
+    "name": "Votre nom",
+    "email": "Votre e-mail"
   }
 }

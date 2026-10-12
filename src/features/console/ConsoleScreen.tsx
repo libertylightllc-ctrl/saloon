@@ -13,9 +13,11 @@ import { AccountsTab } from './AccountsTab';
 import { ActivityTab, PlansTab } from './HistoryTabs';
 import { OverviewTab } from './OverviewTab';
 import { SalonsTab } from './SalonsTab';
+import { SupportTab } from './SupportTab';
+import { useSupportInbox } from '@/features/support/api';
 
-type Tab = 'overview' | 'salons' | 'accounts' | 'plans' | 'activity';
-const TABS: Tab[] = ['overview', 'salons', 'accounts', 'plans', 'activity'];
+type Tab = 'overview' | 'salons' | 'support' | 'accounts' | 'plans' | 'activity';
+const TABS: Tab[] = ['overview', 'salons', 'support', 'accounts', 'plans', 'activity'];
 
 /**
  * The platform console (owner, 2026-10-06): the whole service in one place for platform owners — even one with no
@@ -26,6 +28,8 @@ export function ConsoleScreen() {
   const { status } = useSession();
   const admin = useIsPlatformAdmin();
   const payment = usePaymentDetails();
+  const inbox = useSupportInbox();
+  const unread = (inbox.data ?? []).reduce((n, r) => n + r.unread, 0);
   const [tab, setTab] = useState<Tab>('overview');
   const [paying, setPaying] = useState(false);
   // History of one salon, opened from its row.
@@ -47,7 +51,10 @@ export function ConsoleScreen() {
             }
           >
             <PillTabs<Tab>
-              items={TABS.map((k) => ({ key: k, label: t(`console.tabs.${k}`) }))}
+              items={TABS.map((k) => ({
+                key: k,
+                label: k === 'support' && unread ? `${t('console.tabs.support')} (${unread})` : t(`console.tabs.${k}`),
+              }))}
               value={tab}
               onChange={setTab}
               testID="console-tab"
@@ -65,6 +72,7 @@ export function ConsoleScreen() {
               }}
             />
           ) : null}
+          {tab === 'support' ? <SupportTab /> : null}
           {tab === 'accounts' ? <AccountsTab /> : null}
           {tab === 'plans' ? <PlansTab /> : null}
           {tab === 'activity' ? <ActivityTab salon={salonFilter} onClear={() => setSalonFilter(null)} /> : null}

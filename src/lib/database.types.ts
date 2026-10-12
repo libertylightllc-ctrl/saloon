@@ -3225,6 +3225,100 @@ export type Database = {
           },
         ];
       };
+      support_messages: {
+        Row: {
+          author: string;
+          author_user_id: string | null;
+          body: string;
+          created_at: string;
+          id: string;
+          thread_id: string;
+        };
+        Insert: {
+          author: string;
+          author_user_id?: string | null;
+          body: string;
+          created_at?: string;
+          id?: string;
+          thread_id: string;
+        };
+        Update: {
+          author?: string;
+          author_user_id?: string | null;
+          body?: string;
+          created_at?: string;
+          id?: string;
+          thread_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'support_messages_thread_id_fkey';
+            columns: ['thread_id'];
+            isOneToOne: false;
+            referencedRelation: 'support_threads';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      support_threads: {
+        Row: {
+          alerted_at: string | null;
+          business_id: string | null;
+          context: NonNullable<Json>;
+          created_at: string;
+          email: string | null;
+          guest_token_hash: string | null;
+          id: string;
+          last_from: string;
+          last_message_at: string;
+          name: string | null;
+          status: string;
+          support_read_at: string | null;
+          user_id: string | null;
+          user_read_at: string | null;
+        };
+        Insert: {
+          alerted_at?: string | null;
+          business_id?: string | null;
+          context?: NonNullable<Json>;
+          created_at?: string;
+          email?: string | null;
+          guest_token_hash?: string | null;
+          id?: string;
+          last_from?: string;
+          last_message_at?: string;
+          name?: string | null;
+          status?: string;
+          support_read_at?: string | null;
+          user_id?: string | null;
+          user_read_at?: string | null;
+        };
+        Update: {
+          alerted_at?: string | null;
+          business_id?: string | null;
+          context?: NonNullable<Json>;
+          created_at?: string;
+          email?: string | null;
+          guest_token_hash?: string | null;
+          id?: string;
+          last_from?: string;
+          last_message_at?: string;
+          name?: string | null;
+          status?: string;
+          support_read_at?: string | null;
+          user_id?: string | null;
+          user_read_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'support_threads_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       tip_payouts: {
         Row: {
           amount_minor: number;
@@ -3403,6 +3497,27 @@ export type Database = {
       };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
       admin_set_platform_owner: { Args: { p_email: string; p_on: boolean }; Returns: undefined };
+      admin_support_close: { Args: { p_thread: string }; Returns: undefined };
+      admin_support_reply: { Args: { p_body: string; p_thread: string }; Returns: undefined };
+      admin_support_thread: { Args: { p_thread: string }; Returns: Json };
+      admin_support_threads: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          context: Json;
+          created_at: string;
+          email: string;
+          id: string;
+          last_from: string;
+          last_message_at: string;
+          preview: string;
+          role: string;
+          salon: string;
+          salon_code: string;
+          status: string;
+          unread: number;
+          who: string;
+        }[];
+      };
       aed_rate: { Args: { p_currency: string }; Returns: number };
       allocate_minor: { Args: { p_total: number; p_weights: number[] }; Returns: number[] };
       appointment_for_update: {
@@ -3515,6 +3630,18 @@ export type Database = {
           people: number;
           requested_at: string;
           salon: string;
+        }[];
+      };
+      claim_support_alerts: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          admin_emails: string[];
+          email: string;
+          preview: string;
+          salon: string;
+          salon_code: string;
+          thread_id: string;
+          who: string;
         }[];
       };
       clock: { Args: { p: Json }; Returns: Json };
@@ -3909,6 +4036,18 @@ export type Database = {
           terms_days: number;
         }[];
       };
+      support_add: {
+        Args: { p_author: string; p_body: string; p_thread: string };
+        Returns: undefined;
+      };
+      support_context: { Args: { p: Json }; Returns: Json };
+      support_guest_send: { Args: { p: Json }; Returns: undefined };
+      support_guest_thread: { Args: { p_token: string }; Returns: Json };
+      support_mine: { Args: Record<PropertyKey, never>; Returns: Json };
+      support_send: { Args: { p: Json }; Returns: string };
+      support_thread_json: { Args: { p_thread: string }; Returns: Json };
+      support_token_hash: { Args: { p_token: string }; Returns: string };
+      support_unread: { Args: Record<PropertyKey, never>; Returns: number };
       tips_owed: {
         Args: { p_branch: string };
         Returns: {
@@ -3918,6 +4057,7 @@ export type Database = {
         }[];
       };
       unclaim_plan_alert: { Args: { p_event: string }; Returns: undefined };
+      unclaim_support_alert: { Args: { p_thread: string }; Returns: undefined };
       undo_no_show: { Args: { p_id: string }; Returns: undefined };
       unique_business_code: { Args: { p_name: string }; Returns: string };
       unregister_push_token: { Args: { p_token: string }; Returns: undefined };

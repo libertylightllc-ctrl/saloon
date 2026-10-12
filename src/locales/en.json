@@ -806,7 +806,9 @@
     "country_locked": "The country can no longer change: money has been recorded in this salon.",
     "invalid_phone": "That phone number does not look right. Use digits, spaces and an optional + at the start.",
     "wrong_current_password": "That is not your current password.",
-    "days_required": "Pick at least one day"
+    "days_required": "Pick at least one day",
+    "message_required": "Write a message first.",
+    "invalid_email": "That email address does not look right."
   },
   "sales": {
     "title": "Sales",
@@ -1778,6 +1780,10 @@
       "daily_digest": {
         "title": "Good morning — {{branch}}",
         "body": "Yesterday {{sales_total}} from {{sales}} sales · {{pending_closes}} closes to approve · {{low_stock}} low on stock"
+      },
+      "support_reply": {
+        "title": "Saloqo support answered",
+        "body": "{{preview}}"
       }
     },
     "markedRead": "{{count}} marked as read"
@@ -2071,7 +2077,7 @@
       },
       "collect": {
         "title": "What we collect",
-        "body": "• Your account: your name, email address and password (kept only as a secure hash). If you continue with Google, Google gives us your name and email address.\n• What salons enter: services and prices, sales and receipts, expenses, suppliers and purchases, stock, cash counts, customers’ names, phone numbers and visits, staff names, attendance and pay, and documents such as licences and photos of receipts.\n• This device: a notification token if you allow notifications. Your language and remembered sign-in stay on the device.\n• Where you visit from: the website works out the country you are in from your connection (IP address) to show your language and price. It is not stored.\nWe use no advertising trackers and we never sell personal data."
+        "body": "• Your account: your name, email address and password (kept only as a secure hash). If you continue with Google, Google gives us your name and email address.\n• What salons enter: services and prices, sales and receipts, expenses, suppliers and purchases, stock, cash counts, customers’ names, phone numbers and visits, staff names, attendance and pay, and documents such as licences and photos of receipts.\n• This device: a notification token if you allow notifications. Your language and remembered sign-in stay on the device.\n• Where you visit from: the website works out the country you are in from your connection (IP address) to show your language and price. It is not stored.\n• Help & support: the messages you send us, with your salon, the app version, your device and the screen you were on; if you write without signing in, the name and email you give. They are deleted with your account, or when you ask.\nWe use no advertising trackers and we never sell personal data."
       },
       "use": {
         "title": "How we use it",
@@ -2215,7 +2221,8 @@
       "salons": "Salons",
       "accounts": "Accounts",
       "plans": "Plans",
-      "activity": "Activity"
+      "activity": "Activity",
+      "support": "Support"
     },
     "overview": {
       "salons": "Salons",
@@ -2278,6 +2285,18 @@
     },
     "activity": {
       "empty": "No history yet."
+    },
+    "support": {
+      "empty": "No messages yet.",
+      "someone": "Someone",
+      "visitor": "Not signed in",
+      "new": "{{count}} new",
+      "new_one": "{{count}} new",
+      "closed": "Closed",
+      "send": "Send answer",
+      "sent": "Answer sent",
+      "close": "Close conversation",
+      "closedToast": "Conversation closed"
     }
   },
   "profile": {
@@ -2303,5 +2322,25 @@
     "newPassword": "New password (8 or more characters)",
     "changePassword": "Change password",
     "passwordChanged": "Password changed"
+  },
+  "support": {
+    "title": "Help & support",
+    "intro": "Something not working, or a question? Write to us here. We answer in this chat and you get a notification.",
+    "attached": "With each message we see your salon, the app version, your device and the screen you were on, to help us fix it.",
+    "attachedGuest": "We see the device and app version you write from, to help us fix it. Your conversation stays on this device: come back to this page to read our answer.",
+    "message": "Message",
+    "placeholder": "What happened, or what do you need?",
+    "send": "Send",
+    "you": "You",
+    "team": "Saloqo support",
+    "closed": "This conversation was closed. Write again to open it.",
+    "newCount": "{{count}} new",
+    "newCount_one": "{{count}} new",
+    "contactTitle": "Contact us",
+    "contactIntro": "Tell us what’s wrong or ask anything. We answer by email and here on this page.",
+    "contactLink": "Need help? Contact us",
+    "contactSend": "Send message",
+    "name": "Your name",
+    "email": "Your email"
   }
 }

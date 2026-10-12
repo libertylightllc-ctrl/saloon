@@ -15,6 +15,8 @@ export function notificationHref(n: { type: string; entity_type: string | null; 
       return n.entity_id ? { pathname: '/sales/[id]', params: { id: n.entity_id } } : '/sales';
     case 'compliance_document':
       return '/compliance';
+    case 'support':
+      return '/support';
     default:
       return '/';
   }

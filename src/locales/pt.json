@@ -806,7 +806,9 @@
     "country_locked": "O país não pode mais mudar: já há dinheiro registrado neste salão.",
     "invalid_phone": "Esse número de telefone não parece certo. Use dígitos, espaços e, se quiser, um + no início.",
     "wrong_current_password": "Essa não é sua senha atual.",
-    "days_required": "Escolha pelo menos um dia"
+    "days_required": "Escolha pelo menos um dia",
+    "message_required": "Escreva uma mensagem primeiro.",
+    "invalid_email": "Esse endereço de e-mail não parece correto."
   },
   "sales": {
     "title": "Vendas",
@@ -1778,6 +1780,10 @@
       "daily_digest": {
         "title": "Bom dia — {{branch}}",
         "body": "Ontem: {{sales_total}} em {{sales}} vendas · {{pending_closes}} fechamentos a aprovar · {{low_stock}} com estoque baixo"
+      },
+      "support_reply": {
+        "title": "O suporte Saloqo respondeu",
+        "body": "{{preview}}"
       }
     },
     "markedRead": "{{count}} marcadas como lidas"
@@ -2071,7 +2077,7 @@
       },
       "collect": {
         "title": "O que coletamos",
-        "body": "• Sua conta: seu nome, endereço de e-mail e senha (guardada apenas como um hash seguro). Se você continuar com o Google, o Google nos informa seu nome e endereço de e-mail.\n• O que os salões registram: serviços e preços, vendas e recibos, despesas, fornecedores e compras, estoque, contagens de caixa, nomes, telefones e visitas de clientes, nomes, frequência e pagamento da equipe, e documentos como licenças e fotos de recibos.\n• Este aparelho: um token de notificação, se você permitir notificações. Seu idioma e o login memorizado ficam no aparelho.\n• De onde você nos visita: o site identifica seu país pela sua conexão (endereço IP) para mostrar seu idioma e seu preço. Isso não é guardado.\nNão usamos rastreadores de publicidade e nunca vendemos dados pessoais."
+        "body": "• Sua conta: seu nome, endereço de e-mail e senha (guardada apenas como um hash seguro). Se você continuar com o Google, o Google nos informa seu nome e endereço de e-mail.\n• O que os salões registram: serviços e preços, vendas e recibos, despesas, fornecedores e compras, estoque, contagens de caixa, nomes, telefones e visitas de clientes, nomes, frequência e pagamento da equipe, e documentos como licenças e fotos de recibos.\n• Este aparelho: um token de notificação, se você permitir notificações. Seu idioma e o login memorizado ficam no aparelho.\n• De onde você nos visita: o site identifica seu país pela sua conexão (endereço IP) para mostrar seu idioma e seu preço. Isso não é guardado.\n• Ajuda e suporte: as mensagens que você nos envia, com seu salão, a versão do app, seu dispositivo e a tela em que estava; se você escrever sem entrar, o nome e o e-mail que informar. Elas são apagadas com sua conta ou quando você pedir.\nNão usamos rastreadores de publicidade e nunca vendemos dados pessoais."
       },
       "use": {
         "title": "Como usamos os dados",
@@ -2216,7 +2222,8 @@
       "salons": "Salões",
       "accounts": "Contas",
       "plans": "Planos",
-      "activity": "Atividade"
+      "activity": "Atividade",
+      "support": "Suporte"
     },
     "overview": {
       "salons": "Salões",
@@ -2279,6 +2286,18 @@
     },
     "activity": {
       "empty": "Nenhum histórico ainda."
+    },
+    "support": {
+      "empty": "Nenhuma mensagem ainda.",
+      "someone": "Alguém",
+      "visitor": "Sem login",
+      "new": "{{count}} novas",
+      "new_one": "{{count}} nova",
+      "closed": "Encerrada",
+      "send": "Enviar resposta",
+      "sent": "Resposta enviada",
+      "close": "Encerrar conversa",
+      "closedToast": "Conversa encerrada"
     }
   },
   "profile": {
@@ -2304,5 +2323,25 @@
     "newPassword": "Nova senha (8 caracteres ou mais)",
     "changePassword": "Alterar senha",
     "passwordChanged": "Senha alterada"
+  },
+  "support": {
+    "title": "Ajuda e suporte",
+    "intro": "Algo não está funcionando ou tem alguma dúvida? Escreva para a gente aqui. Respondemos neste chat e você recebe uma notificação.",
+    "attached": "Com cada mensagem, vemos seu salão, a versão do app, seu aparelho e a tela em que você estava, para nos ajudar a resolver.",
+    "attachedGuest": "Vemos o aparelho e a versão do app de onde você escreve, para nos ajudar a resolver. Sua conversa fica neste aparelho: volte a esta página para ler nossa resposta.",
+    "message": "Mensagem",
+    "placeholder": "O que aconteceu ou do que você precisa?",
+    "send": "Enviar",
+    "you": "Você",
+    "team": "Suporte Saloqo",
+    "closed": "Esta conversa foi encerrada. Escreva de novo para reabri-la.",
+    "newCount": "{{count}} novas",
+    "newCount_one": "{{count}} nova",
+    "contactTitle": "Fale conosco",
+    "contactIntro": "Conte o que está errado ou pergunte o que quiser. Respondemos por e-mail e aqui nesta página.",
+    "contactLink": "Precisa de ajuda? Fale conosco",
+    "contactSend": "Enviar mensagem",
+    "name": "Seu nome",
+    "email": "Seu e-mail"
   }
 }

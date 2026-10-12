@@ -177,6 +177,7 @@ export default function Welcome() {
           </Text>
         ) : null}
         <View style={styles.legal}>
+          <Button variant="ghost" size="sm" icon="messageCircle" label={t('support.contactTitle')} onPress={() => router.push('/contact')} testID="landing-contact" />
           <Button variant="ghost" size="sm" label={t('legal.privacy.title')} onPress={() => router.push('/privacy')} testID="landing-privacy" />
           <Button variant="ghost" size="sm" label={t('legal.terms.title')} onPress={() => router.push('/terms')} testID="landing-terms" />
         </View>

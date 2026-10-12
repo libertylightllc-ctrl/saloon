@@ -1,4 +1,5 @@
-// Emails the platform owner when a salon asks for its plan (owner, 2026-10-04), through Resend from
+// Emails the platform owner when a salon asks for its plan (owner, 2026-10-04) and when someone writes to Help &
+// support (2026-10-12), through Resend from
 // no-reply@saloqo.com. Called by the database when a request is made (dispatch_plan_alerts) and every 10 minutes as a
 // retry; safe to call any time: each request is told once. Needs the RESEND_API_KEY secret (the owner sets it); without
 // it nothing is sent and the requests wait. EMAIL_ENDPOINT overrides Resend (the local stack's mail-sink stand-in).
@@ -56,6 +57,30 @@ function message(a: Alert) {
   return { subject: `Plan request: ${a.salon} · ${a.months} month(s)`, text: lines.join('\n') };
 }
 
+interface SupportAlert {
+  thread_id: string;
+  who: string | null;
+  email: string | null;
+  salon: string | null;
+  salon_code: string | null;
+  preview: string | null;
+  admin_emails: string[] | null;
+}
+
+function supportMessage(a: SupportAlert) {
+  const who = a.who || 'Someone';
+  const from = a.salon ? `${a.salon} · ${a.salon_code}` : 'not signed in';
+  const lines = [
+    `${who} (${from}) wrote to Help & support:`,
+    '',
+    a.preview ?? '',
+    '',
+    ...(a.email ? [`Their email: ${a.email}`] : []),
+    `Answer in the console: ${SITE}/console`,
+  ];
+  return { subject: `Support: ${who} (${from})`, text: lines.join('\n') };
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   const key = Deno.env.get('RESEND_API_KEY');
@@ -69,25 +94,38 @@ Deno.serve(async (req) => {
   if (error) return json({ error: error.message }, 500);
   const alerts = (data ?? []) as Alert[];
 
+  const support = await admin.rpc('claim_support_alerts');
+  if (support.error) return json({ error: support.error.message }, 500);
+  const supportAlerts = (support.data ?? []) as SupportAlert[];
+
   const endpoint = Deno.env.get('EMAIL_ENDPOINT') || RESEND;
+  const send = (to: string[], subject: string, text: string) =>
+    to.length > 0
+      ? fetch(endpoint, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from: 'Saloqo <no-reply@saloqo.com>', to, subject, text }),
+        })
+          .then((r) => r.ok)
+          .catch(() => false)
+      : Promise.resolve(false);
   let sent = 0;
+  for (const a of supportAlerts) {
+    const { subject, text } = supportMessage(a);
+    if (await send(a.admin_emails ?? [], subject, text)) sent++;
+    else {
+      console.error(`plan-alert: could not email support thread ${a.thread_id}; it goes back to the queue`);
+      await admin.rpc('unclaim_support_alert', { p_thread: a.thread_id });
+    }
+  }
   for (const a of alerts) {
-    const to = a.admin_emails ?? [];
     const { subject, text } = message(a);
-    const ok =
-      to.length > 0 &&
-      (await fetch(endpoint, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: 'Saloqo <no-reply@saloqo.com>', to, subject, text }),
-      })
-        .then((r) => r.ok)
-        .catch(() => false));
+    const ok = await send(a.admin_emails ?? [], subject, text);
     if (ok) sent++;
     else {
       console.error(`plan-alert: could not email ${a.event_id}; it goes back to the queue`);
       await admin.rpc('unclaim_plan_alert', { p_event: a.event_id });
     }
   }
-  return json({ sent, waiting: alerts.length - sent });
+  return json({ sent, waiting: alerts.length + supportAlerts.length - sent });
 });
