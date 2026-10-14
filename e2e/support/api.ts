@@ -47,7 +47,7 @@ export const KUWAIT: Country = { country_code: 'KW', currency: 'KWD', timezone: 
 /** An owner with a set-up business, created the way the setup wizard does it. */
 export async function createOwner(
   mode: Mode,
-  opts: { vat?: boolean; openingCash?: number; businessName?: string; plan?: boolean; country?: Country } = {},
+  opts: { vat?: boolean; openingCash?: number; businessName?: string; plan?: boolean | 'trial'; country?: Country } = {},
 ): Promise<Owner> {
   const id = uid();
   const email = `owner-${id}@e2e.test`;
@@ -78,9 +78,17 @@ export async function createOwner(
   });
   if (rpcError) throw rpcError;
   const r = data as { business_id: string; branch_id: string; code: string };
-  // Salons need a paid plan to work (docs/06); flows about something else get one, the plan flow does not.
-  if (opts.plan !== false) {
-    const { error: planError } = await admin.from('subscriptions').upsert({ business_id: r.business_id, paid_until: '2099-12-31' });
+  // Salons need a paid plan to work (docs/06); flows about something else get one. The plan flows start with none:
+  // this salon's free trial is taken away, as for an owner who has used theirs; 'trial' keeps the 7-day trial.
+  if (opts.plan === 'trial') {
+    // As signed up.
+  } else if (opts.plan !== false) {
+    const { error: planError } = await admin
+      .from('subscriptions')
+      .upsert({ business_id: r.business_id, paid_until: '2099-12-31', trial: false });
+    if (planError) throw planError;
+  } else {
+    const { error: planError } = await admin.from('subscriptions').delete().eq('business_id', r.business_id);
     if (planError) throw planError;
   }
   return { email, password, name, client, businessId: r.business_id, branchId: r.branch_id, code: r.code };

@@ -26,6 +26,10 @@ Português — More → Language in the app, or the language button at the top o
 
 ## Plan and price
 - Setting up is free (services, team, stock). Using the features needs an active plan.
+- Free trial: a new salon has every feature free for 7 days, with no card and no payment (one trial per owner). Home
+  and More → Plan & billing show the days left; the owner is told the day before it ends. When it ends the salon is
+  locked like an ended plan until the plan is paid; nothing is deleted. A plan paid during the trial starts when the
+  trial ends, so no trial day is lost. A trial cannot be restarted or made longer by the app; ask a person.
 - One price for the whole salon, whatever the number of branches: in the UAE AED 50 a month for up to 4 people who
   sign in (the owner and staff logins), plus AED 10 a month for each person after that. Outside the UAE USD 13.99 a
   month for up to 4 people, plus USD 2.99 for each person after that. Staff without a login are not counted.
@@ -58,7 +62,7 @@ Português — More → Language in the app, or the language button at the top o
 - Deleting the account: owner only, More → Delete my account. Financial records the law requires are kept.
 
 ## When something goes wrong
-- "Your plan isn't active" or nothing saves: the owner opens More → Plan & billing.
+- "Your plan isn't active" or nothing saves: the owner opens More → Plan & billing (also when the free trial has ended).
 - "No connection", or a change not showing on another phone: check the internet, then the refresh button.
 - A receipt does not print: check More → Branch settings → Customer receipt; on a computer the receipt opens the
   browser's print window; on a phone it can be shared or sent on WhatsApp.

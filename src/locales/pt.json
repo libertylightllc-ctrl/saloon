@@ -611,8 +611,9 @@
       "pricing": {
         "title": "Preços simples",
         "per": "por mês, para até {{people}} pessoas",
-        "note": "Um preço só para o salão inteiro, não importa quantas filiais. A configuração é grátis: serviços, equipe e estoque; pague mês a mês quando começar a vender. Nada é renovado sozinho.",
-        "extra": "depois {{price}} por mês para cada pessoa a mais que entrar no app"
+        "note": "Um só preço para o salão inteiro, com quantas filiais tiver. Configurar é sempre grátis; pague mês a mês, e nada se renova sozinho.",
+        "extra": "depois {{price}} por mês para cada pessoa a mais que entrar no app",
+        "trial": "Experimente todos os recursos grátis por {{count}} dias. Sem cartão."
       },
       "contact": "Dúvidas? Escreva para {{email}}",
       "preview": {
@@ -1784,6 +1785,10 @@
       "support_reply": {
         "title": "O suporte Saloqo respondeu",
         "body": "{{preview}}"
+      },
+      "trial_ending": {
+        "title": "Seu teste grátis termina amanhã",
+        "body": "Amanhã é o último dia. Depois disso nada novo pode ser salvo até o plano estar ativo; tudo o que foi salvo continua."
       }
     },
     "markedRead": "{{count}} marcadas como lidas"
@@ -1991,7 +1996,8 @@
       "requestedBody": "Ele é ativado assim que o pagamento for recebido ({{price}} por mês).",
       "action": "Ver plano",
       "staffTitle": "O plano do salão não está ativo",
-      "staffBody": "Peça ao proprietário para ativá-lo. Você ainda pode explorar o app."
+      "staffBody": "Peça ao proprietário para ativá-lo. Você ainda pode explorar o app.",
+      "trialEndedTitle": "Seu teste grátis terminou"
     },
     "extendAction": "Pedir mais meses",
     "store": {
@@ -2012,7 +2018,18 @@
     "people": "{{count}} pessoas entram no app: você e os logins da sua equipe",
     "people_one": "{{count}} pessoa entra no app: você",
     "pricing": "{{base}} cobre até {{included}} pessoas; cada pessoa a mais adiciona {{extra}} por mês. Filiais não custam nada a mais.",
-    "extraPerson": "Seu plano cobre {{included}} pessoas e {{people}} já entram no app, então este login adiciona {{extra}} por mês."
+    "extraPerson": "Seu plano cobre {{included}} pessoas e {{people}} já entram no app, então este login adiciona {{extra}} por mês.",
+    "trial": {
+      "pill": "Teste grátis",
+      "left": "Teste grátis: faltam {{count}} dias, até {{date}}.",
+      "left_one": "Teste grátis: falta {{count}} dia, até {{date}}.",
+      "lastDay": "Hoje é o último dia do seu teste grátis",
+      "ended": "Seu teste grátis terminou em {{date}}. Ative seu plano para continuar adicionando trabalho novo; tudo o que foi salvo continua.",
+      "bannerTitle": "Teste grátis: faltam {{count}} dias",
+      "bannerTitle_one": "Teste grátis: falta {{count}} dia",
+      "bannerBody": "Tudo está ativo até {{date}}. Ative seu plano quando quiser para continuar depois disso.",
+      "bannerBodyStore": "Tudo está ativo até {{date}}."
+    }
   },
   "admin": {
     "title": "Salões e planos",
@@ -2029,7 +2046,7 @@
     "activated": "{{name}}: plano ativado",
     "endPlan": "Encerrar plano (observação obrigatória)",
     "ended": "{{name}}: plano encerrado",
-    "hint": "O plano vale a partir de hoje, ou a partir do fim atual se ainda estiver em vigor. Encerrá-lo mantém todos os dados do salão.",
+    "hint": "O plano vale a partir de hoje, ou a partir do fim do plano atual ou do teste grátis, se ainda estiverem ativos. Encerrá-lo mantém todos os dados do salão.",
     "pay": {
       "button": "Dados de pagamento",
       "title": "Onde os salões pagam",
@@ -2045,7 +2062,8 @@
         "pay_note": "Observação para os salões (opcional)"
       },
       "saved": "Dados de pagamento salvos"
-    }
+    },
+    "trialUntil": "Teste até {{date}}"
   },
   "account": {
     "delete": {
@@ -2138,7 +2156,7 @@
       },
       "plans": {
         "title": "Planos e pagamento",
-        "body": "A configuração é gratuita. Usar os recursos (fila, vendas e os demais) exige um plano ativo, cobrado por salão e por mês, pelo preço exibido no nosso site, que depende de quantas pessoas entram no app. Os planos são pagos antecipadamente, são ativados quando o pagamento é recebido e não são renovados automaticamente. Meses pagos não são reembolsados, exceto quando a lei exigir. Se um plano terminar, seus dados continuam guardados: você ainda pode entrar, consultá-los e exportá-los."
+        "body": "Configurar é grátis, e um salão novo pode usar todos os recursos grátis por 7 dias (um teste grátis por proprietário) sem pagar nem informar cartão. Depois disso, usar os recursos (fila, vendas e o resto) exige um plano ativo, cobrado por salão por mês ao preço mostrado no nosso site, que depende de quantas pessoas entram no app. Os planos são pagos antecipadamente, são ativados quando o pagamento é recebido e não se renovam sozinhos. Meses pagos não são reembolsados, exceto quando a lei exigir. Se um plano ou o teste grátis terminar, seus dados continuam: você ainda pode entrar, vê-los e exportá-los."
       },
       "data": {
         "title": "Seus dados",
@@ -2227,7 +2245,7 @@
     },
     "overview": {
       "salons": "Salões",
-      "salonsSub": "{{active}} com plano · {{closed}} fechados",
+      "salonsSub": "{{active}} com plano · {{trial}} em teste · {{closed}} fechados",
       "requests": "Pedidos de plano pendentes",
       "accounts": "Contas de acesso",
       "accountsSub": "{{owners}} proprietários · {{staff}} logins da equipe · {{none}} sem salão",
@@ -2281,7 +2299,8 @@
       "kinds": {
         "request": "Pedido",
         "activate": "Pago",
-        "end": "Encerrado"
+        "end": "Encerrado",
+        "trial": "Teste grátis"
       }
     },
     "activity": {

@@ -611,8 +611,9 @@
       "pricing": {
         "title": "Precios sencillos",
         "per": "al mes, para hasta {{people}} personas",
-        "note": "Un solo precio para todo el salón, sin importar cuántas sucursales tenga. Configurar es gratis: servicios, equipo y stock; paga mes a mes cuando empieces a vender. Nada se renueva solo.",
-        "extra": "luego {{price}} al mes por cada persona adicional que inicie sesión"
+        "note": "Un solo precio para todo el salón, con las sucursales que sean. Configurar es siempre gratis; paga mes a mes y nada se renueva solo.",
+        "extra": "luego {{price}} al mes por cada persona adicional que inicie sesión",
+        "trial": "Prueba todas las funciones gratis durante {{count}} días. Sin tarjeta."
       },
       "contact": "¿Tienes preguntas? Escribe a {{email}}",
       "preview": {
@@ -1784,6 +1785,10 @@
       "support_reply": {
         "title": "El soporte de Saloqo respondió",
         "body": "{{preview}}"
+      },
+      "trial_ending": {
+        "title": "Tu prueba gratis termina mañana",
+        "body": "Mañana es el último día. Después no se puede guardar nada nuevo hasta que el plan esté activo; todo lo guardado se conserva."
       }
     },
     "markedRead": "{{count}} marcadas como leídas"
@@ -1991,7 +1996,8 @@
       "requestedBody": "Se activa en cuanto recibamos el pago ({{price}} al mes).",
       "action": "Ver plan",
       "staffTitle": "El plan del salón no está activo",
-      "staffBody": "Pide al dueño que lo active. Mientras tanto puedes echar un vistazo."
+      "staffBody": "Pide al dueño que lo active. Mientras tanto puedes echar un vistazo.",
+      "trialEndedTitle": "Tu prueba gratis ha terminado"
     },
     "extendAction": "Pedir más meses",
     "store": {
@@ -2012,7 +2018,18 @@
     "people": "{{count}} personas inician sesión: tú y los accesos de tu personal",
     "people_one": "{{count}} persona inicia sesión: tú",
     "pricing": "{{base}} cubre hasta {{included}} personas; cada persona adicional suma {{extra}} al mes. Las sucursales no cuestan nada extra.",
-    "extraPerson": "Tu plan cubre {{included}} personas y ya inician sesión {{people}}, así que este acceso suma {{extra}} al mes."
+    "extraPerson": "Tu plan cubre {{included}} personas y ya inician sesión {{people}}, así que este acceso suma {{extra}} al mes.",
+    "trial": {
+      "pill": "Prueba gratis",
+      "left": "Prueba gratis: quedan {{count}} días, hasta el {{date}}.",
+      "left_one": "Prueba gratis: queda {{count}} día, hasta el {{date}}.",
+      "lastDay": "Hoy es el último día de tu prueba gratis",
+      "ended": "Tu prueba gratis terminó el {{date}}. Activa tu plan para seguir añadiendo trabajo nuevo; todo lo guardado se conserva.",
+      "bannerTitle": "Prueba gratis: quedan {{count}} días",
+      "bannerTitle_one": "Prueba gratis: queda {{count}} día",
+      "bannerBody": "Todo está activo hasta el {{date}}. Activa tu plan cuando quieras para seguir después.",
+      "bannerBodyStore": "Todo está activo hasta el {{date}}."
+    }
   },
   "admin": {
     "title": "Salones y planes",
@@ -2029,7 +2046,7 @@
     "activated": "{{name}}: plan activado",
     "endPlan": "Terminar plan (requiere nota)",
     "ended": "{{name}}: plan terminado",
-    "hint": "El plan cuenta desde hoy, o desde su fecha de fin actual si sigue vigente. Al terminarlo se conservan todos los datos del salón.",
+    "hint": "El plan cuenta desde hoy, o desde el fin del plan actual o de la prueba gratis si siguen activos. Terminarlo conserva todos los datos del salón.",
     "pay": {
       "button": "Datos de pago",
       "title": "Dónde pagan los salones",
@@ -2045,7 +2062,8 @@
         "pay_note": "Nota para los salones (opcional)"
       },
       "saved": "Datos de pago guardados"
-    }
+    },
+    "trialUntil": "Prueba hasta el {{date}}"
   },
   "account": {
     "delete": {
@@ -2138,7 +2156,7 @@
       },
       "plans": {
         "title": "Planes y pagos",
-        "body": "La configuración es gratuita. Para usar las funciones (fila, ventas y el resto) se necesita un plan activo, que se cobra por salón y por mes al precio indicado en nuestro sitio web, que depende de cuántas personas inicien sesión. Los planes se pagan por adelantado, se activan cuando se recibe el pago y no se renuevan solos. Los meses pagados no se reembolsan, salvo cuando la ley lo exija. Si un plan termina, tus datos se conservan: puedes seguir iniciando sesión, consultarlos y exportarlos."
+        "body": "Configurar es gratis, y un salón nuevo puede usar todas las funciones gratis durante 7 días (una prueba gratis por propietario) sin pagar ni dar una tarjeta. Después, usar las funciones (cola, ventas y lo demás) requiere un plan activo, cobrado por salón y por mes al precio que muestra nuestra web, que depende de cuántas personas inician sesión. Los planes se pagan por adelantado, se activan al recibir el pago y no se renuevan solos. Los meses pagados no se reembolsan, salvo donde la ley lo exija. Si un plan o la prueba gratis terminan, tus datos se conservan: puedes seguir iniciando sesión, verlos y exportarlos."
       },
       "data": {
         "title": "Tus datos",
@@ -2227,7 +2245,7 @@
     },
     "overview": {
       "salons": "Salones",
-      "salonsSub": "{{active}} con plan · {{closed}} cerrados",
+      "salonsSub": "{{active}} con plan · {{trial}} en prueba · {{closed}} cerrados",
       "requests": "Solicitudes de plan pendientes",
       "accounts": "Cuentas de acceso",
       "accountsSub": "{{owners}} dueños · {{staff}} accesos de personal · {{none}} sin salón",
@@ -2281,7 +2299,8 @@
       "kinds": {
         "request": "Solicitado",
         "activate": "Pagado",
-        "end": "Terminado"
+        "end": "Terminado",
+        "trial": "Prueba gratis"
       }
     },
     "activity": {

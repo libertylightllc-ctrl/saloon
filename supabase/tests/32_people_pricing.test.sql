@@ -44,7 +44,7 @@ $$;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000032a0');
 select set_config('t.a', (create_business('{"business_name":"People Salon","owner_name":"Owner","mode":"gents","vat_mode":"off"}') ->> 'business_id'), false);
 select set_config('t.abr', (select id::text from branches where business_id = current_setting('t.a')::uuid), false);
-select is(plan_status(current_setting('t.a')::uuid) - 'paid_until' - 'requested_at' - 'requested_months' - 'active',
+select is(plan_status(current_setting('t.a')::uuid) - 'paid_until' - 'requested_at' - 'requested_months' - 'active' - 'trial' - 'today',
   '{"people":1,"included_people":4,"base_minor":5000,"extra_person_minor":1000,"monthly_minor":5000,"currency":"AED"}'::jsonb,
   'the owner alone: AED 50 covers up to 4 people');
 

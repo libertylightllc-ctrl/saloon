@@ -76,8 +76,12 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                     badges={
                       <View style={styles.badges}>
                         <StatusPill
-                          status={s.active ? 'valid' : 'expired'}
-                          label={s.active && s.paid_until ? t('admin.until', { date: dates.day(s.paid_until, 'd MMM yyyy') }) : t('plan.inactive')}
+                          status={s.active ? (s.trial ? 'due_soon' : 'valid') : 'expired'}
+                          label={
+                            s.active && s.paid_until
+                              ? t(s.trial ? 'admin.trialUntil' : 'admin.until', { date: dates.day(s.paid_until, 'd MMM yyyy') })
+                              : t('plan.inactive')
+                          }
                         />
                         {s.requested_at ? <StatusPill status="pending_approval" label={t('admin.asked')} /> : null}
                         {st?.closed ? <StatusPill status="cancelled" label={t('console.salons.closed')} /> : null}

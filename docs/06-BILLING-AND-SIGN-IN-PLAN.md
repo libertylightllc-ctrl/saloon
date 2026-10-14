@@ -2,7 +2,9 @@
 
 Status: **decided 2026-09-29 and built** (card payments later):
 - Sign-in: **Continue with Google** + an email sender (owner sets both up in Supabase — see HOSTED-SUPABASE.md §7–8).
-- **No trial**: sign up and set up for free; the features need an active plan.
+- **7-day free trial** (owner, 2026-10-14; was "no trial"): a new salon has every feature for 7 days, no card, one
+  trial per owner (`platform_settings.trial_days`, 0 = off; `subscriptions.trial`). Then the features need an active
+  plan; a plan paid during the trial starts when it ends. Migration 47.
 - **Priced by people, per salon** (owner, 2026-10-08): **AED 50 a month for up to 4 people who sign in** (the owner
   and every staff login), **+ AED 10 for each one after**; outside the UAE USD 13.99 + USD 2.99. Branches cost nothing
   extra. `platform_settings`: `price_per_branch_minor` / `intl_price_per_branch_minor` (the base, named from when it

@@ -110,6 +110,7 @@ test('the privacy policy and terms are open to everyone, from the landing page a
   await expect(id(page, 'landing-pricing')).toContainText('a month, for up to 4 people');
   await expect(id(page, 'landing-price-extra')).toHaveText('then AED 10.00 a month for each extra person who signs in');
   await expect(id(page, 'landing-pricing')).not.toContainText('USD');
+  await expect(id(page, 'landing-trial')).toHaveText('Try every feature free for 7 days. No card needed.');
   // The languages come round one at a time (the whole line did not fit a phone); a screen reader hears them all.
   const languages = id(page, 'landing-languages');
   await expect(languages).toHaveAttribute('aria-label', 'English · العربية · हिन्दी · اردو · Español · Français · Português');

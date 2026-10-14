@@ -1,5 +1,6 @@
 /** The salon's paid plan (docs/06): its status, the owner's request, and the platform owner's tools. */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { differenceInCalendarDays, parseISO } from 'date-fns';
 
 import { isCurrency, type CurrencyCode } from '@/lib/currencies';
 import { supabase } from '@/lib/supabase';
@@ -10,6 +11,10 @@ export const planKey = (businessId: string) => ['plan', businessId] as const;
 export interface PlanStatus {
   active: boolean;
   paid_until: string | null;
+  /** The plan running until paid_until is the free trial (when not active: the trial has ended). */
+  trial: boolean;
+  /** The salon's business date. */
+  today: string;
   /** Everyone who signs in: the owner and every staff login. */
   people: number;
   included_people: number;
@@ -40,6 +45,11 @@ export function usePlanStatus(businessId: string) {
       };
     },
   });
+}
+
+/** Days of the free trial left after today: 7 on the day it starts, 0 on its last day. */
+export function trialDaysLeft(p: Pick<PlanStatus, 'paid_until' | 'today'>): number {
+  return p.paid_until ? Math.max(differenceInCalendarDays(parseISO(p.paid_until), parseISO(p.today)), 0) : 0;
 }
 
 export function useRequestPlan(businessId: string) {
@@ -83,6 +93,8 @@ export interface AdminSalon {
   people: number;
   monthly_minor: number;
   plan_currency: CurrencyCode;
+  /** On its free trial (when active). */
+  trial: boolean;
 }
 
 export function useAdminSalons() {
@@ -126,14 +138,14 @@ export interface PaymentDetails {
   pay_note: string | null;
 }
 
-/** The plan prices, for the website (visitors may read these four columns only, migration 39). */
+/** The plan prices and the trial's length, for the website (visitors may read only these columns). */
 export function usePublicPrices() {
   return useQuery({
     queryKey: ['platform', 'prices'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('platform_settings')
-        .select('price_per_branch_minor, currency, intl_price_per_branch_minor, intl_currency, included_people, extra_person_minor, intl_extra_person_minor')
+        .select('price_per_branch_minor, currency, intl_price_per_branch_minor, intl_currency, included_people, extra_person_minor, intl_extra_person_minor, trial_days')
         .single();
       if (error) throw error;
       return data;

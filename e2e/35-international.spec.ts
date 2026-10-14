@@ -68,7 +68,7 @@ test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt
   await tab(page, 'more');
   await id(page, 'more-plan').click();
   await expect(id(page, 'plan-price')).toHaveText('USD 13.99');
-  await admin.from('subscriptions').upsert({ business_id: biz!.id, paid_until: '2099-12-31' });
+  await admin.from('subscriptions').upsert({ business_id: biz!.id, paid_until: '2099-12-31', trial: false });
   await expect(text(page, 'Paid until 31 December 2099.')).toBeVisible();
   await page.goto('/');
 

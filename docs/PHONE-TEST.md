@@ -383,3 +383,11 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 1. More → Help & support → ✅ "Common questions"; tap "How much does Saloqo cost?" → ✅ the answer opens.
 2. Type "the receipt is not printing" in the message box → ✅ "These might answer it" with the receipt question.
 3. Signed out: sign-in page → Need help? Contact us → ✅ the same questions, in the chosen language.
+
+## 45 · 7-day free trial (2 min)
+
+1. Signed out: saloqo.com → ✅ "Try every feature free for 7 days. No card needed." above the price.
+2. Sign up a new salon → Home → ✅ "Free trial: 7 days left".
+3. Queue → New → a walk-in → ✅ saved (no "plan isn't active").
+4. More → Plan & billing → ✅ "Free trial" and "Free trial: 7 days left, until …".
+5. Console → Salons → that salon → ✅ "Trial until …".

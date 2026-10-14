@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -10,11 +11,22 @@ import { useDates } from '@/lib/useDates';
 import { semantic, spacing, useTheme } from '@/theme';
 import { Button, Card, FormError, HeaderBand, Icon, PillTabs, QueryState, Screen, StatusPill, Text, TextField, useToast, type IconName } from '@/ui';
 
-import { usePlanStatus, useRequestPlan } from './api';
+import { trialDaysLeft, usePlanStatus, useRequestPlan, type PlanStatus } from './api';
 import { HowToPay } from './HowToPay';
 import { canOfferPlans } from './storePolicy';
 
 const MONTHS = [1, 3, 6, 12] as const;
+
+/** The line under the plan's name: paid until, the trial's days left, the trial ended, or not active. */
+function statusLine(p: PlanStatus, t: TFunction, day: (d: string) => string) {
+  if (p.active && p.paid_until && p.trial) {
+    const left = trialDaysLeft(p);
+    return left === 0 ? t('plan.trial.lastDay') : t('plan.trial.left', { count: left, date: day(p.paid_until) });
+  }
+  if (p.active && p.paid_until) return t('plan.paidUntil', { date: day(p.paid_until) });
+  if (p.trial && p.paid_until && canOfferPlans) return t('plan.trial.ended', { date: day(p.paid_until) });
+  return t(canOfferPlans ? 'plan.notActiveBody' : 'plan.store.inactiveBody');
+}
 const INCLUDED: { key: string; icon: IconName }[] = [
   { key: 'queue', icon: 'users' },
   { key: 'sale', icon: 'receipt' },
@@ -52,12 +64,13 @@ export function PlanScreen() {
                 <Text variant="h3" style={styles.flex}>
                   {t('plan.name')}
                 </Text>
-                <StatusPill status={p.active ? 'valid' : 'expired'} label={t(p.active ? 'plan.active' : 'plan.inactive')} />
+                <StatusPill
+                  status={p.active ? (p.trial ? 'due_soon' : 'valid') : 'expired'}
+                  label={t(p.active ? (p.trial ? 'plan.trial.pill' : 'plan.active') : 'plan.inactive')}
+                />
               </View>
-              <Text color="textSecondary">
-                {p.active && p.paid_until
-                  ? t('plan.paidUntil', { date: dates.day(p.paid_until, 'd MMMM yyyy') })
-                  : t(canOfferPlans ? 'plan.notActiveBody' : 'plan.store.inactiveBody')}
+              <Text color="textSecondary" testID="plan-status-line">
+                {statusLine(p, t, (d) => dates.day(d, 'd MMMM yyyy'))}
               </Text>
               {canOfferPlans ? (
                 <View style={[styles.price, { backgroundColor: theme.colors.primary50, borderRadius: theme.radius.md }]}>
@@ -93,7 +106,7 @@ export function PlanScreen() {
             {owner ? <HowToPay code={business.code} /> : null}
             {owner ? (
               <Card variant="outlined" style={styles.card}>
-                <Text variant="h4">{t(p.active ? 'plan.extendTitle' : 'plan.requestTitle')}</Text>
+                <Text variant="h4">{t(p.active && !p.trial ? 'plan.extendTitle' : 'plan.requestTitle')}</Text>
                 {p.requested_at ? (
                   <Text color="primaryText" testID="plan-requested">
                     {t('plan.requested', {
@@ -114,7 +127,7 @@ export function PlanScreen() {
                 <TextField label={t('plan.note')} placeholder={t('plan.notePlaceholder')} value={note} onChangeText={setNote} testID="plan-note" />
                 <FormError error={request.error} />
                 <Button
-                  label={t(p.active ? 'plan.extendAction' : 'plan.requestAction')}
+                  label={t(p.active && !p.trial ? 'plan.extendAction' : 'plan.requestAction')}
                   loading={request.isPending}
                   onPress={() =>
                     request.mutate({ months, note }, { onSuccess: () => { setNote(''); toast(t('plan.requestSent')); } })

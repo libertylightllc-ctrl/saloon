@@ -17,6 +17,8 @@ export function notificationHref(n: { type: string; entity_type: string | null; 
       return '/compliance';
     case 'support':
       return '/support';
+    case 'plan':
+      return '/plan';
     default:
       return '/';
   }

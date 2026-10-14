@@ -10,6 +10,8 @@ export interface Overview {
   salons: number;
   salons_closed: number;
   salons_plan_active: number;
+  /** On their free trial (not counted in salons_plan_active). */
+  salons_trial: number;
   plan_requests_open: number;
   branches: number;
   accounts: number;

@@ -1995,6 +1995,7 @@ export type Database = {
           pay_note: string | null;
           price_per_branch_minor: number;
           support_assistant: boolean;
+          trial_days: number;
         };
         Insert: {
           bank_account_name?: string | null;
@@ -2012,6 +2013,7 @@ export type Database = {
           pay_note?: string | null;
           price_per_branch_minor?: number;
           support_assistant?: boolean;
+          trial_days?: number;
         };
         Update: {
           bank_account_name?: string | null;
@@ -2029,6 +2031,7 @@ export type Database = {
           pay_note?: string | null;
           price_per_branch_minor?: number;
           support_assistant?: boolean;
+          trial_days?: number;
         };
         Relationships: [];
       };
@@ -3084,16 +3087,19 @@ export type Database = {
         Row: {
           business_id: string;
           paid_until: string;
+          trial: boolean;
           updated_at: string;
         };
         Insert: {
           business_id: string;
           paid_until: string;
+          trial?: boolean;
           updated_at?: string;
         };
         Update: {
           business_id?: string;
           paid_until?: string;
+          trial?: boolean;
           updated_at?: string;
         };
         Relationships: [
@@ -3502,6 +3508,7 @@ export type Database = {
           requested_at: string;
           requested_months: number;
           timezone: string;
+          trial: boolean;
         }[];
       };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
@@ -3813,6 +3820,7 @@ export type Database = {
       };
       notify_documents_due: { Args: { p_today?: string }; Returns: number };
       notify_long_waits: { Args: { p_now?: string }; Returns: number };
+      notify_trials_ending: { Args: { p_now?: string }; Returns: number };
       owner_control: { Args: { p_branch: string }; Returns: Json };
       paid_from_account: {
         Args: { p_method: Database['public']['Enums']['payment_method'] };
@@ -4050,6 +4058,7 @@ export type Database = {
       };
       staff_has_records: { Args: { p_employee: string }; Returns: boolean };
       start_service: { Args: { p_id: string }; Returns: undefined };
+      start_trial: { Args: { p_business: string; p_owner: string }; Returns: boolean };
       starter_price: { Args: { p_aed_fils: number; p_currency: string }; Returns: number };
       submit_cash_count: { Args: { p: Json }; Returns: Json };
       supplier_balances: {

@@ -40,6 +40,11 @@ export function LandingPricing({ wide }: { wide: boolean }) {
       <Text variant="h1" align="center">
         {t('auth.landing.pricing.title')}
       </Text>
+      {p.trial_days > 0 ? (
+        <Text variant="h4" align="center" color="primaryText" testID="landing-trial">
+          {t('auth.landing.pricing.trial', { count: p.trial_days })}
+        </Text>
+      ) : null}
       <View style={[styles.tier, wide && styles.tierWide, { backgroundColor: theme.colors.surface, borderRadius: theme.radius.lg }]}>
         <Text variant="display" tabular testID="landing-price">
           {price}

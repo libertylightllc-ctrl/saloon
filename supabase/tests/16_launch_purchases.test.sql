@@ -147,7 +147,8 @@ select set_config('t.staff', (register_staff_member(jsonb_build_object('business
 select register_staff_member(jsonb_build_object('business_id', current_setting('t.b2'), 'branch_id', current_setting('t.br2'),
   'user_id', '00000000-0000-0000-0000-0000000016dd', 'username', 'plaincash', 'display_name', 'Cashier', 'role', 'cashier'));
 select pg_temp.as_admin();
-insert into subscriptions (business_id, paid_until) values (current_setting('t.b2')::uuid, current_date + 30);
+insert into subscriptions (business_id, paid_until) values (current_setting('t.b2')::uuid, current_date + 30)
+  on conflict (business_id) do update set paid_until = excluded.paid_until, trial = false;
 insert into push_tokens (token, member_id, platform) values ('ExponentPushToken[plain-staff]', current_setting('t.staff')::uuid, 'ios');
 
 select pg_temp.as_user('00000000-0000-0000-0000-0000000016cc');

@@ -21,6 +21,8 @@ values
   ('00000000-0000-0000-0000-0000000014ff', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'platform@test.local', crypt('pw-12345', gen_salt('bf')), now(), now(), now(), '{}', '{}');
 insert into platform_admins (user_id) values ('00000000-0000-0000-0000-0000000014ff');
+-- A salon without a plan: trials off for this test (35_free_trial covers the trial).
+update platform_settings set trial_days = 0 where true;
 
 create function pg_temp.as_user(p uuid) returns void language plpgsql as $$
 begin
