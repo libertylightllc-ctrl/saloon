@@ -4,6 +4,7 @@
 |---|---|---|
 | Home | Refresh app | updates the screen |
 | Home | Notifications, 0 unread | opens /notifications |
+| Home | Clock in | shows "No roster · In 7:41 PM · Out …" |
 | Home | Walk-in | opens /appointment/new |
 | Home | Open queue | opens /queue |
 | Home | Home | already selected |
@@ -22,7 +23,7 @@
 | Queue | No-show 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Cancelled 0 | shows "No one is waiting. Add a walk-in." |
 | Queue | Any barber | already selected |
-| Queue | Staff xap | shows "No one is waiting. Add a walk-in." |
+| Queue | Staff nbh | shows "No one is waiting. Add a walk-in." |
 | Queue | More actions for Sweep Walk-in | updates the screen |
 | Queue | Home | opens / |
 | Queue | Queue | already selected |
@@ -51,16 +52,16 @@
 | Inventory | Consumables | updates the screen |
 | Inventory | Retail | updates the screen |
 | Inventory | Tools | shows "No items here yet." |
-| Inventory | Beard Color | opens /inventory/7a67034e-1074-49a6-b7f7-55bf8317ed0c |
-| Inventory | Blades | opens /inventory/2689bf28-e1ec-4cf1-b35e-40ef76976fb4 |
-| Inventory | Developer 20 Vol | opens /inventory/20a74939-af97-4b2e-a5a3-d26eb842de71 |
-| Inventory | Gloves | opens /inventory/6d0abef6-dd29-45b8-b92c-8589d4d0f16c |
-| Inventory | Hair Color | opens /inventory/6150cb9e-22c8-48bc-8090-2dbfa7f521f5 |
-| Inventory | Hair Oil | opens /inventory/ea1bd0a6-18df-4f9c-a719-d177b1a3c2f9 |
-| Inventory | Neck strips | opens /inventory/fbc6431c-bcd9-4ef3-bd01-6149aede20fa |
-| Inventory | Shaving Foam | opens /inventory/6cded018-df0f-458c-8af3-7b93b0d31d81 |
-| Inventory | Sweep Oil | opens /inventory/cb75f6af-ff33-404c-b4c2-920af1cd95d3 |
-| Inventory | Tissues | opens /inventory/aa25ef61-8d7b-404a-ac9a-a0804940472a |
+| Inventory | Beard Color | opens /inventory/6f5ebbe5-a6c7-415d-97f8-9694be4dc8a6 |
+| Inventory | Blades | opens /inventory/65f2653d-55ea-4acd-ae3d-204c1016f667 |
+| Inventory | Developer 20 Vol | opens /inventory/67a8a8fb-24b4-4ae4-9a86-78853ebed45c |
+| Inventory | Gloves | opens /inventory/88e76667-7afa-47be-9981-9341f8fe8e05 |
+| Inventory | Hair Color | opens /inventory/c945d4a3-f9c1-4868-a7d1-b74936c897ec |
+| Inventory | Hair Oil | opens /inventory/63b69422-7d0d-43d7-8e6e-73e8cf40c6b9 |
+| Inventory | Neck strips | opens /inventory/ee8c91db-bd29-4430-a903-433c13bbd233 |
+| Inventory | Shaving Foam | opens /inventory/b454ec39-54a8-4b8d-8227-d013704619e1 |
+| Inventory | Sweep Oil | opens /inventory/2301ccaa-dd63-4d01-974a-4840d5d6ffda |
+| Inventory | Tissues | opens /inventory/8b55e101-288a-4f0e-8163-1eda52f55f57 |
 | Item detail | Back | opens /inventory |
 | My pay | Home | opens / |
 | My pay | Queue | opens /queue |
