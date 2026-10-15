@@ -75,26 +75,15 @@ function late(t) {
   place($('url'), { y: 375, o: out3(prog(u, 33.8, 34.4)) });
 }
 
-// The sound effects: [seconds, sound, options]. sfx.py has the sounds; render.mjs hands this list over.
+// The sound effects: [seconds, sound, options]. sfx.py has the sounds; render.mjs hands this list over. The music
+// carries the video, so only the key moments get a sound: the screens flying in on the drop, the star's streak, the
+// icon, the Checkout tap, "Sale saved", "Balanced" and the logo.
 window.CUES = [
-  [0.12, 'blip'], [1.6, 'whoosh', { dur: 1.3 }], [2.3, 'whoosh', { dur: 1.1, gain: -6, pan: 0.6 }],
-  [4.33, 'blip'], [5.93, 'blip'], [6.15, 'pulse'], [6.72, 'blip'],
-  [7.65, 'swell', { dur: 0.75 }],
-  [8.1, 'whoosh', { dur: 0.8, pan: 0.7 }], [8.4, 'whoosh', { dur: 0.8, pan: 0.2 }], [8.7, 'whoosh', { dur: 0.8, pan: -0.2 }],
-  [10.85, 'whoosh', { dur: 1.2, down: true }], [11.4, 'shimmer', { dur: 2.2, gain: -4 }],
-  [12.0, 'whoosh', { dur: 3.3, peak: 0.45, gain: 2 }], [12.9, 'swell', { dur: 1.0, gain: -4 }],
-  [13.53, 'blip'], [14.43, 'blip'],
-  [15.95, 'pop'], [15.98, 'shimmer', { dur: 1.4, gain: -6 }],
-  [16.68, 'blip'], [17.0, 'whoosh', { dur: 1.0, pan: 0.4 }],
-  [19.05, 'click'], [19.32, 'whoosh', { dur: 0.45, gain: -9 }],
-  [20.55, 'chime'], [20.62, 'sparkle'],
-  [22.25, 'swell', { dur: 0.75 }],
-  [22.7, 'whoosh', { dur: 1.0, pan: -0.6 }], [23.38, 'blip'], [24.35, 'pop'],
-  [25.3, 'whoosh', { dur: 0.9, pan: -0.5 }], [25.73, 'blip'],
-  [27.65, 'whoosh', { dur: 1.1, pan: -0.5 }], [27.83, 'blip'],
-  ...BENEFITS.map((_, i) => [BENEFIT_AT(i), 'tick', { step: i }]),
-  [33.6, 'whoosh', { dur: 0.8, down: true, gain: -4 }],
-  [34.15, 'whoosh', { dur: 1.2 }], [34.48, 'blip'], [36.03, 'blip'],
-  [37.45, 'whoosh', { dur: 0.9, down: true, gain: -4 }],
-  [38.1, 'boom'], [38.15, 'shimmer', { dur: 3.2 }], [39.8, 'pop'],
+  [8.1, 'whoosh', { dur: 0.8, pan: 0.4, gain: -4 }],
+  [12.0, 'whoosh', { dur: 3.3, peak: 0.45, gain: -2 }],
+  [15.95, 'pop'],
+  [19.05, 'click'],
+  [20.55, 'chime'],
+  [24.35, 'pop'],
+  [38.1, 'boom'], [38.15, 'shimmer', { dur: 3.2, gain: -4 }],
 ];

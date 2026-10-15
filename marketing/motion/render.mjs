@@ -16,12 +16,14 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '../..');
 const OUT = join(HERE, 'out');
 const FPS = 30;
-// The music: "Corporate Upbeat" by NastelBom, https://pixabay.com/music/corporate-corporate-upbeat-606729/ (Pixabay
-// Content License: free for commercial use, no credit needed; it is registered with YouTube Content ID, so keep the
-// licence certificate for disputing claims). It is not in git: the repository is public and the licence doesn't allow
-// sharing the track on its own, so download it into music/. Its first kick (the drop) is 9.48 s into the track, so
-// starting 1.48 s in puts the drop on 8 s, where the navy ground spreads in. Without the file the video has effects only.
-const MUSIC = { file: join(HERE, 'music', 'corporate-upbeat-nastelbom.mp3'), from: 1.48, gainDb: -8, mixDb: 2.5, fadeFrom: 39.1 };
+// The music: "Pop Upbeat - Upbeat Pop" by The_Mountain, https://pixabay.com/music/dance-pop-upbeat-upbeat-pop-576584/
+// (Pixabay Content License: free for commercial use, no credit needed; Pixabay marks it AI generated, and it is
+// registered with YouTube Content ID, so keep the licence certificate for disputing claims). It is not in git: the
+// repository is public and the licence doesn't allow sharing the track on its own, so download it into music/.
+// It is 120 BPM; its first kick (the drop) is 9.54 s in, so starting 1.54 s in puts the drop on 8 s, where the navy
+// ground spreads in, and the beat lands on the star's streak (12 s) and comes back from its break on the icon (16 s).
+// Without the file the video has effects only.
+const MUSIC = { file: join(HERE, 'music', 'pop-upbeat-the-mountain.mp3'), from: 1.54, gainDb: -7, mixDb: 2.5, fadeFrom: 39.1 };
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.ttf': 'font/ttf' };
 mkdirSync(OUT, { recursive: true });
 
@@ -77,7 +79,7 @@ if (stills) {
       `afade=t=in:d=0.3,afade=t=out:st=${MUSIC.fadeFrom}:d=${(duration - MUSIC.fadeFrom).toFixed(2)}[m]`;
     inputs.push('-i', MUSIC.file);
     audio = ['-filter_complex', `${m};[1:a][m]amix=inputs=2:duration=first:normalize=0,volume=${MUSIC.mixDb}dB,` +
-      'alimiter=limit=0.84:level=0[a]', '-map', '[a]'];
+      'alimiter=limit=0.7:level=0[a]', '-map', '[a]'];
   } else {
     console.log('no music: download it into', MUSIC.file, '(see MUSIC in render.mjs); making the video with the effects only');
   }
