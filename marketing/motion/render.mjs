@@ -1,12 +1,14 @@
 /**
- * Records the product video (scene.html) frame by frame into an MP4: 1920 × 1080, 30 frames a second, no sound.
- *   node marketing/motion/render.mjs                    → marketing/motion/out/saloqo-product.mp4
+ * Records the product video (scene.html) frame by frame into an MP4: 1920 × 1080, 30 frames a second, with the
+ * sound effects sfx.py makes from the timeline's CUES.
+ *   node marketing/motion/render.mjs                    → marketing/motion/out/saloqo-product.mp4 (picture + sound)
+ *   node marketing/motion/render.mjs --sound            → only remakes the sound (sfx.py) onto the last picture
  *   node marketing/motion/render.mjs --stills 1,5.2,9   → a PNG of each moment in out/ (for checking)
  * The page is served from the repository (fonts, logo, app screens) without a server: requests are answered from disk.
  */
 import { chromium } from '@playwright/test';
-import { spawn } from 'node:child_process';
-import { mkdirSync, readFileSync } from 'node:fs';
+import { execFileSync, spawn } from 'node:child_process';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -19,6 +21,7 @@ mkdirSync(OUT, { recursive: true });
 
 const stillsArg = process.argv.indexOf('--stills');
 const stills = stillsArg > 0 ? process.argv[stillsArg + 1].split(',').map(Number) : null;
+const soundOnly = process.argv.includes('--sound');
 
 const browser = await chromium.launch({ channel: 'chrome' });
 const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
@@ -51,7 +54,21 @@ if (stills) {
     console.log('still', file);
   }
 } else {
+  const picture = join(OUT, 'picture.mp4');
+  if (!soundOnly) await record(picture);
+  // The sound effects, made from the timeline's cues, laid under the picture.
+  const cues = join(OUT, 'cues.json');
+  const sound = join(OUT, 'sfx.wav');
+  writeFileSync(cues, JSON.stringify(await page.evaluate(() => window.CUES)));
+  execFileSync('python3', [join(HERE, 'sfx.py'), cues, String(duration), sound], { stdio: 'inherit' });
   const file = join(OUT, 'saloqo-product.mp4');
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', picture, '-i', sound, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
+    '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', file], { stdio: 'inherit' });
+  console.log('video', file);
+}
+await browser.close();
+
+async function record(file) {
   const ffmpeg = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-i', '-',
     '-c:v', 'libx264', '-preset', 'slow', '-crf', '17', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', file], { stdio: ['pipe', 'inherit', 'inherit'] });
   const frames = Math.round(duration * FPS);
@@ -62,6 +79,4 @@ if (stills) {
   }
   ffmpeg.stdin.end();
   await new Promise((r) => ffmpeg.on('close', r));
-  console.log('video', file);
 }
-await browser.close();

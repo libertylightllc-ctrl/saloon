@@ -1,6 +1,6 @@
 // The timeline of the Saloqo product video: seek(t) puts every element where it is at t seconds (scene.html).
 // Nothing animates by itself, so each frame render.mjs records is exact.
-const DURATION = 36.6;
+const DURATION = 43.1;
 const $ = (id) => document.getElementById(id);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const prog = (t, a, b) => clamp((t - a) / (b - a));
@@ -58,8 +58,6 @@ words('w-salon', [{ text: 'for the whole salon', start: 14.45 }], 110);
 words('w-sell', [{ text: 'Sell', start: 16.7 }], 300);
 words('w-close', [{ text: 'Close the day', start: 23.4 }], 104);
 words('w-pay', [{ text: 'Pay your team', start: 25.75 }], 104);
-words('w-barber', [{ text: '✦ Barber shops', start: 28.0 }], 112);
-words('w-ladies', [{ text: '✦ Ladies salons & spas', start: 29.55 }], 112);
 
 // Soft rings behind "Too little time".
 const rings = [...Array(5)].map((_, i) => {
@@ -117,7 +115,7 @@ function seek(t) {
   // Grounds: light, then navy (8–13), light again from the star (13–22.4), navy to the end. The navy spreads in a
   // circle from where the eye is (no grey cross-fades).
   ground(t);
-  $('grid').style.opacity = t > 31.4 ? 1 - prog(t, 31.4, 32.2) : 1;
+  $('grid').style.opacity = t > 37.9 ? 1 - prog(t, 37.9, 38.7) : 1;
 
   // 1 · "Too many walk-ins. Too little time."
   reveal('w-many', t);
@@ -234,32 +232,6 @@ function seek(t) {
   place($('w-pay'), { x: 420, y: -30, o: win(t, 25.6, 27.6, 0.01, 0.4) });
   for (const id of ['w-close', 'w-pay']) $(id).style.color = id === 'w-close' ? '#BDEFE8' : '#F8B4B6';
 
-  // 6 · Both looks, every language.
-  const fan = out3(prog(t, 27.7, 28.9));
-  const fanOut = inOut(prog(t, 31.0, 31.6));
-  [['p-gents', -470, -9], ['p-ar', 0, 0], ['p-ladies', 470, 9]].forEach(([id, x, rz], i) => {
-    place($(id), {
-      x: x * fan, y: lerp(220, 150, fan) - fanOut * 80 + (i === 1 ? 0 : 30),
-      z: i === 1 ? -200 : -80, rz: rz * fan, rx: 14, s: 0.78,
-      o: out3(prog(t, 27.6 + i * 0.15, 28.4 + i * 0.15)) * (1 - fanOut), blur: (i === 1 ? 3 : 0) + fanOut * 18,
-    });
-  });
-  reveal('w-barber', t);
-  $('w-barber').style.color = '#B7A4FB';
-  place($('w-barber'), { y: -360, o: win(t, 27.9, 29.5, 0.01, 0.3) });
-  reveal('w-ladies', t);
-  $('w-ladies').style.color = '#F8B4B6';
-  place($('w-ladies'), { y: -360, o: win(t, 29.45, 31.4, 0.01, 0.35) });
-  place($('langs'), { y: -250, o: win(t, 29.9, 31.4, 0.5, 0.35) });
-
-  // 7 · End card.
-  const e = out3(prog(t, 31.6, 32.6));
-  place($('end-star'), { y: lerp(-150, -210, e), s: lerp(0.6, 1, e), rz: lerp(-60, 0, e), o: e });
-  place($('wordmark'), { y: 20, o: out3(prog(t, 32.1, 32.9)), blur: (1 - out3(prog(t, 32.1, 32.9))) * 14 });
-  place($('tagline'), { y: 150, o: out3(prog(t, 32.7, 33.4)) * 0.85 });
-  const tryIn = back(prog(t, 33.3, 33.9));
-  place($('try'), { y: 270, s: lerp(0.6, 1, tryIn), o: clamp(tryIn * 2) });
-  place($('url'), { y: 375, o: out3(prog(t, 33.8, 34.4)) });
   $('stage').style.filter = t > DURATION - 0.6 ? `brightness(${1 - prog(t, DURATION - 0.6, DURATION)})` : 'none';
 }
 
@@ -286,13 +258,18 @@ async function wordmark() {
 }
 
 window.DURATION = DURATION;
-window.seek = seek;
+// The owner's benefits, both looks and the end card are in scene-late.js.
+const seekFirstHalf = seek; // (a top-level function is window.seek itself, so keep it before replacing)
+window.seek = (t) => {
+  seekFirstHalf(t);
+  late(t);
+};
 window.ready = (async () => {
   await document.fonts.ready;
   await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
   await wordmark();
   // Both screens of the sale phone, so the swap does not wait for a load.
   await Promise.all(['shots/gents-checkout.png'].map((s) => Object.assign(new Image(), { src: s }).decode()));
-  seek(0);
+  window.seek(0);
   return true;
 })();
