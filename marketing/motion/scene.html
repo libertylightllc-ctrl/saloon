@@ -1,0 +1,138 @@
+<!doctype html>
+<!--
+  The Saloqo product video (owner, 2026-10-15): one stage, 1920 × 1080, drawn for any moment by seek(t) in scene.js,
+  so render.mjs can record it frame by frame. Its pacing follows the owner's reference (a SaaS launch film): kinetic
+  words, floating real app cards, a glowing mark with a light trail, a tap with a success tick, the end card. Every
+  picture is Saloqo's own: real app screens (shots/, capture.mjs) and the logo (docs/brand).
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: Pop; font-weight: 300; src: url(/node_modules/@expo-google-fonts/poppins/300Light/Poppins_300Light.ttf); }
+  @font-face { font-family: Pop; font-weight: 400; src: url(/node_modules/@expo-google-fonts/poppins/400Regular/Poppins_400Regular.ttf); }
+  @font-face { font-family: Pop; font-weight: 500; src: url(/node_modules/@expo-google-fonts/poppins/500Medium/Poppins_500Medium.ttf); }
+  @font-face { font-family: Pop; font-weight: 600; src: url(/node_modules/@expo-google-fonts/poppins/600SemiBold/Poppins_600SemiBold.ttf); }
+  @font-face { font-family: Plex; font-weight: 400; src: url(/node_modules/@expo-google-fonts/ibm-plex-sans-arabic/400Regular/IBMPlexSansArabic_400Regular.ttf); }
+  :root {
+    --navy: #0B0916; --ink: #15121F; --muted: #8C8A99; --teal: #7FE0D2; --violet: #6C45F2; --coral: #F2777A;
+  }
+  html, body { margin: 0; background: #000; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Pop, Plex, sans-serif;
+           perspective: 2000px; color: var(--ink); }
+  #stage > * { position: absolute; }
+  .fill { inset: 0; }
+  #bg-light { background: radial-gradient(1200px 700px at 30% 80%, #EEF4F6 0%, transparent 70%),
+                          radial-gradient(1000px 600px at 80% 10%, #F3EFFE 0%, transparent 70%), #FBFAFD; }
+  #bg-dark { background: radial-gradient(900px 600px at 50% 55%, #1C2A33 0%, transparent 75%), var(--navy); }
+  #grid { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cpath d='M80 72v16M72 80h16' stroke='%23ffffff' stroke-opacity='.14' stroke-width='1.5'/%3E%3C/svg%3E");
+          background-position: center; }
+  .center { left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform, opacity, filter; }
+  .kinetic { white-space: nowrap; font-weight: 300; letter-spacing: -0.01em; font-size: 128px; line-height: 1; }
+  .kinetic span { display: inline-block; white-space: pre; }
+  .accent { background: linear-gradient(90deg, #5FA89C, #8B6CF6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .on-dark { color: #fff; }
+  .phone { width: 420px; height: 908px; border-radius: 66px; background: #0E0D14; padding: 12px; box-sizing: border-box;
+           box-shadow: 0 70px 140px rgba(16, 10, 50, .35), inset 0 0 0 2px #2A2833; }
+  .phone img { width: 100%; height: 100%; border-radius: 54px; display: block; object-fit: cover; }
+  .phone::after { content: ''; position: absolute; top: 26px; left: 50%; width: 118px; height: 34px; margin-left: -59px;
+                  border-radius: 20px; background: #000; }
+  .card { width: 700px; border-radius: 34px; overflow: hidden; box-shadow: 0 40px 90px rgba(30, 20, 70, .22); background: #fff; }
+  .card img { width: 100%; display: block; }
+  .ring { border-radius: 50%; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 55%, rgba(255,255,255,.9) 100%);
+          box-shadow: 0 30px 80px rgba(60, 60, 90, .10), inset 0 -20px 60px rgba(255,255,255,.8); }
+  #trail { left: 0; top: 0; overflow: visible; }
+  #star { width: 230px; height: 230px; }
+  #star img { width: 100%; filter: drop-shadow(0 0 24px rgba(127, 224, 210, .9)) drop-shadow(0 0 60px rgba(127, 224, 210, .5)); }
+  #tile { width: 230px; height: 230px; border-radius: 58px; overflow: hidden; box-shadow: 0 30px 80px rgba(11, 9, 22, .35); }
+  #tile img { width: 100%; height: 100%; display: block; }
+  #cursor { width: 70px; height: 70px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.35)); }
+  .ripple { width: 120px; height: 120px; border-radius: 50%; border: 5px solid #fff; box-shadow: 0 0 0 3px rgba(108,69,242,.6); }
+  .badge { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+  .badge .tick { width: 170px; height: 170px; border-radius: 50%; background: linear-gradient(145deg, #7A58F5, #5A35E0);
+                 display: grid; place-items: center; box-shadow: 0 30px 70px rgba(108, 69, 242, .45); }
+  .badge .label { font-size: 60px; font-weight: 400; color: var(--ink); }
+  .badge .amount { font-size: 40px; font-weight: 500; color: var(--violet); margin-top: -18px; }
+  .confetti { width: 26px; height: 14px; border-radius: 3px; }
+  .pill { padding: 22px 46px; border-radius: 999px; font-size: 44px; font-weight: 500; white-space: nowrap; }
+  #balanced { background: #E3F7F2; color: #127A66; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+  #wordmark { width: 680px; height: 175px; background: #fff; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; }
+  .line { font-size: 46px; font-weight: 300; white-space: nowrap; }
+  #langs { font-size: 34px; font-weight: 300; color: rgba(255,255,255,.75); white-space: nowrap; word-spacing: 6px; }
+  #try { background: linear-gradient(90deg, var(--violet), var(--coral)); color: #fff; }
+  #url { font-size: 40px; font-weight: 400; color: rgba(255,255,255,.8); letter-spacing: .02em; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg-light" class="fill"></div>
+  <div id="bg-dark" class="fill"></div>
+  <div id="grid" class="fill"></div>
+
+  <!-- 1 · the problem -->
+  <div id="q1" class="center card"><img src="shots/gents-card-queue-1.png"></div>
+  <div id="q2" class="center card"><img src="shots/ladies-card-queue-1.png"></div>
+  <div id="q3" class="center card"><img src="shots/gents-card-queue-2.png"></div>
+  <div id="q4" class="center card"><img src="shots/ladies-card-queue-3.png"></div>
+  <div id="q5" class="center card"><img src="shots/gents-card-queue-3.png"></div>
+  <div id="w-many" class="center kinetic"></div>
+  <div id="w-walkins" class="center kinetic"></div>
+  <div id="w-time" class="center kinetic"></div>
+
+  <!-- 2 · the day's work, on dark -->
+  <div id="p-closing" class="center phone"><img src="shots/gents-closing.png"></div>
+  <div id="p-checkout" class="center phone"><img src="shots/ladies-checkout.png"></div>
+  <div id="p-payroll" class="center phone"><img src="shots/gents-payroll.png"></div>
+
+  <!-- 3 · the mark -->
+  <svg id="trail" width="1920" height="1080" viewBox="0 0 1920 1080">
+    <defs>
+      <linearGradient id="tg" x1="0" x2="1"><stop offset="0" stop-color="#7FE0D2" stop-opacity="0"/><stop offset="1" stop-color="#BDEFE8"/></linearGradient>
+      <filter id="tb" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+    </defs>
+    <path id="trail-path" d="M -120 1000 C 420 1060, 760 760, 1040 600 S 1560 300, 1700 230" fill="none" stroke="url(#tg)"
+          stroke-width="70" stroke-linecap="round" filter="url(#tb)"/>
+  </svg>
+  <div id="star" class="center"><img src="/assets/images/splash-icon.png"></div>
+  <div id="w-oneapp" class="center kinetic"></div>
+  <div id="w-salon" class="center kinetic"></div>
+  <div id="tile" class="center"><img src="/assets/images/icon.png"></div>
+
+  <!-- 4 · sell -->
+  <div id="w-sell" class="center kinetic"></div>
+  <div id="p-sale" class="center phone"><img id="sale-img" src="shots/gents-sale.png"></div>
+  <div id="ripple" class="center ripple"></div>
+  <div id="confetti" class="center"></div>
+  <div id="badge" class="center badge">
+    <div class="tick"><svg width="96" height="96" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="label">Sale saved</div>
+    <div class="amount">AED 125.00</div>
+  </div>
+
+  <!-- 5 · close the day, pay the team -->
+  <div id="p-closing2" class="center phone"><img src="shots/gents-closing.png"></div>
+  <div id="p-payroll2" class="center phone"><img src="shots/ladies-payroll.png"></div>
+  <div id="balanced" class="center pill">✓ Balanced</div>
+  <div id="w-close" class="center kinetic on-dark"></div>
+  <div id="w-pay" class="center kinetic on-dark"></div>
+
+  <!-- 6 · both looks, every language -->
+  <div id="p-gents" class="center phone"><img src="shots/gents-home.png"></div>
+  <div id="p-ar" class="center phone"><img src="shots/gents-home-ar.png"></div>
+  <div id="p-ladies" class="center phone"><img src="shots/ladies-home.png"></div>
+  <div id="w-barber" class="center kinetic on-dark"></div>
+  <div id="w-ladies" class="center kinetic on-dark"></div>
+  <div id="langs" class="center">English · العربية · हिन्दी · اردو · Español · Français · Português</div>
+
+  <!-- 7 · the end card -->
+  <div id="end-star" class="center" style="width:260px;height:260px"><img src="/assets/images/splash-icon.png" style="width:100%;filter:drop-shadow(0 0 30px rgba(127,224,210,.8))"></div>
+  <div id="wordmark" class="center"></div>
+  <div id="tagline" class="center line on-dark">Run your salon from your phone</div>
+  <div id="try" class="center pill">Try it free for 7 days</div>
+  <div id="url" class="center">saloqo.com</div>
+
+  <svg id="cursor" class="center" viewBox="0 0 24 24"><path d="M5 2.5v17l4.4-4 3 6.6 3-1.3-3-6.5h6.1z" fill="#fff" stroke="#15121F" stroke-width="1.3" stroke-linejoin="round"/></svg>
+</div>
+<script src="scene.js"></script>
+</body>
+</html>
