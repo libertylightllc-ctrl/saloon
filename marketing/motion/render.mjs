@@ -1,6 +1,6 @@
 /**
  * Records the product video (scene.html) frame by frame into an MP4: 1920 × 1080, 30 frames a second, with the
- * sound effects sfx.py makes from the timeline's CUES.
+ * sound effects sfx.py makes from the timeline's CUES, over the music (MUSIC below).
  *   node marketing/motion/render.mjs                    → marketing/motion/out/saloqo-product.mp4 (picture + sound)
  *   node marketing/motion/render.mjs --sound            → only remakes the sound (sfx.py) onto the last picture
  *   node marketing/motion/render.mjs --stills 1,5.2,9   → a PNG of each moment in out/ (for checking)
@@ -8,7 +8,7 @@
  */
 import { chromium } from '@playwright/test';
 import { execFileSync, spawn } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -16,6 +16,12 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '../..');
 const OUT = join(HERE, 'out');
 const FPS = 30;
+// The music: "Corporate Upbeat" by NastelBom, https://pixabay.com/music/corporate-corporate-upbeat-606729/ (Pixabay
+// Content License: free for commercial use, no credit needed; it is registered with YouTube Content ID, so keep the
+// licence certificate for disputing claims). It is not in git: the repository is public and the licence doesn't allow
+// sharing the track on its own, so download it into music/. Its first kick (the drop) is 9.48 s into the track, so
+// starting 1.48 s in puts the drop on 8 s, where the navy ground spreads in. Without the file the video has effects only.
+const MUSIC = { file: join(HERE, 'music', 'corporate-upbeat-nastelbom.mp3'), from: 1.48, gainDb: -8, fadeFrom: 39.1 };
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.ttf': 'font/ttf' };
 mkdirSync(OUT, { recursive: true });
 
@@ -62,7 +68,18 @@ if (stills) {
   writeFileSync(cues, JSON.stringify(await page.evaluate(() => window.CUES)));
   execFileSync('python3', [join(HERE, 'sfx.py'), cues, String(duration), sound], { stdio: 'inherit' });
   const file = join(OUT, 'saloqo-product.mp4');
-  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', picture, '-i', sound, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
+  const inputs = ['-i', picture, '-i', sound];
+  let audio = ['-map', '1:a'];
+  if (existsSync(MUSIC.file)) {
+    // The music under the effects: in at MUSIC.from, faded out over the end card, then a limiter so the hits don't clip.
+    const m = `[2:a]atrim=start=${MUSIC.from},asetpts=PTS-STARTPTS,aresample=48000,volume=${MUSIC.gainDb}dB,` +
+      `afade=t=in:d=0.3,afade=t=out:st=${MUSIC.fadeFrom}:d=${(duration - MUSIC.fadeFrom).toFixed(2)}[m]`;
+    inputs.push('-i', MUSIC.file);
+    audio = ['-filter_complex', `${m};[1:a][m]amix=inputs=2:duration=first:normalize=0,alimiter=limit=0.89:level=0[a]`, '-map', '[a]'];
+  } else {
+    console.log('no music: download it into', MUSIC.file, '(see MUSIC in render.mjs); making the video with the effects only');
+  }
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...inputs, '-map', '0:v', ...audio, '-c:v', 'copy',
     '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', file], { stdio: 'inherit' });
   console.log('video', file);
 }
