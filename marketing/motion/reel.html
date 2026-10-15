@@ -1,0 +1,93 @@
+<!doctype html>
+<!--
+  The Saloqo reel (owner, 2026-10-15: "make the video like this", an Instagram reel of a laptop on a glossy desk
+  playing a fast motion showreel). 1080 × 1920, about 15 s, drawn for any moment by seek(t) in reel.js and
+  reel-late.js, so render.mjs --film reel can record it frame by frame. The laptop, the room and the camera are drawn
+  here; the showreel on its screen is nine shots cut on the beat, each made from Saloqo's own screens, logo and words.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: Pop; font-weight: 400; src: url(/node_modules/@expo-google-fonts/poppins/400Regular/Poppins_400Regular.ttf); }
+  @font-face { font-family: Pop; font-weight: 600; src: url(/node_modules/@expo-google-fonts/poppins/600SemiBold/Poppins_600SemiBold.ttf); }
+  @font-face { font-family: Pop; font-weight: 800; src: url(/node_modules/@expo-google-fonts/poppins/800ExtraBold/Poppins_800ExtraBold.ttf); }
+  @font-face { font-family: Pop; font-weight: 900; src: url(/node_modules/@expo-google-fonts/poppins/900Black/Poppins_900Black.ttf); }
+  /* macOS fonts (the reel is recorded on the owner's Mac): an editorial italic and a mono for the screen's labels. */
+  @font-face { font-family: ReelSerif; font-style: italic; src: local('Bodoni 72 Book Italic'), local('BodoniSvtyTwoITCTT-BookIta'), local('Georgia Italic'); }
+  @font-face { font-family: ReelMono; src: local('Menlo Regular'), local('Menlo-Regular'), local('Courier New'); }
+  :root { --navy: #0B0916; --ink: #15121F; --teal: #7FE0D2; --violet: #6C45F2; --coral: #F2777A; --glow: #F2777A; }
+  html, body { margin: 0; background: #000; }
+  #frame { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #0c0c0f; font-family: Pop, sans-serif; }
+  #frame * { box-sizing: border-box; }
+  .abs { position: absolute; }
+  .fill { position: absolute; inset: 0; }
+  /* The room: a dark wall, a glossy grey desk, and the screen's light on both. */
+  #wall { background: radial-gradient(1400px 900px at 50% 30%, #26262b 0%, #121215 60%, #08080a 100%); }
+  #desk { top: 1000px; background: linear-gradient(#2c2c31 0%, #1f1f23 30%, #121215 100%); }
+  #glow-wall { left: -300px; top: 200px; width: 1680px; height: 1200px; border-radius: 50%; filter: blur(140px);
+               background: radial-gradient(closest-side, var(--glow), transparent); mix-blend-mode: screen; }
+  #glow-desk { left: -100px; top: 1080px; width: 1280px; height: 520px; border-radius: 50%; filter: blur(90px);
+               background: radial-gradient(closest-side, var(--glow), transparent); mix-blend-mode: screen; }
+  #cam { position: absolute; inset: 0; transform-origin: 540px 900px; }
+  /* The laptop, reflected in the desk. */
+  #laptop { left: 0; top: 0; width: 1080px; height: 1112px; perspective: 2600px; perspective-origin: 540px 760px;
+            -webkit-box-reflect: below -6px linear-gradient(rgba(255,255,255,.05), rgba(255,255,255,.42)); }
+  #rig { left: 540px; top: 1040px; width: 0; height: 0; transform-style: preserve-3d; }
+  #lid { left: -820px; top: -1060px; width: 1640px; height: 1060px; border-radius: 34px; padding: 22px 20px 38px;
+         background: linear-gradient(#1b1b20, #0b0b0d); box-shadow: inset 0 0 0 3px #2a2a30, inset 0 -16px 0 #151518;
+         transform-origin: 50% 100%; }
+  #display { position: relative; width: 1600px; height: 1000px; overflow: hidden; border-radius: 10px; background: #000; }
+  #glare { background: linear-gradient(115deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0) 70%, rgba(255,255,255,.05) 100%);
+           pointer-events: none; z-index: 50; }
+  #deck { left: -880px; top: 0; width: 1760px; height: 960px; border-radius: 0 0 40px 40px; transform-origin: 50% 0;
+          background: linear-gradient(#3a3a40, #26262b 40%, #1d1d21); box-shadow: inset 0 0 0 3px #45454c; }
+  #keys { left: 150px; top: 60px; width: 1460px; height: 470px; border-radius: 14px; background-color: #111114;
+          background-image: linear-gradient(90deg, #26262b 2px, transparent 2px), linear-gradient(#26262b 2px, transparent 2px);
+          background-size: 97px 93px; box-shadow: inset 0 0 0 2px #2b2b30; }
+  #pad { left: 560px; top: 590px; width: 640px; height: 320px; border-radius: 22px; background: #2a2a2f; box-shadow: inset 0 0 0 2px #36363c; }
+  /* The caption over the video, as in the reference. */
+  #caption { left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; }
+  .cap { display: flex; align-items: center; gap: 0; color: #fff; font: 600 54px 'Helvetica Neue', Helvetica, sans-serif;
+         letter-spacing: -0.01em; text-shadow: 0 3px 10px rgba(0,0,0,.55); white-space: nowrap; }
+  .cap img { width: 210px; height: 210px; margin-right: -64px; filter: drop-shadow(0 0 22px rgba(127,224,210,.7)); }
+  /* Inside the screen. */
+  .shot { position: absolute; inset: 0; overflow: hidden; display: none; }
+  .c { position: absolute; left: 50%; top: 50%; will-change: transform, opacity, filter; }
+  .mono { font-family: ReelMono, monospace; font-size: 19px; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+  .hud { z-index: 40; }
+  .phone { width: 420px; height: 908px; border-radius: 66px; background: #0E0D14; padding: 12px;
+           box-shadow: 0 50px 110px rgba(0,0,0,.45), inset 0 0 0 2px #2A2833; }
+  .phone img { width: 100%; height: 100%; border-radius: 54px; display: block; object-fit: cover; }
+  .bracket { width: 70px; height: 70px; border: 0 solid #fff; }
+</style>
+</head>
+<body>
+<div id="frame">
+  <div id="cam">
+    <div id="wall" class="fill"></div>
+    <div id="glow-wall" class="abs"></div>
+    <div id="desk" class="abs" style="left:0;width:1080px;height:920px"></div>
+    <div id="glow-desk" class="abs"></div>
+    <div id="laptop" class="abs">
+      <div id="rig" class="abs">
+        <div id="deck" class="abs"><div id="keys" class="abs"></div><div id="pad" class="abs"></div></div>
+        <div id="lid" class="abs">
+          <div id="display">
+            <div id="shots" class="fill"></div>
+            <div id="hud" class="fill hud"></div>
+            <div id="glare" class="fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="caption" class="abs">
+    <div id="cap" class="abs cap"><img src="/assets/images/splash-icon.png"><span>one app runs the whole salon</span></div>
+    <div id="cap-mirror" class="abs cap"><img src="/assets/images/splash-icon.png"><span>one app runs the whole salon</span></div>
+  </div>
+</div>
+<script src="reel.js"></script>
+<script src="reel-late.js"></script>
+</body>
+</html>
