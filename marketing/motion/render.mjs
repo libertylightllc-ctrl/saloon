@@ -23,7 +23,8 @@ const FPS = 30;
 // It is 120 BPM; its first kick (the drop) is 9.54 s in, so starting 1.54 s in puts the drop on 8 s, where the navy
 // ground spreads in, and the beat lands on the star's streak (12 s) and comes back from its break on the icon (16 s).
 // Without the file the video has effects only.
-const MUSIC = { file: join(HERE, 'music', 'pop-upbeat-the-mountain.mp3'), from: 1.54, gainDb: -7, mixDb: 2.5, fadeFrom: 39.1 };
+// fxDb sets the sound effects under the music.
+const MUSIC = { file: join(HERE, 'music', 'pop-upbeat-the-mountain.mp3'), from: 1.54, gainDb: -7, fxDb: -6, mixDb: 2.5, fadeFrom: 39.1 };
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.ttf': 'font/ttf' };
 mkdirSync(OUT, { recursive: true });
 
@@ -78,8 +79,8 @@ if (stills) {
     const m = `[2:a]atrim=start=${MUSIC.from},asetpts=PTS-STARTPTS,aresample=48000,volume=${MUSIC.gainDb}dB,` +
       `afade=t=in:d=0.3,afade=t=out:st=${MUSIC.fadeFrom}:d=${(duration - MUSIC.fadeFrom).toFixed(2)}[m]`;
     inputs.push('-i', MUSIC.file);
-    audio = ['-filter_complex', `${m};[1:a][m]amix=inputs=2:duration=first:normalize=0,volume=${MUSIC.mixDb}dB,` +
-      'alimiter=limit=0.7:level=0[a]', '-map', '[a]'];
+    audio = ['-filter_complex', `[1:a]volume=${MUSIC.fxDb}dB[fx];${m};[fx][m]amix=inputs=2:duration=first:normalize=0,` +
+      `volume=${MUSIC.mixDb}dB,alimiter=limit=0.7:level=0[a]`, '-map', '[a]'];
   } else {
     console.log('no music: download it into', MUSIC.file, '(see MUSIC in render.mjs); making the video with the effects only');
   }
