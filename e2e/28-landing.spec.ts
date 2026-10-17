@@ -23,9 +23,11 @@ test('a new visitor reads what the app does, picks a salon type and lands on the
   await expect(page).toHaveURL(/\/sign-up$/);
   await expect(id(page, 'sign-up-submit')).toHaveCSS('background-color', THEME[mode].primaryAction);
 
-  // Next visit on this device goes straight to the sign-in, which links back to the landing page.
+  // The next visit to the site's address opens on the home page again (owner, 2026-10-17); a sign-in page reached
+  // another way links back to it.
   await page.goto('/');
-  await expect(id(page, 'sign-in-submit')).toBeVisible();
+  await expect(text(page, 'Run your salon from your phone')).toBeVisible();
+  await page.goto('/sign-in');
   await id(page, 'link-about').click();
   await expect(text(page, 'Run your salon from your phone')).toBeVisible();
   // Someone who already chose a type goes straight on from "Sign in".
