@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import { LANGUAGES } from '@/lib/i18n';
+import { brandPalette } from '@/theme';
 import { Text, useReducedMotion } from '@/ui';
 
 const EVERY_MS = 2000;
@@ -17,7 +18,7 @@ const LONGEST = LANGUAGES.reduce((a, b) =>
  * The app's languages on the welcome page, one at a time (owner, 2026-10-08: the full line did not fit a phone).
  * Screen readers hear the whole list; with Reduce Motion the list is shown whole and wraps.
  */
-export function LanguageTicker() {
+export function LanguageTicker({ onDark = false }: { onDark?: boolean }) {
   const { t } = useTranslation();
   const reduce = useReducedMotion();
   const [index, setIndex] = useState(0);
@@ -35,9 +36,11 @@ export function LanguageTicker() {
   }, [reduce, shown]);
 
   const all = t('auth.landing.facts.languages');
+  // On the home page's navy ground.
+  const ink = onDark ? { color: brandPalette.onNavy } : undefined;
   if (reduce) {
     return (
-      <Text variant="bodyStrong" align="center" style={styles.wrap}>
+      <Text variant="bodyStrong" align="center" style={[styles.wrap, ink]}>
         {all}
       </Text>
     );
@@ -59,7 +62,9 @@ export function LanguageTicker() {
         ]}
         aria-hidden
       >
-        <Text variant="bodyStrong">{LANGUAGES[index]!.nativeName}</Text>
+        <Text variant="bodyStrong" style={ink}>
+          {LANGUAGES[index]!.nativeName}
+        </Text>
       </Animated.View>
     </View>
   );

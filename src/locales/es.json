@@ -613,19 +613,35 @@
         "per": "al mes, para hasta {{people}} personas",
         "note": "Un solo precio para todo el salón, con las sucursales que sean. Configurar es siempre gratis; paga mes a mes y nada se renueva solo.",
         "extra": "luego {{price}} al mes por cada persona adicional que inicie sesión",
-        "trial": "Prueba todas las funciones gratis durante {{count}} días. Sin tarjeta."
+        "trial": "Prueba todas las funciones gratis durante {{count}} días. Sin tarjeta.",
+        "points": {
+          "everything": "Todas las funciones incluidas",
+          "languages": "Los 7 idiomas",
+          "support": "Ayuda y soporte en la app"
+        }
       },
       "contact": "¿Tienes preguntas? Escribe a {{email}}",
-      "preview": {
-        "expected": "Efectivo esperado hoy",
-        "queueLine": "{{n}} en la fila",
-        "fade": "Degradado a piel",
-        "blowDry": "Brushing",
-        "beard": "Arreglo de barba",
-        "waiting": "esperando {{min}} min",
-        "inChair": "en el sillón"
+      "about": "Acerca de {{app}}",
+      "eyebrow": "Para barberías y salones de belleza y spas",
+      "start": "Empieza gratis {{count}} días",
+      "start_one": "Empieza gratis {{count}} día",
+      "noCard": "Sin tarjeta · Listo en minutos",
+      "balanced": "Caja cuadrada",
+      "owners": {
+        "eyebrow": "Para dueños",
+        "title": "Hecho para dueños de salones",
+        "lead": "Sabe cómo va tu salón, incluso cuando no estás.",
+        "items": {
+          "live": "Ve ventas y caja en vivo, desde cualquier lugar",
+          "closing": "Una caja que cuadra cada noche",
+          "pay": "Sueldos y comisiones calculados por ti",
+          "reminders": "Avisos de licencias y visados, a tiempo",
+          "stock": "Alertas de stock antes de quedarte sin nada",
+          "reports": "Informes listos para tu contable"
+        }
       },
-      "about": "Acerca de {{app}}"
+      "finalTitle": "Todo tu salón en una sola app",
+      "finalLead": "Configúralo hoy; mañana tu equipo entra con sus propios accesos."
     },
     "google": {
       "action": "Continuar con Google",

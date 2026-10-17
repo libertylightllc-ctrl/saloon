@@ -613,19 +613,35 @@
         "per": "par mois, jusqu’à {{people}} personnes",
         "note": "Un seul prix pour tout le salon, quel que soit le nombre d’établissements. La configuration est toujours gratuite ; payez mois par mois, rien ne se renouvelle tout seul.",
         "extra": "puis {{price}} par mois pour chaque personne en plus qui se connecte",
-        "trial": "Essayez toutes les fonctions gratuitement pendant {{count}} jours. Sans carte."
+        "trial": "Essayez toutes les fonctions gratuitement pendant {{count}} jours. Sans carte.",
+        "points": {
+          "everything": "Toutes les fonctions incluses",
+          "languages": "Les 7 langues",
+          "support": "Aide et assistance dans l’app"
+        }
       },
       "contact": "Des questions ? Écrivez à {{email}}",
-      "preview": {
-        "expected": "Espèces attendues aujourd’hui",
-        "queueLine": "{{n}} dans la file",
-        "fade": "Dégradé",
-        "blowDry": "Brushing",
-        "beard": "Taille de barbe",
-        "waiting": "attend depuis {{min}} min",
-        "inChair": "au fauteuil"
+      "about": "À propos de {{app}}",
+      "eyebrow": "Pour les barbiers, salons de beauté et spas",
+      "start": "Commencez gratuitement {{count}} jours",
+      "start_one": "Commencez gratuitement {{count}} jour",
+      "noCard": "Sans carte · Prêt en quelques minutes",
+      "balanced": "Caisse juste",
+      "owners": {
+        "eyebrow": "Pour les gérants",
+        "title": "Pensé pour les gérants de salon",
+        "lead": "Sachez comment va votre salon, même quand vous n’y êtes pas.",
+        "items": {
+          "live": "Ventes et caisse en direct, où que vous soyez",
+          "closing": "Une caisse juste, chaque soir",
+          "pay": "Salaires et commissions calculés pour vous",
+          "reminders": "Rappels de licences et visas, à temps",
+          "stock": "Alertes de stock avant la rupture",
+          "reports": "Rapports prêts pour votre comptable"
+        }
       },
-      "about": "À propos de {{app}}"
+      "finalTitle": "Tout votre salon dans une seule app",
+      "finalLead": "Configurez-le aujourd’hui ; demain votre équipe se connecte avec ses propres accès."
     },
     "google": {
       "action": "Continuer avec Google",

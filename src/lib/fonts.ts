@@ -7,12 +7,14 @@
  * counts use IBM Plex Sans Arabic, whose Latin digits are all 600 units — true tabular figures.
  */
 import {
+  IBMPlexSansArabic_300Light,
   IBMPlexSansArabic_400Regular,
   IBMPlexSansArabic_500Medium,
   IBMPlexSansArabic_600SemiBold,
   IBMPlexSansArabic_700Bold,
 } from '@expo-google-fonts/ibm-plex-sans-arabic';
 import {
+  Poppins_300Light,
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_600SemiBold,
@@ -24,10 +26,12 @@ import type { FontWeightName } from '@/theme/tokens';
 import { isRtlLanguage, type Language } from './i18n';
 
 export const fontAssets = {
+  Poppins_300Light,
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_600SemiBold,
   Poppins_700Bold,
+  IBMPlexSansArabic_300Light,
   IBMPlexSansArabic_400Regular,
   IBMPlexSansArabic_500Medium,
   IBMPlexSansArabic_600SemiBold,
@@ -38,12 +42,14 @@ type FontFamily = keyof typeof fontAssets;
 
 const FAMILIES: Record<'latin' | 'arabic', Record<FontWeightName, FontFamily>> = {
   latin: {
+    light: 'Poppins_300Light',
     regular: 'Poppins_400Regular',
     medium: 'Poppins_500Medium',
     semibold: 'Poppins_600SemiBold',
     bold: 'Poppins_700Bold',
   },
   arabic: {
+    light: 'IBMPlexSansArabic_300Light',
     regular: 'IBMPlexSansArabic_400Regular',
     medium: 'IBMPlexSansArabic_500Medium',
     semibold: 'IBMPlexSansArabic_600SemiBold',

@@ -391,3 +391,10 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 3. Queue → New → a walk-in → ✅ saved (no "plan isn't active").
 4. More → Plan & billing → ✅ "Free trial" and "Free trial: 7 days left, until …".
 5. Console → Salons → that salon → ✅ "Trial until …".
+
+## 46 · Website home page (2 min)
+
+1. saloqo.com on a computer → ✅ navy top with "Run your salon from your phone", "Start free for 7 days" and the app on two phones.
+2. Scroll → ✅ "Made for salon owners" with six ticks → ✅ features → ✅ "Which salon are you?" cards with real screens → ✅ price on navy.
+3. Same on a phone → ✅ everything in one column, nothing cut off.
+4. Language button → العربية → ✅ the page mirrors right to left.

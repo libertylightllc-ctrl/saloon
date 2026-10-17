@@ -613,19 +613,35 @@
         "per": "por mês, para até {{people}} pessoas",
         "note": "Um só preço para o salão inteiro, com quantas filiais tiver. Configurar é sempre grátis; pague mês a mês, e nada se renova sozinho.",
         "extra": "depois {{price}} por mês para cada pessoa a mais que entrar no app",
-        "trial": "Experimente todos os recursos grátis por {{count}} dias. Sem cartão."
+        "trial": "Experimente todos os recursos grátis por {{count}} dias. Sem cartão.",
+        "points": {
+          "everything": "Todos os recursos incluídos",
+          "languages": "Os 7 idiomas",
+          "support": "Ajuda e suporte no app"
+        }
       },
       "contact": "Dúvidas? Escreva para {{email}}",
-      "preview": {
-        "expected": "Dinheiro esperado hoje",
-        "queueLine": "{{n}} na fila",
-        "fade": "Degradê navalhado",
-        "blowDry": "Escova",
-        "beard": "Aparar barba",
-        "waiting": "aguardando {{min}} min",
-        "inChair": "na cadeira"
+      "about": "Sobre o {{app}}",
+      "eyebrow": "Para barbearias, salões femininos e spas",
+      "start": "Comece grátis por {{count}} dias",
+      "start_one": "Comece grátis por {{count}} dia",
+      "noCard": "Sem cartão · Pronto em minutos",
+      "balanced": "Caixa batendo",
+      "owners": {
+        "eyebrow": "Para donos",
+        "title": "Feito para donos de salão",
+        "lead": "Saiba como está o seu salão, mesmo quando você não está lá.",
+        "items": {
+          "live": "Veja vendas e caixa ao vivo, de qualquer lugar",
+          "closing": "Um caixa que bate toda noite",
+          "pay": "Salários e comissões calculados para você",
+          "reminders": "Lembretes de licenças e vistos, na hora certa",
+          "stock": "Alertas de estoque antes de acabar",
+          "reports": "Relatórios prontos para o seu contador"
+        }
       },
-      "about": "Sobre o {{app}}"
+      "finalTitle": "Seu salão inteiro em um só app",
+      "finalLead": "Configure hoje; amanhã sua equipe entra com os próprios logins."
     },
     "google": {
       "action": "Continuar com Google",

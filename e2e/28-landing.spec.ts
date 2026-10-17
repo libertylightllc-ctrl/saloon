@@ -8,6 +8,10 @@ test('a new visitor reads what the app does, picks a salon type and lands on the
   for (const feature of ['Walk-ins and bookings', 'Daily cash closing', 'Licences and inspections', 'Books and reports']) {
     await expect(text(page, feature, true)).toBeVisible();
   }
+  // What the owner gets (the 2026-10-17 redesign), and the real app on the page.
+  await expect(text(page, 'Made for salon owners')).toBeVisible();
+  await expect(text(page, 'Cash that adds up, every night')).toBeVisible();
+  await expect(id(page, 'landing-create')).toHaveText(/Start free for 7 days/);
   await expect(text(page, 'Which salon are you?')).toBeVisible();
   // The placeholder support address is never shown.
   await expect(text(page, /example\.com/)).toHaveCount(0);

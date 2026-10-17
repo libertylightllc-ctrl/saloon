@@ -40,7 +40,9 @@ async function phone(mode, locale = 'en-AE') {
 
 async function shot(page, name) {
   await page.waitForLoadState('networkidle').catch(() => {});
-  await page.waitForTimeout(1500);
+  // Until nothing is still loading (spinners, grey placeholders).
+  await page.waitForFunction(() => !document.querySelector('[role="progressbar"], [aria-busy="true"]'), null, { timeout: 15_000 }).catch(() => {});
+  await page.waitForTimeout(3500);
   await page.screenshot({ path: join(OUT, `${name}.png`) });
   console.log('saved', name);
 }

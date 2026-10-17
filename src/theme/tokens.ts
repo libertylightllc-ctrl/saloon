@@ -107,7 +107,7 @@ export const avatarPalette = [
   { fill: '#DDF5EA', ink: '#0B6B45' },
 ] as const;
 
-export type FontWeightName = 'regular' | 'medium' | 'semibold' | 'bold';
+export type FontWeightName = 'light' | 'regular' | 'medium' | 'semibold' | 'bold';
 
 export interface TypeStyle {
   fontSize: number;
@@ -116,8 +116,13 @@ export interface TypeStyle {
 }
 
 export const typeScale = {
-  /** Landing page headline only. */
-  hero: { fontSize: 36, lineHeight: 44, weight: 'bold' },
+  /** The website's home page only (light headings, as in the product video): headline and section titles, each with a
+   *  smaller size for phones. */
+  hero: { fontSize: 60, lineHeight: 70, weight: 'light' },
+  heroCompact: { fontSize: 38, lineHeight: 48, weight: 'light' },
+  section: { fontSize: 44, lineHeight: 54, weight: 'light' },
+  sectionCompact: { fontSize: 30, lineHeight: 40, weight: 'light' },
+  lead: { fontSize: 18, lineHeight: 28, weight: 'regular' },
   display: { fontSize: 28, lineHeight: 36, weight: 'bold' },
   h1: { fontSize: 24, lineHeight: 32, weight: 'bold' },
   h2: { fontSize: 20, lineHeight: 28, weight: 'bold' },
@@ -132,6 +137,35 @@ export const typeScale = {
 export type TypeVariant = keyof typeof typeScale;
 
 export const tabularNums: TextStyle = { fontVariant: ['tabular-nums'] };
+
+/**
+ * Saloqo's own colours, from the logo and the product video: the website's home page wears them, the same whichever
+ * salon look a visitor picks (like the app icon). Everything inside the app keeps the gents / ladies themes.
+ */
+export const brandPalette = {
+  navy: '#0B0916',
+  navyRaised: '#16141F',
+  glow: '#1F3A40',
+  teal: '#7FE0D2',
+  tealSoft: '#BDEFE8',
+  tealDeep: '#2F8A7E',
+  mist: '#F7F6FB',
+  lilacMist: '#EFEAFD',
+  ink: '#15121F',
+  inkMuted: '#5E5B6B',
+  card: '#FFFFFF',
+  hairline: 'rgba(21, 18, 31, 0.08)',
+  onNavy: '#FFFFFF',
+  onNavyMuted: 'rgba(255, 255, 255, 0.72)',
+  navyLine: 'rgba(255, 255, 255, 0.12)',
+  violet: '#6C45F2',
+  coral: '#F2777A',
+  phoneBezel: '#0E0D14',
+  phoneIsland: '#000000',
+  /** Floating phones and cards. */
+  liftShadow: '0px 40px 80px rgba(11, 9, 22, 0.35)',
+  cardShadow: '0px 24px 60px rgba(30, 20, 70, 0.14)',
+} as const;
 
 export interface ThemeColors {
   primary50: string;
