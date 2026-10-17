@@ -398,3 +398,9 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 2. Scroll → ✅ "Made for salon owners" with six ticks → ✅ features → ✅ "Which salon are you?" cards with real screens → ✅ price on navy.
 3. Same on a phone → ✅ everything in one column, nothing cut off.
 4. Language button → العربية → ✅ the page mirrors right to left.
+
+## 47 · Sign-in page (1 min)
+
+1. saloqo.com → Sign in → ✅ navy top with the logo, "Welcome back" and a white card; the button in your salon's colour.
+2. Tap Ladies / Gents → ✅ the card's colours change at once (and, on a computer, the phone on the left).
+3. "New here? Create an owner account" → ✅ the same look, with a white back arrow.

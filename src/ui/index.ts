@@ -11,7 +11,7 @@ export { DateStrip, MonthSwitcher, TimeSlotGrid, type TimeSlot } from './DatePic
 export { EmptyState } from './EmptyState';
 export { FitText } from './FitText';
 export { HeaderBand } from './HeaderBand';
-export { NavRootsContext, useHeaderOverlap, useOnBand } from './layoutContext';
+export { NavRootsContext, OnBandContext, useHeaderOverlap, useOnBand } from './layoutContext';
 export { Icon, icons, type IconName } from './Icon';
 export { IconButton } from './IconButton';
 export { Illustration, type IllustrationName } from './Illustration';
