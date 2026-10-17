@@ -95,6 +95,10 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
     .first();
   await target.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => undefined);
   if (!(await target.count())) return { ok: true, result: 'not present after reload (an earlier tap changed the data)' };
+  // Selected on this fresh load although it was not when the buttons were listed: the day turned while the sweep ran,
+  // so the next date is now "today" and chosen already (proof, 2026-10-18 00:00: "Sunday 18 October", New booking).
+  const chosen = await target.evaluate((e) => e.getAttribute('aria-selected') === 'true' || e.getAttribute('aria-checked') === 'true');
+  if (chosen) return { ok: true, result: 'already selected' };
   // A link opened in a new tab counts the moment the page asks for it (window.open, inside the tap): the tab itself can
   // take longer to appear than the effect window on a busy browser (proof, 2026-10-08: "Pay by card" missed).
   await page.evaluate(() => {
