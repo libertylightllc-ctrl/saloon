@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { brand } from '@/config/brand';
 import { spacing } from '@/theme';
 import { HeaderBand, Screen, Text, TextField } from '@/ui';
 
@@ -64,6 +65,12 @@ export function ContactScreen() {
           onDraftChange={setDraft}
           testID="contact"
         />
+        {/* Email as well (needed by the payment provider's checks, 2026-10-18), once a real address is set. */}
+        {!brand.supportEmail.endsWith('@example.com') ? (
+          <Text color="textSecondary" selectable testID="contact-by-email">
+            {t('support.preferEmail', { email: brand.supportEmail })}
+          </Text>
+        ) : null}
         <Text variant="small" color="textSecondary">
           {t('support.attachedGuest')}
         </Text>

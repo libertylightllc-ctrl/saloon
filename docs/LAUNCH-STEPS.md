@@ -129,8 +129,9 @@ lawyer should check. These details are yours to supply; put them in `src/config/
 pages in every language:
 
 1. **`legalName` and `address`** — the company that runs Saloqo (as on its trade licence). GDPR requires them.
-2. **`privacyEmail`** (or a real `supportEmail`) — today it is `support@example.com`, so the pages show no contact at
-   all. One real address, read regularly, e.g. privacy@saloqo.com. It is also the Brazil "encarregado" contact.
+2. ✅ **Contact email** — done 2026-10-18: `supportEmail` is hello@saloqo.com (Hostinger mailbox) and `address` is Dubai,
+   United Arab Emirates; they show on the home page, Contact us, the privacy policy and the terms. A separate
+   `privacyEmail` can still be set if privacy questions should go elsewhere.
 3. **EU and UK representatives** (`euRepresentative`, `ukRepresentative`) — a company outside the EU/UK that serves
    salons there must name one (GDPR article 27). Services such as Prighter, DataRep or VeraSafe do this for roughly
    EUR 100–500 a year each. Enter their name and address once appointed.

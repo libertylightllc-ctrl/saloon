@@ -2451,6 +2451,7 @@
     "faqTitle": "Common questions",
     "faqMatches": "These might answer it",
     "faqAll": "Show all questions",
-    "faqNotAnswered": "Not answered here? Write your message below."
+    "faqNotAnswered": "Not answered here? Write your message below.",
+    "preferEmail": "Prefer email? Write to us at {{email}}"
   }
 }

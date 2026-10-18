@@ -116,8 +116,12 @@ test('the privacy policy and terms are open to everyone, from the landing page a
   await expect(languages).toHaveAttribute('aria-label', 'English · العربية · हिन्दी · اردو · Español · Français · Português');
   await expect(languages).toContainText('English');
   await expect(languages).toContainText('العربية');
+  // Where to write (the payment provider checks it is on the site, 2026-10-18): the footer, the policy, Contact us.
+  await expect(text(page, 'Questions? Write to hello@saloqo.com')).toBeVisible();
   await id(page, 'landing-privacy').click();
   await expect(id(page, 'legal-privacy')).toBeVisible();
+  await expect(id(page, 'legal-privacy')).toContainText('Address: Dubai, United Arab Emirates');
+  await expect(id(page, 'legal-privacy')).toContainText('Questions or requests, including about your data: hello@saloqo.com');
   await expect(text(page, /Personal Data Protection Law/)).toBeVisible();
   await expect(text(page, /five years/).first()).toBeVisible();
   await snap(page, 'legal-privacy', mode);

@@ -52,6 +52,7 @@ test('a visitor who cannot sign in writes from the sign-in screen and reads the 
   const email = `visitor-${uid()}@e2e.test`;
   await chooseType(page, mode);
   await id(page, 'auth-contact').click();
+  await expect(id(page, 'contact-by-email')).toHaveText('Prefer email? Write to us at hello@saloqo.com');
   await id(page, 'contact-input').fill('I forgot my salon code');
   await id(page, 'contact-send').click();
   await expect(text(page, 'Enter a name.')).toBeVisible();

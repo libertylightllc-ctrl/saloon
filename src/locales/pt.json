@@ -2452,6 +2452,7 @@
     "faqTitle": "Perguntas frequentes",
     "faqMatches": "Isto pode ajudar",
     "faqAll": "Ver todas as perguntas",
-    "faqNotAnswered": "Não encontrou a resposta? Escreva sua mensagem abaixo."
+    "faqNotAnswered": "Não encontrou a resposta? Escreva sua mensagem abaixo.",
+    "preferEmail": "Prefere e-mail? Escreva para {{email}}"
   }
 }
