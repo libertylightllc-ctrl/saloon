@@ -737,7 +737,8 @@
     "taxNumber": "Letters, numbers, spaces, dots, dashes or slashes",
     "taxRate": "Enter a rate from 0 to 30, like 5 or 8.875",
     "timezone": "Use a time zone name like Europe/London",
-    "licence": "Letters, numbers and . / - only"
+    "licence": "Letters, numbers and . / - only",
+    "province": "Pick your province"
   },
   "errors": {
     "not_signed_in": "Your session ended. Please sign in again.",
@@ -829,7 +830,8 @@
     "message_required": "Write a message first.",
     "invalid_email": "That email address does not look right.",
     "invalid_licence": "A licence number can have letters, numbers and . / - only.",
-    "too_long": "That text is too long."
+    "too_long": "That text is too long.",
+    "tax2_name_required": "Give the second tax a name, like PST."
   },
   "sales": {
     "title": "Sales",
@@ -1066,7 +1068,8 @@
       "salaries_expense": "Salaries",
       "commission_expense": "Commission",
       "cash_over_short": "Cash over / short",
-      "supplies_expense": "Supplies"
+      "supplies_expense": "Supplies",
+      "tax2_payable": "Second sales tax payable"
     },
     "sources": {
       "sale": "Sales",
@@ -1125,7 +1128,8 @@
       "closedToast": "{{month}} is closed",
       "reopenedToast": "{{month}} is open again",
       "hint": "Only finished months can be closed. The books must balance."
-    }
+    },
+    "tax2Collected": "{{name}} collected (owed to the tax office)"
   },
   "settingUp": {
     "title": "{{name}} is being set up",
@@ -1869,7 +1873,9 @@
       "vatOutput": "{{tax}} collected",
       "vatInput": "{{tax}} paid (claimable)",
       "vatDue": "{{tax}} to pay",
-      "vatRefund": "{{tax}} to get back"
+      "vatRefund": "{{tax}} to get back",
+      "tax2Output": "Of it, {{name}}",
+      "tax2Generic": "second tax"
     },
     "chart": {
       "salesByDay": "Sales by day",
@@ -2243,17 +2249,43 @@
       "gst": "GST",
       "salesTax": "Sales tax",
       "serviceTax": "Service tax",
-      "other": "Other"
+      "other": "Other",
+      "hst": "HST",
+      "pst": "PST",
+      "qst": "QST",
+      "rst": "RST"
     },
     "rateHint": {
-      "US": "Sales tax depends on your state and city: enter the combined rate you charge.",
-      "CA": "GST, HST or GST + PST, depending on your province: enter the total rate you charge."
+      "US": "Sales tax depends on your state and city: enter the combined rate you charge."
     },
     "preview": {
       "service": "Service",
       "included": "Includes {{tax}} ({{rate}})",
       "added": "{{tax}} ({{rate}})",
       "total": "Total"
+    },
+    "province": {
+      "title": "Province",
+      "hint": "Picks your province’s sales tax. You can still change it below.",
+      "names": {
+        "AB": "Alberta",
+        "BC": "British Columbia",
+        "MB": "Manitoba",
+        "NB": "New Brunswick",
+        "NL": "Newfoundland and Labrador",
+        "NS": "Nova Scotia",
+        "NT": "Northwest Territories",
+        "NU": "Nunavut",
+        "ON": "Ontario",
+        "PE": "Prince Edward Island",
+        "QC": "Quebec",
+        "SK": "Saskatchewan",
+        "YT": "Yukon"
+      }
+    },
+    "second": {
+      "title": "Second tax",
+      "hint": "Charged beside the first, like PST or QST in Canada. Receipts show each tax on its own line."
     }
   },
   "nav": {

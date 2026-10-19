@@ -75,10 +75,10 @@ describe('buildReport', () => {
       {
         type: 'vat',
         data: [
-          { kind: 'sales', entries: 3, taxable_minor: 60_000, vat_minor: 3_000 },
-          { kind: 'refunds', entries: 1, taxable_minor: -2_000, vat_minor: -100 },
-          { kind: 'purchases', entries: 1, taxable_minor: 4_500, vat_minor: 225 },
-          { kind: 'expenses', entries: 1, taxable_minor: 10_000, vat_minor: 500 },
+          { kind: 'sales', entries: 3, taxable_minor: 60_000, vat_minor: 3_000, tax2_minor: 0 },
+          { kind: 'refunds', entries: 1, taxable_minor: -2_000, vat_minor: -100, tax2_minor: 0 },
+          { kind: 'purchases', entries: 1, taxable_minor: 4_500, vat_minor: 225, tax2_minor: 0 },
+          { kind: 'expenses', entries: 1, taxable_minor: 10_000, vat_minor: 500, tax2_minor: 0 },
         ],
       },
       { t, day },
@@ -91,7 +91,27 @@ describe('buildReport', () => {
     expect(view.rows[1]!.csv).toEqual(['reports.vatKinds.refunds:{}', 1, '-20.00', '-1.00']);
     expect(view.rows[0]!.csv.length).toBe(csvHeader('vat', t).length);
 
-    const refund = buildReport({ type: 'vat', data: [{ kind: 'purchases', entries: 1, taxable_minor: 4_500, vat_minor: 225 }] }, { t, day });
+    const refund = buildReport({ type: 'vat', data: [{ kind: 'purchases', entries: 1, taxable_minor: 4_500, vat_minor: 225, tax2_minor: 0 }] }, { t, day });
     expect(refund.kpis[2]).toMatchObject({ label: 'reports.kpi.vatRefund:{}', value: 'AED\u00a02.25' });
+  });
+
+  it('vat with a second tax (British Columbia: GST + PST): how much of the output is the PST', () => {
+    const view = buildReport(
+      {
+        type: 'vat',
+        data: [
+          { kind: 'sales', entries: 2, taxable_minor: 20_000, vat_minor: 2_400, tax2_minor: 1_400 },
+          { kind: 'refunds', entries: 1, taxable_minor: -10_000, vat_minor: -1_200, tax2_minor: -700 },
+        ],
+      },
+      { t, day, tax2Name: 'PST' },
+    );
+    expect(view.kpis.map((k) => [k.key, k.value])).toEqual([
+      ['output', 'AED\u00a012.00'],
+      ['tax2', 'AED\u00a07.00'],
+      ['input', 'AED\u00a00.00'],
+      ['due', 'AED\u00a012.00'],
+    ]);
+    expect(view.kpis[1]!.label).toBe('reports.kpi.tax2Output:{"name":"PST"}');
   });
 });

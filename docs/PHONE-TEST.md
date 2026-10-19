@@ -425,3 +425,10 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 2. Sign in as a barber/stylist → Sale → add a service → Checkout → ✅ only your own name, already chosen → Save → New sale.
 3. More → My sales → ✅ only your sales → open the sale → Send on WhatsApp → ✅ WhatsApp opens with the receipt and its PDF link.
 4. Owner: More → Sales → any sale → ✅ Send on WhatsApp is there too.
+
+## 51 · Canada: province and two taxes (2 min)
+
+1. A Canadian salon: More → Branch settings → Tax → Province → Ontario → ✅ HST, 13%, added at the till → Save.
+2. Province → British Columbia → ✅ GST 5% and Second tax PST 7%; the preview shows GST 5.00 and PST 7.00 → Save.
+3. Sell → Checkout → ✅ two lines, GST 5% and PST 7% → Save → open the sale → Print receipt → ✅ both lines.
+4. Reports → Tax → ✅ "Of it, PST" under the tax collected.

@@ -82,6 +82,8 @@ export interface VatRow {
   entries: number;
   taxable_minor: number;
   vat_minor: number;
+  /** The second tax's part of `vat_minor` (Canada's PST, RST or QST); 0 without one. */
+  tax2_minor: number;
 }
 
 export type ReportData =
@@ -187,6 +189,7 @@ async function fetchReport(type: ReportType, businessId: string, branchId: strin
           entries: Number(r.entries),
           taxable_minor: num(r.taxable_minor),
           vat_minor: num(r.vat_minor),
+          tax2_minor: num(r.tax2_minor),
         })),
       };
     }

@@ -3,12 +3,16 @@
  * for 5% VAT, or added on top; discount capped at the subtotal; deposit applied up to the total), so what the screen
  * shows is what the server charges. The server stays the authority.
  */
-import { multiply, subtract, sum, vatFromInclusive, vatOnTop, type Minor, type TaxRate } from '@/lib/money';
+import { multiply, secondTaxShare, subtract, sum, vatFromInclusive, vatOnTop, type Minor, type TaxRate } from '@/lib/money';
 
-/** The tax checkout charges: a rate, included in the prices or added at the till. */
+/**
+ * The tax checkout charges: a rate, included in the prices or added at the till; and a second tax beside it (Canada's
+ * PST, RST or QST next to the GST), charged together and shown apart.
+ */
 export interface TaxRule {
   rateBps: TaxRate;
   inclusive: boolean;
+  rate2Bps?: TaxRate;
 }
 
 export interface BasketLine {
@@ -28,7 +32,10 @@ export interface Totals {
   discount: Minor;
   /** After discount, with any tax added at the till. */
   net: Minor;
+  /** All the tax, the second tax included. */
   vat: Minor;
+  /** The second tax's share of `vat` (0 without one). */
+  tax2: Minor;
   /** The tax was added on top of the prices (not included in them). */
   taxAdded: boolean;
   tip: Minor;
@@ -45,9 +52,12 @@ export function basketTotals(
   const subtotal = sum(lines.map((l) => multiply(l.unitPriceMinor, l.qty)));
   const discount = Math.min(Math.max(opts.discount ?? 0, 0), subtotal);
   const afterDiscount = subtract(subtotal, discount);
-  const tax = opts.tax && opts.tax.rateBps > 0 ? opts.tax : null;
+  const rate2 = opts.tax?.rate2Bps ?? 0;
+  const rate = (opts.tax?.rateBps ?? 0) + rate2;
+  const tax = opts.tax && rate > 0 ? opts.tax : null;
   const taxAdded = tax !== null && !tax.inclusive;
-  const vat = !tax ? 0 : tax.inclusive ? vatFromInclusive(afterDiscount, tax.rateBps) : vatOnTop(afterDiscount, tax.rateBps);
+  const vat = !tax ? 0 : tax.inclusive ? vatFromInclusive(afterDiscount, rate) : vatOnTop(afterDiscount, rate);
+  const tax2 = tax ? secondTaxShare(vat, tax.rateBps, rate2) : 0;
   const net = taxAdded ? afterDiscount + vat : afterDiscount;
   const tip = Math.max(opts.tip ?? 0, 0);
   const total = net + tip;
@@ -57,6 +67,7 @@ export function basketTotals(
     discount,
     net,
     vat,
+    tax2,
     taxAdded,
     tip,
     total,

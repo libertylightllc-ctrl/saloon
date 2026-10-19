@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import { useWorkspace } from '@/features/auth/session';
-import { isLanguage, isRtlLanguage } from '@/lib/i18n';
+import { isLanguage, isRtlLanguage, taxDisplayName } from '@/lib/i18n';
 import { formatBps } from '@/lib/money';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/theme';
@@ -53,7 +53,7 @@ export function useShareReceipt() {
  */
 export function receiptLabels(
   t: TFunction,
-  sale: { vat_mode: string; tax_inclusive: boolean; tax_rate_bps: number },
+  sale: { vat_mode: string; tax_inclusive: boolean; tax_rate_bps: number; tax2_name: string | null; tax2_rate_bps: number },
   terms?: { tax: string; taxId: string },
 ) {
   return {
@@ -64,6 +64,14 @@ export function receiptLabels(
     subtotal: t('sale.subtotal'),
     discount: t('sale.discount'),
     vat: t(sale.tax_inclusive ? 'receipt.vatIncluded' : 'receipt.vatAdded', { rate: formatBps(sale.tax_rate_bps), ...terms }),
+    /** The second tax beside the first ("PST (7%)"), when the sale had one. */
+    vat2:
+      sale.tax2_name && sale.tax2_rate_bps > 0
+        ? t(sale.tax_inclusive ? 'receipt.vatIncluded' : 'receipt.vatAdded', {
+            tax: taxDisplayName(sale.tax2_name),
+            rate: formatBps(sale.tax2_rate_bps),
+          })
+        : null,
     tip: t('sale.tip'),
     deposit: t('receipt.deposit'),
     total: t('receipt.total'),

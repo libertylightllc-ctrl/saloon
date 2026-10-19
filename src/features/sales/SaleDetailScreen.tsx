@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { taxDisplayName } from '@/lib/i18n';
 import { formatBps, formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
@@ -90,10 +91,18 @@ export function SaleDetailScreen() {
                       sale.vat_mode !== 'on'
                         ? t('sale.vatNotApplied')
                         : sale.tax_inclusive
-                          ? t('sale.vatIncluded', { amount: formatMoney(sale.vat_minor) })
-                          : formatMoney(sale.vat_minor)
+                          ? t('sale.vatIncluded', { amount: formatMoney(sale.vat_minor - sale.tax2_minor) })
+                          : formatMoney(sale.vat_minor - sale.tax2_minor)
                     }
+                    testID="sale-vat"
                   />
+                  {sale.vat_mode === 'on' && sale.tax2_name && sale.tax2_rate_bps > 0 ? (
+                    <Row
+                      label={`${taxDisplayName(sale.tax2_name)} ${formatBps(sale.tax2_rate_bps)}`}
+                      value={sale.tax_inclusive ? t('sale.vatIncluded', { amount: formatMoney(sale.tax2_minor) }) : formatMoney(sale.tax2_minor)}
+                      testID="sale-tax2"
+                    />
+                  ) : null}
                   {sale.tip_minor ? <Row label={t('sale.tip')} value={formatMoney(sale.tip_minor)} /> : null}
                   <Row label={t('receipt.total')} value={formatMoney(sale.total_minor)} strong testID="sale-total" />
                   {sale.deposit_applied_minor ? (

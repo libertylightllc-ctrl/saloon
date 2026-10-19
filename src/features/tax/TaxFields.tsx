@@ -1,61 +1,16 @@
-import { useState } from 'react';
 import { Controller, useWatch, type Control, type FieldPath, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
-import { z } from 'zod';
 
 import { isUae } from '@/lib/countries';
 import type { CurrencyCode } from '@/lib/currencies';
-import { taxDisplayName } from '@/lib/i18n';
-import { decimalsOf, formatBps, formatMoney, parseTaxRate, vatFromInclusive, vatOnTop } from '@/lib/money';
+import { decimalsOf, formatMoney, secondTaxShare, vatFromInclusive, vatOnTop } from '@/lib/money';
 import { spacing, useTheme } from '@/theme';
-import { Chip, FormTextField, SegmentTabs, Text } from '@/ui';
+import { Chip, FormTextField, SegmentTabs, SwitchRow, Text } from '@/ui';
 
 import { TAX_KINDS, taxKindOf } from './kinds';
-
-/** The tax fields of a form (setup, branch settings); the on/off switch stays with the screen. */
-export const taxShape = {
-  tax_name: z.string().trim().min(1, 'validation.required').max(20, 'validation.tooLong'),
-  tax_rate: z
-    .string()
-    .trim()
-    .refine((v) => parseTaxRate(v) !== null, 'validation.taxRate'),
-  tax_inclusive: z.boolean(),
-  tax_id_label: z.string().trim().min(1, 'validation.required').max(20, 'validation.tooLong'),
-  trn: z.string().trim(),
-};
-
-export interface TaxValues {
-  tax_name: string;
-  tax_rate: string;
-  tax_inclusive: boolean;
-  tax_id_label: string;
-  trn: string;
-}
-
-/** The UAE TRN is 15 digits; elsewhere any tax number, or none yet (the server checks the same). */
-export function trnValid(trn: string, uae: boolean): boolean {
-  return uae ? /^[0-9]{15}$/.test(trn) : trn === '' || /^[A-Za-z0-9][A-Za-z0-9 ./-]{1,28}[A-Za-z0-9]$/.test(trn);
-}
-
-/** What the tax words read while the owner is typing them (the branch's own words apply once saved). */
-export function useTaxWords<T extends FieldValues & TaxValues>(control: Control<T>) {
-  const { t } = useTranslation();
-  const [name, rateText, idLabel] = useWatch({
-    control,
-    name: ['tax_name', 'tax_rate', 'tax_id_label'] as FieldPath<T>[],
-  }) as string[];
-  const rate = parseTaxRate(rateText ?? '');
-  return {
-    tax: name?.trim() ? taxDisplayName(name.trim()) : t('tax.kinds.vat'),
-    taxId: idLabel?.trim() && idLabel.trim() !== 'TRN' ? idLabel.trim() : t('tax.trn'),
-    rate: rate === null ? '–' : formatBps(rate),
-    rateBps: rate,
-  };
-}
-
-/** Countries where the rate depends on the state, province or city: the owner enters the one they charge. */
-const LOCAL_RATES = new Set(['US', 'CA']);
+import { ProvincePicker } from './ProvincePicker';
+import { useTaxWords, type TaxValues } from './taxForm';
 
 export function TaxFields<T extends FieldValues & TaxValues>({
   control,
@@ -74,6 +29,7 @@ export function TaxFields<T extends FieldValues & TaxValues>({
 
   return (
     <View style={styles.box}>
+      {country === 'CA' ? <ProvincePicker control={control} /> : null}
       <Controller
         control={control}
         name={field('tax_name')}
@@ -83,7 +39,7 @@ export function TaxFields<T extends FieldValues & TaxValues>({
         control={control}
         name={field('tax_rate')}
         label={t('tax.fields.rate')}
-        hint={LOCAL_RATES.has(country) ? t(`tax.rateHint.${country as 'US' | 'CA'}`) : undefined}
+        hint={country === 'US' ? t('tax.rateHint.US') : undefined}
         keyboardType="decimal-pad"
         maxLength={6}
       />
@@ -102,6 +58,7 @@ export function TaxFields<T extends FieldValues & TaxValues>({
           />
         )}
       />
+      {uae ? null : <SecondTax control={control} />}
       <TaxPreview currency={currency} inclusive={inclusive} words={words} />
       {uae ? null : (
         <FormTextField control={control} name={field('tax_id_label')} label={t('tax.fields.idLabel')} maxLength={20} />
@@ -131,8 +88,8 @@ function TaxKindPicker<T extends FieldValues & TaxValues>({
 }) {
   const { t } = useTranslation();
   const kind = taxKindOf(value);
-  // "Other" stays open once picked, even while its box is still empty.
-  const [other, setOther] = useState(kind === null);
+  // Any name that is not one of the chips (an empty box too) is "Other"; a province picked above can change it.
+  const other = kind === null;
   return (
     <View style={styles.kinds}>
       <Text variant="bodyStrong">{t('tax.fields.kind')}</Text>
@@ -141,11 +98,8 @@ function TaxKindPicker<T extends FieldValues & TaxValues>({
           <Chip
             key={k.key}
             label={t(`tax.kinds.${k.key}`)}
-            selected={!other && kind === k.key}
-            onPress={() => {
-              setOther(false);
-              onChange(k.name);
-            }}
+            selected={kind === k.key}
+            onPress={() => onChange(k.name)}
             testID={`tax-kind-${k.key}`}
           />
         ))}
@@ -153,8 +107,7 @@ function TaxKindPicker<T extends FieldValues & TaxValues>({
           label={t('tax.kinds.other')}
           selected={other}
           onPress={() => {
-            if (!other) onChange(kind === null ? value : '');
-            setOther(true);
+            if (!other) onChange('');
           }}
           testID="tax-kind-other"
         />
@@ -166,7 +119,34 @@ function TaxKindPicker<T extends FieldValues & TaxValues>({
   );
 }
 
-/** A small receipt for a 100 service with this tax (as the owner's sketch, 2026-10-19). */
+/** A second tax charged beside the first (Canada's PST, RST or QST next to the GST); receipts show each one. */
+function SecondTax<T extends FieldValues & TaxValues>({ control }: { control: Control<T> }) {
+  const { t } = useTranslation();
+  const on = useWatch({ control, name: 'tax2_on' as FieldPath<T> }) as boolean;
+  return (
+    <View style={styles.box}>
+      <Controller
+        control={control}
+        name={'tax2_on' as FieldPath<T>}
+        render={({ field: f }) => (
+          <SwitchRow label={t('tax.second.title')} hint={t('tax.second.hint')} value={Boolean(f.value)} onChange={f.onChange} testID="tax2-on" />
+        )}
+      />
+      {on ? (
+        <View style={styles.pair}>
+          <View style={styles.flex}>
+            <FormTextField control={control} name={'tax2_name' as FieldPath<T>} label={t('tax.fields.name')} maxLength={20} autoCapitalize="characters" />
+          </View>
+          <View style={styles.flex}>
+            <FormTextField control={control} name={'tax2_rate' as FieldPath<T>} label={t('tax.fields.rate')} keyboardType="decimal-pad" maxLength={6} />
+          </View>
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+/** A small receipt for a 100 service with this tax (as the owner's sketch, 2026-10-19); each tax on its own line. */
 function TaxPreview({
   currency,
   inclusive,
@@ -179,7 +159,10 @@ function TaxPreview({
   const { t } = useTranslation();
   const theme = useTheme();
   const price = 100 * 10 ** decimalsOf(currency);
-  const amount = words.rateBps === null ? 0 : inclusive ? vatFromInclusive(price, words.rateBps) : vatOnTop(price, words.rateBps);
+  const rate2 = words.second?.rateBps ?? 0;
+  const rate = words.rateBps === null ? null : words.rateBps + rate2;
+  const amount = rate === null ? 0 : inclusive ? vatFromInclusive(price, rate) : vatOnTop(price, rate);
+  const amount2 = rate === null ? 0 : secondTaxShare(amount, words.rateBps ?? 0, rate2);
   const total = inclusive ? price : price + amount;
   const row = (label: string, value: number, strong = false) => (
     <View style={styles.row}>
@@ -194,7 +177,8 @@ function TaxPreview({
   return (
     <View style={[styles.preview, { backgroundColor: theme.colors.primary50, borderRadius: theme.radius.md }]} testID="tax-example">
       {row(t('tax.preview.service'), price)}
-      {row(t(inclusive ? 'tax.preview.included' : 'tax.preview.added', words), amount)}
+      {row(t(inclusive ? 'tax.preview.included' : 'tax.preview.added', words), amount - amount2)}
+      {words.second ? row(t(inclusive ? 'tax.preview.included' : 'tax.preview.added', words.second), amount2) : null}
       <View style={[styles.rule, { backgroundColor: theme.colors.divider }]} />
       {row(t('tax.preview.total'), total, true)}
     </View>
@@ -207,6 +191,8 @@ const styles = StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   preview: { padding: spacing.lg, gap: spacing.sm },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  // Inputs line up even when one label takes two lines.
+  pair: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.md },
   flex: { flex: 1 },
   rule: { height: StyleSheet.hairlineWidth, marginVertical: spacing.xs },
 });

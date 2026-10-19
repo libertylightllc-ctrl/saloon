@@ -10,7 +10,8 @@ import { z } from 'zod';
 import { useSalonType } from '@/features/auth/salonType';
 import { useSession } from '@/features/auth/session';
 import { useIsPlatformAdmin } from '@/features/plan/api';
-import { TaxFields, taxShape, trnValid, useTaxWords } from '@/features/tax/TaxFields';
+import { TaxFields } from '@/features/tax/TaxFields';
+import { checkProvince, checkSecondTax, secondTaxPayload, taxShape, trnValid, useTaxWords } from '@/features/tax/taxForm';
 import { isUae } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
 import { parseTaxRate, setActiveCurrency } from '@/lib/money';
@@ -52,7 +53,12 @@ const schema = z
     openingCash: z.number().int().min(0).nullable(),
   })
   .refine((v) => v.vat === 'off' || !isUae(v.country) || trnValid(v.trn, true), { message: 'validation.trn', path: ['trn'] })
-  .refine((v) => v.vat === 'off' || isUae(v.country) || trnValid(v.trn, false), { message: 'validation.taxNumber', path: ['trn'] });
+  .refine((v) => v.vat === 'off' || isUae(v.country) || trnValid(v.trn, false), { message: 'validation.taxNumber', path: ['trn'] })
+  .superRefine((v, ctx) => {
+    if (v.vat === 'off') return;
+    checkSecondTax(v, ctx);
+    checkProvince(v, v.country, ctx);
+  });
 
 type Values = z.infer<typeof schema>;
 
@@ -61,7 +67,10 @@ const STEPS: { key: 'business' | 'country' | 'mode' | 'branch' | 'tax'; fields: 
   { key: 'country', fields: ['country', 'currency', 'timezone'] },
   { key: 'mode', fields: ['mode'] },
   { key: 'branch', fields: ['branchName', 'address', 'phone', 'days'] },
-  { key: 'tax', fields: ['vat', 'tax_name', 'tax_rate', 'tax_inclusive', 'tax_id_label', 'trn', 'openingCash'] },
+  {
+    key: 'tax',
+    fields: ['vat', 'tax_region', 'tax_name', 'tax_rate', 'tax_inclusive', 'tax2_on', 'tax2_name', 'tax2_rate', 'tax_id_label', 'trn', 'openingCash'],
+  },
 ];
 
 
@@ -91,6 +100,10 @@ export function SetupWizard() {
       days: [0, 1, 2, 3, 4, 5, 6],
       vat: 'off',
       trn: '',
+      tax2_on: false,
+      tax2_name: '',
+      tax2_rate: '',
+      tax_region: '',
       openingCash: null,
     },
   });
@@ -116,6 +129,7 @@ export function SetupWizard() {
           tax_rate_bps: parseTaxRate(v.tax_rate),
           tax_inclusive: v.tax_inclusive,
           tax_id_label: isUae(v.country) ? 'TRN' : v.tax_id_label,
+          ...(v.vat === 'on' ? { ...secondTaxPayload(v), tax_region: v.tax_region } : {}),
           trn: v.vat === 'on' ? v.trn : null,
           opening_cash_minor: v.openingCash ?? 0,
         }),
@@ -134,6 +148,10 @@ export function SetupWizard() {
   };
   const vat = useWatch({ control: form.control, name: 'vat' });
   const [country, currency] = useWatch({ control: form.control, name: ['country', 'currency'] });
+  // A new country brings its own tax: a second tax and a province picked for the last one go.
+  useEffect(() => {
+    for (const [k, v] of [['tax2_on', false], ['tax2_name', ''], ['tax2_rate', ''], ['tax_region', '']] as const) form.setValue(k, v);
+  }, [country, form]);
   const words = useTaxWords(form.control);
 
   return (

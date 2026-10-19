@@ -7,10 +7,11 @@ import { z } from 'zod';
 
 import { useSession, useWorkspace } from '@/features/auth/session';
 import { ModeCard } from '@/features/setup/ModeCard';
-import { TaxFields, taxShape, trnValid } from '@/features/tax/TaxFields';
+import { TaxFields } from '@/features/tax/TaxFields';
+import { checkProvince, checkSecondTax, secondTaxPayload, taxShape, taxValuesOf, trnValid } from '@/features/tax/taxForm';
 import { licenceLabelFor , isUae } from '@/lib/countries';
 import { useSetBranchMode, useUpdateBranch } from '@/features/team/api';
-import { activeCurrency, formatBps, parseTaxRate } from '@/lib/money';
+import { activeCurrency, parseTaxRate } from '@/lib/money';
 import { spacing, type Mode } from '@/theme';
 import {
   Button,
@@ -38,7 +39,7 @@ const whole = (min: number, max: number) =>
     .regex(/^\d+$/, 'validation.number')
     .refine((v) => Number(v) >= min && Number(v) <= max, 'validation.range');
 
-const schemaFor = (uae: boolean) =>
+const schemaFor = (uae: boolean, country: string) =>
   z
     .object({
       name: z.string().trim().min(2, 'validation.required').max(80, 'validation.tooLong'),
@@ -57,11 +58,13 @@ const schemaFor = (uae: boolean) =>
       require_hygiene_evidence: z.boolean(),
       receipt_mode: z.enum(['off', 'simple', 'whatsapp']),
     })
-    .refine((v) => !v.vat_on || trnValid(v.trn, uae), { path: ['trn'], message: uae ? 'validation.trn' : 'validation.taxNumber' });
+    .refine((v) => !v.vat_on || trnValid(v.trn, uae), { path: ['trn'], message: uae ? 'validation.trn' : 'validation.taxNumber' })
+    .superRefine((v, ctx) => {
+      if (!v.vat_on) return;
+      checkSecondTax(v, ctx);
+      checkProvince(v, country, ctx);
+    });
 type Values = z.infer<ReturnType<typeof schemaFor>>;
-
-/** 887.5 → "8.875" for the rate field. */
-const rateText = (bps: number) => formatBps(bps).replace('%', '');
 
 /** The open days stored with the branch (weekday numbers, 0 = Sunday); every day if none are stored. */
 function openDays(hours: unknown): number[] {
@@ -76,7 +79,7 @@ export function BranchSettingsScreen() {
   const { reload } = useSession();
   const { business, branch } = useWorkspace();
   const uae = isUae(business.country_code);
-  const schema = useMemo(() => schemaFor(uae), [uae]);
+  const schema = useMemo(() => schemaFor(uae, business.country_code), [uae, business.country_code]);
   const settings = branch.settings as Record<string, unknown>;
   const update = useUpdateBranch(branch.id);
   const setMode = useSetBranchMode(branch.id);
@@ -90,11 +93,7 @@ export function BranchSettingsScreen() {
       phone: branch.phone ?? '',
       open_days: openDays(branch.opening_hours),
       vat_on: branch.vat_mode === 'on',
-      trn: branch.trn ?? '',
-      tax_name: branch.tax_name,
-      tax_rate: rateText(branch.tax_rate_bps),
-      tax_inclusive: branch.tax_inclusive,
-      tax_id_label: branch.tax_id_label,
+      ...taxValuesOf(branch),
       legal_name: branch.legal_name ?? '',
       licence_label: branch.licence_label ?? licenceLabelFor(business.country_code),
       licence_number: branch.licence_number ?? '',
@@ -123,6 +122,7 @@ export function BranchSettingsScreen() {
         tax_rate_bps: parseTaxRate(v.tax_rate),
         tax_inclusive: v.tax_inclusive,
         tax_id_label: v.tax_id_label,
+        ...secondTaxPayload(v),
         legal_name: v.legal_name,
         licence_label: v.licence_label,
         licence_number: v.licence_number,
@@ -135,6 +135,7 @@ export function BranchSettingsScreen() {
           late_grace_min: Number(v.late_grace_min),
           require_hygiene_evidence: v.require_hygiene_evidence,
           receipt_mode: v.receipt_mode,
+          tax_region: v.tax_region,
         },
       },
       {

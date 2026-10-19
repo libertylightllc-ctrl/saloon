@@ -21,6 +21,7 @@ export type ReceiptSale = Pick<
   | 'discount_minor'
   | 'vat_mode'
   | 'vat_minor'
+  | 'tax2_minor'
   | 'tip_minor'
   | 'total_minor'
   | 'deposit_applied_minor'
@@ -59,6 +60,8 @@ export interface ReceiptContext {
     subtotal: string;
     discount: string;
     vat: string;
+    /** The second tax's line (Canada's PST…), or null. */
+    vat2?: string | null;
     tip: string;
     deposit: string;
     total: string;
@@ -103,7 +106,8 @@ ${staffNames(sale) ? `<br>${escape(L.staff)}: ${escape(staffNames(sale))}` : ''}
 <table>${lines}
 ${row(L.subtotal, formatMoney(sale.subtotal_minor))}
 ${sale.discount_minor ? row(L.discount, formatMoney(-sale.discount_minor)) : ''}
-${sale.vat_mode === 'on' ? row(L.vat, formatMoney(sale.vat_minor)) : ''}
+${sale.vat_mode === 'on' ? row(L.vat, formatMoney(sale.vat_minor - sale.tax2_minor)) : ''}
+${sale.vat_mode === 'on' && L.vat2 ? row(L.vat2, formatMoney(sale.tax2_minor)) : ''}
 ${sale.tip_minor ? row(L.tip, formatMoney(sale.tip_minor)) : ''}
 ${row(L.total, formatMoney(sale.total_minor), true)}
 ${sale.deposit_applied_minor ? row(L.deposit, formatMoney(-sale.deposit_applied_minor)) : ''}

@@ -9,7 +9,7 @@ import fr from '@/locales/fr.json';
 import hi from '@/locales/hi.json';
 import pt from '@/locales/pt.json';
 import ur from '@/locales/ur.json';
-import { taxKindOf } from '@/features/tax/kinds';
+import { taxWordKey } from '@/features/tax/kinds';
 
 /** Native names are shown untranslated so people can always find their own language. */
 export const LANGUAGES = [
@@ -88,7 +88,7 @@ function refreshTermVariables() {
 
 /** A tax name in the reader's language when it is one of the usual kinds, else as the owner wrote it. */
 export function taxDisplayName(name: string): string {
-  const kind = taxKindOf(name);
+  const kind = taxWordKey(name);
   return kind ? i18n.t(`tax.kinds.${kind}`) : name;
 }
 

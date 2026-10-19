@@ -196,6 +196,9 @@ export interface SaleRow {
   discount_minor: number;
   tip_minor: number;
   vat_minor: number;
+  /** The second tax's part of vat_minor (Canada's PST…). */
+  tax2_minor: number;
+  tax2_name: string | null;
   total_minor: number;
   refunded_minor: number;
   status: string;

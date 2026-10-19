@@ -39,6 +39,16 @@ describe('basketTotals', () => {
     expect(t).toMatchObject({ subtotal: 10000, net: 10888, vat: 888, taxAdded: true, total: 11388, due: 11388 });
   });
 
+  it('matches the SQL test: GST 5% + PST 7% added at the till, the PST kept apart', () => {
+    const t = basketTotals([line('Haircut', 10000)], { tax: { rateBps: 500, inclusive: false, rate2Bps: 700 } });
+    expect(t).toMatchObject({ vat: 1200, tax2: 700, total: 11200 });
+  });
+
+  it('Quebec: GST 5% + QST 9.975% on 35.00 is 5.24 of tax, 3.49 of it QST', () => {
+    const t = basketTotals([line('Coupe', 3500)], { tax: { rateBps: 500, inclusive: false, rate2Bps: 997.5 } });
+    expect(t).toMatchObject({ vat: 524, tax2: 349, total: 4024 });
+  });
+
   it('a 0% rate charges no tax', () => {
     expect(basketTotals([line('Fade', 10000)], { tax: { rateBps: 0, inclusive: false } })).toMatchObject({ vat: 0, total: 10000, taxAdded: false });
   });

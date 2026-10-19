@@ -42,6 +42,8 @@ export function receiptText(
     sale: string;
     staff: string;
     vat: string;
+    /** The second tax's line (Canada's PST…), or null. */
+    vat2?: string | null;
     tip: string;
     total: string;
     paid: string;
@@ -61,7 +63,8 @@ export function receiptText(
     ...(staffNames(sale) ? [`${L.staff}: ${staffNames(sale)}`] : []),
     '',
     ...sale.sale_lines.map((l) => `${Number(l.qty)} × ${l.name_snapshot} — ${formatMoney(Math.round(l.unit_price_minor * Number(l.qty)))}`),
-    ...(sale.vat_mode === 'on' ? [`${L.vat}: ${formatMoney(sale.vat_minor)}`] : []),
+    ...(sale.vat_mode === 'on' ? [`${L.vat}: ${formatMoney(sale.vat_minor - sale.tax2_minor)}`] : []),
+    ...(sale.vat_mode === 'on' && L.vat2 ? [`${L.vat2}: ${formatMoney(sale.tax2_minor)}`] : []),
     ...(sale.tip_minor ? [`${L.tip}: ${formatMoney(sale.tip_minor)}`] : []),
     `*${L.total}: ${formatMoney(sale.total_minor)}*`,
     ...sale.sale_payments.map((p) => `${L.paid} · ${L.methods[p.method] ?? p.method}: ${formatMoney(p.amount_minor)}`),

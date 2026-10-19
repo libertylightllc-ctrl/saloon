@@ -7,7 +7,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { businessMonth, type MonthKey } from '@/lib/dates';
 import { fileSlug, printHtml, shareCsv, sharePdf } from '@/lib/exportFile';
-import { isLanguage, isRtlLanguage } from '@/lib/i18n';
+import { isLanguage, isRtlLanguage, taxDisplayName } from '@/lib/i18n';
 import { useDates } from '@/lib/useDates';
 import { semantic, spacing, useTheme } from '@/theme';
 import { Button, FormError, HeaderBand, KpiCard, MonthSwitcher, PillTabs, QueryState, Screen } from '@/ui';
@@ -34,8 +34,8 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
   const control = useOwnerControl(branch.id);
   const controlWords = useControlWords();
   const view = useMemo<ReportView | null>(
-    () => (report.data && report.data.type === type ? buildReport(report.data, { t, day: dates.day }) : null),
-    [report.data, type, t, dates.day],
+    () => (report.data && report.data.type === type ? buildReport(report.data, { t, day: dates.day, tax2Name: branch.tax2_name && taxDisplayName(branch.tax2_name) }) : null),
+    [report.data, type, t, dates.day, branch.tax2_name],
   );
 
   const title = t(`reports.types.${type}`);

@@ -121,6 +121,17 @@ export function vatOnTop(net: Minor, rate: TaxRate): Minor {
 }
 
 /**
+ * The second tax's share of a tax charged at two rates together (Canada: GST 5% + PST 7% = 12.00 on 100.00, of which
+ * PST 7.00). Same rounding as the server: round(tax × rate2 / (rate1 + rate2)).
+ */
+export function secondTaxShare(tax: Minor, rate1: TaxRate, rate2: TaxRate): Minor {
+  assertMinor(tax);
+  const r2 = tenthsOfBps(rate2);
+  const both = tenthsOfBps(rate1) + r2;
+  return tax === 0 || r2 === 0n ? 0 : toSafeNumber(divRound(BigInt(tax) * r2, both), 'vat');
+}
+
+/**
  * Split `total` in proportion to `weights` so the parts add up exactly to `total`
  * (largest-remainder method; ties go to the earlier item). Used for spreading a discount
  * across sale lines and for pro-rata refunds. If every weight is 0 the split is even.

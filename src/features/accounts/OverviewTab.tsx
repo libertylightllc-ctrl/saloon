@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { taxDisplayName } from '@/lib/i18n';
 import { businessDate, businessMonth, shiftBusinessDate, shiftMonth, type MonthKey } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
 import { spacing, useTheme } from '@/theme';
@@ -104,6 +105,14 @@ export function OverviewTab() {
                 {rule}
                 <Row label={t('accounts.result')} value={revenue - costs} strong testID="month-result" />
                 <Row label={t('accounts.vatCollected')} value={total(rows, key('vat_payable'))} testID="month-vat" />
+                {/* A second tax (Canada's PST, paid to the province) on its own line, as it is owed apart. */}
+                {total(rows, key('tax2_payable')) !== 0 ? (
+                  <Row
+                    label={t('accounts.tax2Collected', { name: branch.tax2_name ? taxDisplayName(branch.tax2_name) : t('accounts.names.tax2_payable') })}
+                    value={total(rows, key('tax2_payable'))}
+                    testID="month-tax2"
+                  />
+                ) : null}
                 <Row label={t('accounts.tipsCollected')} value={total(rows, key('tips_payable'))} />
                 <View style={styles.balanced}>
                   <StatusPill

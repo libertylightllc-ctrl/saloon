@@ -737,7 +737,8 @@
     "taxNumber": "Letras, números, espaços, pontos, hifens ou barras",
     "taxRate": "Digite uma alíquota de 0 a 30, como 5 ou 8.875",
     "timezone": "Use o nome de um fuso horário, como Europe/Lisbon",
-    "licence": "Só letras, números e . / -"
+    "licence": "Só letras, números e . / -",
+    "province": "Escolha sua província"
   },
   "errors": {
     "not_signed_in": "Sua sessão terminou. Entre novamente.",
@@ -829,7 +830,8 @@
     "message_required": "Escreva uma mensagem primeiro.",
     "invalid_email": "Esse endereço de e-mail não parece correto.",
     "invalid_licence": "O número da licença aceita só letras, números e . / -.",
-    "too_long": "O texto é longo demais."
+    "too_long": "O texto é longo demais.",
+    "tax2_name_required": "Dê um nome ao segundo imposto, como PST."
   },
   "sales": {
     "title": "Vendas",
@@ -1066,7 +1068,8 @@
       "salaries_expense": "Salários",
       "commission_expense": "Comissões",
       "cash_over_short": "Sobra / falta de caixa",
-      "supplies_expense": "Materiais"
+      "supplies_expense": "Materiais",
+      "tax2_payable": "Segundo imposto sobre vendas a pagar"
     },
     "sources": {
       "sale": "Vendas",
@@ -1125,7 +1128,8 @@
       "closedToast": "{{month}} está fechado",
       "reopenedToast": "{{month}} está aberto de novo",
       "hint": "Só meses já encerrados podem ser fechados. Os livros precisam estar equilibrados."
-    }
+    },
+    "tax2Collected": "{{name}} cobrado (devido ao fisco)"
   },
   "settingUp": {
     "title": "Estamos configurando {{name}}",
@@ -1869,7 +1873,9 @@
       "vatOutput": "{{tax}} cobrado",
       "vatInput": "{{tax}} pago (recuperável)",
       "vatDue": "{{tax}} a pagar",
-      "vatRefund": "{{tax}} a recuperar"
+      "vatRefund": "{{tax}} a recuperar",
+      "tax2Output": "Dos quais, {{name}}",
+      "tax2Generic": "segundo imposto"
     },
     "chart": {
       "salesByDay": "Vendas por dia",
@@ -2243,17 +2249,43 @@
       "gst": "GST",
       "salesTax": "Imposto sobre vendas",
       "serviceTax": "Imposto sobre serviços",
-      "other": "Outro"
+      "other": "Outro",
+      "hst": "HST",
+      "pst": "PST",
+      "qst": "QST",
+      "rst": "RST"
     },
     "rateHint": {
-      "US": "O imposto sobre vendas depende do seu estado e cidade: digite a taxa total que você cobra.",
-      "CA": "GST, HST ou GST + PST conforme a sua província: digite a taxa total que você cobra."
+      "US": "O imposto sobre vendas depende do seu estado e cidade: digite a taxa total que você cobra."
     },
     "preview": {
       "service": "Serviço",
       "included": "Inclui {{tax}} ({{rate}})",
       "added": "{{tax}} ({{rate}})",
       "total": "Total"
+    },
+    "province": {
+      "title": "Província",
+      "hint": "Preenche o imposto sobre vendas da sua província. Você pode alterá-lo abaixo.",
+      "names": {
+        "AB": "Alberta",
+        "BC": "Colúmbia Britânica",
+        "MB": "Manitoba",
+        "NB": "Nova Brunswick",
+        "NL": "Terra Nova e Labrador",
+        "NS": "Nova Escócia",
+        "NT": "Territórios do Noroeste",
+        "NU": "Nunavut",
+        "ON": "Ontário",
+        "PE": "Ilha do Príncipe Eduardo",
+        "QC": "Quebec",
+        "SK": "Saskatchewan",
+        "YT": "Yukon"
+      }
+    },
+    "second": {
+      "title": "Segundo imposto",
+      "hint": "Cobrado junto com o primeiro, como o PST ou o QST no Canadá. O recibo mostra cada imposto em sua própria linha."
     }
   },
   "nav": {

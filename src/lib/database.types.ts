@@ -522,6 +522,8 @@ export type Database = {
           tax_inclusive: boolean;
           tax_name: string;
           tax_rate_bps: number;
+          tax2_name: string | null;
+          tax2_rate_bps: number;
           trn: string | null;
           vat_mode: Database['public']['Enums']['vat_mode'];
         };
@@ -543,6 +545,8 @@ export type Database = {
           tax_inclusive?: boolean;
           tax_name?: string;
           tax_rate_bps?: number;
+          tax2_name?: string | null;
+          tax2_rate_bps?: number;
           trn?: string | null;
           vat_mode?: Database['public']['Enums']['vat_mode'];
         };
@@ -564,6 +568,8 @@ export type Database = {
           tax_inclusive?: boolean;
           tax_name?: string;
           tax_rate_bps?: number;
+          tax2_name?: string | null;
+          tax2_rate_bps?: number;
           trn?: string | null;
           vat_mode?: Database['public']['Enums']['vat_mode'];
         };
@@ -2673,6 +2679,9 @@ export type Database = {
           subtotal_minor: number;
           tax_inclusive: boolean;
           tax_rate_bps: number;
+          tax2_minor: number;
+          tax2_name: string | null;
+          tax2_rate_bps: number;
           tip_employee_id: string | null;
           tip_minor: number;
           total_minor: number;
@@ -2701,6 +2710,9 @@ export type Database = {
           subtotal_minor: number;
           tax_inclusive?: boolean;
           tax_rate_bps?: number;
+          tax2_minor?: number;
+          tax2_name?: string | null;
+          tax2_rate_bps?: number;
           tip_employee_id?: string | null;
           tip_minor?: number;
           total_minor: number;
@@ -2729,6 +2741,9 @@ export type Database = {
           subtotal_minor?: number;
           tax_inclusive?: boolean;
           tax_rate_bps?: number;
+          tax2_minor?: number;
+          tax2_name?: string | null;
+          tax2_rate_bps?: number;
           tip_employee_id?: string | null;
           tip_minor?: number;
           total_minor?: number;
@@ -3973,6 +3988,7 @@ export type Database = {
         Returns: {
           entries: number;
           kind: string;
+          tax2_minor: number;
           taxable_minor: number;
           vat_minor: number;
         }[];

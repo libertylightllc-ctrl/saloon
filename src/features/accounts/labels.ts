@@ -4,7 +4,7 @@ import { DEFAULT_CATEGORY_KEYS } from '@/features/moneyout/labels';
 
 const SYSTEM_ACCOUNTS = [
   'cash', 'card_clearing', 'wallet_clearing', 'bank', 'inventory', 'staff_advances', 'supplier_payable',
-  'deposits_held', 'tips_payable', 'salaries_payable', 'vat_payable', 'owner_equity', 'owner_drawings',
+  'deposits_held', 'tips_payable', 'salaries_payable', 'vat_payable', 'tax2_payable', 'owner_equity', 'owner_drawings',
   'service_revenue', 'product_revenue', 'other_income', 'consumables_used', 'cost_of_goods_sold',
   'salaries_expense', 'commission_expense', 'cash_over_short', 'supplies_expense',
 ] as const;

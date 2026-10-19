@@ -9,11 +9,11 @@ import { Linking } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { brand } from '@/config/brand';
 import { dialCodeOf } from '@/lib/countries';
-import { formatBps } from '@/lib/money';
 import { supabase } from '@/lib/supabase';
 
 import { SALE_WITH_STAFF, type SaleDetail } from './api';
 import { sellerLines } from './seller';
+import { receiptLabels } from './useReceipt';
 import { receiptText, waNumber } from './whatsappText';
 
 export function useWhatsAppReceipt() {
@@ -39,20 +39,7 @@ export function useWhatsAppReceipt() {
           ...sellerLines({ business, branch }),
           link: `${brand.website}/r/${sale.receipt_token}`,
         },
-        {
-          title: t(sale.vat_mode === 'on' ? 'receipt.taxInvoice' : 'receipt.receipt'),
-          sale: t('receipt.sale'),
-          staff: t('receipt.staff'),
-          vat: t(sale.tax_inclusive ? 'receipt.vatIncluded' : 'receipt.vatAdded', { rate: formatBps(sale.tax_rate_bps) }),
-          tip: t('sale.tip'),
-          total: t('receipt.total'),
-          paid: t('receipt.paid'),
-          refunded: t('receipt.refunded'),
-          trn: t('receipt.trn'),
-          thanks: t('receipt.thanks'),
-          pdf: t('receipt.pdfLine'),
-          methods: { cash: t('sale.methods.cash'), card: t('sale.methods.card'), wallet: t('sale.methods.wallet') },
-        },
+        { ...receiptLabels(t, sale), pdf: t('receipt.pdfLine') },
       );
       const to = waNumber(sale.customers?.phone, dialCodeOf(business.country_code));
       await Linking.openURL(`https://wa.me/${to}?text=${encodeURIComponent(text)}`);

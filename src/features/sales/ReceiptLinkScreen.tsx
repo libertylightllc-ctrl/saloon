@@ -19,7 +19,7 @@ import { saudiReceiptQr, sellerLines } from './seller';
 import { receiptLabels } from './useReceipt';
 
 interface ReceiptLink {
-  sale: ReceiptSale & { tax_inclusive: boolean; tax_rate_bps: number };
+  sale: ReceiptSale & { tax_inclusive: boolean; tax_rate_bps: number; tax2_name: string | null; tax2_rate_bps: number };
   seller: {
     business_name: string;
     country_code: string;

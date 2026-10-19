@@ -230,11 +230,19 @@ export function CheckoutForm(props: CheckoutProps) {
           !tax.rule
             ? t('sale.vatNotApplied')
             : totals.taxAdded
-              ? formatMoney(totals.vat)
-              : t('sale.vatIncluded', { amount: formatMoney(totals.vat) }),
+              ? formatMoney(totals.vat - totals.tax2)
+              : t('sale.vatIncluded', { amount: formatMoney(totals.vat - totals.tax2) }),
           false,
           'checkout-vat',
         )}
+        {tax.rule && tax.second
+          ? row(
+              tax.second.label,
+              totals.taxAdded ? formatMoney(totals.tax2) : t('sale.vatIncluded', { amount: formatMoney(totals.tax2) }),
+              false,
+              'checkout-tax2',
+            )
+          : null}
         {totals.tip ? row(t('sale.tip'), formatMoney(totals.tip)) : null}
         {totals.depositApplied ? row(t('sale.depositApplied'), formatMoney(-totals.depositApplied)) : null}
         {row(t('sale.amountDue'), formatMoney(totals.due), true, 'checkout-due')}

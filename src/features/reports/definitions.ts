@@ -40,6 +40,8 @@ export interface ReportView {
 interface Helpers {
   t: TFunction;
   day: (date: string, pattern: string) => string;
+  /** The branch's second tax, by name ("PST"), for the tax report. */
+  tax2Name?: string | null;
 }
 
 const csvMoney = (minor: number | null) => (minor === null ? '' : formatAmount(minor, undefined, { grouping: false }));
@@ -51,7 +53,7 @@ function change(now: number, before: number, upIsGood: boolean) {
   return { label: formatBps(Math.abs(bps)), trend: bps >= 0 ? ('up' as const) : ('down' as const), good: bps >= 0 === upIsGood };
 }
 
-export function buildReport(report: ReportData, { t, day }: Helpers): ReportView {
+export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): ReportView {
   const R = (key: string, values?: Record<string, unknown>) => t(`reports.${key}` as 'reports.title', values ?? {}) as string;
   switch (report.type) {
     case 'monthly': {
@@ -185,19 +187,24 @@ export function buildReport(report: ReportData, { t, day }: Helpers): ReportView
       };
     }
     case 'vat':
-      return vatReport(report.data, R);
+      return vatReport(report.data, R, tax2Name);
   }
 }
 
-/** Output VAT (sales less refunds), input VAT (purchases and expenses) and what is due for the month. */
-function vatReport(rows: VatRow[], R: (key: string, values?: Record<string, unknown>) => string): ReportView {
+/**
+ * Output VAT (sales less refunds), input VAT (purchases and expenses) and what is due for the month; with a second
+ * tax (Canada's PST, paid to the province), how much of the output is that tax.
+ */
+function vatReport(rows: VatRow[], R: (key: string, values?: Record<string, unknown>) => string, tax2Name?: string | null): ReportView {
   const vatOf = (kinds: VatRow['kind'][]) => sum(rows.filter((r) => kinds.includes(r.kind)).map((r) => r.vat_minor));
   const output = vatOf(['sales', 'refunds']);
   const input = vatOf(['purchases', 'expenses']);
   const due = output - input;
+  const tax2 = sum(rows.filter((r) => r.kind === 'sales' || r.kind === 'refunds').map((r) => r.tax2_minor));
   return {
     kpis: [
       { key: 'output', label: R('kpi.vatOutput'), value: formatMoney(output) },
+      ...(tax2 ? [{ key: 'tax2', label: R('kpi.tax2Output', { name: tax2Name || R('kpi.tax2Generic') }), value: formatMoney(tax2) }] : []),
       { key: 'input', label: R('kpi.vatInput'), value: formatMoney(input) },
       { key: 'due', label: R(due >= 0 ? 'kpi.vatDue' : 'kpi.vatRefund'), value: formatMoney(Math.abs(due)) },
     ],
