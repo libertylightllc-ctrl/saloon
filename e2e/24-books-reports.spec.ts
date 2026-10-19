@@ -5,7 +5,7 @@ import type { Page } from '@playwright/test';
 
 import { admin, createOwner, createStaff, dubaiDate, employeeOf, journalTotals, staffEmail, userClient, type Owner } from './support/api';
 import { expect, test } from './support/fixtures';
-import { id, idStarts, ownerOn, snap, staffOn, tab, text, visibleTabs } from './support/ui';
+import { id, idStarts, ownerOn, printedText, snap, staffOn, tab, text, visibleTabs } from './support/ui';
 
 async function download(page: Page, testId: string): Promise<string> {
   const [file] = await Promise.all([page.waitForEvent('download'), id(page, testId).click()]);
@@ -96,7 +96,7 @@ test('owner reads every report, exports PDF and CSV, closes last month and expor
   expect(monthly).toContain(`${dubaiDate()},200.00`);
   await id(page, 'report-pdf').click();
   await expect
-    .poll(() => page.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? ''))
+    .poll(() => printedText(page))
     .toContain('Monthly business');
   // Last month: the moved sale.
   await page.getByRole('button', { name: 'Previous month' }).filter({ visible: true }).first().click();

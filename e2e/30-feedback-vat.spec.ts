@@ -4,7 +4,7 @@
  */
 import { admin, createOwner, createStaff, employeeOf, sellCustom } from './support/api';
 import { expect, test } from './support/fixtures';
-import { back, chooseType, expectMoney, field, id, ownerOn, snap, tab, text } from './support/ui';
+import { back, chooseType, expectMoney, field, id, ownerOn, printedText, snap, tab, text } from './support/ui';
 
 test('services without a time, and who did each sale on the list, the sale and the receipt', async ({ page, mode }) => {
   const owner = await createOwner(mode);
@@ -41,7 +41,7 @@ test('services without a time, and who did each sale on the list, the sale and t
   await expect(id(page, 'sale-line-staff')).toContainText('by Rafiq Feedback');
   await page.getByRole('button', { name: 'Print receipt' }).click();
   await expect
-    .poll(() => page.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? ''))
+    .poll(() => printedText(page))
     .toContain('Served by: Rafiq Feedback');
   await snap(page, 'sale-staff', mode);
 });

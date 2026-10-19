@@ -45,22 +45,37 @@ export async function shareZip(name: string, files: Record<string, readonly (rea
 }
 
 /**
- * Web: expo-print ignores the HTML and prints the whole page, so the document goes into a hidden
- * frame of its own and that frame is printed. The frame stays until the next document replaces it.
+ * Web: prints `html` (a whole document) on its own. expo-print would print the whole page, and a hidden frame printed
+ * with frame.print() works on computers but iPhones print the app page behind it instead (owner, 2026-10-19: a receipt
+ * printed as the Quick sale screen). So the document goes into the page itself, in a shadow root of its own (its styles
+ * stay inside), and a print-only style hides everything else. It stays, off screen, until the next printout.
  */
 function printOnWeb(html: string) {
-  document.querySelector('iframe[data-receipt]')?.remove();
-  const frame = document.createElement('iframe');
-  frame.setAttribute('data-receipt', 'true');
-  frame.setAttribute('aria-hidden', 'true');
-  frame.style.cssText = 'position:fixed;width:0;height:0;border:0;opacity:0;pointer-events:none';
-  document.body.appendChild(frame);
-  const doc = frame.contentDocument!;
-  doc.open();
-  doc.write(html);
-  doc.close();
-  frame.contentWindow!.focus();
-  frame.contentWindow!.print();
+  document.querySelector('[data-printout]')?.remove();
+  const parsed = new DOMParser().parseFromString(html, 'text/html');
+  // The document's page rules (html, body) apply to the printout's own box.
+  const css = [...parsed.querySelectorAll('style')]
+    .map((s) => s.textContent ?? '')
+    .join('\n')
+    .replace(/(^|[\s,}])(html|body)(?=\s*[{,:.[#])/g, '$1.printout');
+  const host = document.createElement('div');
+  host.setAttribute('data-printout', 'true');
+  host.setAttribute('aria-hidden', 'true');
+  const root = host.attachShadow({ mode: 'open' });
+  root.innerHTML = `<style>${css}</style><div class="printout" dir="${parsed.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'}">${parsed.body.innerHTML}</div>`;
+  document.body.appendChild(host);
+  if (!document.getElementById('printout-style')) {
+    const style = document.createElement('style');
+    style.id = 'printout-style';
+    style.textContent = `[data-printout] { position: fixed; left: -10000px; top: 0; width: 720px; pointer-events: none; }
+@media print {
+  body > *:not([data-printout]) { display: none !important; }
+  html, body { height: auto !important; overflow: visible !important; background: #fff !important; }
+  [data-printout] { position: static !important; left: auto !important; width: auto !important; }
+}`;
+    document.head.appendChild(style);
+  }
+  window.print();
 }
 
 /** Share as PDF (phones) or print (web). */

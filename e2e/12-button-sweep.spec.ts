@@ -69,7 +69,7 @@ async function perceivable(page: Page) {
       .map((e) => (e as HTMLElement).getAttribute('aria-label') || (e as HTMLElement).innerText)
       .join('|'),
     values: [...document.querySelectorAll('input, textarea')].map((e) => (e as HTMLInputElement).value).join('|'),
-    receipt: (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? '',
+    receipt: (document.querySelector('[data-printout]')?.shadowRoot?.querySelector('.printout') as HTMLElement | null)?.innerText ?? '',
   }));
   return { url: page.url(), ...dom };
 }

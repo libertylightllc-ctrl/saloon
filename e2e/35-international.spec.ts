@@ -9,7 +9,7 @@ import { admin, createOwner, KUWAIT, latestSale, type Mode } from './support/api
 import { SERVICE } from './support/catalog';
 import { uid } from './support/env';
 import { expect, test } from './support/fixtures';
-import { chooseType, expectMoney, field, id, ownerOn, snap, tab, text } from './support/ui';
+import { chooseType, expectMoney, field, id, ownerOn, printedText, snap, tab, text } from './support/ui';
 
 /** The mode's starter service, priced from AED at setup: USD 6.80 / 22.00 and KWD 2.100 / 6.600. */
 const PRICE = {
@@ -93,7 +93,7 @@ test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt
   await page.goto('/sales');
   await id(page, `sale-row-${sale.number}`).click();
   await page.getByRole('button', { name: 'Print receipt' }).click();
-  const receipt = () => page.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? '').then((t) => t.replace(/\u00a0/g, ' '));
+  const receipt = () => printedText(page).then((t) => t.replace(/\u00a0/g, ' '));
   await expect.poll(receipt).toContain('Sales tax (8.875%)');
   await expect.poll(receipt).toContain(`USD ${((price + tax) / 100).toFixed(2)}`);
 });

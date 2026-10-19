@@ -6,7 +6,7 @@ import path from 'path';
 
 import { admin, createOwner, createStaff, dubaiDate } from './support/api';
 import { expect, test } from './support/fixtures';
-import { back, id, ownerOn, staffOn, tab, text } from './support/ui';
+import { back, id, ownerOn, printedText, staffOn, tab, text } from './support/ui';
 
 const PHOTO = path.join(__dirname, 'fixtures', 'receipt.jpg');
 
@@ -80,8 +80,8 @@ test('owner keeps the register: licence, a renewed health card, Montaji, binder;
   await id(page, 'compliance-tab-binder').click();
   await expect(id(page, `binder-trade_licence-${branch}`)).toContainText('Valid');
   await id(page, 'binder-export').click();
-  await expect.poll(() => page.evaluate(() => document.querySelector('iframe[data-receipt]')?.getAttribute('data-receipt'))).toBe('true');
-  const pdf = await page.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement).contentDocument!.body.innerText);
+  await expect.poll(() => printedText(page)).toContain('Inspection binder');
+  const pdf = await printedText(page);
   expect(pdf).toContain('Inspection binder');
   expect(pdf).toContain('CN-1234567');
   expect(pdf).toContain('MNT-2026-0042');

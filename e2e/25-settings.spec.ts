@@ -7,7 +7,7 @@ import { strFromU8, unzipSync } from 'fflate';
 import { createOwner, createStaff, sellService } from './support/api';
 import { SERVICE } from './support/catalog';
 import { expect, test } from './support/fixtures';
-import { id, ownerOn, signInStaff, snap, staffOn, tab, text } from './support/ui';
+import { id, ownerOn, printedText, signInStaff, snap, staffOn, tab, text } from './support/ui';
 
 async function setReceiptMode(page: Page, mode: 'off' | 'simple' | 'whatsapp') {
   await page.goto('/settings/branch');
@@ -54,7 +54,7 @@ test('the customer receipt follows the setting: none, printed, or sent on WhatsA
   await expect(customer.frameLocator('iframe[data-receipt-view]').locator('body')).toContainText(svc.name);
   await id(customer, 'receipt-download').click();
   await expect
-    .poll(() => customer.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? ''))
+    .poll(() => printedText(customer))
     .toContain(svc.name);
   await customer.goto('/r/AAAAAAAAAAAAAAAAAAAAAAAA');
   await expect(customer.getByText('This receipt link is not valid.')).toBeVisible();
@@ -64,7 +64,7 @@ test('the customer receipt follows the setting: none, printed, or sent on WhatsA
   await sellOne(page, svc.name);
   await id(page, 'share-receipt').click();
   await expect
-    .poll(() => page.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? ''))
+    .poll(() => printedText(page))
     .toContain(svc.name);
 });
 

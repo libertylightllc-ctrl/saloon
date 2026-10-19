@@ -105,3 +105,10 @@ export async function snap(page: Page, name: string, mode: Mode) {
 export async function expectMoney(page: Page, testId: string, expected: number, timeout = 15_000) {
   await expect.poll(() => moneyOf(page, testId).catch(() => NaN), { timeout }).toBe(expected);
 }
+
+/** The text of the last printout (receipt, report, bill PDF) the page sent to the printer (src/lib/exportFile.ts). */
+export function printedText(page: Page): Promise<string> {
+  return page.evaluate(
+    () => (document.querySelector('[data-printout]')?.shadowRoot?.querySelector('.printout') as HTMLElement | null)?.innerText ?? '',
+  );
+}

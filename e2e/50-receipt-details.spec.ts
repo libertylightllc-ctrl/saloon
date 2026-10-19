@@ -8,7 +8,7 @@ import type { Page } from '@playwright/test';
 import { admin, createOwner, latestSale, SAUDI, type Mode } from './support/api';
 import { SERVICE } from './support/catalog';
 import { expect, test } from './support/fixtures';
-import { field, id, ownerOn, tab } from './support/ui';
+import { field, id, ownerOn, printedText, tab } from './support/ui';
 
 async function sellAndPrint(page: Page, mode: Mode, branchId: string) {
   await tab(page, 'sale');
@@ -24,7 +24,7 @@ async function sellAndPrint(page: Page, mode: Mode, branchId: string) {
 }
 
 const receiptText = (page: Page) =>
-  page.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? '');
+  printedText(page);
 
 test('the company name and trade licence number print on the tax invoice', async ({ page, mode }) => {
   const owner = await createOwner(mode, { vat: true });
@@ -50,6 +50,12 @@ test('the company name and trade licence number print on the tax invoice', async
   await expect.poll(() => receiptText(page)).toContain('Al Barsha Gents Salon LLC');
   await expect.poll(() => receiptText(page)).toContain('Trade licence no. 1234567');
   await expect.poll(() => receiptText(page)).toContain('100234567800003');
+  // On paper only the receipt shows (2026-10-19: iPhones printed the app page around a hidden frame instead).
+  await page.emulateMedia({ media: 'print' });
+  await expect(page.locator('[data-printout] .printout')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Print receipt' })).toBeHidden();
+  await page.emulateMedia({ media: 'screen' });
+  await expect(page.getByRole('button', { name: 'Print receipt' })).toBeVisible();
 });
 
 test('a Saudi tax invoice carries ZATCA’s QR code with the seller, VAT number, time, total and VAT', async ({ page, mode }) => {
@@ -59,8 +65,7 @@ test('a Saudi tax invoice carries ZATCA’s QR code with the seller, VAT number,
   const sale = await sellAndPrint(page, mode, owner.branchId);
   const qr = () =>
     page.evaluate(() => {
-      const doc = (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument;
-      const box = doc?.querySelector('.qr[data-zatca]');
+      const box = document.querySelector('[data-printout]')?.shadowRoot?.querySelector('.qr[data-zatca]');
       return box ? { text: box.getAttribute('data-zatca') ?? '', svg: Boolean(box.querySelector('svg')) } : null;
     });
   await expect.poll(qr).not.toBeNull();

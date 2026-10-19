@@ -5,7 +5,7 @@
  */
 import { admin, createOwner, createStaff, staffEmail, stockQty, userClient } from './support/api';
 import { expect, test } from './support/fixtures';
-import { expectMoney, id, ownerOn, signInOwner, snap, staffOn, tab, text } from './support/ui';
+import { expectMoney, id, ownerOn, printedText, signInOwner, snap, staffOn, tab, text } from './support/ui';
 
 test('a purchase entered like the supplier’s invoice: 10 bottles of 1 L, delivery, part paid by card', async ({
   page,
@@ -62,12 +62,7 @@ test('a purchase entered like the supplier’s invoice: 10 bottles of 1 L, deliv
 
   // Printed (a PDF on phones) in the same layout.
   await id(page, 'bill-print').click();
-  const printed = () =>
-    page.evaluate(
-      () =>
-        (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)
-          ?.contentDocument?.body?.innerText ?? '',
-    );
+  const printed = () => printedText(page);
   await expect.poll(printed).toContain('PUR-00001');
   const paper = (await printed()).replace(/\u00a0/g, ' '); // amounts keep "AED" and the number together
   for (const part of [
