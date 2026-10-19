@@ -2667,6 +2667,7 @@ export type Database = {
           id: string;
           note: string | null;
           number: number;
+          receipt_token: string;
           refunded_minor: number;
           status: Database['public']['Enums']['sale_status'];
           subtotal_minor: number;
@@ -2694,6 +2695,7 @@ export type Database = {
           id?: string;
           note?: string | null;
           number: number;
+          receipt_token?: string;
           refunded_minor?: number;
           status?: Database['public']['Enums']['sale_status'];
           subtotal_minor: number;
@@ -2721,6 +2723,7 @@ export type Database = {
           id?: string;
           note?: string | null;
           number?: number;
+          receipt_token?: string;
           refunded_minor?: number;
           status?: Database['public']['Enums']['sale_status'];
           subtotal_minor?: number;
@@ -3879,6 +3882,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      public_receipt: { Args: { p_token: string }; Returns: Json };
       purchase_no: { Args: { p_number: number }; Returns: string };
       record_adjustment: { Args: { p: Json }; Returns: Json };
       record_expense: { Args: { p: Json }; Returns: Json };

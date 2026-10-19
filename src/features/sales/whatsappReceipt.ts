@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { brand } from '@/config/brand';
 import { dialCodeOf } from '@/lib/countries';
 import { formatBps } from '@/lib/money';
 import { supabase } from '@/lib/supabase';
@@ -36,6 +37,7 @@ export function useWhatsAppReceipt() {
           language: i18n.language,
           trn: sale.vat_mode === 'on' ? branch.trn : null,
           ...sellerLines({ business, branch }),
+          link: `${brand.website}/r/${sale.receipt_token}`,
         },
         {
           title: t(sale.vat_mode === 'on' ? 'receipt.taxInvoice' : 'receipt.receipt'),
@@ -48,6 +50,7 @@ export function useWhatsAppReceipt() {
           refunded: t('receipt.refunded'),
           trn: t('receipt.trn'),
           thanks: t('receipt.thanks'),
+          pdf: t('receipt.pdfLine'),
           methods: { cash: t('sale.methods.cash'), card: t('sale.methods.card'), wallet: t('sale.methods.wallet') },
         },
       );

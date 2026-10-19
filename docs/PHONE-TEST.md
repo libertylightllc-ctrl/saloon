@@ -412,3 +412,9 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 3. "On your receipts and invoices" → type a company name and a licence number → Save.
 4. Sell → open the sale → Print receipt → ✅ the company name and "Trade licence no. …" under the tax number.
 5. (Saudi salon only) ✅ a QR code at the bottom of the tax invoice; the VAT app reads it.
+
+## 49 · WhatsApp receipt with a PDF link (1 min)
+
+1. More → Branch settings → Customer receipt → WhatsApp → Save.
+2. Sell to a customer with a phone number → Send receipt → ✅ WhatsApp opens with the receipt and "Receipt as PDF: saloqo.com/r/…" → Send.
+3. On the customer's phone, tap the link → ✅ the receipt → Download PDF → ✅ a PDF.

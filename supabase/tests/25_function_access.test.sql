@@ -71,6 +71,7 @@ insert into reviewed values
     ('period_list'),
     ('plan_status'),
     ('post_purchase_bill'),
+    ('public_receipt'),
     ('record_adjustment'),
     ('record_expense'),
     ('record_stock_count'),
@@ -133,9 +134,10 @@ select is(
 select is(
   array(select p.proname::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
         where n.nspname = 'public' and p.prosecdef and has_function_privilege('anon', p.oid, 'EXECUTE') order by 1),
-  -- The visitors' support chat only (2026-10-12): reading needs the secret kept on the visitor's device.
-  array['support_guest_send', 'support_guest_thread']::text[],
-  'signed-out visitors can call only the visitor support chat');
+  -- The visitors' support chat (2026-10-12), reading needs the secret kept on the visitor's device; and one receipt
+  -- for the holder of its secret link (2026-10-19).
+  array['public_receipt', 'support_guest_send', 'support_guest_thread']::text[],
+  'signed-out visitors can call only the visitor support chat and the receipt link');
 
 select is(
   array(select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace

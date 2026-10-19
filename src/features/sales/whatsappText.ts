@@ -34,8 +34,23 @@ export function receiptText(
     trn: string | null;
     legalName?: string | null;
     licence?: string | null;
+    /** saloqo.com/r/<token>: the receipt as a PDF. */
+    link?: string | null;
   },
-  L: { title: string; sale: string; staff: string; vat: string; tip: string; total: string; paid: string; refunded: string; trn: string; thanks: string; methods: Record<string, string> },
+  L: {
+    title: string;
+    sale: string;
+    staff: string;
+    vat: string;
+    tip: string;
+    total: string;
+    paid: string;
+    refunded: string;
+    trn: string;
+    thanks: string;
+    pdf?: string;
+    methods: Record<string, string>;
+  },
 ): string {
   const lines = [
     `*${ctx.businessName}* · ${ctx.branchName}`,
@@ -52,6 +67,7 @@ export function receiptText(
     ...sale.sale_payments.map((p) => `${L.paid} · ${L.methods[p.method] ?? p.method}: ${formatMoney(p.amount_minor)}`),
     ...(sale.refunded_minor > 0 ? [`${L.refunded}: ${formatMoney(-sale.refunded_minor)}`] : []),
     '',
+    ...(ctx.link && L.pdf ? [`${L.pdf} ${ctx.link}`, ''] : []),
     L.thanks,
   ];
   return lines.join('\n');

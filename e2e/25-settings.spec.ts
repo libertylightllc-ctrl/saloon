@@ -24,7 +24,7 @@ async function sellOne(page: Page, service: string) {
   await expect(id(page, 'sale-done')).toBeVisible();
 }
 
-test('the customer receipt follows the setting: none, printed, or sent on WhatsApp', async ({ page, mode }) => {
+test('the customer receipt follows the setting: none, printed, or sent on WhatsApp', async ({ page, mode, device }) => {
   const svc = SERVICE[mode];
   const owner = await createOwner(mode);
   await ownerOn(page, mode, owner.email, owner.password);
@@ -42,8 +42,22 @@ test('the customer receipt follows the setting: none, printed, or sent on WhatsA
   await popup.waitForLoadState();
   const url = new URL(popup.url());
   expect(url.hostname).toBe('wa.me');
-  expect(url.searchParams.get('text')).toContain(svc.name);
+  const message = url.searchParams.get('text') ?? '';
+  expect(message).toContain(svc.name);
   await popup.close();
+  // It ends with the receipt as a PDF behind a secret link (2026-10-19): the customer, not signed in, sees the receipt
+  // there and downloads it.
+  const token = /https:\/\/www\.saloqo\.com\/r\/([A-Za-z0-9_-]{24})/.exec(message)?.[1];
+  expect(token).toBeTruthy();
+  const customer = await device();
+  await customer.goto(`/r/${token}`);
+  await expect(customer.frameLocator('iframe[data-receipt-view]').locator('body')).toContainText(svc.name);
+  await id(customer, 'receipt-download').click();
+  await expect
+    .poll(() => customer.evaluate(() => (document.querySelector('iframe[data-receipt]') as HTMLIFrameElement | null)?.contentDocument?.body?.innerText ?? ''))
+    .toContain(svc.name);
+  await customer.goto('/r/AAAAAAAAAAAAAAAAAAAAAAAA');
+  await expect(customer.getByText('This receipt link is not valid.')).toBeVisible();
   await id(page, 'new-sale').click();
 
   await setReceiptMode(page, 'simple');

@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import { useWorkspace } from '@/features/auth/session';
@@ -39,25 +40,37 @@ export function useShareReceipt() {
         ink: theme.colors.text,
         muted: theme.colors.textSecondary,
         line: theme.colors.divider,
-        labels: {
-          title: t(sale.vat_mode === 'on' ? 'receipt.taxInvoice' : 'receipt.receipt'),
-          sale: t('receipt.sale'),
-          customer: t('sale.customer'),
-          staff: t('receipt.staff'),
-          subtotal: t('sale.subtotal'),
-          discount: t('sale.discount'),
-          vat: t(sale.tax_inclusive ? 'receipt.vatIncluded' : 'receipt.vatAdded', { rate: formatBps(sale.tax_rate_bps) }),
-          tip: t('sale.tip'),
-          deposit: t('receipt.deposit'),
-          total: t('receipt.total'),
-          paid: t('receipt.paid'),
-          refunded: t('receipt.refunded'),
-          trn: t('receipt.trn'),
-          thanks: t('receipt.thanks'),
-          methods: { cash: t('sale.methods.cash'), card: t('sale.methods.card'), wallet: t('sale.methods.wallet') },
-        },
+        labels: receiptLabels(t, sale),
       });
       await shareReceipt(html, t('sale.shareReceipt'));
     },
   });
+}
+
+/**
+ * The receipt's words in the reader's language. `terms`: the tax's words when they are not the signed-in salon's
+ * (the receipt link page, which anyone may open).
+ */
+export function receiptLabels(
+  t: TFunction,
+  sale: { vat_mode: string; tax_inclusive: boolean; tax_rate_bps: number },
+  terms?: { tax: string; taxId: string },
+) {
+  return {
+    title: t(sale.vat_mode === 'on' ? 'receipt.taxInvoice' : 'receipt.receipt'),
+    sale: t('receipt.sale'),
+    customer: t('sale.customer'),
+    staff: t('receipt.staff'),
+    subtotal: t('sale.subtotal'),
+    discount: t('sale.discount'),
+    vat: t(sale.tax_inclusive ? 'receipt.vatIncluded' : 'receipt.vatAdded', { rate: formatBps(sale.tax_rate_bps), ...terms }),
+    tip: t('sale.tip'),
+    deposit: t('receipt.deposit'),
+    total: t('receipt.total'),
+    paid: t('receipt.paid'),
+    refunded: t('receipt.refunded'),
+    trn: t('receipt.trn', terms),
+    thanks: t('receipt.thanks'),
+    methods: { cash: t('sale.methods.cash'), card: t('sale.methods.card'), wallet: t('sale.methods.wallet') },
+  };
 }

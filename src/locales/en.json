@@ -867,7 +867,10 @@
     "trn": "{{taxId}}",
     "thanks": "Thank you for visiting.",
     "staff": "Served by",
-    "vatAdded": "{{tax}} ({{rate}})"
+    "vatAdded": "{{tax}} ({{rate}})",
+    "pdfLine": "Receipt as PDF:",
+    "download": "Download PDF",
+    "notFound": "This receipt link is not valid."
   },
   "services": {
     "title": "Services",

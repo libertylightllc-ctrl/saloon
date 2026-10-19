@@ -867,7 +867,10 @@
     "trn": "{{taxId}}",
     "thanks": "شكرًا لزيارتكم.",
     "staff": "قدّم الخدمة",
-    "vatAdded": "{{tax}} ({{rate}})"
+    "vatAdded": "{{tax}} ({{rate}})",
+    "pdfLine": "الإيصال بصيغة PDF:",
+    "download": "تنزيل PDF",
+    "notFound": "رابط الإيصال هذا غير صالح."
   },
   "services": {
     "title": "الخدمات",

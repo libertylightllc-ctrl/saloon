@@ -867,7 +867,10 @@
     "trn": "{{taxId}}",
     "thanks": "आने के लिए धन्यवाद।",
     "staff": "सेवा दी",
-    "vatAdded": "{{tax}} ({{rate}})"
+    "vatAdded": "{{tax}} ({{rate}})",
+    "pdfLine": "रसीद PDF में:",
+    "download": "PDF डाउनलोड करें",
+    "notFound": "यह रसीद लिंक सही नहीं है।"
   },
   "services": {
     "title": "सर्विस",

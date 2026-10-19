@@ -5,10 +5,31 @@
 import { clockPattern } from '@/lib/clock';
 import { formatAt } from '@/lib/dates';
 import { escapeHtml as escape, sharePdf } from '@/lib/exportFile';
-import { formatMoney } from '@/lib/money';
+import type { CurrencyCode } from '@/lib/currencies';
+import { formatMoney as formatIn } from '@/lib/money';
 
 import type { SaleDetail } from './api';
 import { staffNames } from './staff';
+
+/** What a receipt prints of a sale (a loaded SaleDetail, or the receipt link's copy). */
+export type ReceiptSale = Pick<
+  SaleDetail,
+  | 'number'
+  | 'created_at'
+  | 'customer_name'
+  | 'subtotal_minor'
+  | 'discount_minor'
+  | 'vat_mode'
+  | 'vat_minor'
+  | 'tip_minor'
+  | 'total_minor'
+  | 'deposit_applied_minor'
+  | 'refunded_minor'
+> & {
+  sale_lines: { qty: number | string; name_snapshot: string; unit_price_minor: number; employees: { full_name: string } | null }[];
+  sale_payments: { method: string; amount_minor: number }[];
+  employees: { full_name: string } | null;
+};
 
 export interface ReceiptContext {
   businessName: string;
@@ -21,6 +42,8 @@ export interface ReceiptContext {
   licence: string | null;
   /** Saudi Arabia: ZATCA's QR code (seller.ts). */
   qr: { text: string; svg: string } | null;
+  /** The salon's currency (the signed-in salon's when not given: the receipt link page gives it). */
+  currency?: CurrencyCode;
   timeZone: string;
   /** App language: day and month names on the receipt. */
   language: string;
@@ -47,8 +70,9 @@ export interface ReceiptContext {
   };
 }
 
-export function receiptHtml(sale: SaleDetail, ctx: ReceiptContext): string {
+export function receiptHtml(sale: ReceiptSale, ctx: ReceiptContext): string {
   const L = ctx.labels;
+  const formatMoney = (minor: number) => (ctx.currency ? formatIn(minor, ctx.currency) : formatIn(minor));
   const row = (label: string, value: string, strong = false) =>
     `<tr${strong ? ' class="strong"' : ''}><td>${escape(label)}</td><td class="num">${escape(value)}</td></tr>`;
   const lines = sale.sale_lines

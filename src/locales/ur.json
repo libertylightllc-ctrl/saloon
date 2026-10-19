@@ -867,7 +867,10 @@
     "trn": "{{taxId}}",
     "thanks": "تشریف آوری کا شکریہ۔",
     "staff": "خدمت کی",
-    "vatAdded": "{{tax}} ({{rate}})"
+    "vatAdded": "{{tax}} ({{rate}})",
+    "pdfLine": "رسید PDF میں:",
+    "download": "PDF ڈاؤن لوڈ کریں",
+    "notFound": "یہ رسید لنک درست نہیں ہے۔"
   },
   "services": {
     "title": "سروسز",
