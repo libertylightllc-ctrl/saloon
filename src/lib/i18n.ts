@@ -9,6 +9,7 @@ import fr from '@/locales/fr.json';
 import hi from '@/locales/hi.json';
 import pt from '@/locales/pt.json';
 import ur from '@/locales/ur.json';
+import { taxKindOf } from '@/features/tax/kinds';
 
 /** Native names are shown untranslated so people can always find their own language. */
 export const LANGUAGES = [
@@ -73,15 +74,22 @@ const rtlIsolation: FormatterModule = {
 
 /**
  * The branch's tax in any text: {{tax}} (VAT, GST, Sales tax), {{taxId}} (TRN, EIN, GST number) and {{rate}} ("5%").
- * The usual VAT and TRN show in the reader's language; any other name the owner chose shows as written.
+ * The usual kinds (VAT, GST, Sales tax, Service tax) and TRN show in the reader's language; any other name the owner
+ * chose shows as written.
  */
 const taxTerms = { name: 'VAT', idLabel: 'TRN', rate: '5%' };
 const termVariables: Record<string, string> = { tax: 'VAT', taxId: 'TRN', rate: '5%' };
 
 function refreshTermVariables() {
-  termVariables.tax = taxTerms.name === 'VAT' ? i18n.t('tax.vat') : taxTerms.name;
+  termVariables.tax = taxDisplayName(taxTerms.name);
   termVariables.taxId = taxTerms.idLabel === 'TRN' ? i18n.t('tax.trn') : taxTerms.idLabel;
   termVariables.rate = taxTerms.rate;
+}
+
+/** A tax name in the reader's language when it is one of the usual kinds, else as the owner wrote it. */
+export function taxDisplayName(name: string): string {
+  const kind = taxKindOf(name);
+  return kind ? i18n.t(`tax.kinds.${kind}`) : name;
 }
 
 /** Returns whether anything changed (the caller then tells the screens to redraw, see redrawTexts). */

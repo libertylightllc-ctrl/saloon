@@ -228,7 +228,7 @@ export function SetupWizard() {
               )}
             />
             {vat === 'on' ? (
-              <TaxFields control={form.control} uae={isUae(country)} currency={isCurrency(currency) ? currency : 'AED'} />
+              <TaxFields control={form.control} country={country} currency={isCurrency(currency) ? currency : 'AED'} />
             ) : null}
             <FormMoneyField
               control={form.control}

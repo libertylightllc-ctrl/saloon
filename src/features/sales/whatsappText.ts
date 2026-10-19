@@ -26,12 +26,22 @@ export function waNumber(phone: string | null | undefined, countryCode = '971'):
 
 export function receiptText(
   sale: SaleDetail,
-  ctx: { businessName: string; branchName: string; timeZone: string; language: string; trn: string | null },
+  ctx: {
+    businessName: string;
+    branchName: string;
+    timeZone: string;
+    language: string;
+    trn: string | null;
+    legalName?: string | null;
+    licence?: string | null;
+  },
   L: { title: string; sale: string; staff: string; vat: string; tip: string; total: string; paid: string; refunded: string; trn: string; thanks: string; methods: Record<string, string> },
 ): string {
   const lines = [
     `*${ctx.businessName}* · ${ctx.branchName}`,
+    ...(ctx.legalName ? [ctx.legalName] : []),
     ...(ctx.trn ? [`${L.trn} ${ctx.trn}`] : []),
+    ...(ctx.licence ? [ctx.licence] : []),
     `${L.title} · ${L.sale} #${sale.number} · ${formatAt(sale.created_at, ctx.timeZone, clockPattern('d MMM yyyy HH:mm'), ctx.language)}`,
     ...(staffNames(sale) ? [`${L.staff}: ${staffNames(sale)}`] : []),
     '',

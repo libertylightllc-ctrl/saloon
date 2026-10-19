@@ -9,6 +9,7 @@ import { useTheme } from '@/theme';
 
 import { SALE_WITH_STAFF, type SaleDetail } from './api';
 import { receiptHtml, shareReceipt } from './receipt';
+import { saudiReceiptQr, sellerLines } from './seller';
 
 /** Loads the sale and shares (phones) or prints (web) its receipt. */
 export function useShareReceipt() {
@@ -30,6 +31,8 @@ export function useShareReceipt() {
         address: branch.address,
         phone: branch.phone,
         trn: sale.vat_mode === 'on' ? branch.trn : null,
+        ...sellerLines({ business, branch }),
+        qr: saudiReceiptQr({ business, branch }, sale),
         timeZone: business.timezone,
         language: i18n.language,
         rtl: isLanguage(i18n.language) && isRtlLanguage(i18n.language),

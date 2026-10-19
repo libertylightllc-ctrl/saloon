@@ -735,7 +735,8 @@
     "tooLong": "Trop long",
     "taxNumber": "Lettres, chiffres, espaces, points, tirets ou barres obliques",
     "taxRate": "Saisissez un taux de 0 à 30, comme 5 ou 8.875",
-    "timezone": "Utilisez un nom de fuseau horaire comme Europe/Paris"
+    "timezone": "Utilisez un nom de fuseau horaire comme Europe/Paris",
+    "licence": "Lettres, chiffres et . / - uniquement"
   },
   "errors": {
     "not_signed_in": "Votre session a expiré. Reconnectez-vous.",
@@ -825,7 +826,9 @@
     "wrong_current_password": "Ce n’est pas votre mot de passe actuel.",
     "days_required": "Choisissez au moins un jour",
     "message_required": "Écrivez d’abord un message.",
-    "invalid_email": "Cette adresse e-mail ne semble pas correcte."
+    "invalid_email": "Cette adresse e-mail ne semble pas correcte.",
+    "invalid_licence": "Le numéro de licence n’accepte que lettres, chiffres et . / -.",
+    "too_long": "Le texte est trop long."
   },
   "sales": {
     "title": "Ventes",
@@ -992,6 +995,14 @@
       "changed": "Pays modifié",
       "locked": "Choisi à la création du salon. Il ne peut plus changer, car de l’argent a été enregistré (une vente, une dépense, un achat ou le fond de caisse initial).",
       "hint": "Cela change la devise, le fuseau horaire et la taxe de toutes les succursales. Les prix, salaires et acomptes saisis sont convertis approximativement dans la nouvelle devise : vérifiez-les ensuite dans Services, Stock et Équipe."
+    },
+    "seller": {
+      "title": "Sur vos reçus et factures",
+      "hint": "Imprimé sur chaque reçu et facture, sous le numéro fiscal. Tout est facultatif.",
+      "legalName": "Raison sociale",
+      "legalNameHint": "Si elle diffère du nom du salon, p. ex. « … SARL ».",
+      "licenceLabel": "Nom du numéro",
+      "licenceNumber": "N° de licence / d’immatriculation"
     }
   },
   "accounts": {
@@ -2209,21 +2220,36 @@
     }
   },
   "tax": {
-    "vat": "TVA",
     "trn": "TRN",
     "name": "{{tax}}",
     "withRate": "{{tax}} {{rate}}",
     "inclusive": "Incluse dans les prix",
     "added": "Ajoutée à la caisse",
-    "exampleIncluded": "Un service à {{price}} : le client paie {{price}}, dont {{amount}} de {{tax}}.",
-    "exampleAdded": "Un service à {{price}} : le client paie {{total}} ({{amount}} de {{tax}} en plus).",
     "fields": {
       "name": "Nom de la taxe",
       "rate": "Taux (%)",
       "idLabel": "Votre numéro fiscal s’appelle",
       "number": "{{taxId}}",
       "numberUae": "{{taxId}} (15 chiffres)",
-      "numberHint": "Imprimé sur les reçus. Laissez vide si vous n’en avez pas encore."
+      "numberHint": "Imprimé sur les reçus. Laissez vide si vous n’en avez pas encore.",
+      "kind": "Type de taxe"
+    },
+    "kinds": {
+      "vat": "TVA",
+      "gst": "TPS",
+      "salesTax": "Taxe de vente",
+      "serviceTax": "Taxe sur les services",
+      "other": "Autre"
+    },
+    "rateHint": {
+      "US": "La taxe de vente dépend de votre État et de votre ville : saisissez le taux total que vous appliquez.",
+      "CA": "TPS, TVH ou TPS + TVP selon votre province : saisissez le taux total que vous appliquez."
+    },
+    "preview": {
+      "service": "Prestation",
+      "included": "Dont {{tax}} ({{rate}})",
+      "added": "{{tax}} ({{rate}})",
+      "total": "Total"
     }
   },
   "nav": {

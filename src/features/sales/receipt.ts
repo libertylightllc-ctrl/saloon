@@ -16,6 +16,11 @@ export interface ReceiptContext {
   address: string | null;
   phone: string | null;
   trn: string | null;
+  /** The registered company name and the licence / CR line (seller.ts). */
+  legalName: string | null;
+  licence: string | null;
+  /** Saudi Arabia: ZATCA's QR code (seller.ts). */
+  qr: { text: string; svg: string } | null;
   timeZone: string;
   /** App language: day and month names on the receipt. */
   language: string;
@@ -60,10 +65,13 @@ export function receiptHtml(sale: SaleDetail, ctx: ReceiptContext): string {
   table { width: 100%; border-collapse: collapse; margin-top: 12px; }
   td { padding: 4px 0; border-bottom: 1px solid ${ctx.line}; } td.num { text-align: end; direction: ltr; unicode-bidi: isolate; }
   tr.strong td { font-weight: 700; font-size: 15px; border-bottom: 0; padding-top: 8px; }
+  .qr { width: 120px; margin: 16px auto 0; } .qr svg { width: 100%; height: auto; display: block; }
 </style></head><body>
 <h1>${escape(ctx.businessName)}</h1>
+${ctx.legalName ? `<div class="muted">${escape(ctx.legalName)}</div>` : ''}
 <div class="muted">${escape([ctx.branchName, ctx.address, ctx.phone].filter(Boolean).join(' · '))}</div>
 ${ctx.trn ? `<div class="muted">${escape(L.trn)} ${escape(ctx.trn)}</div>` : ''}
+${ctx.licence ? `<div class="muted">${escape(ctx.licence)}</div>` : ''}
 <p><strong>${escape(L.title)}</strong> · ${escape(L.sale)} #${sale.number}<br>
 <span class="muted">${formatAt(sale.created_at, ctx.timeZone, clockPattern('dd MMM yyyy HH:mm'), ctx.language)}</span>
 ${sale.customer_name ? `<br>${escape(L.customer)}: ${escape(sale.customer_name)}` : ''}
@@ -76,6 +84,7 @@ ${sale.tip_minor ? row(L.tip, formatMoney(sale.tip_minor)) : ''}
 ${row(L.total, formatMoney(sale.total_minor), true)}
 ${sale.deposit_applied_minor ? row(L.deposit, formatMoney(-sale.deposit_applied_minor)) : ''}
 ${payments}${refunded}</table>
+${ctx.qr ? `<div class="qr" data-zatca="${escape(ctx.qr.text)}">${ctx.qr.svg}</div>` : ''}
 <p class="muted">${escape(L.thanks)}</p>
 </body></html>`;
 }

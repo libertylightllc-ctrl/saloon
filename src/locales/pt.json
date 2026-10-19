@@ -735,7 +735,8 @@
     "tooLong": "Muito longo",
     "taxNumber": "Letras, números, espaços, pontos, hifens ou barras",
     "taxRate": "Digite uma alíquota de 0 a 30, como 5 ou 8.875",
-    "timezone": "Use o nome de um fuso horário, como Europe/Lisbon"
+    "timezone": "Use o nome de um fuso horário, como Europe/Lisbon",
+    "licence": "Só letras, números e . / -"
   },
   "errors": {
     "not_signed_in": "Sua sessão terminou. Entre novamente.",
@@ -825,7 +826,9 @@
     "wrong_current_password": "Essa não é sua senha atual.",
     "days_required": "Escolha pelo menos um dia",
     "message_required": "Escreva uma mensagem primeiro.",
-    "invalid_email": "Esse endereço de e-mail não parece correto."
+    "invalid_email": "Esse endereço de e-mail não parece correto.",
+    "invalid_licence": "O número da licença aceita só letras, números e . / -.",
+    "too_long": "O texto é longo demais."
   },
   "sales": {
     "title": "Vendas",
@@ -992,6 +995,14 @@
       "changed": "País alterado",
       "locked": "Definido ao criar o salão. Não pode mais mudar porque já há dinheiro registrado (uma venda, despesa, compra ou o caixa inicial).",
       "hint": "Isso muda a moeda, o fuso horário e o imposto de todas as filiais. Preços, salários e sinais que você inseriu são convertidos aproximadamente para a nova moeda — confira depois em Serviços, Estoque e Equipe."
+    },
+    "seller": {
+      "title": "Nos seus recibos e notas",
+      "hint": "Impresso em cada recibo e nota fiscal, abaixo do número fiscal. Tudo é opcional.",
+      "legalName": "Razão social",
+      "legalNameHint": "Se for diferente do nome do salão, ex.: “… Ltda”.",
+      "licenceLabel": "Nome do número",
+      "licenceNumber": "Nº da licença / registro"
     }
   },
   "accounts": {
@@ -2209,21 +2220,36 @@
     }
   },
   "tax": {
-    "vat": "IVA",
     "trn": "TRN",
     "name": "{{tax}}",
     "withRate": "{{tax}} {{rate}}",
     "inclusive": "Incluído nos preços",
     "added": "Adicionado no caixa",
-    "exampleIncluded": "Um serviço de {{price}}: o cliente paga {{price}}, dos quais {{amount}} são de {{tax}}.",
-    "exampleAdded": "Um serviço de {{price}}: o cliente paga {{total}} ({{amount}} de {{tax}} adicionados).",
     "fields": {
       "name": "Nome do imposto",
       "rate": "Alíquota (%)",
       "idLabel": "Seu número fiscal se chama",
       "number": "{{taxId}}",
       "numberUae": "{{taxId}} (15 dígitos)",
-      "numberHint": "Impresso nos recibos. Deixe em branco se ainda não tiver um."
+      "numberHint": "Impresso nos recibos. Deixe em branco se ainda não tiver um.",
+      "kind": "Tipo de imposto"
+    },
+    "kinds": {
+      "vat": "IVA",
+      "gst": "GST",
+      "salesTax": "Imposto sobre vendas",
+      "serviceTax": "Imposto sobre serviços",
+      "other": "Outro"
+    },
+    "rateHint": {
+      "US": "O imposto sobre vendas depende do seu estado e cidade: digite a taxa total que você cobra.",
+      "CA": "GST, HST ou GST + PST conforme a sua província: digite a taxa total que você cobra."
+    },
+    "preview": {
+      "service": "Serviço",
+      "included": "Inclui {{tax}} ({{rate}})",
+      "added": "{{tax}} ({{rate}})",
+      "total": "Total"
     }
   },
   "nav": {

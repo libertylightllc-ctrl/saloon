@@ -40,9 +40,21 @@ export interface Country {
   tax_rate_bps?: number;
   tax_inclusive?: boolean;
   tax_id_label?: string;
+  trn?: string;
 }
 
 export const KUWAIT: Country = { country_code: 'KW', currency: 'KWD', timezone: 'Asia/Kuwait', tax_name: 'VAT', tax_rate_bps: 0 };
+/** VAT 15% included in prices, with a VAT number (ZATCA's sample number). */
+export const SAUDI: Country = {
+  country_code: 'SA',
+  currency: 'SAR',
+  timezone: 'Asia/Riyadh',
+  tax_name: 'VAT',
+  tax_rate_bps: 1500,
+  tax_inclusive: true,
+  tax_id_label: 'VAT number',
+  trn: '310122393500003',
+};
 
 /** An owner with a set-up business, created the way the setup wizard does it. */
 export async function createOwner(
@@ -188,6 +200,7 @@ export interface SaleRow {
   refunded_minor: number;
   status: string;
   vat_mode: 'on' | 'off';
+  created_at: string;
   sale_payments: { method: string; amount_minor: number }[];
 }
 

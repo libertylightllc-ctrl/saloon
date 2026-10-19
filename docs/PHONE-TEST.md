@@ -404,3 +404,11 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 1. saloqo.com → Sign in → ✅ navy top with the logo, "Welcome back" and a white card; the button in your salon's colour.
 2. Tap Ladies / Gents → ✅ the card's colours change at once (and, on a computer, the phone on the left).
 3. "New here? Create an owner account" → ✅ the same look, with a white back arrow.
+
+## 48 · Tax type and receipt details (2 min)
+
+1. More → Branch settings → Tax → ✅ chips VAT · GST · Sales tax · Service tax · Other; tap GST → ✅ the preview box says "GST (5%)".
+2. Change the rate → ✅ the preview's tax and total change.
+3. "On your receipts and invoices" → type a company name and a licence number → Save.
+4. Sell → open the sale → Print receipt → ✅ the company name and "Trade licence no. …" under the tax number.
+5. (Saudi salon only) ✅ a QR code at the bottom of the tax invoice; the VAT app reads it.

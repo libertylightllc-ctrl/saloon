@@ -50,9 +50,14 @@ test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt
   await id(page, 'setup-next').click();
   // Registered for sales tax: 8.875%, added at the till, no tax number yet.
   await id(page, 'setup-vat').click();
-  await expect(field(page, 'tax_name')).toHaveValue('Sales tax');
+  // The tax type is picked, not typed (2026-10-19); the US rate depends on the state and city, so it asks for it.
+  await expect(id(page, 'tax-kind-salesTax')).toHaveAttribute('aria-selected', 'true');
+  await expect(text(page, 'Sales tax depends on your state and city: enter the combined rate you charge.')).toBeVisible();
   await field(page, 'tax_rate').fill('8.875');
   await expect(id(page, 'tax-inclusive-add')).toHaveAttribute('aria-selected', 'true');
+  // A receipt for a USD 100 service, as the owner sketched it.
+  await expect(id(page, 'tax-example')).toContainText('Sales tax (8.875%)');
+  await expect(id(page, 'tax-example')).toContainText('USD 8.88');
   await expect(id(page, 'tax-example')).toContainText('USD 108.88');
   await field(page, 'openingCash').fill('100');
   await snap(page, 'setup-us-tax', mode);

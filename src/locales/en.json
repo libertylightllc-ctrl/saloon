@@ -735,7 +735,8 @@
     "tooLong": "Too long",
     "taxNumber": "Letters, numbers, spaces, dots, dashes or slashes",
     "taxRate": "Enter a rate from 0 to 30, like 5 or 8.875",
-    "timezone": "Use a time zone name like Europe/London"
+    "timezone": "Use a time zone name like Europe/London",
+    "licence": "Letters, numbers and . / - only"
   },
   "errors": {
     "not_signed_in": "Your session ended. Please sign in again.",
@@ -825,7 +826,9 @@
     "wrong_current_password": "That is not your current password.",
     "days_required": "Pick at least one day",
     "message_required": "Write a message first.",
-    "invalid_email": "That email address does not look right."
+    "invalid_email": "That email address does not look right.",
+    "invalid_licence": "A licence number can have letters, numbers and . / - only.",
+    "too_long": "That text is too long."
   },
   "sales": {
     "title": "Sales",
@@ -992,6 +995,14 @@
       "changed": "Country changed",
       "locked": "Set when the salon was created. It can no longer change, because money has been recorded (a sale, expense, purchase or opening cash).",
       "hint": "This changes the currency, time zone and tax for every branch. Prices, salaries and deposits you have entered are converted roughly into the new currency — check them in Services, Inventory and Staff afterwards."
+    },
+    "seller": {
+      "title": "On your receipts and invoices",
+      "hint": "Printed on every receipt and tax invoice, under the tax number. All optional.",
+      "legalName": "Registered company name",
+      "legalNameHint": "If it differs from the salon’s name, e.g. “… LLC”.",
+      "licenceLabel": "The number is called",
+      "licenceNumber": "Licence / registration number"
     }
   },
   "accounts": {
@@ -2209,21 +2220,36 @@
     }
   },
   "tax": {
-    "vat": "VAT",
     "trn": "TRN",
     "name": "{{tax}}",
     "withRate": "{{tax}} {{rate}}",
     "inclusive": "Included in prices",
     "added": "Added at the till",
-    "exampleIncluded": "A {{price}} service: the customer pays {{price}}, of which {{amount}} is {{tax}}.",
-    "exampleAdded": "A {{price}} service: the customer pays {{total}} ({{amount}} {{tax}} added).",
     "fields": {
       "name": "Tax name",
       "rate": "Rate (%)",
       "idLabel": "Your tax number is called",
       "number": "{{taxId}}",
       "numberUae": "{{taxId}} (15 digits)",
-      "numberHint": "Printed on receipts. Leave it empty if you don’t have one yet."
+      "numberHint": "Printed on receipts. Leave it empty if you don’t have one yet.",
+      "kind": "Tax type"
+    },
+    "kinds": {
+      "vat": "VAT",
+      "gst": "GST",
+      "salesTax": "Sales tax",
+      "serviceTax": "Service tax",
+      "other": "Other"
+    },
+    "rateHint": {
+      "US": "Sales tax depends on your state and city: enter the combined rate you charge.",
+      "CA": "GST, HST or GST + PST, depending on your province: enter the total rate you charge."
+    },
+    "preview": {
+      "service": "Service",
+      "included": "Includes {{tax}} ({{rate}})",
+      "added": "{{tax}} ({{rate}})",
+      "total": "Total"
     }
   },
   "nav": {

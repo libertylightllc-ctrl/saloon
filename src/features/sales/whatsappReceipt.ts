@@ -12,6 +12,7 @@ import { formatBps } from '@/lib/money';
 import { supabase } from '@/lib/supabase';
 
 import { SALE_WITH_STAFF, type SaleDetail } from './api';
+import { sellerLines } from './seller';
 import { receiptText, waNumber } from './whatsappText';
 
 export function useWhatsAppReceipt() {
@@ -28,7 +29,14 @@ export function useWhatsAppReceipt() {
       const sale = data as unknown as SaleDetail & { customers: { phone: string | null } | null };
       const text = receiptText(
         sale,
-        { businessName: business.name, branchName: branch.name, timeZone: business.timezone, language: i18n.language, trn: sale.vat_mode === 'on' ? branch.trn : null },
+        {
+          businessName: business.name,
+          branchName: branch.name,
+          timeZone: business.timezone,
+          language: i18n.language,
+          trn: sale.vat_mode === 'on' ? branch.trn : null,
+          ...sellerLines({ business, branch }),
+        },
         {
           title: t(sale.vat_mode === 'on' ? 'receipt.taxInvoice' : 'receipt.receipt'),
           sale: t('receipt.sale'),

@@ -510,6 +510,9 @@ export type Database = {
           created_at: string;
           id: string;
           invoice_prefix: string | null;
+          legal_name: string | null;
+          licence_label: string | null;
+          licence_number: string | null;
           mode: Database['public']['Enums']['salon_mode'];
           name: string;
           opening_hours: NonNullable<Json>;
@@ -528,6 +531,9 @@ export type Database = {
           created_at?: string;
           id?: string;
           invoice_prefix?: string | null;
+          legal_name?: string | null;
+          licence_label?: string | null;
+          licence_number?: string | null;
           mode: Database['public']['Enums']['salon_mode'];
           name: string;
           opening_hours?: NonNullable<Json>;
@@ -546,6 +552,9 @@ export type Database = {
           created_at?: string;
           id?: string;
           invoice_prefix?: string | null;
+          legal_name?: string | null;
+          licence_label?: string | null;
+          licence_number?: string | null;
           mode?: Database['public']['Enums']['salon_mode'];
           name?: string;
           opening_hours?: NonNullable<Json>;

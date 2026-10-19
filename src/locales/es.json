@@ -735,7 +735,8 @@
     "tooLong": "Demasiado largo",
     "taxNumber": "Letras, números, espacios, puntos, guiones o barras",
     "taxRate": "Escribe una tasa de 0 a 30, como 5 o 8.875",
-    "timezone": "Usa un nombre de zona horaria como Europe/Madrid"
+    "timezone": "Usa un nombre de zona horaria como Europe/Madrid",
+    "licence": "Solo letras, números y . / -"
   },
   "errors": {
     "not_signed_in": "Tu sesión terminó. Vuelve a iniciar sesión.",
@@ -825,7 +826,9 @@
     "wrong_current_password": "Esa no es tu contraseña actual.",
     "days_required": "Elige al menos un día",
     "message_required": "Primero escribe un mensaje.",
-    "invalid_email": "Esa dirección de correo no parece correcta."
+    "invalid_email": "Esa dirección de correo no parece correcta.",
+    "invalid_licence": "El número de licencia solo admite letras, números y . / -.",
+    "too_long": "El texto es demasiado largo."
   },
   "sales": {
     "title": "Ventas",
@@ -992,6 +995,14 @@
       "changed": "País cambiado",
       "locked": "Se eligió al crear el salón. Ya no puede cambiar porque hay dinero registrado (una venta, un gasto, una compra o el efectivo inicial).",
       "hint": "Esto cambia la moneda, la zona horaria y el impuesto de todas las sucursales. Los precios, salarios y anticipos que ingresaste se convierten de forma aproximada a la nueva moneda; revísalos después en Servicios, Inventario y Personal."
+    },
+    "seller": {
+      "title": "En tus recibos y facturas",
+      "hint": "Se imprime en cada recibo y factura, debajo del número fiscal. Todo es opcional.",
+      "legalName": "Razón social registrada",
+      "legalNameHint": "Si es distinta del nombre del salón, p. ej. «… S.L.».",
+      "licenceLabel": "Cómo se llama el número",
+      "licenceNumber": "Número de licencia / registro"
     }
   },
   "accounts": {
@@ -2209,21 +2220,36 @@
     }
   },
   "tax": {
-    "vat": "IVA",
     "trn": "TRN",
     "name": "{{tax}}",
     "withRate": "{{tax}} {{rate}}",
     "inclusive": "Incluido en los precios",
     "added": "Se suma al cobrar",
-    "exampleIncluded": "Un servicio de {{price}}: el cliente paga {{price}}, de los cuales {{amount}} son {{tax}}.",
-    "exampleAdded": "Un servicio de {{price}}: el cliente paga {{total}} (se suman {{amount}} de {{tax}}).",
     "fields": {
       "name": "Nombre del impuesto",
       "rate": "Tasa (%)",
       "idLabel": "Tu número fiscal se llama",
       "number": "{{taxId}}",
       "numberUae": "{{taxId}} (15 dígitos)",
-      "numberHint": "Aparece en los recibos. Déjalo vacío si aún no tienes uno."
+      "numberHint": "Aparece en los recibos. Déjalo vacío si aún no tienes uno.",
+      "kind": "Tipo de impuesto"
+    },
+    "kinds": {
+      "vat": "IVA",
+      "gst": "GST",
+      "salesTax": "Impuesto sobre ventas",
+      "serviceTax": "Impuesto de servicios",
+      "other": "Otro"
+    },
+    "rateHint": {
+      "US": "El impuesto sobre ventas depende de tu estado y ciudad: escribe la tasa total que cobras.",
+      "CA": "GST, HST o GST + PST según tu provincia: escribe la tasa total que cobras."
+    },
+    "preview": {
+      "service": "Servicio",
+      "included": "Incluye {{tax}} ({{rate}})",
+      "added": "{{tax}} ({{rate}})",
+      "total": "Total"
     }
   },
   "nav": {

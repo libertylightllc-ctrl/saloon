@@ -52,6 +52,7 @@
     "i18next": "^26.4.2",
     "intl-pluralrules": "^2.0.1",
     "lucide-react-native": "^1.48.0",
+    "qrcode-generator": "2.0.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.88.0",

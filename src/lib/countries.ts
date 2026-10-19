@@ -163,6 +163,26 @@ export function countryName(code: string, language: string): string {
 /** Features that only exist in the UAE: WPS salary transfers and Montaji cosmetic product registration. */
 export const isUae = (code: string | null | undefined) => (code ?? DEFAULT_COUNTRY) === 'AE';
 
+/**
+ * What the trade licence / company registration number is called on receipts, by country (owner, 2026-10-19); the
+ * owner can change it in Branch settings.
+ */
+const LICENCE_LABELS: Record<string, string> = {
+  AE: 'Trade licence no.',
+  SA: 'CR no.',
+  QA: 'CR no.',
+  BH: 'CR no.',
+  OM: 'CR no.',
+  SG: 'UEN',
+  MY: 'SSM no.',
+  GB: 'Company no.',
+  US: 'Business license no.',
+};
+
+export function licenceLabelFor(countryCode: string | null | undefined): string {
+  return (countryCode && LICENCE_LABELS[countryCode]) || 'Licence no.';
+}
+
 /** "Other": a country not in the list; the owner enters currency, time zone and tax themselves. */
 export const OTHER_COUNTRY = 'ZZ';
 

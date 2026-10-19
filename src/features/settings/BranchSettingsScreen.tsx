@@ -8,8 +8,8 @@ import { z } from 'zod';
 import { useSession, useWorkspace } from '@/features/auth/session';
 import { ModeCard } from '@/features/setup/ModeCard';
 import { TaxFields, taxShape, trnValid } from '@/features/tax/TaxFields';
+import { licenceLabelFor , isUae } from '@/lib/countries';
 import { useSetBranchMode, useUpdateBranch } from '@/features/team/api';
-import { isUae } from '@/lib/countries';
 import { activeCurrency, formatBps, parseTaxRate } from '@/lib/money';
 import { spacing, type Mode } from '@/theme';
 import {
@@ -29,6 +29,7 @@ import {
 
 import { CountryCard } from './CountryCard';
 import { OpeningCashCard } from './OpeningCashCard';
+import { SellerFields, sellerShape } from './SellerFields';
 
 const whole = (min: number, max: number) =>
   z
@@ -46,6 +47,7 @@ const schemaFor = (uae: boolean) =>
       open_days: z.array(z.number()).min(1, 'validation.days'),
       vat_on: z.boolean(),
       ...taxShape,
+      ...sellerShape,
       waiting_target_min: whole(1, 240),
       cancel_cutoff_hours: whole(0, 168),
       default_deposit_minor: z.number().int().min(0).nullable(),
@@ -93,6 +95,9 @@ export function BranchSettingsScreen() {
       tax_rate: rateText(branch.tax_rate_bps),
       tax_inclusive: branch.tax_inclusive,
       tax_id_label: branch.tax_id_label,
+      legal_name: branch.legal_name ?? '',
+      licence_label: branch.licence_label ?? licenceLabelFor(business.country_code),
+      licence_number: branch.licence_number ?? '',
       waiting_target_min: String(settings.waiting_target_min ?? 10),
       cancel_cutoff_hours: String(settings.cancel_cutoff_hours ?? 12),
       default_deposit_minor: Number(settings.default_deposit_minor ?? 0) || null,
@@ -118,6 +123,9 @@ export function BranchSettingsScreen() {
         tax_rate_bps: parseTaxRate(v.tax_rate),
         tax_inclusive: v.tax_inclusive,
         tax_id_label: v.tax_id_label,
+        legal_name: v.legal_name,
+        licence_label: v.licence_label,
+        licence_number: v.licence_number,
         settings: {
           waiting_target_min: Number(v.waiting_target_min),
           cancel_cutoff_hours: Number(v.cancel_cutoff_hours),
@@ -202,7 +210,8 @@ export function BranchSettingsScreen() {
               <SwitchRow label={t('branch.fields.vat')} hint={t('branch.fields.vatHint')} value={field.value} onChange={field.onChange} testID="branch-vat" />
             )}
           />
-          {vatOn ? <TaxFields control={form.control} uae={uae} currency={activeCurrency()} /> : null}
+          {vatOn ? <TaxFields control={form.control} country={business.country_code} currency={activeCurrency()} /> : null}
+          <SellerFields control={form.control} />
           <Text variant="bodyStrong">{t('branch.receipt')}</Text>
           <Text variant="small" color="textSecondary">
             {t('branch.receiptHint')}
