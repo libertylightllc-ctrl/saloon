@@ -831,7 +831,8 @@
     "invalid_email": "That email address does not look right.",
     "invalid_licence": "A licence number can have letters, numbers and . / - only.",
     "too_long": "That text is too long.",
-    "tax2_name_required": "Give the second tax a name, like PST."
+    "tax2_name_required": "Give the second tax a name, like PST.",
+    "logo_missing": "The logo did not upload. Try again."
   },
   "sales": {
     "title": "Sales",
@@ -1009,6 +1010,22 @@
       "legalNameHint": "If it differs from the salon’s name, e.g. “… LLC”.",
       "licenceLabel": "The number is called",
       "licenceNumber": "Licence / registration number"
+    },
+    "logo": {
+      "title": "Logo",
+      "hint": "Printed at the top of every receipt. A PNG with a see-through background looks best.",
+      "add": "Add logo",
+      "change": "Change logo",
+      "remove": "Remove",
+      "saved": "Logo added to receipts",
+      "removed": "Logo removed from receipts"
+    },
+    "receiptPaper": "Receipt paper",
+    "receiptPaperHint": "Most receipt printers use 80 mm rolls. A4 is for office printers.",
+    "receiptPapers": {
+      "80mm": "Roll 80 mm",
+      "58mm": "Roll 58 mm",
+      "a4": "A4"
     }
   },
   "accounts": {

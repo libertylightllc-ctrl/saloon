@@ -432,3 +432,11 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 2. Province → British Columbia → ✅ GST 5% and Second tax PST 7%; the preview shows GST 5.00 and PST 7.00 → Save.
 3. Sell → Checkout → ✅ two lines, GST 5% and PST 7% → Save → open the sale → Print receipt → ✅ both lines.
 4. Reports → Tax → ✅ "Of it, PST" under the tax collected.
+
+## 52 · Logo and receipt paper (2 min)
+
+1. More → Branch settings → On your receipts and invoices → Add logo → pick your logo (PNG best) → ✅ "Logo added to receipts" and a small preview.
+2. Open any sale → Print receipt → ✅ the logo at the top.
+3. Send on WhatsApp → open the PDF link → ✅ the logo there too.
+4. More → Branch settings → Receipt paper → ✅ Roll 80 mm is picked → print a receipt on the receipt printer → ✅ full roll width, black text, no wide margins.
+5. Pick A4 → Save → print → ✅ the full-page receipt as before.

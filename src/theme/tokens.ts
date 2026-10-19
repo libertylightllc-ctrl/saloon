@@ -42,6 +42,8 @@ export const neutrals = {
   n80: '#626262',
   n90: '#3D3D3D',
   n100: '#222222',
+  /** Print ink: thermal receipt printers print black only, no grey. */
+  ink: '#000000',
 } as const;
 
 export interface SemanticSet {

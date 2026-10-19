@@ -50,19 +50,28 @@ export async function shareZip(name: string, files: Record<string, readonly (rea
  * printed as the Quick sale screen). So the document goes into the page itself, in a shadow root of its own (its styles
  * stay inside), and a print-only style hides everything else. It stays, off screen, until the next printout.
  */
-function printOnWeb(html: string) {
+async function printOnWeb(html: string) {
   document.querySelector('[data-printout]')?.remove();
   const parsed = new DOMParser().parseFromString(html, 'text/html');
   // The document's page rules (html, body) apply to the printout's own box.
-  const css = [...parsed.querySelectorAll('style')]
-    .map((s) => s.textContent ?? '')
-    .join('\n')
+  const all = [...parsed.querySelectorAll('style')].map((s) => s.textContent ?? '').join('\n');
+  // Page rules (a receipt roll's margin) only work for the whole page, not inside the printout's own box.
+  const pageRules = all.match(/@page\s*\{[^}]*\}/g) ?? [];
+  const css = all
+    .replace(/@page\s*\{[^}]*\}/g, '')
     .replace(/(^|[\s,}])(html|body)(?=\s*[{,:.[#])/g, '$1.printout');
+  let page = document.getElementById('printout-page');
+  if (!page) {
+    page = document.createElement('style');
+    page.id = 'printout-page';
+    document.head.appendChild(page);
+  }
+  page.textContent = pageRules.join('\n');
   const host = document.createElement('div');
   host.setAttribute('data-printout', 'true');
   host.setAttribute('aria-hidden', 'true');
   const root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = `<style>${css}</style><div class="printout" dir="${parsed.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'}">${parsed.body.innerHTML}</div>`;
+  root.innerHTML = `<style>${css}</style><div class="printout" dir="${parsed.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'}" data-paper="${parsed.body.dataset.paper ?? ''}">${parsed.body.innerHTML}</div>`;
   document.body.appendChild(host);
   if (!document.getElementById('printout-style')) {
     const style = document.createElement('style');
@@ -75,16 +84,18 @@ function printOnWeb(html: string) {
 }`;
     document.head.appendChild(style);
   }
+  // Pictures (the salon's logo) are drawn before the page prints, or the paper would show an empty box.
+  await Promise.all([...root.querySelectorAll('img')].map((img) => img.decode().catch(() => undefined)));
   window.print();
 }
 
 /** Share as PDF (phones) or print (web). */
-export async function sharePdf(html: string, dialogTitle: string): Promise<void> {
+export async function sharePdf(html: string, dialogTitle: string, page?: { width: number; height: number }): Promise<void> {
   if (Platform.OS === 'web') {
-    printOnWeb(html);
+    await printOnWeb(html);
     return;
   }
-  const { uri } = await Print.printToFileAsync({ html });
+  const { uri } = await Print.printToFileAsync({ html, ...page });
   if (await Sharing.isAvailableAsync()) {
     await Sharing.shareAsync(uri, { mimeType: 'application/pdf', UTI: 'com.adobe.pdf', dialogTitle });
   } else {
@@ -94,6 +105,6 @@ export async function sharePdf(html: string, dialogTitle: string): Promise<void>
 
 /** Straight to the printer (phones); on web the same as sharePdf. */
 export async function printHtml(html: string): Promise<void> {
-  if (Platform.OS === 'web') printOnWeb(html);
+  if (Platform.OS === 'web') await printOnWeb(html);
   else await Print.printAsync({ html });
 }

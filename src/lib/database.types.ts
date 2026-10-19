@@ -513,6 +513,7 @@ export type Database = {
           legal_name: string | null;
           licence_label: string | null;
           licence_number: string | null;
+          logo_path: string | null;
           mode: Database['public']['Enums']['salon_mode'];
           name: string;
           opening_hours: NonNullable<Json>;
@@ -536,6 +537,7 @@ export type Database = {
           legal_name?: string | null;
           licence_label?: string | null;
           licence_number?: string | null;
+          logo_path?: string | null;
           mode: Database['public']['Enums']['salon_mode'];
           name: string;
           opening_hours?: NonNullable<Json>;
@@ -559,6 +561,7 @@ export type Database = {
           legal_name?: string | null;
           licence_label?: string | null;
           licence_number?: string | null;
+          logo_path?: string | null;
           mode?: Database['public']['Enums']['salon_mode'];
           name?: string;
           opening_hours?: NonNullable<Json>;
@@ -4047,6 +4050,7 @@ export type Database = {
       };
       seed_system_accounts: { Args: { p_business: string }; Returns: undefined };
       send_daily_digests: { Args: { p_now?: string }; Returns: number };
+      set_branch_logo: { Args: { p_branch: string; p_path: string }; Returns: undefined };
       set_branch_mode: {
         Args: { p_branch: string; p_mode: Database['public']['Enums']['salon_mode'] };
         Returns: undefined;

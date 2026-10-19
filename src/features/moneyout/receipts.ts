@@ -38,7 +38,7 @@ export async function pickPhoto(source: 'camera' | 'library'): Promise<PickedPho
 }
 
 /** Uploads a photo to `<bucket>/<folder>/<rowId>-<random>.<ext>` and gives back its path. Never overwrites. */
-export async function uploadPhoto(bucket: 'receipts' | 'documents', folder: string, rowId: string, photo: PickedPhoto): Promise<string> {
+export async function uploadPhoto(bucket: 'receipts' | 'documents' | 'logos', folder: string, rowId: string, photo: PickedPhoto): Promise<string> {
   const path = `${folder}/${rowId}-${Crypto.randomUUID().slice(0, 8)}.${EXT[photo.mimeType]}`;
   const bytes = Uint8Array.from(atob(photo.base64), (c) => c.charCodeAt(0));
   const { error } = await supabase.storage.from(bucket).upload(path, bytes, { contentType: photo.mimeType, upsert: false });

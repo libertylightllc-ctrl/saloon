@@ -831,7 +831,8 @@
     "invalid_email": "Cette adresse e-mail ne semble pas correcte.",
     "invalid_licence": "Le numéro de licence n’accepte que lettres, chiffres et . / -.",
     "too_long": "Le texte est trop long.",
-    "tax2_name_required": "Donnez un nom à la deuxième taxe, comme TVP."
+    "tax2_name_required": "Donnez un nom à la deuxième taxe, comme TVP.",
+    "logo_missing": "Le logo n’a pas été envoyé. Réessayez."
   },
   "sales": {
     "title": "Ventes",
@@ -1009,6 +1010,22 @@
       "legalNameHint": "Si elle diffère du nom du salon, p. ex. « … SARL ».",
       "licenceLabel": "Nom du numéro",
       "licenceNumber": "N° de licence / d’immatriculation"
+    },
+    "logo": {
+      "title": "Logo",
+      "hint": "Imprimé en haut de chaque reçu. Un PNG à fond transparent rend le mieux.",
+      "add": "Ajouter un logo",
+      "change": "Changer le logo",
+      "remove": "Retirer",
+      "saved": "Logo ajouté aux reçus",
+      "removed": "Logo retiré des reçus"
+    },
+    "receiptPaper": "Papier du reçu",
+    "receiptPaperHint": "La plupart des imprimantes de reçus utilisent des rouleaux de 80 mm. Le A4 est pour les imprimantes de bureau.",
+    "receiptPapers": {
+      "80mm": "Rouleau 80 mm",
+      "58mm": "Rouleau 58 mm",
+      "a4": "A4"
     }
   },
   "accounts": {

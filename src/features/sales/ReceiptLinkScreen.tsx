@@ -3,11 +3,12 @@
  * as printed and downloads it as a PDF. Open to anyone with the link, signed in or not; in the reader's language, with
  * the salon's own currency and tax words.
  */
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 
+import { receiptLogo } from '@/features/settings/logo';
 import { isCurrency } from '@/lib/currencies';
 import { isLanguage, isRtlLanguage, taxDisplayName } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
@@ -34,19 +35,24 @@ interface ReceiptLink {
     legal_name: string | null;
     licence_label: string | null;
     licence_number: string | null;
+    logo_path: string | null;
   };
+  /** The logo as a data: link, loaded with the receipt. */
+  logo?: string | null;
 }
 
 export function ReceiptLinkScreen({ token }: { token: string }) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
+  const client = useQueryClient();
   const receipt = useQuery({
     queryKey: ['receipt-link', token],
     queryFn: async (): Promise<ReceiptLink | null> => {
       if (!/^[A-Za-z0-9_-]{24}$/.test(token)) return null;
       const { data, error } = await supabase.rpc('public_receipt', { p_token: token });
       if (error) throw error;
-      return (data as unknown as ReceiptLink | null) ?? null;
+      const found = (data as unknown as ReceiptLink | null) ?? null;
+      return found && { ...found, logo: await receiptLogo(client, found.seller.logo_path) };
     },
   });
 
@@ -62,6 +68,7 @@ export function ReceiptLinkScreen({ token }: { token: string }) {
       trn: s.trn,
       ...sellerLines({ business, branch }),
       qr: saudiReceiptQr({ business, branch }, r.sale),
+      logo: r.logo,
       currency: isCurrency(s.currency) ? s.currency : undefined,
       timeZone: s.timezone,
       language: i18n.language,

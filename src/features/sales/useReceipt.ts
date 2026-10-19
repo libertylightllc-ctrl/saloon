@@ -1,15 +1,17 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import { useWorkspace } from '@/features/auth/session';
+import { receiptLogo } from '@/features/settings/logo';
 import { isLanguage, isRtlLanguage, taxDisplayName } from '@/lib/i18n';
 import { formatBps } from '@/lib/money';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/theme';
 
 import { SALE_WITH_STAFF, type SaleDetail } from './api';
-import { receiptHtml, shareReceipt } from './receipt';
+import { receiptHtml, receiptPage, shareReceipt } from './receipt';
+import { paperOf } from './receiptPaper';
 import { saudiReceiptQr, sellerLines } from './seller';
 
 /** Loads the sale and shares (phones) or prints (web) its receipt. */
@@ -17,6 +19,7 @@ export function useShareReceipt() {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const { business, branch } = useWorkspace();
+  const client = useQueryClient();
   return useMutation({
     mutationFn: async (saleId: string) => {
       const { data, error } = await supabase
@@ -26,7 +29,8 @@ export function useShareReceipt() {
         .single();
       if (error) throw error;
       const sale = data as unknown as SaleDetail;
-      const html = receiptHtml(sale, {
+      const logo = await receiptLogo(client, branch.logo_path);
+      const ctx = {
         businessName: business.name,
         branchName: branch.name,
         address: branch.address,
@@ -34,6 +38,8 @@ export function useShareReceipt() {
         trn: sale.vat_mode === 'on' ? branch.trn : null,
         ...sellerLines({ business, branch }),
         qr: saudiReceiptQr({ business, branch }, sale),
+        logo,
+        paper: paperOf(branch.settings),
         timeZone: business.timezone,
         language: i18n.language,
         rtl: isLanguage(i18n.language) && isRtlLanguage(i18n.language),
@@ -41,8 +47,8 @@ export function useShareReceipt() {
         muted: theme.colors.textSecondary,
         line: theme.colors.divider,
         labels: receiptLabels(t, sale),
-      });
-      await shareReceipt(html, t('sale.shareReceipt'));
+      };
+      await shareReceipt(receiptHtml(sale, ctx), t('sale.shareReceipt'), receiptPage(sale, ctx));
     },
   });
 }

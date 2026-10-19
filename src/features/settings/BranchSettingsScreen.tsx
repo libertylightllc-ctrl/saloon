@@ -6,6 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
 import { useSession, useWorkspace } from '@/features/auth/session';
+import { paperOf, RECEIPT_PAPERS } from '@/features/sales/receiptPaper';
 import { ModeCard } from '@/features/setup/ModeCard';
 import { TaxFields } from '@/features/tax/TaxFields';
 import { checkProvince, checkSecondTax, secondTaxPayload, taxShape, taxValuesOf, trnValid } from '@/features/tax/taxForm';
@@ -20,7 +21,6 @@ import {
   FormMoneyField,
   FormTextField,
   HeaderBand,
-  PillTabs,
   Screen,
   SectionHeader,
   SwitchRow,
@@ -30,6 +30,7 @@ import {
 
 import { CountryCard } from './CountryCard';
 import { OpeningCashCard } from './OpeningCashCard';
+import { RECEIPT_MODES, ReceiptOptions } from './ReceiptOptions';
 import { SellerFields, sellerShape } from './SellerFields';
 
 const whole = (min: number, max: number) =>
@@ -56,7 +57,8 @@ const schemaFor = (uae: boolean, country: string) =>
       block_insufficient_stock: z.boolean(),
       late_grace_min: whole(0, 120),
       require_hygiene_evidence: z.boolean(),
-      receipt_mode: z.enum(['off', 'simple', 'whatsapp']),
+      receipt_mode: z.enum(RECEIPT_MODES),
+      receipt_paper: z.enum(RECEIPT_PAPERS),
     })
     .refine((v) => !v.vat_on || trnValid(v.trn, uae), { path: ['trn'], message: uae ? 'validation.trn' : 'validation.taxNumber' })
     .superRefine((v, ctx) => {
@@ -104,7 +106,8 @@ export function BranchSettingsScreen() {
       block_insufficient_stock: settings.block_insufficient_stock === true,
       late_grace_min: String(settings.late_grace_min ?? 10),
       require_hygiene_evidence: settings.require_hygiene_evidence === true,
-      receipt_mode: (['off', 'simple', 'whatsapp'] as const).find((m) => m === settings.receipt_mode) ?? 'simple',
+      receipt_mode: RECEIPT_MODES.find((m) => m === settings.receipt_mode) ?? 'simple',
+      receipt_paper: paperOf(settings),
     },
   });
   const vatOn = useWatch({ control: form.control, name: 'vat_on' });
@@ -135,6 +138,7 @@ export function BranchSettingsScreen() {
           late_grace_min: Number(v.late_grace_min),
           require_hygiene_evidence: v.require_hygiene_evidence,
           receipt_mode: v.receipt_mode,
+          receipt_paper: v.receipt_paper,
           tax_region: v.tax_region,
         },
       },
@@ -213,22 +217,7 @@ export function BranchSettingsScreen() {
           />
           {vatOn ? <TaxFields control={form.control} country={business.country_code} currency={activeCurrency()} /> : null}
           <SellerFields control={form.control} />
-          <Text variant="bodyStrong">{t('branch.receipt')}</Text>
-          <Text variant="small" color="textSecondary">
-            {t('branch.receiptHint')}
-          </Text>
-          <Controller
-            control={form.control}
-            name="receipt_mode"
-            render={({ field }) => (
-              <PillTabs<Values['receipt_mode']>
-                items={(['off', 'simple', 'whatsapp'] as const).map((key) => ({ key, label: t(`branch.receiptModes.${key}`) }))}
-                value={field.value}
-                onChange={field.onChange}
-                testID="branch-receipt"
-              />
-            )}
-          />
+          <ReceiptOptions control={form.control} />
         </View>
 
         <View style={styles.section}>

@@ -101,6 +101,7 @@ insert into reviewed values
     ('save_item'),
     ('save_service'),
     ('save_supplier'),
+    ('set_branch_logo'),
     ('set_branch_mode'),
     ('set_my_pin'),
     ('set_opening_cash'),

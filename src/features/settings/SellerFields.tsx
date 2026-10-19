@@ -11,6 +11,8 @@ import { z } from 'zod';
 import { spacing } from '@/theme';
 import { FormTextField, Text } from '@/ui';
 
+import { LogoField } from './LogoField';
+
 export const sellerShape = {
   legal_name: z.string().trim().max(120, 'validation.tooLong'),
   licence_label: z.string().trim().max(30, 'validation.tooLong'),
@@ -35,6 +37,7 @@ export function SellerFields<T extends FieldValues & SellerValues>({ control }: 
       <Text variant="small" color="textSecondary">
         {t('branch.seller.hint')}
       </Text>
+      <LogoField />
       <FormTextField
         control={control}
         name={field('legal_name')}

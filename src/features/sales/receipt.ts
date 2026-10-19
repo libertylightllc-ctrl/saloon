@@ -7,8 +7,10 @@ import { formatAt } from '@/lib/dates';
 import { escapeHtml as escape, sharePdf } from '@/lib/exportFile';
 import type { CurrencyCode } from '@/lib/currencies';
 import { formatMoney as formatIn } from '@/lib/money';
+import { neutrals } from '@/theme';
 
 import type { SaleDetail } from './api';
+import { paperCss, rollPage, type ReceiptPaper } from './receiptPaper';
 import { staffNames } from './staff';
 
 /** What a receipt prints of a sale (a loaded SaleDetail, or the receipt link's copy). */
@@ -41,6 +43,10 @@ export interface ReceiptContext {
   /** The registered company name and the licence / CR line (seller.ts). */
   legalName: string | null;
   licence: string | null;
+  /** The paper it prints on (receiptPaper.ts); A4 when not given (the customer's receipt link). */
+  paper?: ReceiptPaper;
+  /** The salon's logo as a data: link (settings/logo.ts), or null. */
+  logo?: string | null;
   /** Saudi Arabia: ZATCA's QR code (seller.ts). */
   qr: { text: string; svg: string } | null;
   /** The salon's currency (the signed-in salon's when not given: the receipt link page gives it). */
@@ -73,6 +79,9 @@ export interface ReceiptContext {
   };
 }
 
+/** Only a picture the app made itself goes on the receipt. */
+const LOGO = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/;
+
 export function receiptHtml(sale: ReceiptSale, ctx: ReceiptContext): string {
   const L = ctx.labels;
   const formatMoney = (minor: number) => (ctx.currency ? formatIn(minor, ctx.currency) : formatIn(minor));
@@ -92,13 +101,18 @@ export function receiptHtml(sale: ReceiptSale, ctx: ReceiptContext): string {
   table { width: 100%; border-collapse: collapse; margin-top: 12px; }
   td { padding: 4px 0; border-bottom: 1px solid ${ctx.line}; } td.num { text-align: end; direction: ltr; unicode-bidi: isolate; }
   tr.strong td { font-weight: 700; font-size: 15px; border-bottom: 0; padding-top: 8px; }
+  .logo { display: block; max-width: 60%; max-height: 80px; margin: 0 auto 12px; }
   .qr { width: 120px; margin: 16px auto 0; } .qr svg { width: 100%; height: auto; display: block; }
-</style></head><body>
+  ${paperCss(ctx.paper ?? 'a4', neutrals.ink)}
+</style></head><body data-paper="${ctx.paper ?? 'a4'}">
+<header>
+${ctx.logo && LOGO.test(ctx.logo) ? `<img class="logo" src="${escape(ctx.logo)}" alt="">` : ''}
 <h1>${escape(ctx.businessName)}</h1>
 ${ctx.legalName ? `<div class="muted">${escape(ctx.legalName)}</div>` : ''}
 <div class="muted">${escape([ctx.branchName, ctx.address, ctx.phone].filter(Boolean).join(' · '))}</div>
 ${ctx.trn ? `<div class="muted">${escape(L.trn)} ${escape(ctx.trn)}</div>` : ''}
 ${ctx.licence ? `<div class="muted">${escape(ctx.licence)}</div>` : ''}
+</header>
 <p><strong>${escape(L.title)}</strong> · ${escape(L.sale)} #${sale.number}<br>
 <span class="muted">${formatAt(sale.created_at, ctx.timeZone, clockPattern('dd MMM yyyy HH:mm'), ctx.language)}</span>
 ${sale.customer_name ? `<br>${escape(L.customer)}: ${escape(sale.customer_name)}` : ''}
@@ -113,11 +127,18 @@ ${row(L.total, formatMoney(sale.total_minor), true)}
 ${sale.deposit_applied_minor ? row(L.deposit, formatMoney(-sale.deposit_applied_minor)) : ''}
 ${payments}${refunded}</table>
 ${ctx.qr ? `<div class="qr" data-zatca="${escape(ctx.qr.text)}">${ctx.qr.svg}</div>` : ''}
-<p class="muted">${escape(L.thanks)}</p>
+<p class="muted thanks">${escape(L.thanks)}</p>
 </body></html>`;
 }
 
-/** Share as PDF (phones) or print (web). */
-export async function shareReceipt(html: string, dialogTitle: string): Promise<void> {
-  await sharePdf(html, dialogTitle);
+/** The phone PDF's page for a roll (as wide as the roll, as long as this receipt); null on A4. */
+export function receiptPage(sale: ReceiptSale, ctx: Pick<ReceiptContext, 'paper' | 'logo' | 'qr' | 'legalName' | 'trn' | 'licence'>) {
+  const header = [ctx.legalName, ctx.trn, ctx.licence, sale.customer_name, staffNames(sale)].filter(Boolean).length;
+  const rows = sale.sale_lines.length + sale.sale_payments.length + 8 + header;
+  return rollPage(ctx.paper ?? 'a4', { rows, logo: Boolean(ctx.logo), qr: Boolean(ctx.qr) });
+}
+
+/** Share as PDF (phones) or print (web). `page`: the PDF's page size on phones (a roll), else the usual page. */
+export async function shareReceipt(html: string, dialogTitle: string, page?: { width: number; height: number } | null): Promise<void> {
+  await sharePdf(html, dialogTitle, page ?? undefined);
 }

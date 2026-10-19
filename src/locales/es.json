@@ -831,7 +831,8 @@
     "invalid_email": "Esa dirección de correo no parece correcta.",
     "invalid_licence": "El número de licencia solo admite letras, números y . / -.",
     "too_long": "El texto es demasiado largo.",
-    "tax2_name_required": "Escribe el nombre del segundo impuesto, como PST."
+    "tax2_name_required": "Escribe el nombre del segundo impuesto, como PST.",
+    "logo_missing": "El logotipo no se subió. Inténtalo de nuevo."
   },
   "sales": {
     "title": "Ventas",
@@ -1009,6 +1010,22 @@
       "legalNameHint": "Si es distinta del nombre del salón, p. ej. «… S.L.».",
       "licenceLabel": "Cómo se llama el número",
       "licenceNumber": "Número de licencia / registro"
+    },
+    "logo": {
+      "title": "Logotipo",
+      "hint": "Se imprime arriba de cada recibo. Un PNG con fondo transparente se ve mejor.",
+      "add": "Añadir logotipo",
+      "change": "Cambiar logotipo",
+      "remove": "Quitar",
+      "saved": "Logotipo añadido a los recibos",
+      "removed": "Logotipo quitado de los recibos"
+    },
+    "receiptPaper": "Papel del recibo",
+    "receiptPaperHint": "La mayoría de las impresoras de recibos usan rollos de 80 mm. A4 es para impresoras de oficina.",
+    "receiptPapers": {
+      "80mm": "Rollo 80 mm",
+      "58mm": "Rollo 58 mm",
+      "a4": "A4"
     }
   },
   "accounts": {

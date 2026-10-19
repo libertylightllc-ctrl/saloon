@@ -13,7 +13,7 @@ export const ERROR_CODES = [
   'invalid_role', 'day_closed', 'invalid_date', 'count_required', 'confirm_required', 'previous_close_pending',
   'item_exists', 'price_required', 'item_unavailable', 'invalid_restock', 'receipt_exists', 'receipt_missing',
   'photo_too_large', 'camera_denied', 'invalid_roster', 'invalid_time', 'already_clocked_in', 'not_clocked_in',
-  'payroll_approved', 'evidence_required', 'tax2_name_required', 'already_signed', 'already_requested', 'invalid_token',
+  'payroll_approved', 'evidence_required', 'tax2_name_required', 'logo_missing', 'already_signed', 'already_requested', 'invalid_token',
   'plan_required', 'employee_has_login', 'account_deleted', 'on_break', 'not_on_break', 'not_balanced', 'invalid_pin', 'pin_locked', 'wrong_pin', 'switch_expired', 'server_busy',
   'invalid_country', 'invalid_tax_rate', 'invalid_iban', 'invalid_swift', 'invalid_link', 'document_exists', 'country_locked', 'invalid_phone', 'wrong_current_password', 'days_required', 'message_required', 'invalid_email', 'unknown',
 ] as const;
