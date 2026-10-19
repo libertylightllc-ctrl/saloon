@@ -50,9 +50,11 @@ export function CheckoutForm(props: CheckoutProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const terms = useTerms();
-  const { business, branch } = useWorkspace();
+  const { business, branch, role, employeeId: me } = useWorkspace();
   const tax = useTax();
   const employees = useEmployees(branch.id);
+  // A staff member sells in their own name only (owner, 2026-10-19; the server makes sure of it too).
+  const choosable = (employees.data ?? []).filter((e) => role !== 'staff' || e.id === me);
   const catalog = useCatalog(business.id);
   const create = useCreateSale(business.id, branch.id);
 
@@ -151,12 +153,14 @@ export function CheckoutForm(props: CheckoutProps) {
       <View style={styles.section}>
         <Text variant="bodyStrong">{terms.staff}</Text>
         <View style={styles.wrap}>
-          {(employees.data ?? []).map((person) => (
+          {choosable.map((person) => (
             <Chip
               key={person.id}
               label={person.full_name}
-              selected={person.id === props.employeeId}
-              onPress={() => props.onEmployee(person.id === props.employeeId ? null : person.id)}
+              selected={person.id === props.employeeId || role === 'staff'}
+              onPress={() => {
+                if (role !== 'staff') props.onEmployee(person.id === props.employeeId ? null : person.id);
+              }}
               testID={`checkout-staff-${person.full_name}`}
             />
           ))}

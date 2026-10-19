@@ -428,7 +428,8 @@
       "pin": "Quick-switch PIN",
       "switch": "Switch user",
       "plan": "Plan & billing",
-      "admin": "Platform console"
+      "admin": "Platform console",
+      "mySales": "My sales"
     },
     "logOut": "Log out",
     "title": "More",

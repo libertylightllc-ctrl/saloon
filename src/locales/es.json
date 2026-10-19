@@ -428,7 +428,8 @@
       "pin": "PIN de cambio rápido",
       "switch": "Cambiar de usuario",
       "plan": "Plan y facturación",
-      "admin": "Consola de la plataforma"
+      "admin": "Consola de la plataforma",
+      "mySales": "Mis ventas"
     },
     "logOut": "Cerrar sesión",
     "title": "Más",

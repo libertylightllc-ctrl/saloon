@@ -51,12 +51,12 @@ export function useTabItems(): Record<TabKey, { icon: IconName; label: string }>
 
 /** The business pages this person may open, in More's order, with the section the sidebar shows them in. */
 export function useBusinessRows() {
-  const { role } = useWorkspace();
+  const { role, rules } = useWorkspace();
   const platformAdmin = useIsPlatformAdmin();
   const rows = [
     { key: 'services', icon: 'scissors', href: '/services', show: can(role, 'viewServices'), section: 'business' },
     { key: 'inventory', icon: 'boxes', href: '/inventory', show: can(role, 'viewInventory'), section: 'business' },
-    { key: 'sales', icon: 'receipt', href: '/sales', show: can(role, 'viewSales'), section: 'money' },
+    { key: role === 'staff' ? 'mySales' : 'sales', icon: 'receipt', href: '/sales', show: can(role, 'viewSales', rules), section: 'money' },
     { key: 'expenses', icon: 'coins', href: '/expenses', show: can(role, 'viewExpenses'), section: 'money' },
     { key: 'purchases', icon: 'truck', href: '/purchases', show: can(role, 'viewPurchases'), section: 'money' },
     { key: 'cashClosing', icon: 'banknote', href: '/cash-closing', show: can(role, 'viewClosing'), section: 'money' },

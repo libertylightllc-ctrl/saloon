@@ -2144,3 +2144,4 @@ errors.too_long,That text is too long.,النص طويل جدًا.,टेक्�
 receipt.pdfLine,Receipt as PDF:,الإيصال بصيغة PDF:,रसीद PDF में:,رسید PDF میں:,Recibo en PDF:,Reçu en PDF :,Recibo em PDF:,Receipt link (2026-10-19); machine draft
 receipt.download,Download PDF,تنزيل PDF,PDF डाउनलोड करें,PDF ڈاؤن لوڈ کریں,Descargar PDF,Télécharger le PDF,Baixar PDF,Receipt link (2026-10-19); machine draft
 receipt.notFound,This receipt link is not valid.,رابط الإيصال هذا غير صالح.,यह रसीद लिंक सही नहीं है।,یہ رسید لنک درست نہیں ہے۔,Este enlace de recibo no es válido.,Ce lien de reçu n’est pas valide.,Este link de recibo não é válido.,Receipt link (2026-10-19); machine draft
+more.rows.mySales,My sales,مبيعاتي,मेरी बिक्री,میری فروخت,Mis ventas,Mes ventes,Minhas vendas,Staff sell as themselves (2026-10-19); machine draft

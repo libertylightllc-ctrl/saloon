@@ -39,8 +39,10 @@ export function SaleScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { mode } = useThemeMode();
-  const { business, branch, role } = useWorkspace();
+  const { business, branch, role, employeeId: me } = useWorkspace();
   const tax = useTax();
+  // A staff member's sale is their own (owner, 2026-10-19); others choose who served at checkout.
+  const ownStaff = role === 'staff' ? me : null;
   const params = useLocalSearchParams<{ appointment?: string; customer?: string; customerName?: string }>();
   const catalog = useCatalog(business.id);
   const appointment = useAppointment(branch.id, params.appointment);
@@ -50,7 +52,7 @@ export function SaleScreen() {
   const [lines, setLines] = useState<BasketLine[]>([]);
   const [customer, setCustomer] = useState<PickedCustomer | null>(null);
   const [guestName, setGuestName] = useState('');
-  const [employeeId, setEmployeeId] = useState<string | null>(null);
+  const [employeeId, setEmployeeId] = useState<string | null>(ownStaff);
   const [checkout, setCheckout] = useState(false);
   const [customOpen, setCustomOpen] = useState(false);
   const [done, setDone] = useState<(SaleResult & { method: string }) | null>(null);
@@ -73,7 +75,7 @@ export function SaleScreen() {
     );
     setCustomer(appt.customer_id ? { id: appt.customer_id, name: appt.customer_name ?? '' } : null);
     setGuestName(appt.customer_id ? '' : (appt.customer_name ?? ''));
-    setEmployeeId(appt.employee_id);
+    setEmployeeId(ownStaff ?? appt.employee_id);
   }
   const [customerParam, setCustomerParam] = useState<string | undefined>();
   if (params.customer !== customerParam) {
@@ -109,7 +111,7 @@ export function SaleScreen() {
     setLines([]);
     setCustomer(null);
     setGuestName('');
-    setEmployeeId(null);
+    setEmployeeId(ownStaff);
     setPrefilledFor(null);
     if (params.appointment || params.customer) router.setParams({ appointment: undefined, customer: undefined, customerName: undefined });
   };

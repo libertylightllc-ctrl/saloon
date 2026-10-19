@@ -418,3 +418,10 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 1. More → Branch settings → Customer receipt → WhatsApp → Save.
 2. Sell to a customer with a phone number → Send receipt → ✅ WhatsApp opens with the receipt and "Receipt as PDF: saloqo.com/r/…" → Send.
 3. On the customer's phone, tap the link → ✅ the receipt → Download PDF → ✅ a PDF.
+
+## 50 · Staff sell in their own name; send a receipt again (2 min)
+
+1. Owner: More → Branch settings → Staff can take payments → on → Save.
+2. Sign in as a barber/stylist → Sale → add a service → Checkout → ✅ only your own name, already chosen → Save → New sale.
+3. More → My sales → ✅ only your sales → open the sale → Send on WhatsApp → ✅ WhatsApp opens with the receipt and its PDF link.
+4. Owner: More → Sales → any sale → ✅ Send on WhatsApp is there too.

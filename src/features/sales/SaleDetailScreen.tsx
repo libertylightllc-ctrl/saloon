@@ -14,6 +14,7 @@ import { staffNames, useSale } from './api';
 import { RefundRequest } from './RefundRequest';
 import { RefundSheet } from './RefundSheet';
 import { useShareReceipt } from './useReceipt';
+import { useWhatsAppReceipt } from './whatsappReceipt';
 
 const STATUS_PILL = { completed: 'paid', partially_refunded: 'reversed', refunded: 'reversed' } as const;
 
@@ -37,6 +38,7 @@ export function SaleDetailScreen() {
   const { business, role } = useWorkspace();
   const query = useSale(id);
   const share = useShareReceipt();
+  const whatsapp = useWhatsAppReceipt();
   const [refunding, setRefunding] = useState(false);
   const time = (iso: string) => dates.at(new Date(iso), business.timezone, 'd MMM yyyy · HH:mm');
 
@@ -117,13 +119,23 @@ export function SaleDetailScreen() {
                     ))}
                   </View>
                 ) : null}
-                <FormError error={share.error} />
+                <FormError error={share.error ?? whatsapp.error} />
                 <Button
                   label={t(Platform.OS === 'web' ? 'sale.printReceipt' : 'sale.shareReceipt')}
                   icon={Platform.OS === 'web' ? 'printer' : 'share'}
                   variant="secondary"
                   loading={share.isPending}
                   onPress={() => share.mutate(sale.id)}
+                  testID="sale-print"
+                />
+                {/* Send the receipt again, e.g. when the customer did not get it (owner, 2026-10-19). */}
+                <Button
+                  label={t('sale.sendWhatsApp')}
+                  icon="messageCircle"
+                  variant="secondary"
+                  loading={whatsapp.isPending}
+                  onPress={() => whatsapp.mutate(sale.id)}
+                  testID="sale-whatsapp"
                 />
                 <RefundRequest sale={sale} />
                 {can(role, 'refund') && left > 0 ? (

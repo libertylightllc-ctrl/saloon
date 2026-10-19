@@ -428,7 +428,8 @@
       "pin": "PIN de troca rápida",
       "switch": "Trocar de usuário",
       "plan": "Plano e cobrança",
-      "admin": "Console da plataforma"
+      "admin": "Console da plataforma",
+      "mySales": "Minhas vendas"
     },
     "logOut": "Sair",
     "title": "Mais",

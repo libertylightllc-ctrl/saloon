@@ -68,6 +68,8 @@ export type Capability = keyof typeof MATRIX;
 export function can(role: Role | null | undefined, capability: Capability, rules?: BranchRules): boolean {
   if (!role) return false;
   if (capability === 'sell' && role === 'staff') return Boolean(rules?.staffCanSell);
+  // Staff who sell see their own sales, to send a receipt again (owner, 2026-10-19); the server shows only theirs.
+  if (capability === 'viewSales' && role === 'staff') return Boolean(rules?.staffCanSell);
   return (MATRIX[capability] as readonly Role[]).includes(role);
 }
 
