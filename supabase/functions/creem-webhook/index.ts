@@ -16,7 +16,7 @@ interface Event {
     request_id?: string;
     metadata?: Record<string, string>;
     mode?: string;
-    order?: { id?: string; amount?: number; currency?: string; product?: string };
+    order?: { id?: string; amount?: number; amount_paid?: number; amount_due?: number; currency?: string; product?: string };
     product?: { id?: string };
     customer?: { email?: string };
     custom_fields?: unknown;
@@ -52,7 +52,8 @@ Deno.serve(async (req) => {
         months: monthsOfProduct(o.product?.id ?? o.order?.product),
         salon_code: o.metadata?.salon_code ?? salonCodeField(o.custom_fields),
         mode,
-        paid_minor: o.order?.amount ?? null,
+        // What Creem really received (after any discount, with any tax); the order's amount is before the discount.
+        paid_minor: o.order?.amount_paid ?? o.order?.amount_due ?? o.order?.amount ?? null,
         paid_currency: o.order?.currency ?? null,
         email: o.customer?.email ?? null,
       },

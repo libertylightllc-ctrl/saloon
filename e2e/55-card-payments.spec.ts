@@ -58,7 +58,7 @@ test('an owner pays 3 months by card: one payment with the extra person, the pla
       id: pending!.checkout_id,
       object: 'checkout',
       request_id: requestId,
-      order: { id: `ord_${requestId.slice(0, 8)}`, amount: 5349, currency: 'USD', product: PLAN_3M, status: 'paid' },
+      order: { id: `ord_${requestId.slice(0, 8)}`, amount: 5349, amount_paid: 5349, currency: 'USD', product: PLAN_3M, status: 'paid' },
       product: { id: PLAN_3M },
       customer: { email: owner.email },
       custom_fields: [],
