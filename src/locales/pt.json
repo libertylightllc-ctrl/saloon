@@ -248,7 +248,8 @@
       "preferred": "Preferido",
       "patch_test": "Teste de alergia antes da coloração",
       "second_no_show": "2ª falta",
-      "deposit": "Sinal pago"
+      "deposit": "Sinal pago",
+      "online": "Online"
     },
     "visits": "{{n}} visitas",
     "actions": {
@@ -832,7 +833,12 @@
     "invalid_licence": "O número da licença aceita só letras, números e . / -.",
     "too_long": "O texto é longo demais.",
     "tax2_name_required": "Dê um nome ao segundo imposto, como PST.",
-    "logo_missing": "O logotipo não foi enviado. Tente de novo."
+    "logo_missing": "O logotipo não foi enviado. Tente de novo.",
+    "booking_unavailable": "As reservas online não estão disponíveis neste salão agora.",
+    "invalid_booking_link": "Um link só pode ter letras, números e hífens (3–40).",
+    "link_taken": "Esse link já está em uso. Tente outro.",
+    "too_late_to_cancel": "Já é tarde para cancelar online. Ligue para o salão.",
+    "too_many_bookings": "Você já tem 3 reservas futuras aqui. Cancele uma ou ligue para o salão."
   },
   "sales": {
     "title": "Vendas",
@@ -1841,6 +1847,14 @@
       "trial_ending": {
         "title": "Seu teste grátis termina amanhã",
         "body": "Amanhã é o último dia. Depois disso nada novo pode ser salvo até o plano estar ativo; tudo o que foi salvo continua."
+      },
+      "online_booking": {
+        "title": "Nova reserva online",
+        "body": "{{customer}} · {{at}}"
+      },
+      "online_cancelled": {
+        "title": "Reserva online cancelada",
+        "body": "{{customer}} · {{at}}"
       }
     },
     "markedRead": "{{count}} marcadas como lidas"
@@ -2533,5 +2547,73 @@
     "faqAll": "Ver todas as perguntas",
     "faqNotAnswered": "Não encontrou a resposta? Escreva sua mensagem abaixo.",
     "preferEmail": "Prefere e-mail? Escreva para {{email}}"
+  },
+  "booking": {
+    "title": "Marcar horário",
+    "notFound": "Esta página de reservas não está disponível. O salão pode tê-la desativado.",
+    "directions": "Como chegar",
+    "call": "Ligar",
+    "minutes": "{{count}} min",
+    "anyone": "Qualquer pessoa",
+    "today": "Hoje",
+    "tomorrow": "Amanhã",
+    "book": "Reservar",
+    "servicesCount": "{{count}} serviços",
+    "servicesCount_one": "{{count}} serviço",
+    "steps": {
+      "services": "Escolha os serviços",
+      "staff": "Com",
+      "day": "Dia",
+      "time": "Horário",
+      "details": "Seus dados"
+    },
+    "taxAdded": "Preços sem {{tax}}, que é somado no salão.",
+    "pickFirst": "Escolha um serviço e um dia para ver os horários livres.",
+    "noTimes": "Não há horários livres neste dia. Tente outro dia.",
+    "fields": {
+      "name": "Seu nome",
+      "phone": "Número de celular",
+      "phoneHint": "O salão pode ligar ou mandar WhatsApp sobre sua reserva.",
+      "notes": "Recado para o salão (opcional)"
+    },
+    "mine": "Sua reserva",
+    "linkNotFound": "Este link de reserva não é válido.",
+    "booked": "Reserva feita",
+    "status": {
+      "booked": "Reservada",
+      "waiting": "Chegou",
+      "in_progress": "Em andamento",
+      "completed": "Concluída",
+      "cancelled": "Cancelada",
+      "no_show": "Não compareceu"
+    },
+    "with": "Com {{name}}",
+    "keepLink": "Guarde esta página (favorito ou o link) para ver ou cancelar sua reserva.",
+    "whatsappSalon": "Falar com o salão no WhatsApp",
+    "whatsappText": "Olá, reservei {{services}} para {{when}}. Nome: {{name}}.",
+    "cancel": "Cancelar reserva",
+    "tooLate": "Para cancelar com menos de {{count}} horas de antecedência, ligue para o salão.",
+    "tooLate_one": "Para cancelar com menos de {{count}} hora de antecedência, ligue para o salão.",
+    "again": "Marcar outro horário",
+    "cancelText": "Cancelar sua reserva de {{when}}?",
+    "cancelConfirm": "Sim, cancelar",
+    "keep": "Manter minha reserva",
+    "owner": {
+      "title": "Reservas online",
+      "switch": "Clientes podem reservar online",
+      "hint": "Sua própria página de reservas: serviços, preços e horários livres. As reservas entram na fila. Sem comissão.",
+      "turnedOn": "Reservas online ativadas",
+      "turnedOff": "Reservas online desativadas",
+      "shareHint": "Compartilhe no Instagram, no Google Maps e no seu status do WhatsApp.",
+      "copy": "Copiar link",
+      "copied": "Link copiado",
+      "share": "Compartilhar",
+      "open": "Abrir",
+      "change": "Mudar link",
+      "linkLabel": "Seu link: saloqo.com/b/…",
+      "linkHint": "Letras, números e hífens.",
+      "saveLink": "Salvar link",
+      "linkSaved": "Link salvo"
+    }
   }
 }

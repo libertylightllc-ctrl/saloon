@@ -248,7 +248,8 @@
       "preferred": "Preferido",
       "patch_test": "Prueba de alergia antes del tinte",
       "second_no_show": "2.ª inasistencia",
-      "deposit": "Anticipo retenido"
+      "deposit": "Anticipo retenido",
+      "online": "Online"
     },
     "visits": "{{n}} visitas",
     "actions": {
@@ -832,7 +833,12 @@
     "invalid_licence": "El número de licencia solo admite letras, números y . / -.",
     "too_long": "El texto es demasiado largo.",
     "tax2_name_required": "Escribe el nombre del segundo impuesto, como PST.",
-    "logo_missing": "El logotipo no se subió. Inténtalo de nuevo."
+    "logo_missing": "El logotipo no se subió. Inténtalo de nuevo.",
+    "booking_unavailable": "Las reservas online no están disponibles en este salón ahora mismo.",
+    "invalid_booking_link": "Un enlace solo puede tener letras, números y guiones (3–40).",
+    "link_taken": "Ese enlace ya está en uso. Prueba otro.",
+    "too_late_to_cancel": "Ya es tarde para cancelar online. Llama al salón.",
+    "too_many_bookings": "Ya tienes 3 reservas próximas aquí. Cancela una o llama al salón."
   },
   "sales": {
     "title": "Ventas",
@@ -1841,6 +1847,14 @@
       "trial_ending": {
         "title": "Tu prueba gratis termina mañana",
         "body": "Mañana es el último día. Después no se puede guardar nada nuevo hasta que el plan esté activo; todo lo guardado se conserva."
+      },
+      "online_booking": {
+        "title": "Nueva reserva online",
+        "body": "{{customer}} · {{at}}"
+      },
+      "online_cancelled": {
+        "title": "Reserva online cancelada",
+        "body": "{{customer}} · {{at}}"
       }
     },
     "markedRead": "{{count}} marcadas como leídas"
@@ -2533,5 +2547,73 @@
     "faqAll": "Ver todas las preguntas",
     "faqNotAnswered": "¿No encuentras la respuesta? Escribe tu mensaje abajo.",
     "preferEmail": "¿Prefieres el correo? Escríbenos a {{email}}"
+  },
+  "booking": {
+    "title": "Reservar una cita",
+    "notFound": "Esta página de reservas no está disponible. Puede que el salón la haya desactivado.",
+    "directions": "Cómo llegar",
+    "call": "Llamar",
+    "minutes": "{{count}} min",
+    "anyone": "Cualquiera",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "book": "Reservar",
+    "servicesCount": "{{count}} servicios",
+    "servicesCount_one": "{{count}} servicio",
+    "steps": {
+      "services": "Elige servicios",
+      "staff": "Con",
+      "day": "Día",
+      "time": "Hora",
+      "details": "Tus datos"
+    },
+    "taxAdded": "Precios sin {{tax}}, que se añade en el salón.",
+    "pickFirst": "Elige un servicio y un día para ver las horas libres.",
+    "noTimes": "No hay horas libres ese día. Prueba otro día.",
+    "fields": {
+      "name": "Tu nombre",
+      "phone": "Número de móvil",
+      "phoneHint": "El salón puede llamarte o escribirte por WhatsApp sobre tu reserva.",
+      "notes": "Nota para el salón (opcional)"
+    },
+    "mine": "Tu reserva",
+    "linkNotFound": "Este enlace de reserva no es válido.",
+    "booked": "Reserva confirmada",
+    "status": {
+      "booked": "Reservada",
+      "waiting": "Has llegado",
+      "in_progress": "En curso",
+      "completed": "Hecha",
+      "cancelled": "Cancelada",
+      "no_show": "No asististe"
+    },
+    "with": "Con {{name}}",
+    "keepLink": "Guarda esta página (márcala o guarda el enlace) para ver o cancelar tu reserva.",
+    "whatsappSalon": "Escribir al salón por WhatsApp",
+    "whatsappText": "Hola, reservé {{services}} para el {{when}}. Nombre: {{name}}.",
+    "cancel": "Cancelar reserva",
+    "tooLate": "Para cancelar con menos de {{count}} horas de antelación, llama al salón.",
+    "tooLate_one": "Para cancelar con menos de {{count}} hora de antelación, llama al salón.",
+    "again": "Reservar otra cita",
+    "cancelText": "¿Cancelar tu reserva del {{when}}?",
+    "cancelConfirm": "Sí, cancelarla",
+    "keep": "Mantener mi reserva",
+    "owner": {
+      "title": "Reservas online",
+      "switch": "Los clientes pueden reservar online",
+      "hint": "Tu propia página de reservas: servicios, precios y horas libres. Las reservas llegan a la cola. Sin comisión.",
+      "turnedOn": "Reservas online activadas",
+      "turnedOff": "Reservas online desactivadas",
+      "shareHint": "Compártelo en Instagram, Google Maps y tu estado de WhatsApp.",
+      "copy": "Copiar enlace",
+      "copied": "Enlace copiado",
+      "share": "Compartir",
+      "open": "Abrir",
+      "change": "Cambiar enlace",
+      "linkLabel": "Tu enlace: saloqo.com/b/…",
+      "linkHint": "Letras, números y guiones.",
+      "saveLink": "Guardar enlace",
+      "linkSaved": "Enlace guardado"
+    }
   }
 }

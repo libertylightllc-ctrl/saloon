@@ -248,7 +248,8 @@
       "preferred": "Préféré",
       "patch_test": "Test cutané avant coloration",
       "second_no_show": "2e absence",
-      "deposit": "Acompte versé"
+      "deposit": "Acompte versé",
+      "online": "En ligne"
     },
     "visits": "{{n}} visites",
     "actions": {
@@ -832,7 +833,12 @@
     "invalid_licence": "Le numéro de licence n’accepte que lettres, chiffres et . / -.",
     "too_long": "Le texte est trop long.",
     "tax2_name_required": "Donnez un nom à la deuxième taxe, comme TVP.",
-    "logo_missing": "Le logo n’a pas été envoyé. Réessayez."
+    "logo_missing": "Le logo n’a pas été envoyé. Réessayez.",
+    "booking_unavailable": "La réservation en ligne n’est pas disponible dans ce salon pour le moment.",
+    "invalid_booking_link": "Un lien ne peut contenir que des lettres, des chiffres et des tirets (3–40).",
+    "link_taken": "Ce lien est déjà pris. Essayez-en un autre.",
+    "too_late_to_cancel": "Il est trop tard pour annuler en ligne. Appelez le salon.",
+    "too_many_bookings": "Vous avez déjà 3 réservations à venir ici. Annulez-en une ou appelez le salon."
   },
   "sales": {
     "title": "Ventes",
@@ -1841,6 +1847,14 @@
       "trial_ending": {
         "title": "Votre essai gratuit se termine demain",
         "body": "Demain est le dernier jour. Ensuite, rien de nouveau ne peut être enregistré tant que l’abonnement n’est pas actif ; tout ce qui est enregistré est conservé."
+      },
+      "online_booking": {
+        "title": "Nouvelle réservation en ligne",
+        "body": "{{customer}} · {{at}}"
+      },
+      "online_cancelled": {
+        "title": "Réservation en ligne annulée",
+        "body": "{{customer}} · {{at}}"
       }
     },
     "markedRead": "{{count}} marquées comme lues"
@@ -2533,5 +2547,73 @@
     "faqAll": "Voir toutes les questions",
     "faqNotAnswered": "Pas de réponse ici ? Écrivez votre message ci-dessous.",
     "preferEmail": "Vous préférez l’e-mail ? Écrivez-nous à {{email}}"
+  },
+  "booking": {
+    "title": "Prendre rendez-vous",
+    "notFound": "Cette page de réservation n’est pas disponible. Le salon l’a peut-être désactivée.",
+    "directions": "Itinéraire",
+    "call": "Appeler",
+    "minutes": "{{count}} min",
+    "anyone": "N’importe qui",
+    "today": "Aujourd’hui",
+    "tomorrow": "Demain",
+    "book": "Réserver",
+    "servicesCount": "{{count}} prestations",
+    "servicesCount_one": "{{count}} prestation",
+    "steps": {
+      "services": "Choisissez vos prestations",
+      "staff": "Avec",
+      "day": "Jour",
+      "time": "Heure",
+      "details": "Vos coordonnées"
+    },
+    "taxAdded": "Prix hors {{tax}}, ajoutée au salon.",
+    "pickFirst": "Choisissez une prestation et un jour pour voir les créneaux libres.",
+    "noTimes": "Aucun créneau libre ce jour-là. Essayez un autre jour.",
+    "fields": {
+      "name": "Votre nom",
+      "phone": "Numéro de mobile",
+      "phoneHint": "Le salon peut vous appeler ou vous écrire sur WhatsApp au sujet de votre réservation.",
+      "notes": "Note pour le salon (facultatif)"
+    },
+    "mine": "Votre réservation",
+    "linkNotFound": "Ce lien de réservation n’est pas valide.",
+    "booked": "C’est réservé",
+    "status": {
+      "booked": "Réservée",
+      "waiting": "Arrivé",
+      "in_progress": "En cours",
+      "completed": "Terminée",
+      "cancelled": "Annulée",
+      "no_show": "Absent"
+    },
+    "with": "Avec {{name}}",
+    "keepLink": "Gardez cette page (en favori ou le lien) pour voir ou annuler votre réservation.",
+    "whatsappSalon": "Écrire au salon sur WhatsApp",
+    "whatsappText": "Bonjour, j’ai réservé {{services}} pour le {{when}}. Nom : {{name}}.",
+    "cancel": "Annuler la réservation",
+    "tooLate": "Pour annuler moins de {{count}} heures avant, appelez le salon.",
+    "tooLate_one": "Pour annuler moins d’{{count}} heure avant, appelez le salon.",
+    "again": "Prendre un autre rendez-vous",
+    "cancelText": "Annuler votre réservation du {{when}} ?",
+    "cancelConfirm": "Oui, annuler",
+    "keep": "Garder ma réservation",
+    "owner": {
+      "title": "Réservation en ligne",
+      "switch": "Les clients peuvent réserver en ligne",
+      "hint": "Votre propre page de réservation : prestations, prix et créneaux libres. Les réservations arrivent dans la file. Sans commission.",
+      "turnedOn": "Réservation en ligne activée",
+      "turnedOff": "Réservation en ligne désactivée",
+      "shareHint": "Partagez-le sur Instagram, Google Maps et votre statut WhatsApp.",
+      "copy": "Copier le lien",
+      "copied": "Lien copié",
+      "share": "Partager",
+      "open": "Ouvrir",
+      "change": "Changer le lien",
+      "linkLabel": "Votre lien : saloqo.com/b/…",
+      "linkHint": "Lettres, chiffres et tirets.",
+      "saveLink": "Enregistrer le lien",
+      "linkSaved": "Lien enregistré"
+    }
   }
 }

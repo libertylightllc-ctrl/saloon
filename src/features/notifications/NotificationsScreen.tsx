@@ -11,9 +11,11 @@ import { Button, EmptyState, HeaderBand, Icon, ListRow, QueryState, Screen, useT
 import { useMarkRead, useNotifications, type AppNotification } from './api';
 import { notificationHref } from './links';
 
-const TYPES = ['new_booking', 'long_wait', 'close_submitted', 'low_stock', 'document_due', 'payroll_generated', 'refund_requested', 'daily_digest', 'support_reply', 'trial_ending'] as const;
+const TYPES = ['new_booking', 'online_booking', 'online_cancelled', 'long_wait', 'close_submitted', 'low_stock', 'document_due', 'payroll_generated', 'refund_requested', 'daily_digest', 'support_reply', 'trial_ending'] as const;
 const ICON: Record<(typeof TYPES)[number], IconName> = {
   new_booking: 'calendarPlus',
+  online_booking: 'calendarPlus',
+  online_cancelled: 'calendarX',
   long_wait: 'hourglass',
   close_submitted: 'banknote',
   low_stock: 'package',

@@ -29,6 +29,7 @@ import {
 } from '@/ui';
 
 import { CountryCard } from './CountryCard';
+import { OnlineBookingCard } from './OnlineBookingCard';
 import { OpeningCashCard } from './OpeningCashCard';
 import { RECEIPT_MODES, ReceiptOptions } from './ReceiptOptions';
 import { SellerFields, sellerShape } from './SellerFields';
@@ -218,6 +219,11 @@ export function BranchSettingsScreen() {
           {vatOn ? <TaxFields control={form.control} country={business.country_code} currency={activeCurrency()} /> : null}
           <SellerFields control={form.control} />
           <ReceiptOptions control={form.control} />
+        </View>
+
+        <View style={styles.section}>
+          <SectionHeader title={t('booking.owner.title')} />
+          <OnlineBookingCard />
         </View>
 
         <View style={styles.section}>

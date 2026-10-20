@@ -143,3 +143,14 @@ Close history list below.
 ### 2.11 Reports
 
 Report type as PillTabs, MonthSwitcher, summary KpiCards, chart, table rows, sticky bar: Print · Export PDF · Export CSV.
+
+### 2.12 Public pages (no sign-in)
+
+- **saloqo.com/r/<token>** — a receipt sent on WhatsApp (2026-10-19).
+- **saloqo.com/b/<link>** — a salon's online booking page (2026-10-20): salon card (logo, name, address, Directions,
+  Call) → services by category (time, price) → with whom (Anyone / first names) → day chips (14 days, closed days
+  hidden) → free time chips → name, mobile, note → Book. In the salon's own look and the visitor's language.
+- **saloqo.com/booking/<token>** — the customer's booking: when and what, salon card, Message the salon on WhatsApp,
+  Cancel (until the free-cancel hours), Book another.
+- Owner side: Branch settings → **Online booking** (switch, the link with Copy / Open / Change link). Online bookings
+  show an **Online** tag in the queue and send "New online booking" / "Online booking cancelled".

@@ -154,6 +154,7 @@ export type Database = {
       };
       appointments: {
         Row: {
+          booking_token: string | null;
           branch_id: string;
           business_date: string;
           business_id: string;
@@ -181,6 +182,7 @@ export type Database = {
           wait_notified_at: string | null;
         };
         Insert: {
+          booking_token?: string | null;
           branch_id: string;
           business_date: string;
           business_id: string;
@@ -208,6 +210,7 @@ export type Database = {
           wait_notified_at?: string | null;
         };
         Update: {
+          booking_token?: string | null;
           branch_id?: string;
           business_date?: string;
           business_id?: string;
@@ -506,6 +509,7 @@ export type Database = {
       branches: {
         Row: {
           address: string | null;
+          booking_slug: string | null;
           business_id: string;
           created_at: string;
           id: string;
@@ -530,6 +534,7 @@ export type Database = {
         };
         Insert: {
           address?: string | null;
+          booking_slug?: string | null;
           business_id: string;
           created_at?: string;
           id?: string;
@@ -554,6 +559,7 @@ export type Database = {
         };
         Update: {
           address?: string | null;
+          booking_slug?: string | null;
           business_id?: string;
           created_at?: string;
           id?: string;
@@ -3571,6 +3577,7 @@ export type Database = {
       appointment_for_update: {
         Args: { p_id: string };
         Returns: {
+          booking_token: string | null;
           branch_id: string;
           business_date: string;
           business_id: string;
@@ -3639,6 +3646,55 @@ export type Database = {
           available: boolean;
           slot: string;
           starts_at: string;
+        }[];
+      };
+      book_slots: {
+        Args: { p_branch: string; p_date: string; p_duration: number; p_employee?: string };
+        Returns: {
+          available: boolean;
+          slot: string;
+          starts_at: string;
+        }[];
+      };
+      booking_branch: {
+        Args: { p_slug: string };
+        Returns: {
+          address: string | null;
+          booking_slug: string | null;
+          business_id: string;
+          created_at: string;
+          id: string;
+          invoice_prefix: string | null;
+          legal_name: string | null;
+          licence_label: string | null;
+          licence_number: string | null;
+          logo_path: string | null;
+          mode: Database['public']['Enums']['salon_mode'];
+          name: string;
+          opening_hours: NonNullable<Json>;
+          phone: string | null;
+          settings: NonNullable<Json>;
+          tax_id_label: string;
+          tax_inclusive: boolean;
+          tax_name: string;
+          tax_rate_bps: number;
+          tax2_name: string | null;
+          tax2_rate_bps: number;
+          trn: string | null;
+          vat_mode: Database['public']['Enums']['vat_mode'];
+        };
+        SetofOptions: {
+          from: '*';
+          to: 'branches';
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      booking_length: {
+        Args: { p_business: string; p_services: string[] };
+        Returns: {
+          minutes: number;
+          needs_room: boolean;
         }[];
       };
       branch_business: { Args: { p_branch: string }; Returns: string };
@@ -3772,6 +3828,7 @@ export type Database = {
       employee_has_history: { Args: { p_id: string }; Returns: boolean };
       expected_cash: { Args: { p_branch: string; p_date?: string }; Returns: number };
       fmt_money: { Args: { p_currency?: string; p_minor: number }; Returns: string };
+      free_room: { Args: { p_at: string; p_branch: string; p_minutes: number }; Returns: string };
       generate_payroll: { Args: { p_business: string; p_period: string }; Returns: string };
       has_pin: { Args: { p_business: string }; Returns: boolean };
       has_role: {
@@ -3900,7 +3957,19 @@ export type Database = {
         };
         Returns: undefined;
       };
+      public_book: { Args: { p: Json }; Returns: Json };
+      public_booking: { Args: { p_token: string }; Returns: Json };
+      public_booking_cancel: { Args: { p_token: string }; Returns: undefined };
+      public_booking_page: { Args: { p_slug: string }; Returns: Json };
+      public_booking_slots: {
+        Args: { p_date: string; p_employee?: string; p_services: string[]; p_slug: string };
+        Returns: {
+          slot: string;
+          starts_at: string;
+        }[];
+      };
       public_receipt: { Args: { p_token: string }; Returns: Json };
+      public_staff_name: { Args: { p_full: string }; Returns: string };
       purchase_no: { Args: { p_number: number }; Returns: string };
       record_adjustment: { Args: { p: Json }; Returns: Json };
       record_expense: { Args: { p: Json }; Returns: Json };
@@ -4056,6 +4125,10 @@ export type Database = {
         Returns: undefined;
       };
       set_my_pin: { Args: { p_business: string; p_pin: string }; Returns: undefined };
+      set_online_booking: {
+        Args: { p_branch: string; p_on: boolean; p_slug?: string };
+        Returns: string;
+      };
       set_opening_cash: { Args: { p_amount: number; p_branch: string }; Returns: undefined };
       set_opening_stock: { Args: { p_branch: string; p_items: Json }; Returns: undefined };
       set_roster: { Args: { p_days: Json; p_employee: string }; Returns: undefined };
@@ -4134,6 +4207,7 @@ export type Database = {
       unclaim_support_alert: { Args: { p_thread: string }; Returns: undefined };
       unclaim_support_assistant: { Args: { p_thread: string }; Returns: undefined };
       undo_no_show: { Args: { p_id: string }; Returns: undefined };
+      unique_booking_slug: { Args: { p_name: string }; Returns: string };
       unique_business_code: { Args: { p_name: string }; Returns: string };
       unregister_push_token: { Args: { p_token: string }; Returns: undefined };
       update_branch: { Args: { p: Json; p_branch: string }; Returns: undefined };

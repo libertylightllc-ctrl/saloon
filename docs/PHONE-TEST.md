@@ -440,3 +440,11 @@ Phone A = owner. Use a test salon for step 25, not your real one: deleting the o
 3. Send on WhatsApp → open the PDF link → ✅ the logo there too.
 4. More → Branch settings → Receipt paper → ✅ Roll 80 mm is picked → print a receipt on the receipt printer → ✅ full roll width, black text, no wide margins.
 5. Pick A4 → Save → print → ✅ the full-page receipt as before.
+
+## 53 · Online booking link (3 min)
+
+1. Owner: More → Branch settings → Online booking → switch on → ✅ "saloqo.com/b/…" → Copy link.
+2. On another phone (not signed in), open the link → ✅ your salon, services and prices, in your salon's colours.
+3. Pick a service → a day → a time → name and number → Book → ✅ "You're booked".
+4. Owner's phone → ✅ "New online booking" alert; the booking is in the queue for that day, tagged Online.
+5. Customer's page → Cancel booking → Yes → ✅ "Cancelled"; owner gets "Online booking cancelled".

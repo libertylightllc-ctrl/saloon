@@ -76,6 +76,7 @@ export function VisitPanel({
 
       <View style={styles.badges}>
         {item.source === 'walk_in' ? <StatusPill tone="primary" label={t('queue.badges.walk_in')} /> : null}
+        {item.source === 'app' ? <StatusPill tone="info" label={t('queue.badges.online')} /> : null}
         {item.deposit_status === 'held' ? (
           <StatusPill tone="success" label={t('queue.depositHeld', { amount: formatMoney(item.deposit_minor) })} />
         ) : null}

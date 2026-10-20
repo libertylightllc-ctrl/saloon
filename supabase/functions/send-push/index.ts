@@ -16,6 +16,8 @@ interface Pending {
   body: string;
   entity_type: string | null;
   entity_id: string | null;
+  /** The phones of the person it is for. */
+  tokens: string[];
 }
 
 Deno.serve(async (req) => {
@@ -24,34 +26,15 @@ Deno.serve(async (req) => {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const { data: pending, error } = await admin
-    .from('notifications')
-    .select('id, member_id, type, title, body, entity_type, entity_id')
-    .is('pushed_at', null)
-    .gt('created_at', new Date(Date.now() - 86_400_000).toISOString())
-    .order('created_at')
-    .limit(300);
+  // Take a batch in one step inside the database (marked pushed, with each person's phones): an overlapping run
+  // cannot send the same one twice, and no list of ids goes in a URL (past ~200 ids the gateway refused it, 2026-10-20).
+  const { data: claimed, error } = await admin.rpc('claim_pending_push', { p_limit: 300 });
   if (error) return json({ error: error.message }, 500);
-  const rows = (pending ?? []) as Pending[];
-  if (rows.length === 0) return json({ sent: 0 });
-
-  // Claim them first, so an overlapping run cannot send the same one twice.
-  const ids = rows.map((r) => r.id);
-  const { data: claimed } = await admin.from('notifications').update({ pushed_at: new Date().toISOString() }).in('id', ids).is('pushed_at', null).select('id');
-  const mine = new Set((claimed ?? []).map((c: { id: string }) => c.id));
-  const toSend = rows.filter((r) => mine.has(r.id));
-
-  const { data: tokens } = await admin
-    .from('push_tokens')
-    .select('token, member_id')
-    .in('member_id', [...new Set(toSend.map((r) => r.member_id))]);
-  const byMember = new Map<string, string[]>();
-  for (const t of (tokens ?? []) as { token: string; member_id: string }[]) {
-    byMember.set(t.member_id, [...(byMember.get(t.member_id) ?? []), t.token]);
-  }
+  const toSend = (claimed ?? []) as Pending[];
+  if (toSend.length === 0) return json({ sent: 0 });
 
   const messages = toSend.flatMap((n) =>
-    (byMember.get(n.member_id) ?? []).map((to) => ({
+    n.tokens.map((to) => ({
       n,
       message: { to, title: n.title, body: n.body, sound: 'default', data: { id: n.id, type: n.type, entity_type: n.entity_type, entity_id: n.entity_id } },
     })),

@@ -71,6 +71,11 @@ insert into reviewed values
     ('period_list'),
     ('plan_status'),
     ('post_purchase_bill'),
+    ('public_book'),
+    ('public_booking'),
+    ('public_booking_cancel'),
+    ('public_booking_page'),
+    ('public_booking_slots'),
     ('public_receipt'),
     ('record_adjustment'),
     ('record_expense'),
@@ -102,6 +107,7 @@ insert into reviewed values
     ('save_service'),
     ('save_supplier'),
     ('set_branch_logo'),
+    ('set_online_booking'),
     ('set_branch_mode'),
     ('set_my_pin'),
     ('set_opening_cash'),
@@ -135,10 +141,12 @@ select is(
 select is(
   array(select p.proname::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
         where n.nspname = 'public' and p.prosecdef and has_function_privilege('anon', p.oid, 'EXECUTE') order by 1),
-  -- The visitors' support chat (2026-10-12), reading needs the secret kept on the visitor's device; and one receipt
-  -- for the holder of its secret link (2026-10-19).
-  array['public_receipt', 'support_guest_send', 'support_guest_thread']::text[],
-  'signed-out visitors can call only the visitor support chat and the receipt link');
+  -- The visitors' support chat (2026-10-12), reading needs the secret kept on the visitor's device; one receipt for
+  -- the holder of its secret link (2026-10-19); a salon's booking page when its owner switched it on, and one booking
+  -- for the holder of its secret link (2026-10-20).
+  array['public_book', 'public_booking', 'public_booking_cancel', 'public_booking_page', 'public_booking_slots',
+        'public_receipt', 'support_guest_send', 'support_guest_thread']::text[],
+  'signed-out visitors can call only the visitor support chat, the receipt link and the booking page');
 
 select is(
   array(select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace

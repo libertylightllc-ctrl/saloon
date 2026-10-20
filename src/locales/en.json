@@ -248,7 +248,8 @@
       "preferred": "Preferred",
       "patch_test": "Patch test before colour",
       "second_no_show": "2nd no-show",
-      "deposit": "Deposit held"
+      "deposit": "Deposit held",
+      "online": "Online"
     },
     "visits": "{{n}} visits",
     "actions": {
@@ -832,7 +833,12 @@
     "invalid_licence": "A licence number can have letters, numbers and . / - only.",
     "too_long": "That text is too long.",
     "tax2_name_required": "Give the second tax a name, like PST.",
-    "logo_missing": "The logo did not upload. Try again."
+    "logo_missing": "The logo did not upload. Try again.",
+    "booking_unavailable": "Online booking is not available at this salon right now.",
+    "invalid_booking_link": "A link can have only letters, numbers and dashes (3–40).",
+    "link_taken": "That link is taken. Try another.",
+    "too_late_to_cancel": "It is too late to cancel online. Please call the salon.",
+    "too_many_bookings": "You already have 3 bookings coming up here. Cancel one or call the salon."
   },
   "sales": {
     "title": "Sales",
@@ -1841,6 +1847,14 @@
       "trial_ending": {
         "title": "Your free trial ends tomorrow",
         "body": "Tomorrow is the last day. After that nothing new can be saved until the plan is on; everything saved stays."
+      },
+      "online_booking": {
+        "title": "New online booking",
+        "body": "{{customer}} · {{at}}"
+      },
+      "online_cancelled": {
+        "title": "Online booking cancelled",
+        "body": "{{customer}} · {{at}}"
       }
     },
     "markedRead": "{{count}} marked as read"
@@ -2532,5 +2546,73 @@
     "faqAll": "Show all questions",
     "faqNotAnswered": "Not answered here? Write your message below.",
     "preferEmail": "Prefer email? Write to us at {{email}}"
+  },
+  "booking": {
+    "title": "Book an appointment",
+    "notFound": "This booking page is not available. The salon may have switched it off.",
+    "directions": "Directions",
+    "call": "Call",
+    "minutes": "{{count}} min",
+    "anyone": "Anyone",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "book": "Book",
+    "servicesCount": "{{count}} services",
+    "servicesCount_one": "{{count}} service",
+    "steps": {
+      "services": "Choose services",
+      "staff": "With",
+      "day": "Day",
+      "time": "Time",
+      "details": "Your details"
+    },
+    "taxAdded": "Prices are before {{tax}}, added at the salon.",
+    "pickFirst": "Choose a service and a day to see free times.",
+    "noTimes": "No free times this day. Try another day.",
+    "fields": {
+      "name": "Your name",
+      "phone": "Mobile number",
+      "phoneHint": "The salon may call or WhatsApp you about your booking.",
+      "notes": "Note for the salon (optional)"
+    },
+    "mine": "Your booking",
+    "linkNotFound": "This booking link is not valid.",
+    "booked": "You’re booked",
+    "status": {
+      "booked": "Booked",
+      "waiting": "Checked in",
+      "in_progress": "In progress",
+      "completed": "Done",
+      "cancelled": "Cancelled",
+      "no_show": "Missed"
+    },
+    "with": "With {{name}}",
+    "keepLink": "Keep this page (bookmark it or save the link) to see or cancel your booking.",
+    "whatsappSalon": "Message the salon on WhatsApp",
+    "whatsappText": "Hello, I booked {{services}} for {{when}}. Name: {{name}}.",
+    "cancel": "Cancel booking",
+    "tooLate": "To cancel less than {{count}} hours before, call the salon.",
+    "tooLate_one": "To cancel less than {{count}} hour before, call the salon.",
+    "again": "Book another appointment",
+    "cancelText": "Cancel your booking for {{when}}?",
+    "cancelConfirm": "Yes, cancel it",
+    "keep": "Keep my booking",
+    "owner": {
+      "title": "Online booking",
+      "switch": "Customers can book online",
+      "hint": "Your own booking page: services, prices and free times. Bookings land in the queue. No commission.",
+      "turnedOn": "Online booking is on",
+      "turnedOff": "Online booking is off",
+      "shareHint": "Share it on Instagram, Google Maps and your WhatsApp status.",
+      "copy": "Copy link",
+      "copied": "Link copied",
+      "share": "Share",
+      "open": "Open",
+      "change": "Change link",
+      "linkLabel": "Your link: saloqo.com/b/…",
+      "linkHint": "Letters, numbers and dashes.",
+      "saveLink": "Save link",
+      "linkSaved": "Link saved"
+    }
   }
 }
