@@ -10,14 +10,15 @@ import { spacing } from '@/theme';
 import { Button, HeaderBand, PillTabs, Screen } from '@/ui';
 
 import { AccountsTab } from './AccountsTab';
+import { CardsTab } from './CardsTab';
 import { ActivityTab, PlansTab } from './HistoryTabs';
 import { OverviewTab } from './OverviewTab';
 import { SalonsTab } from './SalonsTab';
 import { SupportTab } from './SupportTab';
 import { useSupportInbox } from '@/features/support/api';
 
-type Tab = 'overview' | 'salons' | 'support' | 'accounts' | 'plans' | 'activity';
-const TABS: Tab[] = ['overview', 'salons', 'support', 'accounts', 'plans', 'activity'];
+type Tab = 'overview' | 'salons' | 'support' | 'accounts' | 'plans' | 'cards' | 'activity';
+const TABS: Tab[] = ['overview', 'salons', 'support', 'accounts', 'plans', 'cards', 'activity'];
 
 /**
  * The platform console (owner, 2026-10-06): the whole service in one place for platform owners — even one with no
@@ -75,6 +76,7 @@ export function ConsoleScreen() {
           {tab === 'support' ? <SupportTab /> : null}
           {tab === 'accounts' ? <AccountsTab /> : null}
           {tab === 'plans' ? <PlansTab /> : null}
+          {tab === 'cards' ? <CardsTab /> : null}
           {tab === 'activity' ? <ActivityTab salon={salonFilter} onClear={() => setSalonFilter(null)} /> : null}
         </View>
       </Screen>

@@ -838,7 +838,8 @@
     "invalid_booking_link": "A link can have only letters, numbers and dashes (3–40).",
     "link_taken": "That link is taken. Try another.",
     "too_late_to_cancel": "It is too late to cancel online. Please call the salon.",
-    "too_many_bookings": "You already have 3 bookings coming up here. Cancel one or call the salon."
+    "too_many_bookings": "You already have 3 bookings coming up here. Cancel one or call the salon.",
+    "card_unavailable": "Card payment is not available right now. Pay by bank transfer instead."
   },
   "sales": {
     "title": "Sales",
@@ -2056,7 +2057,7 @@
     "notePlaceholder": "e.g. paying by bank transfer",
     "requestAction": "Ask to switch on",
     "requestSent": "Request sent. We’ll switch it on once paid.",
-    "howToPay": "Card payments in the app are coming. For now we contact you to take the payment by bank transfer or a card link, then switch the plan on.",
+    "howToPay": "We contact you to take the payment by bank transfer or a card link, then switch the plan on.",
     "banner": {
       "title": "Switch on your plan",
       "body": "Queue, sales and the other features start once your plan is active: {{price}} a month.",
@@ -2097,6 +2098,18 @@
       "bannerTitle_one": "Free trial: {{count}} day left",
       "bannerBody": "Everything is on until {{date}}. Switch on your plan any time to keep going after that.",
       "bannerBodyStore": "Everything is on until {{date}}."
+    },
+    "card": {
+      "title": "Pay by card",
+      "body": "Pay now with a debit or credit card and your plan switches on at once. Charged in US dollars.",
+      "total": "{{total}} + tax where it applies",
+      "action": "Pay {{total}} by card",
+      "secure": "Secure checkout by Creem, our payment provider.",
+      "test": "Test mode: no real money. Use a Creem test card.",
+      "waiting": "Payment received. Switching on your plan…",
+      "slow": "Confirming the payment. This page updates by itself; it can take a minute.",
+      "done": "Paid. Your plan is on until {{date}}.",
+      "check": "We are checking this payment and will contact you."
     }
   },
   "admin": {
@@ -2175,7 +2188,7 @@
       },
       "where": {
         "title": "Where it is kept",
-        "body": "Your data is stored with Supabase (database, sign-in and file storage) in South Korea. The website and app are delivered by Vercel from servers close to you. Emails go through our email provider, notifications to phones through Expo and Apple or Google, and Google handles “Continue with Google”. Help & support messages are answered first by an AI assistant run for us by Groq, or by Anthropic (Claude); they use the messages only to answer them and do not train on them. These providers process data only for us, under data processing terms, and must keep it confidential and secure.\nThe European Union and the United Kingdom recognise South Korea as protecting personal data adequately. Where a provider handles data in a country without such recognition, such as the United States, the transfer is covered by the European Commission’s standard contractual clauses with the UK addendum and, for Brazil, by the safeguards the LGPD allows, such as standard contractual clauses."
+        "body": "Your data is stored with Supabase (database, sign-in and file storage) in South Korea. The website and app are delivered by Vercel from servers close to you. Emails go through our email provider, notifications to phones through Expo and Apple or Google, and Google handles “Continue with Google”. Help & support messages are answered first by an AI assistant run for us by Groq, or by Anthropic (Claude); they use the messages only to answer them and do not train on them. These providers process data only for us, under data processing terms, and must keep it confidential and secure. Card payments for the plan are taken by Creem, our payment provider (merchant of record), which receives the payer’s name, email, card and billing details.\nThe European Union and the United Kingdom recognise South Korea as protecting personal data adequately. Where a provider handles data in a country without such recognition, such as the United States, the transfer is covered by the European Commission’s standard contractual clauses with the UK addendum and, for Brazil, by the safeguards the LGPD allows, such as standard contractual clauses."
       },
       "share": {
         "title": "Who we share it with",
@@ -2224,7 +2237,7 @@
       },
       "plans": {
         "title": "Plans and payment",
-        "body": "Setting up is free, and a new salon can use every feature free for 7 days (one free trial per owner) without paying or giving a card. After that, using the features (queue, sales and the rest) needs an active plan, charged per salon per month at the price shown on our website, which depends on how many people sign in. Plans are paid in advance, switch on when the payment is received and do not renew by themselves. Paid months are not refunded, except where the law requires. If a plan or the free trial ends your data stays: you can still sign in, view it and export it."
+        "body": "Setting up is free, and a new salon can use every feature free for 7 days (one free trial per owner) without paying or giving a card. After that, using the features (queue, sales and the rest) needs an active plan, charged per salon per month at the price shown on our website, which depends on how many people sign in. Plans are paid in advance, switch on when the payment is received and do not renew by themselves. Paid months are not refunded, except where the law requires. If a plan or the free trial ends your data stays: you can still sign in, view it and export it. Card payments are processed by Creem as merchant of record."
       },
       "data": {
         "title": "Your data",
@@ -2349,7 +2362,8 @@
       "accounts": "Accounts",
       "plans": "Plans",
       "activity": "Activity",
-      "support": "Support"
+      "support": "Support",
+      "cards": "Card payments"
     },
     "overview": {
       "salons": "Salons",
@@ -2429,6 +2443,25 @@
       "aiAnswered": "AI answered",
       "assistantSwitch": "AI assistant answers first",
       "assistantHint": "The AI assistant answers new messages straight away and hands a conversation to you when it can’t solve it or someone asks for a person. Your own answer takes a conversation over."
+    },
+    "cards": {
+      "title": "Card payments (Creem)",
+      "hint": "Off: nobody sees Pay by card. Test: only platform admins, with Creem test cards. Live: every salon owner.",
+      "modes": {
+        "off": "Off",
+        "test": "Test",
+        "live": "Live"
+      },
+      "empty": "No card payments yet.",
+      "unmatched": "No salon matched",
+      "extra": "+{{count}} people",
+      "extra_one": "+{{count}} person",
+      "status": {
+        "pending": "Waiting",
+        "paid": "Paid",
+        "refunded": "Refunded",
+        "review": "To review"
+      }
     }
   },
   "profile": {
@@ -2498,7 +2531,7 @@
       },
       "payPlan": {
         "q": "How do I pay or switch on my plan?",
-        "a": "More → Plan & billing → choose 1, 3, 6 or 12 months → ask for the plan. Pay by bank transfer with your salon code as the reference, or with the card link shown there. The plan switches on when the payment arrives."
+        "a": "More → Plan & billing → choose 1, 3, 6 or 12 months. Pay by card and the plan switches on at once. Or pay by bank transfer with your salon code as the reference and tap “Ask to switch on”: the plan switches on when the payment arrives."
       },
       "planInactive": {
         "q": "Nothing saves, or my plan isn’t active",

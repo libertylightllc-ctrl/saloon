@@ -106,7 +106,7 @@ documents; takes a few days). Tell me when it is approved.
 ## H · Getting paid by salons (10 min)
 
 Salons see **How to pay** on their Plan page (website), pay you, and tap **Ask to switch on**; you get an email and
-switch their plan on. Card payments inside the app come later.
+switch their plan on. Paying by card with the plan switching on by itself: see H2 (Creem).
 
 1. **Be the platform owner on the live site.** Tell me the email you signed in with on www.saloqo.com; I add it once.
    You then have **More → Salons & plans**.
@@ -121,6 +121,31 @@ switch their plan on. Card payments inside the app come later.
    From then on every request emails the platform owner's sign-in address; requests made before that are emailed
    within 10 minutes.
 4. When the money arrives: More → Salons & plans → the salon → **Record payment**. Their plan starts at once.
+
+## H2 · Card payments with Creem (10 min, test first)
+
+The app is ready: Plan & billing → **Pay by card** → Creem's checkout → paid → the plan switches on by itself.
+It stays hidden until you switch it on in the console. Keys are secrets: **type them only into Supabase, never send
+them to me.**
+
+**Test mode (you only):**
+1. Creem dashboard (test mode) → **Settings → API Keys** → copy the test key.
+2. https://supabase.com/dashboard/project/djgxvfbsxnimzblpxcst/functions/secrets → **Add new secret** → Name
+   `CREEM_TEST_API_KEY` → Value: the key → **Save**.
+3. Creem dashboard (test mode) → **Developers → Webhooks → Add** → URL
+   `https://djgxvfbsxnimzblpxcst.supabase.co/functions/v1/creem-webhook` → events **checkout.completed** and
+   **refund.created** → save → copy its **signing secret**.
+4. Supabase secrets → **Add new secret** → Name `CREEM_TEST_WEBHOOK_SECRET` → Value: the signing secret → **Save**.
+5. www.saloqo.com → More → Salons & plans → **Card payments** → **Test**. Only platform owners now see Pay by card.
+6. Your own salon → More → Plan & billing → Pay by card → pay with Creem's test card → back on Plan & billing:
+   "Paid. Your plan is on until …". Console → Card payments shows it **Paid**.
+
+**Live (everyone):**
+1. Creem → **Switch to live** → API Keys → copy the live key → Supabase secret `CREEM_API_KEY`.
+2. Create the 4 live plan products (1, 3, 6, 12 months, USD 13.99 a month, one-time, tax added on top) — tell me
+   their product IDs (IDs are not secret) and I add them.
+3. Live webhook (same URL, same 2 events) → its signing secret → Supabase secret `CREEM_WEBHOOK_SECRET`.
+4. Console → Card payments → **Live**. Every salon owner now sees Pay by card.
 
 ## I · Privacy for the EU, the UK and Brazil (before signing up salons there)
 

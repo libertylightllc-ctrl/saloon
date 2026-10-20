@@ -838,7 +838,8 @@
     "invalid_booking_link": "Un enlace solo puede tener letras, números y guiones (3–40).",
     "link_taken": "Ese enlace ya está en uso. Prueba otro.",
     "too_late_to_cancel": "Ya es tarde para cancelar online. Llama al salón.",
-    "too_many_bookings": "Ya tienes 3 reservas próximas aquí. Cancela una o llama al salón."
+    "too_many_bookings": "Ya tienes 3 reservas próximas aquí. Cancela una o llama al salón.",
+    "card_unavailable": "El pago con tarjeta no está disponible ahora. Paga por transferencia bancaria."
   },
   "sales": {
     "title": "Ventas",
@@ -2056,7 +2057,7 @@
     "notePlaceholder": "p. ej., pago por transferencia bancaria",
     "requestAction": "Pedir la activación",
     "requestSent": "Solicitud enviada. Lo activaremos cuando se pague.",
-    "howToPay": "Pronto podrás pagar con tarjeta en la app. Por ahora te contactamos para cobrar por transferencia bancaria o con un enlace de pago con tarjeta, y luego activamos el plan.",
+    "howToPay": "Te contactamos para cobrar por transferencia bancaria o con un enlace de pago con tarjeta, y luego activamos el plan.",
     "banner": {
       "title": "Activa tu plan",
       "body": "La fila, las ventas y las demás funciones empiezan cuando tu plan esté activo: {{price}} al mes.",
@@ -2097,6 +2098,18 @@
       "bannerTitle_one": "Prueba gratis: queda {{count}} día",
       "bannerBody": "Todo está activo hasta el {{date}}. Activa tu plan cuando quieras para seguir después.",
       "bannerBodyStore": "Todo está activo hasta el {{date}}."
+    },
+    "card": {
+      "title": "Pagar con tarjeta",
+      "body": "Paga ahora con tarjeta de débito o crédito y tu plan se activa al momento. Se cobra en dólares estadounidenses.",
+      "total": "{{total}} + impuestos donde correspondan",
+      "action": "Pagar {{total}} con tarjeta",
+      "secure": "Pago seguro con Creem, nuestro proveedor de pagos.",
+      "test": "Modo de prueba: sin dinero real. Usa una tarjeta de prueba de Creem.",
+      "waiting": "Pago recibido. Activando tu plan…",
+      "slow": "Confirmando el pago. Esta página se actualiza sola; puede tardar un minuto.",
+      "done": "Pagado. Tu plan está activo hasta el {{date}}.",
+      "check": "Estamos revisando este pago y te contactaremos."
     }
   },
   "admin": {
@@ -2175,7 +2188,7 @@
       },
       "where": {
         "title": "Dónde se guarda",
-        "body": "Tus datos se almacenan en Supabase (base de datos, inicio de sesión y almacenamiento de archivos), en Corea del Sur. El sitio web y la app se entregan a través de Vercel desde servidores cercanos a ti. Los correos electrónicos pasan por nuestro proveedor de correo electrónico, las notificaciones a los teléfonos pasan por Expo y por Apple o Google, y Google gestiona “Continuar con Google”. Los mensajes de Ayuda y soporte los responde primero un asistente de IA operado para nosotros por Groq o por Anthropic (Claude); estos proveedores utilizan los mensajes únicamente para responderlos y no entrenan sus modelos con ellos. Estos proveedores tratan los datos solo por nuestra cuenta, conforme a condiciones de tratamiento de datos, y deben mantenerlos confidenciales y seguros.\nLa Unión Europea y el Reino Unido reconocen que Corea del Sur protege adecuadamente los datos personales. Cuando un proveedor trata datos en un país que no cuenta con ese reconocimiento, como Estados Unidos, la transferencia está amparada por las cláusulas contractuales tipo de la Comisión Europea junto con la adenda del Reino Unido y, en el caso de Brasil, por las garantías que permite la LGPD, como las cláusulas contractuales tipo."
+        "body": "Tus datos se almacenan en Supabase (base de datos, inicio de sesión y almacenamiento de archivos), en Corea del Sur. El sitio web y la app se entregan a través de Vercel desde servidores cercanos a ti. Los correos electrónicos pasan por nuestro proveedor de correo electrónico, las notificaciones a los teléfonos pasan por Expo y por Apple o Google, y Google gestiona “Continuar con Google”. Los mensajes de Ayuda y soporte los responde primero un asistente de IA operado para nosotros por Groq o por Anthropic (Claude); estos proveedores utilizan los mensajes únicamente para responderlos y no entrenan sus modelos con ellos. Estos proveedores tratan los datos solo por nuestra cuenta, conforme a condiciones de tratamiento de datos, y deben mantenerlos confidenciales y seguros. Los pagos del plan con tarjeta los cobra Creem, nuestro proveedor de pagos (comerciante registrado), que recibe el nombre, el correo, la tarjeta y los datos de facturación de quien paga.\nLa Unión Europea y el Reino Unido reconocen que Corea del Sur protege adecuadamente los datos personales. Cuando un proveedor trata datos en un país que no cuenta con ese reconocimiento, como Estados Unidos, la transferencia está amparada por las cláusulas contractuales tipo de la Comisión Europea junto con la adenda del Reino Unido y, en el caso de Brasil, por las garantías que permite la LGPD, como las cláusulas contractuales tipo."
       },
       "share": {
         "title": "Con quién lo compartimos",
@@ -2224,7 +2237,7 @@
       },
       "plans": {
         "title": "Planes y pagos",
-        "body": "Configurar es gratis, y un salón nuevo puede usar todas las funciones gratis durante 7 días (una prueba gratis por propietario) sin pagar ni dar una tarjeta. Después, usar las funciones (cola, ventas y lo demás) requiere un plan activo, cobrado por salón y por mes al precio que muestra nuestra web, que depende de cuántas personas inician sesión. Los planes se pagan por adelantado, se activan al recibir el pago y no se renuevan solos. Los meses pagados no se reembolsan, salvo donde la ley lo exija. Si un plan o la prueba gratis terminan, tus datos se conservan: puedes seguir iniciando sesión, verlos y exportarlos."
+        "body": "Configurar es gratis, y un salón nuevo puede usar todas las funciones gratis durante 7 días (una prueba gratis por propietario) sin pagar ni dar una tarjeta. Después, usar las funciones (cola, ventas y lo demás) requiere un plan activo, cobrado por salón y por mes al precio que muestra nuestra web, que depende de cuántas personas inician sesión. Los planes se pagan por adelantado, se activan al recibir el pago y no se renuevan solos. Los meses pagados no se reembolsan, salvo donde la ley lo exija. Si un plan o la prueba gratis terminan, tus datos se conservan: puedes seguir iniciando sesión, verlos y exportarlos. Los pagos con tarjeta los procesa Creem como comerciante registrado."
       },
       "data": {
         "title": "Tus datos",
@@ -2350,7 +2363,8 @@
       "accounts": "Cuentas",
       "plans": "Planes",
       "activity": "Actividad",
-      "support": "Soporte"
+      "support": "Soporte",
+      "cards": "Pagos con tarjeta"
     },
     "overview": {
       "salons": "Salones",
@@ -2430,6 +2444,25 @@
       "aiAnswered": "Respondida por la IA",
       "assistantSwitch": "El asistente de IA responde primero",
       "assistantHint": "El asistente de IA responde los mensajes nuevos al instante y te pasa la conversación cuando no puede resolverla o alguien pide hablar con una persona. Si respondes tú, te haces cargo de la conversación."
+    },
+    "cards": {
+      "title": "Pagos con tarjeta (Creem)",
+      "hint": "Desactivado: nadie ve Pagar con tarjeta. Prueba: solo administradores, con tarjetas de prueba de Creem. En vivo: todos los dueños de salones.",
+      "modes": {
+        "off": "Desactivado",
+        "test": "Prueba",
+        "live": "En vivo"
+      },
+      "empty": "Aún no hay pagos con tarjeta.",
+      "unmatched": "Ningún salón coincide",
+      "extra": "+{{count}} personas",
+      "extra_one": "+{{count}} persona",
+      "status": {
+        "pending": "En espera",
+        "paid": "Pagado",
+        "refunded": "Reembolsado",
+        "review": "Por revisar"
+      }
     }
   },
   "profile": {
@@ -2499,7 +2532,7 @@
       },
       "payPlan": {
         "q": "¿Cómo pago o activo mi plan?",
-        "a": "Más → Plan y facturación → elige 1, 3, 6 o 12 meses → “Pedir la activación”. Paga por transferencia bancaria con el código de tu salón como referencia, o con el enlace de pago con tarjeta que aparece ahí. El plan se activa cuando llega el pago."
+        "a": "Más → Plan y facturación → elige 1, 3, 6 o 12 meses. Paga con tarjeta y el plan se activa al momento. O paga por transferencia bancaria con el código de tu salón como referencia y toca “Pedir la activación”: el plan se activa cuando llega el pago."
       },
       "planInactive": {
         "q": "No se guarda nada, o mi plan no está activo",

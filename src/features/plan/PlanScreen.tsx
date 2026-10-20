@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from 'expo-router';
 import type { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,8 +12,9 @@ import { useDates } from '@/lib/useDates';
 import { semantic, spacing, useTheme } from '@/theme';
 import { Button, Card, FormError, HeaderBand, Icon, PillTabs, QueryState, Screen, StatusPill, Text, TextField, useToast, type IconName } from '@/ui';
 
-import { trialDaysLeft, usePlanStatus, useRequestPlan, type PlanStatus } from './api';
+import { trialDaysLeft, useIsPlatformAdmin, usePlanStatus, useRequestPlan, type PlanStatus } from './api';
 import { HowToPay } from './HowToPay';
+import { CardReturn, PayByCard } from './PayByCard';
 import { canOfferPlans } from './storePolicy';
 
 const MONTHS = [1, 3, 6, 12] as const;
@@ -49,6 +51,10 @@ export function PlanScreen() {
   const [note, setNote] = useState('');
   const owner = can(role, 'requestPlan') && canOfferPlans;
   const uae = isUae(business.country_code);
+  const admin = useIsPlatformAdmin().data === true;
+  // Back from Creem's checkout: saloqo.com/plan?paid=<the card payment>.
+  const { paid } = useLocalSearchParams<{ paid?: string }>();
+  const paidId = typeof paid === 'string' && /^[0-9a-f-]{36}$/.test(paid) ? paid : null;
 
   return (
     <Screen
@@ -102,8 +108,7 @@ export function PlanScreen() {
               </View>
             </Card>
 
-            {/* Pay first, then tell us (the request below). */}
-            {owner ? <HowToPay code={business.code} /> : null}
+            {owner && paidId ? <CardReturn businessId={business.id} paymentId={paidId} /> : null}
             {owner ? (
               <Card variant="outlined" style={styles.card}>
                 <Text variant="h4">{t(p.active && !p.trial ? 'plan.extendTitle' : 'plan.requestTitle')}</Text>
@@ -124,6 +129,14 @@ export function PlanScreen() {
                 <Text variant="bodyStrong" testID="plan-total">
                   {t('plan.total', { total: formatMoney(p.monthly_minor * months, p.currency) })}
                 </Text>
+              </Card>
+            ) : null}
+            {/* By card: paid and switched on at once. */}
+            {owner ? <PayByCard businessId={business.id} plan={p} months={months} admin={admin} /> : null}
+            {/* By bank transfer: pay first, then tell us (the request below). */}
+            {owner ? <HowToPay code={business.code} /> : null}
+            {owner ? (
+              <Card variant="outlined" style={styles.card}>
                 <TextField label={t('plan.note')} placeholder={t('plan.notePlaceholder')} value={note} onChangeText={setNote} testID="plan-note" />
                 <FormError error={request.error} />
                 <Button

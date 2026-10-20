@@ -637,6 +637,83 @@ export type Database = {
         };
         Relationships: [];
       };
+      card_payments: {
+        Row: {
+          amount_minor: number;
+          business_id: string | null;
+          checkout_id: string | null;
+          created_at: string;
+          created_by: string | null;
+          currency: string;
+          customer_email: string | null;
+          extra_people: number;
+          id: string;
+          mode: string;
+          months: number;
+          note: string | null;
+          order_id: string | null;
+          paid_at: string | null;
+          paid_currency: string | null;
+          paid_minor: number | null;
+          paid_until: string | null;
+          people: number;
+          refunded_at: string | null;
+          status: string;
+        };
+        Insert: {
+          amount_minor: number;
+          business_id?: string | null;
+          checkout_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          customer_email?: string | null;
+          extra_people?: number;
+          id?: string;
+          mode: string;
+          months: number;
+          note?: string | null;
+          order_id?: string | null;
+          paid_at?: string | null;
+          paid_currency?: string | null;
+          paid_minor?: number | null;
+          paid_until?: string | null;
+          people?: number;
+          refunded_at?: string | null;
+          status?: string;
+        };
+        Update: {
+          amount_minor?: number;
+          business_id?: string | null;
+          checkout_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          customer_email?: string | null;
+          extra_people?: number;
+          id?: string;
+          mode?: string;
+          months?: number;
+          note?: string | null;
+          order_id?: string | null;
+          paid_at?: string | null;
+          paid_currency?: string | null;
+          paid_minor?: number | null;
+          paid_until?: string | null;
+          people?: number;
+          refunded_at?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'card_payments_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       cash_closings: {
         Row: {
           approved_at: string | null;
@@ -2008,6 +2085,7 @@ export type Database = {
           bank_iban: string | null;
           bank_name: string | null;
           bank_swift: string | null;
+          card_payments: string;
           currency: string;
           extra_person_minor: number;
           id: boolean;
@@ -2026,6 +2104,7 @@ export type Database = {
           bank_iban?: string | null;
           bank_name?: string | null;
           bank_swift?: string | null;
+          card_payments?: string;
           currency?: string;
           extra_person_minor?: number;
           id?: boolean;
@@ -2044,6 +2123,7 @@ export type Database = {
           bank_iban?: string | null;
           bank_name?: string | null;
           bank_swift?: string | null;
+          card_payments?: string;
           currency?: string;
           extra_person_minor?: number;
           id?: boolean;
@@ -3489,6 +3569,26 @@ export type Database = {
           summary: string;
         }[];
       };
+      admin_card_payments: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          amount_minor: number;
+          code: string;
+          created_at: string;
+          customer_email: string;
+          extra_people: number;
+          id: string;
+          mode: string;
+          months: number;
+          note: string;
+          order_id: string;
+          paid_at: string;
+          paid_currency: string;
+          paid_minor: number;
+          salon: string;
+          status: string;
+        }[];
+      };
       admin_close_salon: { Args: { p_business: string; p_note: string }; Returns: undefined };
       admin_end_plan: { Args: { p_business: string; p_note: string }; Returns: undefined };
       admin_overview: { Args: Record<PropertyKey, never>; Returns: Json };
@@ -3547,6 +3647,7 @@ export type Database = {
           trial: boolean;
         }[];
       };
+      admin_set_card_payments: { Args: { p_mode: string }; Returns: undefined };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
       admin_set_platform_owner: { Args: { p_email: string; p_on: boolean }; Returns: undefined };
       admin_set_support_assistant: { Args: { p_on: boolean }; Returns: undefined };
@@ -3704,6 +3805,10 @@ export type Database = {
       business_today: { Args: { p_business: string }; Returns: string };
       can_use_branch: { Args: { p_branch: string }; Returns: boolean };
       cancel_appointment: { Args: { p_id: string; p_reason: string }; Returns: string };
+      card_checkout_opened: { Args: { p_checkout_id: string; p_id: string }; Returns: undefined };
+      card_checkout_start: { Args: { p_business: string; p_months: number }; Returns: Json };
+      card_payment_completed: { Args: { p: Json }; Returns: Json };
+      card_payment_refunded: { Args: { p: Json }; Returns: Json };
       cash_breakdown: {
         Args: { p_branch: string; p_date?: string };
         Returns: {
@@ -3715,6 +3820,19 @@ export type Database = {
       change_country: { Args: { p: Json }; Returns: undefined };
       check_in: { Args: { p_id: string }; Returns: undefined };
       check_pin: { Args: { p_member: string; p_pin: string }; Returns: boolean };
+      claim_pending_push: {
+        Args: { p_limit?: number };
+        Returns: {
+          body: string;
+          entity_id: string;
+          entity_type: string;
+          id: string;
+          member_id: string;
+          title: string;
+          tokens: string[];
+          type: string;
+        }[];
+      };
       claim_plan_alerts: {
         Args: Record<PropertyKey, never>;
         Returns: {

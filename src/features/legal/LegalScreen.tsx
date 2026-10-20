@@ -8,7 +8,7 @@ import { spacing } from '@/theme';
 import { Button, HeaderBand, Screen, Text } from '@/ui';
 
 /** The date the current wording took effect; change it with the wording. */
-export const LEGAL_UPDATED = '2026-10-18';
+export const LEGAL_UPDATED = '2026-10-20';
 
 const SECTIONS = {
   privacy: ['who', 'collect', 'use', 'basis', 'where', 'share', 'keep', 'rights', 'cookies', 'security', 'children', 'changes'],

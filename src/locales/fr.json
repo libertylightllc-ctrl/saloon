@@ -838,7 +838,8 @@
     "invalid_booking_link": "Un lien ne peut contenir que des lettres, des chiffres et des tirets (3–40).",
     "link_taken": "Ce lien est déjà pris. Essayez-en un autre.",
     "too_late_to_cancel": "Il est trop tard pour annuler en ligne. Appelez le salon.",
-    "too_many_bookings": "Vous avez déjà 3 réservations à venir ici. Annulez-en une ou appelez le salon."
+    "too_many_bookings": "Vous avez déjà 3 réservations à venir ici. Annulez-en une ou appelez le salon.",
+    "card_unavailable": "Le paiement par carte n’est pas disponible pour le moment. Payez par virement bancaire."
   },
   "sales": {
     "title": "Ventes",
@@ -2056,7 +2057,7 @@
     "notePlaceholder": "par ex. paiement par virement bancaire",
     "requestAction": "Demander l’activation",
     "requestSent": "Demande envoyée. Nous l’activerons dès réception du paiement.",
-    "howToPay": "Le paiement par carte dans l’app arrive bientôt. En attendant, nous vous contactons pour encaisser le paiement par virement bancaire ou par lien de paiement carte, puis nous activons l’abonnement.",
+    "howToPay": "Nous vous contactons pour le paiement par virement bancaire ou lien de paiement par carte, puis nous activons l’abonnement.",
     "banner": {
       "title": "Activer votre abonnement",
       "body": "La file, les ventes et les autres fonctions démarrent dès que votre abonnement est actif : {{price}} par mois.",
@@ -2097,6 +2098,18 @@
       "bannerTitle_one": "Essai gratuit : encore {{count}} jour",
       "bannerBody": "Tout est activé jusqu’au {{date}}. Activez votre abonnement quand vous voulez pour continuer ensuite.",
       "bannerBodyStore": "Tout est activé jusqu’au {{date}}."
+    },
+    "card": {
+      "title": "Payer par carte",
+      "body": "Payez maintenant par carte bancaire et votre abonnement s’active aussitôt. Débité en dollars américains.",
+      "total": "{{total}} + taxes le cas échéant",
+      "action": "Payer {{total}} par carte",
+      "secure": "Paiement sécurisé par Creem, notre prestataire de paiement.",
+      "test": "Mode test : pas d’argent réel. Utilisez une carte de test Creem.",
+      "waiting": "Paiement reçu. Activation de votre abonnement…",
+      "slow": "Confirmation du paiement. Cette page se met à jour seule ; cela peut prendre une minute.",
+      "done": "Payé. Votre abonnement est actif jusqu’au {{date}}.",
+      "check": "Nous vérifions ce paiement et vous contacterons."
     }
   },
   "admin": {
@@ -2175,7 +2188,7 @@
       },
       "where": {
         "title": "Où elles sont conservées",
-        "body": "Vos données sont stockées chez Supabase (base de données, connexion et stockage de fichiers) en Corée du Sud. Le site web et l’app sont distribués par Vercel depuis des serveurs proches de vous. Les e-mails passent par notre prestataire d’e-mail, les notifications vers les téléphones par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Les messages envoyés via Aide et assistance reçoivent d’abord une réponse d’un assistant IA exploité pour notre compte par Groq ou par Anthropic (Claude) ; ces prestataires n’utilisent les messages que pour y répondre et ne s’en servent pas pour entraîner leurs modèles. Ces prestataires traitent les données uniquement pour notre compte, conformément à des conditions de traitement des données, et sont tenus de les garder confidentielles et sécurisées.\nL’Union européenne et le Royaume-Uni reconnaissent que la Corée du Sud protège les données personnelles de manière adéquate. Lorsqu’un prestataire traite des données dans un pays qui ne bénéficie pas d’une telle reconnaissance, comme les États-Unis, le transfert est couvert par les clauses contractuelles types de la Commission européenne, assorties de l’addendum du Royaume-Uni, et, pour le Brésil, par les garanties que permet la LGPD, telles que les clauses contractuelles types."
+        "body": "Vos données sont stockées chez Supabase (base de données, connexion et stockage de fichiers) en Corée du Sud. Le site web et l’app sont distribués par Vercel depuis des serveurs proches de vous. Les e-mails passent par notre prestataire d’e-mail, les notifications vers les téléphones par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Les messages envoyés via Aide et assistance reçoivent d’abord une réponse d’un assistant IA exploité pour notre compte par Groq ou par Anthropic (Claude) ; ces prestataires n’utilisent les messages que pour y répondre et ne s’en servent pas pour entraîner leurs modèles. Ces prestataires traitent les données uniquement pour notre compte, conformément à des conditions de traitement des données, et sont tenus de les garder confidentielles et sécurisées. Les paiements de l’abonnement par carte sont encaissés par Creem, notre prestataire de paiement (marchand officiel), qui reçoit le nom, l’e-mail, la carte et les coordonnées de facturation du payeur.\nL’Union européenne et le Royaume-Uni reconnaissent que la Corée du Sud protège les données personnelles de manière adéquate. Lorsqu’un prestataire traite des données dans un pays qui ne bénéficie pas d’une telle reconnaissance, comme les États-Unis, le transfert est couvert par les clauses contractuelles types de la Commission européenne, assorties de l’addendum du Royaume-Uni, et, pour le Brésil, par les garanties que permet la LGPD, telles que les clauses contractuelles types."
       },
       "share": {
         "title": "Avec qui nous les partageons",
@@ -2224,7 +2237,7 @@
       },
       "plans": {
         "title": "Abonnements et paiement",
-        "body": "La configuration est gratuite, et un nouveau salon peut utiliser toutes les fonctions gratuitement pendant 7 jours (un essai gratuit par propriétaire) sans payer ni donner de carte. Ensuite, utiliser les fonctions (file d’attente, ventes et le reste) nécessite un abonnement actif, facturé par salon et par mois au prix affiché sur notre site, qui dépend du nombre de personnes qui se connectent. Les abonnements se paient d’avance, s’activent à réception du paiement et ne se renouvellent pas d’eux-mêmes. Les mois payés ne sont pas remboursés, sauf lorsque la loi l’exige. Si un abonnement ou l’essai gratuit se termine, vos données restent : vous pouvez toujours vous connecter, les consulter et les exporter."
+        "body": "La configuration est gratuite, et un nouveau salon peut utiliser toutes les fonctions gratuitement pendant 7 jours (un essai gratuit par propriétaire) sans payer ni donner de carte. Ensuite, utiliser les fonctions (file d’attente, ventes et le reste) nécessite un abonnement actif, facturé par salon et par mois au prix affiché sur notre site, qui dépend du nombre de personnes qui se connectent. Les abonnements se paient d’avance, s’activent à réception du paiement et ne se renouvellent pas d’eux-mêmes. Les mois payés ne sont pas remboursés, sauf lorsque la loi l’exige. Si un abonnement ou l’essai gratuit se termine, vos données restent : vous pouvez toujours vous connecter, les consulter et les exporter. Les paiements par carte sont traités par Creem en tant que marchand officiel."
       },
       "data": {
         "title": "Vos données",
@@ -2350,7 +2363,8 @@
       "accounts": "Comptes",
       "plans": "Abonnements",
       "activity": "Activité",
-      "support": "Assistance"
+      "support": "Assistance",
+      "cards": "Paiements par carte"
     },
     "overview": {
       "salons": "Salons",
@@ -2430,6 +2444,25 @@
       "aiAnswered": "Réponse de l’IA",
       "assistantSwitch": "L’assistant IA répond en premier",
       "assistantHint": "L’assistant IA répond tout de suite aux nouveaux messages et vous transmet une conversation lorsqu’il ne peut pas résoudre le problème ou qu’on demande à parler à une personne. Dès que vous répondez vous-même, vous prenez la main sur la conversation."
+    },
+    "cards": {
+      "title": "Paiements par carte (Creem)",
+      "hint": "Désactivé : personne ne voit Payer par carte. Test : administrateurs seulement, avec des cartes de test Creem. En direct : tous les propriétaires de salons.",
+      "modes": {
+        "off": "Désactivé",
+        "test": "Test",
+        "live": "En direct"
+      },
+      "empty": "Aucun paiement par carte pour l’instant.",
+      "unmatched": "Aucun salon correspondant",
+      "extra": "+{{count}} personnes",
+      "extra_one": "+{{count}} personne",
+      "status": {
+        "pending": "En attente",
+        "paid": "Payé",
+        "refunded": "Remboursé",
+        "review": "À vérifier"
+      }
     }
   },
   "profile": {
@@ -2499,7 +2532,7 @@
       },
       "payPlan": {
         "q": "Comment payer ou activer mon abonnement ?",
-        "a": "Plus → Abonnement et facturation → choisissez 1, 3, 6 ou 12 mois → « Demander l’activation ». Payez par virement bancaire avec le code de votre salon en référence, ou via le lien de paiement par carte affiché à cet endroit. L’abonnement s’active dès réception du paiement."
+        "a": "Plus → Abonnement et facturation → choisissez 1, 3, 6 ou 12 mois. Payez par carte et l’abonnement s’active aussitôt. Ou payez par virement bancaire avec le code de votre salon en référence et touchez « Demander l’activation » : l’abonnement s’active dès réception du paiement."
       },
       "planInactive": {
         "q": "Rien ne s’enregistre, ou mon abonnement n’est pas actif",
