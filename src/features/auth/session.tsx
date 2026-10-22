@@ -14,6 +14,7 @@ import { formatBps, setActiveCurrency } from '@/lib/money';
 import type { BranchRules, Role } from '@/lib/permissions';
 import { queryClient } from '@/lib/queryClient';
 import { forget } from './quickSwitch';
+import { useSiteCookie } from './siteCookie';
 import { registeredPushToken } from '@/features/notifications/pushToken';
 import { supabase } from '@/lib/supabase';
 
@@ -248,6 +249,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (taxChanged) redrawTexts();
   }, [taxChanged, taxName, taxIdLabel, taxRate]);
+
+  useSiteCookie(status);
 
   const value = useMemo<SessionValue>(() => {
     const settings = (loaded.branch?.settings ?? {}) as Record<string, unknown>;

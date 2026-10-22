@@ -36,7 +36,8 @@ confirmation before a plan is bought.
 
 ## Phase 4 — Google, speed, technical
 
-**4.1 approach (needs your OK before I build it):** keep the app as it is (single-page) and add pre-rendered
+**Built (22 Oct 2026), see DECISIONS:** a plain-HTML home page generated at deploy time (scripts/site/), not the
+app's screens pre-rendered, which would still have made phones download the whole app. **Original proposal, 4.1:** keep the app as it is (single-page) and add pre-rendered
 marketing pages: a small build step renders `/welcome` (and the language versions, 4.2) to real HTML with React
 Native Web's server rendering, served by Vercel at `/` for signed-out visitors (a Vercel rewrite plus a cookie the app
 sets on sign-in, so signed-in owners still land in the app). Switching the whole app to Expo's `static` output is the

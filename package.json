@@ -16,8 +16,8 @@
     "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
     "e2e": "playwright test",
     "test:db": "supabase test db",
-    "build:web": "node scripts/check-web-env.mjs && expo export -p web",
-    "build:web:local": "expo export -p web",
+    "build:web": "node scripts/check-web-env.mjs && expo export -p web && node scripts/site/build.mjs",
+    "build:web:local": "expo export -p web && node scripts/site/build.mjs",
     "serve:web": "node scripts/serve-web.mjs 8090"
   },
   "dependencies": {
@@ -90,7 +90,8 @@
     "preset": "jest-expo",
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",
-      "^lucide-react-native$": "<rootDir>/node_modules/lucide-react-native/dist/cjs/lucide-react-native.js"
+      "^lucide-react-native$": "<rootDir>/node_modules/lucide-react-native/dist/cjs/lucide-react-native.js",
+      "^lucide-react-native/icons/(.*)$": "<rootDir>/node_modules/lucide-react-native/dist/cjs/icons/$1.js"
     },
     "testPathIgnorePatterns": [
       "/node_modules/",

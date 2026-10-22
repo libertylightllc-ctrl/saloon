@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useRouter } from 'expo-router';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -12,6 +13,7 @@ import { GoogleButton } from '@/features/auth/GoogleButton';
 import { composePhone, PhoneField, phoneNumberValid } from '@/features/auth/PhoneField';
 import { SignUpDone } from '@/features/auth/SignUpDone';
 import { usePublicPrices } from '@/features/plan/api';
+import { track } from '@/lib/analytics';
 import { usePageMeta } from '@/lib/pageMeta';
 import { spacing } from '@/theme';
 import { Button, CheckRow, FormError, FormTextField, Text } from '@/ui';
@@ -42,7 +44,17 @@ export default function SignUp() {
       const phone = composePhone(v.phone);
       return signUpOwner(v.name, v.email, v.password, phone ? { phone, whatsappOk: v.whatsappOk } : undefined);
     },
+    onSuccess: (outcome) => {
+      if (outcome !== 'already_registered') track('signup_completed');
+    },
   });
+  // Analytics (brief 4.7): the first time the visitor types their name, email or password (the country code changes
+  // by itself, so it does not count).
+  const { dirtyFields } = form.formState;
+  const started = Boolean(dirtyFields.name || dirtyFields.email || dirtyFields.password);
+  useEffect(() => {
+    if (started) track('signup_started');
+  }, [started]);
   const submit = form.handleSubmit((values) => signUp.mutate(values));
   // The offer, under the title and again above the button (brief 3.1).
   const offer = t('auth.signUp.offer', { count: trialDays });

@@ -2,12 +2,43 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "npm ci",
-  "buildCommand": "node scripts/check-web-env.mjs && npx expo export -p web",
+  "buildCommand": "node scripts/check-web-env.mjs && npx expo export -p web && node scripts/site/build.mjs",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/:lang(ar|hi|ur|es|fr|pt)/",
+      "destination": "/:lang",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "source": "/",
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "sq_in"
+        }
+      ],
+      "destination": "/site/en.html"
+    },
+    {
+      "source": "/welcome",
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "sq_in"
+        }
+      ],
+      "destination": "/site/en.html"
+    },
+    {
+      "source": "/:lang(ar|hi|ur|es|fr|pt)",
+      "destination": "/site/:lang.html"
+    },
+    {
+      "source": "/((?!api/|_vercel/).*)",
+      "destination": "/spa.html"
     }
   ],
   "headers": [
@@ -51,6 +82,15 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/site/(img|fonts)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
         }
       ]
     }

@@ -5,6 +5,9 @@ import { createClient } from '@supabase/supabase-js';
 import Constants from 'expo-constants';
 import { AppState, Platform } from 'react-native';
 
+// First: it reads the kind of sign-in link in the address before the client below takes the details out.
+import './analytics';
+
 import type { Database, Json } from './database.types';
 
 const LOCAL_API_PORT = 54321;
