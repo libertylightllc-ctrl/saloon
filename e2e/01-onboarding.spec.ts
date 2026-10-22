@@ -6,20 +6,21 @@ test('fresh device → type → themed sign-in → owner sign-up → setup → e
   const email = `new-${uid()}@e2e.test`;
 
   await chooseType(page, mode);
-  // The sign-in is already in the chosen theme.
+  // The sign-in is already in the chosen theme, with no salon-type switch (a returning owner's salon has its type;
+  // website brief 1.6, 2026-10-22). Remembered across a reload.
   await expect(id(page, 'sign-in-submit')).toHaveCSS('background-color', THEME[mode].primaryAction);
-  // The switch on the sign-in re-themes; switching back restores it.
-  const other = mode === 'gents' ? 'ladies' : 'gents';
-  await id(page, `salon-type-${other}`).click();
-  await expect(id(page, 'sign-in-submit')).toHaveCSS('background-color', THEME[other].primaryAction);
-  await id(page, `salon-type-${mode}`).click();
-  await expect(id(page, 'sign-in-submit')).toHaveCSS('background-color', THEME[mode].primaryAction);
-
-  // Remembered across a reload.
+  await expect(id(page, 'salon-type-gents')).toHaveCount(0);
   await page.reload();
   await expect(id(page, 'sign-in-submit')).toHaveCSS('background-color', THEME[mode].primaryAction);
 
+  // Sign-up still offers the switch: it re-themes; switching back restores it. Back to sign-in from there.
   await id(page, 'link-sign-up').click();
+  const other = mode === 'gents' ? 'ladies' : 'gents';
+  await id(page, `salon-type-${other}`).click();
+  await expect(id(page, 'sign-up-submit')).toHaveCSS('background-color', THEME[other].primaryAction);
+  await id(page, `salon-type-${mode}`).click();
+  await expect(id(page, 'sign-up-submit')).toHaveCSS('background-color', THEME[mode].primaryAction);
+  await expect(id(page, 'sign-up-to-sign-in')).toBeVisible();
   await id(page, 'sign-up-submit').click();
   await expect(text(page, 'Required').first()).toBeVisible(); // validation before any request
   await field(page, 'name').fill('Test Owner');
