@@ -2,7 +2,7 @@
 -- the WhatsApp OK), saved or removed by the owner in setup, readable only by that owner and platform owners.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(9);
+select plan(11);
 
 -- Sign-ups: one with a number and the WhatsApp OK, one with a number only, one without.
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
@@ -22,6 +22,15 @@ select is((select row(phone, whatsapp_ok, whatsapp_ok_at is not null, source)::t
 select is((select row(phone, whatsapp_ok, whatsapp_ok_at is null)::text from owner_contacts
            where user_id = '00000000-0000-0000-0000-0000000045b1'), '(+919812345678,f,t)', 'a number without the OK: no time');
 select is((select count(*)::int from owner_contacts where user_id = '00000000-0000-0000-0000-0000000045c2'), 0, 'no number, nothing kept');
+
+-- Odd sign-up details never stop the sign-up: the OK is only a real "true".
+select lives_ok($$ insert into auth.users (id, instance_id, aud, role, email, encrypted_password, created_at, updated_at,
+                                           raw_app_meta_data, raw_user_meta_data)
+  values ('00000000-0000-0000-0000-0000000045d3', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+          'contact-d3@test.local', '', now(), now(), '{}', '{"phone":"+971501112233","whatsapp_ok":"maybe"}') $$,
+  'a sign-up with an odd WhatsApp OK still goes through');
+select is((select row(phone, whatsapp_ok)::text from owner_contacts where user_id = '00000000-0000-0000-0000-0000000045d3'),
+  '(+971501112233,f)', 'and keeps the number without the OK');
 
 -- Each owner reads only their own.
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000045b1","role":"authenticated"}', true);

@@ -17,18 +17,21 @@ create policy "platform admins read contacts" on public.owner_contacts for selec
 revoke all on public.owner_contacts from anon;
 revoke insert, update, delete on public.owner_contacts from authenticated;
 
--- The number given at sign-up (in the account's sign-up details) is kept when the account is created.
+-- The number given at sign-up (in the account's sign-up details) is kept when the account is created. Anything odd in
+-- those details is ignored, never an error: a sign-up must not fail because of the optional number.
 create function public.on_user_contact() returns trigger
 language plpgsql security definer set search_path = public as $$
 declare
   v_phone text := regexp_replace(coalesce(new.raw_user_meta_data ->> 'phone', ''), '[^0-9+]', '', 'g');
-  v_ok boolean := coalesce((new.raw_user_meta_data ->> 'whatsapp_ok')::boolean, false);
+  v_ok boolean := lower(coalesce(new.raw_user_meta_data ->> 'whatsapp_ok', '')) = 'true';
 begin
   if v_phone ~ '^\+[0-9]{7,15}$' then
     insert into owner_contacts (user_id, phone, whatsapp_ok, whatsapp_ok_at, source)
     values (new.id, v_phone, v_ok, case when v_ok then now() end, 'sign_up')
     on conflict (user_id) do nothing;
   end if;
+  return new;
+exception when others then
   return new;
 end;
 $$;
