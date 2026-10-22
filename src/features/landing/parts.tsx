@@ -4,7 +4,7 @@
  * Colours come from `brandPalette`: the home page wears Saloqo's own colours whichever salon look is picked.
  */
 import type { ReactNode } from 'react';
-import { Image, Pressable, StyleSheet, useWindowDimensions, View, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'react-native';
+import { Image, Linking, Platform, Pressable, StyleSheet, useWindowDimensions, View, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'react-native';
 import Svg, { Defs, Path, Pattern, RadialGradient, Rect, Stop } from 'react-native-svg';
 
 import { brandPalette as B, screenPadding, spacing } from '@/theme';
@@ -70,36 +70,60 @@ export function PhoneShot({ source, width, tilt = 0, style }: { source: ImageSou
   );
 }
 
-/** The page's buttons: a teal pill (the main way in) or a quiet outline, on navy or on light. */
+/**
+ * The page's buttons: a teal pill (the main way in), a quiet outline, a navy pill, or a plain text link on navy. With
+ * `href` it is a real link on the web (<a href>; external ones open in a new tab; brief 4.6), else a button.
+ */
 export function BrandButton({
   label,
   onPress,
   kind = 'teal',
   icon,
   testID,
+  href,
+  external,
+  small,
+  full,
 }: {
   label: string;
-  onPress: () => void;
-  kind?: 'teal' | 'outlineOnNavy' | 'navy';
+  onPress?: () => void;
+  kind?: 'teal' | 'outlineOnNavy' | 'navy' | 'textOnNavy' | 'whatsapp';
   icon?: IconName;
   testID?: string;
+  href?: string;
+  external?: boolean;
+  small?: boolean;
+  /** As wide as its row (the sticky bar). */
+  full?: boolean;
 }) {
   const look = {
     teal: { bg: B.teal, fg: B.navy, border: B.teal },
     navy: { bg: B.navy, fg: B.onNavy, border: B.navy },
     outlineOnNavy: { bg: 'transparent', fg: B.onNavy, border: B.navyLine },
+    textOnNavy: { bg: 'transparent', fg: B.tealSoft, border: 'transparent' },
+    whatsapp: { bg: B.whatsapp, fg: B.onNavy, border: B.whatsapp },
   }[kind];
+  const link = href && Platform.OS === 'web';
   return (
     <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
+      onPress={onPress ?? (href && !link ? () => void Linking.openURL(href) : undefined)}
+      accessibilityRole={href ? 'link' : 'button'}
+      accessibilityLabel={label}
       testID={testID}
-      style={({ pressed }) => [styles.button, { backgroundColor: look.bg, borderColor: look.border }, pressed && styles.pressed]}
+      {...(link ? ({ href, hrefAttrs: external ? { target: '_blank', rel: 'noopener noreferrer' } : undefined } as object) : {})}
+      style={({ pressed }) => [
+        styles.button,
+        small && styles.buttonSmall,
+        full && styles.buttonFull,
+        kind === 'textOnNavy' && styles.buttonText0,
+        { backgroundColor: look.bg, borderColor: look.border },
+        pressed && styles.pressed,
+      ]}
     >
-      <Text variant="bodyStrong" style={[styles.buttonText, { color: look.fg }]}>
+      <Text variant="bodyStrong" style={[styles.buttonText, small && styles.buttonTextSmall, { color: look.fg }]}>
         {label}
       </Text>
-      {icon ? <Icon name={icon} size={18} color={look.fg} /> : null}
+      {icon ? <Icon name={icon} size={small ? 16 : 18} color={look.fg} /> : null}
     </Pressable>
   );
 }
@@ -142,6 +166,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   buttonText: { fontSize: 16 },
+  // Small: the top bar's "Sign in" on a phone; still a 44-px tap target.
+  buttonSmall: { minHeight: 44, paddingHorizontal: spacing.md, borderWidth: 0 },
+  buttonTextSmall: { fontSize: 15 },
+  buttonText0: { paddingHorizontal: spacing.sm },
+  buttonFull: { alignSelf: 'stretch' },
   pressed: { opacity: 0.88, transform: [{ scale: 0.98 }] },
   eyebrow: {
     flexDirection: 'row',

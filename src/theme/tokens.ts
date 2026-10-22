@@ -162,6 +162,8 @@ export const brandPalette = {
   navyLine: 'rgba(255, 255, 255, 0.12)',
   violet: '#6C45F2',
   coral: '#F2777A',
+  /** WhatsApp buttons: WhatsApp's green, dark enough for white text (5:1). */
+  whatsapp: '#0E7A4F',
   phoneBezel: '#0E0D14',
   phoneIsland: '#000000',
   /** Floating phones and cards. */
