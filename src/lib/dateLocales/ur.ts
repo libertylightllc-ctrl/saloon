@@ -3,7 +3,7 @@
  * everything else from en-GB. Digits are made Latin by the formatter, per the design system.
  */
 import type { Day, Locale, Month } from 'date-fns';
-import { enGB } from 'date-fns/locale';
+import { enGB } from 'date-fns/locale/en-GB';
 
 const MONTHS = ['جنوری', 'فروری', 'مارچ', 'اپریل', 'مئی', 'جون', 'جولائی', 'اگست', 'ستمبر', 'اکتوبر', 'نومبر', 'دسمبر'];
 const DAYS = ['اتوار', 'پیر', 'منگل', 'بدھ', 'جمعرات', 'جمعہ', 'ہفتہ'];

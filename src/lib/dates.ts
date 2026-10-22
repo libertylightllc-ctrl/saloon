@@ -5,8 +5,16 @@
  *
  * Business dates are plain 'YYYY-MM-DD' strings, matching Postgres `date` columns.
  */
-import { format, type Locale } from 'date-fns';
-import { ar, enGB, es, fr, hi, ptBR } from 'date-fns/locale';
+// One file per function and language: the package's index would bring all of date-fns and its ~90 languages
+// (website brief 4.4).
+import type { Locale } from 'date-fns';
+import { format } from 'date-fns/format';
+import { ar } from 'date-fns/locale/ar';
+import { enGB } from 'date-fns/locale/en-GB';
+import { es } from 'date-fns/locale/es';
+import { fr } from 'date-fns/locale/fr';
+import { hi } from 'date-fns/locale/hi';
+import { ptBR } from 'date-fns/locale/pt-BR';
 import { formatInTimeZone, fromZonedTime } from 'date-fns-tz';
 
 import { ur } from './dateLocales/ur';

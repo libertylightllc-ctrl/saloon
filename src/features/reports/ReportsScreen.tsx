@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 
@@ -16,8 +16,10 @@ import { REPORT_TYPES, useOwnerControl, useReport, type ReportType } from './api
 import { ControlLine, useControlWords } from './ControlLine';
 import { buildReport, csvHeader, type ReportView } from './definitions';
 import { reportCsv, reportHtml } from './export';
-import { ReportChart } from './ReportChart';
 import { ReportTable } from './ReportTable';
+
+/** The chart library loads with the first report, not with the website (brief 4.4). */
+const ReportChart = lazy(() => import('./ReportChart').then((m) => ({ default: m.ReportChart })));
 
 /** Reports (owner and accountant): pick a report and a month; summary, chart, table; print, PDF and CSV. */
 export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
@@ -115,7 +117,9 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
                     <KpiCard key={k.key} label={k.label} value={k.value} delta={k.delta} style={styles.kpi} testID={`report-kpi-${k.key}`} />
                   ))}
                 </View>
-                <ReportChart chart={view.chart} />
+                <Suspense fallback={null}>
+                  <ReportChart chart={view.chart} />
+                </Suspense>
                 <ReportTable view={view} />
               </View>
             ) : null

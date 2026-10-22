@@ -1,6 +1,7 @@
 /** The salon's paid plan (docs/06): its status, the owner's request, and the platform owner's tools. */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { differenceInCalendarDays, parseISO } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns/differenceInCalendarDays';
+import { parseISO } from 'date-fns/parseISO';
 
 import { isCurrency, type CurrencyCode } from '@/lib/currencies';
 import { supabase } from '@/lib/supabase';

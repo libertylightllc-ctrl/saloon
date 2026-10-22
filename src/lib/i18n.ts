@@ -2,13 +2,8 @@ import 'intl-pluralrules'; // Hermes lacks full Intl.PluralRules; Arabic has six
 import { createInstance, type FormatterModule } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import ar from '@/locales/ar.json';
 import en from '@/locales/en.json';
-import es from '@/locales/es.json';
-import fr from '@/locales/fr.json';
-import hi from '@/locales/hi.json';
-import pt from '@/locales/pt.json';
-import ur from '@/locales/ur.json';
+import { loadWords } from '@/lib/locales';
 import { taxWordKey } from '@/features/tax/kinds';
 
 /** Native names are shown untranslated so people can always find their own language. */
@@ -30,15 +25,10 @@ export const DEFAULT_LANGUAGE: Language = 'en';
 /** The app's single i18next instance (also registered with react-i18next on init). */
 export const i18n = createInstance();
 
-export const resources = {
-  en: { translation: en },
-  ar: { translation: ar },
-  hi: { translation: hi },
-  ur: { translation: ur },
-  es: { translation: es },
-  fr: { translation: fr },
-  pt: { translation: pt },
-} as const;
+/** English is always there (every other language falls back to it); the others come from locales(.web).ts. */
+async function wordsOf(language: Language): Promise<typeof en> {
+  return language === 'en' ? en : loadWords(language);
+}
 
 export function isLanguage(value: unknown): value is Language {
   return LANGUAGES.some((l) => l.code === value);
@@ -106,7 +96,9 @@ export function redrawTexts() {
 }
 
 export async function initI18n(language: Language): Promise<typeof i18n> {
+  const words = await wordsOf(language);
   if (i18n.isInitialized) {
+    if (!i18n.hasResourceBundle(language, 'translation')) i18n.addResourceBundle(language, 'translation', words);
     await i18n.changeLanguage(language);
     return i18n;
   }
@@ -114,7 +106,7 @@ export async function initI18n(language: Language): Promise<typeof i18n> {
     .use(initReactI18next)
     .use(rtlIsolation)
     .init({
-      resources,
+      resources: { en: { translation: en }, [language]: { translation: words } },
       lng: language,
       fallbackLng: DEFAULT_LANGUAGE,
       interpolation: {
