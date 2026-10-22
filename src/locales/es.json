@@ -545,7 +545,8 @@
       "subtitle": "Para el dueño del salón. El personal tendrá sus propios accesos más adelante.",
       "action": "Crear cuenta",
       "haveAccount": "¿Ya tienes una cuenta?",
-      "signIn": "Inicia sesión"
+      "signIn": "Inicia sesión",
+      "offer": "{{count}} días gratis · Sin tarjeta · Nada se renueva solo"
     },
     "forgot": {
       "title": "Restablecer contraseña",
@@ -738,6 +739,14 @@
       "title": "Este correo ya tiene una cuenta",
       "body": "{{email}} ya está registrado. Inicia sesión, continúa con Google o restablece tu contraseña.",
       "reset": "Restablecer mi contraseña"
+    },
+    "phone": {
+      "label": "Número de móvil o WhatsApp (opcional)",
+      "hint": "Solo lo usaremos para ayudarte a configurar.",
+      "whatsappOk": "Acepto que me escribáis por WhatsApp sobre la configuración de Saloqo",
+      "code": "Prefijo {{code}}",
+      "pick": "Prefijo del país",
+      "search": "Buscar país"
     }
   },
   "setup": {
@@ -815,7 +824,8 @@
     "taxRate": "Escribe una tasa de 0 a 30, como 5 o 8.875",
     "timezone": "Usa un nombre de zona horaria como Europe/Madrid",
     "licence": "Solo letras, números y . / -",
-    "province": "Elige tu provincia"
+    "province": "Elige tu provincia",
+    "mobile": "Escribe el número: de 6 a 14 dígitos."
   },
   "errors": {
     "not_signed_in": "Tu sesión terminó. Vuelve a iniciar sesión.",
@@ -2252,7 +2262,7 @@
       },
       "collect": {
         "title": "Qué recopilamos",
-        "body": "• Tu cuenta: tu nombre, tu dirección de correo electrónico y tu contraseña (guardada solo como un hash seguro). Si continúas con Google, Google nos facilita tu nombre y tu dirección de correo electrónico.\n• Lo que introducen los salones: servicios y precios, ventas y recibos, gastos, proveedores y compras, stock, conteos de caja, nombres, teléfonos y visitas de los clientes, nombres, asistencia y pagos del personal, y documentos como licencias y fotos de recibos.\n• Este dispositivo: un token de notificaciones si permites las notificaciones. Tu idioma y tu inicio de sesión recordado se quedan en el dispositivo.\n• Desde dónde nos visitas: el sitio web deduce tu país a partir de tu conexión (dirección IP) para mostrarte tu idioma y tu precio. No se guarda.\n• Ayuda y soporte: los mensajes que nos envías, con tu salón, la versión de la app, tu dispositivo y la pantalla en la que estabas; si escribes sin iniciar sesión, el nombre y el correo que nos das. Se eliminan con tu cuenta o cuando lo pidas.\nNo usamos rastreadores publicitarios y nunca vendemos datos personales."
+        "body": "• Tu cuenta: tu nombre, tu dirección de correo electrónico y tu contraseña (guardada solo como un hash seguro). Si continúas con Google, Google nos facilita tu nombre y tu dirección de correo electrónico.\n• Si nos lo das: tu número de móvil o de WhatsApp, que usamos solo para ayudarte a configurar. Te escribimos por WhatsApp sobre la configuración solo si marcas la casilla, y guardamos cuándo lo hiciste. Pídenos cuando quieras que lo borremos.\n• Lo que introducen los salones: servicios y precios, ventas y recibos, gastos, proveedores y compras, stock, conteos de caja, nombres, teléfonos y visitas de los clientes, nombres, asistencia y pagos del personal, y documentos como licencias y fotos de recibos.\n• Este dispositivo: un token de notificaciones si permites las notificaciones. Tu idioma y tu inicio de sesión recordado se quedan en el dispositivo.\n• Desde dónde nos visitas: el sitio web deduce tu país a partir de tu conexión (dirección IP) para mostrarte tu idioma y tu precio. No se guarda.\n• Ayuda y soporte: los mensajes que nos envías, con tu salón, la versión de la app, tu dispositivo y la pantalla en la que estabas; si escribes sin iniciar sesión, el nombre y el correo que nos das. Se eliminan con tu cuenta o cuando lo pidas.\nNo usamos rastreadores publicitarios y nunca vendemos datos personales."
       },
       "use": {
         "title": "Cómo lo usamos",
@@ -2479,7 +2489,9 @@
       "line": "Alta: {{created}} · último inicio de sesión: {{last}}",
       "never": "nunca",
       "inactive": "Desactivada",
-      "unconfirmed": "Correo sin confirmar"
+      "unconfirmed": "Correo sin confirmar",
+      "phone": "Móvil {{phone}}",
+      "phoneOk": "Móvil {{phone}} · acepta WhatsApp desde el {{date}}"
     },
     "owners": {
       "title": "Dueños de la plataforma",

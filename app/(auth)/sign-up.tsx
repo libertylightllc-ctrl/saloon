@@ -1,32 +1,33 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useRouter } from 'expo-router';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
 import { signUpOwner } from '@/features/auth/api';
-import { SignUpDone } from '@/features/auth/SignUpDone';
 import { AuthShell } from '@/features/auth/AuthShell';
-import { spacing } from '@/theme';
-import { Button, FormError, FormTextField, Text } from '@/ui';
 import { GoogleButton } from '@/features/auth/GoogleButton';
+import { composePhone, PhoneField, phoneNumberValid } from '@/features/auth/PhoneField';
+import { SignUpDone } from '@/features/auth/SignUpDone';
 import { usePublicPrices } from '@/features/plan/api';
 import { usePageMeta } from '@/lib/pageMeta';
+import { spacing } from '@/theme';
+import { Button, CheckRow, FormError, FormTextField, Text } from '@/ui';
 
-const schema = z
-  .object({
-    name: z.string().trim().min(2, 'validation.name'),
-    email: z.string().trim().min(1, 'validation.required').email('validation.email'),
-    password: z.string().min(8, 'validation.passwordMin'),
-    confirm: z.string(),
-  })
-  .refine((v) => v.password === v.confirm, { message: 'validation.passwordMatch', path: ['confirm'] });
+const schema = z.object({
+  name: z.string().trim().min(2, 'validation.name'),
+  email: z.string().trim().min(1, 'validation.required').email('validation.email'),
+  // One password field with its show/hide eye (no "confirm"; website brief 3.2).
+  password: z.string().min(8, 'validation.passwordMin'),
+  phone: z.object({ dial: z.string(), number: z.string() }).refine((v) => phoneNumberValid(v.number), 'validation.mobile'),
+  whatsappOk: z.boolean(),
+});
 
 type Values = z.infer<typeof schema>;
 
-/** Owner account. Setting up the salon comes next (the session gate opens /setup). */
+/** Owner account. Setting up the salon comes next (the session gate opens /setup), with the salon type. */
 export default function SignUp() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -34,10 +35,17 @@ export default function SignUp() {
   usePageMeta(t('meta.signUp.title', { count: trialDays }), t('meta.signUp.description'));
   const form = useForm<Values>({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', email: '', password: '', confirm: '' },
+    defaultValues: { name: '', email: '', password: '', phone: { dial: '971', number: '' }, whatsappOk: false },
   });
-  const signUp = useMutation({ mutationFn: (v: Values) => signUpOwner(v.name, v.email, v.password) });
+  const signUp = useMutation({
+    mutationFn: (v: Values) => {
+      const phone = composePhone(v.phone);
+      return signUpOwner(v.name, v.email, v.password, phone ? { phone, whatsappOk: v.whatsappOk } : undefined);
+    },
+  });
   const submit = form.handleSubmit((values) => signUp.mutate(values));
+  // The offer, under the title and again above the button (brief 3.1).
+  const offer = t('auth.signUp.offer', { count: trialDays });
 
   // Back: where the visitor came from, else the home page (not sign-in; brief 1.4).
   const back = () => (router.canGoBack() ? router.back() : router.replace('/welcome'));
@@ -45,14 +53,14 @@ export default function SignUp() {
   // No session yet (email confirmation on): "check your inbox", or this address already has an account.
   if (signUp.data === 'check_email' || signUp.data === 'already_registered') {
     return (
-      <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack={back}>
+      <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack={back} panel="signUp">
         <SignUpDone outcome={signUp.data} email={form.getValues('email').trim().toLowerCase()} />
       </AuthShell>
     );
   }
 
   return (
-    <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack={back} typeSwitch>
+    <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} offer={offer} onBack={back} panel="signUp">
       <View style={styles.form}>
         <GoogleButton />
         <FormTextField control={form.control} name="name" label={t('auth.fields.yourName')} autoComplete="name" />
@@ -72,16 +80,33 @@ export default function SignUp() {
           hint={t('auth.fields.passwordHint')}
           secureTextEntry
           autoComplete="new-password"
-        />
-        <FormTextField
-          control={form.control}
-          name="confirm"
-          label={t('auth.fields.confirmPassword')}
-          secureTextEntry
-          autoComplete="new-password"
           onSubmitEditing={submit}
         />
+        <Controller
+          control={form.control}
+          name="phone"
+          render={({ field, fieldState }) => (
+            <PhoneField
+              value={field.value}
+              onChange={field.onChange}
+              label={t('auth.phone.label')}
+              hint={t('auth.phone.hint')}
+              error={fieldState.error?.message ? t(fieldState.error.message as 'validation.mobile') : undefined}
+              testID="field-phone"
+            />
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="whatsappOk"
+          render={({ field }) => (
+            <CheckRow label={t('auth.phone.whatsappOk')} value={field.value} onChange={field.onChange} testID="sign-up-whatsapp-ok" />
+          )}
+        />
         <FormError error={signUp.error} />
+        <Text variant="small" color="textSecondary" align="center" testID="sign-up-offer-small">
+          {offer}
+        </Text>
         <Button label={t('auth.signUp.action')} onPress={submit} loading={signUp.isPending} testID="sign-up-submit" />
         <View style={styles.haveAccount}>
           <Text color="textSecondary">{t('auth.signUp.haveAccount')}</Text>
@@ -93,8 +118,12 @@ export default function SignUp() {
           {t('legal.agree')}
         </Text>
         <View style={styles.legal}>
-          <Button variant="ghost" size="sm" label={t('legal.terms.title')} onPress={() => router.push('/terms')} testID="sign-up-terms" />
-          <Button variant="ghost" size="sm" label={t('legal.privacy.title')} onPress={() => router.push('/privacy')} testID="sign-up-privacy" />
+          <Link href="/terms" asChild>
+            <Button variant="ghost" size="sm" label={t('legal.terms.title')} testID="sign-up-terms" />
+          </Link>
+          <Link href="/privacy" asChild>
+            <Button variant="ghost" size="sm" label={t('legal.privacy.title')} testID="sign-up-privacy" />
+          </Link>
         </View>
       </View>
     </AuthShell>

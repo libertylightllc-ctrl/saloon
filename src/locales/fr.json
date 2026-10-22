@@ -545,7 +545,8 @@
       "subtitle": "Pour le propriétaire du salon. Les employés recevront leurs propres accès plus tard.",
       "action": "Créer le compte",
       "haveAccount": "Vous avez déjà un compte ?",
-      "signIn": "Se connecter"
+      "signIn": "Se connecter",
+      "offer": "{{count}} jours gratuits · Sans carte · Rien ne se renouvelle tout seul"
     },
     "forgot": {
       "title": "Réinitialiser le mot de passe",
@@ -738,6 +739,14 @@
       "title": "Cet e-mail a déjà un compte",
       "body": "{{email}} est déjà inscrit. Connectez-vous, continuez avec Google ou réinitialisez votre mot de passe.",
       "reset": "Réinitialiser mon mot de passe"
+    },
+    "phone": {
+      "label": "Numéro de mobile ou WhatsApp (facultatif)",
+      "hint": "Nous ne l’utiliserons que pour vous aider à démarrer.",
+      "whatsappOk": "J’accepte d’être contacté sur WhatsApp pour démarrer avec Saloqo",
+      "code": "Indicatif {{code}}",
+      "pick": "Indicatif du pays",
+      "search": "Rechercher un pays"
     }
   },
   "setup": {
@@ -815,7 +824,8 @@
     "taxRate": "Saisissez un taux de 0 à 30, comme 5 ou 8.875",
     "timezone": "Utilisez un nom de fuseau horaire comme Europe/Paris",
     "licence": "Lettres, chiffres et . / - uniquement",
-    "province": "Choisissez votre province"
+    "province": "Choisissez votre province",
+    "mobile": "Saisissez le numéro : 6 à 14 chiffres."
   },
   "errors": {
     "not_signed_in": "Votre session a expiré. Reconnectez-vous.",
@@ -2252,7 +2262,7 @@
       },
       "collect": {
         "title": "Ce que nous collectons",
-        "body": "• Votre compte : votre nom, votre adresse e-mail et votre mot de passe (conservé uniquement sous forme de hachage sécurisé). Si vous continuez avec Google, Google nous transmet votre nom et votre adresse e-mail.\n• Ce que les salons saisissent : services et prix, ventes et reçus, dépenses, fournisseurs et achats, stock, comptages de caisse, noms, numéros de téléphone et visites des clients, noms, présences et paie du personnel, ainsi que des documents tels que des licences et des photos de reçus.\n• Cet appareil : un jeton de notification si vous autorisez les notifications. Votre langue et votre connexion mémorisée restent sur l’appareil.\n• D’où vous nous consultez : le site déduit votre pays de votre connexion (adresse IP) pour afficher votre langue et votre prix. Il n’est pas conservé.\n• Aide et assistance : les messages que vous nous envoyez, avec votre salon, la version de l’application, votre appareil et l’écran où vous étiez ; si vous écrivez sans être connecté, le nom et l’e-mail que vous indiquez. Ils sont supprimés avec votre compte ou à votre demande.\nNous n’utilisons aucun traceur publicitaire et nous ne vendons jamais de données personnelles."
+        "body": "• Votre compte : votre nom, votre adresse e-mail et votre mot de passe (conservé uniquement sous forme de hachage sécurisé). Si vous continuez avec Google, Google nous transmet votre nom et votre adresse e-mail.\n• Si vous le donnez : votre numéro de mobile ou WhatsApp, utilisé uniquement pour vous aider à démarrer. Nous vous écrivons sur WhatsApp à ce sujet seulement si vous cochez la case, et nous gardons la date de votre accord. Demandez-nous à tout moment de le supprimer.\n• Ce que les salons saisissent : services et prix, ventes et reçus, dépenses, fournisseurs et achats, stock, comptages de caisse, noms, numéros de téléphone et visites des clients, noms, présences et paie du personnel, ainsi que des documents tels que des licences et des photos de reçus.\n• Cet appareil : un jeton de notification si vous autorisez les notifications. Votre langue et votre connexion mémorisée restent sur l’appareil.\n• D’où vous nous consultez : le site déduit votre pays de votre connexion (adresse IP) pour afficher votre langue et votre prix. Il n’est pas conservé.\n• Aide et assistance : les messages que vous nous envoyez, avec votre salon, la version de l’application, votre appareil et l’écran où vous étiez ; si vous écrivez sans être connecté, le nom et l’e-mail que vous indiquez. Ils sont supprimés avec votre compte ou à votre demande.\nNous n’utilisons aucun traceur publicitaire et nous ne vendons jamais de données personnelles."
       },
       "use": {
         "title": "Comment nous les utilisons",
@@ -2479,7 +2489,9 @@
       "line": "Inscrit le {{created}} · dernière connexion : {{last}}",
       "never": "jamais",
       "inactive": "Désactivé",
-      "unconfirmed": "E-mail non confirmé"
+      "unconfirmed": "E-mail non confirmé",
+      "phone": "Mobile {{phone}}",
+      "phoneOk": "Mobile {{phone}} · accord WhatsApp depuis le {{date}}"
     },
     "owners": {
       "title": "Propriétaires de la plateforme",

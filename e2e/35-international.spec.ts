@@ -31,7 +31,6 @@ test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt
   await field(page, 'name').fill('Nia Owner');
   await field(page, 'email').fill(email);
   await field(page, 'password').fill('Owner1234!');
-  await field(page, 'confirm').fill('Owner1234!');
   await id(page, 'sign-up-submit').click();
 
   await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });

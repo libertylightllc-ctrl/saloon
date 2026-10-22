@@ -545,7 +545,8 @@
       "subtitle": "For the salon owner. Staff get their own logins later.",
       "action": "Create account",
       "haveAccount": "Already have an account?",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "offer": "{{count}} days free · No card needed · Nothing renews by itself"
     },
     "forgot": {
       "title": "Reset password",
@@ -738,6 +739,14 @@
       "title": "This email already has an account",
       "body": "{{email}} is already signed up. Sign in, continue with Google, or reset your password.",
       "reset": "Reset my password"
+    },
+    "phone": {
+      "label": "Mobile or WhatsApp number (optional)",
+      "hint": "We’ll only use it to help you set up.",
+      "whatsappOk": "OK to message me on WhatsApp about setting up Saloqo",
+      "code": "Country code {{code}}",
+      "pick": "Country code",
+      "search": "Search countries"
     }
   },
   "setup": {
@@ -815,7 +824,8 @@
     "taxRate": "Enter a rate from 0 to 30, like 5 or 8.875",
     "timezone": "Use a time zone name like Europe/London",
     "licence": "Letters, numbers and . / - only",
-    "province": "Pick your province"
+    "province": "Pick your province",
+    "mobile": "Enter the number: 6 to 14 digits."
   },
   "errors": {
     "not_signed_in": "Your session ended. Please sign in again.",
@@ -2252,7 +2262,7 @@
       },
       "collect": {
         "title": "What we collect",
-        "body": "• Your account: your name, email address and password (kept only as a secure hash). If you continue with Google, Google gives us your name and email address.\n• What salons enter: services and prices, sales and receipts, expenses, suppliers and purchases, stock, cash counts, customers’ names, phone numbers and visits, staff names, attendance and pay, and documents such as licences and photos of receipts.\n• This device: a notification token if you allow notifications. Your language and remembered sign-in stay on the device.\n• Where you visit from: the website works out the country you are in from your connection (IP address) to show your language and price. It is not stored.\n• Help & support: the messages you send us, with your salon, the app version, your device and the screen you were on; if you write without signing in, the name and email you give. They are deleted with your account, or when you ask.\nWe use no advertising trackers and we never sell personal data."
+        "body": "• Your account: your name, email address and password (kept only as a secure hash). If you continue with Google, Google gives us your name and email address.\n• If you give it: your mobile or WhatsApp number, which we use only to help you set up. We message you on WhatsApp about setting up only if you tick the box for it, and we keep when you did. Ask us any time to remove it.\n• What salons enter: services and prices, sales and receipts, expenses, suppliers and purchases, stock, cash counts, customers’ names, phone numbers and visits, staff names, attendance and pay, and documents such as licences and photos of receipts.\n• This device: a notification token if you allow notifications. Your language and remembered sign-in stay on the device.\n• Where you visit from: the website works out the country you are in from your connection (IP address) to show your language and price. It is not stored.\n• Help & support: the messages you send us, with your salon, the app version, your device and the screen you were on; if you write without signing in, the name and email you give. They are deleted with your account, or when you ask.\nWe use no advertising trackers and we never sell personal data."
       },
       "use": {
         "title": "How we use it",
@@ -2478,7 +2488,9 @@
       "line": "Joined {{created}} · last signed in {{last}}",
       "never": "never",
       "inactive": "Switched off",
-      "unconfirmed": "Email not confirmed"
+      "unconfirmed": "Email not confirmed",
+      "phone": "Mobile {{phone}}",
+      "phoneOk": "Mobile {{phone}} · OK to WhatsApp since {{date}}"
     },
     "owners": {
       "title": "Platform owners",

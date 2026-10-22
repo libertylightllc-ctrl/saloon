@@ -62,6 +62,10 @@ export type Account = {
   confirmed: boolean;
   provider: string;
   platform_owner: boolean;
+  /** The owner's mobile / WhatsApp number from sign-up or setup, and whether (and when) they said OK to WhatsApp. */
+  phone: string | null;
+  whatsapp_ok: boolean;
+  whatsapp_ok_at: string | null;
 };
 
 export function useAccounts() {

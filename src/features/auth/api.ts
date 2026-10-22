@@ -58,11 +58,25 @@ export function signUpOutcome(data: { session: unknown; user: { identities?: unk
   return 'check_email';
 }
 
-export async function signUpOwner(name: string, email: string, password: string): Promise<SignUpOutcome> {
+/**
+ * `contact`: the optional mobile / WhatsApp number ("+971501234567") and the WhatsApp OK (website brief 3.3); the
+ * database keeps them for the owner when the account is created (owner_contacts).
+ */
+export async function signUpOwner(
+  name: string,
+  email: string,
+  password: string,
+  contact?: { phone: string; whatsappOk: boolean },
+): Promise<SignUpOutcome> {
   const { data, error } = await supabase.auth.signUp({
     email: email.trim().toLowerCase(),
     password,
-    options: { data: { display_name: name.trim() } },
+    options: {
+      data: {
+        display_name: name.trim(),
+        ...(contact?.phone ? { phone: contact.phone, whatsapp_ok: contact.whatsappOk } : {}),
+      },
+    },
   });
   if (error) raise(error);
   return signUpOutcome(data);

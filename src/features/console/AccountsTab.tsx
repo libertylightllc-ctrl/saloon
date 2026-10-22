@@ -98,6 +98,13 @@ export function AccountsTab() {
                     .filter(Boolean)
                     .join(' · '),
                   t('console.accounts.line', { created: dates.at(a.created_at, ZONE, 'd MMM yyyy'), last: when(a.last_sign_in_at) }),
+                  ...(a.phone
+                    ? [
+                        a.whatsapp_ok && a.whatsapp_ok_at
+                          ? t('console.accounts.phoneOk', { phone: a.phone, date: dates.at(a.whatsapp_ok_at, ZONE, 'd MMM yyyy') })
+                          : t('console.accounts.phone', { phone: a.phone }),
+                      ]
+                    : []),
                 ]}
                 badges={
                   a.platform_owner || a.active === false || a.provider !== 'email' || !a.confirmed ? (

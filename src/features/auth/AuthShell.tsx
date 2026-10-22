@@ -11,8 +11,10 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 're
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { brand } from '@/config/brand';
+import { site } from '@/config/site';
 import { ContactButton } from '@/features/landing/ContactButton';
 import { Band, NavyBackdrop, PhoneShot, Tick, useLandingLayout } from '@/features/landing/parts';
+import { usePublicPrices } from '@/features/plan/api';
 import { LanguageButton } from '@/features/settings/LanguageSheet';
 import { brandPalette as B, spacing, useThemeMode, type Mode } from '@/theme';
 import { BackButton, BrandMark, Chip, OnBandContext, Text } from '@/ui';
@@ -67,29 +69,58 @@ function TopBar({ onBack }: { onBack?: (() => void) | true }) {
 }
 
 /** Computer: what Saloqo is, beside the form, with the real app in the picked look. */
-function BrandPanel({ onBack }: { onBack?: (() => void) | true }) {
+function BrandPanel({ onBack, panel }: { onBack?: (() => void) | true; panel: 'signIn' | 'signUp' }) {
   const { t } = useTranslation();
   const { mode } = useThemeMode();
   const insets = useSafeAreaInsets();
+  const trialDays = usePublicPrices().data?.trial_days ?? 0;
+  const quote = site.testimonials[0];
   return (
     <View style={[styles.panel, { paddingTop: insets.top + spacing['2xl'] }]}>
       <NavyBackdrop glowAt={['60%', '70%']} />
       <TopBar onBack={onBack} />
-      <View style={styles.panelBody}>
-        <Text variant="section" style={styles.white}>
-          {t('auth.landing.headline')}
-        </Text>
-        <View style={styles.points}>
-          {POINTS.map((k) => (
-            <View key={k} style={styles.point}>
-              <Tick size={24} />
-              <Text variant="h4" style={styles.white}>
-                {t(`auth.landing.owners.items.${k}`)}
+      {panel === 'signUp' ? (
+        // Sign-up: the free trial, the data line and one real customer's words when there are some (brief 3.6).
+        <View style={styles.panelBody} testID="auth-panel-sign-up">
+          <Text variant="section" style={styles.white}>
+            {trialDays > 0 ? t('auth.landing.start', { count: trialDays }) : t('auth.landing.headline')}
+          </Text>
+          <View style={styles.points}>
+            {[t('auth.landing.noCard'), t('auth.landing.trust.noRenew'), t('auth.landing.trust.dataYours')].map((line) => (
+              <View key={line} style={styles.point}>
+                <Tick size={24} />
+                <Text variant="h4" style={styles.white}>
+                  {line}
+                </Text>
+              </View>
+            ))}
+          </View>
+          {quote ? (
+            <View style={styles.quote}>
+              <Text variant="lead" style={styles.white}>{`“${quote.quote}”`}</Text>
+              <Text variant="small" style={styles.whiteMuted}>
+                {[quote.name, quote.salon, quote.city].filter(Boolean).join(' · ')}
               </Text>
             </View>
-          ))}
+          ) : null}
         </View>
-      </View>
+      ) : (
+        <View style={styles.panelBody}>
+          <Text variant="section" style={styles.white}>
+            {t('auth.landing.headline')}
+          </Text>
+          <View style={styles.points}>
+            {POINTS.map((k) => (
+              <View key={k} style={styles.point}>
+                <Tick size={24} />
+                <Text variant="h4" style={styles.white}>
+                  {t(`auth.landing.owners.items.${k}`)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
       <View style={styles.panelShot}>
         <PhoneShot source={SHOT[mode]} width={250} tilt={-4} />
       </View>
@@ -102,10 +133,16 @@ export function AuthShell({
   subtitle,
   onBack,
   typeSwitch = false,
+  offer,
+  panel = 'signIn',
   children,
 }: {
   title: string;
   subtitle?: string;
+  /** Sign-up: "7 days free · No card needed · Nothing renews by itself" under the title (brief 3.1). */
+  offer?: string;
+  /** What the computer's side panel says: the app (sign-in) or the free trial (sign-up). */
+  panel?: 'signIn' | 'signUp';
   onBack?: (() => void) | true;
   /** Gents / Ladies above the form: sign-up only (a returning owner's salon already has its type; brief 1.6). */
   typeSwitch?: boolean;
@@ -123,6 +160,11 @@ export function AuthShell({
             {title}
           </Text>
           {subtitle ? <Text style={styles.inkMuted}>{subtitle}</Text> : null}
+          {offer ? (
+            <Text variant="bodyStrong" style={styles.tealDeep} testID="auth-offer">
+              {offer}
+            </Text>
+          ) : null}
         </View>
       ) : null}
       {typeSwitch ? <SalonTypeSwitch /> : null}
@@ -138,7 +180,7 @@ export function AuthShell({
     <View style={styles.root}>
       <StatusBar style="light" />
       <KeyboardAvoidingView style={wide ? styles.row : styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        {wide ? <BrandPanel onBack={onBack} /> : null}
+        {wide ? <BrandPanel onBack={onBack} panel={panel} /> : null}
         <ScrollView style={styles.flex} contentContainerStyle={styles.grow} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           {wide ? (
             <View style={[styles.side, { paddingTop: insets.top + spacing['4xl'], paddingBottom: insets.bottom + spacing['4xl'] }]}>{card}</View>
@@ -155,6 +197,11 @@ export function AuthShell({
                     {subtitle ? (
                       <Text align="center" style={styles.whiteMuted}>
                         {subtitle}
+                      </Text>
+                    ) : null}
+                    {offer ? (
+                      <Text variant="bodyStrong" align="center" style={styles.teal} testID="auth-offer">
+                        {offer}
                       </Text>
                     ) : null}
                   </View>
@@ -178,6 +225,9 @@ const styles = StyleSheet.create({
   whiteMuted: { color: B.onNavyMuted },
   ink: { color: B.ink },
   inkMuted: { color: B.inkMuted },
+  teal: { color: B.teal },
+  tealDeep: { color: B.tealDeep },
+  quote: { gap: spacing.sm, padding: spacing.xl, borderRadius: 20, backgroundColor: B.navyRaised, borderWidth: 1, borderColor: B.navyLine },
   switch: { flexDirection: 'row', justifyContent: 'center', gap: spacing.sm, flexWrap: 'wrap' },
   topBar: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   lockup: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: spacing.sm },

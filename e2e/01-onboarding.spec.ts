@@ -13,20 +13,19 @@ test('fresh device → type → themed sign-in → owner sign-up → setup → e
   await page.reload();
   await expect(id(page, 'sign-in-submit')).toHaveCSS('background-color', THEME[mode].primaryAction);
 
-  // Sign-up still offers the switch: it re-themes; switching back restores it. Back to sign-in from there.
+  // Sign-up: no salon-type switch either (setup asks it, from the type picked on the home page; brief 3.5); one
+  // password field (brief 3.2); the offer under the title and above the button (brief 3.1).
   await id(page, 'link-sign-up').click();
-  const other = mode === 'gents' ? 'ladies' : 'gents';
-  await id(page, `salon-type-${other}`).click();
-  await expect(id(page, 'sign-up-submit')).toHaveCSS('background-color', THEME[other].primaryAction);
-  await id(page, `salon-type-${mode}`).click();
-  await expect(id(page, 'sign-up-submit')).toHaveCSS('background-color', THEME[mode].primaryAction);
+  await expect(id(page, 'salon-type-gents')).toHaveCount(0);
+  await expect(field(page, 'confirm')).toHaveCount(0);
+  await expect(id(page, 'auth-offer')).toHaveText('7 days free · No card needed · Nothing renews by itself');
+  await expect(id(page, 'sign-up-offer-small')).toHaveText('7 days free · No card needed · Nothing renews by itself');
   await expect(id(page, 'sign-up-to-sign-in')).toBeVisible();
   await id(page, 'sign-up-submit').click();
   await expect(text(page, 'Required').first()).toBeVisible(); // validation before any request
   await field(page, 'name').fill('Test Owner');
   await field(page, 'email').fill(email);
   await field(page, 'password').fill('Owner1234!');
-  await field(page, 'confirm').fill('Owner1234!');
   await id(page, 'sign-up-submit').click();
 
   // Setup wizard: mode is pre-selected from the device choice.

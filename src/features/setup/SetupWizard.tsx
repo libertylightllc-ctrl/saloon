@@ -11,6 +11,7 @@ import { useSalonType } from '@/features/auth/salonType';
 import { useSession } from '@/features/auth/session';
 import { useIsPlatformAdmin } from '@/features/plan/api';
 import { TaxFields } from '@/features/tax/TaxFields';
+import { composePhone, phoneNumberValid } from '@/features/auth/PhoneField';
 import { checkProvince, checkSecondTax, secondTaxPayload, taxShape, trnValid, useTaxWords } from '@/features/tax/taxForm';
 import { isUae } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
@@ -31,6 +32,7 @@ import {
 } from '@/ui';
 
 import { CountryStep, countryDefaults, guessCountry } from './CountryStep';
+import { SetupContact, useHasContact } from './SetupContact';
 import { ModeCard } from './ModeCard';
 
 /** "Asia/Dubai", "America/Argentina/Buenos_Aires", "UTC"; the server checks it is a real one. */
@@ -51,6 +53,8 @@ const schema = z
     vat: z.enum(['off', 'on']),
     ...taxShape,
     openingCash: z.number().int().min(0).nullable(),
+    ownerPhone: z.object({ dial: z.string(), number: z.string() }).refine((v) => phoneNumberValid(v.number), 'validation.mobile'),
+    whatsappOk: z.boolean(),
   })
   .refine((v) => v.vat === 'off' || !isUae(v.country) || trnValid(v.trn, true), { message: 'validation.trn', path: ['trn'] })
   .refine((v) => v.vat === 'off' || isUae(v.country) || trnValid(v.trn, false), { message: 'validation.taxNumber', path: ['trn'] })
@@ -63,7 +67,7 @@ const schema = z
 type Values = z.infer<typeof schema>;
 
 const STEPS: { key: 'business' | 'country' | 'mode' | 'branch' | 'tax'; fields: FieldPath<Values>[] }[] = [
-  { key: 'business', fields: ['businessName', 'ownerName'] },
+  { key: 'business', fields: ['businessName', 'ownerName', 'ownerPhone'] },
   { key: 'country', fields: ['country', 'currency', 'timezone'] },
   { key: 'mode', fields: ['mode'] },
   { key: 'branch', fields: ['branchName', 'address', 'phone', 'days'] },
@@ -105,8 +109,11 @@ export function SetupWizard() {
       tax2_rate: '',
       tax_region: '',
       openingCash: null,
+      ownerPhone: { dial: '971', number: '' },
+      whatsappOk: false,
     },
   });
+  const hasContact = useHasContact(session?.user.id);
   useEffect(() => setActiveCurrency(where.currency), [where.currency]);
 
   const create = useMutation({
@@ -135,6 +142,9 @@ export function SetupWizard() {
         }),
       });
       if (error) throw error;
+      // The owner's number, when given here (optional: a failure does not stop the salon being set up).
+      const ownerPhone = composePhone(v.ownerPhone);
+      if (ownerPhone) await supabase.rpc('save_owner_contact', { p_phone: ownerPhone, p_whatsapp_ok: v.whatsappOk });
     },
     onSuccess: () => reload(),
   });
@@ -188,6 +198,7 @@ export function SetupWizard() {
           <>
             <FormTextField control={form.control} name="businessName" label={t('setup.fields.businessName')} />
             <FormTextField control={form.control} name="ownerName" label={t('auth.fields.yourName')} />
+            {hasContact.data === false ? <SetupContact control={form.control} /> : null}
           </>
         ) : null}
 

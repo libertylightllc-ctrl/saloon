@@ -110,7 +110,6 @@ test('a new Quebec salon picks its province at setup: GST 5% and QST 9.975%', as
   await field(page, 'name').fill('Élodie Owner');
   await field(page, 'email').fill(email);
   await field(page, 'password').fill('Owner1234!');
-  await field(page, 'confirm').fill('Owner1234!');
   await id(page, 'sign-up-submit').click();
 
   await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });

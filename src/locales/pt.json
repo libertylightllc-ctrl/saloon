@@ -545,7 +545,8 @@
       "subtitle": "Para o proprietário do salão. A equipe recebe os próprios logins depois.",
       "action": "Criar conta",
       "haveAccount": "Já tem uma conta?",
-      "signIn": "Entrar"
+      "signIn": "Entrar",
+      "offer": "{{count}} dias grátis · Sem cartão · Nada é renovado sozinho"
     },
     "forgot": {
       "title": "Redefinir senha",
@@ -738,6 +739,14 @@
       "title": "Este e-mail já tem uma conta",
       "body": "{{email}} já está cadastrado. Entre, continue com Google ou redefina sua senha.",
       "reset": "Redefinir minha senha"
+    },
+    "phone": {
+      "label": "Número de celular ou WhatsApp (opcional)",
+      "hint": "Usaremos só para ajudar você a configurar.",
+      "whatsappOk": "Pode me mandar mensagem no WhatsApp sobre a configuração do Saloqo",
+      "code": "Código do país {{code}}",
+      "pick": "Código do país",
+      "search": "Buscar país"
     }
   },
   "setup": {
@@ -815,7 +824,8 @@
     "taxRate": "Digite uma alíquota de 0 a 30, como 5 ou 8.875",
     "timezone": "Use o nome de um fuso horário, como Europe/Lisbon",
     "licence": "Só letras, números e . / -",
-    "province": "Escolha sua província"
+    "province": "Escolha sua província",
+    "mobile": "Digite o número: de 6 a 14 dígitos."
   },
   "errors": {
     "not_signed_in": "Sua sessão terminou. Entre novamente.",
@@ -2252,7 +2262,7 @@
       },
       "collect": {
         "title": "O que coletamos",
-        "body": "• Sua conta: seu nome, endereço de e-mail e senha (guardada apenas como um hash seguro). Se você continuar com o Google, o Google nos informa seu nome e endereço de e-mail.\n• O que os salões registram: serviços e preços, vendas e recibos, despesas, fornecedores e compras, estoque, contagens de caixa, nomes, telefones e visitas de clientes, nomes, frequência e pagamento da equipe, e documentos como licenças e fotos de recibos.\n• Este aparelho: um token de notificação, se você permitir notificações. Seu idioma e o login memorizado ficam no aparelho.\n• De onde você nos visita: o site identifica seu país pela sua conexão (endereço IP) para mostrar seu idioma e seu preço. Isso não é guardado.\n• Ajuda e suporte: as mensagens que você nos envia, com seu salão, a versão do app, seu dispositivo e a tela em que estava; se você escrever sem entrar, o nome e o e-mail que informar. Elas são apagadas com sua conta ou quando você pedir.\nNão usamos rastreadores de publicidade e nunca vendemos dados pessoais."
+        "body": "• Sua conta: seu nome, endereço de e-mail e senha (guardada apenas como um hash seguro). Se você continuar com o Google, o Google nos informa seu nome e endereço de e-mail.\n• Se você informar: seu número de celular ou WhatsApp, que usamos só para ajudar na configuração. Só mandamos mensagem no WhatsApp sobre a configuração se você marcar a caixa, e guardamos quando marcou. Peça a qualquer momento para apagarmos.\n• O que os salões registram: serviços e preços, vendas e recibos, despesas, fornecedores e compras, estoque, contagens de caixa, nomes, telefones e visitas de clientes, nomes, frequência e pagamento da equipe, e documentos como licenças e fotos de recibos.\n• Este aparelho: um token de notificação, se você permitir notificações. Seu idioma e o login memorizado ficam no aparelho.\n• De onde você nos visita: o site identifica seu país pela sua conexão (endereço IP) para mostrar seu idioma e seu preço. Isso não é guardado.\n• Ajuda e suporte: as mensagens que você nos envia, com seu salão, a versão do app, seu dispositivo e a tela em que estava; se você escrever sem entrar, o nome e o e-mail que informar. Elas são apagadas com sua conta ou quando você pedir.\nNão usamos rastreadores de publicidade e nunca vendemos dados pessoais."
       },
       "use": {
         "title": "Como usamos os dados",
@@ -2479,7 +2489,9 @@
       "line": "Cadastro em {{created}} · último acesso: {{last}}",
       "never": "nunca",
       "inactive": "Desativada",
-      "unconfirmed": "E-mail não confirmado"
+      "unconfirmed": "E-mail não confirmado",
+      "phone": "Celular {{phone}}",
+      "phoneOk": "Celular {{phone}} · aceita WhatsApp desde {{date}}"
     },
     "owners": {
       "title": "Proprietários da plataforma",
