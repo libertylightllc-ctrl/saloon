@@ -1,5 +1,5 @@
 /** The end of the website's home page: how to get going, the last call (the glowing star), and the footer. */
-import { useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Image, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,6 +10,8 @@ import { brandPalette as B, spacing } from '@/theme';
 import { Button, Text } from '@/ui';
 
 import star from '../../../assets/images/splash-icon.png';
+import { mailtoUrl } from './contact';
+import { ContactButton } from './ContactButton';
 import { Band, BrandButton, NavyBackdrop, useLandingLayout } from './parts';
 
 export function HowItWorks() {
@@ -60,21 +62,25 @@ export function FinalCall({ label, onPress }: { label: string; onPress: () => vo
 
 export function Footer() {
   const { t } = useTranslation();
-  const router = useRouter();
   const insets = useSafeAreaInsets();
   return (
     <Band ground={B.mist} style={[styles.footer, { paddingBottom: insets.bottom + spacing['3xl'] }]}>
       <LanguageLink />
       {/* The contact line waits for a real support address (src/config/brand.json). */}
       {!brand.supportEmail.endsWith('@example.com') ? (
-        <Text variant="small" color="textSecondary" align="center" selectable>
+        <Text variant="small" color="textSecondary" align="center" selectable testID="landing-email" {...({ href: mailtoUrl } as object)}>
           {t('auth.landing.contact', { email: brand.supportEmail })}
         </Text>
       ) : null}
+      {/* Real links (website brief 1.7, 4.6): crawlers and "open in new tab" work. */}
       <View style={styles.legal}>
-        <Button variant="ghost" size="sm" icon="messageCircle" label={t('support.contactTitle')} onPress={() => router.push('/contact')} testID="landing-contact" />
-        <Button variant="ghost" size="sm" label={t('legal.privacy.title')} onPress={() => router.push('/privacy')} testID="landing-privacy" />
-        <Button variant="ghost" size="sm" label={t('legal.terms.title')} onPress={() => router.push('/terms')} testID="landing-terms" />
+        <ContactButton label={t('support.contactTitle')} testID="landing-contact" />
+        <Link href="/privacy" asChild>
+          <Button variant="ghost" size="sm" label={t('legal.privacy.title')} testID="landing-privacy" />
+        </Link>
+        <Link href="/terms" asChild>
+          <Button variant="ghost" size="sm" label={t('legal.terms.title')} testID="landing-terms" />
+        </Link>
       </View>
       <Text variant="small" color="textSecondary" align="center">
         {`© ${new Date().getFullYear()} ${brand.appName}`}

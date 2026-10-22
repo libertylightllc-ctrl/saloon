@@ -35,12 +35,13 @@ export default function Welcome() {
 
   const choose = (mode: Mode) => {
     setSalonType(mode);
-    router.replace(next);
+    // push, not replace: the back arrow on sign-up returns here (brief 1.4).
+    router.push(next);
   };
   const toTypes = (to: '/sign-in' | '/sign-up') => {
     // Someone who already picked a type on this device goes straight on; everyone else picks one first.
     if (salonType) {
-      router.replace(to);
+      router.push(to);
       return;
     }
     setNext(to);

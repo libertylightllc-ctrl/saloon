@@ -4,7 +4,6 @@
  * the form's buttons and fields are already the colours of the app that follows. On a computer the navy is a panel
  * beside the form, with the real app in that look.
  */
-import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,10 +11,11 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 're
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { brand } from '@/config/brand';
+import { ContactButton } from '@/features/landing/ContactButton';
 import { Band, NavyBackdrop, PhoneShot, Tick, useLandingLayout } from '@/features/landing/parts';
 import { LanguageButton } from '@/features/settings/LanguageSheet';
 import { brandPalette as B, spacing, useThemeMode, type Mode } from '@/theme';
-import { BackButton, BrandMark, Button, Chip, OnBandContext, Text } from '@/ui';
+import { BackButton, BrandMark, Chip, OnBandContext, Text } from '@/ui';
 
 import gentsQueue from '../../../assets/images/landing/gents-queue.webp';
 import ladiesQueue from '../../../assets/images/landing/ladies-queue.webp';
@@ -101,15 +101,17 @@ export function AuthShell({
   title,
   subtitle,
   onBack,
+  typeSwitch = false,
   children,
 }: {
   title: string;
   subtitle?: string;
   onBack?: (() => void) | true;
+  /** Gents / Ladies above the form: sign-up only (a returning owner's salon already has its type; brief 1.6). */
+  typeSwitch?: boolean;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
-  const router = useRouter();
   const insets = useSafeAreaInsets();
   const { wide } = useLandingLayout();
 
@@ -123,11 +125,11 @@ export function AuthShell({
           {subtitle ? <Text style={styles.inkMuted}>{subtitle}</Text> : null}
         </View>
       ) : null}
-      <SalonTypeSwitch />
+      {typeSwitch ? <SalonTypeSwitch /> : null}
       <View style={styles.body}>
         {children}
         {/* Someone whose app is not working often cannot sign in: they can still write to us. */}
-        <Button variant="ghost" size="sm" icon="messageCircle" label={t('support.contactLink')} onPress={() => router.push('/contact')} testID="auth-contact" />
+        <ContactButton label={t('support.contactLink')} testID="auth-contact" />
       </View>
     </View>
   );

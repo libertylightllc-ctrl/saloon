@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -39,17 +39,20 @@ export default function SignUp() {
   const signUp = useMutation({ mutationFn: (v: Values) => signUpOwner(v.name, v.email, v.password) });
   const submit = form.handleSubmit((values) => signUp.mutate(values));
 
+  // Back: where the visitor came from, else the home page (not sign-in; brief 1.4).
+  const back = () => (router.canGoBack() ? router.back() : router.replace('/welcome'));
+
   // No session yet (email confirmation on): "check your inbox", or this address already has an account.
   if (signUp.data === 'check_email' || signUp.data === 'already_registered') {
     return (
-      <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack>
+      <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack={back}>
         <SignUpDone outcome={signUp.data} email={form.getValues('email').trim().toLowerCase()} />
       </AuthShell>
     );
   }
 
   return (
-    <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack>
+    <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack={back} typeSwitch>
       <View style={styles.form}>
         <GoogleButton />
         <FormTextField control={form.control} name="name" label={t('auth.fields.yourName')} autoComplete="name" />
@@ -80,6 +83,12 @@ export default function SignUp() {
         />
         <FormError error={signUp.error} />
         <Button label={t('auth.signUp.action')} onPress={submit} loading={signUp.isPending} testID="sign-up-submit" />
+        <View style={styles.haveAccount}>
+          <Text color="textSecondary">{t('auth.signUp.haveAccount')}</Text>
+          <Link href="/sign-in" asChild>
+            <Button variant="ghost" size="sm" label={t('auth.signUp.signIn')} testID="sign-up-to-sign-in" />
+          </Link>
+        </View>
         <Text variant="small" color="textSecondary" align="center">
           {t('legal.agree')}
         </Text>
@@ -95,4 +104,5 @@ export default function SignUp() {
 const styles = StyleSheet.create({
   form: { gap: spacing.lg },
   legal: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: spacing.sm },
+  haveAccount: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: spacing.xs },
 });

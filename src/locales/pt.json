@@ -543,7 +543,9 @@
     "signUp": {
       "title": "Crie sua conta",
       "subtitle": "Para o proprietário do salão. A equipe recebe os próprios logins depois.",
-      "action": "Criar conta"
+      "action": "Criar conta",
+      "haveAccount": "Já tem uma conta?",
+      "signIn": "Entrar"
     },
     "forgot": {
       "title": "Redefinir senha",

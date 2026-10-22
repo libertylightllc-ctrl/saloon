@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { semantic, spacing, tapTarget, useTheme, type TypeVariant } from '@/theme';
 
@@ -27,6 +27,13 @@ export interface ButtonProps {
   disabled?: boolean;
   accessibilityHint?: string;
   testID?: string;
+  /**
+   * A link (website brief 4.6): on the web it is a real <a href> (crawlers and "open in new tab" work; inside an
+   * expo-router <Link asChild> the link passes it, with its own client-side press). External links (WhatsApp, email)
+   * open in a new tab on the web; in the phone apps they open with the system.
+   */
+  href?: string;
+  external?: boolean;
 }
 
 export function Button({
@@ -39,6 +46,8 @@ export function Button({
   disabled,
   accessibilityHint,
   testID,
+  href,
+  external,
 }: ButtonProps) {
   const theme = useTheme();
   const { colors } = theme;
@@ -79,9 +88,12 @@ export function Button({
   return (
     <Pressable
       testID={testID}
-      onPress={onPress}
+      onPress={onPress ?? (href && Platform.OS !== 'web' ? () => void Linking.openURL(href) : undefined)}
       disabled={inactive}
-      accessibilityRole="button"
+      {...(href && Platform.OS === 'web'
+        ? ({ href, hrefAttrs: external ? { target: '_blank', rel: 'noopener noreferrer' } : undefined } as object)
+        : {})}
+      accessibilityRole={href ? 'link' : 'button'}
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
       aria-disabled={inactive}

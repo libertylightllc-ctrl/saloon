@@ -543,7 +543,9 @@
     "signUp": {
       "title": "Créez votre compte",
       "subtitle": "Pour le propriétaire du salon. Les employés recevront leurs propres accès plus tard.",
-      "action": "Créer le compte"
+      "action": "Créer le compte",
+      "haveAccount": "Vous avez déjà un compte ?",
+      "signIn": "Se connecter"
     },
     "forgot": {
       "title": "Réinitialiser le mot de passe",

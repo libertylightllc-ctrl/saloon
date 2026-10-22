@@ -543,7 +543,9 @@
     "signUp": {
       "title": "Crea tu cuenta",
       "subtitle": "Para el dueño del salón. El personal tendrá sus propios accesos más adelante.",
-      "action": "Crear cuenta"
+      "action": "Crear cuenta",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Inicia sesión"
     },
     "forgot": {
       "title": "Restablecer contraseña",

@@ -543,7 +543,9 @@
     "signUp": {
       "title": "Create your account",
       "subtitle": "For the salon owner. Staff get their own logins later.",
-      "action": "Create account"
+      "action": "Create account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
     },
     "forgot": {
       "title": "Reset password",
