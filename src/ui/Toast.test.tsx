@@ -2,8 +2,10 @@
 import { act, screen } from '@testing-library/react-native';
 import { useEffect } from 'react';
 
-import { renderInApp } from './testUtils';
+import { renderInApp, warmUpRendering } from './testUtils';
 import { TOAST_MS, useToast } from './Toast';
+
+warmUpRendering();
 
 const handle: { show?: ReturnType<typeof useToast> } = {};
 function Grab() {

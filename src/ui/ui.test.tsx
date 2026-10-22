@@ -12,7 +12,9 @@ import { MoneyInput } from './MoneyInput';
 import { StatusPill } from './StatusPill';
 import { Stepper } from './Stepper';
 import { SuccessCheck } from './SuccessCheck';
-import { renderInApp } from './testUtils';
+import { renderInApp, warmUpRendering } from './testUtils';
+
+warmUpRendering();
 
 describe('Stepper', () => {
   it('shows Add at zero, then counts', async () => {
