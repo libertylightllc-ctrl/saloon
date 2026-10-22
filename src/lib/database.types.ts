@@ -1741,6 +1741,36 @@ export type Database = {
           },
         ];
       };
+      owner_contacts: {
+        Row: {
+          created_at: string;
+          phone: string;
+          source: string;
+          updated_at: string;
+          user_id: string;
+          whatsapp_ok: boolean;
+          whatsapp_ok_at: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          phone: string;
+          source?: string;
+          updated_at?: string;
+          user_id: string;
+          whatsapp_ok?: boolean;
+          whatsapp_ok_at?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          phone?: string;
+          source?: string;
+          updated_at?: string;
+          user_id?: string;
+          whatsapp_ok?: boolean;
+          whatsapp_ok_at?: string | null;
+        };
+        Relationships: [];
+      };
       payroll_adjustments: {
         Row: {
           amount_minor: number;
@@ -3544,12 +3574,15 @@ export type Database = {
           display_name: string;
           email: string;
           last_sign_in_at: string;
+          phone: string;
           platform_owner: boolean;
           provider: string;
           role: string;
           salon: string;
           user_id: string;
           username: string;
+          whatsapp_ok: boolean;
+          whatsapp_ok_at: string;
         }[];
       };
       admin_activate: {
@@ -4224,6 +4257,7 @@ export type Database = {
       save_employee: { Args: { p: Json }; Returns: string };
       save_expense_category: { Args: { p: Json }; Returns: string };
       save_item: { Args: { p: Json }; Returns: string };
+      save_owner_contact: { Args: { p_phone: string; p_whatsapp_ok: boolean }; Returns: undefined };
       save_service: { Args: { p: Json }; Returns: string };
       save_supplier: { Args: { p: Json }; Returns: string };
       seed_expense_categories: { Args: { p_business: string }; Returns: undefined };

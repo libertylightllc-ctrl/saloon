@@ -105,6 +105,7 @@ insert into reviewed values
     ('save_employee'),
     ('save_expense_category'),
     ('save_item'),
+    ('save_owner_contact'),
     ('save_service'),
     ('save_supplier'),
     ('set_branch_logo'),
