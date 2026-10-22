@@ -567,7 +567,8 @@
       "facts": {
         "languages": "English · العربية · हिन्दी · اردو · Español · Français · Português",
         "devices": "Téléphone, tablette et web",
-        "private": "Les données de chaque salon restent privées"
+        "private": "Les données de chaque salon restent privées",
+        "booking": "Page de réservation en ligne gratuite, sans commission"
       },
       "featuresTitle": "Tout ce qu’il faut à la caisse",
       "featuresLead": "Conçu à partir du quotidien réel des salons — du premier client sans RDV au comptage de clôture.",
@@ -586,11 +587,13 @@
         },
         "staff": {
           "title": "Équipe, présences et paie",
-          "body": "Plannings, pointage avec signalement des retards, commissions, avances et paie — avec preuve de salaire WPS aux EAU."
+          "body": "Plannings, pointage avec signalement des retards, commissions, avances et paie — avec preuve de salaire WPS aux EAU.",
+          "bodyIntl": "Plannings, pointage avec retards signalés, commissions, avances et paie."
         },
         "compliance": {
           "title": "Licences et inspections",
-          "body": "Licences, baux, cartes de santé et visas avec rappels d’expiration, un registre d’hygiène et un dossier d’inspection — la liste de contrôle des EAU intégrée."
+          "body": "Licences, baux, cartes de santé et visas avec rappels d’expiration, un registre d’hygiène et un dossier d’inspection — la liste de contrôle des EAU intégrée.",
+          "bodyIntl": "Licences, baux, cartes sanitaires et permis avec rappels d’échéance, un registre d’hygiène quotidien et un classeur d’inspection."
         },
         "stock": {
           "title": "Stock, fournisseurs et dépenses",
@@ -603,6 +606,10 @@
         "roles": {
           "title": "Le bon accès pour chacun",
           "body": "Propriétaire, caissier, barbier ou styliste et comptable ne voient que ce dont leur poste a besoin."
+        },
+        "booking": {
+          "title": "Page de réservation en ligne gratuite",
+          "body": "Chaque salon a sa propre page de réservation à partager sur Instagram, Google Maps et WhatsApp. Le client choisit une prestation et un créneau ; la réservation arrive dans votre file. Sans commission, jamais."
         }
       },
       "typeTitle": "Quel type de salon avez-vous ?",
@@ -622,11 +629,12 @@
           "everything": "Toutes les fonctions incluses",
           "languages": "Les 7 langues",
           "support": "Aide et assistance dans l’app"
-        }
+        },
+        "perDay": "Moins de {{price}} par jour"
       },
       "contact": "Des questions ? Écrivez à {{email}}",
       "about": "À propos de {{app}}",
-      "eyebrow": "Pour les barbiers, salons de beauté et spas",
+      "eyebrow": "Pour les barbiers, salons, spas, ongleries et instituts de beauté",
       "start": "Commencez gratuitement {{count}} jours",
       "start_one": "Commencez gratuitement {{count}} jour",
       "noCard": "Sans carte · Prêt en quelques minutes",
@@ -645,7 +653,73 @@
         }
       },
       "finalTitle": "Tout votre salon dans une seule app",
-      "finalLead": "Configurez-le aujourd’hui ; demain votre équipe se connecte avec ses propres accès."
+      "finalLead": "Configurez-le aujourd’hui ; demain votre équipe se connecte avec ses propres accès.",
+      "leadShort": "Réservations, ventes, clôture de caisse et paie du personnel, dans une seule appli.",
+      "whatsapp": "Écrivez-nous sur WhatsApp",
+      "seeHow": "Voir comment ça marche",
+      "demo": "Réserver une démo",
+      "trust": {
+        "dataYours": "Vos données vous appartiennent : exportez-les à tout moment",
+        "noRenew": "Rien ne se renouvelle tout seul"
+      },
+      "keep": {
+        "title": "Vous utilisez déjà une appli de réservation ? Gardez-la.",
+        "body": "Saloqo gère ce qu’elle ne fait pas : clôture de caisse quotidienne, stock, paie du personnel et rappels de licences."
+      },
+      "swipe": "Carte {{n}} sur {{total}}",
+      "proof": {
+        "madeBy": "Conçu à {{place}} par {{name}}"
+      },
+      "footer": {
+        "madeIn": "Conçu à {{place}}"
+      },
+      "place": {
+        "dubai": "Dubaï, EAU"
+      },
+      "video": {
+        "title": "Découvrez Saloqo en 90 secondes",
+        "play": "Lire la vidéo"
+      },
+      "faq": {
+        "title": "Les questions des propriétaires de salons",
+        "price": {
+          "q": "Combien ça coûte ?",
+          "a": "{{price}} par mois jusqu’à {{people}} personnes qui se connectent, puis {{extra}} par mois par personne en plus. Un seul prix pour tout le salon, quel que soit le nombre de succursales. La mise en place est gratuite.",
+          "aNoPrice": "Un prix mensuel pour tout le salon, quel que soit le nombre de succursales, selon le nombre de personnes qui se connectent. La mise en place est gratuite."
+        },
+        "trial": {
+          "q": "Que se passe-t-il après l’essai de {{count}} jours ?",
+          "a": "Vous choisissez un abonnement de 1, 3, 6 ou 12 mois. Rien ne se renouvelle tout seul. Si vous ne payez pas, vos données restent : vous pouvez toujours vous connecter, les consulter et les exporter."
+        },
+        "card": {
+          "q": "Faut-il une carte pour commencer ?",
+          "a": "Non. L’essai gratuit ne demande pas de carte."
+        },
+        "data": {
+          "q": "Mes données sont-elles en sécurité ? Puis-je les exporter ?",
+          "a": "Les données de votre salon vous appartiennent et restent privées à votre salon. Exportez-les toutes à tout moment, en tableurs."
+        },
+        "staff": {
+          "q": "Mon équipe peut-elle voir mes bénéfices ?",
+          "a": "Non. Le propriétaire, le caissier, le barbier ou coiffeur et le comptable ne voient que ce dont leur travail a besoin."
+        },
+        "printer": {
+          "q": "Ai-je besoin d’une imprimante de reçus ?",
+          "a": "Non. Partagez les reçus ou envoyez-les sur WhatsApp. Saloqo imprime aussi sur les imprimantes de reçus 80 mm et 58 mm, et en A4."
+        },
+        "devices": {
+          "q": "Ça marche sur mon téléphone ? En arabe, hindi ou ourdou ?",
+          "a": "Oui : sur téléphone, tablette et ordinateur, en 7 langues : anglais, arabe, hindi, ourdou, espagnol, français et portugais."
+        },
+        "bookingApp": {
+          "q": "J’utilise déjà une appli de réservation : puis-je la garder ?",
+          "a": "Oui. Gardez-la pour les réservations ; Saloqo gère votre clôture de caisse quotidienne, le stock et la paie du personnel."
+        },
+        "countries": {
+          "q": "Dans quels pays ça fonctionne ?",
+          "a": "Dans tous les pays : à la mise en place, choisissez votre pays, votre devise et votre taxe (TVA, GST et autres)."
+        }
+      }
     },
     "google": {
       "action": "Continuer avec Google",

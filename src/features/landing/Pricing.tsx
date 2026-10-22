@@ -4,60 +4,45 @@
  * (owner, 2026-10-08): the UAE price for a visitor in the UAE, the international one anywhere else — where they are by
  * IP (2026-10-12), or by the device's time zone when that cannot be told. Not in the phone apps (storePolicy).
  */
-import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { usePublicPrices } from '@/features/plan/api';
-import { deviceTimeZone } from '@/features/setup/CountryStep';
-import { countryOf } from '@/lib/countries';
-import { isCurrency } from '@/lib/currencies';
-import { visitorCountry } from '@/lib/geo';
-import { formatMoney } from '@/lib/money';
 import { brandPalette as B, spacing } from '@/theme';
 import { Text } from '@/ui';
 
+import { demoHref } from './contact';
 import { Band, BrandButton, NavyBackdrop, Tick, useLandingLayout } from './parts';
+import { useLandingPrice } from './price';
 
-function inUae(country: string | null | undefined): boolean {
-  if (country) return country === 'AE';
-  const zone = deviceTimeZone();
-  return zone !== null && (countryOf('AE')?.timezones.includes(zone) ?? false);
-}
-
-export function Pricing({ startLabel, onStart }: { startLabel: string; onStart: () => void }) {
+export function Pricing({ startLabel, onStart, onLayoutRange }: { startLabel: string; onStart: () => void; onLayoutRange?: (top: number, bottom: number) => void }) {
   const { t } = useTranslation();
   const { compact } = useLandingLayout();
-  const prices = usePublicPrices();
-  const where = useQuery({ queryKey: ['visitor-country'], queryFn: () => visitorCountry(), staleTime: Infinity });
-  const p = prices.data;
-  if (!p || where.isPending) return null;
-  const money = (minor: number, currency: string) => (isCurrency(currency) ? formatMoney(minor, currency) : `${currency} ${minor / 100}`);
-  // Priced by people, per salon (owner, 2026-10-08): the base covers the first few who sign in; each one after adds.
-  const uae = inUae(where.data);
-  const price = uae ? money(p.price_per_branch_minor, p.currency) : money(p.intl_price_per_branch_minor, p.intl_currency);
-  const extra = uae ? money(p.extra_person_minor, p.currency) : money(p.intl_extra_person_minor, p.intl_currency);
+  const p = useLandingPrice();
+  if (!p) return null;
   return (
-    <View style={styles.ground}>
+    <View style={styles.ground} onLayout={(e) => onLayoutRange?.(e.nativeEvent.layout.y, e.nativeEvent.layout.y + e.nativeEvent.layout.height)}>
       <NavyBackdrop glowAt={['50%', '35%']} />
-      <Band ground="transparent" style={styles.band} testID="landing-pricing">
+      <Band ground="transparent" style={[styles.band, compact && styles.bandCompact]} testID="landing-pricing">
         <Text variant={compact ? 'sectionCompact' : 'section'} align="center" style={styles.white} accessibilityRole="header">
           {t('auth.landing.pricing.title')}
         </Text>
-        {p.trial_days > 0 ? (
+        {p.trialDays > 0 ? (
           <Text variant="h3" align="center" style={styles.teal} testID="landing-trial">
-            {t('auth.landing.pricing.trial', { count: p.trial_days })}
+            {t('auth.landing.pricing.trial', { count: p.trialDays })}
           </Text>
         ) : null}
         <View style={styles.card}>
           <Text variant={compact ? 'heroCompact' : 'hero'} tabular style={styles.white} testID="landing-price">
-            {price}
+            {p.price}
           </Text>
           <Text variant="lead" style={styles.muted}>
-            {t('auth.landing.pricing.per', { people: p.included_people })}
+            {t('auth.landing.pricing.per', { people: p.people })}
           </Text>
           <Text variant="small" align="center" style={styles.muted} testID="landing-price-extra">
-            {t('auth.landing.pricing.extra', { price: extra })}
+            {t('auth.landing.pricing.extra', { price: p.extra })}
+          </Text>
+          <Text variant="bodyStrong" align="center" style={styles.teal} testID="landing-per-day">
+            {t('auth.landing.pricing.perDay', { price: p.perDay })}
           </Text>
           <View style={styles.rule} />
           {(['everything', 'languages', 'support'] as const).map((k) => (
@@ -68,11 +53,20 @@ export function Pricing({ startLabel, onStart }: { startLabel: string; onStart: 
           ))}
           <View style={styles.cta}>
             <BrandButton label={startLabel} icon="chevronRight" onPress={onStart} testID="landing-start-pricing" />
+            <Text variant="small" align="center" style={styles.tealSoft}>
+              {t('auth.landing.trust.noRenew')}
+            </Text>
+            {demoHref ? (
+              <BrandButton label={t('auth.landing.demo')} kind="textOnNavy" href={demoHref.href} external testID="landing-demo-pricing" />
+            ) : null}
           </View>
         </View>
-        <Text align="center" style={[styles.muted, styles.note]}>
-          {t('auth.landing.pricing.note')}
-        </Text>
+        {/* On a phone the FAQ and the line under the button say the same (brief 2.14). */}
+        {compact ? null : (
+          <Text align="center" style={[styles.muted, styles.note]}>
+            {t('auth.landing.pricing.note')}
+          </Text>
+        )}
       </Band>
     </View>
   );
@@ -81,8 +75,10 @@ export function Pricing({ startLabel, onStart }: { startLabel: string; onStart: 
 const styles = StyleSheet.create({
   ground: { backgroundColor: B.navy, overflow: 'hidden' },
   band: { paddingVertical: 88, gap: spacing.lg, alignItems: 'center' },
+  bandCompact: { paddingVertical: 48 },
   white: { color: B.onNavy },
   teal: { color: B.teal },
+  tealSoft: { color: B.tealSoft },
   muted: { color: B.onNavyMuted },
   note: { maxWidth: 620 },
   card: {
@@ -99,5 +95,5 @@ const styles = StyleSheet.create({
   },
   rule: { alignSelf: 'stretch', height: 1, backgroundColor: B.navyLine, marginVertical: spacing.md },
   line: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, alignSelf: 'stretch' },
-  cta: { marginTop: spacing.lg, alignSelf: 'stretch', alignItems: 'center' },
+  cta: { marginTop: spacing.lg, alignSelf: 'stretch', alignItems: 'center', gap: spacing.sm },
 });

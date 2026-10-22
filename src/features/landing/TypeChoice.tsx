@@ -19,7 +19,7 @@ export function TypeChoice({ onChoose, onLayoutY }: { onChoose: (mode: Mode) => 
   const { wide, compact } = useLandingLayout();
   return (
     <View onLayout={(e) => onLayoutY(e.nativeEvent.layout.y)}>
-      <Band ground={B.mist} style={styles.band}>
+      <Band ground={B.mist} style={[styles.band, compact && styles.bandCompact]}>
         <View style={styles.head}>
           <Text variant={compact ? 'sectionCompact' : 'section'} align="center" style={styles.ink} accessibilityRole="header">
             {t('auth.landing.typeTitle')}
@@ -28,9 +28,10 @@ export function TypeChoice({ onChoose, onLayoutY }: { onChoose: (mode: Mode) => 
             {t('auth.welcome.subtitle')}
           </Text>
         </View>
-        <View style={[styles.cards, wide && styles.row]}>
+        {/* Side by side on a phone too: one look at both (brief 2.14). */}
+        <View style={[styles.cards, (wide || compact) && styles.row, compact && styles.cardsCompact]}>
           {(['gents', 'ladies'] as const).map((mode) => (
-            <TypeCard key={mode} mode={mode} onPress={() => onChoose(mode)} />
+            <TypeCard key={mode} mode={mode} compact={compact} onPress={() => onChoose(mode)} />
           ))}
         </View>
       </Band>
@@ -38,7 +39,7 @@ export function TypeChoice({ onChoose, onLayoutY }: { onChoose: (mode: Mode) => 
   );
 }
 
-function TypeCard({ mode, onPress }: { mode: Mode; onPress: () => void }) {
+function TypeCard({ mode, compact, onPress }: { mode: Mode; compact: boolean; onPress: () => void }) {
   const { t } = useTranslation();
   const { colors } = themes[mode];
   return (
@@ -49,15 +50,15 @@ function TypeCard({ mode, onPress }: { mode: Mode; onPress: () => void }) {
       accessibilityLabel={t(`auth.salonType.${mode}`)}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
-      <View style={[styles.preview, { backgroundColor: mode === 'gents' ? colors.primary500 : colors.primary100 }]}>
-        <PhoneShot source={SHOT[mode]} width={200} tilt={mode === 'gents' ? -3 : 3} />
+      <View style={[styles.preview, compact && styles.previewCompact, { backgroundColor: mode === 'gents' ? colors.primary500 : colors.primary100 }]}>
+        <PhoneShot source={SHOT[mode]} width={compact ? 104 : 200} tilt={mode === 'gents' ? -3 : 3} />
       </View>
-      <View style={styles.text}>
-        <View style={styles.flex}>
-          <Text variant="h2" style={{ color: colors.primaryText }}>
+      <View style={[styles.text, compact && styles.textCompact]}>
+        <View style={compact ? undefined : styles.flex}>
+          <Text variant={compact ? 'h4' : 'h2'} style={{ color: colors.primaryText }}>
             {t(`auth.salonType.${mode}`)}
           </Text>
-          <Text style={styles.muted}>{t(`auth.welcome.${mode}`)}</Text>
+          {compact ? null : <Text style={styles.muted}>{t(`auth.welcome.${mode}`)}</Text>}
         </View>
         <View style={[styles.go, { backgroundColor: colors.primaryAction }]}>
           <Text variant="bodyStrong" color="onPrimary">
@@ -72,6 +73,10 @@ function TypeCard({ mode, onPress }: { mode: Mode; onPress: () => void }) {
 
 const styles = StyleSheet.create({
   band: { paddingVertical: 88, gap: spacing['3xl'] },
+  bandCompact: { paddingVertical: 48, gap: spacing.xl },
+  previewCompact: { height: 130, paddingTop: spacing.lg },
+  cardsCompact: { gap: spacing.md },
+  textCompact: { flexDirection: 'column', alignItems: 'stretch', padding: spacing.md, gap: spacing.sm },
   head: { gap: spacing.md, alignItems: 'center', maxWidth: 720, alignSelf: 'center' },
   ink: { color: B.ink },
   muted: { color: B.inkMuted },

@@ -14,7 +14,7 @@ export function OwnerBenefits() {
   const { t } = useTranslation();
   const { wide, compact } = useLandingLayout();
   return (
-    <Band ground={B.mist} style={[styles.band, wide && styles.row]} testID="landing-owners">
+    <Band ground={B.mist} style={[styles.band, wide && styles.row, compact && styles.bandCompact]} testID="landing-owners">
       {wide ? (
         <View style={styles.visual}>
           <View style={styles.halo} />
@@ -29,11 +29,11 @@ export function OwnerBenefits() {
         <Text variant="lead" style={styles.muted}>
           {t('auth.landing.owners.lead')}
         </Text>
-        <View style={styles.list}>
+        <View style={[styles.list, compact && styles.listCompact]}>
           {ITEMS.map((k) => (
             <View key={k} style={styles.item}>
               <Tick />
-              <Text variant="h4" style={[styles.ink, styles.itemText]}>
+              <Text variant={compact ? 'bodyStrong' : 'h4'} style={[styles.ink, styles.itemText]}>
                 {t(`auth.landing.owners.items.${k}`)}
               </Text>
             </View>
@@ -46,6 +46,8 @@ export function OwnerBenefits() {
 
 const styles = StyleSheet.create({
   band: { paddingVertical: 88, gap: spacing['4xl'] },
+  bandCompact: { paddingVertical: 48 },
+  listCompact: { gap: spacing.md },
   row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   visual: { width: 440, alignItems: 'center', justifyContent: 'center', paddingVertical: spacing.xl },
   halo: { position: 'absolute', width: 420, height: 420, borderRadius: 210, backgroundColor: B.lilacMist },
