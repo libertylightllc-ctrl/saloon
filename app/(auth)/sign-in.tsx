@@ -13,6 +13,7 @@ import { AuthShell } from '@/features/auth/AuthShell';
 import { GoogleButton } from '@/features/auth/GoogleButton';
 import { useSession } from '@/features/auth/session';
 import { SessionNotice } from '@/features/auth/SessionNotice';
+import { usePageMeta } from '@/lib/pageMeta';
 import { spacing } from '@/theme';
 import { Button, FormError, FormTextField, SegmentTabs, Text } from '@/ui';
 
@@ -30,6 +31,7 @@ type Who = 'owner' | 'staff';
 
 export default function SignIn() {
   const { t } = useTranslation();
+  usePageMeta(t('meta.signIn.title'), t('meta.signIn.description'));
   const { notice, clearNotice } = useSession();
   const [who, setWho] = useState<Who>('owner');
   useEffect(() => {

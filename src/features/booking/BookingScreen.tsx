@@ -12,6 +12,7 @@ import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
 import { dialCodeOf } from '@/lib/countries';
+import { usePageMeta } from '@/lib/pageMeta';
 import { isCurrency } from '@/lib/currencies';
 import type { BusinessDate } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
@@ -51,6 +52,14 @@ export function BookingScreen({ slug }: { slug: string }) {
 
 function BookingForm({ slug, page }: { slug: string; page: BookingPage }) {
   const { t } = useTranslation();
+  const s = page.salon;
+  // "Book at Al Barsha Gents – Al Barsha": the branch says where, when it differs from the salon's name.
+  usePageMeta(
+    s.branch_name && s.branch_name !== s.business_name
+      ? t('meta.booking.titleWhere', { salon: s.business_name, where: s.branch_name })
+      : t('meta.booking.title', { salon: s.business_name }),
+    t('meta.booking.description', { salon: s.business_name }),
+  );
   const router = useRouter();
   const currency = isCurrency(page.salon.currency) ? page.salon.currency : 'AED';
   const [services, setServices] = useState<string[]>([]);

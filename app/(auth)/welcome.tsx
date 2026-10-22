@@ -11,6 +11,7 @@ import { OwnerBenefits } from '@/features/landing/OwnerBenefits';
 import { Pricing } from '@/features/landing/Pricing';
 import { TypeChoice } from '@/features/landing/TypeChoice';
 import { usePublicPrices } from '@/features/plan/api';
+import { usePageMeta } from '@/lib/pageMeta';
 import { canOfferPlans } from '@/features/plan/storePolicy';
 import { brandPalette, type Mode } from '@/theme';
 
@@ -30,6 +31,7 @@ export default function Welcome() {
 
   const trialDays = canOfferPlans ? (prices.data?.trial_days ?? 0) : 0;
   const startLabel = trialDays > 0 ? t('auth.landing.start', { count: trialDays }) : t('auth.landing.create');
+  usePageMeta(t('meta.welcome.title'), t('meta.welcome.description'));
 
   const choose = (mode: Mode) => {
     setSalonType(mode);

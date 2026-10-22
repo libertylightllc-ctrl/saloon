@@ -2648,5 +2648,24 @@
       "saveLink": "Guardar enlace",
       "linkSaved": "Enlace guardado"
     }
+  },
+  "meta": {
+    "welcome": {
+      "title": "Saloqo – App para salones y barberías: reservas, cierre de caja, sueldos del personal",
+      "description": "Lleva tu barbería, salón o spa desde el móvil: clientes sin cita y reservas, ventas rápidas y recibos, cierre de caja diario, stock, sueldos del personal y tus impuestos. Pruébalo gratis, sin tarjeta."
+    },
+    "signUp": {
+      "title": "Empieza tu prueba gratis de {{count}} días – Saloqo",
+      "description": "Crea tu cuenta de propietario y configura tu salón en minutos. Sin tarjeta."
+    },
+    "signIn": {
+      "title": "Iniciar sesión – Saloqo",
+      "description": "Inicia sesión en Saloqo como propietario, o como personal con el código de tu salón."
+    },
+    "booking": {
+      "title": "Reserva en {{salon}} – Saloqo",
+      "titleWhere": "Reserva en {{salon}} – {{where}}",
+      "description": "Reserva online en {{salon}}: servicios, precios y horas libres. Sin cuenta."
+    }
   }
 }

@@ -2648,5 +2648,24 @@
       "saveLink": "Salvar link",
       "linkSaved": "Link salvo"
     }
+  },
+  "meta": {
+    "welcome": {
+      "title": "Saloqo – App para salões e barbearias: reservas, fechamento de caixa, pagamento da equipe",
+      "description": "Gerencie sua barbearia, salão ou spa pelo celular: clientes sem hora marcada e reservas, vendas rápidas e recibos, fechamento de caixa diário, estoque, pagamento da equipe e seus impostos. Teste grátis, sem cartão."
+    },
+    "signUp": {
+      "title": "Comece seu teste grátis de {{count}} dias – Saloqo",
+      "description": "Crie sua conta de proprietário e configure seu salão em minutos. Sem cartão."
+    },
+    "signIn": {
+      "title": "Entrar – Saloqo",
+      "description": "Entre no Saloqo como proprietário, ou como equipe com o código do salão."
+    },
+    "booking": {
+      "title": "Reserve no {{salon}} – Saloqo",
+      "titleWhere": "Reserve no {{salon}} – {{where}}",
+      "description": "Reserve online no {{salon}}: serviços, preços e horários livres. Sem conta."
+    }
   }
 }

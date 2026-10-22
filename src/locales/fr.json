@@ -2648,5 +2648,24 @@
       "saveLink": "Enregistrer le lien",
       "linkSaved": "Lien enregistré"
     }
+  },
+  "meta": {
+    "welcome": {
+      "title": "Saloqo – Appli pour salons et barbiers : réservations, clôture de caisse, paie du personnel",
+      "description": "Gérez votre barbier, salon ou spa depuis votre téléphone : clients sans rendez-vous et réservations, ventes rapides et reçus, clôture de caisse quotidienne, stock, paie du personnel et vos taxes. Essai gratuit, sans carte."
+    },
+    "signUp": {
+      "title": "Commencez votre essai gratuit de {{count}} jours – Saloqo",
+      "description": "Créez votre compte propriétaire et configurez votre salon en quelques minutes. Sans carte."
+    },
+    "signIn": {
+      "title": "Se connecter – Saloqo",
+      "description": "Connectez-vous à Saloqo en tant que propriétaire, ou membre de l’équipe avec le code de votre salon."
+    },
+    "booking": {
+      "title": "Réservez chez {{salon}} – Saloqo",
+      "titleWhere": "Réservez chez {{salon}} – {{where}}",
+      "description": "Réservez en ligne chez {{salon}} : prestations, prix et créneaux libres. Sans compte."
+    }
   }
 }

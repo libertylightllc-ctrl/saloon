@@ -12,6 +12,8 @@ import { AuthShell } from '@/features/auth/AuthShell';
 import { spacing } from '@/theme';
 import { Button, FormError, FormTextField, Text } from '@/ui';
 import { GoogleButton } from '@/features/auth/GoogleButton';
+import { usePublicPrices } from '@/features/plan/api';
+import { usePageMeta } from '@/lib/pageMeta';
 
 const schema = z
   .object({
@@ -28,6 +30,8 @@ type Values = z.infer<typeof schema>;
 export default function SignUp() {
   const { t } = useTranslation();
   const router = useRouter();
+  const trialDays = usePublicPrices().data?.trial_days ?? 7;
+  usePageMeta(t('meta.signUp.title', { count: trialDays }), t('meta.signUp.description'));
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: { name: '', email: '', password: '', confirm: '' },

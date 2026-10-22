@@ -2647,5 +2647,24 @@
       "saveLink": "Save link",
       "linkSaved": "Link saved"
     }
+  },
+  "meta": {
+    "welcome": {
+      "title": "Saloqo – Salon & Barbershop App: Bookings, Cash Closing, Staff Pay",
+      "description": "Run your barber shop, salon or spa from your phone: walk-ins and bookings, quick sales and receipts, daily cash closing, stock, staff pay and your sales tax. Try it free, no card needed."
+    },
+    "signUp": {
+      "title": "Start your free {{count}}-day trial – Saloqo",
+      "description": "Create your owner account and set up your salon in minutes. No card needed."
+    },
+    "signIn": {
+      "title": "Sign in – Saloqo",
+      "description": "Sign in to Saloqo as the owner, or as staff with your salon code."
+    },
+    "booking": {
+      "title": "Book at {{salon}} – Saloqo",
+      "titleWhere": "Book at {{salon}} – {{where}}",
+      "description": "Book online at {{salon}}: services, prices and free times. No account needed."
+    }
   }
 }
