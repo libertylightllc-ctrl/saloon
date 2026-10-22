@@ -1,15 +1,18 @@
 /** "Everything the counter needs": the two everyday screens large (with the real app), the rest as small cards. */
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View, type ImageSourcePropType } from 'react-native';
+import { useState, type ReactNode } from 'react';
+import { ScrollView, StyleSheet, useWindowDimensions, View, type ImageSourcePropType } from 'react-native';
 
-import { brandPalette as B, spacing } from '@/theme';
+import { brandPalette as B, screenPadding, spacing } from '@/theme';
 import { Icon, Text, type IconName } from '@/ui';
 
+import gentsBooking from '../../../assets/images/landing/gents-booking.webp';
 import gentsQueue from '../../../assets/images/landing/gents-queue.webp';
 import gentsSale from '../../../assets/images/landing/gents-sale.webp';
 import { Band, NavyBackdrop, PhoneShot, useLandingLayout } from './parts';
+import { useVisitorInUae } from './visitor';
 
-type FeatureKey = 'queue' | 'sale' | 'closing' | 'staff' | 'compliance' | 'stock' | 'reports' | 'roles';
+type FeatureKey = 'booking' | 'queue' | 'sale' | 'closing' | 'staff' | 'compliance' | 'stock' | 'reports' | 'roles';
 const SMALL: { key: FeatureKey; icon: IconName }[] = [
   { key: 'closing', icon: 'banknote' },
   { key: 'staff', icon: 'clock' },
@@ -18,39 +21,118 @@ const SMALL: { key: FeatureKey; icon: IconName }[] = [
   { key: 'reports', icon: 'chart' },
   { key: 'roles', icon: 'userCheck' },
 ];
+const BIG: { feature: FeatureKey; icon: IconName; shot: ImageSourcePropType; dark?: boolean }[] = [
+  { feature: 'booking', icon: 'calendarPlus', shot: gentsBooking, dark: true },
+  { feature: 'queue', icon: 'users', shot: gentsQueue },
+  { feature: 'sale', icon: 'receipt', shot: gentsSale },
+];
+/** WPS and the UAE checklist are for UAE salons: visitors elsewhere read the general line (brief 2.12). */
+const UAE_ONLY: FeatureKey[] = ['staff', 'compliance'];
 
-export function FeatureBento() {
+export function FeatureBento({ onLayoutY }: { onLayoutY?: (y: number) => void }) {
   const { t } = useTranslation();
   const { wide, compact, width } = useLandingLayout();
-  const columns = width >= 1100 ? 3 : compact ? 1 : 2;
+  const uae = useVisitorInUae();
+  const columns = width >= 1100 ? 3 : 2;
+  const body = (key: FeatureKey) => t(`auth.landing.features.${key}.${UAE_ONLY.includes(key) && uae === false ? 'bodyIntl' : 'body'}` as 'auth.landing.features.queue.body');
   return (
-    <Band ground={B.card} style={styles.band}>
-      <View style={styles.head}>
-        <Text variant={compact ? 'sectionCompact' : 'section'} align="center" style={styles.ink} accessibilityRole="header">
-          {t('auth.landing.featuresTitle')}
-        </Text>
-        <Text variant="lead" align="center" style={styles.muted}>
-          {t('auth.landing.featuresLead')}
-        </Text>
-      </View>
-      <View style={[styles.bigRow, wide && styles.row]}>
-        <BigTile feature="queue" icon="users" shot={gentsQueue} dark />
-        <BigTile feature="sale" icon="receipt" shot={gentsSale} />
-      </View>
-      <View style={styles.grid}>
-        {SMALL.map((f) => (
-          <View key={f.key} style={[styles.small, { width: columns === 1 ? '100%' : `${100 / columns - 1.6}%` }]}>
-            <View style={styles.iconRing}>
-              <Icon name={f.icon} size={20} color={B.tealDeep} />
-            </View>
-            <Text variant="h4" style={styles.ink}>
-              {t(`auth.landing.features.${f.key}.title`)}
+    <View onLayout={(e) => onLayoutY?.(e.nativeEvent.layout.y)}>
+      <Band ground={B.card} style={[styles.band, compact && styles.bandCompact]}>
+        <View style={styles.head}>
+          <Text variant={compact ? 'sectionCompact' : 'section'} align="center" style={styles.ink} accessibilityRole="header">
+            {t('auth.landing.featuresTitle')}
+          </Text>
+          {compact ? null : (
+            <Text variant="lead" align="center" style={styles.muted}>
+              {t('auth.landing.featuresLead')}
             </Text>
-            <Text style={styles.muted}>{t(`auth.landing.features.${f.key}.body`)}</Text>
+          )}
+        </View>
+        {/* The free booking page first (brief 2.6): every salon gets one, no commission. On a phone the large tiles,
+            then the small cards, swipe sideways (brief 2.14). */}
+        {compact ? (
+          <Swipe count={BIG.length} share={0.86} testID="landing-big-swipe">
+            {(i, w) => (
+              <View key={BIG[i]!.feature} style={{ width: w }}>
+                <BigTile {...BIG[i]!} />
+              </View>
+            )}
+          </Swipe>
+        ) : (
+          <>
+            <BigTile {...BIG[0]!} />
+            <View style={[styles.bigRow, wide && styles.row]}>
+              <BigTile {...BIG[1]!} />
+              <BigTile {...BIG[2]!} />
+            </View>
+          </>
+        )}
+        {compact ? (
+          <Swipe count={SMALL.length} share={0.78} testID="landing-features-swipe">
+            {(i, w) => (
+              <View key={SMALL[i]!.key} style={[styles.small, { width: w }]}>
+                <SmallCard feature={SMALL[i]!.key} icon={SMALL[i]!.icon} body={body(SMALL[i]!.key)} />
+              </View>
+            )}
+          </Swipe>
+        ) : (
+          <View style={styles.grid}>
+            {SMALL.map((f) => (
+              <View key={f.key} style={[styles.small, { width: `${100 / columns - 1.6}%` }]}>
+                <SmallCard feature={f.key} icon={f.icon} body={body(f.key)} />
+              </View>
+            ))}
           </View>
+        )}
+      </Band>
+    </View>
+  );
+}
+
+function SmallCard({ feature, icon, body }: { feature: FeatureKey; icon: IconName; body: string }) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <View style={styles.iconRing}>
+        <Icon name={icon} size={20} color={B.tealDeep} />
+      </View>
+      <Text variant="h4" style={styles.ink}>
+        {t(`auth.landing.features.${feature}.title`)}
+      </Text>
+      <Text style={styles.muted} testID={`landing-feature-${feature}`}>
+        {body}
+      </Text>
+    </>
+  );
+}
+
+/** A row that swipes sideways on a phone, the next card peeking in, with dots (brief 2.14). */
+function Swipe({ count, share, testID, children }: { count: number; share: number; testID: string; children: (i: number, width: number) => ReactNode }) {
+  const { t } = useTranslation();
+  const { width } = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const card = Math.round(width * share);
+  const step = card + spacing.md;
+  return (
+    <View style={styles.swipe}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={step}
+        decelerationRate="fast"
+        contentContainerStyle={styles.swipeRow}
+        onScroll={(e) => setIndex(Math.min(count - 1, Math.max(0, Math.round(Math.abs(e.nativeEvent.contentOffset.x) / step))))}
+        scrollEventThrottle={32}
+        testID={testID}
+      >
+        {Array.from({ length: count }, (_, i) => children(i, card))}
+      </ScrollView>
+      <View style={styles.dots} accessibilityLabel={t('auth.landing.swipe', { n: index + 1, total: count })}>
+        {Array.from({ length: count }, (_, i) => (
+          <View key={i} style={[styles.dot, i === index && styles.dotOn]} />
         ))}
       </View>
-    </Band>
+    </View>
   );
 }
 
@@ -80,6 +162,7 @@ function BigTile({ feature, icon, shot, dark = false }: { feature: FeatureKey; i
 
 const styles = StyleSheet.create({
   band: { paddingVertical: 88, gap: spacing['3xl'] },
+  bandCompact: { paddingVertical: 48, gap: spacing.xl },
   head: { gap: spacing.md, alignItems: 'center', maxWidth: 720, alignSelf: 'center' },
   ink: { color: B.ink },
   muted: { color: B.inkMuted },
@@ -89,10 +172,15 @@ const styles = StyleSheet.create({
   bigCopy: { flex: 1, padding: spacing['3xl'], gap: spacing.md, zIndex: 1 },
   bigShot: { width: 250, paddingTop: spacing['3xl'], marginBottom: -220, alignItems: 'center' },
   // On a phone the screen sits under the words.
-  bigStacked: { flexDirection: 'column', minHeight: 0, maxHeight: 640 },
-  bigShotStacked: { width: '100%', paddingTop: 0, marginBottom: -260 },
+  bigStacked: { flexDirection: 'column', minHeight: 0, maxHeight: 470 },
+  bigShotStacked: { width: '100%', paddingTop: 0, marginBottom: -330 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.lg, justifyContent: 'space-between' },
   small: { padding: spacing['2xl'], gap: spacing.sm, borderRadius: 22, borderWidth: 1, borderColor: B.hairline, backgroundColor: B.card, boxShadow: B.cardShadow },
   iconRing: { width: 44, height: 44, borderRadius: 22, backgroundColor: B.tealSoft, alignItems: 'center', justifyContent: 'center' },
   iconRingDark: { backgroundColor: B.navyRaised, borderWidth: 1, borderColor: B.navyLine },
+  swipe: { gap: spacing.md, marginHorizontal: -screenPadding },
+  swipeRow: { gap: spacing.md, paddingHorizontal: screenPadding },
+  dots: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
+  dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: B.hairline },
+  dotOn: { width: 20, backgroundColor: B.tealDeep },
 });

@@ -1,5 +1,6 @@
 /** The top of the website's home page: on navy, what Saloqo is, the way in, and the real app floating beside it. */
 import { StatusBar } from 'expo-status-bar';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,9 +15,11 @@ import gentsQueue from '../../../assets/images/landing/gents-queue.webp';
 import ladiesHome from '../../../assets/images/landing/ladies-home.webp';
 import queueCard from '../../../assets/images/landing/queue-card.webp';
 import star from '../../../assets/images/splash-icon.png';
+import { demoHref, hasWhatsApp, whatsappUrl } from './contact';
 import { Band, BrandButton, Eyebrow, NavyBackdrop, PhoneShot, useLandingLayout } from './parts';
 
-const FACTS: { key: 'languages' | 'devices' | 'private'; icon: IconName }[] = [
+const FACTS: { key: 'booking' | 'languages' | 'devices' | 'private'; icon: IconName }[] = [
+  { key: 'booking', icon: 'calendarPlus' },
   { key: 'languages', icon: 'languages' },
   { key: 'devices', icon: 'smartphone' },
   { key: 'private', icon: 'shield' },
@@ -26,22 +29,45 @@ export function Hero({
   createLabel,
   onCreate,
   onSignIn,
+  onSeeHow,
+  onCtaBottom,
   trialLine,
 }: {
   createLabel: string;
   onCreate: () => void;
   onSignIn: () => void;
+  /** "See how it works" (phones without a WhatsApp number): to the video, or the features. */
+  onSeeHow: () => void;
+  /** Where the main button ends, from the top of the window (the sticky bar shows once it has scrolled away). */
+  onCtaBottom?: (windowY: number) => void;
   /** "No card needed" under the button (website only; the phone apps do not talk about paying). */
   trialLine: string | null;
 }) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { wide, compact } = useLandingLayout();
+  const cta = useRef<View>(null);
+  const facts = (
+    <View style={styles.facts}>
+      {FACTS.filter((f) => !(compact && f.key === 'private')).map((f) => (
+        <View key={f.key} style={styles.fact}>
+          <Icon name={f.icon} size={16} color={B.teal} />
+          {f.key === 'languages' ? (
+            <LanguageTicker onDark />
+          ) : (
+            <Text variant="bodyStrong" style={styles.onNavy} testID={`landing-fact-${f.key}`}>
+              {t(`auth.landing.facts.${f.key}`)}
+            </Text>
+          )}
+        </View>
+      ))}
+    </View>
+  );
   return (
     <View style={styles.ground}>
       <StatusBar style="light" />
       <NavyBackdrop glowAt={wide ? ['72%', '45%'] : ['50%', '70%']} />
-      <Band ground="transparent" style={{ paddingTop: insets.top + spacing.lg, paddingBottom: wide ? 96 : 56 }}>
+      <Band ground="transparent" style={{ paddingTop: insets.top + spacing.lg, paddingBottom: wide ? 96 : 40 }}>
         <View style={styles.topBar}>
           <View style={styles.brand}>
             <BrandMark size={36} />
@@ -51,47 +77,60 @@ export function Hero({
           </View>
           <View style={styles.topActions}>
             <LanguageButton onBand />
-            {compact ? null : <BrandButton label={t('auth.landing.signIn')} kind="outlineOnNavy" onPress={onSignIn} testID="landing-sign-in" />}
+            {/* On a phone a small link, so the page's one big button is the way in (brief 2.2). */}
+            <BrandButton label={t('auth.landing.signIn')} kind={compact ? 'textOnNavy' : 'outlineOnNavy'} small={compact} onPress={onSignIn} testID="landing-sign-in" />
           </View>
         </View>
 
-        <View style={[styles.body, wide ? styles.bodyWide : styles.bodyNarrow]}>
-          <View style={[styles.copy, wide && styles.copyWide]}>
+        <View style={[styles.body, wide ? styles.bodyWide : styles.bodyNarrow, compact && styles.bodyCompact]}>
+          <View style={[styles.copy, wide && styles.copyWide, compact && styles.copyCompact]}>
             <Eyebrow label={t('auth.landing.eyebrow')} onNavy />
             <Text variant={compact ? 'heroCompact' : 'hero'} style={[styles.onNavy, styles.headline]} accessibilityRole="header">
               {t('auth.landing.headline')}
             </Text>
             <Text variant="lead" style={styles.muted}>
-              {t('auth.landing.lead')}
+              {t(compact ? 'auth.landing.leadShort' : 'auth.landing.lead')}
             </Text>
-            <View style={styles.ctas}>
+            <View
+              ref={cta}
+              style={styles.ctas}
+              onLayout={() => cta.current?.measure((_x, _y, _w, h, _px, py) => onCtaBottom?.(py + h))}
+            >
               <BrandButton label={createLabel} icon="chevronRight" onPress={onCreate} testID="landing-create" />
-              {compact ? <BrandButton label={t('auth.landing.signIn')} kind="outlineOnNavy" onPress={onSignIn} testID="landing-sign-in" /> : null}
+              {compact ? (
+                hasWhatsApp ? (
+                  <BrandButton label={t('auth.landing.whatsapp')} kind="whatsapp" icon="messageCircle" href={whatsappUrl()} external testID="landing-whatsapp" />
+                ) : (
+                  <BrandButton label={t('auth.landing.seeHow')} kind="outlineOnNavy" onPress={onSeeHow} testID="landing-see-how" />
+                )
+              ) : demoHref ? (
+                <BrandButton label={t('auth.landing.demo')} kind="outlineOnNavy" href={demoHref.href} external testID="landing-demo" />
+              ) : null}
             </View>
-            {trialLine ? (
-              <Text variant="small" style={styles.tealLine}>
-                {trialLine}
+            <View style={styles.trust}>
+              {trialLine ? (
+                <Text variant="small" style={styles.tealLine}>
+                  {trialLine}
+                </Text>
+              ) : null}
+              <Text variant="small" style={styles.tealLine} testID="landing-trust-data">
+                {t('auth.landing.trust.dataYours')}
               </Text>
-            ) : null}
-            <Text variant="small" style={styles.muted}>
-              {t('auth.landing.staffNote')}
-            </Text>
-            <View style={styles.facts}>
-              {FACTS.map((f) => (
-                <View key={f.key} style={styles.fact}>
-                  <Icon name={f.icon} size={16} color={B.teal} />
-                  {f.key === 'languages' ? (
-                    <LanguageTicker onDark />
-                  ) : (
-                    <Text variant="bodyStrong" style={styles.onNavy}>
-                      {t(`auth.landing.facts.${f.key}`)}
-                    </Text>
-                  )}
-                </View>
-              ))}
             </View>
+            {compact ? null : (
+              <>
+                <Text variant="small" style={styles.muted}>
+                  {t('auth.landing.staffNote')}
+                </Text>
+                {facts}
+              </>
+            )}
           </View>
-          <HeroVisual size={wide ? 1 : compact ? 0.72 : 0.86} />
+          {/* On a phone the app shows on the first screen, a little cropped (brief 2.1). */}
+          <View style={compact ? styles.visualCrop : undefined} testID="landing-hero-visual">
+            <HeroVisual size={wide ? 1 : compact ? 0.64 : 0.86} />
+          </View>
+          {compact ? <View style={styles.copyCompact}>{facts}</View> : null}
         </View>
       </Band>
     </View>
@@ -130,6 +169,11 @@ const styles = StyleSheet.create({
   body: { marginTop: spacing['4xl'] },
   bodyWide: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing['4xl'] },
   bodyNarrow: { gap: spacing['4xl'], alignItems: 'center' },
+  bodyCompact: { marginTop: spacing['2xl'], gap: spacing.xl },
+  copyCompact: { gap: spacing.md, width: '100%' },
+  // The phones cut off at the bottom: enough to see the app without a whole extra screen.
+  visualCrop: { height: 330, overflow: 'hidden' },
+  trust: { gap: 2 },
   copy: { gap: spacing.lg, width: '100%' },
   copyWide: { flex: 1, maxWidth: 580 },
   headline: { maxWidth: 600 },
