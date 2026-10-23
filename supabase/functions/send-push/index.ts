@@ -1,7 +1,7 @@
 // Delivers waiting notifications to the phones of the people they are for (Expo push service).
 // Called every minute by pg_cron (dispatch_push) and safe to call any time: each notification goes out once.
 // PUSH_ENDPOINT overrides the Expo URL on the local stack only (the push-sink stand-in; ../_shared/env.ts).
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { cors, json } from '../_shared/staff.ts';
 import { localOnly } from '../_shared/env.ts';

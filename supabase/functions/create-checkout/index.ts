@@ -2,7 +2,7 @@
 // out the amount (the salon's people now) and records the payment as pending; Creem gives a checkout page to open.
 // When Creem says it is paid, creem-webhook extends the plan. The Creem key never leaves the server.
 // CREEM_API_BASE (local only) points at the creem-sink stand-in on the local stack.
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { API_BASE, checkoutBody, PRODUCTS, type CheckoutStart, type PlanKey } from '../_shared/creem.ts';
 import { localOnly, secret } from '../_shared/env.ts';

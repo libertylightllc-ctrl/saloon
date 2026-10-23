@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
   }
 
   // Look up the target with the service role, then check the caller owns that business.
-  const { createClient } = await import('npm:@supabase/supabase-js@2');
+  const { createClient } = await import('npm:@supabase/supabase-js@2.109.0');
   const lookup = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });

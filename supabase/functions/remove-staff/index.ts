@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
   }
   if (body.action !== 'remove' && body.action !== 'restore') return fail('invalid_action');
 
-  const { createClient } = await import('npm:@supabase/supabase-js@2');
+  const { createClient } = await import('npm:@supabase/supabase-js@2.109.0');
   const lookup = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });

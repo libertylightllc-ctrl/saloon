@@ -7,7 +7,7 @@
 // emailed instead. GROQ_BASE_URL / ANTHROPIC_BASE_URL point at the local stand-in (ai-sink) in development and are
 // ignored on the live project (../_shared/env.ts).
 import Anthropic from 'npm:@anthropic-ai/sdk@0.133.0';
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { localOnly, secret } from '../_shared/env.ts';
 import { cors, json } from '../_shared/staff.ts';

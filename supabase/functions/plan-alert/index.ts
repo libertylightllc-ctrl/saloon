@@ -3,7 +3,7 @@
 // no-reply@saloqo.com. Called by the database when a request is made (dispatch_plan_alerts) and every 10 minutes as a
 // retry; safe to call any time: each request is told once. Needs the RESEND_API_KEY secret (the owner sets it); without
 // it nothing is sent and the requests wait. EMAIL_ENDPOINT overrides Resend on the local stack only (mail-sink).
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { localOnly, secret } from '../_shared/env.ts';
 import { cors, json } from '../_shared/staff.ts';

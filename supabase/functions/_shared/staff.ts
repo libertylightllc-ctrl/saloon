@@ -1,5 +1,5 @@
 // Shared helpers for the staff-login Edge Functions (service role, owner-only).
-import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
+import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 export const cors = {
   'Access-Control-Allow-Origin': '*',

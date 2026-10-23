@@ -2,7 +2,7 @@
 // refunded for the platform owner to look at. Every request must carry a valid creem-signature (HMAC-SHA256 of the
 // raw body with the webhook secret; test and live each have their own); anything else gets 401 and changes nothing.
 // Creem retries for up to a day: the database makes the same event harmless the second time.
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { monthsOfProduct, salonCodeField, sameHex, signature } from '../_shared/creem.ts';
 import { localOnly, secret } from '../_shared/env.ts';

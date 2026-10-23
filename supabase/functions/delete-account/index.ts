@@ -1,7 +1,7 @@
 // An owner deletes their own account (the app stores require it for accounts people create themselves). Their details
 // and sign-in go; the salon's records stay, as UAE law requires records to be kept. Deleting it closes the salon, and
 // its staff logins go too. Staff logins are the owner's to remove. See delete_account_data() in the database.
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { callerOf, cors, fail, json } from '../_shared/staff.ts';
 
