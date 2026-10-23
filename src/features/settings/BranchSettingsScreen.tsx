@@ -7,6 +7,7 @@ import { z } from 'zod';
 
 import { useSession, useWorkspace } from '@/features/auth/session';
 import { paperOf, RECEIPT_PAPERS } from '@/features/sales/receiptPaper';
+import { modeConfig } from '@/features/mode/modeConfig';
 import { ModeCard } from '@/features/setup/ModeCard';
 import { TaxFields } from '@/features/tax/TaxFields';
 import { checkProvince, checkSecondTax, secondTaxPayload, taxShape, taxValuesOf, trnValid } from '@/features/tax/taxForm';
@@ -30,6 +31,7 @@ import {
 
 import { CountryCard } from './CountryCard';
 import { OnlineBookingCard } from './OnlineBookingCard';
+import { RoomsCard } from './RoomsCard';
 import { OpeningCashCard } from './OpeningCashCard';
 import { RECEIPT_MODES, ReceiptOptions } from './ReceiptOptions';
 import { SellerFields, sellerShape } from './SellerFields';
@@ -201,6 +203,14 @@ export function BranchSettingsScreen() {
           <FormTextField control={form.control} name="phone" label={t('branch.fields.phone')} keyboardType="phone-pad" />
           <FormDaysField control={form.control} name="open_days" label={t('branch.fields.openDays')} hint={t('branch.fields.openDaysHint')} />
         </View>
+
+        {/* Treatment rooms, for the types that book rooms (2026-10-24). */}
+        {modeConfig[branch.mode].usesRooms ? (
+          <View style={styles.section}>
+            <SectionHeader title={t('branch.rooms.title')} />
+            <RoomsCard />
+          </View>
+        ) : null}
 
         <View style={styles.section}>
           <SectionHeader title={t('branch.country.title')} />

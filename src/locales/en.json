@@ -941,7 +941,9 @@
     "too_many_bookings": "You already have 3 bookings coming up here. Cancel one or call the salon.",
     "card_unavailable": "Card payment is not available right now. Pay by bank transfer instead.",
     "photo_missing": "The photo did not upload. Try again.",
-    "invalid_instagram": "Enter your Instagram handle: letters, numbers, dots and underscores."
+    "invalid_instagram": "Enter your Instagram handle: letters, numbers, dots and underscores.",
+    "room_name_required": "Give the room a name (up to 40 letters).",
+    "room_taken": "Another room in use already has this name."
   },
   "sales": {
     "title": "Sales",
@@ -1135,6 +1137,22 @@
       "80mm": "Roll 80 mm",
       "58mm": "Roll 58 mm",
       "a4": "A4"
+    },
+    "rooms": {
+      "title": "Rooms",
+      "hint": "Treatment rooms for services that need one, like massages and facials. Bookings get a free room.",
+      "new": "New room",
+      "placeholder": "Massage room",
+      "add": "Add room",
+      "added": "Room added",
+      "name": "Room name",
+      "rename": "Rename",
+      "saved": "Room saved",
+      "stop": "Stop using",
+      "use": "Use again",
+      "stopped": "Room no longer used for bookings",
+      "inUse": "Room in use again",
+      "notInUse": "Not in use"
     }
   },
   "accounts": {

@@ -941,7 +941,9 @@
     "too_many_bookings": "Ya tienes 3 reservas próximas aquí. Cancela una o llama al salón.",
     "card_unavailable": "El pago con tarjeta no está disponible ahora. Paga por transferencia bancaria.",
     "photo_missing": "La foto no se subió. Inténtalo de nuevo.",
-    "invalid_instagram": "Escribe tu usuario de Instagram: letras, números, puntos y guiones bajos."
+    "invalid_instagram": "Escribe tu usuario de Instagram: letras, números, puntos y guiones bajos.",
+    "room_name_required": "Pon un nombre a la cabina (hasta 40 letras).",
+    "room_taken": "Otra cabina en uso ya tiene este nombre."
   },
   "sales": {
     "title": "Ventas",
@@ -1135,6 +1137,22 @@
       "80mm": "Rollo 80 mm",
       "58mm": "Rollo 58 mm",
       "a4": "A4"
+    },
+    "rooms": {
+      "title": "Cabinas",
+      "hint": "Cabinas para los servicios que la necesitan, como masajes y faciales. Cada reserva recibe una cabina libre.",
+      "new": "Nueva cabina",
+      "placeholder": "Cabina de masajes",
+      "add": "Añadir cabina",
+      "added": "Cabina añadida",
+      "name": "Nombre de la cabina",
+      "rename": "Renombrar",
+      "saved": "Cabina guardada",
+      "stop": "Dejar de usar",
+      "use": "Volver a usar",
+      "stopped": "La cabina ya no se usa para reservas",
+      "inUse": "Cabina en uso de nuevo",
+      "notInUse": "Sin usar"
     }
   },
   "accounts": {

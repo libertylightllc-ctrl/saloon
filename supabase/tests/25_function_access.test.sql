@@ -111,6 +111,7 @@ insert into reviewed values
     ('set_branch_logo'),
     ('set_branch_instagram'),
     ('set_branch_cover'),
+    ('save_room'),
     ('admin_set_card_payments'),
     ('admin_set_bank_transfer'),
     ('card_checkout_start'),

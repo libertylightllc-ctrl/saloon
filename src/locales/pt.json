@@ -941,7 +941,9 @@
     "too_many_bookings": "Você já tem 3 reservas futuras aqui. Cancele uma ou ligue para o salão.",
     "card_unavailable": "O pagamento com cartão não está disponível agora. Pague por transferência bancária.",
     "photo_missing": "A foto não foi enviada. Tente de novo.",
-    "invalid_instagram": "Digite seu usuário do Instagram: letras, números, pontos e sublinhados."
+    "invalid_instagram": "Digite seu usuário do Instagram: letras, números, pontos e sublinhados.",
+    "room_name_required": "Dê um nome à sala (até 40 letras).",
+    "room_taken": "Outra sala em uso já tem este nome."
   },
   "sales": {
     "title": "Vendas",
@@ -1135,6 +1137,22 @@
       "80mm": "Rolo 80 mm",
       "58mm": "Rolo 58 mm",
       "a4": "A4"
+    },
+    "rooms": {
+      "title": "Salas",
+      "hint": "Salas para os serviços que precisam de uma, como massagens e faciais. Cada reserva recebe uma sala livre.",
+      "new": "Nova sala",
+      "placeholder": "Sala de massagem",
+      "add": "Adicionar sala",
+      "added": "Sala adicionada",
+      "name": "Nome da sala",
+      "rename": "Renomear",
+      "saved": "Sala salva",
+      "stop": "Parar de usar",
+      "use": "Usar de novo",
+      "stopped": "A sala não é mais usada para reservas",
+      "inUse": "Sala em uso de novo",
+      "notInUse": "Fora de uso"
     }
   },
   "accounts": {

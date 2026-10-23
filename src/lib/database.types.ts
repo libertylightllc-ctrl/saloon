@@ -4274,6 +4274,10 @@ export type Database = {
       save_expense_category: { Args: { p: Json }; Returns: string };
       save_item: { Args: { p: Json }; Returns: string };
       save_owner_contact: { Args: { p_phone: string; p_whatsapp_ok: boolean }; Returns: undefined };
+      save_room: {
+        Args: { p_active?: boolean; p_branch: string; p_name: string; p_room: string };
+        Returns: string;
+      };
       save_service: { Args: { p: Json }; Returns: string };
       save_supplier: { Args: { p: Json }; Returns: string };
       seed_expense_categories: { Args: { p_business: string }; Returns: undefined };
