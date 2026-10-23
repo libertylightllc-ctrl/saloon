@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import type { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ import { semantic, spacing, useTheme } from '@/theme';
 import { Button, Card, FormError, HeaderBand, Icon, PillTabs, QueryState, Screen, StatusPill, Text, TextField, useToast, type IconName } from '@/ui';
 
 import { trialDaysLeft, useIsPlatformAdmin, usePlanStatus, useRequestPlan, type PlanStatus } from './api';
+import { payOptions, useCardPrice } from './cardApi';
 import { HowToPay } from './HowToPay';
 import { CardReturn, PayByCard } from './PayByCard';
 import { canOfferPlans } from './storePolicy';
@@ -52,6 +53,8 @@ export function PlanScreen() {
   const owner = can(role, 'requestPlan') && canOfferPlans;
   const uae = isUae(business.country_code);
   const admin = useIsPlatformAdmin().data === true;
+  const pay = payOptions(useCardPrice().data, admin);
+  const router = useRouter();
   // Back from Creem's checkout: saloqo.com/plan?paid=<the card payment>.
   const { paid } = useLocalSearchParams<{ paid?: string }>();
   const paidId = typeof paid === 'string' && /^[0-9a-f-]{36}$/.test(paid) ? paid : null;
@@ -133,9 +136,16 @@ export function PlanScreen() {
             ) : null}
             {/* By card: paid and switched on at once. */}
             {owner ? <PayByCard businessId={business.id} plan={p} months={months} admin={admin} /> : null}
-            {/* By bank transfer: pay first, then tell us (the request below). */}
-            {owner ? <HowToPay code={business.code} /> : null}
-            {owner ? (
+            {/* Neither way to pay is on: ask us (brief 5.3). */}
+            {owner && pay.contact ? (
+              <Card variant="outlined" style={styles.card} testID="plan-contact">
+                <Text color="textSecondary">{t('plan.contactToBuy')}</Text>
+                <Button label={t('support.contactTitle')} icon="messageCircle" variant="outline" onPress={() => router.push('/support')} />
+              </Card>
+            ) : null}
+            {/* By bank transfer or a card link, once switched on (brief 5.3): pay first, then tell us (the request below). */}
+            {owner && pay.bank ? <HowToPay code={business.code} /> : null}
+            {owner && pay.bank ? (
               <Card variant="outlined" style={styles.card}>
                 <TextField label={t('plan.note')} placeholder={t('plan.notePlaceholder')} value={note} onChangeText={setNote} testID="plan-note" />
                 <FormError error={request.error} />

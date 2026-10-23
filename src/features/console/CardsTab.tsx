@@ -54,6 +54,14 @@ export function CardsTab() {
     },
     onSuccess: () => client.invalidateQueries({ queryKey: ['platform', 'card-price'] }),
   });
+  // Bank transfer or a payment link on the plan page (brief 5.3): off until the company and bank account are ready.
+  const setBank = useMutation({
+    mutationFn: async (on: boolean) => {
+      const { error } = await supabase.rpc('admin_set_bank_transfer', { p_on: on });
+      if (error) throw error;
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: ['platform', 'card-price'] }),
+  });
   const money = (minor: number, currency: string) => (isCurrency(currency) ? formatMoney(minor, currency) : `${currency} ${minor}`);
 
   return (
@@ -70,6 +78,19 @@ export function CardsTab() {
           testID="console-card-mode"
         />
         <FormError error={setMode.error} />
+      </Card>
+      <Card variant="outlined" style={styles.card}>
+        <Text variant="h4">{t('console.cards.bankTitle')}</Text>
+        <Text variant="small" color="textSecondary">
+          {t('console.cards.bankHint')}
+        </Text>
+        <PillTabs<'off' | 'on'>
+          items={(['off', 'on'] as const).map((key) => ({ key, label: t(key === 'on' ? 'console.cards.bankOn' : 'console.cards.bankOff') }))}
+          value={price.data?.bank_transfer ? 'on' : 'off'}
+          onChange={(v) => setBank.mutate(v === 'on')}
+          testID="console-bank-transfer"
+        />
+        <FormError error={setBank.error} />
       </Card>
       <QueryState query={payments} isEmpty={(rows) => rows.length === 0} empty={<EmptyState illustration="no-results" message={t('console.cards.empty')} />}>
         {(rows) => (

@@ -3,6 +3,7 @@
  * Hosted or CI runs can set E2E_SUPABASE_URL / E2E_ANON_KEY / E2E_SERVICE_KEY instead.
  * Also tells the database where send-push lives, so the every-minute push job can reach it
  * (inside the local Docker network that is http://kong:8000).
+ * It switches on paying by bank transfer (off by default; the plan tests use it).
  * Locally it also stops the realtime server from restarting its database stream every 10 minutes
  * (scripts/realtime-local-region.sh), which lost live updates sent during the restart.
  */
@@ -30,4 +31,15 @@ export default async function globalSetup() {
     body: JSON.stringify({ p_project_url: local ? 'http://kong:8000' : url, p_anon_key: process.env.E2E_ANON_KEY }),
   });
   if (!res.ok) throw new Error(`configure_push failed: ${res.status} ${await res.text()}`);
+  // The plan page's bank transfer and request (brief 5.3) is off by default; the plan tests use it.
+  const bank = await fetch(`${url}/rest/v1/platform_settings?id=eq.true`, {
+    method: 'PATCH',
+    headers: {
+      apikey: process.env.E2E_SERVICE_KEY!,
+      Authorization: `Bearer ${process.env.E2E_SERVICE_KEY!}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ bank_transfer: true }),
+  });
+  if (!bank.ok) throw new Error(`bank_transfer failed: ${bank.status} ${await bank.text()}`);
 }
