@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
+import { modeConfig } from '@/features/mode/modeConfig';
 import { useWorkspace } from '@/features/auth/session';
 import { useCatalog, useSaveService } from '@/features/catalog/api';
 import { spacing } from '@/theme';
@@ -118,7 +119,8 @@ export function ServiceFormScreen() {
 
   const submit = form.handleSubmit((v) => write(v));
   const toggleArchive = form.handleSubmit((v) => write(v, existing?.status === 'archived' ? 'active' : 'archived'));
-  const ladies = branch.mode === 'ladies';
+  // Types with treatment rooms (ladies salons, wellness studios) ask about rooms and patch tests (brief 5.4).
+  const roomsAndPatchTests = modeConfig[branch.mode].usesRooms;
 
   const body = (data: NonNullable<typeof catalog.data>) => (
     <View style={styles.body}>
@@ -164,7 +166,7 @@ export function ServiceFormScreen() {
           <FormTextField control={form.control} name="buffer_min" label={t('services.fields.buffer')} keyboardType="number-pad" />
         </View>
       </View>
-      {ladies ? (
+      {roomsAndPatchTests ? (
         <>
           <Controller
             control={form.control}

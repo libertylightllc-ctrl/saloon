@@ -1,7 +1,7 @@
 /** Screen actions shared by the flows. testIDs render as data-testid on web. */
 import { expect, type Page } from '@playwright/test';
 
-import type { Mode } from './api';
+import type { Mode, SalonMode } from './api';
 import { THEME } from './fixtures';
 
 /**
@@ -18,7 +18,7 @@ export const text = (page: Page, value: string | RegExp, exact = false) =>
 export const field = (page: Page, name: string) => id(page, `field-${name}`);
 
 /** Fresh device: welcome → pick the salon type → sign-in. */
-export async function chooseType(page: Page, mode: Mode) {
+export async function chooseType(page: Page, mode: SalonMode) {
   await page.goto('/');
   await id(page, `welcome-${mode}`).click();
   await expect(id(page, 'sign-in-submit')).toBeVisible();
@@ -42,7 +42,7 @@ export async function signInStaff(page: Page, code: string, username: string, pa
 }
 
 /** A new device that picks `deviceMode` on the welcome screen, then signs in. */
-export async function ownerOn(page: Page, deviceMode: Mode, email: string, password: string) {
+export async function ownerOn(page: Page, deviceMode: SalonMode, email: string, password: string) {
   await chooseType(page, deviceMode);
   await signInOwner(page, email, password);
 }

@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { spacing, themes, type Mode } from '@/theme';
+import { MODE_ICON } from '@/features/mode/modeLook';
 import { Icon, Text } from '@/ui';
 
 /** A salon type drawn in its own theme, so the choice previews the look. */
@@ -34,7 +35,7 @@ export function ModeCard({
       ]}
     >
       <View style={[styles.swatch, { backgroundColor: preview.colors.primary500, borderRadius: preview.radius.md }]}>
-        <Icon name={mode === 'gents' ? 'scissors' : 'flower'} size={22} color={preview.colors.onPrimary} />
+        <Icon name={MODE_ICON[mode]} size={22} color={preview.colors.onPrimary} />
       </View>
       <View style={styles.flex}>
         <Text variant="h4" style={{ color: preview.colors.primaryText }}>

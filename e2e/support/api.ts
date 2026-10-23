@@ -9,7 +9,11 @@ import { ANON_KEY, MAILPIT_URL, SERVICE_KEY, SUPABASE_URL, uid } from './env';
 // Node 20 has no global WebSocket; supabase-js only needs the constructor to exist.
 if (!('WebSocket' in globalThis)) Object.assign(globalThis, { WebSocket: class {} });
 
+/** The two looks every browser test runs in (playwright.config projects). */
 export type Mode = 'gents' | 'ladies';
+/** Any salon type a salon can be created with (brief 5.4 added unisex and wellness). */
+export type { Mode as SalonMode } from '../../src/theme/tokens';
+import type { Mode as SalonMode } from '../../src/theme/tokens';
 
 const noSession = { auth: { persistSession: false, autoRefreshToken: false } };
 export const admin = createClient(SUPABASE_URL, SERVICE_KEY, noSession);
@@ -58,7 +62,7 @@ export const SAUDI: Country = {
 
 /** An owner with a set-up business, created the way the setup wizard does it. */
 export async function createOwner(
-  mode: Mode,
+  mode: SalonMode,
   opts: { vat?: boolean; openingCash?: number; businessName?: string; plan?: boolean | 'trial'; country?: Country } = {},
 ): Promise<Owner> {
   const id = uid();

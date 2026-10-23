@@ -35,6 +35,8 @@ const ASPECT: Partial<Record<IllustrationName, number>> = {
 const SOURCES: Record<Mode, Partial<Record<IllustrationName, ImageSourcePropType>>> = {
   gents: {},
   ladies: {},
+  unisex: {},
+  wellness: {},
 };
 
 export interface IllustrationProps {

@@ -3,6 +3,7 @@ import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { modeConfig } from '@/features/mode/modeConfig';
 import { useWorkspace } from '@/features/auth/session';
 import { useCatalog } from '@/features/catalog/api';
 import { CustomerPicker, type PickedCustomer } from '@/features/customers/CustomerPicker';
@@ -62,7 +63,7 @@ export function NewAppointmentScreen() {
   const services = (catalog.data?.services ?? []).filter((s) => s.status === 'active');
   const chosen = services.filter((s) => serviceIds.includes(s.id));
   const duration = sum(chosen.map((s) => (s.duration_min ?? 0) + s.buffer_min)) || 30;
-  const needsRoom = branch.mode === 'ladies' && chosen.some((s) => s.requires_room);
+  const needsRoom = modeConfig[branch.mode].usesRooms && chosen.some((s) => s.requires_room);
   const rooms = useRooms(branch.id, needsRoom);
   const booking = kind === 'booking';
   const slots = useAvailableSlots(branch.id, date, duration, employeeId, booking);

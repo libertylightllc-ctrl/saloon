@@ -5,14 +5,12 @@
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { brandPalette as B, spacing, themes, type Mode } from '@/theme';
+import { MODE_SHOT } from '@/features/mode/modeLook';
+import { brandPalette as B, MODES, spacing, themes, type Mode } from '@/theme';
 import { Icon, Text } from '@/ui';
 
-import gentsQueue from '../../../assets/images/landing/gents-queue.webp';
-import ladiesQueue from '../../../assets/images/landing/ladies-queue.webp';
 import { Band, PhoneShot, useLandingLayout } from './parts';
 
-const SHOT = { gents: gentsQueue, ladies: ladiesQueue };
 
 export function TypeChoice({ onChoose, onLayoutY }: { onChoose: (mode: Mode) => void; onLayoutY: (y: number) => void }) {
   const { t } = useTranslation();
@@ -29,9 +27,12 @@ export function TypeChoice({ onChoose, onLayoutY }: { onChoose: (mode: Mode) => 
           </Text>
         </View>
         {/* Side by side on a phone too: one look at both (brief 2.14). */}
-        <View style={[styles.cards, (wide || compact) && styles.row, compact && styles.cardsCompact]}>
-          {(['gents', 'ladies'] as const).map((mode) => (
-            <TypeCard key={mode} mode={mode} compact={compact} onPress={() => onChoose(mode)} />
+        {/* Four types (brief 5.4): two by two, all four in a row on a wide screen. */}
+        <View style={[styles.cards, styles.row, styles.wrap, compact && styles.cardsCompact]}>
+          {MODES.map((mode, i) => (
+            <View key={mode} style={wide ? styles.quarter : styles.half}>
+              <TypeCard mode={mode} compact={compact} stacked={compact || wide} tilt={i % 2 ? 3 : -3} onPress={() => onChoose(mode)} />
+            </View>
           ))}
         </View>
       </Band>
@@ -39,7 +40,8 @@ export function TypeChoice({ onChoose, onLayoutY }: { onChoose: (mode: Mode) => 
   );
 }
 
-function TypeCard({ mode, compact, onPress }: { mode: Mode; compact: boolean; onPress: () => void }) {
+/** `stacked`: the words above the button (a phone, or four cards in a row on a wide screen). */
+function TypeCard({ mode, compact, stacked, tilt, onPress }: { mode: Mode; compact: boolean; stacked: boolean; tilt: number; onPress: () => void }) {
   const { t } = useTranslation();
   const { colors } = themes[mode];
   return (
@@ -50,11 +52,12 @@ function TypeCard({ mode, compact, onPress }: { mode: Mode; compact: boolean; on
       accessibilityLabel={t(`auth.salonType.${mode}`)}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
-      <View style={[styles.preview, compact && styles.previewCompact, { backgroundColor: mode === 'gents' ? colors.primary500 : colors.primary100 }]}>
-        <PhoneShot source={SHOT[mode]} width={compact ? 104 : 200} tilt={mode === 'gents' ? -3 : 3} />
+      {/* The banded looks (gents, unisex) on their strong colour, the soft ones (ladies, wellness) on a pale tint. */}
+      <View style={[styles.preview, compact && styles.previewCompact, { backgroundColor: themes[mode].variants.header === 'band' ? colors.primary500 : colors.primary100 }]}>
+        <PhoneShot source={MODE_SHOT[mode]} width={compact ? 104 : 200} tilt={tilt} />
       </View>
-      <View style={[styles.text, compact && styles.textCompact]}>
-        <View style={compact ? undefined : styles.flex}>
+      <View style={[styles.text, stacked && styles.textCompact, stacked && !compact && styles.textStacked]}>
+        <View style={stacked ? undefined : styles.flex}>
           <Text variant={compact ? 'h4' : 'h2'} style={{ color: colors.primaryText }}>
             {t(`auth.salonType.${mode}`)}
           </Text>
@@ -76,11 +79,16 @@ const styles = StyleSheet.create({
   bandCompact: { paddingVertical: 48, gap: spacing.xl },
   previewCompact: { height: 130, paddingTop: spacing.lg },
   cardsCompact: { gap: spacing.md },
+  textStacked: { padding: spacing.xl, flex: 1, justifyContent: 'space-between' },
   textCompact: { flexDirection: 'column', alignItems: 'stretch', padding: spacing.md, gap: spacing.sm },
   head: { gap: spacing.md, alignItems: 'center', maxWidth: 720, alignSelf: 'center' },
   ink: { color: B.ink },
   muted: { color: B.inkMuted },
   cards: { gap: spacing.xl },
+  wrap: { flexWrap: 'wrap' },
+  // Two to a row (the gap shared), or four on a wide screen.
+  half: { flexBasis: '46%', flexGrow: 1 },
+  quarter: { flexBasis: '22%', flexGrow: 1 },
   row: { flexDirection: 'row' },
   flex: { flex: 1, gap: 2 },
   card: { flex: 1, borderRadius: 28, backgroundColor: B.card, overflow: 'hidden', boxShadow: B.cardShadow },

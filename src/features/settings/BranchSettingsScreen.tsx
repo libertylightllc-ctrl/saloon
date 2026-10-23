@@ -13,7 +13,7 @@ import { checkProvince, checkSecondTax, secondTaxPayload, taxShape, taxValuesOf,
 import { licenceLabelFor , isUae } from '@/lib/countries';
 import { useSetBranchMode, useUpdateBranch } from '@/features/team/api';
 import { activeCurrency, parseTaxRate } from '@/lib/money';
-import { spacing, type Mode } from '@/theme';
+import { MODES, spacing, type Mode } from '@/theme';
 import {
   Button,
   FormDaysField,
@@ -173,7 +173,7 @@ export function BranchSettingsScreen() {
           <Text variant="small" color="textSecondary">
             {t('branch.modeHint')}
           </Text>
-          {(['gents', 'ladies'] as const).map((mode) => (
+          {MODES.map((mode) => (
             <ModeCard
               key={mode}
               mode={mode}

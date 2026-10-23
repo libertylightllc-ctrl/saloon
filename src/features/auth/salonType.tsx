@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-import type { Mode } from '@/theme';
+import { isMode, type Mode } from '@/theme';
 
 const KEY = 'device.salonType';
 
@@ -22,7 +22,7 @@ export function SalonTypeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     AsyncStorage.getItem(KEY)
       .then((value) => {
-        if (value === 'gents' || value === 'ladies') setType(value);
+        if (isMode(value)) setType(value);
       })
       .catch(() => undefined)
       .finally(() => setLoaded(true));

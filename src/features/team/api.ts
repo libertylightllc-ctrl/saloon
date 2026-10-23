@@ -4,6 +4,7 @@ import { keys } from '@/features/live/useLiveSync';
 import type { Tables } from '@/lib/database.types';
 import { functionError } from '@/lib/errors';
 import { asJson, supabase } from '@/lib/supabase';
+import type { Mode } from '@/theme';
 
 export type TeamMember = Tables<'members'> & { employees: Pick<Tables<'employees'>, 'commission_bps' | 'colour'> | null };
 
@@ -105,7 +106,7 @@ export function useChangeCountry(businessId: string) {
 
 export function useSetBranchMode(branchId: string) {
   return useMutation({
-    mutationFn: async (mode: 'gents' | 'ladies') => {
+    mutationFn: async (mode: Mode) => {
       const { error } = await supabase.rpc('set_branch_mode', { p_branch: branchId, p_mode: mode });
       if (error) throw error;
     },

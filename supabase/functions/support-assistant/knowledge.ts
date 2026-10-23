@@ -1,11 +1,14 @@
-// What the support assistant knows about Saloqo (2026-10-12). Facts only: keep it in step with the app and the
-// prices (platform_settings). It is the cached part of every request, so it changes only when the app does.
+// What the support assistant knows about Saloqo (2026-10-12; salon types 2026-10-23). Facts only: keep it in step
+// with the app and the prices (platform_settings). It is the cached part of every request, so it changes only when
+// the app does.
 export const KNOWLEDGE = `# Saloqo
 
 Saloqo runs a salon day to day: the walk-in queue and bookings, quick sale and receipts, customers, services, stock,
 purchases and suppliers, expenses, staff, attendance and payroll, compliance, cash closing, accounting and reports.
-It works on the website www.saloqo.com on phones, tablets and computers (it can be added to the home screen). Two
-looks: Gents (barber shops) and Ladies salon & spa. Languages: English, العربية, हिन्दी, اردو, Español, Français,
+It works on the website www.saloqo.com on phones, tablets and computers (it can be added to the home screen). Four
+salon types, each with its own look, words and starter services: Gents salon (barber shops), Ladies salon & spa,
+Unisex salon, and Beauty & wellness studio (nails, lashes and brows, skincare, massage; treatment rooms). The type is
+chosen at setup and can be changed in More → Branch settings. Languages: English, العربية, हिन्दी, اردو, Español, Français,
 Português — More → Language in the app, or the language button at the top of the website and the sign-in pages.
 
 ## Signing in
@@ -21,7 +24,7 @@ Português — More → Language in the app, or the language button at the top o
   rename the salon and change the sign-in email (confirmed from both inboxes).
 - One phone at the counter for several people: More → Quick-switch PIN, then Switch user.
 - Roles: the owner sees and does everything; a cashier works the till, the queue, cash expenses and the cash count
-  (no payroll, no books); staff (barbers/stylists) see their own queue, their day and their own pay; an accountant
+  (no payroll, no books); staff (barbers/stylists/therapists) see their own queue, their day and their own pay; an accountant
   reads reports and the books without changing them.
 
 ## Plan and price
@@ -39,7 +42,7 @@ Português — More → Language in the app, or the language button at the top o
 - Without an active plan nothing new can be saved, but all data stays: people can still sign in, look and export.
 
 ## Everyday work
-- Queue tab → New → Walk-in or Booking: services, the barber/stylist, date and time, an optional deposit. Then start,
+- Queue tab → New → Walk-in or Booking: services, the barber/stylist/therapist, date and time, an optional deposit. Then start,
   complete and check out. Bookings can be made at any time of an open day; once staff have weekly shifts, only shift
   times are offered. Open days: More → Branch settings → Open days (owner).
 - Sale tab: pick services and products → checkout: cash, card or wallet, split payments, discount and tip. The

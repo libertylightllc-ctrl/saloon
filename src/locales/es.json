@@ -55,23 +55,33 @@
   "terms": {
     "staff": {
       "gents": "Barbero",
-      "ladies": "Estilista"
+      "ladies": "Estilista",
+      "unisex": "Estilista",
+      "wellness": "Terapeuta"
     },
     "staffPlural": {
       "gents": "Barberos",
-      "ladies": "Estilistas"
+      "ladies": "Estilistas",
+      "unisex": "Estilistas",
+      "wellness": "Terapeutas"
     },
     "station": {
       "gents": "Sillón",
-      "ladies": "Puesto"
+      "ladies": "Puesto",
+      "unisex": "Sillón",
+      "wellness": "Cabina"
     },
     "shop": {
       "gents": "Barbería",
-      "ladies": "Salón y spa"
+      "ladies": "Salón y spa",
+      "unisex": "Salón",
+      "wellness": "Estudio"
     },
     "anyStaff": {
       "gents": "Cualquier barbero",
-      "ladies": "Cualquier estilista"
+      "ladies": "Cualquier estilista",
+      "unisex": "Cualquier estilista",
+      "wellness": "Cualquier terapeuta"
     }
   },
   "categories": {
@@ -510,12 +520,16 @@
   "auth": {
     "salonType": {
       "gents": "Salón de caballeros",
-      "ladies": "Salón y spa de damas"
+      "ladies": "Salón y spa de damas",
+      "unisex": "Salón unisex",
+      "wellness": "Estudio de belleza y bienestar"
     },
     "welcome": {
       "subtitle": "Elige el tipo de salón. Puedes cambiarlo después.",
       "gents": "Barberías y salones de caballeros",
-      "ladies": "Salones de damas, belleza y spa"
+      "ladies": "Salones de damas, belleza y spa",
+      "unisex": "Salones para hombres y mujeres",
+      "wellness": "Uñas, pestañas y cejas, cuidado de la piel y masajes"
     },
     "fields": {
       "yourName": "Tu nombre",

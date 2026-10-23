@@ -17,7 +17,7 @@ import { isUae } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
 import { parseTaxRate, setActiveCurrency } from '@/lib/money';
 import { asJson, supabase } from '@/lib/supabase';
-import { spacing } from '@/theme';
+import { MODES, spacing } from '@/theme';
 import {
   Button,
   FormDaysField,
@@ -45,7 +45,7 @@ const schema = z
     country: z.string().regex(/^[A-Z]{2}$/),
     currency: z.string().regex(/^[A-Z]{3}$/, 'validation.required'),
     timezone: z.string().trim().regex(ZONE, 'validation.timezone'),
-    mode: z.enum(['gents', 'ladies']),
+    mode: z.enum(MODES),
     branchName: z.string().trim().max(80),
     address: z.string().trim().max(160),
     phone: z.string().trim().regex(/^$|^\+?[0-9 ]{7,20}$/, 'validation.phone'),
@@ -210,7 +210,7 @@ export function SetupWizard() {
             name="mode"
             render={({ field }) => (
               <View style={styles.modes}>
-                {(['gents', 'ladies'] as const).map((mode) => (
+                {MODES.map((mode) => (
                   <ModeCard
                     key={mode}
                     mode={mode}

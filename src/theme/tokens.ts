@@ -4,7 +4,13 @@
  */
 import type { TextStyle } from 'react-native';
 
-export type Mode = 'gents' | 'ladies';
+/** The salon types (website brief 5.4 added unisex and wellness, 2026-10-23); each has its own look and words. */
+export const MODES = ['gents', 'ladies', 'unisex', 'wellness'] as const;
+export type Mode = (typeof MODES)[number];
+
+export function isMode(value: unknown): value is Mode {
+  return MODES.includes(value as Mode);
+}
 
 export const spacing = {
   xs: 4,

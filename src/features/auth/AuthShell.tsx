@@ -16,14 +16,12 @@ import { ContactButton } from '@/features/landing/ContactButton';
 import { Band, NavyBackdrop, PhoneShot, Tick, useLandingLayout } from '@/features/landing/parts';
 import { usePublicPrices } from '@/features/plan/api';
 import { LanguageButton } from '@/features/settings/LanguageSheet';
-import { brandPalette as B, spacing, useThemeMode, type Mode } from '@/theme';
+import { MODE_ICON, MODE_SHOT } from '@/features/mode/modeLook';
+import { brandPalette as B, MODES, spacing, useThemeMode } from '@/theme';
 import { BackButton, BrandMark, Chip, OnBandContext, Text } from '@/ui';
 
-import gentsQueue from '../../../assets/images/landing/gents-queue.webp';
-import ladiesQueue from '../../../assets/images/landing/ladies-queue.webp';
 import { useSalonType } from './salonType';
 
-const SHOT = { gents: gentsQueue, ladies: ladiesQueue };
 const POINTS = ['live', 'closing', 'pay'] as const;
 
 /** Small switch to change the salon type on sign-in screens (re-themes instantly). */
@@ -31,14 +29,13 @@ export function SalonTypeSwitch() {
   const { t } = useTranslation();
   const { mode } = useThemeMode();
   const { setSalonType } = useSalonType();
-  const options: Mode[] = ['gents', 'ladies'];
   return (
     <View style={styles.switch} accessibilityRole="radiogroup">
-      {options.map((option) => (
+      {MODES.map((option) => (
         <Chip
           key={option}
           label={t(`auth.salonType.${option}`)}
-          icon={option === 'gents' ? 'scissors' : 'flower'}
+          icon={MODE_ICON[option]}
           selected={mode === option}
           onPress={() => setSalonType(option)}
           testID={`salon-type-${option}`}
@@ -122,7 +119,7 @@ function BrandPanel({ onBack, panel }: { onBack?: (() => void) | true; panel: 's
         </View>
       )}
       <View style={styles.panelShot}>
-        <PhoneShot source={SHOT[mode]} width={250} tilt={-4} />
+        <PhoneShot source={MODE_SHOT[mode]} width={250} tilt={-4} />
       </View>
     </View>
   );

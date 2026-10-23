@@ -1,5 +1,9 @@
 # More salon types — plan (website brief 5.4, 23 Oct 2026)
 
+**Built the same day** (owner: "finish all in one sweep") with the defaults below: teal for Unisex, lavender for
+Beauty & wellness, Stylist/Chair and Therapist/Room, the starter services listed. Not built: the rooms screen
+(question 4). Each default can still be changed — tell me which.
+
 Today there are two types, `gents` ("Gents salon", violet) and `ladies` ("Ladies salon & spa", coral). The type sits
 on each branch (`branches.mode`, enum `salon_mode`) and decides the look, the words (Barber/Stylist, Chair/Station),
 the starter services at setup, and whether bookings need a room. The brief asks for **Unisex salon** and **Beauty &

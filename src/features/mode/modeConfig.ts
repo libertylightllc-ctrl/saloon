@@ -49,4 +49,32 @@ export const modeConfig: Record<Mode, ModeConfig> = {
     patchTestRemindersDefault: true,
     customerPhotosDefault: false,
   },
+  // Website brief 5.4 (2026-10-23): a unisex salon leads with walk-ins like a barber; a beauty & wellness studio
+  // with appointments, and has treatment rooms.
+  unisex: {
+    queueFirst: 'walk_in',
+    defaultCategories: [
+      { key: 'hair', icon: 'scissors' },
+      { key: 'color', icon: 'palette' },
+      { key: 'beard', icon: 'brush' },
+      { key: 'nails', icon: 'hand' },
+      { key: 'treatments', icon: 'sparkles' },
+    ],
+    usesRooms: false,
+    patchTestRemindersDefault: true,
+    customerPhotosDefault: true,
+  },
+  wellness: {
+    queueFirst: 'appointment',
+    defaultCategories: [
+      { key: 'nails', icon: 'hand' },
+      { key: 'lashes', icon: 'sparkles' },
+      { key: 'facial', icon: 'face' },
+      { key: 'massage', icon: 'massage' },
+      { key: 'waxing', icon: 'feather' },
+    ],
+    usesRooms: true,
+    patchTestRemindersDefault: true,
+    customerPhotosDefault: false,
+  },
 };

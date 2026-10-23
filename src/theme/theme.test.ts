@@ -2,6 +2,8 @@ import { contrastRatio } from './contrast';
 import { gents } from './gents';
 import { ladies } from './ladies';
 import { avatarPalette, neutrals, semantic, type Theme } from './tokens';
+import { unisex } from './unisex';
+import { wellness } from './wellness';
 
 /** Every key path in an object, so the two themes can be compared structurally. */
 function shape(value: unknown, prefix = ''): string[] {
@@ -12,11 +14,20 @@ function shape(value: unknown, prefix = ''): string[] {
 const themes: [string, Theme][] = [
   ['gents', gents],
   ['ladies', ladies],
+  ['unisex', unisex],
+  ['wellness', wellness],
 ];
 
 describe('theme structure', () => {
-  it('gents and ladies have exactly the same keys', () => {
+  it('every look has exactly the same keys', () => {
     expect(shape(ladies).sort()).toEqual(shape(gents).sort());
+    expect(shape(unisex).sort()).toEqual(shape(gents).sort());
+    expect(shape(wellness).sort()).toEqual(shape(gents).sort());
+  });
+
+  it('the new types use the existing kits (brief 5.4): unisex the gents layout, wellness the ladies layout', () => {
+    expect(unisex.variants).toEqual(gents.variants);
+    expect(wellness.variants).toEqual(ladies.variants);
   });
 
   it('differ in the signature variants from 02-DESIGN-SYSTEM §2', () => {
@@ -70,6 +81,10 @@ describe.each(themes)('%s contrast (4.5:1 for text)', (_name, theme) => {
 });
 
 describe('filled button labels', () => {
+  it.each([unisex, wellness])('the $mode colour passes 4.5:1', (theme) => {
+    expect(contrastRatio(theme.colors.onPrimary, theme.colors.primaryAction)).toBeGreaterThanOrEqual(4.5);
+  });
+
   it('gents violet passes 4.5:1', () => {
     expect(
       contrastRatio(gents.colors.onPrimary, gents.colors.primaryAction),

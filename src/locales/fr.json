@@ -55,23 +55,33 @@
   "terms": {
     "staff": {
       "gents": "Barbier",
-      "ladies": "Styliste"
+      "ladies": "Styliste",
+      "unisex": "Styliste",
+      "wellness": "Praticienne"
     },
     "staffPlural": {
       "gents": "Barbiers",
-      "ladies": "Stylistes"
+      "ladies": "Stylistes",
+      "unisex": "Stylistes",
+      "wellness": "Praticiennes"
     },
     "station": {
       "gents": "Fauteuil",
-      "ladies": "Poste"
+      "ladies": "Poste",
+      "unisex": "Fauteuil",
+      "wellness": "Cabine"
     },
     "shop": {
       "gents": "Salon de barbier",
-      "ladies": "Salon et spa"
+      "ladies": "Salon et spa",
+      "unisex": "Salon",
+      "wellness": "Institut"
     },
     "anyStaff": {
       "gents": "N’importe quel barbier",
-      "ladies": "N’importe quel styliste"
+      "ladies": "N’importe quel styliste",
+      "unisex": "N’importe quel styliste",
+      "wellness": "N’importe quelle praticienne"
     }
   },
   "categories": {
@@ -510,12 +520,16 @@
   "auth": {
     "salonType": {
       "gents": "Salon pour hommes",
-      "ladies": "Salon et spa pour femmes"
+      "ladies": "Salon et spa pour femmes",
+      "unisex": "Salon mixte",
+      "wellness": "Institut de beauté et bien-être"
     },
     "welcome": {
       "subtitle": "Choisissez votre type de salon. Vous pourrez le changer plus tard.",
       "gents": "Barbiers et salons pour hommes",
-      "ladies": "Salons pour femmes, beauté et spa"
+      "ladies": "Salons pour femmes, beauté et spa",
+      "unisex": "Salons pour hommes et femmes",
+      "wellness": "Ongles, cils et sourcils, soins du visage et massages"
     },
     "fields": {
       "yourName": "Votre nom",

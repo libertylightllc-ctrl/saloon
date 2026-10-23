@@ -55,23 +55,33 @@
   "terms": {
     "staff": {
       "gents": "Barbeiro",
-      "ladies": "Profissional"
+      "ladies": "Profissional",
+      "unisex": "Profissional",
+      "wellness": "Terapeuta"
     },
     "staffPlural": {
       "gents": "Barbeiros",
-      "ladies": "Profissionais"
+      "ladies": "Profissionais",
+      "unisex": "Profissionais",
+      "wellness": "Terapeutas"
     },
     "station": {
       "gents": "Cadeira",
-      "ladies": "Estação"
+      "ladies": "Estação",
+      "unisex": "Cadeira",
+      "wellness": "Sala"
     },
     "shop": {
       "gents": "Barbearia",
-      "ladies": "Salão e spa"
+      "ladies": "Salão e spa",
+      "unisex": "Salão",
+      "wellness": "Estúdio"
     },
     "anyStaff": {
       "gents": "Qualquer barbeiro",
-      "ladies": "Qualquer profissional"
+      "ladies": "Qualquer profissional",
+      "unisex": "Qualquer profissional",
+      "wellness": "Qualquer terapeuta"
     }
   },
   "categories": {
@@ -510,12 +520,16 @@
   "auth": {
     "salonType": {
       "gents": "Salão masculino",
-      "ladies": "Salão feminino e spa"
+      "ladies": "Salão feminino e spa",
+      "unisex": "Salão unissex",
+      "wellness": "Estúdio de beleza e bem-estar"
     },
     "welcome": {
       "subtitle": "Escolha o tipo do seu salão. Você pode mudar depois.",
       "gents": "Barbearias e salões masculinos",
-      "ladies": "Salões femininos, beleza e spa"
+      "ladies": "Salões femininos, beleza e spa",
+      "unisex": "Salões para homens e mulheres",
+      "wellness": "Unhas, cílios e sobrancelhas, skincare e massagem"
     },
     "fields": {
       "yourName": "Seu nome",

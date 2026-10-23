@@ -55,23 +55,33 @@
   "terms": {
     "staff": {
       "gents": "Barber",
-      "ladies": "Stylist"
+      "ladies": "Stylist",
+      "unisex": "Stylist",
+      "wellness": "Therapist"
     },
     "staffPlural": {
       "gents": "Barbers",
-      "ladies": "Stylists"
+      "ladies": "Stylists",
+      "unisex": "Stylists",
+      "wellness": "Therapists"
     },
     "station": {
       "gents": "Chair",
-      "ladies": "Station"
+      "ladies": "Station",
+      "unisex": "Chair",
+      "wellness": "Room"
     },
     "shop": {
       "gents": "Barber shop",
-      "ladies": "Salon & spa"
+      "ladies": "Salon & spa",
+      "unisex": "Salon",
+      "wellness": "Studio"
     },
     "anyStaff": {
       "gents": "Any barber",
-      "ladies": "Any stylist"
+      "ladies": "Any stylist",
+      "unisex": "Any stylist",
+      "wellness": "Any therapist"
     }
   },
   "categories": {
@@ -510,12 +520,16 @@
   "auth": {
     "salonType": {
       "gents": "Gents salon",
-      "ladies": "Ladies salon & spa"
+      "ladies": "Ladies salon & spa",
+      "unisex": "Unisex salon",
+      "wellness": "Beauty & wellness studio"
     },
     "welcome": {
       "subtitle": "Choose your salon type. You can change it later.",
       "gents": "Barber shops and gents salons",
-      "ladies": "Ladies salons, beauty and spa"
+      "ladies": "Ladies salons, beauty and spa",
+      "unisex": "Salons for men and women",
+      "wellness": "Nails, lashes and brows, skincare and massage"
     },
     "fields": {
       "yourName": "Your name",

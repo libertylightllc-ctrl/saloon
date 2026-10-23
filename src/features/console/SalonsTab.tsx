@@ -7,7 +7,7 @@ import { countryName } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
 import { formatMoney } from '@/lib/money';
 import { useDates } from '@/lib/useDates';
-import { spacing } from '@/theme';
+import { isMode, spacing } from '@/theme';
 import {
   BottomSheet,
   Button,
@@ -57,7 +57,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                     meta={[
                       [s.owner_name, s.owner_email].filter(Boolean).join(' · '),
                       t('admin.meta', { code: s.code, branches: s.branches, date: dates.at(s.created_at, s.timezone, 'd MMM yyyy') }),
-                      [countryName(s.country_code, i18n.language), st?.mode].filter(Boolean).join(' · '),
+                      [countryName(s.country_code, i18n.language), ...(st?.mode ?? '').split(', ').filter(Boolean).map((m) => (isMode(m) ? t(`auth.salonType.${m}`) : m))].filter(Boolean).join(' · '),
                       t('console.salons.plan', { people: s.people, price: formatMoney(s.monthly_minor, s.plan_currency) }),
                       ...(st
                         ? [

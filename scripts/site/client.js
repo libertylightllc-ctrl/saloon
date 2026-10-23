@@ -66,7 +66,7 @@
 
   // Someone who already picked a salon type on this device goes straight to the sign-up (as the app's home page).
   var type = store && store.getItem('device.salonType');
-  if (type === 'gents' || type === 'ladies') {
+  if (['gents', 'ladies', 'unisex', 'wellness'].indexOf(type) >= 0) {
     document.querySelectorAll('[data-start]').forEach(function (a) { a.setAttribute('href', '/sign-up'); });
   }
 

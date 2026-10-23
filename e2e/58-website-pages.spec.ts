@@ -92,6 +92,8 @@ test.describe('on a phone', () => {
     await expect(page.locator('#sticky')).toBeHidden();
     await page.locator('details[data-faq="price"] summary').click();
     await expect(page.locator('details[data-faq="price"] .uae')).toContainText('AED 50.00 a month for up to 4 people');
+    // Four salon types to choose from (brief 5.4).
+    await expect(page.locator('a[data-type]')).toHaveCount(4);
     // Start free → the salon types → the sign-up, with the type and the language kept for the app.
     await page.locator('[data-start="hero"]').click();
     await page.locator('a[data-type="ladies"]').click();

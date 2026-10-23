@@ -8,11 +8,13 @@ import { esc, LANGUAGES, pathOf } from './text.mjs';
 
 const external = ' target="_blank" rel="noopener noreferrer"';
 
-/** The salon looks' own colours (src/theme/gents.ts, ladies.ts). */
+/** The salon looks' own colours (src/theme/gents.ts, ladies.ts, unisex.ts, wellness.ts); brief 5.4 added the last two. */
 const LOOK = {
   gents: { preview: '#6C45F2', text: '#6C45F2', action: '#6C45F2', shot: 'gents-queue.webp', tilt: -3 },
   ladies: { preview: '#FDE1E0', text: '#B8464B', action: '#E0606A', shot: 'ladies-queue.webp', tilt: 3 },
-};
+  unisex: { preview: '#2F8A7E', text: '#26736A', action: '#26736A', shot: 'unisex-queue.webp', tilt: -3 },
+  wellness: { preview: '#EBE3F8', text: '#5A3F92', action: '#7050AE', shot: 'wellness-queue.webp', tilt: 3 },
+}
 
 export function types(c) {
   const t = c.t;
@@ -25,7 +27,7 @@ export function types(c) {
   };
   return `<section class="band mist types" id="types"><div class="inner stack-lg">
 <div class="head"><h2 class="t-section center">${esc(t('auth.landing.typeTitle'))}</h2><p class="t-lead muted center">${esc(t('auth.welcome.subtitle'))}</p></div>
-<div class="type-cards">${card('gents')}${card('ladies')}</div>
+<div class="type-cards">${Object.keys(LOOK).map(card).join('')}</div>
 </div></section>`;
 }
 
