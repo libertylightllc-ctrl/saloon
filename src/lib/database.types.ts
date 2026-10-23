@@ -4032,6 +4032,10 @@ export type Database = {
         Args: { p_method: Database['public']['Enums']['payment_method'] };
         Returns: string;
       };
+      mode_uses_rooms: {
+        Args: { p_mode: Database['public']['Enums']['salon_mode'] };
+        Returns: boolean;
+      };
       month_bounds: { Args: { p_month: string }; Returns: Record<string, unknown> };
       move_stock: {
         Args: {
@@ -4406,7 +4410,7 @@ export type Database = {
       payment_method: 'cash' | 'card' | 'wallet' | 'bank';
       sale_line_kind: 'service' | 'retail' | 'custom';
       sale_status: 'completed' | 'partially_refunded' | 'refunded';
-      salon_mode: 'gents' | 'ladies';
+      salon_mode: 'gents' | 'ladies' | 'unisex' | 'wellness';
       stock_reason:
         | 'purchase'
         | 'service_use'
@@ -4539,7 +4543,7 @@ export const Constants = {
       payment_method: ['cash', 'card', 'wallet', 'bank'],
       sale_line_kind: ['service', 'retail', 'custom'],
       sale_status: ['completed', 'partially_refunded', 'refunded'],
-      salon_mode: ['gents', 'ladies'],
+      salon_mode: ['gents', 'ladies', 'unisex', 'wellness'],
       stock_reason: [
         'purchase',
         'service_use',
