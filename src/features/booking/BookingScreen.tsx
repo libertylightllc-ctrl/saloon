@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
+import { brand } from '@/config/brand';
 import { dialCodeOf } from '@/lib/countries';
 import { usePageMeta } from '@/lib/pageMeta';
 import { isCurrency } from '@/lib/currencies';
@@ -173,6 +174,17 @@ function BookingForm({ slug, page }: { slug: string; page: BookingPage }) {
           <FormTextField control={form.control} name="notes" label={t('booking.fields.notes')} maxLength={300} />
         </View>
         <FormError error={book.error} />
+        {/* Every booking page tells other salon owners where it comes from (website brief 5.1). */}
+        <View style={styles.poweredBy}>
+          <Button
+            label={t('booking.poweredBy', { app: brand.appName })}
+            variant="ghost"
+            size="sm"
+            href={`${brand.website}/?ref=booking&salon=${encodeURIComponent(slug)}`}
+            external
+            testID="booking-powered-by"
+          />
+        </View>
       </View>
     </Screen>
   );
@@ -182,4 +194,5 @@ const styles = StyleSheet.create({
   body: { gap: spacing['2xl'] },
   section: { gap: spacing.md },
   footer: { gap: spacing.sm },
+  poweredBy: { alignItems: 'center' },
 });

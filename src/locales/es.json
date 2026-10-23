@@ -925,7 +925,9 @@
     "link_taken": "Ese enlace ya está en uso. Prueba otro.",
     "too_late_to_cancel": "Ya es tarde para cancelar online. Llama al salón.",
     "too_many_bookings": "Ya tienes 3 reservas próximas aquí. Cancela una o llama al salón.",
-    "card_unavailable": "El pago con tarjeta no está disponible ahora. Paga por transferencia bancaria."
+    "card_unavailable": "El pago con tarjeta no está disponible ahora. Paga por transferencia bancaria.",
+    "photo_missing": "La foto no se subió. Inténtalo de nuevo.",
+    "invalid_instagram": "Escribe tu usuario de Instagram: letras, números, puntos y guiones bajos."
   },
   "sales": {
     "title": "Ventas",
@@ -2196,7 +2198,8 @@
       "slow": "Confirmando el pago. Esta página se actualiza sola; puede tardar un minuto.",
       "done": "Pagado. Tu plan está activo hasta el {{date}}.",
       "check": "Estamos revisando este pago y te contactaremos."
-    }
+    },
+    "contactToBuy": "Para activar tu plan, escríbenos y te ayudamos a pagar."
   },
   "admin": {
     "title": "Salones y planes",
@@ -2357,6 +2360,10 @@
         "title": "Cambios",
         "body": "Podemos actualizar estos términos; la fecha indicada arriba muestra la versión vigente. Si sigues usando el servicio después de un cambio, se aplican los nuevos términos."
       }
+    },
+    "provider": {
+      "withAddress": "{{app}} lo ofrece {{name}}, {{address}}.",
+      "name": "{{app}} lo ofrece {{name}}."
     }
   },
   "tax": {
@@ -2550,7 +2557,11 @@
         "paid": "Pagado",
         "refunded": "Reembolsado",
         "review": "Por revisar"
-      }
+      },
+      "bankTitle": "Transferencia bancaria o enlace de pago",
+      "bankHint": "Los salones ven tus datos de pago y te piden activar su plan. Déjalo desactivado hasta tener la empresa y la cuenta bancaria.",
+      "bankOff": "Desactivado",
+      "bankOn": "Activado"
     }
   },
   "profile": {
@@ -2734,8 +2745,25 @@
       "linkLabel": "Tu enlace: saloqo.com/b/…",
       "linkHint": "Letras, números y guiones.",
       "saveLink": "Guardar enlace",
-      "linkSaved": "Enlace guardado"
-    }
+      "linkSaved": "Enlace guardado",
+      "cover": "Foto de portada",
+      "coverHint": "Una foto amplia de tu salón, arriba de tu página de reservas.",
+      "coverAdd": "Añadir foto",
+      "coverChange": "Cambiar foto",
+      "coverRemove": "Quitar",
+      "coverSaved": "Foto de portada guardada",
+      "coverRemoved": "Foto de portada quitada",
+      "instagram": "Instagram (opcional)",
+      "instagramHint": "Tu usuario o el enlace a tu perfil. Aparece en tu página de reservas.",
+      "saveInstagram": "Guardar Instagram",
+      "instagramSaved": "Instagram guardado",
+      "instagramRemoved": "Instagram quitado",
+      "instagramPlaceholder": "@tusalon"
+    },
+    "instagram": "Instagram",
+    "openDays": "Abierto: {{days}}",
+    "everyDay": "Abierto todos los días",
+    "poweredBy": "Página de reservas gratis de {{app}}"
   },
   "meta": {
     "welcome": {

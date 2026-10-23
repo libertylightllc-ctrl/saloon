@@ -6,6 +6,7 @@
 import Archive from 'lucide-react-native/icons/archive';
 import Armchair from 'lucide-react-native/icons/armchair';
 import ArrowLeft from 'lucide-react-native/icons/arrow-left';
+import AtSign from 'lucide-react-native/icons/at-sign';
 import Banknote from 'lucide-react-native/icons/banknote';
 import BedDouble from 'lucide-react-native/icons/bed-double';
 import Bell from 'lucide-react-native/icons/bell';
@@ -116,6 +117,7 @@ export const icons = {
   archive: Archive,
   armchair: Armchair,
   arrowLeft: ArrowLeft,
+  atSign: AtSign,
   banknote: Banknote,
   bed: BedDouble,
   bell: Bell,

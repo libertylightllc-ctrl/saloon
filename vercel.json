@@ -38,6 +38,17 @@
       "destination": "/site/:lang.html"
     },
     {
+      "source": "/b/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(WhatsApp|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Slackbot|TelegramBot|Discordbot|SkypeUriPreview|Pinterestbot|Snap URL Preview|redditbot|Embedly).*"
+        }
+      ],
+      "destination": "/api/booking-preview?slug=:slug"
+    },
+    {
       "source": "/((?!api/|_vercel/).*)",
       "destination": "/spa.html"
     }

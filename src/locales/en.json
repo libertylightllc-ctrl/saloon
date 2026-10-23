@@ -925,7 +925,9 @@
     "link_taken": "That link is taken. Try another.",
     "too_late_to_cancel": "It is too late to cancel online. Please call the salon.",
     "too_many_bookings": "You already have 3 bookings coming up here. Cancel one or call the salon.",
-    "card_unavailable": "Card payment is not available right now. Pay by bank transfer instead."
+    "card_unavailable": "Card payment is not available right now. Pay by bank transfer instead.",
+    "photo_missing": "The photo did not upload. Try again.",
+    "invalid_instagram": "Enter your Instagram handle: letters, numbers, dots and underscores."
   },
   "sales": {
     "title": "Sales",
@@ -2196,7 +2198,8 @@
       "slow": "Confirming the payment. This page updates by itself; it can take a minute.",
       "done": "Paid. Your plan is on until {{date}}.",
       "check": "We are checking this payment and will contact you."
-    }
+    },
+    "contactToBuy": "To switch on your plan, write to us and we will help you pay."
   },
   "admin": {
     "title": "Salons & plans",
@@ -2357,6 +2360,10 @@
         "title": "Changes",
         "body": "We may update these terms; the date above shows the current version. Using the service after a change means the new terms apply."
       }
+    },
+    "provider": {
+      "withAddress": "{{app}} is provided by {{name}}, {{address}}.",
+      "name": "{{app}} is provided by {{name}}."
     }
   },
   "tax": {
@@ -2549,7 +2556,11 @@
         "paid": "Paid",
         "refunded": "Refunded",
         "review": "To review"
-      }
+      },
+      "bankTitle": "Bank transfer or payment link",
+      "bankHint": "Salons see your payment details and ask you to switch their plan on. Keep this off until the company and bank account are ready.",
+      "bankOff": "Off",
+      "bankOn": "On"
     }
   },
   "profile": {
@@ -2733,8 +2744,25 @@
       "linkLabel": "Your link: saloqo.com/b/…",
       "linkHint": "Letters, numbers and dashes.",
       "saveLink": "Save link",
-      "linkSaved": "Link saved"
-    }
+      "linkSaved": "Link saved",
+      "cover": "Cover photo",
+      "coverHint": "A wide photo of your salon, at the top of your booking page.",
+      "coverAdd": "Add photo",
+      "coverChange": "Change photo",
+      "coverRemove": "Remove",
+      "coverSaved": "Cover photo saved",
+      "coverRemoved": "Cover photo removed",
+      "instagram": "Instagram (optional)",
+      "instagramHint": "Your handle or profile link. It shows on your booking page.",
+      "saveInstagram": "Save Instagram",
+      "instagramSaved": "Instagram saved",
+      "instagramRemoved": "Instagram removed",
+      "instagramPlaceholder": "@yoursalon"
+    },
+    "instagram": "Instagram",
+    "openDays": "Open {{days}}",
+    "everyDay": "Open every day",
+    "poweredBy": "Free booking page by {{app}}"
   },
   "meta": {
     "welcome": {

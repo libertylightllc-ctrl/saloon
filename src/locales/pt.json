@@ -925,7 +925,9 @@
     "link_taken": "Esse link já está em uso. Tente outro.",
     "too_late_to_cancel": "Já é tarde para cancelar online. Ligue para o salão.",
     "too_many_bookings": "Você já tem 3 reservas futuras aqui. Cancele uma ou ligue para o salão.",
-    "card_unavailable": "O pagamento com cartão não está disponível agora. Pague por transferência bancária."
+    "card_unavailable": "O pagamento com cartão não está disponível agora. Pague por transferência bancária.",
+    "photo_missing": "A foto não foi enviada. Tente de novo.",
+    "invalid_instagram": "Digite seu usuário do Instagram: letras, números, pontos e sublinhados."
   },
   "sales": {
     "title": "Vendas",
@@ -2196,7 +2198,8 @@
       "slow": "Confirmando o pagamento. Esta página se atualiza sozinha; pode levar um minuto.",
       "done": "Pago. Seu plano está ativo até {{date}}.",
       "check": "Estamos verificando este pagamento e entraremos em contato."
-    }
+    },
+    "contactToBuy": "Para ativar seu plano, escreva para nós e ajudamos você a pagar."
   },
   "admin": {
     "title": "Salões e planos",
@@ -2357,6 +2360,10 @@
         "title": "Alterações",
         "body": "Podemos atualizar estes termos; a data acima mostra a versão em vigor. Usar o serviço após uma alteração significa que os novos termos se aplicam."
       }
+    },
+    "provider": {
+      "withAddress": "O {{app}} é fornecido por {{name}}, {{address}}.",
+      "name": "O {{app}} é fornecido por {{name}}."
     }
   },
   "tax": {
@@ -2550,7 +2557,11 @@
         "paid": "Pago",
         "refunded": "Reembolsado",
         "review": "Para revisar"
-      }
+      },
+      "bankTitle": "Transferência bancária ou link de pagamento",
+      "bankHint": "Os salões veem seus dados de pagamento e pedem para ativar o plano. Deixe desligado até a empresa e a conta bancária estarem prontas.",
+      "bankOff": "Desligado",
+      "bankOn": "Ligado"
     }
   },
   "profile": {
@@ -2734,8 +2745,25 @@
       "linkLabel": "Seu link: saloqo.com/b/…",
       "linkHint": "Letras, números e hífens.",
       "saveLink": "Salvar link",
-      "linkSaved": "Link salvo"
-    }
+      "linkSaved": "Link salvo",
+      "cover": "Foto de capa",
+      "coverHint": "Uma foto larga do seu salão, no topo da sua página de reservas.",
+      "coverAdd": "Adicionar foto",
+      "coverChange": "Trocar foto",
+      "coverRemove": "Remover",
+      "coverSaved": "Foto de capa salva",
+      "coverRemoved": "Foto de capa removida",
+      "instagram": "Instagram (opcional)",
+      "instagramHint": "Seu usuário ou o link do perfil. Aparece na sua página de reservas.",
+      "saveInstagram": "Salvar Instagram",
+      "instagramSaved": "Instagram salvo",
+      "instagramRemoved": "Instagram removido",
+      "instagramPlaceholder": "@seusalao"
+    },
+    "instagram": "Instagram",
+    "openDays": "Aberto: {{days}}",
+    "everyDay": "Aberto todos os dias",
+    "poweredBy": "Página de reservas grátis da {{app}}"
   },
   "meta": {
     "welcome": {

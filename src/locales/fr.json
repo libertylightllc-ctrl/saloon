@@ -925,7 +925,9 @@
     "link_taken": "Ce lien est déjà pris. Essayez-en un autre.",
     "too_late_to_cancel": "Il est trop tard pour annuler en ligne. Appelez le salon.",
     "too_many_bookings": "Vous avez déjà 3 réservations à venir ici. Annulez-en une ou appelez le salon.",
-    "card_unavailable": "Le paiement par carte n’est pas disponible pour le moment. Payez par virement bancaire."
+    "card_unavailable": "Le paiement par carte n’est pas disponible pour le moment. Payez par virement bancaire.",
+    "photo_missing": "La photo n’a pas été envoyée. Réessayez.",
+    "invalid_instagram": "Saisissez votre identifiant Instagram : lettres, chiffres, points et tirets bas."
   },
   "sales": {
     "title": "Ventes",
@@ -2196,7 +2198,8 @@
       "slow": "Confirmation du paiement. Cette page se met à jour seule ; cela peut prendre une minute.",
       "done": "Payé. Votre abonnement est actif jusqu’au {{date}}.",
       "check": "Nous vérifions ce paiement et vous contacterons."
-    }
+    },
+    "contactToBuy": "Pour activer votre forfait, écrivez-nous et nous vous aiderons à payer."
   },
   "admin": {
     "title": "Salons et abonnements",
@@ -2357,6 +2360,10 @@
         "title": "Modifications",
         "body": "Nous pouvons mettre à jour ces conditions ; la date ci-dessus indique la version en vigueur. Utiliser le service après une modification signifie que les nouvelles conditions s’appliquent."
       }
+    },
+    "provider": {
+      "withAddress": "{{app}} est fourni par {{name}}, {{address}}.",
+      "name": "{{app}} est fourni par {{name}}."
     }
   },
   "tax": {
@@ -2550,7 +2557,11 @@
         "paid": "Payé",
         "refunded": "Remboursé",
         "review": "À vérifier"
-      }
+      },
+      "bankTitle": "Virement ou lien de paiement",
+      "bankHint": "Les salons voient vos coordonnées de paiement et vous demandent d’activer leur forfait. Laissez désactivé tant que la société et le compte bancaire ne sont pas prêts.",
+      "bankOff": "Désactivé",
+      "bankOn": "Activé"
     }
   },
   "profile": {
@@ -2734,8 +2745,25 @@
       "linkLabel": "Votre lien : saloqo.com/b/…",
       "linkHint": "Lettres, chiffres et tirets.",
       "saveLink": "Enregistrer le lien",
-      "linkSaved": "Lien enregistré"
-    }
+      "linkSaved": "Lien enregistré",
+      "cover": "Photo de couverture",
+      "coverHint": "Une photo large de votre salon, en haut de votre page de réservation.",
+      "coverAdd": "Ajouter une photo",
+      "coverChange": "Changer la photo",
+      "coverRemove": "Retirer",
+      "coverSaved": "Photo de couverture enregistrée",
+      "coverRemoved": "Photo de couverture retirée",
+      "instagram": "Instagram (facultatif)",
+      "instagramHint": "Votre identifiant ou le lien de votre profil. Il s’affiche sur votre page de réservation.",
+      "saveInstagram": "Enregistrer Instagram",
+      "instagramSaved": "Instagram enregistré",
+      "instagramRemoved": "Instagram retiré",
+      "instagramPlaceholder": "@votresalon"
+    },
+    "instagram": "Instagram",
+    "openDays": "Ouvert : {{days}}",
+    "everyDay": "Ouvert tous les jours",
+    "poweredBy": "Page de réservation gratuite par {{app}}"
   },
   "meta": {
     "welcome": {

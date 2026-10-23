@@ -17,6 +17,9 @@ export interface BookingSalon {
   address: string | null;
   phone: string | null;
   logo_path: string | null;
+  /** The booking page's cover photo and Instagram handle (website brief 5.1); not on a customer's booking page. */
+  cover_path?: string | null;
+  instagram?: string | null;
   currency: string;
   timezone: string;
   country_code: string;

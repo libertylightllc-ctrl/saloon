@@ -511,8 +511,10 @@ export type Database = {
           address: string | null;
           booking_slug: string | null;
           business_id: string;
+          cover_path: string | null;
           created_at: string;
           id: string;
+          instagram: string | null;
           invoice_prefix: string | null;
           legal_name: string | null;
           licence_label: string | null;
@@ -536,8 +538,10 @@ export type Database = {
           address?: string | null;
           booking_slug?: string | null;
           business_id: string;
+          cover_path?: string | null;
           created_at?: string;
           id?: string;
+          instagram?: string | null;
           invoice_prefix?: string | null;
           legal_name?: string | null;
           licence_label?: string | null;
@@ -561,8 +565,10 @@ export type Database = {
           address?: string | null;
           booking_slug?: string | null;
           business_id?: string;
+          cover_path?: string | null;
           created_at?: string;
           id?: string;
+          instagram?: string | null;
           invoice_prefix?: string | null;
           legal_name?: string | null;
           licence_label?: string | null;
@@ -2115,6 +2121,7 @@ export type Database = {
           bank_iban: string | null;
           bank_name: string | null;
           bank_swift: string | null;
+          bank_transfer: boolean;
           card_payments: string;
           currency: string;
           extra_person_minor: number;
@@ -2134,6 +2141,7 @@ export type Database = {
           bank_iban?: string | null;
           bank_name?: string | null;
           bank_swift?: string | null;
+          bank_transfer?: boolean;
           card_payments?: string;
           currency?: string;
           extra_person_minor?: number;
@@ -2153,6 +2161,7 @@ export type Database = {
           bank_iban?: string | null;
           bank_name?: string | null;
           bank_swift?: string | null;
+          bank_transfer?: boolean;
           card_payments?: string;
           currency?: string;
           extra_person_minor?: number;
@@ -3680,6 +3689,7 @@ export type Database = {
           trial: boolean;
         }[];
       };
+      admin_set_bank_transfer: { Args: { p_on: boolean }; Returns: undefined };
       admin_set_card_payments: { Args: { p_mode: string }; Returns: undefined };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
       admin_set_platform_owner: { Args: { p_email: string; p_on: boolean }; Returns: undefined };
@@ -3796,8 +3806,10 @@ export type Database = {
           address: string | null;
           booking_slug: string | null;
           business_id: string;
+          cover_path: string | null;
           created_at: string;
           id: string;
+          instagram: string | null;
           invoice_prefix: string | null;
           legal_name: string | null;
           licence_label: string | null;
@@ -4271,6 +4283,8 @@ export type Database = {
       };
       seed_system_accounts: { Args: { p_business: string }; Returns: undefined };
       send_daily_digests: { Args: { p_now?: string }; Returns: number };
+      set_branch_cover: { Args: { p_branch: string; p_path: string }; Returns: undefined };
+      set_branch_instagram: { Args: { p_branch: string; p_instagram: string }; Returns: string };
       set_branch_logo: { Args: { p_branch: string; p_path: string }; Returns: undefined };
       set_branch_mode: {
         Args: { p_branch: string; p_mode: Database['public']['Enums']['salon_mode'] };

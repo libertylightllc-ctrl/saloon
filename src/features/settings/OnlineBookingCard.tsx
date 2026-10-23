@@ -7,6 +7,8 @@ import { bookingUrl, useSetOnlineBooking } from '@/features/booking/api';
 import { spacing, useTheme } from '@/theme';
 import { Button, Card, FormError, SwitchRow, Text, TextField, useToast } from '@/ui';
 
+import { BookingProfileFields } from './BookingProfileFields';
+
 /**
  * Branch settings → Online booking (owner, 2026-10-20): switch the salon's booking page on, then copy, share or open
  * its link (saloqo.com/b/<link>) and change the link if wanted. Saved at once.
@@ -86,6 +88,7 @@ export function OnlineBookingCard() {
               />
             </View>
           ) : null}
+          <BookingProfileFields />
         </View>
       ) : null}
       <FormError error={set.error} />

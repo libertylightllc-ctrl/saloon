@@ -40,7 +40,8 @@ const cookies = (header = '') => Object.fromEntries(header.split(/;\s*/).filter(
 createServer((req, res) => {
   const url = new URL(req.url, 'http://local');
   const jar = cookies(req.headers.cookie);
-  const has = (c) => c.type === 'cookie' && c.key in jar;
+  const has = (c) =>
+    c.type === 'cookie' ? c.key in jar : c.type === 'header' && new RegExp(`^${c.value}$`).test(String(req.headers[c.key] ?? ''));
   const applies = (rule) => !(rule.missing ?? []).some(has) && (rule.has ?? []).every(has);
   for (const rule of config.redirects ?? []) {
     const values = match(rule.source, url.pathname);
