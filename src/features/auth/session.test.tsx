@@ -5,7 +5,12 @@
 import { act, render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
+import { warmUpRendering } from '@/ui/testUtils';
+
 import { SessionProvider, useSession } from './session';
+
+// Cold first render outside the first test's 5 s (it timed out once at load ~100, 24 Oct 2026; see testUtils).
+warmUpRendering();
 
 type Listener = (event: string, session: unknown) => void;
 type Deferred = { promise: Promise<unknown>; resolve: (v: unknown) => void };

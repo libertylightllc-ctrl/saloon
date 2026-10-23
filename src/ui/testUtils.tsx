@@ -33,7 +33,7 @@ export async function renderInApp(ui: ReactElement, { mode = 'gents' }: { mode?:
 export function warmUpRendering() {
   beforeAll(async () => {
     await renderInApp(<></>);
-    cleanup();
+    await cleanup();
     Animated.timing(new Animated.Value(0), { toValue: 1, duration: 0, useNativeDriver: true }).start();
   }, 60_000);
 }
