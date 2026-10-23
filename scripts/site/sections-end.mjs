@@ -27,7 +27,7 @@ export function types(c) {
   };
   return `<section class="band mist types" id="types"><div class="inner stack-lg">
 <div class="head"><h2 class="t-section center">${esc(t('auth.landing.typeTitle'))}</h2><p class="t-lead muted center">${esc(t('auth.welcome.subtitle'))}</p></div>
-<div class="type-cards">${Object.keys(LOOK).map(card).join('')}</div>
+<div class="swipe-wrap"><div class="type-cards swipe" data-swipe>${Object.keys(LOOK).map(card).join('')}</div><div class="dots" aria-hidden="true">${Object.keys(LOOK).map((_, i) => `<i${i === 0 ? ' class="on"' : ''}></i>`).join('')}</div></div>
 </div></section>`;
 }
 

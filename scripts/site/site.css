@@ -142,7 +142,8 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .features .swipe-wrap:last-child .swipe{padding-bottom:24px;margin-bottom:-12px}
 /* Salon type. */
 .types{padding:48px 0}
-.type-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* Four types (brief 5.4): one sideways row on a phone, two at a time, so the page stays short (brief 2.14). */
+.type-cards>.type-card{flex:0 0 42vw}
 .type-card{flex:1;display:flex;flex-direction:column;border-radius:28px;background:var(--card);overflow:hidden;box-shadow:var(--shadow);transition:transform .1s}
 .type-card:active{transform:scale(.99);opacity:.92}
 .preview{display:flex;justify-content:center;height:130px;padding-top:16px;overflow:hidden;background:var(--preview)}
@@ -221,7 +222,7 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .smalls{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0;padding:0;overflow:visible}
 .features .swipe-wrap:last-child .swipe{padding-bottom:0;margin-bottom:0}
 .dots{display:none}
-.type-cards{gap:20px}
+.type-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:0;padding:0;overflow:visible}
 .preview{height:260px;padding-top:32px}
 .type-card .phone{--w:200px!important}
 .type-text{flex-direction:row;align-items:center;gap:12px;padding:24px}
@@ -249,7 +250,7 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .bigs{grid-template-columns:1fr 1fr}
 .bigs>.big:first-child{grid-column:1/-1}
 .type-cards{grid-template-columns:repeat(4,1fr)}
-.type-text{flex-direction:column;align-items:stretch}
+.type-text{flex-direction:column;align-items:stretch;flex:1;justify-content:space-between}
 .step-list{flex-direction:row}
 .step-list li{flex:1}
 .quotes{flex-direction:row}.quote{flex:1}

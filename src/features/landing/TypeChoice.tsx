@@ -10,6 +10,7 @@ import { brandPalette as B, MODES, spacing, themes, type Mode } from '@/theme';
 import { Icon, Text } from '@/ui';
 
 import { Band, PhoneShot, useLandingLayout } from './parts';
+import { Swipe } from './Swipe';
 
 
 export function TypeChoice({ onChoose, onLayoutY }: { onChoose: (mode: Mode) => void; onLayoutY: (y: number) => void }) {
@@ -26,15 +27,25 @@ export function TypeChoice({ onChoose, onLayoutY }: { onChoose: (mode: Mode) => 
             {t('auth.welcome.subtitle')}
           </Text>
         </View>
-        {/* Side by side on a phone too: one look at both (brief 2.14). */}
-        {/* Four types (brief 5.4): two by two, all four in a row on a wide screen. */}
-        <View style={[styles.cards, styles.row, styles.wrap, compact && styles.cardsCompact]}>
-          {MODES.map((mode, i) => (
-            <View key={mode} style={wide ? styles.quarter : styles.half}>
-              <TypeCard mode={mode} compact={compact} stacked={compact || wide} tilt={i % 2 ? 3 : -3} onPress={() => onChoose(mode)} />
-            </View>
-          ))}
-        </View>
+        {/* Four types (brief 5.4). On a phone one row that swipes sideways, two at a time, so the page stays as short
+            as brief 2.14 asks; two by two on a tablet; all four in a row on a wide screen. */}
+        {compact ? (
+          <Swipe count={MODES.length} share={0.42} testID="landing-types-swipe">
+            {(i, w) => (
+              <View key={MODES[i]} style={{ width: w }}>
+                <TypeCard mode={MODES[i]!} compact stacked tilt={i % 2 ? 3 : -3} onPress={() => onChoose(MODES[i]!)} />
+              </View>
+            )}
+          </Swipe>
+        ) : (
+          <View style={[styles.cards, styles.row, styles.wrap]}>
+            {MODES.map((mode, i) => (
+              <View key={mode} style={wide ? styles.quarter : styles.half}>
+                <TypeCard mode={mode} compact={false} stacked={wide} tilt={i % 2 ? 3 : -3} onPress={() => onChoose(mode)} />
+              </View>
+            ))}
+          </View>
+        )}
       </Band>
     </View>
   );
@@ -78,7 +89,6 @@ const styles = StyleSheet.create({
   band: { paddingVertical: 88, gap: spacing['3xl'] },
   bandCompact: { paddingVertical: 48, gap: spacing.xl },
   previewCompact: { height: 130, paddingTop: spacing.lg },
-  cardsCompact: { gap: spacing.md },
   textStacked: { padding: spacing.xl, flex: 1, justifyContent: 'space-between' },
   textCompact: { flexDirection: 'column', alignItems: 'stretch', padding: spacing.md, gap: spacing.sm },
   head: { gap: spacing.md, alignItems: 'center', maxWidth: 720, alignSelf: 'center' },

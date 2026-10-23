@@ -1,15 +1,15 @@
 /** "Everything the counter needs": the two everyday screens large (with the real app), the rest as small cards. */
 import { useTranslation } from 'react-i18next';
-import { useState, type ReactNode } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions, View, type ImageSourcePropType } from 'react-native';
+import { StyleSheet, View, type ImageSourcePropType } from 'react-native';
 
-import { brandPalette as B, screenPadding, spacing } from '@/theme';
+import { brandPalette as B, spacing } from '@/theme';
 import { Icon, Text, type IconName } from '@/ui';
 
 import gentsBooking from '../../../assets/images/landing/gents-booking.webp';
 import gentsQueue from '../../../assets/images/landing/gents-queue.webp';
 import gentsSale from '../../../assets/images/landing/gents-sale.webp';
 import { Band, NavyBackdrop, PhoneShot, useLandingLayout } from './parts';
+import { Swipe } from './Swipe';
 import { useVisitorInUae } from './visitor';
 
 type FeatureKey = 'booking' | 'queue' | 'sale' | 'closing' | 'staff' | 'compliance' | 'stock' | 'reports' | 'roles';
@@ -106,36 +106,6 @@ function SmallCard({ feature, icon, body }: { feature: FeatureKey; icon: IconNam
   );
 }
 
-/** A row that swipes sideways on a phone, the next card peeking in, with dots (brief 2.14). */
-function Swipe({ count, share, testID, children }: { count: number; share: number; testID: string; children: (i: number, width: number) => ReactNode }) {
-  const { t } = useTranslation();
-  const { width } = useWindowDimensions();
-  const [index, setIndex] = useState(0);
-  const card = Math.round(width * share);
-  const step = card + spacing.md;
-  return (
-    <View style={styles.swipe}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={step}
-        decelerationRate="fast"
-        contentContainerStyle={styles.swipeRow}
-        onScroll={(e) => setIndex(Math.min(count - 1, Math.max(0, Math.round(Math.abs(e.nativeEvent.contentOffset.x) / step))))}
-        scrollEventThrottle={32}
-        testID={testID}
-      >
-        {Array.from({ length: count }, (_, i) => children(i, card))}
-      </ScrollView>
-      <View style={styles.dots} accessibilityLabel={t('auth.landing.swipe', { n: index + 1, total: count })}>
-        {Array.from({ length: count }, (_, i) => (
-          <View key={i} style={[styles.dot, i === index && styles.dotOn]} />
-        ))}
-      </View>
-    </View>
-  );
-}
-
 /** A large tile: the words on one side, the real screen rising from the bottom edge on the other. */
 function BigTile({ feature, icon, shot, dark = false }: { feature: FeatureKey; icon: IconName; shot: ImageSourcePropType; dark?: boolean }) {
   const { t } = useTranslation();
@@ -178,9 +148,4 @@ const styles = StyleSheet.create({
   small: { padding: spacing['2xl'], gap: spacing.sm, borderRadius: 22, borderWidth: 1, borderColor: B.hairline, backgroundColor: B.card, boxShadow: B.cardShadow },
   iconRing: { width: 44, height: 44, borderRadius: 22, backgroundColor: B.tealSoft, alignItems: 'center', justifyContent: 'center' },
   iconRingDark: { backgroundColor: B.navyRaised, borderWidth: 1, borderColor: B.navyLine },
-  swipe: { gap: spacing.md, marginHorizontal: -screenPadding },
-  swipeRow: { gap: spacing.md, paddingHorizontal: screenPadding },
-  dots: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
-  dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: B.hairline },
-  dotOn: { width: 20, backgroundColor: B.tealDeep },
 });
