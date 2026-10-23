@@ -55,8 +55,9 @@ test('search engines read the words, the price and the questions without JavaScr
   expect(html).toContain('<link rel="canonical" href="https://www.saloqo.com/">');
   expect(html).toContain('<meta name="twitter:card" content="summary_large_image">');
   expect(html.match(/rel="alternate" hreflang=/g)).toHaveLength(8);
-  // The same page at /welcome; Arabic at /ar, right to left.
-  expect(await (await request.get(`${site}/welcome`)).text()).toContain('Run your salon from your phone');
+  // /welcome is the same page: one address for search engines. Arabic at /ar, right to left.
+  const welcome = await request.get(`${site}/welcome`, { maxRedirects: 0 });
+  expect([welcome.status(), welcome.headers().location]).toEqual([308, '/']);
   const ar = await (await request.get(`${site}/ar`)).text();
   expect(ar).toContain('<html lang="ar" dir="rtl">');
   expect(ar).toContain('<link rel="canonical" href="https://www.saloqo.com/ar">');

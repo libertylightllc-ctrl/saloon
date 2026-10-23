@@ -6,6 +6,17 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/welcome",
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "sq_in"
+        }
+      ],
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/:lang(ar|hi|ur|es|fr|pt)/",
       "destination": "/:lang",
       "permanent": true
@@ -14,16 +25,6 @@
   "rewrites": [
     {
       "source": "/",
-      "missing": [
-        {
-          "type": "cookie",
-          "key": "sq_in"
-        }
-      ],
-      "destination": "/site/en.html"
-    },
-    {
-      "source": "/welcome",
       "missing": [
         {
           "type": "cookie",

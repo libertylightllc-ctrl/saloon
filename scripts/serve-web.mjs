@@ -1,7 +1,7 @@
 /**
- * Serves the production web build the way Vercel does with vercel.json (a real file first, then the rewrites in
- * order, with their cookie conditions): the website's home pages, and the app for every other address. For local
- * checks:
+ * Serves the production web build the way Vercel does with vercel.json (redirects, then a real file, then the
+ * rewrites in order, all with their cookie conditions): the website's home pages, and the app for every other
+ * address. For local checks:
  *
  *   npm run build:web:local && node scripts/serve-web.mjs 8090 [dist]
  *
@@ -39,14 +39,20 @@ const cookies = (header = '') => Object.fromEntries(header.split(/;\s*/).filter(
 
 createServer((req, res) => {
   const url = new URL(req.url, 'http://local');
+  const jar = cookies(req.headers.cookie);
+  const has = (c) => c.type === 'cookie' && c.key in jar;
+  const applies = (rule) => !(rule.missing ?? []).some(has) && (rule.has ?? []).every(has);
+  for (const rule of config.redirects ?? []) {
+    const values = match(rule.source, url.pathname);
+    if (!values || !applies(rule)) continue;
+    res.writeHead(rule.permanent ? 308 : 307, { location: rule.destination.replace(/:(\w+)/g, (_, n) => values[n]) }).end();
+    return;
+  }
   let target = file(url.pathname);
   if (!target && !/^\/(api|_vercel)\//.test(url.pathname)) {
-    const jar = cookies(req.headers.cookie);
     for (const rule of config.rewrites) {
       const values = match(rule.source, url.pathname);
-      if (!values) continue;
-      const has = (c) => c.type === 'cookie' && c.key in jar;
-      if ((rule.missing ?? []).some(has) || !(rule.has ?? []).every(has)) continue;
+      if (!values || !applies(rule)) continue;
       target = file(rule.destination.replace(/:(\w+)/g, (_, n) => values[n]));
       break;
     }
