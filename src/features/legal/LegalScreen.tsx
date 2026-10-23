@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { brand } from '@/config/brand';
+import { site } from '@/config/site';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Button, HeaderBand, Screen, Text } from '@/ui';
@@ -21,8 +22,11 @@ export type LegalKind = keyof typeof SECTIONS;
 const contactEmail = brand.privacyEmail || brand.supportEmail;
 /** Whether a real address has been set; until then no contact line is shown. */
 export const hasSupportEmail = Boolean(contactEmail) && !contactEmail.endsWith('@example.com');
-/** The company behind the app (its legal name once set), for "Who we are". */
-const company = brand.legalName || brand.appName;
+/** The company behind the app and its address, once the owner has set them (src/config/site.json; website brief 5.2). */
+const legalName = site.legalName || brand.legalName;
+const legalAddress = site.legalAddress;
+/** For "Who we are": the legal name once set, else the app's name. */
+const company = legalName || brand.appName;
 
 /** The privacy policy or the terms: open to everyone, signed in or not (the stores and the website link here). */
 export function LegalScreen({ kind }: { kind: LegalKind }) {
@@ -38,6 +42,12 @@ export function LegalScreen({ kind }: { kind: LegalKind }) {
         <Text variant="small" color="textSecondary">
           {t('legal.updated', { date: dates.day(LEGAL_UPDATED, 'd MMMM yyyy') })}
         </Text>
+        {/* "Saloqo is provided by <legal name>, <address>" (brief 5.2): only once the name is set. */}
+        {legalName ? (
+          <Text weight="semibold" testID="legal-provider">
+            {legalAddress ? t('legal.provider.withAddress', { app, name: legalName, address: legalAddress }) : t('legal.provider.name', { app, name: legalName })}
+          </Text>
+        ) : null}
         <Text>{t(`legal.${kind}.intro`, { app })}</Text>
         {SECTIONS[kind].map((key) => (
           <View key={key} style={styles.section}>
