@@ -58,10 +58,11 @@ select is((select started_at from attendance_breaks where attendance_id = (pg_te
 select lives_ok($$ select pg_temp.tap('break_end') $$, 'End break is not refused (the proof''s failure)');
 select is((select count(*)::int from attendance_breaks where ended_at < started_at), 0, 'no break ends before it starts');
 
--- A time typed in by hand before the break began is still refused.
+-- A time typed in by hand a minute before the break began is still refused (typed times count to the minute: the
+-- same minute is accepted, migration 65 and SQL test 51).
 select lives_ok($$ select pg_temp.tap('break_start') $$, 'a second break');
 select pg_temp.as_user('00000000-0000-0000-0000-0000000040a0');
-select throws_ok(format($$ select clock(jsonb_build_object('employee_id', '%s', 'action', 'break_end', 'at', now() - interval '1 second')) $$,
+select throws_ok(format($$ select clock(jsonb_build_object('employee_id', '%s', 'action', 'break_end', 'at', date_trunc('minute', now()) - interval '1 minute')) $$,
   current_setting('t.emp')), '22023', 'invalid_time', 'the owner cannot type a time before the break began');
 
 -- Clocking out and back to work "now" after another step back.
