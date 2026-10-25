@@ -1,21 +1,18 @@
 /**
- * Real customers and real numbers (website brief 2.8), from src/config/site.ts: testimonial cards, a stats strip and
- * "Made in Dubai" with the company's name. Nothing is shown while the config is empty — never sample data.
+ * Real customers and real numbers (website brief 2.8), from src/config/site.ts: testimonial cards and a stats strip
+ * (no company name: full update brief). Nothing is shown while the config is empty — never sample data.
  */
-import { useTranslation } from 'react-i18next';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { site } from '@/config/site';
 import { brandPalette as B, spacing } from '@/theme';
 import { Text } from '@/ui';
 
-import { madeInPlace } from './contact';
 import { Band, useLandingLayout } from './parts';
 
 export function SocialProof() {
-  const { t } = useTranslation();
   const { wide, compact } = useLandingLayout();
-  if (!site.testimonials.length && !site.stats.length && !site.legalName) return null;
+  if (!site.testimonials.length && !site.stats.length) return null;
   return (
     <Band ground={B.card} style={[styles.band, compact && styles.bandCompact]} testID="landing-proof">
       {site.stats.length ? (
@@ -49,11 +46,6 @@ export function SocialProof() {
             </View>
           ))}
         </View>
-      ) : null}
-      {site.legalName ? (
-        <Text align="center" style={styles.muted} testID="landing-made-by">
-          {t('auth.landing.proof.madeBy', { name: site.legalName, place: madeInPlace(t) })}
-        </Text>
       ) : null}
     </Band>
   );

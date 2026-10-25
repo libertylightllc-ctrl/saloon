@@ -4,6 +4,7 @@
   "installCommand": "npm ci",
   "buildCommand": "node scripts/check-web-env.mjs && npx expo export -p web && node scripts/site/build.mjs",
   "outputDirectory": "dist",
+  "trailingSlash": false,
   "redirects": [
     {
       "source": "/welcome",
@@ -49,7 +50,15 @@
       "destination": "/api/booking-preview?slug=:slug"
     },
     {
-      "source": "/((?!api/|_vercel/).*)",
+      "source": "/:page(contact|privacy|terms)",
+      "destination": "/site/:page.html"
+    },
+    {
+      "source": "/",
+      "destination": "/spa.html"
+    },
+    {
+      "source": "/:route(accounts|accounts-tab|accounts/close-period|admin|appointment/new|attendance|auth-callback|b/[^/]+|booking/[^/]+|cash-closing|cash-closing/[^/]+|compliance|compliance/doc|console|contact|customers|customers/[^/]+|dev/gallery|expenses|expenses/[^/]+|forgot-password|inventory|inventory/[^/]+|more|notifications|pay|payroll|payroll/adjustments|plan|privacy|profile|purchases|purchases/[^/]+|queue|r/[^/]+|reports|reports-tab|sale|sales|sales/[^/]+|services|services/categories|services/form|settings/backup|settings/branch|settings/team|setup|sign-in|sign-up|staff|staff/[^/]+|support|terms|welcome)",
       "destination": "/spa.html"
     }
   ],

@@ -117,7 +117,8 @@ test('the privacy policy and terms are open to everyone, from the landing page a
   await expect(id(page, 'legal-privacy')).toBeVisible();
   await expect(id(page, 'legal-privacy')).toContainText('Address: Dubai, United Arab Emirates');
   await expect(id(page, 'legal-privacy')).toContainText('Questions or requests, including about your data: hello@saloqo.com');
-  await expect(text(page, /Personal Data Protection Law/)).toBeVisible();
+  // The policy opens with the UAE law (full update, Phase 5).
+  await expect(text(page, /written for the UAE Personal Data Protection Law \(Federal Decree-Law No\. 45 of 2021\)/)).toBeVisible();
   await expect(text(page, /five years/).first()).toBeVisible();
   await snap(page, 'legal-privacy', mode);
   await id(page, 'legal-open-terms').click();

@@ -80,6 +80,29 @@ test('search engines read the words, the price and the questions without JavaScr
   expect(sitemap).not.toContain('/sign-in');
 });
 
+test('every page of the app opens; any other address is a real "not found"; contact, privacy and terms have their titles', async ({ request }) => {
+  // Every screen in app/ (the build stops if vercel.json misses one), as a visitor without the signed-in cookie.
+  const routes: string[] = JSON.parse(
+    execFileSync('node', ['--input-type=module', '-e', "import { appRoutes } from './scripts/site/pages.mjs'; console.log(JSON.stringify(appRoutes('app')))"], { encoding: 'utf8' }),
+  );
+  expect(routes.length).toBeGreaterThan(50);
+  for (const route of routes) {
+    const res = await request.get(`${site}/${route}`, { maxRedirects: 0 });
+    expect.soft(res.status(), route).toBe(route === 'welcome' ? 308 : 200);
+  }
+  for (const path of ['/nope', '/queue/extra', '/wp-login.php', '/b']) {
+    const res = await request.get(`${site}${path}`);
+    expect(res.status(), path).toBe(404);
+    const html = await res.text();
+    expect(html).toContain('<meta name="robots" content="noindex">');
+    expect(html).toContain('<title>Page not found – Saloqo</title>');
+  }
+  expect((await request.get(`${site}/queue/`, { maxRedirects: 0 })).headers().location).toMatch(/\/queue$/);
+  for (const [path, title] of [['/contact', 'Contact Saloqo'], ['/privacy', 'Privacy policy – Saloqo'], ['/terms', 'Terms of use – Saloqo']]) {
+    expect(await (await request.get(`${site}${path}`)).text()).toContain(`<title>${title}</title>`);
+  }
+});
+
 test.describe('on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, timezoneId: 'Asia/Dubai', locale: 'en-US' });
 

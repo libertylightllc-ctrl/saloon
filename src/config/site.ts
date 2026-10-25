@@ -5,7 +5,8 @@
  * - whatsappNumber: international format, digits only, e.g. "9715XXXXXXXX"
  * - demoBookingUrl: optional calendar link; if empty, "Book a demo" opens WhatsApp (or nothing without a number)
  * - demoVideoUrl: YouTube, Vimeo or MP4; the video section is hidden while empty
- * - legalName: e.g. "Saloqo FZ-LLC"; legalAddress: postal address
+ * - operatorName: who is responsible for Saloqo, named in "Who we are" of the privacy policy (full update, Phase 5);
+ *   while empty the policy names the app only. Never a company form, licence or tax number (the owner's rule).
  * - stats: e.g. { "value": "120+", "label": "salons" } — real numbers only
  * - testimonials: real customers only
  */

@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { usePageMeta } from '@/lib/pageMeta';
 import { spacing } from '@/theme';
 import { Button, EmptyState, Screen, Text } from '@/ui';
 
@@ -9,6 +10,7 @@ import { Button, EmptyState, Screen, Text } from '@/ui';
 export function NotFoundScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  usePageMeta(t('meta.notFound.title'), null, { noindex: true });
   return (
     <Screen>
       <View style={styles.body} testID="not-found">

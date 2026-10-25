@@ -702,9 +702,7 @@
         "body": "Saloqo ajoute ce qui lui manque : clôture de caisse chaque soir, stock, paie et rappels de licences."
       },
       "swipe": "Carte {{n}} sur {{total}}",
-      "proof": {
-        "madeBy": "Conçu à {{place}} par {{name}}"
-      },
+      "proof": {},
       "footer": {
         "madeIn": "Conçu à {{place}}"
       },
@@ -752,7 +750,8 @@
         },
         "free": {
           "q": "Combien de temps est-ce gratuit ?",
-          "a": "Votre période gratuite s’affiche dans l’app, sous Plus → Abonnement et facturation. Les salons du pilote ont 3 mois gratuits. À la fin, rien n’est facturé sauf si vous choisissez une formule, et vos données restent : vous pouvez les consulter et les exporter à tout moment."
+          "a": "Votre période gratuite s’affiche dans l’app, sous Plus → Abonnement et facturation. À la fin, rien n’est facturé sauf si vous choisissez une formule, et vos données restent : vous pouvez les consulter et les exporter à tout moment.",
+          "pilot": "Les salons du pilote ont 3 mois gratuits."
         },
         "branches": {
           "q": "Puis-je gérer plusieurs établissements ?",
@@ -841,8 +840,7 @@
     },
     "google": {
       "action": "Continuer avec Google",
-      "or": "ou avec un e-mail",
-      "mark": "G"
+      "or": "ou avec un e-mail"
     },
     "checkInbox": {
       "title": "Consultez votre boîte de réception",
@@ -2392,15 +2390,17 @@
     },
     "privacy": {
       "title": "Politique de confidentialité",
-      "intro": "Cette politique explique ce que {{app}} collecte, pourquoi, et les choix dont vous disposez. {{app}} est un logiciel que les barbiers et les salons pour femmes utilisent pour gérer leur journée : file d’attente, ventes, stock, équipe, paie et taxes.",
+      "intro": "Cette politique explique ce que {{app}} collecte, pourquoi, et les choix dont vous disposez. Elle est rédigée selon la loi des Émirats arabes unis sur la protection des données personnelles (décret-loi fédéral n° 45 de 2021) et couvre aussi les personnes de l’Union européenne, du Royaume-Uni et du Brésil. {{app}} est un logiciel que les barbiers, salons pour femmes, salons mixtes, spas et instituts d’ongles et de beauté utilisent pour gérer leur journée : file d’attente, ventes, stock, équipe, paie et taxes.",
       "who": {
         "title": "Qui nous sommes",
-        "body": "{{company}} (« nous ») fournit {{app}}, l’app et le site web. Pour votre compte et la façon dont vous utilisez {{app}}, c’est nous qui décidons de la manière dont vos données sont utilisées : nous sommes le « responsable du traitement ». Pour les informations qu’un salon conserve sur ses propres clients et son personnel, c’est le salon qui est le responsable du traitement : il décide de ce qui est enregistré et pourquoi, et nous les stockons et les traitons pour son compte, selon ses instructions, conformément aux conditions de traitement des données figurant dans nos conditions d’utilisation.",
-        "address": "Adresse : {{address}}"
+        "body": "Pour votre compte et la façon dont vous utilisez {{app}}, c’est nous qui décidons de la manière dont vos données sont utilisées : nous sommes le « responsable du traitement ». Pour les informations qu’un salon conserve sur ses propres clients et son personnel, c’est le salon qui est le responsable du traitement : il décide de ce qui est enregistré et pourquoi, et nous les stockons et les traitons pour son compte, selon ses instructions, conformément aux conditions de traitement des données figurant dans nos conditions d’utilisation.",
+        "address": "Adresse : {{address}}",
+        "lead": "{{app}} (« nous ») désigne l’application et le site {{website}}. Vous pouvez nous écrire à {{email}}.",
+        "leadOperator": "{{operator}} est responsable de {{app}} (« nous »), l’application et le site {{website}}. Vous pouvez nous écrire à {{email}}."
       },
       "collect": {
         "title": "Ce que nous collectons",
-        "body": "• Votre compte : votre nom, votre adresse e-mail et votre mot de passe (conservé uniquement sous forme de hachage sécurisé). Si vous continuez avec Google, Google nous transmet votre nom et votre adresse e-mail.\n• Si vous le donnez : votre numéro de mobile ou WhatsApp, utilisé uniquement pour vous aider à démarrer. Nous vous écrivons sur WhatsApp à ce sujet seulement si vous cochez la case, et nous gardons la date de votre accord. Demandez-nous à tout moment de le supprimer.\n• Ce que les salons saisissent : services et prix, ventes et reçus, dépenses, fournisseurs et achats, stock, comptages de caisse, noms, numéros de téléphone et visites des clients, noms, présences et paie du personnel, ainsi que des documents tels que des licences et des photos de reçus.\n• Cet appareil : un jeton de notification si vous autorisez les notifications. Votre langue et votre connexion mémorisée restent sur l’appareil.\n• D’où vous nous consultez : le site déduit votre pays de votre connexion (adresse IP) pour afficher votre langue et votre prix. Il n’est pas conservé.\n• Visites du site : nous comptons les visites et les appuis sur les boutons principaux avec Vercel Web Analytics, qui n’utilise pas de cookies et ne vous identifie pas.\n• Aide et assistance : les messages que vous nous envoyez, avec votre salon, la version de l’application, votre appareil et l’écran où vous étiez ; si vous écrivez sans être connecté, le nom et l’e-mail que vous indiquez. Ils sont supprimés avec votre compte ou à votre demande.\nNous n’utilisons aucun traceur publicitaire et nous ne vendons jamais de données personnelles."
+        "body": "• Votre compte : votre nom, votre adresse e-mail et votre mot de passe (conservé uniquement sous forme de hachage sécurisé). Si vous continuez avec Google, Google nous transmet votre nom et votre adresse e-mail.\n• Si vous le donnez : votre numéro de mobile ou WhatsApp, utilisé uniquement pour vous aider à démarrer. Nous vous écrivons sur WhatsApp à ce sujet seulement si vous cochez la case, et nous gardons la date de votre accord. Demandez-nous à tout moment de le supprimer.\n• Ce que les salons saisissent : services et prix, ventes et reçus, dépenses, fournisseurs et achats, stock, comptages de caisse, noms, numéros de téléphone et visites des clients, noms, présences et paie du personnel, ainsi que des documents tels que des licences et des photos de reçus.\n• Cet appareil : un jeton de notification si vous autorisez les notifications. Votre langue et votre connexion mémorisée restent sur l’appareil.\n• D’où vous nous consultez : le site déduit votre pays de votre connexion (adresse IP) pour afficher votre langue et votre prix. Il n’est pas conservé.\n• Visites du site : nous comptons les visites et les appuis sur les boutons principaux avec Vercel Web Analytics, qui n’utilise pas de cookies et ne vous identifie pas.\n• Aide et assistance : les messages que vous nous envoyez, avec votre salon, la version de l’application, votre appareil et l’écran où vous étiez ; si vous écrivez sans être connecté, le nom et l’e-mail que vous indiquez. Ils sont supprimés avec votre compte ou à votre demande.\n• Si vous postulez au pilote : votre nom, le nom, le type et l’effectif de votre salon, son émirat et son quartier, votre numéro WhatsApp, votre langue préférée, et si vous avez accepté que nous vous contactions sur WhatsApp au sujet du pilote. Nous les utilisons uniquement pour choisir les salons du pilote et vous contacter à ce sujet.\nNous n’utilisons aucun traceur publicitaire et nous ne vendons jamais de données personnelles."
       },
       "use": {
         "title": "Comment nous les utilisons",
@@ -2408,11 +2408,11 @@
       },
       "basis": {
         "title": "Pourquoi nous pouvons les utiliser (bases légales)",
-        "body": "• Pour fournir le service auquel vous ou votre salon avez souscrit (un contrat).\n• Pour respecter nos obligations légales, comme la conservation des documents fiscaux et financiers (une obligation légale).\n• Pour assurer la sécurité du service, prévenir les utilisations abusives et corriger les dysfonctionnements, ce qui relève de notre intérêt légitime et de celui de nos utilisateurs ; vous pouvez vous y opposer.\n• Pour les notifications sur votre téléphone et les éventuels messages facultatifs, parce que vous l’avez accepté ; vous pouvez les désactiver à tout moment (consentement).\nAu Brésil, ce sont les bases légales correspondantes de la LGPD (article 7)."
+        "body": "• Aux Émirats arabes unis, selon la loi sur la protection des données personnelles, nous utilisons vos données : pour fournir le service auquel vous ou votre salon avez souscrit, y compris le sécuriser et corriger les pannes (exécution d’un contrat) ; pour respecter nos obligations légales, comme la conservation des registres fiscaux et financiers (obligation légale) ; et, pour tout ce qui est facultatif, comme les notifications sur le téléphone et les messages WhatsApp, parce que vous l’avez accepté, ce que vous pouvez retirer à tout moment (consentement).\n• Dans l’Union européenne, au Royaume-Uni et dans les autres pays, ces trois bases s’appliquent aussi, et nous sécurisons en outre le service, prévenons les abus et corrigeons les pannes parce que cela relève de notre intérêt légitime et de celui de nos utilisateurs ; vous pouvez vous y opposer.\nAu Brésil, ce sont les bases légales correspondantes de la LGPD (article 7)."
       },
       "where": {
         "title": "Où elles sont conservées",
-        "body": "Vos données sont stockées chez Supabase (base de données, connexion et stockage de fichiers) en Corée du Sud. Le site web et l’app sont distribués par Vercel depuis des serveurs proches de vous. Les e-mails passent par notre prestataire d’e-mail, les notifications vers les téléphones par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Les messages envoyés via Aide et assistance reçoivent d’abord une réponse d’un assistant IA exploité pour notre compte par Groq ou par Anthropic (Claude) ; ces prestataires n’utilisent les messages que pour y répondre et ne s’en servent pas pour entraîner leurs modèles. Ces prestataires traitent les données uniquement pour notre compte, conformément à des conditions de traitement des données, et sont tenus de les garder confidentielles et sécurisées. Les paiements de l’abonnement par carte sont encaissés par Creem, notre prestataire de paiement (marchand officiel), qui reçoit le nom, l’e-mail, la carte et les coordonnées de facturation du payeur.\nL’Union européenne et le Royaume-Uni reconnaissent que la Corée du Sud protège les données personnelles de manière adéquate. Lorsqu’un prestataire traite des données dans un pays qui ne bénéficie pas d’une telle reconnaissance, comme les États-Unis, le transfert est couvert par les clauses contractuelles types de la Commission européenne, assorties de l’addendum du Royaume-Uni, et, pour le Brésil, par les garanties que permet la LGPD, telles que les clauses contractuelles types."
+        "body": "Vos données sont stockées chez Supabase (base de données, connexion et stockage de fichiers) en Corée du Sud. Le site web et l’app sont distribués par Vercel depuis des serveurs proches de vous. Les e-mails passent par notre prestataire d’e-mail, les notifications vers les téléphones par Expo et Apple ou Google, et Google gère « Continuer avec Google ». Les messages envoyés via Aide et assistance reçoivent d’abord une réponse d’un assistant IA exploité pour notre compte par Groq ou par Anthropic (Claude) ; ces prestataires n’utilisent les messages que pour y répondre et ne s’en servent pas pour entraîner leurs modèles. Ces prestataires traitent les données uniquement pour notre compte, conformément à des conditions de traitement des données, et sont tenus de les garder confidentielles et sécurisées. Les paiements de l’abonnement par carte sont encaissés par Creem, notre prestataire de paiement (marchand officiel), qui reçoit le nom, l’e-mail, la carte et les coordonnées de facturation du payeur.\nGaranties pour leur hébergement en Corée du Sud : la Corée du Sud dispose d’une loi complète sur la protection des données (la loi sur la protection des informations personnelles) ; Supabase traite les données uniquement pour notre compte, selon des conditions de traitement qui l’obligent à les garder confidentielles et sécurisées ; les données sont chiffrées en transit vers et depuis le service et là où elles sont stockées ; les données de chaque salon sont séparées ; et l’accès dans un salon suit le rôle de chaque personne. Pour les personnes aux Émirats arabes unis, ce sont les garanties de ce transfert au titre de la loi sur la protection des données personnelles.\nL’Union européenne et le Royaume-Uni reconnaissent que la Corée du Sud protège les données personnelles de manière adéquate. Lorsqu’un prestataire traite des données dans un pays qui ne bénéficie pas d’une telle reconnaissance, comme les États-Unis, le transfert est couvert par les clauses contractuelles types de la Commission européenne, assorties de l’addendum du Royaume-Uni, et, pour le Brésil, par les garanties que permet la LGPD, telles que les clauses contractuelles types."
       },
       "share": {
         "title": "Avec qui nous les partageons",
@@ -2420,7 +2420,7 @@
       },
       "keep": {
         "title": "Combien de temps nous les conservons",
-        "body": "Les informations de votre compte sont conservées jusqu’à ce que vous supprimiez votre compte. Les données financières d’un salon (ventes, taxes, dépenses, achats et paie) sont conservées au moins cinq ans, ou plus longtemps si le pays du salon l’exige, même après la suppression d’un compte ou la fermeture d’un salon. Elles sont ensuite supprimées."
+        "body": "Les informations de votre compte sont conservées jusqu’à ce que vous supprimiez votre compte. Les données financières d’un salon (ventes, taxes, dépenses, achats et paie) sont conservées au moins cinq ans, ou plus longtemps si le pays du salon l’exige, même après la suppression d’un compte ou la fermeture d’un salon. Elles sont ensuite supprimées.\nLes candidatures au pilote sont conservées jusqu’à la fin du pilote ; vous pouvez nous demander à tout moment de supprimer la vôtre plus tôt."
       },
       "rights": {
         "title": "Vos choix et vos droits",
@@ -2453,7 +2453,7 @@
       "intro": "Ces conditions s’appliquent lorsque vous utilisez {{app}}, l’app et le site web. En créant un compte ou en utilisant le service, vous les acceptez.",
       "service": {
         "title": "Le service",
-        "body": "{{app}} aide les barbiers et les salons pour femmes à gérer leur journée : file d’attente et réservations, ventes et reçus, stock et achats, dépenses, clôture de caisse, équipe et paie, rappels de licences, taxes et rapports. C’est un outil : vous restez responsable de votre entreprise, de vos données, de vos déclarations fiscales et de la paie de votre personnel."
+        "body": "{{app}} aide les barbiers, salons pour femmes, salons mixtes, spas et instituts d’ongles et de beauté à gérer leur journée : file d’attente et réservations, ventes et reçus, stock et achats, dépenses, clôture de caisse, équipe et paie, rappels de licences, taxes et rapports. C’est un outil : vous restez responsable de votre activité, de vos registres, de vos déclarations fiscales et de la paie de votre équipe."
       },
       "accounts": {
         "title": "Comptes",
@@ -2461,7 +2461,7 @@
       },
       "plans": {
         "title": "Abonnements et paiement",
-        "body": "La configuration est gratuite, et un nouveau salon peut utiliser toutes les fonctions gratuitement pendant 7 jours (un essai gratuit par propriétaire) sans payer ni donner de carte. Ensuite, utiliser les fonctions (file d’attente, ventes et le reste) nécessite un abonnement actif, facturé par salon et par mois au prix affiché sur notre site, qui dépend du nombre de personnes qui se connectent. Les abonnements se paient d’avance, s’activent à réception du paiement et ne se renouvellent pas d’eux-mêmes. Les mois payés ne sont pas remboursés, sauf lorsque la loi l’exige. Si un abonnement ou l’essai gratuit se termine, vos données restent : vous pouvez toujours vous connecter, les consulter et les exporter. Les paiements par carte sont traités par Creem en tant que marchand officiel."
+        "body": "La configuration est gratuite, et {{app}} est gratuit pour commencer : un nouveau salon peut utiliser toutes les fonctionnalités pendant la période gratuite affichée dans l’app (dans {{home}} et dans {{planPath}}), sans payer ni donner de carte. Après la période gratuite, utiliser les fonctionnalités (file d’attente, ventes et le reste) nécessite une formule active. Les formules sont facturées par établissement et par mois, jusqu’au nombre de personnes indiqué sur notre site, avec un prix fixe pour chaque personne supplémentaire qui se connecte ; vous pouvez payer 1 mois, 6 mois (10 % de remise) ou 12 mois (le prix de 10). Le prix est affiché avant le paiement. Les formules se paient d’avance, s’activent à réception du paiement et ne se renouvellent pas d’elles-mêmes : rien n’est facturé si le propriétaire ne choisit pas de formule. Les mois payés ne sont pas remboursés, sauf si la loi l’exige. Si une formule ou la période gratuite prend fin, vos données restent : vous pouvez toujours vous connecter, les consulter et les exporter. Les paiements par carte, quand ils sont proposés, sont traités par Creem en tant que marchand officiel."
       },
       "data": {
         "title": "Vos données",
@@ -2494,11 +2494,11 @@
       "changes": {
         "title": "Modifications",
         "body": "Nous pouvons mettre à jour ces conditions ; la date ci-dessus indique la version en vigueur. Utiliser le service après une modification signifie que les nouvelles conditions s’appliquent."
+      },
+      "pilot": {
+        "title": "Le pilote",
+        "body": "Les salons que nous admettons au pilote de {{app}} l’utilisent gratuitement jusqu’à la date affichée dans l’app. Nous pouvons mettre fin au pilote ou le modifier en prévenant le propriétaire 14 jours à l’avance. Rien n’est facturé pendant ou après le pilote si le propriétaire ne choisit pas de formule."
       }
-    },
-    "provider": {
-      "withAddress": "{{app}} est fourni par {{name}}, {{address}}.",
-      "name": "{{app}} est fourni par {{name}}."
     }
   },
   "tax": {
@@ -2903,7 +2903,7 @@
   "meta": {
     "welcome": {
       "title": "Saloqo – Appli pour salons et barbiers : réservations, clôture de caisse, paie du personnel",
-      "description": "Gérez votre barbier, salon ou spa depuis votre téléphone : clients sans rendez-vous et réservations, ventes rapides et reçus, clôture de caisse quotidienne, stock, paie du personnel et vos taxes. Essai gratuit, sans carte."
+      "description": "Appli pour salons et barbiers : clients sans rendez-vous, réservations, ventes, clôture de caisse et paie. En 7 langues. Essai gratuit, sans carte."
     },
     "signUp": {
       "title": "Essayez Saloqo gratuitement – Saloqo",
@@ -2917,6 +2917,21 @@
       "title": "Réservez chez {{salon}} – Saloqo",
       "titleWhere": "Réservez chez {{salon}} – {{where}}",
       "description": "Réservez en ligne chez {{salon}} : prestations, prix et créneaux libres. Sans compte."
+    },
+    "contact": {
+      "title": "Contacter Saloqo",
+      "description": "Des questions sur Saloqo, l'appli pour salons et barbiers ? Écrivez-nous ici, la réponse arrive dans le chat."
+    },
+    "privacy": {
+      "title": "Politique de confidentialité – Saloqo",
+      "description": "Comment Saloqo collecte, utilise et protège les données des salons, de leur équipe et de leurs clients."
+    },
+    "terms": {
+      "title": "Conditions d'utilisation – Saloqo",
+      "description": "Les conditions d'utilisation de Saloqo : la période gratuite, les formules et prix par établissement, vos données et nos engagements."
+    },
+    "notFound": {
+      "title": "Page introuvable – Saloqo"
     }
   }
 }

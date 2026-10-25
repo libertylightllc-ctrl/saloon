@@ -55,10 +55,25 @@ test('"Continue with Google" shows only when Google is switched on, and sends pe
   });
   await page.reload();
   await expect(id(page, 'google-sign-in')).toBeVisible();
+  // Google's light button (Google's branding rules): white, whatever the salon look.
+  await expect(id(page, 'google-sign-in')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   await id(page, 'link-sign-up').click();
   await expect(id(page, 'google-sign-in')).toBeVisible();
   const site = new URL(page.url()).origin;
   await id(page, 'google-sign-in').click();
   await expect.poll(() => authorize).toContain('provider=google');
   expect(new URL(authorize).searchParams.get('redirect_to')).toBe(`${site}/`);
+});
+
+test('contact, privacy and terms have their own titles; an address that does not exist says so and is kept out of search engines', async ({ page }) => {
+  for (const [path, title] of [['/privacy', 'Privacy policy – Saloqo'], ['/terms', 'Terms of use – Saloqo'], ['/contact', 'Contact Saloqo']] as const) {
+    await page.goto(path);
+    await expect(page).toHaveTitle(title);
+  }
+  await page.goto('/no-such-page');
+  await expect(id(page, 'not-found')).toBeVisible();
+  await expect(page).toHaveTitle('Page not found – Saloqo');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+  await id(page, 'not-found-home').click();
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
 });

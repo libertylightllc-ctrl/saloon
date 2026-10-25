@@ -1,7 +1,7 @@
 /**
- * Serves the production web build the way Vercel does with vercel.json (redirects, then a real file, then the
- * rewrites in order, all with their cookie conditions): the website's home pages, and the app for every other
- * address. For local checks:
+ * Serves the production web build the way Vercel does with vercel.json (no trailing slash, redirects, then a real
+ * file, then the rewrites in order, all with their cookie conditions): the website's home pages, the app for each of
+ * its pages, and 404.html with a 404 for anything else. For local checks:
  *
  *   npm run build:web:local && node scripts/serve-web.mjs 8090 [dist]
  *
@@ -43,6 +43,11 @@ createServer((req, res) => {
   const has = (c) =>
     c.type === 'cookie' ? c.key in jar : c.type === 'header' && new RegExp(`^${c.value}$`).test(String(req.headers[c.key] ?? ''));
   const applies = (rule) => !(rule.missing ?? []).some(has) && (rule.has ?? []).every(has);
+  // "trailingSlash": false — "/queue/" → "/queue".
+  if (config.trailingSlash === false && url.pathname.length > 1 && url.pathname.endsWith('/')) {
+    res.writeHead(308, { location: url.pathname.replace(/\/+$/, '') + url.search }).end();
+    return;
+  }
   for (const rule of config.redirects ?? []) {
     const values = match(rule.source, url.pathname);
     if (!values || !applies(rule)) continue;
@@ -59,7 +64,9 @@ createServer((req, res) => {
     }
   }
   if (!target) {
-    res.writeHead(404, { 'content-type': 'text/plain' }).end('Not found');
+    // No page here: Vercel answers 404 with dist/404.html.
+    const page = file('/404.html');
+    res.writeHead(404, { 'content-type': page ? TYPES['.html'] : 'text/plain' }).end(page ? readFileSync(page) : 'Not found');
     return;
   }
   res.writeHead(200, { 'content-type': TYPES[extname(target)] ?? 'application/octet-stream' }).end(readFileSync(target));

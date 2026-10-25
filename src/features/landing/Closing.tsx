@@ -105,11 +105,6 @@ export function Footer() {
           ))}
         </View>
       ) : null}
-      {site.legalName ? (
-        <Text variant="small" color="textSecondary" align="center" testID="landing-legal">
-          {[site.legalName, site.legalAddress].filter(Boolean).join(' · ')}
-        </Text>
-      ) : null}
       <Text variant="small" color="textSecondary" align="center" testID="landing-made-in">
         {`© ${new Date().getFullYear()} ${brand.appName} · ${t('auth.landing.footer.madeIn', { place: madeInPlace(t) })}`}
       </Text>

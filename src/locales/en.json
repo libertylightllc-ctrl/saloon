@@ -702,9 +702,7 @@
         "body": "Saloqo adds what it’s missing: nightly cash closing, stock, staff pay and licence reminders."
       },
       "swipe": "Card {{n}} of {{total}}",
-      "proof": {
-        "madeBy": "Made in {{place}} by {{name}}"
-      },
+      "proof": {},
       "footer": {
         "madeIn": "Made in {{place}}"
       },
@@ -752,7 +750,8 @@
         },
         "free": {
           "q": "How long is it free?",
-          "a": "You’ll see your free period in the app under More → Plan & billing. Pilot salons get 3 months free. When it ends, nothing is charged unless you choose a plan, and your data stays: you can view and export it any time."
+          "a": "You’ll see your free period in the app under More → Plan & billing. When it ends, nothing is charged unless you choose a plan, and your data stays: you can view and export it any time.",
+          "pilot": "Pilot salons get 3 months free."
         },
         "branches": {
           "q": "Can I run more than one branch?",
@@ -841,8 +840,7 @@
     },
     "google": {
       "action": "Continue with Google",
-      "or": "or with email",
-      "mark": "G"
+      "or": "or with email"
     },
     "checkInbox": {
       "title": "Check your inbox",
@@ -2392,15 +2390,17 @@
     },
     "privacy": {
       "title": "Privacy policy",
-      "intro": "This policy explains what {{app}} collects, why, and the choices you have. {{app}} is software that barber shops and ladies salons use to run their day: queue, sales, stock, staff, payroll and tax.",
+      "intro": "This policy explains what {{app}} collects, why, and the choices you have. It is written for the UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021), and it also covers people in the European Union, the United Kingdom and Brazil. {{app}} is software that barber shops, ladies salons, unisex salons, spas and nail and beauty studios use to run their day: queue, sales, stock, staff, payroll and tax.",
       "who": {
         "title": "Who we are",
-        "body": "{{company}} (“we”) provides {{app}}, the app and the website. For your account and how you use {{app}}, we decide how your data is used: we are the “controller”. For the details a salon keeps about its own customers and staff, the salon is the controller: it decides what is recorded and why, and we store and process them for it, on its instructions, under the data processing terms in our terms of use.",
-        "address": "Address: {{address}}"
+        "body": "For your account and how you use {{app}}, we decide how your data is used: we are the “controller”. For the details a salon keeps about its own customers and staff, the salon is the controller: it decides what is recorded and why, and we store and process them for it, on its instructions, under the data processing terms in our terms of use.",
+        "address": "Address: {{address}}",
+        "lead": "{{app}} (“we”) is the app and the website at {{website}}. You can reach us at {{email}}.",
+        "leadOperator": "{{operator}} is responsible for {{app}} (“we”), the app and the website at {{website}}. You can reach us at {{email}}."
       },
       "collect": {
         "title": "What we collect",
-        "body": "• Your account: your name, email address and password (kept only as a secure hash). If you continue with Google, Google gives us your name and email address.\n• If you give it: your mobile or WhatsApp number, which we use only to help you set up. We message you on WhatsApp about setting up only if you tick the box for it, and we keep when you did. Ask us any time to remove it.\n• What salons enter: services and prices, sales and receipts, expenses, suppliers and purchases, stock, cash counts, customers’ names, phone numbers and visits, staff names, attendance and pay, and documents such as licences and photos of receipts.\n• This device: a notification token if you allow notifications. Your language and remembered sign-in stay on the device.\n• Where you visit from: the website works out the country you are in from your connection (IP address) to show your language and price. It is not stored.\n• Website visits: we count page visits and taps on the main buttons with Vercel Web Analytics, which uses no cookies and does not identify you.\n• Help & support: the messages you send us, with your salon, the app version, your device and the screen you were on; if you write without signing in, the name and email you give. They are deleted with your account, or when you ask.\nWe use no advertising trackers and we never sell personal data."
+        "body": "• Your account: your name, email address and password (kept only as a secure hash). If you continue with Google, Google gives us your name and email address.\n• If you give it: your mobile or WhatsApp number, which we use only to help you set up. We message you on WhatsApp about setting up only if you tick the box for it, and we keep when you did. Ask us any time to remove it.\n• What salons enter: services and prices, sales and receipts, expenses, suppliers and purchases, stock, cash counts, customers’ names, phone numbers and visits, staff names, attendance and pay, and documents such as licences and photos of receipts.\n• This device: a notification token if you allow notifications. Your language and remembered sign-in stay on the device.\n• Where you visit from: the website works out the country you are in from your connection (IP address) to show your language and price. It is not stored.\n• Website visits: we count page visits and taps on the main buttons with Vercel Web Analytics, which uses no cookies and does not identify you.\n• Help & support: the messages you send us, with your salon, the app version, your device and the screen you were on; if you write without signing in, the name and email you give. They are deleted with your account, or when you ask.\n• If you apply for the pilot: your name, your salon’s name, type and number of staff, its emirate and area, your WhatsApp number, your preferred language, and whether you agreed to hear from us on WhatsApp about the pilot. We use them only to choose pilot salons and to contact you about the pilot.\nWe use no advertising trackers and we never sell personal data."
       },
       "use": {
         "title": "How we use it",
@@ -2408,11 +2408,11 @@
       },
       "basis": {
         "title": "Why we may use it (legal bases)",
-        "body": "• To provide the service you or your salon signed up for (a contract).\n• To meet legal duties, such as keeping tax and financial records (a legal obligation).\n• To keep the service secure, prevent misuse and fix faults, which is in our and our users’ legitimate interest; you can object to this.\n• For phone notifications and any optional messages, because you agreed; you can turn them off at any time (consent).\nIn Brazil these are the matching legal bases of the LGPD (article 7)."
+        "body": "• In the UAE, under the Personal Data Protection Law, we use your data: to provide the service you or your salon signed up for, including keeping it secure and fixing faults (performing a contract); to meet legal duties, such as keeping tax and financial records (a legal obligation); and, for anything optional such as phone notifications and WhatsApp messages, because you agreed, which you can withdraw at any time (consent).\n• In the European Union, the United Kingdom and other countries the same three apply, and we also keep the service secure, prevent misuse and fix faults because it is in our and our users’ legitimate interest; you can object to this.\nIn Brazil these are the matching legal bases of the LGPD (article 7)."
       },
       "where": {
         "title": "Where it is kept",
-        "body": "Your data is stored with Supabase (database, sign-in and file storage) in South Korea. The website and app are delivered by Vercel from servers close to you. Emails go through our email provider, notifications to phones through Expo and Apple or Google, and Google handles “Continue with Google”. Help & support messages are answered first by an AI assistant run for us by Groq, or by Anthropic (Claude); they use the messages only to answer them and do not train on them. These providers process data only for us, under data processing terms, and must keep it confidential and secure. Card payments for the plan are taken by Creem, our payment provider (merchant of record), which receives the payer’s name, email, card and billing details.\nThe European Union and the United Kingdom recognise South Korea as protecting personal data adequately. Where a provider handles data in a country without such recognition, such as the United States, the transfer is covered by the European Commission’s standard contractual clauses with the UK addendum and, for Brazil, by the safeguards the LGPD allows, such as standard contractual clauses."
+        "body": "Your data is stored with Supabase (database, sign-in and file storage) in South Korea. The website and app are delivered by Vercel from servers close to you. Emails go through our email provider, notifications to phones through Expo and Apple or Google, and Google handles “Continue with Google”. Help & support messages are answered first by an AI assistant run for us by Groq, or by Anthropic (Claude); they use the messages only to answer them and do not train on them. These providers process data only for us, under data processing terms, and must keep it confidential and secure. Card payments for the plan are taken by Creem, our payment provider (merchant of record), which receives the payer’s name, email, card and billing details.\nSafeguards for keeping it in South Korea: South Korea has a comprehensive data protection law (the Personal Information Protection Act); Supabase processes the data only for us, under data processing terms that bind it to keep the data confidential and secure; data is encrypted on its way to and from the service and where it is stored; each salon’s records are kept apart; and access inside a salon follows each person’s role. For people in the UAE, these are the safeguards for this transfer under the Personal Data Protection Law.\nThe European Union and the United Kingdom recognise South Korea as protecting personal data adequately. Where a provider handles data in a country without such recognition, such as the United States, the transfer is covered by the European Commission’s standard contractual clauses with the UK addendum and, for Brazil, by the safeguards the LGPD allows, such as standard contractual clauses."
       },
       "share": {
         "title": "Who we share it with",
@@ -2420,7 +2420,7 @@
       },
       "keep": {
         "title": "How long we keep it",
-        "body": "Your account details stay until you delete your account. A salon’s financial records (sales, tax, expenses, purchases and payroll) are kept for at least five years, or longer where the salon’s country requires it, even after an account is deleted or a salon closes. After that they are deleted."
+        "body": "Your account details stay until you delete your account. A salon’s financial records (sales, tax, expenses, purchases and payroll) are kept for at least five years, or longer where the salon’s country requires it, even after an account is deleted or a salon closes. After that they are deleted.\nPilot applications are kept until the pilot ends; ask us any time to delete yours sooner."
       },
       "rights": {
         "title": "Your choices and rights",
@@ -2453,7 +2453,7 @@
       "intro": "These terms apply when you use {{app}}, the app and the website. By creating an account or using the service you agree to them.",
       "service": {
         "title": "The service",
-        "body": "{{app}} helps barber shops and ladies salons run their day: queue and bookings, sales and receipts, stock and purchases, expenses, cash closing, staff and payroll, licence reminders, tax and reports. It is a tool: you remain responsible for your business, your records, your tax returns and your staff’s pay."
+        "body": "{{app}} helps barber shops, ladies salons, unisex salons, spas and nail and beauty studios run their day: queue and bookings, sales and receipts, stock and purchases, expenses, cash closing, staff and payroll, licence reminders, tax and reports. It is a tool: you remain responsible for your business, your records, your tax returns and your staff’s pay."
       },
       "accounts": {
         "title": "Accounts",
@@ -2461,7 +2461,7 @@
       },
       "plans": {
         "title": "Plans and payment",
-        "body": "Setting up is free, and a new salon can use every feature free for 7 days (one free trial per owner) without paying or giving a card. After that, using the features (queue, sales and the rest) needs an active plan, charged per salon per month at the price shown on our website, which depends on how many people sign in. Plans are paid in advance, switch on when the payment is received and do not renew by themselves. Paid months are not refunded, except where the law requires. If a plan or the free trial ends your data stays: you can still sign in, view it and export it. Card payments are processed by Creem as merchant of record."
+        "body": "Setting up is free, and {{app}} is free to start: a new salon can use every feature during the free period shown in the app (on {{home}} and in {{planPath}}), without paying or giving a card. After the free period, using the features (queue, sales and the rest) needs an active plan. Plans are priced per branch per month, for up to the number of people shown on our website, with a set price for each extra person who signs in; you can pay for 1 month, 6 months (10% off) or 12 months (the price of 10). The price is shown before you pay. Plans are paid in advance, switch on when the payment is received and do not renew by themselves: nothing is charged unless the owner chooses a plan. Paid months are not refunded, except where the law requires. If a plan or the free period ends your data stays: you can still sign in, view it and export it. Card payments, when offered, are processed by Creem as merchant of record."
       },
       "data": {
         "title": "Your data",
@@ -2494,11 +2494,11 @@
       "changes": {
         "title": "Changes",
         "body": "We may update these terms; the date above shows the current version. Using the service after a change means the new terms apply."
+      },
+      "pilot": {
+        "title": "The pilot",
+        "body": "Salons we admit to the {{app}} pilot use it free until the date shown in the app. We may end or change the pilot by telling the owner 14 days in advance. Nothing is charged during or after the pilot unless the owner chooses a plan."
       }
-    },
-    "provider": {
-      "withAddress": "{{app}} is provided by {{name}}, {{address}}.",
-      "name": "{{app}} is provided by {{name}}."
     }
   },
   "tax": {
@@ -2902,7 +2902,7 @@
   "meta": {
     "welcome": {
       "title": "Saloqo – Salon & Barbershop App: Bookings, Cash Closing, Staff Pay",
-      "description": "Run your barber shop, salon or spa from your phone: walk-ins and bookings, quick sales and receipts, daily cash closing, stock, staff pay and your sales tax. Try it free, no card needed."
+      "description": "Salon and barbershop app for walk-ins, bookings, sales, daily cash closing and staff pay. In 7 languages. Try it free, no card needed."
     },
     "signUp": {
       "title": "Try Saloqo free – Saloqo",
@@ -2916,6 +2916,21 @@
       "title": "Book at {{salon}} – Saloqo",
       "titleWhere": "Book at {{salon}} – {{where}}",
       "description": "Book online at {{salon}}: services, prices and free times. No account needed."
+    },
+    "contact": {
+      "title": "Contact Saloqo",
+      "description": "Questions about Saloqo, the salon and barbershop app? Write to us here and get an answer in the chat."
+    },
+    "privacy": {
+      "title": "Privacy policy – Saloqo",
+      "description": "How Saloqo collects, uses and protects the data of salons, their staff and their customers."
+    },
+    "terms": {
+      "title": "Terms of use – Saloqo",
+      "description": "The terms for using Saloqo: the free period, plans and prices per branch, your data and our responsibilities."
+    },
+    "notFound": {
+      "title": "Page not found – Saloqo"
     }
   }
 }

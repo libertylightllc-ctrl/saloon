@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { brand } from '@/config/brand';
+import { usePageMeta } from '@/lib/pageMeta';
 import { spacing } from '@/theme';
 import { HeaderBand, Screen, Text, TextField } from '@/ui';
 
@@ -16,6 +17,7 @@ import { CommonQuestions } from './CommonQuestions';
  */
 export function ContactScreen() {
   const { t } = useTranslation();
+  usePageMeta(t('meta.contact.title'), t('meta.contact.description'));
   const [token, setToken] = useState<string | null>(null);
   useEffect(() => {
     void guestToken().then(setToken);

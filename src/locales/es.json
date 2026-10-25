@@ -702,9 +702,7 @@
         "body": "Saloqo añade lo que le falta: cierre de caja cada noche, stock, pagos al equipo y avisos de licencias."
       },
       "swipe": "Tarjeta {{n}} de {{total}}",
-      "proof": {
-        "madeBy": "Hecho en {{place}} por {{name}}"
-      },
+      "proof": {},
       "footer": {
         "madeIn": "Hecho en {{place}}"
       },
@@ -752,7 +750,8 @@
         },
         "free": {
           "q": "¿Cuánto tiempo es gratis?",
-          "a": "Verás tu periodo gratuito en la app, en Más → Plan y facturación. Los salones del piloto tienen 3 meses gratis. Cuando termina no se cobra nada salvo que elijas un plan, y tus datos se quedan: puedes verlos y exportarlos cuando quieras."
+          "a": "Verás tu periodo gratuito en la app, en Más → Plan y facturación. Cuando termina no se cobra nada salvo que elijas un plan, y tus datos se quedan: puedes verlos y exportarlos cuando quieras.",
+          "pilot": "Los salones del piloto tienen 3 meses gratis."
         },
         "branches": {
           "q": "¿Puedo llevar más de una sucursal?",
@@ -841,8 +840,7 @@
     },
     "google": {
       "action": "Continuar con Google",
-      "or": "o con correo electrónico",
-      "mark": "G"
+      "or": "o con correo electrónico"
     },
     "checkInbox": {
       "title": "Revisa tu bandeja de entrada",
@@ -2392,15 +2390,17 @@
     },
     "privacy": {
       "title": "Política de privacidad",
-      "intro": "Esta política explica qué recopila {{app}}, por qué lo hace y qué opciones tienes. {{app}} es un software que usan barberías y salones de damas para gestionar su día a día: fila, ventas, stock, personal, nómina e impuestos.",
+      "intro": "Esta política explica qué recopila {{app}}, por qué lo hace y qué opciones tienes. Está redactada conforme a la Ley de Protección de Datos Personales de los EAU (Decreto-Ley Federal n.º 45 de 2021) y también cubre a las personas de la Unión Europea, el Reino Unido y Brasil. {{app}} es un software que usan barberías, salones de señoras, salones unisex, spas y estudios de uñas y belleza para gestionar su día a día: fila, ventas, stock, personal, nómina e impuestos.",
       "who": {
         "title": "Quiénes somos",
-        "body": "{{company}} (“nosotros”) proporciona {{app}}, la app y el sitio web. En lo que respecta a tu cuenta y a cómo usas {{app}}, nosotros decidimos cómo se usan tus datos: somos el “responsable del tratamiento”. En cuanto a los datos que un salón guarda sobre sus propios clientes y su personal, el responsable del tratamiento es el salón: decide qué se registra y por qué, y nosotros los almacenamos y tratamos por su cuenta, siguiendo sus instrucciones, conforme a las condiciones de tratamiento de datos de nuestros términos de uso.",
-        "address": "Dirección: {{address}}"
+        "body": "En lo que respecta a tu cuenta y a cómo usas {{app}}, nosotros decidimos cómo se usan tus datos: somos el “responsable del tratamiento”. En cuanto a los datos que un salón guarda sobre sus propios clientes y su personal, el responsable del tratamiento es el salón: decide qué se registra y por qué, y nosotros los almacenamos y tratamos por su cuenta, siguiendo sus instrucciones, conforme a las condiciones de tratamiento de datos de nuestros términos de uso.",
+        "address": "Dirección: {{address}}",
+        "lead": "{{app}} («nosotros») es la app y la web en {{website}}. Puedes escribirnos a {{email}}.",
+        "leadOperator": "{{operator}} es responsable de {{app}} («nosotros»), la app y la web en {{website}}. Puedes escribirnos a {{email}}."
       },
       "collect": {
         "title": "Qué recopilamos",
-        "body": "• Tu cuenta: tu nombre, tu dirección de correo electrónico y tu contraseña (guardada solo como un hash seguro). Si continúas con Google, Google nos facilita tu nombre y tu dirección de correo electrónico.\n• Si nos lo das: tu número de móvil o de WhatsApp, que usamos solo para ayudarte a configurar. Te escribimos por WhatsApp sobre la configuración solo si marcas la casilla, y guardamos cuándo lo hiciste. Pídenos cuando quieras que lo borremos.\n• Lo que introducen los salones: servicios y precios, ventas y recibos, gastos, proveedores y compras, stock, conteos de caja, nombres, teléfonos y visitas de los clientes, nombres, asistencia y pagos del personal, y documentos como licencias y fotos de recibos.\n• Este dispositivo: un token de notificaciones si permites las notificaciones. Tu idioma y tu inicio de sesión recordado se quedan en el dispositivo.\n• Desde dónde nos visitas: el sitio web deduce tu país a partir de tu conexión (dirección IP) para mostrarte tu idioma y tu precio. No se guarda.\n• Visitas al sitio web: contamos las visitas y los toques en los botones principales con Vercel Web Analytics, que no usa cookies ni te identifica.\n• Ayuda y soporte: los mensajes que nos envías, con tu salón, la versión de la app, tu dispositivo y la pantalla en la que estabas; si escribes sin iniciar sesión, el nombre y el correo que nos das. Se eliminan con tu cuenta o cuando lo pidas.\nNo usamos rastreadores publicitarios y nunca vendemos datos personales."
+        "body": "• Tu cuenta: tu nombre, tu dirección de correo electrónico y tu contraseña (guardada solo como un hash seguro). Si continúas con Google, Google nos facilita tu nombre y tu dirección de correo electrónico.\n• Si nos lo das: tu número de móvil o de WhatsApp, que usamos solo para ayudarte a configurar. Te escribimos por WhatsApp sobre la configuración solo si marcas la casilla, y guardamos cuándo lo hiciste. Pídenos cuando quieras que lo borremos.\n• Lo que introducen los salones: servicios y precios, ventas y recibos, gastos, proveedores y compras, stock, conteos de caja, nombres, teléfonos y visitas de los clientes, nombres, asistencia y pagos del personal, y documentos como licencias y fotos de recibos.\n• Este dispositivo: un token de notificaciones si permites las notificaciones. Tu idioma y tu inicio de sesión recordado se quedan en el dispositivo.\n• Desde dónde nos visitas: el sitio web deduce tu país a partir de tu conexión (dirección IP) para mostrarte tu idioma y tu precio. No se guarda.\n• Visitas al sitio web: contamos las visitas y los toques en los botones principales con Vercel Web Analytics, que no usa cookies ni te identifica.\n• Ayuda y soporte: los mensajes que nos envías, con tu salón, la versión de la app, tu dispositivo y la pantalla en la que estabas; si escribes sin iniciar sesión, el nombre y el correo que nos das. Se eliminan con tu cuenta o cuando lo pidas.\n• Si te apuntas al piloto: tu nombre, el nombre, el tipo y el número de empleados de tu salón, su emirato y zona, tu número de WhatsApp, tu idioma preferido y si aceptaste que te escribamos por WhatsApp sobre el piloto. Los usamos solo para elegir los salones del piloto y contactarte sobre él.\nNo usamos rastreadores publicitarios y nunca vendemos datos personales."
       },
       "use": {
         "title": "Cómo lo usamos",
@@ -2408,11 +2408,11 @@
       },
       "basis": {
         "title": "Por qué podemos usarlo (bases legales)",
-        "body": "• Para prestar el servicio al que tú o tu salón se suscribieron (un contrato).\n• Para cumplir obligaciones legales, como conservar los registros fiscales y financieros (una obligación legal).\n• Para mantener el servicio seguro, evitar usos indebidos y corregir fallos, lo cual responde a nuestro interés legítimo y al de nuestros usuarios; puedes oponerte a ello.\n• Para las notificaciones en el teléfono y cualquier mensaje opcional, porque lo aceptaste; puedes desactivarlos en cualquier momento (consentimiento).\nEn Brasil, estas son las bases legales correspondientes de la LGPD (artículo 7)."
+        "body": "• En los EAU, conforme a la Ley de Protección de Datos Personales, usamos tus datos: para prestar el servicio al que tú o tu salón se suscribieron, lo que incluye mantenerlo seguro y corregir fallos (ejecución de un contrato); para cumplir obligaciones legales, como conservar los registros fiscales y financieros (una obligación legal); y, para todo lo opcional, como las notificaciones en el teléfono y los mensajes de WhatsApp, porque lo aceptaste, y puedes retirar ese consentimiento en cualquier momento (consentimiento).\n• En la Unión Europea, el Reino Unido y otros países se aplican esas mismas tres bases, y además mantenemos el servicio seguro, evitamos usos indebidos y corregimos fallos porque responde a nuestro interés legítimo y al de nuestros usuarios; puedes oponerte a ello.\nEn Brasil, estas son las bases legales correspondientes de la LGPD (artículo 7)."
       },
       "where": {
         "title": "Dónde se guarda",
-        "body": "Tus datos se almacenan en Supabase (base de datos, inicio de sesión y almacenamiento de archivos), en Corea del Sur. El sitio web y la app se entregan a través de Vercel desde servidores cercanos a ti. Los correos electrónicos pasan por nuestro proveedor de correo electrónico, las notificaciones a los teléfonos pasan por Expo y por Apple o Google, y Google gestiona “Continuar con Google”. Los mensajes de Ayuda y soporte los responde primero un asistente de IA operado para nosotros por Groq o por Anthropic (Claude); estos proveedores utilizan los mensajes únicamente para responderlos y no entrenan sus modelos con ellos. Estos proveedores tratan los datos solo por nuestra cuenta, conforme a condiciones de tratamiento de datos, y deben mantenerlos confidenciales y seguros. Los pagos del plan con tarjeta los cobra Creem, nuestro proveedor de pagos (comerciante registrado), que recibe el nombre, el correo, la tarjeta y los datos de facturación de quien paga.\nLa Unión Europea y el Reino Unido reconocen que Corea del Sur protege adecuadamente los datos personales. Cuando un proveedor trata datos en un país que no cuenta con ese reconocimiento, como Estados Unidos, la transferencia está amparada por las cláusulas contractuales tipo de la Comisión Europea junto con la adenda del Reino Unido y, en el caso de Brasil, por las garantías que permite la LGPD, como las cláusulas contractuales tipo."
+        "body": "Tus datos se almacenan en Supabase (base de datos, inicio de sesión y almacenamiento de archivos), en Corea del Sur. El sitio web y la app se entregan a través de Vercel desde servidores cercanos a ti. Los correos electrónicos pasan por nuestro proveedor de correo electrónico, las notificaciones a los teléfonos pasan por Expo y por Apple o Google, y Google gestiona “Continuar con Google”. Los mensajes de Ayuda y soporte los responde primero un asistente de IA operado para nosotros por Groq o por Anthropic (Claude); estos proveedores utilizan los mensajes únicamente para responderlos y no entrenan sus modelos con ellos. Estos proveedores tratan los datos solo por nuestra cuenta, conforme a condiciones de tratamiento de datos, y deben mantenerlos confidenciales y seguros. Los pagos del plan con tarjeta los cobra Creem, nuestro proveedor de pagos (comerciante registrado), que recibe el nombre, el correo, la tarjeta y los datos de facturación de quien paga.\nGarantías por guardarlos en Corea del Sur: Corea del Sur tiene una ley completa de protección de datos (la Ley de Protección de la Información Personal); Supabase trata los datos solo por cuenta nuestra, con condiciones de tratamiento de datos que la obligan a mantenerlos confidenciales y seguros; los datos van cifrados hacia y desde el servicio y se guardan cifrados; los registros de cada salón están separados; y el acceso dentro de un salón sigue el rol de cada persona. Para las personas en los EAU, estas son las garantías de esta transferencia conforme a la Ley de Protección de Datos Personales.\nLa Unión Europea y el Reino Unido reconocen que Corea del Sur protege adecuadamente los datos personales. Cuando un proveedor trata datos en un país que no cuenta con ese reconocimiento, como Estados Unidos, la transferencia está amparada por las cláusulas contractuales tipo de la Comisión Europea junto con la adenda del Reino Unido y, en el caso de Brasil, por las garantías que permite la LGPD, como las cláusulas contractuales tipo."
       },
       "share": {
         "title": "Con quién lo compartimos",
@@ -2420,7 +2420,7 @@
       },
       "keep": {
         "title": "Cuánto tiempo lo conservamos",
-        "body": "Los datos de tu cuenta se conservan hasta que elimines tu cuenta. Los registros financieros de un salón (ventas, impuestos, gastos, compras y nómina) se conservan al menos cinco años, o más si el país del salón lo exige, incluso después de que se elimine una cuenta o cierre un salón. Después se eliminan."
+        "body": "Los datos de tu cuenta se conservan hasta que elimines tu cuenta. Los registros financieros de un salón (ventas, impuestos, gastos, compras y nómina) se conservan al menos cinco años, o más si el país del salón lo exige, incluso después de que se elimine una cuenta o cierre un salón. Después se eliminan.\nLas solicitudes al piloto se conservan hasta que termina el piloto; puedes pedirnos en cualquier momento que borremos la tuya antes."
       },
       "rights": {
         "title": "Tus opciones y derechos",
@@ -2453,7 +2453,7 @@
       "intro": "Estos términos se aplican cuando usas {{app}}, la app y el sitio web. Al crear una cuenta o usar el servicio, los aceptas.",
       "service": {
         "title": "El servicio",
-        "body": "{{app}} ayuda a barberías y salones de damas a gestionar su día a día: fila y reservas, ventas y recibos, stock y compras, gastos, cierre de caja, personal y nómina, recordatorios de licencias, impuestos e informes. Es una herramienta: tú sigues siendo responsable de tu negocio, tus registros, tus declaraciones de impuestos y los pagos a tu personal."
+        "body": "{{app}} ayuda a barberías, salones de señoras, salones unisex, spas y estudios de uñas y belleza a gestionar su día a día: fila y reservas, ventas y recibos, stock y compras, gastos, cierre de caja, personal y nómina, avisos de licencias, impuestos e informes. Es una herramienta: sigues siendo responsable de tu negocio, tus registros, tus declaraciones de impuestos y el sueldo de tu personal."
       },
       "accounts": {
         "title": "Cuentas",
@@ -2461,7 +2461,7 @@
       },
       "plans": {
         "title": "Planes y pagos",
-        "body": "Configurar es gratis, y un salón nuevo puede usar todas las funciones gratis durante 7 días (una prueba gratis por propietario) sin pagar ni dar una tarjeta. Después, usar las funciones (cola, ventas y lo demás) requiere un plan activo, cobrado por salón y por mes al precio que muestra nuestra web, que depende de cuántas personas inician sesión. Los planes se pagan por adelantado, se activan al recibir el pago y no se renuevan solos. Los meses pagados no se reembolsan, salvo donde la ley lo exija. Si un plan o la prueba gratis terminan, tus datos se conservan: puedes seguir iniciando sesión, verlos y exportarlos. Los pagos con tarjeta los procesa Creem como comerciante registrado."
+        "body": "Configurar es gratis, y empezar con {{app}} es gratis: un salón nuevo puede usar todas las funciones durante el periodo gratuito que muestra la app (en {{home}} y en {{planPath}}), sin pagar ni dar una tarjeta. Después del periodo gratuito, usar las funciones (fila, ventas y lo demás) requiere un plan activo. Los planes tienen un precio por sucursal y por mes, para hasta el número de personas que indica nuestra web, con un precio fijo por cada persona adicional que inicia sesión; puedes pagar 1 mes, 6 meses (10 % de descuento) o 12 meses (el precio de 10). El precio se muestra antes de pagar. Los planes se pagan por adelantado, se activan al recibir el pago y no se renuevan solos: no se cobra nada salvo que el propietario elija un plan. Los meses pagados no se reembolsan, salvo donde la ley lo exija. Si un plan o el periodo gratuito terminan, tus datos se conservan: puedes seguir iniciando sesión, verlos y exportarlos. Los pagos con tarjeta, cuando se ofrecen, los procesa Creem como comerciante registrado."
       },
       "data": {
         "title": "Tus datos",
@@ -2494,11 +2494,11 @@
       "changes": {
         "title": "Cambios",
         "body": "Podemos actualizar estos términos; la fecha indicada arriba muestra la versión vigente. Si sigues usando el servicio después de un cambio, se aplican los nuevos términos."
+      },
+      "pilot": {
+        "title": "El piloto",
+        "body": "Los salones que admitimos en el piloto de {{app}} lo usan gratis hasta la fecha que muestra la app. Podemos terminar o cambiar el piloto avisando al propietario con 14 días de antelación. No se cobra nada durante el piloto ni después, salvo que el propietario elija un plan."
       }
-    },
-    "provider": {
-      "withAddress": "{{app}} lo ofrece {{name}}, {{address}}.",
-      "name": "{{app}} lo ofrece {{name}}."
     }
   },
   "tax": {
@@ -2903,7 +2903,7 @@
   "meta": {
     "welcome": {
       "title": "Saloqo – App para salones y barberías: reservas, cierre de caja, sueldos del personal",
-      "description": "Lleva tu barbería, salón o spa desde el móvil: clientes sin cita y reservas, ventas rápidas y recibos, cierre de caja diario, stock, sueldos del personal y tus impuestos. Pruébalo gratis, sin tarjeta."
+      "description": "App para salones y barberías: clientes sin cita, reservas, ventas, cierre de caja diario y sueldos. En 7 idiomas. Pruébala gratis, sin tarjeta."
     },
     "signUp": {
       "title": "Prueba Saloqo gratis – Saloqo",
@@ -2917,6 +2917,21 @@
       "title": "Reserva en {{salon}} – Saloqo",
       "titleWhere": "Reserva en {{salon}} – {{where}}",
       "description": "Reserva online en {{salon}}: servicios, precios y horas libres. Sin cuenta."
+    },
+    "contact": {
+      "title": "Contactar con Saloqo",
+      "description": "¿Preguntas sobre Saloqo, la app para salones y barberías? Escríbenos aquí y te respondemos en el chat."
+    },
+    "privacy": {
+      "title": "Política de privacidad – Saloqo",
+      "description": "Cómo Saloqo recoge, usa y protege los datos de los salones, su personal y sus clientes."
+    },
+    "terms": {
+      "title": "Condiciones de uso – Saloqo",
+      "description": "Las condiciones de uso de Saloqo: el periodo gratuito, los planes y precios por sucursal, tus datos y nuestras responsabilidades."
+    },
+    "notFound": {
+      "title": "Página no encontrada – Saloqo"
     }
   }
 }

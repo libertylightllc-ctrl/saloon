@@ -7,13 +7,15 @@
  *   the `sq_in` cookie (set by the app when signed in), so signed-in owners still land in the app;
  * - dist/site/<lang>.html: the home page in each language (served at "/", "/ar", "/hi", …), built from the app's own
  *   words and today's prices; its pictures and fonts go to dist/site/;
- * - dist/sitemap.xml and dist/robots.txt.
+ * - dist/sitemap.xml and dist/robots.txt;
+ * - dist/site/{contact,privacy,terms}.html (the app's page with their own title) and dist/404.html (scripts/site/pages.mjs).
  */
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 import { renderPage } from './page.mjs';
-import { LANGUAGES, pathOf } from './text.mjs';
+import { checkRoutes, notFoundPage, STATIC_PAGES, withMeta } from './pages.mjs';
+import { LANGUAGES, pathOf, translator } from './text.mjs';
 
 const root = process.cwd();
 const dist = resolve(root, process.argv[2] ?? 'dist');
@@ -59,7 +61,7 @@ function sitemap(website) {
   const home = LANGUAGES.map(
     (l) => `<url><loc>${website}${pathOf(l.code)}</loc>${alternates}<xhtml:link rel="alternate" hreflang="x-default" href="${website}/"/><changefreq>weekly</changefreq><priority>${l.code === 'en' ? '1.0' : '0.9'}</priority></url>`,
   );
-  const legal = ['/privacy', '/terms'].map((p) => `<url><loc>${website}${p}</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>`);
+  const legal = ['/privacy', '/terms', '/contact'].map((p) => `<url><loc>${website}${p}</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>`);
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${[...home, ...legal].join('\n')}\n</urlset>\n`;
 }
 
@@ -94,6 +96,16 @@ async function main() {
   copyDir(join(root, 'assets', 'site', 'fonts'), join(dist, 'site', 'fonts'));
   writeFileSync(join(dist, 'sitemap.xml'), sitemap(brand.website));
   writeFileSync(join(dist, 'robots.txt'), robots(brand.website));
+
+  // Contact, privacy and terms with their own title in the HTML; "not found" for any other address (Phase 5).
+  checkRoutes(join(root, 'app'), read('vercel.json'));
+  const t = translator(root, 'en');
+  const app = readFileSync(spa, 'utf8');
+  for (const page of STATIC_PAGES) {
+    const meta = { title: t(`meta.${page}.title`), description: t(`meta.${page}.description`), url: `${brand.website}/${page}` };
+    writeFileSync(join(dist, 'site', `${page}.html`), withMeta(app, meta));
+  }
+  writeFileSync(join(dist, '404.html'), notFoundPage({ t, brand }));
 }
 
 main().catch((error) => {

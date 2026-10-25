@@ -19,14 +19,23 @@ function setDescription(content: string | null) {
   tag.setAttribute('content', content ?? original);
 }
 
-export function usePageMeta(title: string | null, description?: string | null) {
+/** `noindex`: search engines are asked not to list the page while it is open (the "page not found" screen). */
+export function usePageMeta(title: string | null, description?: string | null, { noindex = false } = {}) {
   useEffect(() => {
     if (Platform.OS !== 'web' || typeof document === 'undefined' || !title) return;
     document.title = title;
     setDescription(description ?? null);
+    let robots: HTMLMetaElement | null = null;
+    if (noindex) {
+      robots = document.createElement('meta');
+      robots.name = 'robots';
+      robots.content = 'noindex';
+      document.head.appendChild(robots);
+    }
     return () => {
       document.title = DEFAULT_TITLE;
       setDescription(null);
+      robots?.remove();
     };
-  }, [title, description]);
+  }, [title, description, noindex]);
 }

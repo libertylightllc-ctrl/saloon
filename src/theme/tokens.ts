@@ -177,6 +177,20 @@ export const brandPalette = {
   cardShadow: '0px 24px 60px rgba(30, 20, 70, 0.14)',
 } as const;
 
+/**
+ * "Continue with Google" as Google's branding rules ask (light button): white, a grey border, near-black words and
+ * Google's four-colour "G" exactly as Google draws it — the same in every salon look.
+ */
+export const googleBrand = {
+  surface: '#FFFFFF',
+  border: '#747775',
+  text: '#1F1F1F',
+  blue: '#4285F4',
+  green: '#34A853',
+  yellow: '#FBBC05',
+  red: '#EA4335',
+} as const;
+
 export interface ThemeColors {
   primary50: string;
   primary100: string;
