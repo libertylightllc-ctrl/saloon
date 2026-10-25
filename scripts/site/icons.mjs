@@ -27,6 +27,7 @@ const FILES = {
   sparkles: 'sparkles',
   userCheck: 'user-check',
   users: 'users',
+  x: 'x',
 };
 
 const cache = new Map();

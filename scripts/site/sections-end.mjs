@@ -3,17 +3,18 @@
  * last call, the footer and the phone's sticky bar. Prices are written twice (`.uae` / `.intl`); the page script
  * shows the visitor's one, as the app's pricing card does.
  */
-import { button, phone } from './sections-top.mjs';
+import { phone } from './shots.mjs';
+import { button } from './sections-top.mjs';
 import { esc, LANGUAGES, pathOf } from './text.mjs';
 
 const external = ' target="_blank" rel="noopener noreferrer"';
 
 /** The salon looks' own colours (src/theme/gents.ts, ladies.ts, unisex.ts, wellness.ts); brief 5.4 added the last two. */
 const LOOK = {
-  gents: { preview: '#6C45F2', text: '#6C45F2', action: '#6C45F2', shot: 'gents-queue.webp', tilt: -3 },
-  ladies: { preview: '#FDE1E0', text: '#B8464B', action: '#E0606A', shot: 'ladies-queue.webp', tilt: 3 },
-  unisex: { preview: '#2F8A7E', text: '#26736A', action: '#26736A', shot: 'unisex-queue.webp', tilt: -3 },
-  wellness: { preview: '#EBE3F8', text: '#5A3F92', action: '#7050AE', shot: 'wellness-queue.webp', tilt: 3 },
+  gents: { preview: '#6C45F2', text: '#6C45F2', action: '#6C45F2', shot: 'gents-queue', tilt: -3 },
+  ladies: { preview: '#FDE1E0', text: '#B8464B', action: '#E0606A', shot: 'ladies-queue', tilt: 3 },
+  unisex: { preview: '#2F8A7E', text: '#26736A', action: '#26736A', shot: 'unisex-queue', tilt: -3 },
+  wellness: { preview: '#EBE3F8', text: '#5A3F92', action: '#7050AE', shot: 'wellness-queue', tilt: 3 },
 }
 
 export function types(c) {
@@ -21,7 +22,7 @@ export function types(c) {
   const card = (mode) => {
     const look = LOOK[mode];
     return `<a class="type-card" href="/sign-up" data-type="${mode}" style="--preview:${look.preview};--text:${look.text};--action:${look.action}">
-<span class="preview">${phone(look.shot, 200, look.tilt)}</span>
+<span class="preview">${phone(c, look.shot, 200, look.tilt)}</span>
 <span class="type-text"><span class="type-words"><span class="type-name">${esc(t(`auth.salonType.${mode}`))}</span><span class="muted not-phone">${esc(t(`auth.welcome.${mode}`))}</span></span>
 <span class="go">${esc(t('auth.landing.choose'))}${c.icon('chevronRight', { size: 18, flip: true })}</span></span></a>`;
   };

@@ -9,7 +9,7 @@
  *   words and today's prices; its pictures and fonts go to dist/site/;
  * - dist/sitemap.xml and dist/robots.txt.
  */
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 import { renderPage } from './page.mjs';
@@ -88,8 +88,9 @@ async function main() {
     writeFileSync(join(dist, 'site', `${code}.html`), html);
     console.log(`Website: ${pathOf(code)} → site/${code}.html (${Math.round(html.length / 1024)} KB)`);
   }
-  copyDir(join(root, 'assets', 'images', 'landing'), join(dist, 'site', 'img'), (n) => n.endsWith('.webp'));
   copyDir(join(root, 'assets', 'site'), join(dist, 'site', 'img'), (n) => n.endsWith('.webp'));
+  // The app pictures, one set per language and currency (full update, Phase 4).
+  cpSync(join(root, 'assets', 'site', 'shots'), join(dist, 'site', 'img', 'shots'), { recursive: true });
   copyDir(join(root, 'assets', 'site', 'fonts'), join(dist, 'site', 'fonts'));
   writeFileSync(join(dist, 'sitemap.xml'), sitemap(brand.website));
   writeFileSync(join(dist, 'robots.txt'), robots(brand.website));

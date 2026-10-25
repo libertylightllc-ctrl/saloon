@@ -813,7 +813,31 @@
       "currency": {
         "label": "Moneda"
       },
-      "askWhatsApp": "Pregúntanos por WhatsApp"
+      "askWhatsApp": "Pregúntanos por WhatsApp",
+      "alt": {
+        "gentsQueue": "La cola de una barbería: quién espera, quién está en el sillón y quién tiene cita, con su barbero.",
+        "ladiesHome": "La pantalla de inicio de un salón de señoras: el efectivo esperado en caja, las ventas y visitas de hoy.",
+        "queueCard": "Un cliente esperando en la cola: hora de llegada, servicios, precio y barbero, con un botón para empezar.",
+        "gentsReports": "El informe mensual: ventas, costes y resultado del mes, el resumen del dueño y las ventas por día.",
+        "gentsBooking": "La página de reservas gratuita de una barbería: servicios con precio y duración, con un corte elegido.",
+        "gentsSale": "Venta rápida: servicios con sus precios, dos en la cesta y el botón de cobrar.",
+        "ladiesQueue": "La cola de un salón de señoras: una clienta esperando, otra en la sala de spa y citas para más tarde.",
+        "ladiesSale": "Venta rápida en un salón de señoras: dos servicios en la cesta y el botón de cobrar.",
+        "ladiesClosing": "Cierre de caja: el efectivo esperado según ventas, gastos y anticipos del día, las propinas por pagar y el recuento.",
+        "unisexQueue": "La cola de un salón unisex, con su aspecto verde azulado.",
+        "wellnessQueue": "La cola de un estudio de belleza y bienestar, con su aspecto lavanda."
+      },
+      "tour": {
+        "title": "Un día en Saloqo",
+        "step1": "Atiende a quien llega",
+        "step1Body": "Añádelo a la cola en segundos; todos ven quién espera y quién va después.",
+        "step2": "Haz una venta",
+        "step2Body": "Toca los servicios y cobra en efectivo o con tarjeta. El stock y la contabilidad se actualizan solos.",
+        "step3": "Cierra el día",
+        "step3Body": "Cuenta la caja. Saloqo muestra el efectivo esperado y cualquier diferencia.",
+        "stepOf": "Paso {{n}} de {{total}}",
+        "next": "Siguiente"
+      }
     },
     "google": {
       "action": "Continuar con Google",

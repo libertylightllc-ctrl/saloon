@@ -4,7 +4,6 @@
  * structured data, the fonts for the page's script, and Vercel Web Analytics (owner, 22 Oct 2026; no cookies).
  */
 import { FAQ_KEYS, faqAnswer, faqQuestion } from './sections-end.mjs';
-import { HERO_SIZES } from './sections-top.mjs';
 import { esc, LANGUAGES, pathOf } from './text.mjs';
 
 const OG_LOCALE = { en: 'en_US', ar: 'ar_AE', hi: 'hi_IN', ur: 'ur_PK', es: 'es_ES', fr: 'fr_FR', pt: 'pt_BR' };
@@ -93,8 +92,8 @@ ${alternates}
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${c.brand.website}/og-image.jpg">
 ${f.preload}
-<link rel="preload" as="image" href="/site/img/ladies-home.webp" imagesrcset="/site/img/ladies-home-360.webp 360w, /site/img/ladies-home.webp 600w" imagesizes="${HERO_SIZES}" fetchpriority="high">
 <script>${earlyScript}</script>
+<noscript><style>img[data-src]{display:none}</style></noscript>
 <style>${f.css}:root{--font:${f.family},system-ui,-apple-system,"Segoe UI",sans-serif}${css}</style>
 ${structuredData(c, url)}
 </head>`;

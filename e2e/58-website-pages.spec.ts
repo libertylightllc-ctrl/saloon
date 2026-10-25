@@ -176,3 +176,46 @@ test.describe('on a tablet', () => {
     expect(errors).toEqual([]);
   });
 });
+
+test.describe('the app pictures and the tour', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, timezoneId: 'Asia/Dubai' });
+
+  test('only the visitor\'s language and currency download, each picture described; "See how it works" walks through a day', async ({ page }) => {
+    const errors = watchErrors(page);
+    const sets = new Set<string>();
+    page.on('request', (r) => {
+      const m = /\/shots\/(\w+)\/(\w+)\//.exec(r.url());
+      if (m) sets.add(`${m[1]}/${m[2]}`);
+    });
+    await page.goto(`${site}/es`);
+    await page.locator('#types').scrollIntoViewIfNeeded();
+    await page.waitForLoadState('networkidle');
+    expect([...sets]).toEqual(['es/aed']);
+    // Words for screen readers, in the page's language; the hidden currency's pictures are out of the way.
+    await expect(page.locator('img.qcard')).toHaveAttribute('alt', /barbero/);
+    expect(await page.locator('.phone img:visible').evaluateAll((imgs) => imgs.every((i) => (i as HTMLImageElement).alt.length > 20))).toBe(true);
+
+    // AED | USD: the first screen's pictures follow.
+    await page.locator('[data-currency="USD"]').click();
+    await expect(page.locator('img.qcard')).toHaveAttribute('src', '/site/img/shots/es/usd/queue-card.webp');
+
+    // The tour: the arrows move through the three steps, Esc closes it and the keyboard is back on the link.
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.locator('[data-tour]').click();
+    const tour = page.locator('#tour');
+    await expect(tour).toBeVisible();
+    await expect(tour.locator('.tour-step:visible')).toContainText('Paso 1 de 3');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowRight');
+    await expect(tour.locator('.tour-step:visible')).toContainText('Paso 3 de 3');
+    await expect(tour.locator('[data-start="tour"]')).toBeFocused();
+    await expect(tour.locator('[data-tour-next]')).toBeHidden();
+    await page.keyboard.press('ArrowLeft');
+    await expect(tour.locator('.tour-step:visible')).toContainText('Paso 2 de 3');
+    await page.keyboard.press('Escape');
+    await expect(tour).toBeHidden();
+    await expect(page.locator('[data-tour]')).toBeFocused();
+    expect([...sets].sort()).toEqual(['es/aed', 'es/usd']);
+    expect(errors).toEqual([]);
+  });
+});

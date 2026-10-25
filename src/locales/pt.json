@@ -813,7 +813,31 @@
       "currency": {
         "label": "Moeda"
       },
-      "askWhatsApp": "Fale com a gente no WhatsApp"
+      "askWhatsApp": "Fale com a gente no WhatsApp",
+      "alt": {
+        "gentsQueue": "A fila de uma barbearia: quem está esperando, quem está na cadeira e quem tem horário, com o barbeiro.",
+        "ladiesHome": "A tela inicial de um salão feminino: o dinheiro esperado no caixa, as vendas e visitas de hoje.",
+        "queueCard": "Um cliente esperando na fila: hora de chegada, serviços, preço e barbeiro, com um botão para começar.",
+        "gentsReports": "O relatório mensal: vendas, custos e resultado do mês, o resumo do dono e as vendas por dia.",
+        "gentsBooking": "A página de agendamento grátis de uma barbearia: serviços com preço e duração, com um corte escolhido.",
+        "gentsSale": "Venda rápida: serviços com preços, dois na cesta e o botão de finalizar.",
+        "ladiesQueue": "A fila de um salão feminino: uma cliente esperando, outra na sala de spa e horários mais tarde.",
+        "ladiesSale": "Venda rápida em um salão feminino: dois serviços na cesta e o botão de finalizar.",
+        "ladiesClosing": "Fechamento de caixa: o dinheiro esperado pelas vendas, despesas e adiantamentos do dia, as gorjetas a pagar e a contagem.",
+        "unisexQueue": "A fila de um salão unissex, no visual verde-azulado.",
+        "wellnessQueue": "A fila de um estúdio de beleza e bem-estar, no visual lavanda."
+      },
+      "tour": {
+        "title": "Um dia no Saloqo",
+        "step1": "Receba um cliente sem horário",
+        "step1Body": "Adicione à fila em segundos; todos veem quem está esperando e quem é o próximo.",
+        "step2": "Faça uma venda",
+        "step2Body": "Toque nos serviços e receba em dinheiro ou cartão. O estoque e a contabilidade se atualizam sozinhos.",
+        "step3": "Feche o dia",
+        "step3Body": "Conte o caixa. O Saloqo mostra o dinheiro esperado e qualquer diferença.",
+        "stepOf": "Passo {{n}} de {{total}}",
+        "next": "Próximo"
+      }
     },
     "google": {
       "action": "Continuar com Google",

@@ -813,7 +813,31 @@
       "currency": {
         "label": "Currency"
       },
-      "askWhatsApp": "Ask us on WhatsApp"
+      "askWhatsApp": "Ask us on WhatsApp",
+      "alt": {
+        "gentsQueue": "The queue in a barber shop: who is waiting, who is in the chair and who is booked, with their barbers.",
+        "ladiesHome": "The home screen in a ladies salon: the cash expected in the drawer, today's sales and visits.",
+        "queueCard": "A customer waiting on the queue: arrival time, services, price and barber, with a button to start.",
+        "gentsReports": "The monthly report: sales, costs and the month's result, the owner's checks, and sales by day.",
+        "gentsBooking": "A barber shop's free booking page: services with prices and times, with a haircut picked.",
+        "gentsSale": "Quick sale: services with their prices, two in the basket, and the Checkout button.",
+        "ladiesQueue": "The queue in a ladies salon: a guest waiting, a client in a spa room, and bookings later today.",
+        "ladiesSale": "Quick sale in a ladies salon: two services in the basket, and the Checkout button.",
+        "ladiesClosing": "Cash closing: the cash expected from the day's sales, costs and staff advances, tips to pay out, and the drawer count.",
+        "unisexQueue": "The queue in a unisex salon, in its teal look.",
+        "wellnessQueue": "The queue in a beauty and wellness studio, in its lavender look."
+      },
+      "tour": {
+        "title": "A day in Saloqo",
+        "step1": "Take a walk-in",
+        "step1Body": "Add them to the queue in seconds; everyone sees who is waiting and who is next.",
+        "step2": "Make a sale",
+        "step2Body": "Tap the services and take cash or card. The stock and the books update by themselves.",
+        "step3": "Close the day",
+        "step3Body": "Count the drawer. Saloqo shows the cash expected and any difference.",
+        "stepOf": "Step {{n}} of {{total}}",
+        "next": "Next"
+      }
     },
     "google": {
       "action": "Continue with Google",

@@ -2,6 +2,7 @@
  * The website home page, top half, as plain HTML (website brief 4.1): the same sections, words and pictures as the
  * app's home page (src/features/landing), laid out by site.css. `c` is the page context from page.mjs.
  */
+import { HERO_SCRIPT, phone, shot } from './shots.mjs';
 import { esc, LANGUAGES, pathOf } from './text.mjs';
 
 /** `load`: true = when scrolled near (below the first screen), false = at once, 'first' = at once and before the rest
@@ -11,16 +12,6 @@ const img = (name, w, h, alt = '', load = true) =>
 
 /** The hero's phones change size with the page width (site.css .visual). */
 export const HERO_SIZES = '(min-width: 980px) 270px, (min-width: 640px) 233px, 173px';
-
-/**
- * A real app screen in a phone frame (parts.tsx PhoneShot); `w` in px, `tilt` in degrees. Phones get the 360-px
- * picture, larger screens the 600-px one (brief 4.5).
- */
-export const phone = (shot, w, tilt = 0, lazy = true, cls = '', sizes = `${w}px`) => {
-  const base = shot.replace(/\.webp$/, '');
-  const picture = img(shot, 600, 1298, '', lazy).replace('<img', `<img srcset="/site/img/${base}-360.webp 360w, /site/img/${shot} 600w" sizes="${sizes}"`);
-  return `<div class="phone ${cls}" style="--w:${w}px;--tilt:${tilt}deg" aria-hidden="true">${picture}</div>`;
-};
 
 /** The page's buttons (parts.tsx BrandButton): always real links. */
 export const button = (c, { label, href, kind = 'teal', icon, attrs = '', cls = '' }) =>
@@ -104,13 +95,13 @@ export function hero(c) {
 ${ask}
 <div class="trust"><p>${esc(t('auth.landing.noCard'))}</p><p>${esc(t('auth.landing.trust.dataYours'))}</p></div>
 </div>
-<div class="hero-visual" aria-hidden="true"><div class="visual">
+<div class="hero-visual"><div class="visual">
 ${img('star-300.webp', 300, 300, '', false).replace('<img', '<img class="star"')}
-${phone('gents-queue.webp', 232, 7, false, 'p-back', HERO_SIZES)}
-${phone('ladies-home.webp', 270, -5, 'first', 'p-front', HERO_SIZES)}
-${img('queue-card.webp', 640, 355, '', false).replace('<img', '<img class="qcard"')}
+${phone(c, 'gents-queue', 232, 7, false, 'p-back', HERO_SIZES)}
+${phone(c, 'ladies-home', 270, -5, 'first', 'p-front', HERO_SIZES)}
+${shot(c, 'queue-card', { load: false, w: 640, h: 355, cls: 'qcard' })}
 <p class="chip">${c.icon('check', { size: 16, stroke: 2.6 })}<span>${esc(t('auth.landing.balanced'))}</span></p>
-</div></div>
+</div></div><script>${HERO_SCRIPT}</script>
 ${facts(c)}
 </div>
 </div>
@@ -129,7 +120,7 @@ const tick = (c, size = 28) => `<span class="tick" style="--s:${size}px">${c.ico
 export function owners(c) {
   const items = ['live', 'closing', 'pay', 'reminders', 'stock', 'reports'];
   return `<section class="band mist owners"><div class="inner owners-row">
-<div class="owners-visual wide-only"><span class="halo"></span>${phone('gents-reports.webp', 290, -4)}</div>
+<div class="owners-visual wide-only"><span class="halo"></span>${phone(c, 'gents-reports', 290, -4)}</div>
 <div class="copy">
 <p class="eyebrow">${c.icon('sparkles', { size: 14 })}<span>${esc(c.t('auth.landing.owners.eyebrow'))}</span></p>
 <h2 class="t-section">${esc(c.t('auth.landing.owners.title'))}</h2>
@@ -160,9 +151,9 @@ const SMALL = [
   ['roles', 'userCheck'],
 ];
 const BIG = [
-  ['booking', 'calendarPlus', 'gents-booking.webp', true],
-  ['queue', 'users', 'gents-queue.webp', false],
-  ['sale', 'receipt', 'gents-sale.webp', false],
+  ['booking', 'calendarPlus', 'gents-booking', true],
+  ['queue', 'users', 'gents-queue', false],
+  ['sale', 'receipt', 'gents-sale', false],
 ];
 /** WPS and the UAE checklist only for visitors in the UAE (brief 2.12); `.uae` / `.intl` are switched by the script. */
 const UAE_ONLY = ['staff', 'compliance', 'sale'];
@@ -176,9 +167,9 @@ export function features(c) {
       ? `<span class="uae">${esc(t(`auth.landing.features.${k}.body`))}</span><span class="intl">${esc(t(`auth.landing.features.${k}.bodyIntl`))}</span>`
       : esc(t(`auth.landing.features.${k}.body`));
   const big = BIG.map(
-    ([k, i, shot, dark]) => `<article class="big${dark ? ' navy' : ''}">${dark ? '<div class="backdrop glow-tile"></div>' : ''}
+    ([k, i, name, dark]) => `<article class="big${dark ? ' navy' : ''}">${dark ? '<div class="backdrop glow-tile"></div>' : ''}
 <div class="big-copy"><span class="ring${dark ? ' ring-dark' : ''}">${c.icon(i, { size: 20 })}</span><h3 class="t-h2">${esc(t(`auth.landing.features.${k}.title`))}</h3><p>${body(k)}</p></div>
-<div class="big-shot">${phone(shot, 230, dark ? 4 : -4)}</div></article>`,
+<div class="big-shot">${phone(c, name, 230, dark ? 4 : -4)}</div></article>`,
   ).join('');
   const small = SMALL.map(
     ([k, i]) => `<article class="small"><span class="ring">${c.icon(i, { size: 20 })}</span><h3 class="t-h4">${esc(t(`auth.landing.features.${k}.title`))}</h3><p class="muted">${body(k)}</p></article>`,

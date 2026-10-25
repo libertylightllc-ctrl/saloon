@@ -9,12 +9,13 @@ import { fileURLToPath } from 'node:url';
 import { head } from './head.mjs';
 import { icon } from './icons.mjs';
 import { faq, finalCall, floating, footer, pricing, steps, trust, types } from './sections-end.mjs';
-import { features, hero, keep, owners, proof, siteHeader, video } from './sections-top.mjs';
+import { button, features, hero, HERO_SIZES, keep, owners, proof, siteHeader, video } from './sections-top.mjs';
+import { tour } from './shots.mjs';
 import { LANGUAGES, lengthTotal, money, translator } from './text.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const minify = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s*\n\s*/g, '');
-const CSS = minify(readFileSync(join(here, 'site.css'), 'utf8'));
+const CSS = minify(['site.css', 'tour.css'].map((f) => readFileSync(join(here, f), 'utf8')).join('\n'));
 const CLIENT = readFileSync(join(here, 'client.js'), 'utf8');
 
 /**
@@ -25,7 +26,7 @@ const CLIENT = readFileSync(join(here, 'client.js'), 'utf8');
  *   per tab, so a stale session cannot loop);
  * - "/" opens in the visitor's language (their earlier choice, else their device's), as the app picks it;
  * - the currency: the one the visitor picked in the footer, else AED for the UAE time zone (USD elsewhere) until
- *   /api/geo answers;
+ *   /api/geo answers; the hero's largest picture in that currency's set starts loading at once;
  * - Vercel Web Analytics only on a real address (a server on this computer has no /_vercel/).
  */
 const early = (lang) => `(function(){var d=document.documentElement,s=null;try{s=localStorage}catch(e){}
@@ -35,6 +36,7 @@ var codes=${JSON.stringify(LANGUAGES.map((l) => l.code))};
 if(${JSON.stringify(lang)}==='en'){var want=null;try{want=s&&s.getItem('settings.language')}catch(e){}if(!want){var l=navigator.languages||[navigator.language];for(var j=0;j<l.length;j++){var c=String(l[j]||'').slice(0,2).toLowerCase();if(codes.indexOf(c)>=0){want=c;break}}}if(want&&want!=='en'&&codes.indexOf(want)>=0){location.replace('/'+want+location.hash);return}}
 var cur=null;try{cur=s&&s.getItem('sq.currency')}catch(e){}
 if(cur==='AED'||cur==='USD'){d.setAttribute('data-uae',cur==='AED'?'1':'0');d.setAttribute('data-cur',cur)}else{var z='';try{z=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}d.setAttribute('data-uae',z==='Asia/Dubai'?'1':'0')}
+var b='/site/img/shots/${lang}/'+(d.getAttribute('data-uae')==='1'?'aed':'usd')+'/ladies-home',p=document.createElement('link');p.rel='preload';p.as='image';p.href=b+'.webp';p.setAttribute('imagesrcset',b+'-360.webp 360w, '+b+'.webp 600w');p.setAttribute('imagesizes',${JSON.stringify(HERO_SIZES)});p.setAttribute('fetchpriority','high');document.head.appendChild(p);
 window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};
 if(!/^(localhost|127\\.|\\[::1\\]|10\\.|192\\.168\\.)|\\.local$/.test(location.hostname)){var a=document.createElement('script');a.defer=true;a.src='/_vercel/insights/script.js';document.head.appendChild(a)}})();`;
 
@@ -111,6 +113,7 @@ ${main}
 </main>
 ${footer(c)}
 ${floating(c)}
+${tour(c, button)}
 <script>window.SQ=${JSON.stringify(sq).replace(/</g, '\\u003c')}</script>
 <script>${CLIENT}</script>
 </body>

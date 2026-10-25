@@ -1,5 +1,5 @@
 /* The home page's small script (website brief 4.1; full update brief): the visitor's currency (and the footer's
-   AED | USD switch), the price calculator, the menus, sideways rows, the video, and the hand-over to the app (salon
+   AED | USD switch), the price calculator, the menus, sideways rows, the video, the tour, and the hand-over to the app (salon
    type and language, as the app stores them).
    window.SQ is written by page.mjs. Everything here is optional: the page works without it. */
 (function () {
@@ -29,6 +29,7 @@
         if (g && /^[A-Z]{2}$/.test(g.country || '') && !doc.hasAttribute('data-cur')) {
           doc.setAttribute('data-uae', g.country === 'AE' ? '1' : '0');
           calc();
+          pictures();
         }
       })
       .catch(function () {});
@@ -81,8 +82,65 @@
     } catch (err) {}
     markCurrency();
     calc();
+    pictures();
     track('currency', { currency: cur });
   });
+
+  // The hero's pictures load at once, so they carry only the visitor's currency set (shots.mjs); this swaps the set.
+  function pictures() {
+    var cur = doc.getAttribute('data-uae') === '1' ? 'aed' : 'usd';
+    document.querySelectorAll('img[data-src]').forEach(function (img) {
+      var set = img.getAttribute('data-srcset');
+      if (set) img.srcset = set.split('{cur}').join(cur);
+      img.src = img.getAttribute('data-src').split('{cur}').join(cur);
+    });
+  }
+
+  // "See how it works": three steps in a dialog (shots.mjs). Without <dialog> the link goes to the features.
+  var tour = document.getElementById('tour');
+  if (tour && tour.showModal) {
+    var steps = tour.querySelectorAll('.tour-step');
+    var back = tour.querySelector('[data-tour-back]');
+    var next = tour.querySelector('[data-tour-next]');
+    var start = tour.querySelector('[data-start="tour"]');
+    var at = 0;
+    var opener = null;
+    var show = function (n, focus) {
+      at = Math.max(0, Math.min(steps.length - 1, n));
+      var last = at === steps.length - 1;
+      steps.forEach(function (s, i) { s.hidden = i !== at; });
+      tour.querySelectorAll('.tour-dots i').forEach(function (d, i) { d.className = i === at ? 'on' : ''; });
+      back.disabled = at === 0;
+      next.hidden = last;
+      start.hidden = !last;
+      if (focus) (last ? start : next).focus();
+    };
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('[data-tour],[data-tour-next],[data-tour-back],[data-tour-close],#tour a[href^="#"]');
+      if (!a) return;
+      if (a.hasAttribute('data-tour')) {
+        e.preventDefault();
+        opener = a;
+        // All three steps' pictures in the visitor's set, so the next step shows at once.
+        tour.querySelectorAll(doc.getAttribute('data-uae') === '1' ? 'img.uae' : 'img.intl').forEach(function (img) { img.loading = 'eager'; });
+        show(0);
+        tour.showModal();
+        next.focus();
+        track('tour_open');
+      } else if (a.hasAttribute('data-tour-next')) show(at + 1, true);
+      else if (a.hasAttribute('data-tour-back')) show(at - 1, true);
+      else tour.close();
+    });
+    tour.addEventListener('keydown', function (e) {
+      var ahead = doc.getAttribute('dir') === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+      var behind = ahead === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft';
+      if (e.key === ahead) show(at + 1, true);
+      else if (e.key === behind) show(at - 1, true);
+    });
+    // A tap on the dimmed page around it closes it too (Esc is the dialog's own).
+    tour.addEventListener('click', function (e) { if (e.target === tour) tour.close(); });
+    tour.addEventListener('close', function () { if (opener) opener.focus(); });
+  }
 
   // Someone who already picked a salon type on this device goes straight to the sign-up (as the app's home page).
   var type = store && store.getItem('device.salonType');

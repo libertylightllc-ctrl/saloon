@@ -813,7 +813,31 @@
       "currency": {
         "label": "Devise"
       },
-      "askWhatsApp": "Posez-nous vos questions sur WhatsApp"
+      "askWhatsApp": "Posez-nous vos questions sur WhatsApp",
+      "alt": {
+        "gentsQueue": "La file d'attente d'un barbier : qui attend, qui est au fauteuil et qui a réservé, avec son barbier.",
+        "ladiesHome": "L'écran d'accueil d'un salon pour femmes : les espèces attendues en caisse, les ventes et visites du jour.",
+        "queueCard": "Un client en attente : heure d'arrivée, prestations, prix et barbier, avec un bouton pour commencer.",
+        "gentsReports": "Le rapport du mois : ventes, coûts et résultat, le résumé du gérant et les ventes par jour.",
+        "gentsBooking": "La page de réservation gratuite d'un barbier : prestations avec prix et durée, une coupe choisie.",
+        "gentsSale": "Vente rapide : prestations avec leurs prix, deux dans le panier et le bouton d'encaissement.",
+        "ladiesQueue": "La file d'un salon pour femmes : une cliente qui attend, une autre en cabine spa, et des rendez-vous plus tard.",
+        "ladiesSale": "Vente rapide dans un salon pour femmes : deux prestations dans le panier et le bouton d'encaissement.",
+        "ladiesClosing": "Clôture de caisse : les espèces attendues d'après les ventes, dépenses et avances du jour, les pourboires à verser et le comptage.",
+        "unisexQueue": "La file d'un salon mixte, dans son style bleu-vert.",
+        "wellnessQueue": "La file d'un institut de beauté et bien-être, dans son style lavande."
+      },
+      "tour": {
+        "title": "Une journée avec Saloqo",
+        "step1": "Accueillez un client sans rendez-vous",
+        "step1Body": "Ajoutez-le à la file en quelques secondes ; chacun voit qui attend et qui passe ensuite.",
+        "step2": "Encaissez une vente",
+        "step2Body": "Touchez les prestations, encaissez en espèces ou par carte. Le stock et les comptes se mettent à jour seuls.",
+        "step3": "Clôturez la journée",
+        "step3Body": "Comptez la caisse. Saloqo affiche les espèces attendues et tout écart.",
+        "stepOf": "Étape {{n}} sur {{total}}",
+        "next": "Suivant"
+      }
     },
     "google": {
       "action": "Continuer avec Google",

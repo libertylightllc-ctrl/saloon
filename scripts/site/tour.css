@@ -1,0 +1,25 @@
+/* "See how it works" (full update, Phase 4): three steps of a day in a dialog (shots.mjs tour, client.js). */
+.tour{width:min(720px,calc(100vw - 32px));max-height:calc(100dvh - 32px);padding:0;border:0;border-radius:28px;background:var(--card);color:var(--ink);box-shadow:var(--lift);overflow:auto}
+.tour[open]{display:flex;flex-direction:column}
+.tour::backdrop{background:rgba(11,9,22,.64)}
+.tour button{font:inherit;cursor:pointer}
+.tour-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 16px 0 24px}
+[dir=rtl] .tour-head{padding:16px 24px 0 16px}
+.tour-x{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:999px;background:var(--mist);color:var(--ink)}
+.tour-steps{list-style:none;margin:0;padding:12px 24px 20px}
+.tour-step{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;animation:tour-in .25s ease-out}
+.tour-step[hidden]{display:none}
+.tour .phone{--w:min(220px,26dvh)!important;box-shadow:var(--shadow)}
+.tour-text{display:flex;flex-direction:column;gap:6px;max-width:36ch}
+.tour-n{margin:0;color:var(--teal-deep);font-weight:600}
+.tour-text h3,.tour-text p{margin:0}
+.tour-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 24px 24px}
+.tour-nav [hidden]{display:none}
+.tour .btn-outline{background:none;color:var(--ink);border-color:var(--hairline)}
+.tour .btn-outline:disabled{opacity:.4;cursor:default}
+.tour-dots{display:flex;gap:6px}
+.tour-dots i{width:8px;height:8px;border-radius:999px;background:var(--hairline)}
+.tour-dots i.on{background:var(--teal-deep)}
+@media (min-width:640px){.tour-step{flex-direction:row;gap:40px;text-align:start}.tour .phone{--w:220px!important}.tour-text h3{font-size:24px;line-height:32px}}
+@keyframes tour-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tour-step{animation:none}}
