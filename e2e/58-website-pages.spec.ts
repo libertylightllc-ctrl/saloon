@@ -119,11 +119,15 @@ test.describe('on a phone', () => {
     await page.mouse.move(195, 400);
     for (let i = 0; i < 12; i++) await page.mouse.wheel(0, 300);
     await expect(page.locator('[data-start="header"]')).toBeInViewport();
-    // 2 branches of 5 people for 12 months: (50 + 10) × 2 × 10 months' price.
-    await page.selectOption('[data-calc="branches"]', '2');
-    await page.selectOption('[data-calc="people"]', '5');
+    // 6 people for 12 months: (50 + 2 × 10) × 10 months' price. One branch per salon for now: no branch count, no
+    // second-branch question or example (src/config/pricing.ts MULTI_BRANCH).
+    await expect(page.locator('[data-calc="branches"]')).toHaveCount(0);
+    await page.selectOption('[data-calc="people"]', '6');
     await page.selectOption('[data-calc="months"]', '12');
-    await expect(page.locator('[data-calc-total]')).toHaveText('Total: AED\u00a01,200');
+    await expect(page.locator('[data-calc-total]')).toHaveText('Total: AED\u00a0700');
+    await expect(page.locator('details[data-faq="branches"]')).toHaveCount(0);
+    await expect(page.locator('#pricing')).not.toContainText('Every branch in one owner login');
+    await expect(page.locator('#pricing')).not.toContainText('2 branches');
     await page.locator('details[data-faq="price"] summary').click();
     await expect(page.locator('details[data-faq="price"] .uae')).toContainText('AED\u00a050 a month per branch, for up to 4 people');
     // Four salon types to choose from (brief 5.4).

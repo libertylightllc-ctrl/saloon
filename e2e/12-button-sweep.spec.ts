@@ -124,6 +124,10 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
   // Exports (CSV, backup ZIP) arrive as a download on the web.
   let downloaded = '';
   const onDownload = (d: { suggestedFilename: () => string }) => (downloaded = d.suggestedFilename());
+  // "Refresh app" reloads the page on the web: a fresh page load counts even when the reloaded screen looks the same
+  // (proof, 2026-10-25: a light screen reloaded within the effect window, identical to before).
+  let reloaded = false;
+  const onLoad = () => (reloaded = true);
   // A payment link opens in a new tab (window.open); the tab is closed again straight away.
   let opened = '';
   const onTab = (tab: Page) => {
@@ -136,6 +140,7 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
   page.on('pageerror', onError);
   page.on('filechooser', onChooser);
   page.on('download', onDownload);
+  page.on('domcontentloaded', onLoad);
   page.context().on('page', onTab);
   await target
     .click({ timeout: 5_000, ...(backdrop ? { position: { x: 12, y: 12 } } : {}) })
@@ -144,6 +149,7 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
   page.off('pageerror', onError);
   page.off('filechooser', onChooser);
   page.off('download', onDownload);
+  page.off('domcontentloaded', onLoad);
   page.context().off('page', onTab);
   const asked = await page.evaluate(() => (window as Window & { __opened?: string }).__opened ?? '').catch(() => '');
   if (asked && !opened) opened = asked;
@@ -167,6 +173,7 @@ async function tap(page: Page, url: string, name: string, prepare?: (p: Page) =>
   }
   if (after.selected !== before.selected) return { ok: true, result: 'selects it' };
   if (after.values !== before.values) return { ok: true, result: 'fills in a value' };
+  if (reloaded && after.url === before.url) return { ok: true, result: 'reloads the app' };
   return { ok: false, result: 'NO VISIBLE EFFECT' };
 }
 

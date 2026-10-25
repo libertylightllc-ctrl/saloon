@@ -48,7 +48,9 @@
   function calc() {
     if (!form || !SQ.sets) return;
     var set = SQ.sets[doc.getAttribute('data-uae') === '1' ? 'uae' : 'intl'];
-    var branches = Number(form.querySelector('[data-calc="branches"]').value);
+    // One branch while salons have one (no branch count on the page).
+    var count = form.querySelector('[data-calc="branches"]');
+    var branches = count ? Number(count.value) : 1;
     var people = Number(form.querySelector('[data-calc="people"]').value);
     var months = Number(form.querySelector('[data-calc="months"]').value);
     var length = SQ.lengths.filter(function (l) { return l.months === months; })[0] || SQ.lengths[0];

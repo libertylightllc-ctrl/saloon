@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
+import { MULTI_BRANCH } from '@/config/pricing';
 import { brandPalette as B, spacing } from '@/theme';
 import { Icon, Text } from '@/ui';
 
@@ -16,7 +17,7 @@ import { useLandingPrice } from './price';
 export const FAQ_KEYS = [
   'price',
   'free',
-  'branches',
+  ...(MULTI_BRANCH ? (['branches'] as const) : []),
   'uaeCost',
   'card',
   'staffSignIn',

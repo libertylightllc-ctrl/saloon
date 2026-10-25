@@ -3,6 +3,8 @@
  * last call, the footer and the phone's sticky bar. Prices are written twice (`.uae` / `.intl`); the page script
  * shows the visitor's one, as the app's pricing card does.
  */
+import { readFileSync } from 'node:fs';
+
 import { phone } from './shots.mjs';
 import { button } from './sections-top.mjs';
 import { esc, LANGUAGES, pathOf } from './text.mjs';
@@ -61,7 +63,10 @@ ${button(c, { label: c.startLabel, href: '#types', attrs: ` data-start="pricing-
 </article>`;
 }
 
-const FEATURES = ['queue', 'bookingPage', 'sale', 'closing', 'roles', 'payroll', 'stock', 'reminders', 'books', 'branches', 'languages'];
+/** One branch per salon until "Add a branch" ships (src/config/pricing.ts MULTI_BRANCH): no multi-branch claims. */
+const MULTI = JSON.parse(readFileSync(new URL('../../src/config/pricing.json', import.meta.url), 'utf8')).multiBranch;
+
+const FEATURES = ['queue', 'bookingPage', 'sale', 'closing', 'roles', 'payroll', 'stock', 'reminders', 'books', ...(MULTI ? ['branches'] : []), 'languages'];
 
 export function pricing(c) {
   if (!c.prices) return '';
@@ -85,14 +90,14 @@ export function pricing(c) {
 <form class="calc" data-calc-form aria-labelledby="calc-title" onsubmit="return false">
 <h3 class="t-h3" id="calc-title">${esc(t('auth.landing.calc.title'))}</h3>
 <div class="calc-fields">
-${select('branches', t('auth.landing.calc.branches'), range(10))}
+${MULTI ? select('branches', t('auth.landing.calc.branches'), range(10)) : ''}
 ${select('people', t('auth.landing.calc.people'), range(20).map(([v, l]) => [v, l]))}
 ${select('months', t('auth.landing.calc.length'), c.prices.uae.lengths.map((l) => [l.months, t(LENGTH_LABEL[l.months])]))}
 </div>
 <output class="calc-out" data-calc-out aria-live="polite"><strong data-calc-total></strong><span data-calc-each></span></output>
 <ul class="examples t-small">
 <li>${both(c, (p) => t('auth.landing.calc.example1', { price: p.example1 }))}</li>
-<li>${both(c, (p) => t('auth.landing.calc.example2', { price: p.example2 }))}</li>
+${MULTI ? `<li>${both(c, (p) => t('auth.landing.calc.example2', { price: p.example2 }))}</li>` : ''}
 </ul>
 </form>
 <p class="t-small teal-soft center">${esc(t('auth.landing.trust.noRenew'))}</p>
@@ -110,7 +115,7 @@ export function trust(c) {
 }
 
 /** The questions, in order (as src/features/landing/Faq.tsx FAQ_KEYS). */
-export const FAQ_KEYS = ['price', 'free', 'branches', 'uaeCost', 'card', 'staffSignIn', 'languages', 'types', 'data', 'staff', 'printer', 'devices', 'homeScreen', 'bookingApp', 'countries'];
+export const FAQ_KEYS = ['price', 'free', ...(MULTI ? ['branches'] : []), 'uaeCost', 'card', 'staffSignIn', 'languages', 'types', 'data', 'staff', 'printer', 'devices', 'homeScreen', 'bookingApp', 'countries'];
 const PRICED = ['price', 'branches', 'uaeCost'];
 
 /** One answer as plain text, with one region's prices (`p` a price set, or null without prices). */

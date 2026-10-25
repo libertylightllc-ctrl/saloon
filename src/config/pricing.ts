@@ -17,6 +17,12 @@ export interface BillingLength {
 }
 
 export const BILLING_LENGTHS: readonly BillingLength[] = values.lengths;
+/**
+ * Whether an owner can run more than one branch. False until "Add a branch" ships (owner, 2026-10-25: the app has one
+ * branch per salon today): the website then leaves out the second-branch question, "Every branch in one owner login",
+ * the calculator's branch count and its two-branch example. Prices are still per branch.
+ */
+export const MULTI_BRANCH: boolean = values.multiBranch;
 export const PER_DAY_UNDER: Readonly<Record<string, number>> = values.perDayUnder;
 
 /** A monthly amount for a whole billing length, in minor units (rounded half up to the cent or fils). */
