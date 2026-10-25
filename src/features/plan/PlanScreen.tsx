@@ -6,11 +6,10 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { isUae } from '@/lib/countries';
-import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
-import { semantic, spacing, useTheme } from '@/theme';
-import { Button, Card, FormError, HeaderBand, Icon, PillTabs, QueryState, Screen, StatusPill, Text, TextField, useToast, type IconName } from '@/ui';
+import { semantic, spacing } from '@/theme';
+import { Button, Card, FormError, HeaderBand, Icon, QueryState, Screen, StatusPill, Text, TextField, useToast, type IconName } from '@/ui';
 
 import { showsBilling, useIsPlatformAdmin, usePlanStatus, useRequestPlan, type PlanStatus } from './api';
 import { BranchBill, type PlanMonths } from './BranchBill';
@@ -47,7 +46,6 @@ const INCLUDED: { key: string; icon: IconName }[] = [
 /** Plan & billing: the salon's access, and (billing on, not free) what it costs per branch and how to pay. */
 export function PlanScreen() {
   const { t } = useTranslation();
-  const theme = useTheme();
   const dates = useDates();
   const toast = useToast();
   const { business, role } = useWorkspace();

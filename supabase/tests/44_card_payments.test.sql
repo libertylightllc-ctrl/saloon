@@ -92,7 +92,7 @@ select is(card_payment_refunded(jsonb_build_object('checkout_id', 'ch_1', 'refun
   'refunded', 'a refund is marked');
 select pg_temp.as_admin();
 select is((select paid_until from subscriptions where business_id = current_setting('t.b')::uuid),
-  (current_setting('t.until')::date + interval '3 months')::date, 'the plan is not cut on its own');
+  (current_setting('t.until')::date + interval '6 months')::date, 'the plan is not cut on its own');
 
 -- A plain payment link: the salon code typed at checkout; otherwise kept for review.
 select pg_temp.as_service();

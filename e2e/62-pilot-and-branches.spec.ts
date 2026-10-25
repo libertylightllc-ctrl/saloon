@@ -81,8 +81,7 @@ test('an owner adds a branch (its price first, nothing charged), opens it, and t
   await expect(id(page, 'plan-price')).toHaveText('AED 100.00');
 
   // Opening the new branch: the whole app follows (Home names it).
-  await tab(page, 'more');
-  await id(page, 'more-branches').click();
+  await page.goto('/settings/branches');
   await id(page, 'branch-open-Marina').click();
   await expect(id(page, 'tab-index')).toBeVisible();
   await expect(text(page, /Marina ·/)).toBeVisible();

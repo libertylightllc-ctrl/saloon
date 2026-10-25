@@ -45,10 +45,11 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   await id(office, 'console-tab-salons').click();
   await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Paying by bank transfer');
   await id(office, `admin-salon-${owner.code}`).click();
-  await expect(id(office, 'admin-amount')).toHaveValue('150.00');
+  // 6 months at 10% off: AED 50 × 5.4.
+  await expect(id(office, 'admin-amount')).toHaveValue('270.00');
   await id(office, 'admin-note').fill('Bank transfer ref 4411');
   await id(office, 'admin-activate').click();
-  await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Until');
+  await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Paid until');
   await snap(office, 'admin-salons', mode);
 
   // The salon opens on every phone without a reload.

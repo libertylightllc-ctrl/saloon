@@ -45,7 +45,8 @@ $$;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000032a0');
 select set_config('t.a', (create_business('{"business_name":"People Salon","owner_name":"Owner","mode":"gents","vat_mode":"off"}') ->> 'business_id'), false);
 select set_config('t.abr', (select id::text from branches where business_id = current_setting('t.a')::uuid), false);
-select is(plan_status(current_setting('t.a')::uuid) - 'paid_until' - 'requested_at' - 'requested_months' - 'active' - 'trial' - 'today',
+select is((select jsonb_object_agg(k, v) from jsonb_each(plan_status(current_setting('t.a')::uuid)) e(k, v)
+            where k in ('people', 'included_people', 'base_minor', 'extra_person_minor', 'monthly_minor', 'currency')),
   '{"people":1,"included_people":4,"base_minor":5000,"extra_person_minor":1000,"monthly_minor":5000,"currency":"AED"}'::jsonb,
   'the owner alone: AED 50 covers up to 4 people');
 
@@ -69,7 +70,8 @@ select is(pg_temp.monthly('t.a'), 7000::bigint, '6 people: AED 50 + 2 × 10 = AE
 -- A login switched off does not count; a second branch adds its own price (per branch since 2026-10-25).
 select pg_temp.as_admin();
 update members set active = false where user_id = '00000000-0000-0000-0000-0000000032a5';
-with b as (insert into branches (business_id, name, mode) values (current_setting('t.a')::uuid, 'Second branch', 'gents') returning id)
+with b as (insert into branches (business_id, name, mode, created_at)
+           values (current_setting('t.a')::uuid, 'Second branch', 'gents', clock_timestamp()) returning id)
 select set_config('t.abr2', id::text, false) from b;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000032a0');
 select is(pg_temp.monthly('t.a'), 11000::bigint, 'a login switched off is not counted; a second branch adds AED 50');

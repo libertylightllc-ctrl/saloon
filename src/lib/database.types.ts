@@ -2050,6 +2050,167 @@ export type Database = {
           },
         ];
       };
+      pilot_applications: {
+        Row: {
+          alerted_at: string | null;
+          area: string | null;
+          code: string | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          emirate: string;
+          id: string;
+          language: string;
+          name: string;
+          salon_name: string;
+          salon_type: string;
+          source_hash: string | null;
+          staff_count: number;
+          status: string;
+          whatsapp: string;
+          whatsapp_ok: boolean;
+          whatsapp_ok_at: string | null;
+        };
+        Insert: {
+          alerted_at?: string | null;
+          area?: string | null;
+          code?: string | null;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          emirate: string;
+          id?: string;
+          language: string;
+          name: string;
+          salon_name: string;
+          salon_type: string;
+          source_hash?: string | null;
+          staff_count: number;
+          status?: string;
+          whatsapp: string;
+          whatsapp_ok?: boolean;
+          whatsapp_ok_at?: string | null;
+        };
+        Update: {
+          alerted_at?: string | null;
+          area?: string | null;
+          code?: string | null;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          emirate?: string;
+          id?: string;
+          language?: string;
+          name?: string;
+          salon_name?: string;
+          salon_type?: string;
+          source_hash?: string | null;
+          staff_count?: number;
+          status?: string;
+          whatsapp?: string;
+          whatsapp_ok?: boolean;
+          whatsapp_ok_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'pilot_applications_code_fkey';
+            columns: ['code'];
+            isOneToOne: false;
+            referencedRelation: 'pilot_codes';
+            referencedColumns: ['code'];
+          },
+        ];
+      };
+      pilot_code_attempts: {
+        Row: {
+          at: string;
+          user_id: string;
+        };
+        Insert: {
+          at?: string;
+          user_id: string;
+        };
+        Update: {
+          at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      pilot_codes: {
+        Row: {
+          code: string;
+          created_at: string;
+          created_by: string | null;
+          days: number;
+          disabled_at: string | null;
+          expires_on: string | null;
+          max_uses: number;
+          note: string | null;
+        };
+        Insert: {
+          code: string;
+          created_at?: string;
+          created_by?: string | null;
+          days: number;
+          disabled_at?: string | null;
+          expires_on?: string | null;
+          max_uses?: number;
+          note?: string | null;
+        };
+        Update: {
+          code?: string;
+          created_at?: string;
+          created_by?: string | null;
+          days?: number;
+          disabled_at?: string | null;
+          expires_on?: string | null;
+          max_uses?: number;
+          note?: string | null;
+        };
+        Relationships: [];
+      };
+      pilot_redemptions: {
+        Row: {
+          business_id: string;
+          code: string;
+          created_at: string;
+          free_until: string;
+          id: string;
+          redeemed_by: string | null;
+        };
+        Insert: {
+          business_id: string;
+          code: string;
+          created_at?: string;
+          free_until: string;
+          id?: string;
+          redeemed_by?: string | null;
+        };
+        Update: {
+          business_id?: string;
+          code?: string;
+          created_at?: string;
+          free_until?: string;
+          id?: string;
+          redeemed_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'pilot_redemptions_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: true;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'pilot_redemptions_code_fkey';
+            columns: ['code'];
+            isOneToOne: false;
+            referencedRelation: 'pilot_codes';
+            referencedColumns: ['code'];
+          },
+        ];
+      };
       plan_events: {
         Row: {
           alerted_at: string | null;
@@ -2115,6 +2276,47 @@ export type Database = {
         };
         Relationships: [];
       };
+      platform_audit: {
+        Row: {
+          action: string;
+          actor: string | null;
+          after: Json | null;
+          before: Json | null;
+          business_id: string | null;
+          created_at: string;
+          id: string;
+          subject: string | null;
+        };
+        Insert: {
+          action: string;
+          actor?: string | null;
+          after?: Json | null;
+          before?: Json | null;
+          business_id?: string | null;
+          created_at?: string;
+          id?: string;
+          subject?: string | null;
+        };
+        Update: {
+          action?: string;
+          actor?: string | null;
+          after?: Json | null;
+          before?: Json | null;
+          business_id?: string | null;
+          created_at?: string;
+          id?: string;
+          subject?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'platform_audit_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       platform_settings: {
         Row: {
           bank_account_name: string | null;
@@ -2122,6 +2324,7 @@ export type Database = {
           bank_name: string | null;
           bank_swift: string | null;
           bank_transfer: boolean;
+          billing_enabled: boolean;
           card_payments: string;
           currency: string;
           extra_person_minor: number;
@@ -2132,7 +2335,10 @@ export type Database = {
           intl_price_per_branch_minor: number;
           pay_link_url: string | null;
           pay_note: string | null;
+          pilot_free_days: number;
+          pilot_max_salons: number;
           price_per_branch_minor: number;
+          public_free_days: number;
           support_assistant: boolean;
           trial_days: number;
         };
@@ -2142,6 +2348,7 @@ export type Database = {
           bank_name?: string | null;
           bank_swift?: string | null;
           bank_transfer?: boolean;
+          billing_enabled?: boolean;
           card_payments?: string;
           currency?: string;
           extra_person_minor?: number;
@@ -2152,7 +2359,10 @@ export type Database = {
           intl_price_per_branch_minor?: number;
           pay_link_url?: string | null;
           pay_note?: string | null;
+          pilot_free_days?: number;
+          pilot_max_salons?: number;
           price_per_branch_minor?: number;
+          public_free_days?: number;
           support_assistant?: boolean;
           trial_days?: number;
         };
@@ -2162,6 +2372,7 @@ export type Database = {
           bank_name?: string | null;
           bank_swift?: string | null;
           bank_transfer?: boolean;
+          billing_enabled?: boolean;
           card_payments?: string;
           currency?: string;
           extra_person_minor?: number;
@@ -2172,7 +2383,10 @@ export type Database = {
           intl_price_per_branch_minor?: number;
           pay_link_url?: string | null;
           pay_note?: string | null;
+          pilot_free_days?: number;
+          pilot_max_salons?: number;
           price_per_branch_minor?: number;
+          public_free_days?: number;
           support_assistant?: boolean;
           trial_days?: number;
         };
@@ -3240,20 +3454,32 @@ export type Database = {
       };
       subscriptions: {
         Row: {
+          access_type: string;
+          admin_note: string | null;
           business_id: string;
-          paid_until: string;
+          free_until: string | null;
+          paid_until: string | null;
+          pilot_code: string | null;
           trial: boolean;
           updated_at: string;
         };
         Insert: {
+          access_type?: string;
+          admin_note?: string | null;
           business_id: string;
-          paid_until: string;
+          free_until?: string | null;
+          paid_until?: string | null;
+          pilot_code?: string | null;
           trial?: boolean;
           updated_at?: string;
         };
         Update: {
+          access_type?: string;
+          admin_note?: string | null;
           business_id?: string;
-          paid_until?: string;
+          free_until?: string | null;
+          paid_until?: string | null;
+          pilot_code?: string | null;
           trial?: boolean;
           updated_at?: string;
         };
@@ -3632,8 +3858,44 @@ export type Database = {
         }[];
       };
       admin_close_salon: { Args: { p_business: string; p_note: string }; Returns: undefined };
+      admin_create_pilot_code: { Args: { p: Json }; Returns: string };
+      admin_decide_pilot_application: { Args: { p_approve: boolean; p_id: string }; Returns: Json };
+      admin_disable_pilot_code: { Args: { p_code: string }; Returns: undefined };
       admin_end_plan: { Args: { p_business: string; p_note: string }; Returns: undefined };
       admin_overview: { Args: Record<PropertyKey, never>; Returns: Json };
+      admin_pilot_applications: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          area: string;
+          code: string;
+          created_at: string;
+          decided_at: string;
+          emirate: string;
+          id: string;
+          language: string;
+          name: string;
+          salon_name: string;
+          salon_type: string;
+          staff_count: number;
+          status: string;
+          whatsapp: string;
+          whatsapp_ok: boolean;
+        }[];
+      };
+      admin_pilot_codes: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          code: string;
+          created_at: string;
+          created_by: string;
+          days: number;
+          disabled: boolean;
+          expires_on: string;
+          max_uses: number;
+          note: string;
+          uses: number;
+        }[];
+      };
       admin_plan_events: {
         Args: { p_limit?: number };
         Returns: {
@@ -3648,6 +3910,19 @@ export type Database = {
           note: string;
           paid_until: string;
           salon: string;
+        }[];
+      };
+      admin_platform_audit: {
+        Args: { p_limit?: number };
+        Returns: {
+          action: string;
+          actor: string;
+          after: Json;
+          before: Json;
+          created_at: string;
+          id: string;
+          salon: string;
+          subject: string;
         }[];
       };
       admin_salon_stats: {
@@ -3669,27 +3944,35 @@ export type Database = {
       admin_salons: {
         Args: Record<PropertyKey, never>;
         Returns: {
+          access_type: string;
           active: boolean;
+          admin_note: string;
           branches: number;
           business_id: string;
           code: string;
           country_code: string;
           created_at: string;
+          free_until: string;
+          last_active: string;
           monthly_minor: number;
           name: string;
           owner_email: string;
           owner_name: string;
           paid_until: string;
           people: number;
+          pilot_code: string;
           plan_currency: string;
           request_note: string;
           requested_at: string;
           requested_months: number;
+          staff: number;
           timezone: string;
           trial: boolean;
         }[];
       };
+      admin_set_access: { Args: { p: Json; p_business: string }; Returns: Json };
       admin_set_bank_transfer: { Args: { p_on: boolean }; Returns: undefined };
+      admin_set_billing: { Args: { p: Json }; Returns: Json };
       admin_set_card_payments: { Args: { p_mode: string }; Returns: undefined };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
       admin_set_platform_owner: { Args: { p_email: string; p_on: boolean }; Returns: undefined };
@@ -3718,6 +4001,7 @@ export type Database = {
       };
       aed_rate: { Args: { p_currency: string }; Returns: number };
       allocate_minor: { Args: { p_total: number; p_weights: number[] }; Returns: number[] };
+      apply_for_pilot: { Args: { p: Json }; Returns: Json };
       appointment_for_update: {
         Args: { p_id: string };
         Returns: {
@@ -3878,6 +4162,23 @@ export type Database = {
           type: string;
         }[];
       };
+      claim_pilot_alerts: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          admin_emails: string[];
+          area: string;
+          created_at: string;
+          emirate: string;
+          id: string;
+          language: string;
+          name: string;
+          salon_name: string;
+          salon_type: string;
+          staff_count: number;
+          whatsapp: string;
+          whatsapp_ok: boolean;
+        }[];
+      };
       claim_plan_alerts: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3977,6 +4278,7 @@ export type Database = {
       convert_rough: { Args: { p_from: string; p_minor: number; p_to: string }; Returns: number };
       country_change_allowed: { Args: { p_business: string }; Returns: boolean };
       create_appointment: { Args: { p: Json }; Returns: string };
+      create_branch: { Args: { p: Json }; Returns: string };
       create_business: { Args: { p: Json }; Returns: Json };
       create_sale: { Args: { p: Json }; Returns: Json };
       currency_decimals: { Args: { p_currency: string }; Returns: number };
@@ -4093,10 +4395,34 @@ export type Database = {
           status: string;
         }[];
       };
+      pilot_active_count: { Args: Record<PropertyKey, never>; Returns: number };
+      pilot_redeem: { Args: { p_business: string; p_code: string; p_user: string }; Returns: Json };
+      pilot_status: { Args: Record<PropertyKey, never>; Returns: Json };
       plan_active: { Args: { p_business: string }; Returns: boolean };
+      plan_branch_lines: { Args: { p_business: string; p_card?: boolean }; Returns: Json };
+      plan_branch_people: {
+        Args: { p_business: string };
+        Returns: {
+          branch_id: string;
+          name: string;
+          ord: number;
+          people: number;
+        }[];
+      };
+      plan_length_tenths: { Args: { p_months: number }; Returns: number };
       plan_price: { Args: { p_business: string }; Returns: Record<string, unknown> };
       plan_quote: { Args: { p_business: string }; Returns: Record<string, unknown> };
       plan_status: { Args: { p_business: string }; Returns: Json };
+      platform_audit_write: {
+        Args: {
+          p_action: string;
+          p_after: Json;
+          p_before: Json;
+          p_business: string;
+          p_subject: string;
+        };
+        Returns: undefined;
+      };
       post_journal: {
         Args: {
           p_actor: string;
@@ -4141,6 +4467,7 @@ export type Database = {
       record_adjustment: { Args: { p: Json }; Returns: Json };
       record_expense: { Args: { p: Json }; Returns: Json };
       record_stock_count: { Args: { p: Json }; Returns: Json };
+      redeem_pilot_code: { Args: { p_business: string; p_code: string }; Returns: Json };
       refund_sale: { Args: { p: Json }; Returns: Json };
       register_push_token: {
         Args: { p_business: string; p_platform: string; p_token: string };
@@ -4298,6 +4625,7 @@ export type Database = {
         Args: { p_branch: string; p_mode: Database['public']['Enums']['salon_mode'] };
         Returns: undefined;
       };
+      set_my_branch: { Args: { p_branch: string }; Returns: undefined };
       set_my_pin: { Args: { p_business: string; p_pin: string }; Returns: undefined };
       set_online_booking: {
         Args: { p_branch: string; p_on: boolean; p_slug?: string };
@@ -4337,6 +4665,7 @@ export type Database = {
         }[];
       };
       staff_has_records: { Args: { p_employee: string }; Returns: boolean };
+      start_free_period: { Args: { p_business: string; p_owner: string }; Returns: undefined };
       start_service: { Args: { p_id: string }; Returns: undefined };
       start_trial: { Args: { p_business: string; p_owner: string }; Returns: boolean };
       starter_price: { Args: { p_aed_fils: number; p_currency: string }; Returns: number };

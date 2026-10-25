@@ -477,7 +477,8 @@ begin
       billing_enabled = coalesce((p ->> 'billing_enabled')::boolean, billing_enabled),
       public_free_days = coalesce((p ->> 'public_free_days')::int, public_free_days),
       pilot_free_days = coalesce((p ->> 'pilot_free_days')::int, pilot_free_days),
-      pilot_max_salons = coalesce((p ->> 'pilot_max_salons')::int, pilot_max_salons);
+      pilot_max_salons = coalesce((p ->> 'pilot_max_salons')::int, pilot_max_salons)
+    where id;
   exception when check_violation or invalid_text_representation then
     raise exception 'invalid_setting' using errcode = '22023';
   end;

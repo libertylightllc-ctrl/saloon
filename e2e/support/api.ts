@@ -102,7 +102,7 @@ export async function createOwner(
   } else if (opts.plan !== false) {
     const { error: planError } = await admin
       .from('subscriptions')
-      .upsert({ business_id: r.business_id, paid_until: '2099-12-31', trial: false, access_type: 'paid' });
+      .upsert({ business_id: r.business_id, paid_until: '2099-12-31', trial: false, access_type: 'paid', free_until: null });
     if (planError) throw planError;
   } else {
     const { error: planError } = await admin.from('subscriptions').delete().eq('business_id', r.business_id);

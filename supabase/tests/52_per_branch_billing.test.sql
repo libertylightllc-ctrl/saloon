@@ -4,7 +4,7 @@
 -- owner adds branches (stock lines, sale numbers, rooms) and anyone moves between the branches they work at.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(30);
+select plan(29);
 grant execute on function public.branch_today(uuid), public.business_today(uuid), public.unique_business_code(text),
   public.branch_setting(uuid, text, jsonb) to authenticated;
 
@@ -21,6 +21,11 @@ begin
     'role', 'authenticated')::text, true);
   perform set_config('role', 'authenticated', true);
 end $$;
+create function pg_temp.as_service() returns void language plpgsql as $$
+begin
+  perform set_config('request.jwt.claims', '{"role":"service_role"}', true);
+  perform set_config('role', 'service_role', true);
+end $$;
 create function pg_temp.as_admin() returns void language plpgsql as $$
 begin
   perform set_config('role', 'postgres', true);
@@ -30,7 +35,7 @@ end $$;
 create function pg_temp.staff(b text, br text, prefix text, p_from int, p_to int, p_role text default 'staff')
 returns void language plpgsql as $$
 begin
-  perform pg_temp.as_admin();
+  perform pg_temp.as_service();
   for i in p_from..p_to loop
     perform register_staff_member(jsonb_build_object('business_id', current_setting(b), 'branch_id', current_setting(br),
       'user_id', '00000000-0000-0000-0000-0000000052' || prefix || i, 'username', 'pb' || prefix || i,
@@ -82,7 +87,9 @@ select is((select mode::text from branches where id = current_setting('t.a2')::u
 select is((select count(*)::int from rooms where branch_id = current_setting('t.a2')::uuid), 2, 'with its starter rooms');
 select is((select count(*)::int from stock_levels where branch_id = current_setting('t.a2')::uuid),
   (select count(*)::int from inventory_items where business_id = current_setting('t.a')::uuid), 'a stock line for every item');
+select pg_temp.as_admin();
 select ok(exists (select 1 from sale_counters where branch_id = current_setting('t.a2')::uuid), 'and its own sale numbers');
+select pg_temp.as_user('a0');
 select throws_ok($$ select create_branch(jsonb_build_object('business_id', current_setting('t.a'), 'name', 'marina')) $$,
   '23505', 'branch_name_taken', 'two branches cannot share a name');
 select pg_temp.staff('t.a', 't.a2', 'a', 6, 9);
@@ -99,7 +106,7 @@ select set_my_branch(current_setting('t.a2')::uuid);
 select is((select default_branch_id::text from members where user_id = '00000000-0000-0000-0000-0000000052a0'),
   current_setting('t.a2'), 'the owner moves to the second branch');
 select is((pg_temp.status('a0', 't.a') ->> 'monthly_minor')::bigint, 12000::bigint, 'and is still counted once, at the first');
-select pg_temp.as_admin();
+select pg_temp.as_service();
 select register_staff_member(jsonb_build_object('business_id', current_setting('t.a'), 'branch_id', current_setting('t.a2'),
   'user_id', '00000000-0000-0000-0000-0000000052ac', 'username', 'pbac', 'display_name', 'Accountant', 'role', 'accountant'));
 select is(pg_temp.status('a0', 't.a') -> 'branches' -> 0 ->> 'people', '6', 'the accountant counts at the first branch');
@@ -125,6 +132,7 @@ insert into auth.users (id, instance_id, aud, role, email, encrypted_password, e
                         raw_app_meta_data, raw_user_meta_data)
 values ('00000000-0000-0000-0000-0000000052bb', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
         'pb-bb@test.local', crypt('pw-12345', gen_salt('bf')), now(), now(), now(), '{}', '{}');
+select pg_temp.as_service();
 select register_staff_member(jsonb_build_object('business_id', current_setting('t.b'), 'branch_id', current_setting('t.b2'),
   'user_id', '00000000-0000-0000-0000-0000000052bb', 'username', 'pbbb', 'display_name', 'Staff bb', 'role', 'staff'));
 select is(pg_temp.status('b0', 't.b') ->> 'currency', 'USD', 'a salon outside the UAE is priced in USD');

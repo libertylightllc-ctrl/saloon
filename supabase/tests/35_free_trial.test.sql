@@ -5,7 +5,7 @@
 -- their old and new values; pilot applications (honeypot, rate limit, approval with a code); the 14- and 3-day notices.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(43);
+select plan(48);
 grant execute on function public.branch_today(uuid), public.business_today(uuid), public.unique_business_code(text),
   public.branch_setting(uuid, text, jsonb) to authenticated;
 
@@ -27,6 +27,11 @@ create function pg_temp.as_anon() returns void language plpgsql as $$
 begin
   perform set_config('request.jwt.claims', '{"role":"anon"}', true);
   perform set_config('role', 'anon', true);
+end $$;
+create function pg_temp.as_service() returns void language plpgsql as $$
+begin
+  perform set_config('request.jwt.claims', '{"role":"service_role"}', true);
+  perform set_config('role', 'service_role', true);
 end $$;
 create function pg_temp.as_admin() returns void language plpgsql as $$
 begin
@@ -114,7 +119,7 @@ select pg_temp.redeem('b0', 't.b', 'NOPE-' || n) from generate_series(1, 8) n;
 select is(pg_temp.redeem('b0', 't.b', 'PILOT-SIGNUP') ->> 'reason', 'too_many_attempts', 'ten wrong codes in an hour: wait');
 
 -- A staff login cannot use codes; it still works while the salon is open.
-select pg_temp.as_admin();
+select pg_temp.as_service();
 select register_staff_member(jsonb_build_object('business_id', current_setting('t.a'), 'branch_id', current_setting('t.abr'),
   'user_id', '00000000-0000-0000-0000-0000000035f1', 'username', 'ftstaff1', 'display_name', 'Staff 1', 'role', 'staff'));
 select throws_ok($$ select pg_temp.redeem('f1', 't.a', 'PILOT-SIGNUP') $$, '42501', 'not_allowed', 'staff cannot use pilot codes');

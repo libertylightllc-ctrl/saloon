@@ -180,6 +180,7 @@ export function useAdminSalons() {
         ...s,
         monthly_minor: Number(s.monthly_minor),
         plan_currency: isCurrency(s.plan_currency) ? s.plan_currency : 'AED',
+        access_type: (s.access_type as AccessType | null) ?? null,
       }));
     },
   });

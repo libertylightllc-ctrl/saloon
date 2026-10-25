@@ -14,7 +14,7 @@ $$;
 -- People who sign in, per branch: the owner and the accountant count once, at the first branch; everyone else at
 -- their own branch (their default branch, else the first).
 create function public.plan_branch_people(p_business uuid)
-returns table (branch_id uuid, name text, people int)
+returns table (branch_id uuid, name text, people int, ord int)
 language sql stable security definer set search_path = public as $$
   with br as (
     select b.id, b.name, row_number() over (order by b.created_at, b.id) as n
@@ -25,7 +25,7 @@ language sql stable security definer set search_path = public as $$
                 then (select br.id from br where br.n = 1) else m.default_branch_id end as branch_id
     from members m where m.business_id = p_business and m.active
   )
-  select br.id, br.name, (select count(*)::int from counted c where c.branch_id = br.id)
+  select br.id, br.name, (select count(*)::int from counted c where c.branch_id = br.id), br.n::int
   from br order by br.n;
 $$;
 
@@ -54,7 +54,7 @@ language sql stable security definer set search_path = public as $$
   select coalesce(jsonb_agg(jsonb_build_object(
            'branch_id', bp.branch_id, 'name', bp.name, 'people', bp.people,
            'extra_people', greatest(bp.people - s.included_people, 0),
-           'monthly_minor', q.base + q.extra * greatest(bp.people - s.included_people, 0))), '[]'::jsonb)
+           'monthly_minor', q.base + q.extra * greatest(bp.people - s.included_people, 0)) order by bp.ord), '[]'::jsonb)
   from platform_settings s
   cross join businesses bu
   cross join lateral (
@@ -209,12 +209,13 @@ begin
   end if;
   select * into f from branches where business_id = v_business order by created_at, id limit 1;
   v_mode := coalesce(nullif(p ->> 'mode', '')::salon_mode, f.mode);
+  -- Its own moment (not the transaction's), so the salon's first branch is always the one it started with.
   insert into branches (business_id, name, mode, address, phone, opening_hours, vat_mode, trn, tax_name, tax_rate_bps,
-                        tax_inclusive, tax_id_label, legal_name, tax2_name, tax2_rate_bps, logo_path, settings)
+                        tax_inclusive, tax_id_label, legal_name, tax2_name, tax2_rate_bps, logo_path, settings, created_at)
   values (v_business, v_name, v_mode, nullif(btrim(coalesce(p ->> 'address', '')), ''),
           nullif(btrim(coalesce(p ->> 'phone', '')), ''), f.opening_hours, f.vat_mode, f.trn, f.tax_name, f.tax_rate_bps,
           f.tax_inclusive, f.tax_id_label, f.legal_name, f.tax2_name, f.tax2_rate_bps, f.logo_path,
-          coalesce(f.settings, '{}'::jsonb) - 'opening_cash_set' - 'opening_stock_set')
+          coalesce(f.settings, '{}'::jsonb) - 'opening_cash_set' - 'opening_stock_set', clock_timestamp())
   returning id into v_id;
   insert into member_branches (member_id, branch_id) values (m.id, v_id);
   insert into stock_levels (item_id, branch_id, qty) select i.id, v_id, 0 from inventory_items i where i.business_id = v_business;

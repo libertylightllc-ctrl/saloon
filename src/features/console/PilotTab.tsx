@@ -16,6 +16,9 @@ import {
   type PilotApplication,
 } from './api';
 
+/** A code's shape, as an example in the field (not words to translate). */
+const EXAMPLE_CODE = 'PILOT-DXB-07';
+
 /** The approved salon's message, in the language it chose, ready to send on WhatsApp. */
 function useWelcome() {
   const { i18n } = useTranslation();
@@ -122,7 +125,7 @@ export function PilotTab() {
 
       <Text variant="h4">{t('console.pilot.codes')}</Text>
       <Card variant="outlined" style={styles.card} testID="console-pilot-new">
-        <TextField label={t('console.pilot.code')} placeholder="PILOT-DXB-07" value={code} onChangeText={setCode} autoCapitalize="characters" maxLength={40} testID="pilot-new-code" />
+        <TextField label={t('console.pilot.code')} placeholder={EXAMPLE_CODE} value={code} onChangeText={setCode} autoCapitalize="characters" maxLength={40} testID="pilot-new-code" />
         <TextField label={t('console.pilot.days')} placeholder="90" value={days} onChangeText={setDays} keyboardType="number-pad" testID="pilot-new-days" />
         <TextField label={t('console.pilot.maxUses')} value={uses} onChangeText={setUses} keyboardType="number-pad" testID="pilot-new-uses" />
         <TextField label={t('console.pilot.expires')} placeholder="2027-01-31" value={expires} onChangeText={setExpires} maxLength={10} />

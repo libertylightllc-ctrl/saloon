@@ -7,6 +7,10 @@
  */
 import { createHmac } from 'crypto';
 
+import { addMonths } from 'date-fns/addMonths';
+import { format } from 'date-fns/format';
+import { parseISO } from 'date-fns/parseISO';
+
 import { admin, createOwner, createStaff, makePlatformAdmin } from './support/api';
 import { SUPABASE_URL } from './support/env';
 import { expect, test } from './support/fixtures';
@@ -47,7 +51,7 @@ test('an owner pays 6 months by card: one payment with the extra person, the pla
   const requestId = asked.get('request')!;
   expect(asked.get('success')).toMatch(new RegExp(`/plan\\?paid=${requestId}$`));
   const { data: pending } = await admin.from('card_payments').select('status, checkout_id, amount_minor, extra_people').eq('id', requestId).single();
-  expect(pending).toMatchObject({ status: 'pending', amount_minor: 5094, extra_people: 1 });
+  expect(pending).toMatchObject({ status: 'pending', amount_minor: 9169, extra_people: 1 });
 
   // Creem tells us it is paid (with 5% UAE VAT on top).
   const event = JSON.stringify({
@@ -76,9 +80,9 @@ test('an owner pays 6 months by card: one payment with the extra person, the pla
   expect(await (await send(event, sign(event))).json()).toMatchObject({ result: 'duplicate' });
 
   const { data: after } = await admin.from('subscriptions').select('paid_until, access_type').eq('business_id', owner.businessId).single();
-  const expected = new Date(`${before!.paid_until}T00:00:00Z`);
-  expected.setUTCMonth(expected.getUTCMonth() + 6);
-  expect(after).toMatchObject({ paid_until: expected.toISOString().slice(0, 10), access_type: 'paid' });
+  // Six months on, kept within the month as the database does (31 Dec + 6 months = 30 Jun).
+  const expected = format(addMonths(parseISO(before!.paid_until as string), 6), 'yyyy-MM-dd');
+  expect(after).toMatchObject({ paid_until: expected, access_type: 'paid' });
 
   // Back from Creem: paid, the plan on.
   await page.goto(`/plan?paid=${requestId}`);
