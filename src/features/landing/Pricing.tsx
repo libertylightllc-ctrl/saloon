@@ -26,11 +26,9 @@ export function Pricing({ startLabel, onStart, onLayoutRange }: { startLabel: st
         <Text variant={compact ? 'sectionCompact' : 'section'} align="center" style={styles.white} accessibilityRole="header">
           {t('auth.landing.pricing.title')}
         </Text>
-        {p.trialDays > 0 ? (
-          <Text variant="h3" align="center" style={styles.teal} testID="landing-trial">
-            {t('auth.landing.pricing.trial', { count: p.trialDays })}
-          </Text>
-        ) : null}
+        <Text variant="h3" align="center" style={styles.teal} testID="landing-trial">
+          {t('auth.landing.pricing.trial')}
+        </Text>
         <View style={styles.card}>
           <Text variant={compact ? 'heroCompact' : 'hero'} tabular style={styles.white} testID="landing-price">
             {p.price}
@@ -61,12 +59,6 @@ export function Pricing({ startLabel, onStart, onLayoutRange }: { startLabel: st
             ) : null}
           </View>
         </View>
-        {/* On a phone the FAQ and the line under the button say the same (brief 2.14). */}
-        {compact ? null : (
-          <Text align="center" style={[styles.muted, styles.note]}>
-            {t('auth.landing.pricing.note')}
-          </Text>
-        )}
       </Band>
     </View>
   );

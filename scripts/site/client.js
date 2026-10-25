@@ -1,5 +1,6 @@
-/* The home page's small script (website brief 4.1): the visitor's price, today's prices, the phone's sticky bar,
-   sideways rows, the video, and the hand-over to the app (salon type and language, as the app stores them).
+/* The home page's small script (website brief 4.1; full update brief): the visitor's currency (and the footer's
+   AED | USD switch), the price calculator, the menus, sideways rows, the video, and the hand-over to the app (salon
+   type and language, as the app stores them).
    window.SQ is written by page.mjs. Everything here is optional: the page works without it. */
 (function () {
   var SQ = window.SQ;
@@ -17,52 +18,71 @@
     } catch (e) {}
   };
 
-  // Where the visitor is: by IP (Vercel's /api/geo), else the time zone guess already made in <head>.
-  if (window.fetch && window.AbortController) {
+  // Where the visitor is: by IP (Vercel's /api/geo), else the time zone guess already made in <head> — unless the
+  // visitor picked a currency in the footer (remembered; it wins).
+  if (!doc.hasAttribute('data-cur') && window.fetch && window.AbortController) {
     var stop = new AbortController();
     setTimeout(function () { stop.abort(); }, 1500);
     fetch('/api/geo', { signal: stop.signal })
       .then(function (r) { return r.ok && /json/.test(r.headers.get('content-type') || '') ? r.json() : null; })
-      .then(function (g) { if (g && /^[A-Z]{2}$/.test(g.country || '')) doc.setAttribute('data-uae', g.country === 'AE' ? '1' : '0'); })
-      .catch(function () {});
-  }
-
-  // Today's prices (the terms charge "the price shown on our website"): the page was built with them; if they have
-  // changed since, the price texts are written again.
-  var money = function (minor, currency) {
-    return currency + ' ' + (minor / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  };
-  var fill = function (template, values) {
-    return template.replace(/\{\{\s*(\w+)\s*\}\}/g, function (_, k) {
-      return SQ.rtl ? '⁨' + values[k] + '⁩' : String(values[k]);
-    });
-  };
-  if (SQ.prices && window.fetch) {
-    var base = !SQ.supabase || SQ.supabase === 'auto' ? 'http://' + location.hostname + ':54321' : SQ.supabase.replace(/\/$/, '');
-    fetch(base + '/rest/v1/platform_settings?select=price_per_branch_minor,currency,intl_price_per_branch_minor,intl_currency,included_people,extra_person_minor,intl_extra_person_minor', { headers: { apikey: SQ.key } })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (rows) {
-        var p = rows && rows[0];
-        if (!p || JSON.stringify(p) === JSON.stringify(SQ.prices)) return;
-        var sets = {
-          uae: { minor: p.price_per_branch_minor, extra: p.extra_person_minor, currency: p.currency },
-          intl: { minor: p.intl_price_per_branch_minor, extra: p.intl_extra_person_minor, currency: p.intl_currency },
-        };
-        document.querySelectorAll('[data-price]').forEach(function (el) {
-          var s = sets[el.className];
-          if (!s) return;
-          var price = money(s.minor, s.currency);
-          var extra = money(s.extra, s.currency);
-          var perDay = money(Math.ceil(s.minor / 30), s.currency);
-          var kind = el.getAttribute('data-price');
-          el.textContent = kind === 'price' ? price : fill(SQ.texts[kind], { price: price, extra: extra, people: p.included_people });
-        });
-        document.querySelectorAll('[data-people]').forEach(function (el) {
-          el.textContent = fill(SQ.texts.per, { people: p.included_people });
-        });
+      .then(function (g) {
+        if (g && /^[A-Z]{2}$/.test(g.country || '') && !doc.hasAttribute('data-cur')) {
+          doc.setAttribute('data-uae', g.country === 'AE' ? '1' : '0');
+          calc();
+        }
       })
       .catch(function () {});
   }
+
+  // The price calculator (full update brief, Phase 2): branches × (the base for up to N people + each extra person),
+  // for the billing length picked, in the visitor's currency.
+  var price = function (minor, currency) {
+    var whole = minor % 100 === 0;
+    return currency + '\u00a0' + (minor / 100).toLocaleString('en-US', { minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: whole ? 0 : 2 });
+  };
+  var fill = function (template, value) {
+    return template.replace(/\{\{\s*price\s*\}\}/, SQ.rtl ? '\u2068' + value + '\u2069' : value);
+  };
+  var form = document.querySelector('[data-calc-form]');
+  function calc() {
+    if (!form || !SQ.sets) return;
+    var set = SQ.sets[doc.getAttribute('data-uae') === '1' ? 'uae' : 'intl'];
+    var branches = Number(form.querySelector('[data-calc="branches"]').value);
+    var people = Number(form.querySelector('[data-calc="people"]').value);
+    var months = Number(form.querySelector('[data-calc="months"]').value);
+    var length = SQ.lengths.filter(function (l) { return l.months === months; })[0] || SQ.lengths[0];
+    var monthly = set.base + Math.max(0, people - SQ.people) * set.extra;
+    var total = Math.round((branches * monthly * length.payTenths) / 10);
+    form.querySelector('[data-calc-total]').textContent = fill(SQ.texts.total, price(total, set.currency));
+    form.querySelector('[data-calc-each]').textContent = fill(SQ.texts.perBranch, price(Math.round(total / branches / months), set.currency));
+  }
+  if (form) {
+    form.addEventListener('change', calc);
+    form.querySelector('[data-calc="people"]').value = String(SQ.people);
+    calc();
+  }
+
+  // AED | USD in the footer: overrides where the visitor is, remembered on this device.
+  var markCurrency = function () {
+    var aed = doc.getAttribute('data-uae') === '1';
+    document.querySelectorAll('[data-currency]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String((b.getAttribute('data-currency') === 'AED') === aed));
+    });
+  };
+  markCurrency();
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-currency]');
+    if (!b) return;
+    var cur = b.getAttribute('data-currency');
+    doc.setAttribute('data-uae', cur === 'AED' ? '1' : '0');
+    doc.setAttribute('data-cur', cur);
+    try {
+      if (store) store.setItem('sq.currency', cur);
+    } catch (err) {}
+    markCurrency();
+    calc();
+    track('currency', { currency: cur });
+  });
 
   // Someone who already picked a salon type on this device goes straight to the sign-up (as the app's home page).
   var type = store && store.getItem('device.salonType');
@@ -106,9 +126,14 @@
   document.querySelectorAll('details[data-faq]').forEach(function (d) {
     d.addEventListener('toggle', function () { if (d.open) track('faq_open', { question: d.getAttribute('data-faq') }); });
   });
-  // The language menu closes when tapping elsewhere.
+  // The language menu and the header's menu close when tapping elsewhere, and the menu after following a link.
   document.addEventListener('click', function (e) {
-    document.querySelectorAll('details.lang[open]').forEach(function (d) { if (!d.contains(e.target)) d.open = false; });
+    document.querySelectorAll('details.lang[open], details.menu[open]').forEach(function (d) {
+      if (!d.contains(e.target) || (e.target.closest && e.target.closest('details.menu a'))) d.open = false;
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') document.querySelectorAll('details.lang[open], details.menu[open]').forEach(function (d) { d.open = false; });
   });
 
   // Sideways rows: the dot of the card in view.
@@ -122,31 +147,4 @@
     }, { passive: true });
   });
 
-  // The sticky bar (phones): once the hero's button has scrolled away, never over the price or the last call.
-  var bar = document.getElementById('sticky');
-  var cta = document.getElementById('hero-cta');
-  var pricing = document.getElementById('pricing');
-  var final = document.getElementById('final');
-  var onScreen = function (el) {
-    if (!el) return false;
-    var r = el.getBoundingClientRect();
-    return r.top < window.innerHeight && r.bottom > 0;
-  };
-  var queued = false;
-  var update = function () {
-    queued = false;
-    var show = window.innerWidth < 640 && cta.getBoundingClientRect().bottom < 0 && !onScreen(pricing) && !onScreen(final);
-    if (bar.hidden === show) bar.hidden = !show;
-  };
-  var later = function () {
-    if (!queued) {
-      queued = true;
-      requestAnimationFrame(update);
-    }
-  };
-  if (bar && cta) {
-    window.addEventListener('scroll', later, { passive: true });
-    window.addEventListener('resize', later);
-    update();
-  }
 })();

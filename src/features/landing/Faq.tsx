@@ -15,15 +15,19 @@ import { useLandingPrice } from './price';
 
 export const FAQ_KEYS = [
   'price',
-  'trial',
+  'free',
+  'branches',
+  'uaeCost',
   'card',
+  'staffSignIn',
+  'languages',
+  'types',
   'data',
   'staff',
   'printer',
   'devices',
-  // [confirm] No integration is claimed: the booking app is kept alongside, nothing is synced.
+  'homeScreen',
   'bookingApp',
-  // [confirm] Wording: any country, its currency and its sales tax.
   'countries',
 ] as const;
 
@@ -32,14 +36,11 @@ export function Faq({ onOpen }: { onOpen?: (key: string) => void }) {
   const { compact } = useLandingLayout();
   const price = useLandingPrice();
   const [open, setOpen] = useState<string | null>(null);
+  // Answers with the visitor's price (full update brief: per branch, from the one pricing config).
   const answer = (k: (typeof FAQ_KEYS)[number]) =>
-    k === 'price'
-      ? price
-        ? t('auth.landing.faq.price.a', { price: price.price, people: price.people, extra: price.extra })
-        : t('auth.landing.faq.price.aNoPrice')
-      : k === 'trial'
-        ? t('auth.landing.faq.trial.a', { count: price?.trialDays ?? 7 })
-        : t(`auth.landing.faq.${k}.a`);
+    k === 'price' && !price
+      ? t('auth.landing.faq.price.aNoPrice')
+      : t(`auth.landing.faq.${k}.a`, { price: price?.price ?? '', people: price?.people ?? 4, extra: price?.extra ?? '' });
 
   // The same questions for search engines (FAQPage), in the page's language.
   useEffect(() => {
@@ -52,7 +53,7 @@ export function Faq({ onOpen }: { onOpen?: (key: string) => void }) {
       '@type': 'FAQPage',
       mainEntity: FAQ_KEYS.map((k) => ({
         '@type': 'Question',
-        name: t(`auth.landing.faq.${k}.q`, { count: price?.trialDays ?? 7 }),
+        name: t(`auth.landing.faq.${k}.q`),
         acceptedAnswer: { '@type': 'Answer', text: answer(k) },
       })),
     });
@@ -83,7 +84,7 @@ export function Faq({ onOpen }: { onOpen?: (key: string) => void }) {
                 testID={`landing-faq-${k}`}
               >
                 <Text variant="bodyStrong" style={[styles.ink, styles.flex]}>
-                  {t(`auth.landing.faq.${k}.q`, { count: price?.trialDays ?? 7 })}
+                  {t(`auth.landing.faq.${k}.q`)}
                 </Text>
                 <Icon name={isOpen ? 'minus' : 'plus'} size={20} color={B.tealDeep} />
               </Pressable>

@@ -31,8 +31,8 @@ function fonts(lang) {
 function structuredData(c, url) {
   const offers = c.prices
     ? [
-        { '@type': 'Offer', price: (c.prices.raw.intl / 100).toFixed(2), priceCurrency: c.prices.intl.currency, description: c.t('auth.landing.pricing.per', { people: c.prices.people }) },
-        { '@type': 'Offer', price: (c.prices.raw.uae / 100).toFixed(2), priceCurrency: c.prices.uae.currency, eligibleRegion: { '@type': 'Country', name: 'AE' } },
+        { '@type': 'Offer', price: (c.prices.uae.baseMinor / 100).toFixed(2), priceCurrency: c.prices.uae.currency, eligibleRegion: { '@type': 'Country', name: 'AE' }, description: c.t('auth.landing.pricing.per', { people: c.prices.people }) },
+        { '@type': 'Offer', price: (c.prices.intl.baseMinor / 100).toFixed(2), priceCurrency: c.prices.intl.currency, description: c.t('auth.landing.pricing.per', { people: c.prices.people }) },
       ]
     : undefined;
   const app = {
@@ -46,13 +46,13 @@ function structuredData(c, url) {
     description: c.t('meta.welcome.description'),
     image: `${c.brand.website}/og-image.jpg`,
     ...(offers ? { offers } : {}),
-    ...(c.trialDays > 0 ? { featureList: c.t('auth.landing.pricing.trial', { count: c.trialDays }) } : {}),
+    featureList: c.t('auth.landing.pricing.trial'),
   };
-  // The questions for search engines, with the international price (as most crawlers see it).
+  // The questions for search engines, with the AED prices (Saloqo's own market; the page shows both).
   const faq = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: FAQ_KEYS.map((k) => ({ '@type': 'Question', name: faqQuestion(c, k), acceptedAnswer: { '@type': 'Answer', text: faqAnswer(c, k, c.prices?.intl ?? null) } })),
+    mainEntity: FAQ_KEYS.map((k) => ({ '@type': 'Question', name: faqQuestion(c, k), acceptedAnswer: { '@type': 'Answer', text: faqAnswer(c, k, c.prices?.uae ?? null) } })),
   };
   const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
   return `<script type="application/ld+json">${json(app)}</script><script type="application/ld+json" id="faq-jsonld">${json(faq)}</script>`;

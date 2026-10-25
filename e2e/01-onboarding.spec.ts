@@ -18,8 +18,8 @@ test('fresh device → type → themed sign-in → owner sign-up → setup → e
   await id(page, 'link-sign-up').click();
   await expect(id(page, 'salon-type-gents')).toHaveCount(0);
   await expect(field(page, 'confirm')).toHaveCount(0);
-  await expect(id(page, 'auth-offer')).toHaveText('7 days free · No card needed · Nothing renews by itself');
-  await expect(id(page, 'sign-up-offer-small')).toHaveText('7 days free · No card needed · Nothing renews by itself');
+  await expect(id(page, 'auth-offer')).toHaveText('Free to start · No card needed · No auto-renewal');
+  await expect(id(page, 'sign-up-offer-small')).toHaveCount(0);
   await expect(id(page, 'sign-up-to-sign-in')).toBeVisible();
   await id(page, 'sign-up-submit').click();
   await expect(text(page, 'Required').first()).toBeVisible(); // validation before any request

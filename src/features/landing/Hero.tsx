@@ -16,6 +16,7 @@ import ladiesHome from '../../../assets/images/landing/ladies-home.webp';
 import queueCard from '../../../assets/images/landing/queue-card.webp';
 import star from '../../../assets/images/splash-icon.png';
 import { demoHref, hasWhatsApp, whatsappUrl } from './contact';
+import { useVisitorInUae } from './visitor';
 import { Band, BrandButton, Eyebrow, NavyBackdrop, PhoneShot, useLandingLayout } from './parts';
 
 const FACTS: { key: 'booking' | 'languages' | 'devices' | 'private'; icon: IconName }[] = [
@@ -46,6 +47,7 @@ export function Hero({
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { wide, compact } = useLandingLayout();
+  const uae = useVisitorInUae();
   const cta = useRef<View>(null);
   const facts = (
     <View style={styles.facts}>
@@ -86,7 +88,8 @@ export function Hero({
           <View style={[styles.copy, wide && styles.copyWide, compact && styles.copyCompact]}>
             <Eyebrow label={t('auth.landing.eyebrow')} onNavy />
             <Text variant={compact ? 'heroCompact' : 'hero'} style={[styles.onNavy, styles.headline]} accessibilityRole="header">
-              {t('auth.landing.headline')}
+              {/* "…to the last dirham" for UAE visitors, "…to the last cent" for everyone else (full update brief). */}
+              {t(uae === false ? 'auth.landing.headlineIntl' : 'auth.landing.headline')}
             </Text>
             <Text variant="lead" style={styles.muted}>
               {t(compact ? 'auth.landing.leadShort' : 'auth.landing.lead')}
@@ -117,14 +120,7 @@ export function Hero({
                 {t('auth.landing.trust.dataYours')}
               </Text>
             </View>
-            {compact ? null : (
-              <>
-                <Text variant="small" style={styles.muted}>
-                  {t('auth.landing.staffNote')}
-                </Text>
-                {facts}
-              </>
-            )}
+            {compact ? null : facts}
           </View>
           {/* On a phone the app shows on the first screen, a little cropped (brief 2.1). */}
           <View style={compact ? styles.visualCrop : undefined} testID="landing-hero-visual">

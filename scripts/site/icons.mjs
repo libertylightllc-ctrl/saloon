@@ -15,6 +15,7 @@ const FILES = {
   chevronRight: 'chevron-right',
   clock: 'clock',
   languages: 'languages',
+  menu: 'menu',
   messageCircle: 'message-circle',
   minus: 'minus',
   play: 'play',

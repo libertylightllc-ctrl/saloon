@@ -555,12 +555,12 @@
       "staffHelp": "El dueño crea los accesos del personal. Pídele el código del salón, tu usuario y tu contraseña."
     },
     "signUp": {
-      "title": "Crea tu cuenta",
+      "title": "Prueba Saloqo gratis",
       "subtitle": "Para el dueño del salón. El personal tendrá sus propios accesos más adelante.",
       "action": "Crear cuenta",
       "haveAccount": "¿Ya tienes una cuenta?",
       "signIn": "Inicia sesión",
-      "offer": "{{count}} días gratis · Sin tarjeta · Nada se renueva solo"
+      "offer": "Empieza gratis · Sin tarjeta · Sin renovación automática"
     },
     "forgot": {
       "title": "Restablecer contraseña",
@@ -574,10 +574,9 @@
     },
     "landing": {
       "signIn": "Iniciar sesión",
-      "headline": "Gestiona tu salón desde el teléfono",
-      "lead": "Clientes sin cita y reservas, ventas rápidas, cierre de caja diario, pagos del personal y recordatorios de licencias: una sola app para barberías y salones y spas de damas, estés donde estés.",
+      "headline": "Tu salón, cuadrado hasta el último dírham.",
+      "lead": "Cola, ventas, cierre de caja, pagos al equipo y avisos de licencias en una sola app, en 7 idiomas. Hecha en Dubái para barberías, salones y spas.",
       "create": "Crea tu salón — gratis",
-      "staffNote": "Los dueños crean el salón. El personal inicia sesión con el usuario que le da el dueño.",
       "choose": "Elegir",
       "facts": {
         "languages": "English · العربية · हिन्दी · اردو · Español · Français · Português",
@@ -594,7 +593,8 @@
         },
         "sale": {
           "title": "Venta rápida y recibos",
-          "body": "Servicios y productos, pagos mixtos, propinas y tu impuesto sobre las ventas (IVA, GST…); imprime, comparte o envía el recibo por WhatsApp."
+          "body": "Servicios y productos, pagos divididos, propinas e IVA; recibos fiscales con tu TRN para imprimir o enviar por WhatsApp.",
+          "bodyIntl": "Servicios y productos, pagos divididos, propinas y tu impuesto sobre ventas; recibos fiscales con tu número fiscal para imprimir o enviar por WhatsApp."
         },
         "closing": {
           "title": "Cierre de caja diario",
@@ -606,17 +606,17 @@
           "bodyIntl": "Turnos, fichaje con avisos de retraso, comisiones, anticipos y nóminas."
         },
         "compliance": {
-          "title": "Licencias e inspecciones",
-          "body": "Licencias, contratos de alquiler, tarjetas de salud y visas con recordatorios de vencimiento, un registro de higiene y una carpeta para inspecciones, con la lista de control de los EAU incluida.",
-          "bodyIntl": "Licencias, contratos de alquiler, carnés sanitarios y permisos con avisos de caducidad, un registro diario de higiene y un dosier para inspecciones."
+          "title": "No te pierdas ninguna renovación",
+          "body": "Licencia comercial, alquiler, tarjetas sanitarias y visados, con avisos antes de que caduquen. Listo para inspecciones, con registro de higiene y carpeta.",
+          "bodyIntl": "Licencias, alquileres, tarjetas sanitarias y permisos, con avisos antes de que caduquen. Listo para inspecciones, con registro de higiene y carpeta."
         },
         "stock": {
           "title": "Stock, proveedores y gastos",
           "body": "Productos y consumibles, alertas de poco stock, facturas y pagos a proveedores, fotos de recibos."
         },
         "reports": {
-          "title": "Libros e informes",
-          "body": "Contabilidad por partida doble, cierre de mes y seis informes en PDF y CSV para tu contador."
+          "title": "Contabilidad lista para tu gestor",
+          "body": "Libro de doble entrada, cierre de mes y seis informes, en PDF o en Excel como CSV."
         },
         "roles": {
           "title": "El acceso justo para cada persona",
@@ -636,22 +636,42 @@
       },
       "pricing": {
         "title": "Precios sencillos",
-        "per": "al mes, para hasta {{people}} personas",
-        "note": "Un solo precio para todo el salón, con las sucursales que sean. Configurar es siempre gratis; paga mes a mes y nada se renueva solo.",
-        "extra": "luego {{price}} al mes por cada persona adicional que inicie sesión",
-        "trial": "Prueba todas las funciones gratis durante {{count}} días. Sin tarjeta.",
+        "per": "por sucursal, hasta {{people}} personas",
+        "extra": "+ {{price}} al mes por cada persona más",
+        "trial": "Prueba todas las funciones gratis. Sin tarjeta.",
         "points": {
           "everything": "Todas las funciones incluidas",
           "languages": "Los 7 idiomas",
           "support": "Ayuda y soporte en la app"
         },
-        "perDay": "Menos de {{price}} al día"
+        "perDay": "Menos de {{price}} al día",
+        "monthly": "Mensual",
+        "sixMonths": "6 meses",
+        "twelveMonths": "12 meses",
+        "aMonth": "{{price}} al mes",
+        "save": "{{price}} · ahorra un {{percent}} %",
+        "free": "{{price}} · {{count}} meses gratis",
+        "best": "Mejor precio",
+        "everyPlan": "Todas las funciones en todos los planes",
+        "inEveryPlan": "El stock, el fichaje y el cierre de caja diario están en todos los planes.",
+        "features": {
+          "queue": "Cola en directo y reservas",
+          "bookingPage": "Página de reservas gratis, sin comisión",
+          "sale": "Venta rápida y recibos",
+          "closing": "Cierre de caja diario",
+          "roles": "Roles y accesos del equipo",
+          "payroll": "Fichaje, comisiones y nóminas",
+          "payrollUae": "Fichaje, comisiones y nóminas con justificante WPS",
+          "stock": "Stock y proveedores",
+          "reminders": "Avisos de licencias, visados y tarjetas sanitarias",
+          "books": "Contabilidad e informes",
+          "branches": "Todas las sucursales con un solo acceso de dueño",
+          "languages": "7 idiomas"
+        }
       },
       "contact": "¿Tienes preguntas? Escribe a {{email}}",
       "about": "Acerca de {{app}}",
       "eyebrow": "Para barberías, salones, spas y estudios de uñas y belleza",
-      "start": "Empieza gratis {{count}} días",
-      "start_one": "Empieza gratis {{count}} día",
       "noCard": "Sin tarjeta · Listo en minutos",
       "balanced": "Caja cuadrada",
       "owners": {
@@ -667,19 +687,19 @@
           "reports": "Informes listos para tu contable"
         }
       },
-      "finalTitle": "Todo tu salón en una sola app",
-      "finalLead": "Configúralo hoy; mañana tu equipo entra con sus propios accesos.",
-      "leadShort": "Reservas, ventas, cierre de caja y sueldos del personal, en una sola app.",
+      "finalTitle": "Configúralo esta noche.",
+      "finalLead": "Tu equipo entra mañana.",
+      "leadShort": "Cola, ventas, cierre de caja, pagos al equipo y avisos de licencias en una sola app, en 7 idiomas. Hecha en Dubái para barberías, salones y spas.",
       "whatsapp": "Escríbenos por WhatsApp",
       "seeHow": "Mira cómo funciona",
       "demo": "Reserva una demo",
       "trust": {
         "dataYours": "Tus datos son tuyos: expórtalos cuando quieras",
-        "noRenew": "Nada se renueva solo"
+        "noRenew": "Sin renovación automática. Sin permanencia."
       },
       "keep": {
         "title": "¿Ya usas una app de reservas? Quédatela.",
-        "body": "Saloqo lleva lo que ella no hace: cierre de caja diario, stock, sueldos del personal y avisos de licencias."
+        "body": "Saloqo añade lo que le falta: cierre de caja cada noche, stock, pagos al equipo y avisos de licencias."
       },
       "swipe": "Tarjeta {{n}} de {{total}}",
       "proof": {
@@ -689,7 +709,7 @@
         "madeIn": "Hecho en {{place}}"
       },
       "place": {
-        "dubai": "Dubái, EAU"
+        "dubai": "Dubái"
       },
       "video": {
         "title": "Mira Saloqo en 90 segundos",
@@ -699,20 +719,16 @@
         "title": "Lo que preguntan los dueños de salones",
         "price": {
           "q": "¿Cuánto cuesta?",
-          "a": "{{price}} al mes para hasta {{people}} personas que inician sesión, y {{extra}} al mes por cada persona más. Un solo precio para todo el salón, con cualquier número de sucursales. Configurarlo es gratis.",
-          "aNoPrice": "Un precio mensual para todo el salón, con cualquier número de sucursales, según cuántas personas inician sesión. Configurarlo es gratis."
-        },
-        "trial": {
-          "q": "¿Qué pasa después de la prueba de {{count}} días?",
-          "a": "Eliges un plan de 1, 3, 6 o 12 meses. Nada se renueva solo. Si no pagas, tus datos se quedan: puedes seguir entrando, verlos y exportarlos."
+          "a": "{{price}} al mes por sucursal, hasta {{people}} personas que entran en ella, y {{extra}} al mes por cada persona más. Paga 1 mes, 6 meses con un 10 % de descuento o 12 meses al precio de 10. Sin renovación automática ni permanencia.",
+          "aNoPrice": "Un precio mensual por sucursal, según cuántas personas entran en ella. Paga 1, 6 o 12 meses. Sin renovación automática ni permanencia."
         },
         "card": {
           "q": "¿Necesito una tarjeta para empezar?",
-          "a": "No. La prueba gratis no necesita tarjeta."
+          "a": "No. Probarlo es gratis y no necesita tarjeta."
         },
         "data": {
           "q": "¿Mis datos están seguros? ¿Puedo exportarlos?",
-          "a": "Los datos de tu salón son tuyos y privados de tu salón. Expórtalos todos cuando quieras, en hojas de cálculo."
+          "a": "Todas las conexiones van cifradas, la propia base de datos separa los datos de cada salón y cada persona ve solo lo que necesita para su trabajo. Tus datos son tuyos: expórtalos todos cuando quieras."
         },
         "staff": {
           "q": "¿Mi personal puede ver mis beneficios?",
@@ -727,14 +743,77 @@
           "a": "Sí: en móviles, tabletas y ordenadores, en 7 idiomas: inglés, árabe, hindi, urdu, español, francés y portugués."
         },
         "bookingApp": {
-          "q": "Ya uso una app de reservas, ¿puedo quedármela?",
-          "a": "Sí. Quédatela para las reservas; Saloqo lleva tu cierre de caja diario, el stock y los sueldos del personal."
+          "q": "Ya uso una app de reservas: ¿puedo quedármela?",
+          "a": "Sí. Quédatela para las reservas; Saloqo añade lo que le falta: cierre de caja cada noche, stock, pagos al equipo y avisos de licencias."
         },
         "countries": {
           "q": "¿En qué países funciona?",
           "a": "En cualquier país: al configurarlo eliges tu país, moneda e impuesto sobre ventas (IVA, GST y otros)."
+        },
+        "free": {
+          "q": "¿Cuánto tiempo es gratis?",
+          "a": "Verás tu periodo gratuito en la app, en Más → Plan y facturación. Los salones del piloto tienen 3 meses gratis. Cuando termina no se cobra nada salvo que elijas un plan, y tus datos se quedan: puedes verlos y exportarlos cuando quieras."
+        },
+        "branches": {
+          "q": "¿Puedo llevar más de una sucursal?",
+          "a": "Sí. Cada sucursal cuesta {{price}} al mes hasta {{people}} personas, más {{extra}} por cada persona más. Ves todas las sucursales con un solo acceso de dueño."
+        },
+        "uaeCost": {
+          "q": "¿Cuánto cuesta un software para salones en los EAU?",
+          "a": "Saloqo cuesta {{price}} al mes por sucursal hasta {{people}} personas, con todas las funciones en todos los planes, y puedes probarlo gratis sin tarjeta."
+        },
+        "languages": {
+          "q": "¿Mi equipo puede usarlo en árabe, urdu o hindi?",
+          "a": "Sí. Cada persona elige su idioma: inglés, árabe, hindi, urdu, español, francés o portugués, con pantallas de derecha a izquierda en árabe y urdu."
+        },
+        "types": {
+          "q": "¿Sirve para salones de mujeres, barberías y spas?",
+          "a": "Sí. Elige salón de caballeros, salón y spa de damas, salón unisex o estudio de belleza y bienestar: cada uno tiene su propio aspecto, palabras y servicios de inicio, y los spas y estudios tienen cabinas."
+        },
+        "staffSignIn": {
+          "q": "¿Cómo entra mi equipo?",
+          "a": "El dueño crea el salón. El equipo entra con el código del salón y el usuario que le da el dueño."
+        },
+        "homeScreen": {
+          "q": "¿Hay que descargar una app?",
+          "a": "No hace falta descargar nada: funciona en el navegador de cualquier móvil, tableta u ordenador. Para añadirlo a la pantalla de inicio en iPhone, ábrelo en Safari, toca Compartir y luego Añadir a pantalla de inicio. En Android, ábrelo en Chrome, toca el menú y luego Instalar aplicación o Añadir a pantalla de inicio."
         }
-      }
+      },
+      "nav": {
+        "features": "Funciones",
+        "pricing": "Precios",
+        "pilot": "Piloto",
+        "faq": "Preguntas",
+        "menu": "Menú"
+      },
+      "tryFree": "Pruébalo gratis",
+      "headlineIntl": "Tu salón, cuadrado hasta el último céntimo.",
+      "calc": {
+        "title": "Calcula tu precio",
+        "branches": "Sucursales",
+        "people": "Personas por sucursal",
+        "length": "Pagar por",
+        "total": "Total: {{price}}",
+        "perBranch": "{{price}} por sucursal al mes",
+        "example1": "1 sucursal, 6 personas: {{price}} al mes",
+        "example2": "2 sucursales, 5 personas cada una: {{price}} al mes"
+      },
+      "safe": {
+        "title": "Tus datos están seguros",
+        "https": "Todas las conexiones van cifradas (HTTPS)",
+        "separate": "La propia base de datos separa los datos de cada salón",
+        "roles": "Cada persona ve solo lo que necesita para su trabajo",
+        "export": "Tus datos son tuyos: expórtalos todos cuando quieras"
+      },
+      "browser": {
+        "title": "Funciona en tu navegador",
+        "body": "Añádelo a tu pantalla de inicio: no hay nada que descargar."
+      },
+      "uaeAreas": "Para salones en Dubái, Sharjah, Abu Dabi, Ajmán, Ras al-Jaima, Fuyaira, Um al-Qaywayn y Al Ain.",
+      "currency": {
+        "label": "Moneda"
+      },
+      "askWhatsApp": "Pregúntanos por WhatsApp"
     },
     "google": {
       "action": "Continuar con Google",
@@ -2803,7 +2882,7 @@
       "description": "Lleva tu barbería, salón o spa desde el móvil: clientes sin cita y reservas, ventas rápidas y recibos, cierre de caja diario, stock, sueldos del personal y tus impuestos. Pruébalo gratis, sin tarjeta."
     },
     "signUp": {
-      "title": "Empieza tu prueba gratis de {{count}} días – Saloqo",
+      "title": "Prueba Saloqo gratis – Saloqo",
       "description": "Crea tu cuenta de propietario y configura tu salón en minutos. Sin tarjeta."
     },
     "signIn": {

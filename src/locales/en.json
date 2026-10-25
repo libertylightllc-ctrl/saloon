@@ -555,12 +555,12 @@
       "staffHelp": "Staff logins are created by the owner. Ask them for your salon code, username and password."
     },
     "signUp": {
-      "title": "Create your account",
+      "title": "Try Saloqo free",
       "subtitle": "For the salon owner. Staff get their own logins later.",
       "action": "Create account",
       "haveAccount": "Already have an account?",
       "signIn": "Sign in",
-      "offer": "{{count}} days free · No card needed · Nothing renews by itself"
+      "offer": "Free to start · No card needed · No auto-renewal"
     },
     "forgot": {
       "title": "Reset password",
@@ -574,10 +574,9 @@
     },
     "landing": {
       "signIn": "Sign in",
-      "headline": "Run your salon from your phone",
-      "lead": "Walk-ins and bookings, quick sales, daily cash closing, staff pay and licence reminders — one app for barber shops and ladies salons & spas, wherever you are.",
+      "headline": "Your salon, balanced to the last dirham.",
+      "lead": "Queue, sales, cash closing, staff pay and licence reminders in one app, in 7 languages. Built in Dubai for barbers, salons and spas.",
       "create": "Create your salon — free",
-      "staffNote": "Owners create the salon. Staff sign in with the username the owner gives them.",
       "choose": "Choose",
       "facts": {
         "languages": "English · العربية · हिन्दी · اردو · Español · Français · Português",
@@ -594,7 +593,8 @@
         },
         "sale": {
           "title": "Quick sale and receipts",
-          "body": "Services and products, split payments, tips and your sales tax (VAT, GST…); print, share or WhatsApp the receipt."
+          "body": "Services and products, split payments, tips and VAT; tax receipts with your TRN that you can print or send on WhatsApp.",
+          "bodyIntl": "Services and products, split payments, tips and your sales tax; tax receipts with your tax number that you can print or send on WhatsApp."
         },
         "closing": {
           "title": "Daily cash closing",
@@ -606,17 +606,17 @@
           "bodyIntl": "Rosters, clock-in with late flags, commission, advances and payroll."
         },
         "compliance": {
-          "title": "Licences and inspections",
-          "body": "Licences, leases, health cards and visas with expiry reminders, a hygiene log and an inspection binder — the UAE checklist built in.",
-          "bodyIntl": "Licences, leases, health cards and permits with expiry reminders, a daily hygiene log and an inspection binder."
+          "title": "Never miss a renewal",
+          "body": "Trade licence, lease, health cards and visas, with reminders before they expire. Inspection-ready, with a hygiene log and binder.",
+          "bodyIntl": "Licences, leases, health cards and permits, with reminders before they expire. Inspection-ready, with a hygiene log and binder."
         },
         "stock": {
           "title": "Stock, suppliers and expenses",
           "body": "Products and consumables, low-stock alerts, supplier bills and payments, receipt photos."
         },
         "reports": {
-          "title": "Books and reports",
-          "body": "Double-entry books, month close and six reports with PDF and CSV for your accountant."
+          "title": "Accountant-ready books",
+          "body": "Double-entry ledger, month-end close and six reports, exported to PDF or to Excel as CSV."
         },
         "roles": {
           "title": "The right access for everyone",
@@ -636,22 +636,42 @@
       },
       "pricing": {
         "title": "Simple pricing",
-        "per": "a month, for up to {{people}} people",
-        "note": "One price for the whole salon, however many branches. Setting up is always free; pay month by month, and nothing renews by itself.",
-        "extra": "then {{price}} a month for each extra person who signs in",
-        "trial": "Try every feature free for {{count}} days. No card needed.",
+        "per": "per branch, for up to {{people}} people",
+        "extra": "+ {{price}} a month for each extra person",
+        "trial": "Try every feature free. No card needed.",
         "points": {
           "everything": "Every feature included",
           "languages": "All 7 languages",
           "support": "Help & support in the app"
         },
-        "perDay": "Less than {{price}} a day"
+        "perDay": "Under {{price}} a day",
+        "monthly": "Monthly",
+        "sixMonths": "6 months",
+        "twelveMonths": "12 months",
+        "aMonth": "{{price}} a month",
+        "save": "{{price}} · save {{percent}}%",
+        "free": "{{price}} · {{count}} months free",
+        "best": "Best value",
+        "everyPlan": "Every feature on every plan",
+        "inEveryPlan": "Stock, clock-in and daily cash closing are in every plan.",
+        "features": {
+          "queue": "Live queue and bookings",
+          "bookingPage": "Free booking page, no commission",
+          "sale": "Quick sale and receipts",
+          "closing": "Daily cash closing",
+          "roles": "Staff roles and logins",
+          "payroll": "Clock-in, commission and payroll",
+          "payrollUae": "Clock-in, commission and payroll with WPS proof",
+          "stock": "Stock and suppliers",
+          "reminders": "Licence, visa and health-card reminders",
+          "books": "Books and reports",
+          "branches": "Every branch in one owner login",
+          "languages": "7 languages"
+        }
       },
       "contact": "Questions? Write to {{email}}",
       "about": "About {{app}}",
       "eyebrow": "For barber shops, salons, spas, nail and beauty studios",
-      "start": "Start free for {{count}} days",
-      "start_one": "Start free for {{count}} day",
       "noCard": "No card needed · Set up in minutes",
       "balanced": "Cash balanced",
       "owners": {
@@ -667,19 +687,19 @@
           "reports": "Reports ready for your accountant"
         }
       },
-      "finalTitle": "Your whole salon in one app",
-      "finalLead": "Set it up today; your team signs in tomorrow with their own logins.",
-      "leadShort": "Bookings, sales, cash closing and staff pay — in one app.",
+      "finalTitle": "Set it up tonight.",
+      "finalLead": "Your team signs in tomorrow.",
+      "leadShort": "Queue, sales, cash closing, staff pay and licence reminders in one app, in 7 languages. Built in Dubai for barbers, salons and spas.",
       "whatsapp": "WhatsApp us",
       "seeHow": "See how it works",
       "demo": "Book a demo",
       "trust": {
         "dataYours": "Your data is yours — export any time",
-        "noRenew": "Nothing renews by itself"
+        "noRenew": "No auto-renewal. No contract."
       },
       "keep": {
-        "title": "Already use a booking app? Keep it.",
-        "body": "Saloqo runs what it doesn’t: daily cash closing, stock, staff pay and licence reminders."
+        "title": "Already on a booking app? Keep it.",
+        "body": "Saloqo adds what it’s missing: nightly cash closing, stock, staff pay and licence reminders."
       },
       "swipe": "Card {{n}} of {{total}}",
       "proof": {
@@ -689,7 +709,7 @@
         "madeIn": "Made in {{place}}"
       },
       "place": {
-        "dubai": "Dubai, UAE"
+        "dubai": "Dubai"
       },
       "video": {
         "title": "See Saloqo in 90 seconds",
@@ -699,20 +719,16 @@
         "title": "Questions salon owners ask",
         "price": {
           "q": "How much does it cost?",
-          "a": "{{price}} a month for up to {{people}} people who sign in, then {{extra}} a month for each extra person. One price for the whole salon, with any number of branches. Setting up is free.",
-          "aNoPrice": "One monthly price for the whole salon, with any number of branches, set by how many people sign in. Setting up is free."
-        },
-        "trial": {
-          "q": "What happens after the {{count}}-day trial?",
-          "a": "You choose a plan for 1, 3, 6 or 12 months. Nothing renews by itself. If you don’t pay, your data stays: you can still sign in, view it and export it."
+          "a": "{{price}} a month per branch, for up to {{people}} people who sign in there, then {{extra}} a month for each extra person. Pay for 1 month, for 6 months at 10% off, or for 12 months at the price of 10. No auto-renewal, no contract.",
+          "aNoPrice": "One monthly price per branch, set by how many people sign in there. Pay for 1, 6 or 12 months. No auto-renewal, no contract."
         },
         "card": {
           "q": "Do I need a card to start?",
-          "a": "No. The free trial needs no card."
+          "a": "No. Trying it is free and needs no card."
         },
         "data": {
           "q": "Is my data safe? Can I export it?",
-          "a": "Your salon’s data belongs to you and is private to your salon. Export all of it any time, as spreadsheets."
+          "a": "Every connection is encrypted, each salon’s data is kept apart by the database itself, and each person sees only what their job needs. Your data belongs to you: export all of it any time."
         },
         "staff": {
           "q": "Can my staff see my profits?",
@@ -727,14 +743,77 @@
           "a": "Yes: on phones, tablets and computers, in 7 languages — English, Arabic, Hindi, Urdu, Spanish, French and Portuguese."
         },
         "bookingApp": {
-          "q": "I already use a booking app — can I keep it?",
-          "a": "Yes. Keep it for bookings; Saloqo runs your daily cash closing, stock and staff pay."
+          "q": "Already on a booking app — can I keep it?",
+          "a": "Yes. Keep it for bookings; Saloqo adds what it’s missing: nightly cash closing, stock, staff pay and licence reminders."
         },
         "countries": {
           "q": "Which countries does it work in?",
           "a": "Any country: set your country, currency and sales tax — VAT, GST and others — when you set up."
+        },
+        "free": {
+          "q": "How long is it free?",
+          "a": "You’ll see your free period in the app under More → Plan & billing. Pilot salons get 3 months free. When it ends, nothing is charged unless you choose a plan, and your data stays: you can view and export it any time."
+        },
+        "branches": {
+          "q": "Can I run more than one branch?",
+          "a": "Yes. Each branch is {{price}} a month for up to {{people}} people, plus {{extra}} for each extra person. You see every branch from one owner login."
+        },
+        "uaeCost": {
+          "q": "How much does salon software cost in the UAE?",
+          "a": "Saloqo is {{price}} a month per branch for up to {{people}} people, with every feature in every plan, and you can try it free with no card."
+        },
+        "languages": {
+          "q": "Can my staff use it in Arabic, Urdu or Hindi?",
+          "a": "Yes. Each person picks their own language: English, Arabic, Hindi, Urdu, Spanish, French or Portuguese, with right-to-left screens in Arabic and Urdu."
+        },
+        "types": {
+          "q": "Does it work for ladies salons, barber shops and spas?",
+          "a": "Yes. Pick a gents salon, a ladies salon & spa, a unisex salon or a beauty & wellness studio: each has its own look, words and starter services, and spas and studios get treatment rooms."
+        },
+        "staffSignIn": {
+          "q": "How do my staff sign in?",
+          "a": "Owners create the salon. Staff sign in with the salon code and the username the owner gives them."
+        },
+        "homeScreen": {
+          "q": "Is there an app to download?",
+          "a": "No download needed: it works in the browser on any phone, tablet or computer. To add it to your home screen on iPhone, open it in Safari, tap Share, then Add to Home Screen. On Android, open it in Chrome, tap the menu, then Install app or Add to Home screen."
         }
-      }
+      },
+      "nav": {
+        "features": "Features",
+        "pricing": "Pricing",
+        "pilot": "Pilot",
+        "faq": "FAQ",
+        "menu": "Menu"
+      },
+      "tryFree": "Try it free",
+      "headlineIntl": "Your salon, balanced to the last cent.",
+      "calc": {
+        "title": "Work out your price",
+        "branches": "Branches",
+        "people": "People per branch",
+        "length": "Pay for",
+        "total": "Total: {{price}}",
+        "perBranch": "{{price}} per branch per month",
+        "example1": "1 branch, 6 people: {{price}} a month",
+        "example2": "2 branches, 5 people each: {{price}} a month"
+      },
+      "safe": {
+        "title": "Your data is safe",
+        "https": "Every connection is encrypted (HTTPS)",
+        "separate": "Each salon’s data is kept apart by the database itself",
+        "roles": "Each person sees only what their job needs",
+        "export": "Your data is yours — export all of it any time"
+      },
+      "browser": {
+        "title": "Works in your browser",
+        "body": "Add it to your home screen — nothing to download."
+      },
+      "uaeAreas": "For salons in Dubai, Sharjah, Abu Dhabi, Ajman, Ras Al Khaimah, Fujairah, Umm Al Quwain and Al Ain.",
+      "currency": {
+        "label": "Currency"
+      },
+      "askWhatsApp": "Ask us on WhatsApp"
     },
     "google": {
       "action": "Continue with Google",
@@ -2802,7 +2881,7 @@
       "description": "Run your barber shop, salon or spa from your phone: walk-ins and bookings, quick sales and receipts, daily cash closing, stock, staff pay and your sales tax. Try it free, no card needed."
     },
     "signUp": {
-      "title": "Start your free {{count}}-day trial – Saloqo",
+      "title": "Try Saloqo free – Saloqo",
       "description": "Create your owner account and set up your salon in minutes. No card needed."
     },
     "signIn": {

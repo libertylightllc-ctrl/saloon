@@ -54,8 +54,12 @@ export function translator(root, code) {
     });
 }
 
-/** Money as the app shows it ("AED 50.00", "USD 13.99"): the code, a no-break space, two decimals. */
+/** Prices as the website shows them (src/config/pricing.ts priceText): "AED 50", "AED 270", "USD 13.99" — whole
+ *  amounts without ".00". */
 export function money(minor, currency) {
-  const amount = (minor / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  return `${currency}\u00a0${amount}`;
+  const digits = minor % 100 === 0 ? 0 : 2;
+  return `${currency}\u00a0${(minor / 100).toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits })}`;
 }
+
+/** A monthly amount for a whole billing length (src/config/pricing.ts lengthTotal). */
+export const lengthTotal = (monthlyMinor, length) => Math.round((monthlyMinor * length.payTenths) / 10);

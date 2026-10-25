@@ -17,7 +17,6 @@ import { Pricing } from '@/features/landing/Pricing';
 import { SocialProof } from '@/features/landing/SocialProof';
 import { FloatingWhatsApp, StickyBar } from '@/features/landing/StickyCta';
 import { TypeChoice } from '@/features/landing/TypeChoice';
-import { usePublicPrices } from '@/features/plan/api';
 import { usePageMeta } from '@/lib/pageMeta';
 import { canOfferPlans } from '@/features/plan/storePolicy';
 import { brandPalette, type Mode } from '@/theme';
@@ -31,7 +30,6 @@ export default function Welcome() {
   const { t } = useTranslation();
   const router = useRouter();
   const { salonType, setSalonType } = useSalonType();
-  const prices = usePublicPrices();
   const { compact } = useLandingLayout();
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -42,8 +40,7 @@ export default function Welcome() {
   const at = useRef({ cta: Infinity, pricing: [0, 0], final: [0, 0], features: 0, video: -1, y: 0 });
   const [sticky, setSticky] = useState(false);
 
-  const trialDays = canOfferPlans ? (prices.data?.trial_days ?? 0) : 0;
-  const startLabel = trialDays > 0 ? t('auth.landing.start', { count: trialDays }) : t('auth.landing.create');
+  const startLabel = canOfferPlans ? t('auth.landing.tryFree') : t('auth.landing.create');
   usePageMeta(t('meta.welcome.title'), t('meta.welcome.description'));
 
   const choose = (mode: Mode) => {
@@ -85,7 +82,7 @@ export default function Welcome() {
           onSignIn={() => toTypes('/sign-in')}
           onSeeHow={seeHow}
           onCtaBottom={(windowY) => (at.current.cta = windowY + at.current.y)}
-          trialLine={trialDays > 0 ? t('auth.landing.noCard') : null}
+          trialLine={canOfferPlans ? t('auth.landing.noCard') : null}
         />
         <KeepYourApp />
         <OwnerBenefits />

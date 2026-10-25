@@ -1,0 +1,8 @@
+{
+  "lengths": [
+    { "months": 1, "payTenths": 10 },
+    { "months": 6, "payTenths": 54, "saveBps": 1000 },
+    { "months": 12, "payTenths": 100, "freeMonths": 2, "bestValue": true }
+  ],
+  "perDayUnder": { "AED": 200, "USD": 50 }
+}

@@ -40,7 +40,7 @@ test.describe('a visitor in the UAE on a computer set to Paris time', () => {
 
   test('sees the UAE price', async ({ page }) => {
     await visitFrom(page, 'AE');
-    await expect(id(page, 'landing-price')).toHaveText('AED 50.00');
+    await expect(id(page, 'landing-price')).toHaveText('AED 50');
     await expect(id(page, 'landing-pricing')).not.toContainText('USD');
   });
 });

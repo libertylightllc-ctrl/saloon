@@ -12,7 +12,6 @@ import { AuthShell } from '@/features/auth/AuthShell';
 import { GoogleButton } from '@/features/auth/GoogleButton';
 import { composePhone, PhoneField, phoneNumberValid } from '@/features/auth/PhoneField';
 import { SignUpDone } from '@/features/auth/SignUpDone';
-import { usePublicPrices } from '@/features/plan/api';
 import { track } from '@/lib/analytics';
 import { usePageMeta } from '@/lib/pageMeta';
 import { spacing } from '@/theme';
@@ -33,8 +32,7 @@ type Values = z.infer<typeof schema>;
 export default function SignUp() {
   const { t } = useTranslation();
   const router = useRouter();
-  const trialDays = usePublicPrices().data?.trial_days ?? 7;
-  usePageMeta(t('meta.signUp.title', { count: trialDays }), t('meta.signUp.description'));
+  usePageMeta(t('meta.signUp.title'), t('meta.signUp.description'));
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: { name: '', email: '', password: '', phone: { dial: '971', number: '' }, whatsappOk: false },
@@ -56,8 +54,8 @@ export default function SignUp() {
     if (started) track('signup_started');
   }, [started]);
   const submit = form.handleSubmit((values) => signUp.mutate(values));
-  // The offer, under the title and again above the button (brief 3.1).
-  const offer = t('auth.signUp.offer', { count: trialDays });
+  // One line only (full update brief, Phase 5): free to start, no card, no auto-renewal — no number of days.
+  const offer = t('auth.signUp.offer');
 
   // Back: where the visitor came from, else the home page (not sign-in; brief 1.4).
   const back = () => (router.canGoBack() ? router.back() : router.replace('/welcome'));
@@ -65,14 +63,14 @@ export default function SignUp() {
   // No session yet (email confirmation on): "check your inbox", or this address already has an account.
   if (signUp.data === 'check_email' || signUp.data === 'already_registered') {
     return (
-      <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} onBack={back} panel="signUp">
+      <AuthShell title={t('auth.signUp.title')} onBack={back} panel="signUp">
         <SignUpDone outcome={signUp.data} email={form.getValues('email').trim().toLowerCase()} />
       </AuthShell>
     );
   }
 
   return (
-    <AuthShell title={t('auth.signUp.title')} subtitle={t('auth.signUp.subtitle')} offer={offer} onBack={back} panel="signUp">
+    <AuthShell title={t('auth.signUp.title')} offer={offer} onBack={back} panel="signUp">
       <View style={styles.form}>
         <GoogleButton />
         <FormTextField control={form.control} name="name" label={t('auth.fields.yourName')} autoComplete="name" />
@@ -116,9 +114,6 @@ export default function SignUp() {
           )}
         />
         <FormError error={signUp.error} />
-        <Text variant="small" color="textSecondary" align="center" testID="sign-up-offer-small">
-          {offer}
-        </Text>
         <Button label={t('auth.signUp.action')} onPress={submit} loading={signUp.isPending} testID="sign-up-submit" />
         <View style={styles.haveAccount}>
           <Text color="textSecondary">{t('auth.signUp.haveAccount')}</Text>

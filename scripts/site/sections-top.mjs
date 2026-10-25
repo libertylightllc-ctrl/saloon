@@ -54,28 +54,55 @@ function facts(c) {
   return `<ul class="facts">${items.map(([k, i, text]) => `<li class="fact-${k}">${c.icon(i, { size: 16 })}${text}</li>`).join('')}</ul>`;
 }
 
+/** The menu links (desktop: in the header; phones and tablets: in the menu). */
+const navLinks = (c) =>
+  [
+    ['#features', 'auth.landing.nav.features'],
+    ['#pricing', 'auth.landing.nav.pricing'],
+    ['#faq', 'auth.landing.nav.faq'],
+  ]
+    .map(([href, key]) => `<a href="${href}">${esc(c.t(key))}</a>`)
+    .join('');
+
+/**
+ * The sticky header (full update brief, Phase 3): logo · Features · Pricing · FAQ · language · Sign in · "Try it free"
+ * on a computer; on a phone the logo, "Try it free" (always on screen) and a menu with the rest.
+ */
+export function siteHeader(c) {
+  const t = c.t;
+  const wa = c.whatsapp
+    ? `<a class="wa-link not-phone" href="${esc(c.whatsapp)}"${external} data-event="cta_whatsapp" aria-label="${esc(t('auth.landing.whatsapp'))}">${c.icon('messageCircle', { size: 18 })}</a>`
+    : '';
+  const langs = LANGUAGES.map(
+    (l) => `<a href="${pathOf(l.code)}" hreflang="${l.code}" lang="${l.code}" data-lang="${l.code}"${l.code === c.lang ? ' aria-current="page"' : ''}>${esc(l.name)}</a>`,
+  ).join('');
+  return `<header class="site-header navy" id="top">
+<div class="inner header-inner">
+<a class="brand" href="${pathOf(c.lang)}">${img('mark-72.webp', 36, 36, '', false)}<span>${esc(c.brand.appName)}</span></a>
+<nav class="main-nav wide-only" aria-label="${esc(t('auth.landing.nav.menu'))}">${navLinks(c)}</nav>
+<div class="header-actions">${wa}<span class="not-phone">${languageMenu(c)}</span><a class="signin not-phone" href="/sign-in" data-keep-lang>${esc(t('auth.landing.signIn'))}</a>${button(c, { label: t('auth.landing.tryFree'), href: '#types', attrs: ' data-start="header"', cls: 'btn-sm' })}
+<details class="menu narrow-only"><summary aria-label="${esc(t('auth.landing.nav.menu'))}">${c.icon('menu', { size: 22 })}</summary>
+<nav class="menu-panel">${navLinks(c)}<a href="/sign-in" data-keep-lang>${esc(t('auth.landing.signIn'))}</a>${c.whatsapp ? `<a href="${esc(c.whatsapp)}"${external} data-event="cta_whatsapp">${esc(t('auth.landing.whatsapp'))}</a>` : ''}<div class="menu-langs">${c.icon('languages', { size: 16 })}${langs}</div></nav></details>
+</div>
+</div>
+</header>`;
+}
+
 export function hero(c) {
   const t = c.t;
-  const second = c.whatsapp
-    ? button(c, { label: t('auth.landing.whatsapp'), href: c.whatsapp, kind: 'whatsapp', icon: 'messageCircle', attrs: `${external} data-event="cta_whatsapp"`, cls: 'phone-only' })
-    : button(c, { label: t('auth.landing.seeHow'), href: c.site.demoVideoUrl ? '#video' : '#features', kind: 'outline', cls: 'phone-only' });
+  const ask = c.whatsapp ? `<a class="ask" href="${esc(c.whatsapp)}"${external} data-event="cta_whatsapp">${c.icon('messageCircle', { size: 16 })}<span>${esc(t('auth.landing.askWhatsApp'))}</span></a>` : '';
   const demo = c.demo ? button(c, { label: t('auth.landing.demo'), href: c.demo, kind: 'outline', attrs: `${external} data-event="cta_book_demo"`, cls: 'not-phone' }) : '';
-  return `<header class="hero navy">
+  return `<section class="hero navy" aria-labelledby="hero-title">
 <div class="backdrop glow-hero"></div>
 <div class="inner hero-inner">
-<nav class="topbar">
-<a class="brand" href="${pathOf(c.lang)}">${img('mark-72.webp', 36, 36, '', false)}<span>${esc(c.brand.appName)}</span></a>
-<div class="top-actions">${languageMenu(c)}<a class="signin" href="/sign-in" data-keep-lang>${esc(t('auth.landing.signIn'))}</a></div>
-</nav>
 <div class="hero-body">
 <div class="copy">
 <p class="eyebrow on-navy">${c.icon('sparkles', { size: 14 })}<span>${esc(t('auth.landing.eyebrow'))}</span></p>
-<h1 class="t-hero">${esc(t('auth.landing.headline'))}</h1>
-<p class="t-lead muted not-phone">${esc(t('auth.landing.lead'))}</p>
-<p class="t-lead muted phone-only">${esc(t('auth.landing.leadShort'))}</p>
-<div class="ctas" id="hero-cta">${button(c, { label: c.startLabel, href: '#types', icon: 'chevronRight', attrs: ' data-start="hero"' })}${second}${demo}</div>
-<div class="trust">${c.trialDays > 0 ? `<p>${esc(t('auth.landing.noCard'))}</p>` : ''}<p>${esc(t('auth.landing.trust.dataYours'))}</p></div>
-<p class="t-small muted not-phone">${esc(t('auth.landing.staffNote'))}</p>
+<h1 class="t-hero" id="hero-title"><span class="uae">${esc(t('auth.landing.headline'))}</span><span class="intl">${esc(t('auth.landing.headlineIntl'))}</span></h1>
+<p class="t-lead muted">${esc(t('auth.landing.lead'))}</p>
+<div class="ctas" id="hero-cta">${button(c, { label: c.startLabel, href: '#types', icon: 'chevronRight', attrs: ' data-start="hero"' })}${button(c, { label: t('auth.landing.seeHow'), href: c.site.demoVideoUrl ? '#video' : '#features', kind: 'outline', attrs: ' data-tour' })}${demo}</div>
+${ask}
+<div class="trust"><p>${esc(t('auth.landing.noCard'))}</p><p>${esc(t('auth.landing.trust.dataYours'))}</p></div>
 </div>
 <div class="hero-visual" aria-hidden="true"><div class="visual">
 ${img('star-300.webp', 300, 300, '', false).replace('<img', '<img class="star"')}
@@ -87,7 +114,7 @@ ${img('queue-card.webp', 640, 355, '', false).replace('<img', '<img class="qcard
 ${facts(c)}
 </div>
 </div>
-</header>`;
+</section>`;
 }
 
 export function keep(c) {
@@ -112,16 +139,16 @@ export function owners(c) {
 }
 
 export function proof(c) {
-  const { stats, testimonials, legalName } = c.site;
-  if (!testimonials.length && !stats.length && !legalName) return '';
+  // Real customers and numbers only (owner's config); no company name (Saloqo is not yet a registered company).
+  const { stats, testimonials } = c.site;
+  if (!testimonials.length && !stats.length) return '';
   const statsHtml = stats.length ? `<ul class="stats">${stats.map((s) => `<li><strong class="t-section">${esc(s.value)}</strong><span class="muted">${esc(s.label)}</span></li>`).join('')}</ul>` : '';
   const quotes = testimonials
     .map(
       (q) => `<figure class="quote"><blockquote class="t-lead">“${esc(q.quote)}”</blockquote><figcaption>${q.photoUrl ? `<img src="${esc(q.photoUrl)}" width="44" height="44" alt="" loading="lazy">` : ''}<span><strong>${esc(q.name)}</strong><span class="t-small muted">${esc([q.role, q.salon, q.city].filter(Boolean).join(' · '))}</span></span></figcaption></figure>`,
     )
     .join('');
-  const madeBy = legalName ? `<p class="center muted">${esc(c.t('auth.landing.proof.madeBy', { name: legalName, place: c.madeIn }))}</p>` : '';
-  return `<section class="band card proof"><div class="inner stack">${statsHtml}${quotes ? `<div class="quotes">${quotes}</div>` : ''}${madeBy}</div></section>`;
+  return `<section class="band card proof"><div class="inner stack">${statsHtml}${quotes ? `<div class="quotes">${quotes}</div>` : ''}</div></section>`;
 }
 
 const SMALL = [
@@ -138,7 +165,7 @@ const BIG = [
   ['sale', 'receipt', 'gents-sale.webp', false],
 ];
 /** WPS and the UAE checklist only for visitors in the UAE (brief 2.12); `.uae` / `.intl` are switched by the script. */
-const UAE_ONLY = ['staff', 'compliance'];
+const UAE_ONLY = ['staff', 'compliance', 'sale'];
 
 const dots = (n) => `<div class="dots" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<i${i === 0 ? ' class="on"' : ''}></i>`).join('')}</div>`;
 
@@ -150,7 +177,7 @@ export function features(c) {
       : esc(t(`auth.landing.features.${k}.body`));
   const big = BIG.map(
     ([k, i, shot, dark]) => `<article class="big${dark ? ' navy' : ''}">${dark ? '<div class="backdrop glow-tile"></div>' : ''}
-<div class="big-copy"><span class="ring${dark ? ' ring-dark' : ''}">${c.icon(i, { size: 20 })}</span><h3 class="t-h2">${esc(t(`auth.landing.features.${k}.title`))}</h3><p>${esc(t(`auth.landing.features.${k}.body`))}</p></div>
+<div class="big-copy"><span class="ring${dark ? ' ring-dark' : ''}">${c.icon(i, { size: 20 })}</span><h3 class="t-h2">${esc(t(`auth.landing.features.${k}.title`))}</h3><p>${body(k)}</p></div>
 <div class="big-shot">${phone(shot, 230, dark ? 4 : -4)}</div></article>`,
   ).join('');
   const small = SMALL.map(

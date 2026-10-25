@@ -36,48 +36,93 @@ export function steps(c) {
   return `<section class="band card steps"><div class="inner stack-lg"><h2 class="t-section center">${esc(c.t('auth.landing.stepsTitle'))}</h2><ol class="step-list">${items}</ol></div></section>`;
 }
 
-/** "AED 50.00" for UAE visitors, "USD 13.99" for everyone else; `pick` reads one price set; `kind` lets the page
- *  script write it again with today's prices (client.js). */
-const both = (c, kind, pick) =>
-  c.prices ? ['uae', 'intl'].map((r) => `<span class="${r}" data-price="${kind}">${esc(pick(c.prices[r]))}</span>`).join('') : '';
+/** The UAE visitor's text and everyone else's, side by side; site.css shows one (`html[data-uae]`). */
+const both = (c, pick) => (c.prices ? ['uae', 'intl'].map((r) => `<span class="${r}">${esc(pick(c.prices[r]))}</span>`).join('') : '');
+
+const LENGTH_LABEL = { 1: 'auth.landing.pricing.monthly', 6: 'auth.landing.pricing.sixMonths', 12: 'auth.landing.pricing.twelveMonths' };
+
+/** One billing length's card: its price line ("AED 270 · save 10%"), the per-branch rule and the way in. */
+function planCard(c, i) {
+  const t = c.t;
+  const length = c.prices.uae.lengths[i];
+  const line = (p) => {
+    const l = p.lengths[i];
+    if (l.saveBps) return t('auth.landing.pricing.save', { price: l.total, percent: l.saveBps / 100 });
+    if (l.freeMonths) return t('auth.landing.pricing.free', { price: l.total, count: l.freeMonths });
+    return t('auth.landing.pricing.aMonth', { price: l.total });
+  };
+  return `<article class="plan${length.bestValue ? ' best' : ''}" data-testid="plan-${length.months}">
+${length.bestValue ? `<p class="badge">${esc(t('auth.landing.pricing.best'))}</p>` : ''}
+<h3 class="t-h3">${esc(t(LENGTH_LABEL[length.months]))}</h3>
+<p class="plan-price">${both(c, line)}</p>
+<p class="t-small muted">${esc(t('auth.landing.pricing.per', { people: c.prices.people }))} · ${both(c, (p) => t('auth.landing.pricing.extra', { price: p.extra }))}</p>
+${button(c, { label: c.startLabel, href: '#types', attrs: ` data-start="pricing-${length.months}"`, cls: 'plan-btn' })}
+</article>`;
+}
+
+const FEATURES = ['queue', 'bookingPage', 'sale', 'closing', 'roles', 'payroll', 'stock', 'reminders', 'books', 'branches', 'languages'];
 
 export function pricing(c) {
   if (!c.prices) return '';
   const t = c.t;
   const tick = `<span class="tick" style="--s:22px">${c.icon('check', { size: 13, stroke: 2.6 })}</span>`;
-  const points = ['everything', 'languages', 'support'].map((k) => `<li>${tick}<span>${esc(t(`auth.landing.pricing.points.${k}`))}</span></li>`).join('');
-  const demo = c.demo ? button(c, { label: t('auth.landing.demo'), href: c.demo, kind: 'text', attrs: `${external} data-event="cta_book_demo"` }) : '';
+  const feature = (k) =>
+    k === 'payroll'
+      ? `<span class="uae">${esc(t('auth.landing.pricing.features.payrollUae'))}</span><span class="intl">${esc(t('auth.landing.pricing.features.payroll'))}</span>`
+      : esc(t(`auth.landing.pricing.features.${k}`));
+  const select = (name, label, options) =>
+    `<label><span>${esc(label)}</span><select name="${name}" data-calc="${name}">${options.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join('')}</select></label>`;
+  const range = (n) => Array.from({ length: n }, (_, i) => [i + 1, String(i + 1)]);
   return `<section class="band navy pricing" id="pricing"><div class="backdrop glow-pricing"></div><div class="inner stack center-items">
 <h2 class="t-section center">${esc(t('auth.landing.pricing.title'))}</h2>
-${c.trialDays > 0 ? `<p class="t-h3 teal center">${esc(t('auth.landing.pricing.trial', { count: c.trialDays }))}</p>` : ''}
-<div class="price-card">
-<p class="t-hero price" data-testid="landing-price">${both(c, 'price', (p) => p.price)}</p>
-<p class="t-lead muted" data-people>${esc(t('auth.landing.pricing.per', { people: c.prices.people }))}</p>
-<p class="t-small muted center">${both(c, 'extra', (p) => t('auth.landing.pricing.extra', { price: p.extra }))}</p>
-<p class="strong teal center" data-testid="landing-per-day">${both(c, 'perDay', (p) => t('auth.landing.pricing.perDay', { price: p.perDay }))}</p>
-<hr>
-<ul class="points">${points}</ul>
-<div class="price-cta">${button(c, { label: c.startLabel, href: '#types', icon: 'chevronRight', attrs: ' data-start="pricing"' })}<p class="t-small teal-soft center">${esc(t('auth.landing.trust.noRenew'))}</p>${demo}</div>
+<p class="t-h3 teal center" data-testid="landing-trial">${esc(t('auth.landing.pricing.trial'))}</p>
+<div class="plans">${c.prices.uae.lengths.map((_, i) => planCard(c, i)).join('')}</div>
+<p class="strong teal center" data-testid="landing-per-day">${both(c, (p) => t('auth.landing.pricing.perDay', { price: p.perDay }))}</p>
+<div class="every-plan"><h3 class="t-h3 center">${esc(t('auth.landing.pricing.everyPlan'))}</h3>
+<ul class="feature-list">${FEATURES.map((k) => `<li>${tick}<span>${feature(k)}</span></li>`).join('')}</ul>
+<p class="center teal-soft">${esc(t('auth.landing.pricing.inEveryPlan'))}</p></div>
+<form class="calc" data-calc-form aria-labelledby="calc-title" onsubmit="return false">
+<h3 class="t-h3" id="calc-title">${esc(t('auth.landing.calc.title'))}</h3>
+<div class="calc-fields">
+${select('branches', t('auth.landing.calc.branches'), range(10))}
+${select('people', t('auth.landing.calc.people'), range(20).map(([v, l]) => [v, l]))}
+${select('months', t('auth.landing.calc.length'), c.prices.uae.lengths.map((l) => [l.months, t(LENGTH_LABEL[l.months])]))}
 </div>
-<p class="muted center note not-phone">${esc(t('auth.landing.pricing.note'))}</p>
+<output class="calc-out" data-calc-out aria-live="polite"><strong data-calc-total></strong><span data-calc-each></span></output>
+<ul class="examples t-small">
+<li>${both(c, (p) => t('auth.landing.calc.example1', { price: p.example1 }))}</li>
+<li>${both(c, (p) => t('auth.landing.calc.example2', { price: p.example2 }))}</li>
+</ul>
+</form>
+<p class="t-small teal-soft center">${esc(t('auth.landing.trust.noRenew'))}</p>
 </div></section>`;
 }
 
-/** The questions, in order (src/features/landing/Faq.tsx FAQ_KEYS). */
-export const FAQ_KEYS = ['price', 'trial', 'card', 'data', 'staff', 'printer', 'devices', 'bookingApp', 'countries'];
-
-/** One answer as plain text; the price answer for one region (`p` is a price set, or null without prices). */
-export function faqAnswer(c, k, p) {
-  if (k === 'price') return p ? c.t('auth.landing.faq.price.a', { price: p.price, people: c.prices.people, extra: p.extra }) : c.t('auth.landing.faq.price.aNoPrice');
-  if (k === 'trial') return c.t('auth.landing.faq.trial.a', { count: c.trialDays || 7 });
-  return c.t(`auth.landing.faq.${k}.a`);
+/** "Your data is safe" (facts the code shows), "Works in your browser", and the emirates for UAE visitors. */
+export function trust(c) {
+  const t = c.t;
+  const items = ['https', 'separate', 'roles', 'export'].map((k) => `<li>${c.icon('shield', { size: 18 })}<span>${esc(t(`auth.landing.safe.${k}`))}</span></li>`).join('');
+  return `<section class="band card trust-band" aria-labelledby="safe-title"><div class="inner trust-grid">
+<div><h2 class="t-h2" id="safe-title">${esc(t('auth.landing.safe.title'))}</h2><ul class="safe-list">${items}</ul></div>
+<div class="browser"><span class="ring">${c.icon('smartphone', { size: 20 })}</span><h2 class="t-h2">${esc(t('auth.landing.browser.title'))}</h2><p class="muted">${esc(t('auth.landing.browser.body'))}</p></div>
+</div></section>`;
 }
 
-export const faqQuestion = (c, k) => c.t(`auth.landing.faq.${k}.q`, { count: c.trialDays || 7 });
+/** The questions, in order (as src/features/landing/Faq.tsx FAQ_KEYS). */
+export const FAQ_KEYS = ['price', 'free', 'branches', 'uaeCost', 'card', 'staffSignIn', 'languages', 'types', 'data', 'staff', 'printer', 'devices', 'homeScreen', 'bookingApp', 'countries'];
+const PRICED = ['price', 'branches', 'uaeCost'];
+
+/** One answer as plain text, with one region's prices (`p` a price set, or null without prices). */
+export function faqAnswer(c, k, p) {
+  if (k === 'price' && !p) return c.t('auth.landing.faq.price.aNoPrice');
+  return c.t(`auth.landing.faq.${k}.a`, { price: p?.price ?? '', people: c.prices?.people ?? 4, extra: p?.extra ?? '' });
+}
+
+export const faqQuestion = (c, k) => c.t(`auth.landing.faq.${k}.q`);
 
 export function faq(c) {
   const items = FAQ_KEYS.map((k) => {
-    const answer = k === 'price' && c.prices ? both(c, 'faq', (p) => faqAnswer(c, k, p)) : esc(faqAnswer(c, k, null));
+    const answer = PRICED.includes(k) && c.prices ? both(c, (p) => faqAnswer(c, k, p)) : esc(faqAnswer(c, k, null));
     return `<details class="faq-item" data-faq="${k}"><summary><span>${esc(faqQuestion(c, k))}</span>${c.icon('plus', { size: 20, cls: 'plus' })}${c.icon('minus', { size: 20, cls: 'minus' })}</summary><p class="muted">${answer}</p></details>`;
   }).join('');
   return `<section class="band mist faq" id="faq"><div class="inner stack"><h2 class="t-section center">${esc(c.t('auth.landing.faq.title'))}</h2><div class="faq-list">${items}</div></div></section>`;
@@ -94,6 +139,8 @@ ${button(c, { label: c.startLabel, href: '#types', icon: 'chevronRight', attrs: 
 
 const SOCIAL = { instagram: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube', linkedin: 'LinkedIn', facebook: 'Facebook' };
 
+/** The footer: languages, the emirates (UAE visitors), contact, legal pages, social links, AED | USD, "Made in Dubai".
+ *  No licence, TRN, company name or address (full update brief: Saloqo is not yet a registered company). */
 export function footer(c) {
   const t = c.t;
   const langs = LANGUAGES.map((l) => `<a href="${pathOf(l.code)}" hreflang="${l.code}" lang="${l.code}" data-lang="${l.code}"${l.code === c.lang ? ' aria-current="page"' : ''}>${esc(l.name)}</a>`).join('');
@@ -108,18 +155,21 @@ export function footer(c) {
     `<a href="/privacy" data-keep-lang>${esc(t('legal.privacy.title'))}</a>`,
     `<a href="/terms" data-keep-lang>${esc(t('legal.terms.title'))}</a>`,
   ].join('');
-  const social = Object.entries(c.site.social).filter(([, url]) => url);
+  // Instagram first.
+  const social = ['instagram', 'tiktok', 'linkedin', 'youtube', 'facebook'].map((k) => [k, c.site.social[k]]).filter(([, url]) => url);
   const socialHtml = social.length ? `<nav class="links">${social.map(([k, url]) => `<a href="${esc(url)}"${external}>${SOCIAL[k]}</a>`).join('')}</nav>` : '';
-  const legal = c.site.legalName ? `<p class="t-small center">${esc([c.site.legalName, c.site.legalAddress].filter(Boolean).join(' · '))}</p>` : '';
+  const currency = `<div class="currency" role="group" aria-label="${esc(t('auth.landing.currency.label'))}"><button type="button" data-currency="AED">AED</button><button type="button" data-currency="USD">USD</button></div>`;
   return `<footer class="band mist footer"><div class="inner stack-sm center-items">
+<p class="uae t-small center areas">${esc(t('auth.landing.uaeAreas'))}</p>
 <nav class="langs" aria-label="${esc(t('language.title'))}">${c.icon('languages', { size: 16 })}${langs}</nav>
-${email}<nav class="links">${links}</nav>${socialHtml}${legal}
+${email}<nav class="links">${links}</nav>${socialHtml}${currency}
 <p class="t-small center">© ${c.year} ${esc(c.brand.appName)} · ${esc(t('auth.landing.footer.madeIn', { place: c.madeIn }))}</p>
 </div></footer>`;
 }
 
-/** On a phone, the way in stays on screen (brief 2.3); on a computer, a round WhatsApp button (brief 2.4). */
-export function sticky(c) {
-  const round = (cls) => (c.whatsapp ? `<a class="wa-round ${cls}" href="${esc(c.whatsapp)}"${external} aria-label="${esc(c.t('auth.landing.whatsapp'))}" data-event="cta_whatsapp">${c.icon('messageCircle', { size: 26 })}</a>` : '');
-  return `<div class="sticky" id="sticky" hidden>${button(c, { label: c.startLabel, href: '#types', icon: 'chevronRight', attrs: ' data-start="sticky"', cls: 'full' })}${round('')}</div>${round('floating not-phone')}`;
+/** A round WhatsApp button in the corner (bottom right; bottom left in Arabic and Urdu), once a number is set. */
+export function floating(c) {
+  return c.whatsapp
+    ? `<a class="wa-round floating" href="${esc(c.whatsapp)}"${external} aria-label="${esc(c.t('auth.landing.whatsapp'))}" data-event="cta_whatsapp">${c.icon('messageCircle', { size: 26 })}</a>`
+    : '';
 }

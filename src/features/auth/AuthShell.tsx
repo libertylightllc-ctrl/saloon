@@ -14,7 +14,6 @@ import { brand } from '@/config/brand';
 import { site } from '@/config/site';
 import { ContactButton } from '@/features/landing/ContactButton';
 import { Band, NavyBackdrop, PhoneShot, Tick, useLandingLayout } from '@/features/landing/parts';
-import { usePublicPrices } from '@/features/plan/api';
 import { LanguageButton } from '@/features/settings/LanguageSheet';
 import { MODE_ICON, MODE_SHOT } from '@/features/mode/modeLook';
 import { brandPalette as B, MODES, spacing, useThemeMode } from '@/theme';
@@ -70,7 +69,6 @@ function BrandPanel({ onBack, panel }: { onBack?: (() => void) | true; panel: 's
   const { t } = useTranslation();
   const { mode } = useThemeMode();
   const insets = useSafeAreaInsets();
-  const trialDays = usePublicPrices().data?.trial_days ?? 0;
   const quote = site.testimonials[0];
   return (
     <View style={[styles.panel, { paddingTop: insets.top + spacing['2xl'] }]}>
@@ -80,7 +78,7 @@ function BrandPanel({ onBack, panel }: { onBack?: (() => void) | true; panel: 's
         // Sign-up: the free trial, the data line and one real customer's words when there are some (brief 3.6).
         <View style={styles.panelBody} testID="auth-panel-sign-up">
           <Text variant="section" style={styles.white}>
-            {trialDays > 0 ? t('auth.landing.start', { count: trialDays }) : t('auth.landing.headline')}
+            {t('auth.signUp.title')}
           </Text>
           <View style={styles.points}>
             {[t('auth.landing.noCard'), t('auth.landing.trust.noRenew'), t('auth.landing.trust.dataYours')].map((line) => (

@@ -45,10 +45,15 @@ function watchErrors(page: Page) {
 
 test('search engines read the words, the price and the questions without JavaScript', async ({ request }) => {
   const html = await (await request.get(`${site}/`)).text();
-  expect(html).toContain('<h1 class="t-hero">Run your salon from your phone</h1>');
+  expect(html).toContain('<span class="uae">Your salon, balanced to the last dirham.</span><span class="intl">Your salon, balanced to the last cent.</span>');
   expect(html).toContain('Daily cash closing');
-  expect(html).toContain('AED 50.00');
-  expect(html).toContain('USD 13.99');
+  // Per branch, three billing lengths, whole amounts without ".00" (full update brief, Phase 2).
+  for (const price of ['AED\u00a050 a month', 'AED\u00a0270 · save 10%', 'AED\u00a0500 · 2 months free', 'USD\u00a013.99 a month', 'USD\u00a075.55 · save 10%', 'USD\u00a0139.90 · 2 months free']) {
+    expect(html).toContain(price);
+  }
+  expect(html).toContain('Try it free');
+  expect(html).toContain('No auto-renewal. No contract.');
+  expect(html).not.toMatch(/7[- ]day|7 days|Nothing renews/i);
   expect(html).toContain('How much does it cost?');
   expect(html).toContain('"@type":"SoftwareApplication"');
   expect(html).toContain('"@type":"FAQPage"');
@@ -78,20 +83,26 @@ test('search engines read the words, the price and the questions without JavaScr
 test.describe('on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, timezoneId: 'Asia/Dubai', locale: 'en-US' });
 
-  test('the way in stays on screen, questions open, a salon type goes on to the sign-up', async ({ page }) => {
+  test('"Try it free" stays on screen, the calculator and the questions work, a salon type goes on to the sign-up', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto(`${site}/`);
-    await expect(page.locator('h1')).toHaveText('Run your salon from your phone');
+    await expect(page.locator('h1 .uae')).toHaveText('Your salon, balanced to the last dirham.');
+    await expect(page.locator('h1 .intl')).toBeHidden();
     expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
-    await expect(page.getByTestId('landing-price').locator('.uae')).toHaveText('AED 50.00');
-    await expect(page.locator('#sticky')).toBeHidden();
+    await expect(page.getByTestId('plan-6').locator('.plan-price .uae')).toHaveText('AED\u00a0270 · save 10%');
+    await expect(page.getByTestId('plan-6').locator('.plan-price .intl')).toBeHidden();
+    await expect(page.getByTestId('landing-per-day').locator('.uae')).toHaveText('Under AED\u00a02 a day');
+    // The sticky header keeps "Try it free" on screen however far down.
     await page.mouse.move(195, 400);
-    for (let i = 0; i < 8; i++) await page.mouse.wheel(0, 200);
-    await expect(page.locator('#sticky')).toBeVisible();
-    await page.locator('#pricing').scrollIntoViewIfNeeded();
-    await expect(page.locator('#sticky')).toBeHidden();
+    for (let i = 0; i < 12; i++) await page.mouse.wheel(0, 300);
+    await expect(page.locator('[data-start="header"]')).toBeInViewport();
+    // 2 branches of 5 people for 12 months: (50 + 10) × 2 × 10 months' price.
+    await page.selectOption('[data-calc="branches"]', '2');
+    await page.selectOption('[data-calc="people"]', '5');
+    await page.selectOption('[data-calc="months"]', '12');
+    await expect(page.locator('[data-calc-total]')).toHaveText('Total: AED\u00a01,200');
     await page.locator('details[data-faq="price"] summary').click();
-    await expect(page.locator('details[data-faq="price"] .uae')).toContainText('AED 50.00 a month for up to 4 people');
+    await expect(page.locator('details[data-faq="price"] .uae')).toContainText('AED\u00a050 a month per branch, for up to 4 people');
     // Four salon types to choose from (brief 5.4).
     await expect(page.locator('a[data-type]')).toHaveCount(4);
     // Start free → the salon types → the sign-up, with the type and the language kept for the app.
@@ -110,10 +121,12 @@ test.describe('on a phone', () => {
     await expect(page).toHaveURL(`${site}/ar`);
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
     expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
-    await page.locator('details.lang summary').click();
-    await page.locator('details.lang a[data-lang="en"]').click();
+    // On a phone the languages are in the header's menu.
+    await page.locator('details.menu summary').click();
+    await page.locator('details.menu a[data-lang="en"]').click();
     await expect(page).toHaveURL(`${site}/`);
-    await expect(page.locator('h1')).toHaveText('Run your salon from your phone');
+    await expect(page.locator('h1 .uae')).toHaveText('Your salon, balanced to the last dirham.');
+    await expect(page.locator('h1 .intl')).toBeHidden();
     await arabic.close();
   });
 
@@ -132,15 +145,21 @@ test.describe('on a phone', () => {
 test.describe('on a computer outside the UAE', () => {
   test.use({ viewport: { width: 1366, height: 720 }, timezoneId: 'Europe/Paris', locale: 'fr-FR' });
 
-  test('the international price, the general lines, no sticky bar', async ({ page }) => {
+  test('dollars and the "cent" headline; AED | USD in the footer switches and is remembered', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto(`${site}/fr`);
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
-    await expect(page.getByTestId('landing-price').locator('.intl')).toBeVisible();
-    await expect(page.getByTestId('landing-price').locator('.uae')).toBeHidden();
+    await expect(page.getByTestId('plan-1').locator('.plan-price .intl')).toBeVisible();
+    await expect(page.getByTestId('plan-1').locator('.plan-price .uae')).toBeHidden();
+    await expect(page.locator('h1 .intl')).toBeVisible();
     await expect(page.locator('.smalls .small').nth(1).locator('.intl')).toBeVisible();
-    for (let i = 0; i < 8; i++) await page.mouse.wheel(0, 300);
-    await expect(page.locator('#sticky')).toBeHidden();
+    await expect(page.locator('footer .areas')).toBeHidden();
+    await page.locator('[data-currency="AED"]').click();
+    await expect(page.getByTestId('plan-1').locator('.plan-price .uae')).toBeVisible();
+    await expect(page.locator('h1 .uae')).toBeVisible();
+    await page.reload();
+    await expect(page.locator('[data-currency="AED"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByTestId('plan-1').locator('.plan-price .uae')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
     expect(errors).toEqual([]);
   });

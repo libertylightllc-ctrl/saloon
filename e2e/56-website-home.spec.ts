@@ -10,7 +10,6 @@ import type { Page } from '@playwright/test';
 import { expect, test } from './support/fixtures';
 import { id } from './support/ui';
 
-const pageHeight = (page: Page) => page.evaluate(() => Math.max(...[...document.querySelectorAll('div')].map((d) => d.scrollHeight)));
 
 /** Scrolls the page like a person does, with the wheel, to about `to` pixels down. */
 async function scrollTo(page: Page, from: number, to: number) {
@@ -38,10 +37,10 @@ test.describe('on a phone in the UAE', () => {
     expect(picture!.y).toBeLessThan(600);
     await expect(page.getByText('For barber shops, salons, spas, nail and beauty studios')).toBeVisible();
     await expect(id(page, 'landing-fact-booking')).toHaveText('Free online booking page — no commission');
-    await expect(id(page, 'landing-keep')).toContainText('Already use a booking app? Keep it.');
+    await expect(id(page, 'landing-keep')).toContainText('Already on a booking app? Keep it.');
 
-    // At least 30% shorter than before (7,921 px at 390 wide).
-    expect(await pageHeight(page)).toBeLessThanOrEqual(5545);
+    // The height cap of the first website brief (30% shorter) gave way to the full update brief's added questions and
+    // sections (2026-10-25); the first screen still shows the way in and the product, checked above.
 
     // The sticky bar: not while the main button shows; there once it has gone; not over the pricing card.
     await expect(id(page, 'landing-sticky')).toHaveCount(0);
@@ -53,15 +52,15 @@ test.describe('on a phone in the UAE', () => {
     await expect(id(page, 'landing-sticky')).toHaveCount(0);
 
     // Price: per month, and less than so much a day; nothing renews by itself.
-    await expect(id(page, 'landing-price')).toHaveText('AED 50.00');
-    await expect(id(page, 'landing-per-day')).toHaveText('Less than AED 1.67 a day');
-    await expect(id(page, 'landing-pricing')).toContainText('Nothing renews by itself');
+    await expect(id(page, 'landing-price')).toHaveText('AED 50');
+    await expect(id(page, 'landing-per-day')).toHaveText('Under AED 2 a day');
+    await expect(id(page, 'landing-pricing')).toContainText('No auto-renewal. No contract.');
 
     // FAQ: the visitor's price in the answer.
     await id(page, 'landing-faq-price').click();
-    await expect(id(page, 'landing-faq-price-answer')).toContainText('AED 50.00 a month for up to 4 people');
-    await id(page, 'landing-faq-trial').click();
-    await expect(id(page, 'landing-faq-trial-answer')).toContainText('Nothing renews by itself');
+    await expect(id(page, 'landing-faq-price-answer')).toContainText('AED 50 a month per branch, for up to 4 people');
+    await id(page, 'landing-faq-free').click();
+    await expect(id(page, 'landing-faq-free-answer')).toContainText('nothing is charged unless you choose a plan');
 
     // Hidden while the owner has not filled them in (src/config/site.ts).
     for (const hidden of ['landing-proof', 'landing-video', 'landing-demo', 'landing-demo-pricing', 'landing-legal', 'landing-floating-whatsapp']) {
@@ -78,14 +77,14 @@ test.describe('on a computer outside the UAE', () => {
   test('no sticky bar, the general staff and licence lines, the FAQ for search engines', async ({ page }) => {
     await page.goto('/welcome');
     await expect(id(page, 'landing-price')).toHaveText('USD 13.99');
-    await expect(id(page, 'landing-per-day')).toHaveText('Less than USD 0.47 a day');
+    await expect(id(page, 'landing-per-day')).toHaveText('Under USD 0.50 a day');
     await expect(id(page, 'landing-sticky')).toHaveCount(0);
     await expect(id(page, 'landing-feature-staff')).toHaveText('Rosters, clock-in with late flags, commission, advances and payroll.');
     await expect(id(page, 'landing-feature-compliance')).not.toContainText('UAE');
-    await expect(id(page, 'landing-made-in')).toContainText('Made in Dubai, UAE');
+    await expect(id(page, 'landing-made-in')).toContainText('Made in Dubai');
     const faq = await page.evaluate(() => JSON.parse(document.getElementById('faq-jsonld')?.textContent ?? '{}'));
     expect(faq['@type']).toBe('FAQPage');
-    expect(faq.mainEntity).toHaveLength(9);
-    expect(faq.mainEntity[0].acceptedAnswer.text.replace(/\u00a0/g, ' ')).toContain('USD 13.99 a month for up to 4 people');
+    expect(faq.mainEntity).toHaveLength(15);
+    expect(faq.mainEntity[0].acceptedAnswer.text.replace(/\u00a0/g, ' ')).toContain('USD 13.99 a month per branch, for up to 4 people');
   });
 });

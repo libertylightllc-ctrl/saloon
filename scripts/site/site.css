@@ -3,7 +3,7 @@
 :root{--navy:#0B0916;--raised:#16141F;--glow:#1F3A40;--teal:#7FE0D2;--teal-soft:#BDEFE8;--teal-deep:#2F8A7E;--mist:#F7F6FB;--lilac:#EFEAFD;--ink:#15121F;--ink-muted:#5E5B6B;--card:#fff;--hairline:rgba(21,18,31,.08);--on-navy-muted:rgba(255,255,255,.72);--navy-line:rgba(255,255,255,.12);--violet:#6C45F2;--whatsapp:#0E7A4F;--lift:0 40px 80px rgba(11,9,22,.35);--shadow:0 24px 60px rgba(30,20,70,.14)}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{margin:0;background:var(--mist);color:var(--ink);font:400 14px/20px var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--mist);color:var(--ink);font:400 14px/20px var(--font);-webkit-font-smoothing:antialiased;overflow-x:clip}
 h1,h2,h3,p,ul,ol,figure,blockquote{margin:0;padding:0}
 ul,ol{list-style:none}
 a{color:inherit;text-decoration:none}
@@ -12,7 +12,7 @@ img{max-width:100%}
 [dir=rtl] .flip{transform:scaleX(-1)}
 :focus-visible{outline:3px solid var(--violet);outline-offset:2px;border-radius:6px}
 .navy :focus-visible,.sticky :focus-visible{outline-color:var(--teal)}
-[id]{scroll-margin-top:16px}
+[id]{scroll-margin-top:76px}
 /* Type scale (src/theme/tokens.ts); Arabic and Urdu get taller lines, as in the app (src/lib/fonts.ts). */
 .t-hero{font-size:38px;line-height:48px;font-weight:300}
 .t-section{font-size:30px;line-height:40px;font-weight:300}
@@ -60,11 +60,28 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .phone img{display:block;width:100%;height:100%;object-fit:cover;border-radius:calc(var(--w)*.13)}
 .phone::after{content:"";position:absolute;left:50%;top:calc(var(--pad) + var(--w)*.035);width:calc(var(--w)*.28);height:calc(var(--w)*.08);margin-left:calc(var(--w)*-.14);border-radius:999px;background:#000}
 /* Hero. */
-.hero-inner{padding-top:calc(env(safe-area-inset-top,0px) + 16px);padding-bottom:40px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hero-inner{padding-top:8px;padding-bottom:40px}
+/* The sticky header (full update brief, Phase 3): "Try it free" always on screen. */
+.site-header{position:sticky;top:0;z-index:30;padding-top:env(safe-area-inset-top,0px);border-bottom:1px solid var(--navy-line)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px}
+.main-nav{display:flex;gap:4px;margin-inline-start:auto}
+.main-nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:12px;color:var(--on-navy-muted);font-weight:500}
+.main-nav a:hover{color:#fff}
+.header-actions{display:flex;align-items:center;gap:8px}
+.btn-sm{min-height:44px;padding:0 16px;font-size:15px}
+.wa-link{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--whatsapp);color:#fff}
+.menu{position:relative}
+.menu summary{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;border:1px solid var(--navy-line);cursor:pointer;list-style:none}
+.menu summary::-webkit-details-marker{display:none}
+.menu-panel{position:absolute;z-index:40;top:calc(100% + 8px);inset-inline-end:0;display:flex;flex-direction:column;min-width:220px;padding:8px;border-radius:16px;background:var(--card);box-shadow:var(--shadow)}
+.menu-panel>a{display:flex;align-items:center;min-height:44px;padding:0 14px;border-radius:10px;color:var(--ink);font-weight:500}
+.menu-panel>a:hover{background:var(--lilac)}
+.menu-langs{display:flex;flex-wrap:wrap;align-items:center;gap:2px 12px;padding:10px 14px 4px;border-top:1px solid var(--hairline);margin-top:6px;color:var(--ink-muted);font-size:13px}
+.menu-langs a{display:inline-flex;align-items:center;min-height:36px}
+.menu-langs a[aria-current]{color:var(--ink);font-weight:600}
+.ask{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--teal-soft);font-weight:500}
 .brand{display:flex;align-items:center;gap:8px;font-size:18px;line-height:26px;font-weight:600}
 .brand img{width:36px;height:36px;border-radius:10px}
-.top-actions{display:flex;align-items:center;gap:8px}
 .signin{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:999px;color:var(--teal-soft);font-size:15px;font-weight:500}
 .lang{position:relative}
 .lang summary{display:flex;align-items:center;gap:6px;height:36px;min-width:44px;padding:0 10px;border:1px solid #fff;border-radius:10px;font-weight:500;cursor:pointer;list-style:none}
@@ -160,13 +177,36 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .num{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--teal-soft);color:var(--teal-deep);font-weight:500;flex-shrink:0}
 /* Price. */
 .pricing{padding:48px 0}
-.price-card{width:100%;max-width:440px;margin-top:12px;padding:32px;display:flex;flex-direction:column;align-items:center;gap:8px;border-radius:28px;border:1px solid var(--navy-line);background:var(--raised)}
-.price{font-variant-numeric:tabular-nums;white-space:nowrap}
-.price-card hr{align-self:stretch;width:100%;height:1px;margin:12px 0;border:0;background:var(--navy-line)}
-.points{align-self:stretch;display:flex;flex-direction:column;gap:8px}
-.points li{display:flex;align-items:center;gap:12px}
-.price-cta{align-self:stretch;display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:16px}
-.note{max-width:620px}
+/* Three billing lengths (full update brief, Phase 3). */
+.plans{display:grid;grid-template-columns:1fr;gap:16px;width:100%;max-width:1000px;margin-top:8px}
+.plan{position:relative;display:flex;flex-direction:column;gap:10px;padding:24px;border-radius:24px;border:1px solid var(--navy-line);background:var(--raised)}
+.plan.best{border:2px solid var(--teal)}
+.badge{align-self:flex-start;padding:4px 12px;border-radius:999px;background:var(--teal);color:var(--navy);font-size:12px;font-weight:600}
+.plan-price{font-size:24px;line-height:32px;font-weight:600;font-variant-numeric:tabular-nums}
+.plan-btn{margin-top:auto;width:100%}
+.every-plan{display:flex;flex-direction:column;gap:12px;width:100%;max-width:820px;margin-top:8px}
+.feature-list{display:grid;grid-template-columns:1fr;gap:10px}
+.feature-list li{display:flex;align-items:center;gap:12px}
+.calc{display:flex;flex-direction:column;gap:12px;width:100%;max-width:820px;padding:24px;border-radius:24px;border:1px solid var(--navy-line);background:var(--raised)}
+.calc-fields{display:grid;grid-template-columns:1fr;gap:12px}
+.calc label{display:flex;flex-direction:column;gap:6px;color:var(--on-navy-muted);font-size:13px}
+.calc select{min-height:48px;padding:0 12px;border-radius:12px;border:1px solid var(--navy-line);background:var(--navy);color:#fff;font:inherit;font-size:16px}
+.calc-out{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px}
+.calc-out strong{font-size:22px;line-height:30px;font-weight:600;font-variant-numeric:tabular-nums}
+.calc-out span{color:var(--teal-soft)}
+.examples{display:flex;flex-direction:column;gap:4px;color:var(--on-navy-muted)}
+/* Data safety and the browser. */
+.trust-band{padding:48px 0}
+.trust-grid{display:grid;grid-template-columns:1fr;gap:32px}
+.safe-list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.safe-list li{display:flex;align-items:center;gap:12px}
+.safe-list .i{color:var(--teal-deep)}
+.browser{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+/* AED | USD in the footer. */
+.currency{display:inline-flex;padding:4px;border-radius:999px;border:1px solid var(--hairline);background:var(--card)}
+.currency button{min-height:36px;min-width:56px;padding:0 14px;border:0;border-radius:999px;background:none;color:var(--ink-muted);font:inherit;font-weight:500;cursor:pointer}
+.currency button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.areas{max-width:620px}
 /* Questions. */
 .faq{padding:40px 0}
 .faq-list{display:flex;flex-direction:column;gap:8px;width:100%;max-width:820px;margin:0 auto}
@@ -190,8 +230,6 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
 .links a{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 10px;border-radius:12px;color:var(--violet);font-size:14px;font-weight:500}
 /* The phone's sticky bar and the computer's round WhatsApp button (brief 2.3, 2.4). */
-.sticky{position:fixed;z-index:10;inset-inline:0;bottom:0;display:flex;align-items:center;gap:12px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--navy);border-top:1px solid var(--navy-line)}
-.sticky[hidden]{display:none}
 .wa-round{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:var(--whatsapp);color:#fff;box-shadow:var(--lift);flex-shrink:0}
 .wa-round.floating{position:fixed;z-index:10;bottom:24px;inset-inline-end:24px;width:60px;height:60px}
 .video{padding:40px 0}
@@ -200,12 +238,15 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .play{position:relative;width:76px;height:76px;border-radius:50%;background:var(--teal);color:var(--navy);display:flex;align-items:center;justify-content:center}
 .video-box iframe,.video-box video{width:100%;height:100%;border:0}
-@media (max-width:639px){.not-phone{display:none!important}body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:639px){.not-phone{display:none!important}.brand span{display:none}}
 @media (min-width:640px){
 .phone-only{display:none!important}
 .t-hero{font-size:60px;line-height:70px}.t-section{font-size:44px;line-height:54px}
 [dir=rtl] .t-hero{line-height:93px}[dir=rtl] .t-section{line-height:69px}
-.signin{min-height:52px;padding:0 24px;border:1.5px solid var(--navy-line);color:#fff;font-size:16px}
+.signin{min-height:44px;padding:0 16px;border:1.5px solid var(--navy-line);color:#fff;font-size:15px}
+.feature-list{grid-template-columns:1fr 1fr}
+.calc-fields{grid-template-columns:repeat(3,1fr)}
+.trust-band{padding:72px 0}
 .hero-body{grid-template-areas:"copy" "facts" "visual";gap:16px 40px;margin-top:40px;justify-items:center}
 .copy{width:100%}
 .facts{margin-top:-4px;justify-self:start}
@@ -258,3 +299,4 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 @media (max-width:979px){.wide-only{display:none!important}}
 @media (min-width:1100px){.smalls{grid-template-columns:1fr 1fr 1fr}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ticker{height:auto;overflow:visible}.ticker .one{display:none}.ticker .all{display:inline}.btn,.type-card,.dots i{transition:none}}
+@media (min-width:980px){.narrow-only{display:none!important}.plans{grid-template-columns:repeat(3,1fr)}.trust-grid{grid-template-columns:3fr 2fr;align-items:start}}

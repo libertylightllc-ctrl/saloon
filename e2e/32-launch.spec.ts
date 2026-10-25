@@ -101,11 +101,11 @@ test('the privacy policy and terms are open to everyone, from the landing page a
 }) => {
   await page.goto('/');
   // The price the terms point to, read from the same settings salons are billed from: in the UAE, the UAE price only.
-  await expect(id(page, 'landing-price')).toHaveText('AED 50.00');
-  await expect(id(page, 'landing-pricing')).toContainText('a month, for up to 4 people');
-  await expect(id(page, 'landing-price-extra')).toHaveText('then AED 10.00 a month for each extra person who signs in');
+  await expect(id(page, 'landing-price')).toHaveText('AED 50');
+  await expect(id(page, 'landing-pricing')).toContainText('per branch, for up to 4 people');
+  await expect(id(page, 'landing-price-extra')).toHaveText('+ AED 10 a month for each extra person');
   await expect(id(page, 'landing-pricing')).not.toContainText('USD');
-  await expect(id(page, 'landing-trial')).toHaveText('Try every feature free for 7 days. No card needed.');
+  await expect(id(page, 'landing-trial')).toHaveText('Try every feature free. No card needed.');
   // The languages come round one at a time (the whole line did not fit a phone); a screen reader hears them all.
   const languages = id(page, 'landing-languages');
   await expect(languages).toHaveAttribute('aria-label', 'English · العربية · हिन्दी · اردو · Español · Français · Português');
@@ -193,7 +193,7 @@ test.describe('a visitor outside the UAE', () => {
   test('sees the international price only', async ({ page }) => {
     await page.goto('/');
     await expect(id(page, 'landing-price')).toHaveText('USD 13.99');
-    await expect(id(page, 'landing-price-extra')).toHaveText('then USD 2.99 a month for each extra person who signs in');
+    await expect(id(page, 'landing-price-extra')).toHaveText('+ USD 2.99 a month for each extra person');
     await expect(id(page, 'landing-pricing')).not.toContainText('AED');
   });
 });
