@@ -51,6 +51,25 @@ async function prices(url, key) {
   }
 }
 
+/** The pilot as visitors see it (full update, Phase 6): its days, size and places left; null leaves it out (a
+ *  database without the pilot yet). */
+async function pilotStatus(url, key) {
+  if (!url || !key) return null;
+  try {
+    const response = await fetch(`${url}/rest/v1/rpc/pilot_status`, {
+      method: 'POST',
+      headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.warn(`Website: no pilot from ${url} (${error.message}); the pilot is left out.`);
+    return null;
+  }
+}
+
 function copyDir(from, to, pick = () => true) {
   mkdirSync(to, { recursive: true });
   for (const name of readdirSync(from)) if (pick(name)) copyFileSync(join(from, name), join(to, name));
@@ -81,12 +100,14 @@ async function main() {
   const site = { ...read('src/config/site.json'), supportEmail: brand.supportEmail };
   const supabase = { url: env('EXPO_PUBLIC_SUPABASE_URL'), key: env('EXPO_PUBLIC_SUPABASE_ANON_KEY') };
   // "auto" (local development) is the local database next to the page, as src/lib/supabase.ts resolves it.
-  const row = await prices(!supabase.url || supabase.url === 'auto' ? 'http://127.0.0.1:54321' : supabase.url.replace(/\/$/, ''), supabase.key);
+  const api = { url: !supabase.url || supabase.url === 'auto' ? 'http://127.0.0.1:54321' : supabase.url.replace(/\/$/, ''), key: supabase.key };
+  const row = await prices(api.url, api.key);
+  const pilot = await pilotStatus(api.url, api.key);
   const year = new Date().getFullYear();
 
   mkdirSync(join(dist, 'site'), { recursive: true });
   for (const { code } of LANGUAGES) {
-    const html = renderPage({ root, lang: code, row, brand, site, supabase, year });
+    const html = renderPage({ root, lang: code, row, pilot, api, brand, site, supabase, year });
     writeFileSync(join(dist, 'site', `${code}.html`), html);
     console.log(`Website: ${pathOf(code)} → site/${code}.html (${Math.round(html.length / 1024)} KB)`);
   }

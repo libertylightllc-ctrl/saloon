@@ -98,6 +98,61 @@
     });
   }
 
+  // The pilot (full update, Phase 6; pilot.mjs): the places left from the database, and the application form.
+  var pilot = SQ && SQ.pilot;
+  var call = function (fn, body) {
+    return fetch(pilot.url + '/rest/v1/rpc/' + fn, {
+      method: 'POST',
+      headers: { apikey: pilot.key, Authorization: 'Bearer ' + pilot.key, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.ok ? r.json() : null; });
+  };
+  if (pilot && window.fetch) {
+    call('pilot_status', {}).then(function (s) {
+      if (!s) return;
+      var left = Number(s.places_left);
+      document.querySelectorAll('[data-pilot-places]').forEach(function (el) {
+        el.textContent = (left === 1 ? pilot.texts.placesOne : pilot.texts.placesOther).replace(/\{\{\s*count\s*\}\}/, String(left));
+      });
+      document.querySelectorAll('[data-pilot-open]').forEach(function (el) { el.hidden = left <= 0; });
+      document.querySelectorAll('[data-pilot-full]').forEach(function (el) { el.hidden = left > 0; });
+    }).catch(function () {});
+  }
+  // A UAE number typed the local way (050…, 50…) gets +971; 00 becomes +.
+  var phone = function (v) {
+    var d = String(v || '').replace(/[^\d+]/g, '');
+    if (/^00/.test(d)) return '+' + d.slice(2);
+    if (/^0/.test(d)) return '+971' + d.slice(1);
+    return d.charAt(0) === '+' ? d : '+971' + d;
+  };
+  document.querySelectorAll('[data-pilot-form]').forEach(function (form) {
+    var out = form.querySelector('[data-pilot-out]');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!pilot || !form.reportValidity()) return;
+      var f = form.elements;
+      var button = form.querySelector('button[type="submit"]');
+      button.disabled = true;
+      call('apply_for_pilot', { p: {
+        name: f.name.value.trim(), salon_name: f.salon_name.value.trim(), emirate: f.emirate.value, area: f.area.value.trim(),
+        salon_type: f.salon_type.value, staff_count: Number(f.staff_count.value), whatsapp: phone(f.whatsapp.value),
+        language: f.language.value, whatsapp_ok: f.whatsapp_ok.checked, website: f.website.value
+      } }).then(function (r) {
+        if (r && r.ok) {
+          out.textContent = pilot.texts.thanks;
+          form.querySelectorAll('input, select, button').forEach(function (el) { el.disabled = true; });
+          track('pilot_apply');
+        } else {
+          out.textContent = r && r.reason === 'too_many' ? pilot.texts.tooMany : pilot.texts.error;
+          button.disabled = false;
+        }
+      }).catch(function () {
+        out.textContent = pilot.texts.error;
+        button.disabled = false;
+      });
+    });
+  });
+
   // "See how it works": three steps in a dialog (shots.mjs). Without <dialog> the link goes to the features.
   var tour = document.getElementById('tour');
   if (tour && tour.showModal) {

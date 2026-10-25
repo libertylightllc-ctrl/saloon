@@ -115,6 +115,22 @@ insert into reviewed values
     ('admin_set_card_payments'),
     ('admin_set_bank_transfer'),
     ('card_checkout_start'),
+    -- Full update, Phase 6: the owner's own pilot code, branches and switching branch (role checked inside); the
+    -- console's controls (platform owner checked inside); the website's pilot form and places (open to visitors:
+    -- honeypot and rate limits inside; no personal data returned).
+    ('redeem_pilot_code'),
+    ('create_branch'),
+    ('set_my_branch'),
+    ('admin_set_billing'),
+    ('admin_set_access'),
+    ('admin_pilot_codes'),
+    ('admin_create_pilot_code'),
+    ('admin_disable_pilot_code'),
+    ('admin_pilot_applications'),
+    ('admin_decide_pilot_application'),
+    ('admin_platform_audit'),
+    ('apply_for_pilot'),
+    ('pilot_status'),
     ('set_online_booking'),
     ('set_branch_mode'),
     ('set_my_pin'),
@@ -151,10 +167,10 @@ select is(
         where n.nspname = 'public' and p.prosecdef and has_function_privilege('anon', p.oid, 'EXECUTE') order by 1),
   -- The visitors' support chat (2026-10-12), reading needs the secret kept on the visitor's device; one receipt for
   -- the holder of its secret link (2026-10-19); a salon's booking page when its owner switched it on, and one booking
-  -- for the holder of its secret link (2026-10-20).
-  array['public_book', 'public_booking', 'public_booking_cancel', 'public_booking_page', 'public_booking_slots',
-        'public_receipt', 'support_guest_send', 'support_guest_thread']::text[],
-  'signed-out visitors can call only the visitor support chat, the receipt link and the booking page');
+  -- for the holder of its secret link (2026-10-20); the pilot's form and places on the website (2026-10-25).
+  array['apply_for_pilot', 'pilot_status', 'public_book', 'public_booking', 'public_booking_cancel', 'public_booking_page',
+        'public_booking_slots', 'public_receipt', 'support_guest_send', 'support_guest_thread']::text[],
+  'signed-out visitors can call only the visitor support chat, the receipt link, the booking page and the pilot form');
 
 select is(
   array(select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace

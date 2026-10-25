@@ -5,6 +5,7 @@
  */
 import { readFileSync } from 'node:fs';
 
+import { pilotUnderPlans } from './pilot.mjs';
 import { phone } from './shots.mjs';
 import { button } from './sections-top.mjs';
 import { esc, LANGUAGES, pathOf } from './text.mjs';
@@ -83,6 +84,7 @@ export function pricing(c) {
 <h2 class="t-section center">${esc(t('auth.landing.pricing.title'))}</h2>
 <p class="t-h3 teal center" data-testid="landing-trial">${esc(t('auth.landing.pricing.trial'))}</p>
 <div class="plans">${c.prices.uae.lengths.map((_, i) => planCard(c, i)).join('')}</div>
+${pilotUnderPlans(c)}
 <p class="strong teal center" data-testid="landing-per-day">${both(c, (p) => t('auth.landing.pricing.perDay', { price: p.perDay }))}</p>
 <div class="every-plan"><h3 class="t-h3 center">${esc(t('auth.landing.pricing.everyPlan'))}</h3>
 <ul class="feature-list">${FEATURES.map((k) => `<li>${tick}<span>${feature(k)}</span></li>`).join('')}</ul>
@@ -128,7 +130,9 @@ export const faqQuestion = (c, k) => c.t(`auth.landing.faq.${k}.q`);
 
 export function faq(c) {
   const items = FAQ_KEYS.map((k) => {
-    const answer = PRICED.includes(k) && c.prices ? both(c, (p) => faqAnswer(c, k, p)) : esc(faqAnswer(c, k, null));
+    let answer = PRICED.includes(k) && c.prices ? both(c, (p) => faqAnswer(c, k, p)) : esc(faqAnswer(c, k, null));
+    // UAE visitors read the pilot's free months too, while it has places (full update, Phase 6).
+    if (k === 'free' && c.pilot?.placesLeft) answer += `<span class="uae"> ${esc(c.t('auth.landing.faq.free.pilot', { months: c.pilot.months }))}</span>`;
     return `<details class="faq-item" data-faq="${k}"><summary><span>${esc(faqQuestion(c, k))}</span>${c.icon('plus', { size: 20, cls: 'plus' })}${c.icon('minus', { size: 20, cls: 'minus' })}</summary><p class="muted">${answer}</p></details>`;
   }).join('');
   return `<section class="band mist faq" id="faq"><div class="inner stack"><h2 class="t-section center">${esc(c.t('auth.landing.faq.title'))}</h2><div class="faq-list">${items}</div></div></section>`;

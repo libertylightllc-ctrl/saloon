@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { BILLING_LENGTHS, lengthTotal } from '@/config/pricing';
 import { useAdminPlanAction, useAdminSalons, type AdminSalon } from '@/features/plan/api';
 import { countryName } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
@@ -24,9 +25,10 @@ import {
   useToast,
 } from '@/ui';
 
+import { AccessForm, accessLabel } from './AccessForm';
 import { useCloseSalon, useSalonStats } from './api';
 
-const MONTHS = [1, 3, 6, 12] as const;
+const MONTHS = [1, 6, 12] as const;
 
 /** Every salon: owner, plan and request, and what it does — staff, customers, sales, last activity. */
 export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name: string }) => void }) {
@@ -72,16 +74,14 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                           ]
                         : []),
                       ...(s.requested_at ? [t('admin.requested', { months: s.requested_months ?? 1, note: s.request_note ?? '' }).trim()] : []),
+                      ...(s.pilot_code ? [t('console.access.code', { code: s.pilot_code })] : []),
+                      ...(s.admin_note ? [s.admin_note] : []),
                     ]}
                     badges={
                       <View style={styles.badges}>
                         <StatusPill
-                          status={s.active ? (s.trial ? 'due_soon' : 'valid') : 'expired'}
-                          label={
-                            s.active && s.paid_until
-                              ? t(s.trial ? 'admin.trialUntil' : 'admin.until', { date: dates.day(s.paid_until, 'd MMM yyyy') })
-                              : t('plan.inactive')
-                          }
+                          status={s.active ? (s.access_type === 'paid' || s.access_type === 'comp' ? 'valid' : 'due_soon') : 'expired'}
+                          label={accessLabel(s, t, (d) => dates.day(d, 'd MMM yyyy'))}
                         />
                         {s.requested_at ? <StatusPill status="pending_approval" label={t('admin.asked')} /> : null}
                         {st?.closed ? <StatusPill status="cancelled" label={t('console.salons.closed')} /> : null}
@@ -110,6 +110,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
               }}
               testID="console-salon-history"
             />
+            <AccessForm salon={open} onDone={() => setOpen(null)} />
             <SalonPlanForm salon={open} onDone={() => setOpen(null)} />
             {stats.data?.get(open.business_id)?.closed ? null : <CloseSalon salon={open} onDone={() => setOpen(null)} />}
           </View>
@@ -128,7 +129,9 @@ function SalonPlanForm({ salon, onDone }: { salon: AdminSalon; onDone: () => voi
   const toast = useToast();
   const action = useAdminPlanAction();
   const [months, setMonths] = useState<number>(salon.requested_months ?? 1);
-  const [amount, setAmount] = useState<number | null>(price * (salon.requested_months ?? 1));
+  // A length's price with its discount (6 at 10% off, 12 for the price of 10), as the owner's plan page shows it.
+  const priceFor = (m: number) => lengthTotal(price, BILLING_LENGTHS.find((l) => l.months === m) ?? { months: m, payTenths: m * 10 });
+  const [amount, setAmount] = useState<number | null>(priceFor(salon.requested_months ?? 1));
   const [note, setNote] = useState('');
 
   return (
@@ -138,7 +141,7 @@ function SalonPlanForm({ salon, onDone }: { salon: AdminSalon; onDone: () => voi
         value={String(months)}
         onChange={(v) => {
           setMonths(Number(v));
-          setAmount(price * Number(v));
+          setAmount(priceFor(Number(v)));
         }}
         testID="admin-months"
       />

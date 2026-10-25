@@ -12,22 +12,27 @@ import { useDates } from '@/lib/useDates';
 import { semantic, spacing, useTheme } from '@/theme';
 import { Button, Card, FormError, HeaderBand, Icon, PillTabs, QueryState, Screen, StatusPill, Text, TextField, useToast, type IconName } from '@/ui';
 
-import { trialDaysLeft, useIsPlatformAdmin, usePlanStatus, useRequestPlan, type PlanStatus } from './api';
+import { showsBilling, useIsPlatformAdmin, usePlanStatus, useRequestPlan, type PlanStatus } from './api';
+import { BranchBill, type PlanMonths } from './BranchBill';
 import { payOptions, useCardPrice } from './cardApi';
 import { HowToPay } from './HowToPay';
 import { CardReturn, PayByCard } from './PayByCard';
+import { PilotCodeCard } from './PilotCodeCard';
 import { canOfferPlans } from './storePolicy';
 
-const MONTHS = [1, 3, 6, 12] as const;
-
-/** The line under the plan's name: paid until, the trial's days left, the trial ended, or not active. */
+/**
+ * The line under the plan's name. While billing is off or the salon is free, only a note: "Pilot salon · free until
+ * 24 Jan 2027", "Free until …", free for good, or "Free for now". With billing on: paid until, or the free time ended.
+ */
 function statusLine(p: PlanStatus, t: TFunction, day: (d: string) => string) {
-  if (p.active && p.paid_until && p.trial) {
-    const left = trialDaysLeft(p);
-    return left === 0 ? t('plan.trial.lastDay') : t('plan.trial.left', { count: left, date: day(p.paid_until) });
+  if (!showsBilling(p)) {
+    if (p.access_type === 'comp') return t('plan.access.comp');
+    if (p.paid && p.paid_until) return t('plan.paidUntil', { date: day(p.paid_until) });
+    if (p.free && p.free_until) return t(p.access_type === 'pilot' ? 'plan.access.pilot' : 'plan.access.free', { date: day(p.free_until) });
+    return t('plan.access.now');
   }
-  if (p.active && p.paid_until) return t('plan.paidUntil', { date: day(p.paid_until) });
-  if (p.trial && p.paid_until && canOfferPlans) return t('plan.trial.ended', { date: day(p.paid_until) });
+  if (p.paid && p.paid_until) return t('plan.paidUntil', { date: day(p.paid_until) });
+  if (p.free_until && canOfferPlans) return t('plan.free.ended', { date: day(p.free_until) });
   return t(canOfferPlans ? 'plan.notActiveBody' : 'plan.store.inactiveBody');
 }
 const INCLUDED: { key: string; icon: IconName }[] = [
@@ -39,7 +44,7 @@ const INCLUDED: { key: string; icon: IconName }[] = [
   { key: 'books', icon: 'chart' },
 ];
 
-/** Plan & billing: is the salon's plan on, what it costs, and (owner) asking for it to be switched on. */
+/** Plan & billing: the salon's access, and (billing on, not free) what it costs per branch and how to pay. */
 export function PlanScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -48,7 +53,7 @@ export function PlanScreen() {
   const { business, role } = useWorkspace();
   const plan = usePlanStatus(business.id);
   const request = useRequestPlan(business.id);
-  const [months, setMonths] = useState<(typeof MONTHS)[number]>(1);
+  const [months, setMonths] = useState<PlanMonths>(1);
   const [note, setNote] = useState('');
   const owner = can(role, 'requestPlan') && canOfferPlans;
   const uae = isUae(business.country_code);
@@ -66,39 +71,23 @@ export function PlanScreen() {
       header={<HeaderBand title={t('plan.title')} subtitle={t('plan.subtitle')} onBack />}
     >
       <QueryState query={plan}>
-        {(p) => (
+        {(p) => {
+          const billing = showsBilling(p) && canOfferPlans;
+          const pill = p.free ? (p.access_type === 'pilot' ? 'plan.free.pilotPill' : 'plan.free.pill') : p.active ? 'plan.active' : 'plan.inactive';
+          return (
           <View style={styles.body}>
             <Card variant="outlined" style={styles.card} testID="plan-status">
               <View style={styles.row}>
                 <Text variant="h3" style={styles.flex}>
                   {t('plan.name')}
                 </Text>
-                <StatusPill
-                  status={p.active ? (p.trial ? 'due_soon' : 'valid') : 'expired'}
-                  label={t(p.active ? (p.trial ? 'plan.trial.pill' : 'plan.active') : 'plan.inactive')}
-                />
+                <StatusPill status={p.active ? 'valid' : 'expired'} label={t(pill)} />
               </View>
               <Text color="textSecondary" testID="plan-status-line">
                 {statusLine(p, t, (d) => dates.day(d, 'd MMMM yyyy'))}
               </Text>
-              {canOfferPlans ? (
-                <View style={[styles.price, { backgroundColor: theme.colors.primary50, borderRadius: theme.radius.md }]}>
-                  <Text variant="display" tabular testID="plan-price">
-                    {formatMoney(p.monthly_minor, p.currency)}
-                  </Text>
-                  <Text color="textSecondary">{t('plan.perMonth')}</Text>
-                  <Text variant="bodyStrong" testID="plan-people">
-                    {t('plan.people', { count: p.people })}
-                  </Text>
-                  <Text variant="small" color="textSecondary">
-                    {t('plan.pricing', {
-                      base: formatMoney(p.base_minor, p.currency),
-                      included: p.included_people,
-                      extra: formatMoney(p.extra_person_minor, p.currency),
-                    })}
-                  </Text>
-                </View>
-              ) : null}
+              {billing ? <BranchBill plan={p} months={months} onMonths={setMonths} /> : null}
+              {billing ? (
               <View style={styles.list}>
                 {INCLUDED.map((i) => (
                   <View key={i.key} style={styles.row}>
@@ -109,12 +98,13 @@ export function PlanScreen() {
                   </View>
                 ))}
               </View>
+              ) : null}
             </Card>
 
             {owner && paidId ? <CardReturn businessId={business.id} paymentId={paidId} /> : null}
-            {owner ? (
+            {owner && billing ? (
               <Card variant="outlined" style={styles.card}>
-                <Text variant="h4">{t(p.active && !p.trial ? 'plan.extendTitle' : 'plan.requestTitle')}</Text>
+                <Text variant="h4">{t(p.paid ? 'plan.extendTitle' : 'plan.requestTitle')}</Text>
                 {p.requested_at ? (
                   <Text color="primaryText" testID="plan-requested">
                     {t('plan.requested', {
@@ -123,34 +113,25 @@ export function PlanScreen() {
                     })}
                   </Text>
                 ) : null}
-                <PillTabs<string>
-                  items={MONTHS.map((m) => ({ key: String(m), label: t(`plan.monthsOption.${m}` as 'plan.monthsOption.1') }))}
-                  value={String(months)}
-                  onChange={(v) => setMonths(Number(v) as (typeof MONTHS)[number])}
-                  testID="plan-months"
-                />
-                <Text variant="bodyStrong" testID="plan-total">
-                  {t('plan.total', { total: formatMoney(p.monthly_minor * months, p.currency) })}
-                </Text>
               </Card>
             ) : null}
             {/* By card: paid and switched on at once. */}
-            {owner ? <PayByCard businessId={business.id} plan={p} months={months} admin={admin} /> : null}
+            {owner && billing ? <PayByCard businessId={business.id} plan={p} months={months} admin={admin} /> : null}
             {/* Neither way to pay is on: ask us (brief 5.3). */}
-            {owner && pay.contact ? (
+            {owner && billing && pay.contact ? (
               <Card variant="outlined" style={styles.card} testID="plan-contact">
                 <Text color="textSecondary">{t('plan.contactToBuy')}</Text>
                 <Button label={t('support.contactTitle')} icon="messageCircle" variant="outline" onPress={() => router.push('/support')} />
               </Card>
             ) : null}
             {/* By bank transfer or a card link, once switched on (brief 5.3): pay first, then tell us (the request below). */}
-            {owner && pay.bank ? <HowToPay code={business.code} /> : null}
-            {owner && pay.bank ? (
+            {owner && billing && pay.bank ? <HowToPay code={business.code} /> : null}
+            {owner && billing && pay.bank ? (
               <Card variant="outlined" style={styles.card}>
                 <TextField label={t('plan.note')} placeholder={t('plan.notePlaceholder')} value={note} onChangeText={setNote} testID="plan-note" />
                 <FormError error={request.error} />
                 <Button
-                  label={t(p.active && !p.trial ? 'plan.extendAction' : 'plan.requestAction')}
+                  label={t(p.paid ? 'plan.extendAction' : 'plan.requestAction')}
                   loading={request.isPending}
                   onPress={() =>
                     request.mutate({ months, note }, { onSuccess: () => { setNote(''); toast(t('plan.requestSent')); } })
@@ -159,8 +140,11 @@ export function PlanScreen() {
                 />
               </Card>
             ) : null}
+            {/* A pilot code, for an owner whose salon is not a pilot salon or free for good. */}
+            {can(role, 'requestPlan') && p.access_type !== 'pilot' && p.access_type !== 'comp' ? <PilotCodeCard businessId={business.id} /> : null}
           </View>
-        )}
+          );
+        }}
       </QueryState>
     </Screen>
   );
@@ -171,6 +155,5 @@ const styles = StyleSheet.create({
   card: { gap: spacing.md },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   flex: { flex: 1 },
-  price: { padding: spacing.lg, gap: 2, alignItems: 'flex-start' },
   list: { gap: spacing.sm },
 });

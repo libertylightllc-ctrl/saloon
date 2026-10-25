@@ -10,8 +10,13 @@ export interface Overview {
   salons: number;
   salons_closed: number;
   salons_plan_active: number;
-  /** On their free trial (not counted in salons_plan_active). */
+  /** In the public free period (not counted in salons_plan_active). */
   salons_trial: number;
+  salons_pilot: number;
+  salons_comp: number;
+  billing_enabled: boolean;
+  pilot_places_left: number;
+  pilot_applications_new: number;
   plan_requests_open: number;
   branches: number;
   accounts: number;
@@ -123,5 +128,168 @@ export function useCloseSalon() {
       if (error) throw error;
     },
     onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}
+
+/** Billing for everyone and the free days (full update, Phase 6 g). */
+export interface BillingSettings {
+  billing_enabled: boolean;
+  public_free_days: number;
+  pilot_free_days: number;
+  pilot_max_salons: number;
+}
+
+export function useBillingSettings() {
+  return useQuery({
+    queryKey: ['platform', 'billing'],
+    queryFn: async (): Promise<BillingSettings> => {
+      const { data, error } = await supabase
+        .from('platform_settings')
+        .select('billing_enabled, public_free_days, pilot_free_days, pilot_max_salons')
+        .single();
+      if (error) throw error;
+      return data as unknown as BillingSettings;
+    },
+  });
+}
+
+export function useSetBilling() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: Partial<BillingSettings>) => {
+      const { error } = await supabase.rpc('admin_set_billing', { p });
+      if (error) throw error;
+    },
+    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}
+
+export type AccessAction = 'pilot' | 'extend' | 'set_end' | 'end_now' | 'comp' | 'note';
+
+/** One salon's access: make pilot (days or a date), extend 30 days, set the end, end now, free for good, the note. */
+export function useSetAccess() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (v: { businessId: string; action: AccessAction; days?: number; until?: string; note?: string }) => {
+      const { error } = await supabase.rpc('admin_set_access', {
+        p_business: v.businessId,
+        p: { action: v.action, days: v.days, until: v.until, note: v.note },
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      void client.invalidateQueries({ queryKey: ['platform'] });
+      void client.invalidateQueries({ queryKey: ['admin'] });
+    },
+  });
+}
+
+export interface PilotCode {
+  code: string;
+  days: number;
+  max_uses: number;
+  uses: number;
+  expires_on: string | null;
+  note: string | null;
+  disabled: boolean;
+  created_at: string;
+  created_by: string | null;
+}
+
+export function usePilotCodes() {
+  return useQuery({
+    queryKey: ['platform', 'pilot-codes'],
+    queryFn: async (): Promise<PilotCode[]> => {
+      const { data, error } = await supabase.rpc('admin_pilot_codes');
+      if (error) throw error;
+      return (data ?? []) as unknown as PilotCode[];
+    },
+  });
+}
+
+export function useCreatePilotCode() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { code?: string; days?: number; max_uses?: number; expires_on?: string; note?: string }) => {
+      const { data, error } = await supabase.rpc('admin_create_pilot_code', { p });
+      if (error) throw error;
+      return data as unknown as string;
+    },
+    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}
+
+export function useDisablePilotCode() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (code: string) => {
+      const { error } = await supabase.rpc('admin_disable_pilot_code', { p_code: code });
+      if (error) throw error;
+    },
+    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}
+
+export interface PilotApplication {
+  id: string;
+  name: string;
+  salon_name: string;
+  emirate: string;
+  area: string | null;
+  salon_type: string;
+  staff_count: number;
+  whatsapp: string;
+  language: string;
+  whatsapp_ok: boolean;
+  status: 'new' | 'approved' | 'declined';
+  code: string | null;
+  created_at: string;
+  decided_at: string | null;
+}
+
+export function usePilotApplications() {
+  return useQuery({
+    queryKey: ['platform', 'pilot-applications'],
+    queryFn: async (): Promise<PilotApplication[]> => {
+      const { data, error } = await supabase.rpc('admin_pilot_applications');
+      if (error) throw error;
+      return (data ?? []) as unknown as PilotApplication[];
+    },
+  });
+}
+
+/** Approve (a one-use code for the pilot's days, for a WhatsApp message) or decline. */
+export function useDecidePilotApplication() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (v: { id: string; approve: boolean }) => {
+      const { data, error } = await supabase.rpc('admin_decide_pilot_application', { p_id: v.id, p_approve: v.approve });
+      if (error) throw error;
+      return data as unknown as { code: string | null; name: string; whatsapp: string; language: string; days: number };
+    },
+    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}
+
+export interface AuditRow {
+  id: string;
+  actor: string | null;
+  action: string;
+  salon: string | null;
+  subject: string | null;
+  before: Record<string, unknown> | null;
+  after: Record<string, unknown> | null;
+  created_at: string;
+}
+
+/** Who changed what and when, with the old and new values. */
+export function usePlatformAudit() {
+  return useQuery({
+    queryKey: ['platform', 'audit'],
+    queryFn: async (): Promise<AuditRow[]> => {
+      const { data, error } = await supabase.rpc('admin_platform_audit', { p_limit: 300 });
+      if (error) throw error;
+      return (data ?? []) as unknown as AuditRow[];
+    },
   });
 }

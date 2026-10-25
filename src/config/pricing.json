@@ -5,5 +5,5 @@
     { "months": 12, "payTenths": 100, "freeMonths": 2, "bestValue": true }
   ],
   "perDayUnder": { "AED": 200, "USD": 50 },
-  "multiBranch": false
+  "multiBranch": true
 }

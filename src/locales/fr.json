@@ -440,7 +440,8 @@
       "switch": "Changer d’utilisateur",
       "plan": "Abonnement et facturation",
       "admin": "Console de la plateforme",
-      "mySales": "Mes ventes"
+      "mySales": "Mes ventes",
+      "branches": "Établissements"
     },
     "logOut": "Se déconnecter",
     "title": "Plus",
@@ -560,7 +561,8 @@
       "action": "Créer le compte",
       "haveAccount": "Vous avez déjà un compte ?",
       "signIn": "Se connecter",
-      "offer": "Gratuit pour commencer · Sans carte · Pas de renouvellement automatique"
+      "offer": "Gratuit pour commencer · Sans carte · Pas de renouvellement automatique",
+      "pilotHint": "Fourni par l’équipe Saloqo. Nous l’utilisons quand vous configurez votre salon."
     },
     "forgot": {
       "title": "Réinitialiser le mot de passe",
@@ -751,7 +753,7 @@
         "free": {
           "q": "Combien de temps est-ce gratuit ?",
           "a": "Votre période gratuite s’affiche dans l’app, sous Plus → Abonnement et facturation. À la fin, rien n’est facturé sauf si vous choisissez une formule, et vos données restent : vous pouvez les consulter et les exporter à tout moment.",
-          "pilot": "Les salons du pilote ont 3 mois gratuits."
+          "pilot": "Les salons du pilote ont {{months}} mois gratuits."
         },
         "branches": {
           "q": "Puis-je gérer plusieurs établissements ?",
@@ -836,6 +838,37 @@
         "step3Body": "Comptez la caisse. Saloqo affiche les espèces attendues et tout écart.",
         "stepOf": "Étape {{n}} sur {{total}}",
         "next": "Suivant"
+      },
+      "pilot": {
+        "bar": "Pilote ouvert : {{max}} salons aux Émirats ont Saloqo gratuit pendant {{months}} mois.",
+        "places_one": "Reste {{count}} place",
+        "places_other": "Reste {{count}} places",
+        "apply": "Postuler →",
+        "full": "Pilote complet · Essayez gratuitement",
+        "underPlans": "Salons pilotes : gratuit pendant {{months}} mois",
+        "title": "Rejoignez le pilote Saloqo",
+        "lead": "Nous choisissons {{max}} barbiers, salons et spas aux Émirats pour utiliser Saloqo gratuitement pendant {{months}} mois. Nous vous aidons à l’installer, et vos retours orientent la suite.",
+        "points": {
+          "free": "Gratuit pendant {{months}} mois — sans carte ni contrat",
+          "whatsapp": "Aide à l’installation sur WhatsApp, dans votre langue",
+          "data": "Vos données restent à vous — exportez-les quand vous voulez"
+        },
+        "form": {
+          "name": "Votre nom",
+          "salon": "Nom du salon",
+          "emirate": "Émirat",
+          "area": "Quartier",
+          "type": "Type de salon",
+          "staff": "Nombre d’employés",
+          "whatsapp": "Numéro WhatsApp",
+          "language": "Langue préférée",
+          "ok": "J’accepte d’être contacté sur WhatsApp au sujet du pilote",
+          "submit": "Postuler au pilote",
+          "thanks": "Merci ! Nous vous écrirons sur WhatsApp sous 2 jours ouvrés.",
+          "error": "L’envoi n’a pas abouti. Vérifiez vos informations et réessayez.",
+          "tooMany": "Trop de candidatures d’ici. Réessayez dans une heure.",
+          "full": "Le pilote est complet. Vous pouvez quand même essayer Saloqo gratuitement."
+        }
       }
     },
     "google": {
@@ -1014,7 +1047,7 @@
     "pin_locked": "Trop de PIN incorrects. Réessayez dans 5 minutes ou connectez-vous avec le mot de passe.",
     "wrong_pin": "Ce PIN est incorrect.",
     "switch_expired": "Cette personne doit se reconnecter avec son mot de passe.",
-    "plan_required": "L’abonnement de votre salon n’est pas actif : impossible d’enregistrer pour l’instant. Le propriétaire peut l’activer dans Plus → Abonnement et facturation.",
+    "plan_required": "La période gratuite de votre salon est terminée : ceci ne peut pas encore être enregistré. Le propriétaire peut choisir une formule dans Plus → Abonnement et facturation.",
     "employee_has_login": "Cette personne a déjà un accès.",
     "account_deleted": "Votre compte a été supprimé.",
     "on_break": "Déjà en pause.",
@@ -1044,7 +1077,12 @@
     "photo_missing": "La photo n’a pas été envoyée. Réessayez.",
     "invalid_instagram": "Saisissez votre identifiant Instagram : lettres, chiffres, points et tirets bas.",
     "room_name_required": "Donnez un nom à la cabine (40 caractères maximum).",
-    "room_taken": "Une autre cabine utilisée porte déjà ce nom."
+    "room_taken": "Une autre cabine utilisée porte déjà ce nom.",
+    "billing_off": "Les formules et paiements ne sont pas encore ouverts. Rien n’est facturé ; continuez à utiliser l’app.",
+    "branch_name_taken": "Un autre établissement porte déjà ce nom.",
+    "too_many_branches": "Un salon peut avoir jusqu’à 20 établissements.",
+    "code_taken": "Ce code existe déjà. Choisissez-en un autre.",
+    "invalid_setting": "Cette valeur n’est pas autorisée. Vérifiez-la et réessayez."
   },
   "sales": {
     "title": "Ventes",
@@ -2067,8 +2105,9 @@
         "body": "{{preview}}"
       },
       "trial_ending": {
-        "title": "Votre essai gratuit se termine demain",
-        "body": "Demain est le dernier jour. Ensuite, rien de nouveau ne peut être enregistré tant que l’abonnement n’est pas actif ; tout ce qui est enregistré est conservé."
+        "title": "Votre période gratuite se termine dans {{count}} jours",
+        "body": "Gratuit jusqu’au {{until}}. Choisissez une formule dans Plus → Abonnement et facturation pour continuer à enregistrer ; rien n’est facturé sinon, et tout ce qui est enregistré reste.",
+        "title_one": "Votre période gratuite se termine dans {{count}} jour"
       },
       "online_booking": {
         "title": "Nouvelle réservation en ligne",
@@ -2269,7 +2308,6 @@
     "requested": "Vous avez demandé {{months}} mois le {{date}}. L’abonnement s’active dès réception du paiement.",
     "monthsOption": {
       "1": "1 mois",
-      "3": "3 mois",
       "6": "6 mois",
       "12": "12 mois"
     },
@@ -2287,7 +2325,7 @@
       "action": "Voir l’abonnement",
       "staffTitle": "L’abonnement du salon n’est pas actif",
       "staffBody": "Demandez au propriétaire de l’activer. Vous pouvez quand même consulter l’app.",
-      "trialEndedTitle": "Votre essai gratuit est terminé"
+      "trialEndedTitle": "Votre période gratuite est terminée"
     },
     "extendAction": "Demander des mois en plus",
     "store": {
@@ -2307,19 +2345,8 @@
     "perMonth": "par mois",
     "people": "{{count}} personnes se connectent : vous et les accès de vos employés",
     "people_one": "{{count}} personne se connecte : vous",
-    "pricing": "{{base}} couvre jusqu’à {{included}} personnes ; chaque personne en plus ajoute {{extra}} par mois. Les succursales ne coûtent rien de plus.",
-    "extraPerson": "Votre abonnement couvre {{included}} personnes et {{people}} se connectent déjà : cet accès ajoute donc {{extra}} par mois.",
-    "trial": {
-      "pill": "Essai gratuit",
-      "left": "Essai gratuit : encore {{count}} jours, jusqu’au {{date}}.",
-      "left_one": "Essai gratuit : encore {{count}} jour, jusqu’au {{date}}.",
-      "lastDay": "Aujourd’hui est le dernier jour de votre essai gratuit",
-      "ended": "Votre essai gratuit s’est terminé le {{date}}. Activez votre abonnement pour continuer à ajouter du travail ; tout ce qui est enregistré est conservé.",
-      "bannerTitle": "Essai gratuit : encore {{count}} jours",
-      "bannerTitle_one": "Essai gratuit : encore {{count}} jour",
-      "bannerBody": "Tout est activé jusqu’au {{date}}. Activez votre abonnement quand vous voulez pour continuer ensuite.",
-      "bannerBodyStore": "Tout est activé jusqu’au {{date}}."
-    },
+    "pricing": "Chaque établissement coûte {{base}} par mois pour {{included}} personnes qui s’y connectent au maximum ; chaque personne en plus ajoute {{extra}} par mois.",
+    "extraPerson": "Le prix de cet établissement couvre {{included}} personnes et {{people}} s’y connectent déjà : ce compte ajoute {{extra}} par mois.",
     "card": {
       "title": "Payer par carte",
       "body": "Payez maintenant par carte bancaire et votre abonnement s’active aussitôt. Débité en dollars américains.",
@@ -2332,7 +2359,41 @@
       "done": "Payé. Votre abonnement est actif jusqu’au {{date}}.",
       "check": "Nous vérifions ce paiement et vous contacterons."
     },
-    "contactToBuy": "Pour activer votre forfait, écrivez-nous et nous vous aiderons à payer."
+    "contactToBuy": "Pour activer votre forfait, écrivez-nous et nous vous aiderons à payer.",
+    "access": {
+      "pilot": "Salon pilote · gratuit jusqu’au {{date}}",
+      "free": "Gratuit jusqu’au {{date}}",
+      "comp": "Gratuit · sans date de fin",
+      "now": "Gratuit pour l’instant"
+    },
+    "free": {
+      "pill": "Gratuit",
+      "pilotPill": "Pilote",
+      "ended": "Votre période gratuite s’est terminée le {{date}}. Choisissez une formule pour continuer à enregistrer ; tout ce qui est enregistré reste.",
+      "bannerTitle": "Il reste {{count}} jours gratuits",
+      "bannerTitle_one": "Il reste {{count}} jour gratuit",
+      "bannerBody": "Gratuit jusqu’au {{date}}. Choisissez une formule quand vous voulez pour continuer ensuite ; rien n’est facturé sinon.",
+      "bannerBodyStore": "Gratuit jusqu’au {{date}}.",
+      "lastDay": "Aujourd’hui est votre dernier jour gratuit"
+    },
+    "pilot": {
+      "link": "Vous avez un code pilote ?",
+      "title": "Rejoignez le pilote avec votre code",
+      "field": "Code pilote",
+      "action": "Utiliser le code",
+      "refused": {
+        "invalid_code": "Ce code n’est pas bon. Vérifiez-le et réessayez.",
+        "code_expired": "Ce code a expiré. Demandez-en un nouveau à l’équipe Saloqo.",
+        "code_used_up": "Ce code a déjà été utilisé.",
+        "pilot_already": "Ce salon fait déjà partie du pilote.",
+        "pilot_not_needed": "Ce salon est déjà gratuit.",
+        "pilot_full": "Le pilote est complet pour l’instant.",
+        "too_many_attempts": "Trop d’essais. Attendez une heure et réessayez."
+      }
+    },
+    "branchPeople": "{{count}} personnes se connectent ici",
+    "branchPeople_one": "{{count}} personne se connecte ici",
+    "perMonthAll": "Par mois, tous les établissements"
   },
   "admin": {
     "title": "Salons et abonnements",
@@ -2341,7 +2402,7 @@
     "meta": "Code {{code}} · succursales {{branches}} · inscrit le {{date}}",
     "requested": "A demandé {{months}} mois. {{note}}",
     "asked": "Demandé",
-    "until": "Jusqu’au {{date}}",
+    "until": "Payé jusqu’au {{date}}",
     "amount": "Montant reçu",
     "note": "Note",
     "notePlaceholder": "par ex. réf. du virement",
@@ -2349,7 +2410,7 @@
     "activated": "{{name}} : abonnement activé",
     "endPlan": "Mettre fin à l’abonnement (note requise)",
     "ended": "{{name}} : abonnement terminé",
-    "hint": "L’abonnement court à partir d’aujourd’hui, ou de la fin de l’abonnement ou de l’essai gratuit en cours. L’arrêter conserve toutes les données du salon.",
+    "hint": "Un paiement court à partir d’aujourd’hui, ou de la fin de la période payée si elle est en cours. Y mettre fin garde toutes les données du salon.",
     "pay": {
       "button": "Coordonnées de paiement",
       "title": "Où les salons paient",
@@ -2365,8 +2426,7 @@
         "pay_note": "Note pour les salons (facultatif)"
       },
       "saved": "Coordonnées de paiement enregistrées"
-    },
-    "trialUntil": "Essai jusqu’au {{date}}"
+    }
   },
   "account": {
     "delete": {
@@ -2592,11 +2652,14 @@
       "plans": "Abonnements",
       "activity": "Activité",
       "support": "Assistance",
-      "cards": "Paiements par carte"
+      "cards": "Paiements par carte",
+      "pilot": "Pilote",
+      "settings": "Réglages",
+      "audit": "Modifications"
     },
     "overview": {
       "salons": "Salons",
-      "salonsSub": "{{active}} avec abonnement · {{trial}} en essai · {{closed}} fermés",
+      "salonsSub": "{{active}} payants · {{trial}} gratuits · {{pilot}} pilote · {{comp}} gratuits à vie · {{closed}} fermés",
       "requests": "Demandes d’abonnement en attente",
       "accounts": "Comptes de connexion",
       "accountsSub": "{{owners}} propriétaires · {{staff}} accès employés · {{none}} sans salon",
@@ -2607,7 +2670,9 @@
       "salesLine_one": "{{count}} vente",
       "planIncome": "Paiements d’abonnement reçus",
       "countries": "Salons par pays",
-      "none": "Rien pour l’instant."
+      "none": "Rien pour l’instant.",
+      "pilot": "Places restantes du pilote",
+      "pilotSub": "{{applications}} nouvelles candidatures"
     },
     "salons": {
       "search": "Rechercher salons, propriétaires, codes",
@@ -2653,7 +2718,9 @@
         "request": "Demandé",
         "activate": "Payé",
         "end": "Terminé",
-        "trial": "Essai gratuit"
+        "trial": "Période gratuite",
+        "pilot": "Pilote",
+        "access": "Accès modifié"
       }
     },
     "activity": {
@@ -2697,6 +2764,86 @@
       "bankHint": "Les salons voient vos coordonnées de paiement et vous demandent d’activer leur forfait. Laissez désactivé tant que la société et le compte bancaire ne sont pas prêts.",
       "bankOff": "Désactivé",
       "bankOn": "Activé"
+    },
+    "access": {
+      "title": "Accès",
+      "comp": "Gratuit à vie",
+      "pilotUntil": "Pilote · jusqu’au {{date}}",
+      "freeUntil": "Gratuit jusqu’au {{date}}",
+      "none": "Pas de période gratuite",
+      "code": "Code pilote {{code}}",
+      "pilotDays": "Pilote : {{days}} jours",
+      "extend": "+30 jours",
+      "compAction": "Gratuit à vie",
+      "endNow": "Terminer maintenant",
+      "date": "Date (année-mois-jour)",
+      "pilotUntilAction": "Pilote jusqu’à cette date",
+      "setEnd": "Gratuit jusqu’à cette date",
+      "note": "Note (visible seulement par les propriétaires de la plateforme)",
+      "saveNote": "Enregistrer la note",
+      "saved": "Enregistré"
+    },
+    "billing": {
+      "title": "Facturation",
+      "on": "Facturation activée",
+      "off": "Facturation désactivée",
+      "onBody": "Les propriétaires voient les prix et les formules. Un salon dont la période gratuite est finie ne peut plus enregistrer avant de payer ; ses données restent.",
+      "offBody": "Personne n’est invité à payer et l’app n’affiche ni prix ni formule. Tout salon ouvert fonctionne, quelles que soient ses dates.",
+      "turnOn": "Activer la facturation",
+      "turnOff": "Désactiver la facturation",
+      "confirmOn": "Activer la facturation ? Les propriétaires verront les prix, et les salons dont la période gratuite est finie devront choisir une formule avant d’enregistrer.",
+      "confirmOff": "Désactiver la facturation ? Tout salon ouvert peut travailler et personne n’est invité à payer.",
+      "numbers": "Période gratuite et pilote",
+      "freeDays": "Jours gratuits pour un nouveau salon",
+      "pilotDays": "Jours gratuits pour un salon pilote",
+      "pilotMax": "Salons pilotes au maximum"
+    },
+    "pilot": {
+      "applications": "Candidatures",
+      "noApplications": "Pas encore de candidatures.",
+      "status": {
+        "new": "Nouvelle",
+        "approved": "Acceptée",
+        "declined": "Refusée"
+      },
+      "emirates": {
+        "abu_dhabi": "Abou Dabi",
+        "dubai": "Dubaï",
+        "sharjah": "Charjah",
+        "ajman": "Ajman",
+        "umm_al_quwain": "Oumm al Qaïwaïn",
+        "ras_al_khaimah": "Ras el Khaïmah",
+        "fujairah": "Fujaïrah"
+      },
+      "types": {
+        "barber": "Barbier",
+        "ladies": "Salon pour femmes",
+        "unisex": "Salon mixte",
+        "spa": "Spa",
+        "beauty": "Institut d’ongles et de beauté"
+      },
+      "staff": "{{count}} employés",
+      "whatsappOk": "D’accord pour WhatsApp",
+      "approve": "Accepter",
+      "decline": "Refuser",
+      "openWhatsApp": "Ouvrir dans WhatsApp",
+      "message": "Bonjour {{name}}, bienvenue dans le pilote Saloqo ! Inscrivez-vous sur saloqo.com, touchez « {{link}} » et tapez {{code}}. Votre salon est alors gratuit pendant {{days}} jours.",
+      "codes": "Codes pilote",
+      "noCodes": "Pas encore de codes.",
+      "code": "Code (vide : un code est créé)",
+      "days": "Jours gratuits (vide : ceux du pilote)",
+      "maxUses": "Combien de salons peuvent l’utiliser",
+      "expires": "Valable jusqu’au (année-mois-jour, facultatif)",
+      "create": "Créer le code",
+      "created": "Code {{code}} créé",
+      "codeLine": "{{days}} jours · utilisé {{uses}} sur {{max}}",
+      "until": "Valable jusqu’au {{date}}",
+      "disable": "Désactiver",
+      "disabled": "Désactivé"
+    },
+    "audit": {
+      "empty": "Pas encore de modifications.",
+      "change": "{{before}} → {{after}}"
     }
   },
   "profile": {
@@ -2933,5 +3080,16 @@
     "notFound": {
       "title": "Page introuvable – Saloqo"
     }
+  },
+  "branches": {
+    "title": "Établissements",
+    "subtitle": "Tous les établissements de votre salon, avec un seul compte propriétaire",
+    "openNow": "Ouvert maintenant",
+    "open": "Ouvrir",
+    "new": "Ajouter un établissement",
+    "name": "Nom de l’établissement",
+    "add": "Ajouter",
+    "added": "{{name}} ajouté",
+    "priceNote": "Cet établissement ajoute {{price}} par mois à votre formule pour {{included}} personnes qui s’y connectent au maximum, et {{extra}} par personne en plus, à partir de votre prochain paiement. Rien n’est facturé maintenant."
   }
 }

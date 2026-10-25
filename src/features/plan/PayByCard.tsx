@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { BILLING_LENGTHS, lengthTotal } from '@/config/pricing';
 import { isCurrency } from '@/lib/currencies';
 import { formatMoney } from '@/lib/money';
 import { useDates } from '@/lib/useDates';
@@ -13,9 +14,9 @@ import { planKey, type PlanStatus } from './api';
 import { useCardPayment, useCardPrice, usePayByCard } from './cardApi';
 
 /**
- * Plan & billing → Pay by card: the total in US dollars for the months picked (the salon's people now), tax added
- * by Creem where it applies; the button opens Creem's secure checkout. Shown while card payments are live (in test,
- * to platform admins only — the server checks the same).
+ * Plan & billing → Pay by card: the total in US dollars for the months picked — every branch's price for its people
+ * now, with the length's discount (the server works it out the same way) — tax added by Creem where it applies; the
+ * button opens Creem's secure checkout. Shown while card payments are live (in test, to platform admins only).
  */
 export function PayByCard({ businessId, plan, months, admin }: { businessId: string; plan: PlanStatus; months: number; admin: boolean }) {
   const { t } = useTranslation();
@@ -24,8 +25,12 @@ export function PayByCard({ businessId, plan, months, admin }: { businessId: str
   const p = price.data;
   if (!p || p.card_payments === 'off' || (p.card_payments === 'test' && !admin)) return null;
   const currency = isCurrency(p.intl_currency) ? p.intl_currency : 'USD';
-  const extra = Math.max(plan.people - p.included_people, 0);
-  const total = (p.intl_price_per_branch_minor + extra * p.intl_extra_person_minor) * months;
+  const length = BILLING_LENGTHS.find((l) => l.months === months) ?? BILLING_LENGTHS[0]!;
+  const monthly = plan.branches.reduce(
+    (sum, b) => sum + p.intl_price_per_branch_minor + Math.max(b.people - p.included_people, 0) * p.intl_extra_person_minor,
+    0,
+  );
+  const total = lengthTotal(monthly, length);
   return (
     <Card variant="outlined" style={styles.card} testID="plan-card">
       <View style={styles.row}>

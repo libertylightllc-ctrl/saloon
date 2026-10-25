@@ -119,15 +119,13 @@ test.describe('on a phone', () => {
     await page.mouse.move(195, 400);
     for (let i = 0; i < 12; i++) await page.mouse.wheel(0, 300);
     await expect(page.locator('[data-start="header"]')).toBeInViewport();
-    // 6 people for 12 months: (50 + 2 × 10) × 10 months' price. One branch per salon for now: no branch count, no
-    // second-branch question or example (src/config/pricing.ts MULTI_BRANCH).
-    await expect(page.locator('[data-calc="branches"]')).toHaveCount(0);
-    await page.selectOption('[data-calc="people"]', '6');
+    // 2 branches of 5 people for 12 months: (50 + 10) × 2 × 10 months' price (branches can be added since Phase 6).
+    await page.selectOption('[data-calc="branches"]', '2');
+    await page.selectOption('[data-calc="people"]', '5');
     await page.selectOption('[data-calc="months"]', '12');
-    await expect(page.locator('[data-calc-total]')).toHaveText('Total: AED\u00a0700');
-    await expect(page.locator('details[data-faq="branches"]')).toHaveCount(0);
-    await expect(page.locator('#pricing')).not.toContainText('Every branch in one owner login');
-    await expect(page.locator('#pricing')).not.toContainText('2 branches');
+    await expect(page.locator('[data-calc-total]')).toHaveText('Total: AED\u00a01,200');
+    await expect(page.locator('details[data-faq="branches"]')).toHaveCount(1);
+    await expect(page.locator('#pricing')).toContainText('Every branch in one owner login');
     await page.locator('details[data-faq="price"] summary').click();
     await expect(page.locator('details[data-faq="price"] .uae')).toContainText('AED\u00a050 a month per branch, for up to 4 people');
     // Four salon types to choose from (brief 5.4).
@@ -243,6 +241,38 @@ test.describe('the app pictures and the tour', () => {
     await expect(tour).toBeHidden();
     await expect(page.locator('[data-tour]')).toBeFocused();
     expect([...sets].sort()).toEqual(['es/aed', 'es/usd']);
+    expect(errors).toEqual([]);
+  });
+});
+
+test.describe('the pilot, for visitors in the UAE', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, timezoneId: 'Asia/Dubai' });
+
+  test('a bar, a menu link and the section with its form; an application is thanked; other visitors see none of it', async ({ page }) => {
+    const errors = watchErrors(page);
+    // Each run applies from an address of its own (the form allows 3 an hour from one address).
+    const address = `198.51.100.${Math.floor(Math.random() * 250) + 1}`;
+    await page.route('**/rest/v1/rpc/apply_for_pilot', (route) =>
+      route.continue({ headers: { ...route.request().headers(), 'x-forwarded-for': address } }),
+    );
+    await page.goto(`${site}/`);
+    await expect(page.locator('.pilot-bar a[href="#pilot"]')).toContainText('Pilot open');
+    await expect(page.locator('.main-nav a[href="#pilot"]')).toBeVisible();
+    const form = page.locator('[data-pilot-form]');
+    await form.locator('[name="name"]').fill('Mariam');
+    await form.locator('[name="salon_name"]').fill('Al Wasl Ladies');
+    await form.locator('[name="area"]').fill('Al Wasl');
+    await form.locator('[name="salon_type"]').selectOption('ladies');
+    await form.locator('[name="staff_count"]').fill('6');
+    await form.locator('[name="whatsapp"]').fill('050 123 4567');
+    await form.locator('[name="whatsapp_ok"]').check();
+    await form.locator('button[type="submit"]').click();
+    await expect(form.locator('[data-pilot-out]')).toHaveText('Thanks! We’ll message you on WhatsApp within 2 working days.');
+    // Elsewhere (USD): no pilot anywhere.
+    await page.locator('[data-currency="USD"]').click();
+    await expect(page.locator('.pilot-bar')).toBeHidden();
+    await expect(page.locator('#pilot')).toBeHidden();
+    await expect(page.locator('.main-nav a[href="#pilot"]')).toBeHidden();
     expect(errors).toEqual([]);
   });
 });

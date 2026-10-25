@@ -68,11 +68,12 @@ test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt
   expect(biz).toMatchObject({ country_code: 'US', currency: 'USD', timezone: 'America/New_York' });
   expect(biz!.branches[0]).toMatchObject({ tax_name: 'Sales tax', tax_rate_bps: 887.5, tax_inclusive: false, vat_mode: 'on' });
 
-  // The plan outside the UAE: USD 13.99 a branch (about AED 50). The platform owner switches it on.
+  // A new salon is in its free period: the plan page is a note, no price (full update, Phase 6). Paid later.
   await tab(page, 'more');
   await id(page, 'more-plan').click();
-  await expect(id(page, 'plan-price')).toHaveText('USD 13.99');
-  await admin.from('subscriptions').upsert({ business_id: biz!.id, paid_until: '2099-12-31', trial: false });
+  await expect(id(page, 'plan-status-line')).toContainText('Free until');
+  await expect(id(page, 'plan-price')).toHaveCount(0);
+  await admin.from('subscriptions').upsert({ business_id: biz!.id, paid_until: '2099-12-31', trial: false, access_type: 'paid' });
   await expect(text(page, 'Paid until 31 December 2099.')).toBeVisible();
   await page.goto('/');
 

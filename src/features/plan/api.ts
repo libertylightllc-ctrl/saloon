@@ -1,4 +1,4 @@
-/** The salon's paid plan (docs/06): its status, the owner's request, and the platform owner's tools. */
+/** The salon's plan (docs/06; full update, Phase 6): its access and price, the owner's request, the pilot code. */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { differenceInCalendarDays } from 'date-fns/differenceInCalendarDays';
 import { parseISO } from 'date-fns/parseISO';
@@ -8,11 +8,36 @@ import { supabase } from '@/lib/supabase';
 
 export const planKey = (businessId: string) => ['plan', businessId] as const;
 
-/** Priced by people, per salon: the base covers `included_people` sign-ins; each one after adds the extra. */
+export type AccessType = 'trial' | 'pilot' | 'paid' | 'comp';
+
+/** One branch's line of the bill: its people (the owner and the accountant count at the first branch) and price. */
+export interface BranchLine {
+  branch_id: string;
+  name: string;
+  people: number;
+  extra_people: number;
+  monthly_minor: number;
+}
+
+/**
+ * The salon's plan (full update, Phase 6): its access — the free period, the pilot, paid, or free for good; billing
+ * switched on or off for everyone — and its price per branch: the base covers `included_people` sign-ins at a branch,
+ * each one after that adds the extra; totals for 1, 6 (10% off) and 12 months (the price of 10).
+ */
 export interface PlanStatus {
+  /** New work can be saved (the server's one access check). */
   active: boolean;
+  /** Off: nobody is asked to pay and no price or plan is shown in the app. */
+  billing_enabled: boolean;
+  access_type: AccessType;
+  /** The last free day (free period or pilot). */
+  free_until: string | null;
+  /** In the free period or the pilot, or free for good. */
+  free: boolean;
+  pilot_code: string | null;
   paid_until: string | null;
-  /** The plan running until paid_until is the free trial (when not active: the trial has ended). */
+  paid: boolean;
+  /** In the public free period (not a pilot). */
   trial: boolean;
   /** The salon's business date. */
   today: string;
@@ -21,9 +46,12 @@ export interface PlanStatus {
   included_people: number;
   base_minor: number;
   extra_person_minor: number;
+  /** Every branch together, for one month. */
   monthly_minor: number;
   /** AED in the UAE, USD elsewhere. */
   currency: CurrencyCode;
+  branches: BranchLine[];
+  lengths: { months: number; total_minor: number }[];
   requested_at: string | null;
   requested_months: number | null;
 }
@@ -43,14 +71,51 @@ export function usePlanStatus(businessId: string) {
         extra_person_minor: Number(r.extra_person_minor),
         monthly_minor: Number(r.monthly_minor),
         currency: isCurrency(r.currency) ? r.currency : 'AED',
+        branches: (r.branches ?? []).map((b) => ({
+          ...b,
+          people: Number(b.people),
+          extra_people: Number(b.extra_people),
+          monthly_minor: Number(b.monthly_minor),
+        })),
+        lengths: (r.lengths ?? []).map((l) => ({ months: Number(l.months), total_minor: Number(l.total_minor) })),
       };
     },
   });
 }
 
-/** Days of the free trial left after today: 7 on the day it starts, 0 on its last day. */
-export function trialDaysLeft(p: Pick<PlanStatus, 'paid_until' | 'today'>): number {
-  return p.paid_until ? Math.max(differenceInCalendarDays(parseISO(p.paid_until), parseISO(p.today)), 0) : 0;
+/** Free days left after today: 0 on the last free day (and after it). */
+export function freeDaysLeft(p: Pick<PlanStatus, 'free_until' | 'today'>): number {
+  return p.free_until ? Math.max(differenceInCalendarDays(parseISO(p.free_until), parseISO(p.today)), 0) : 0;
+}
+
+/** Prices, plans and payment show only while billing is on and the salon is not free (brief: nothing about paying
+ *  while billing is off or during the free period or the pilot). */
+export function showsBilling(p: Pick<PlanStatus, 'billing_enabled' | 'free'>): boolean {
+  return p.billing_enabled && !p.free;
+}
+
+export type PilotRefusal =
+  | 'invalid_code'
+  | 'code_expired'
+  | 'code_used_up'
+  | 'pilot_already'
+  | 'pilot_not_needed'
+  | 'pilot_full'
+  | 'too_many_attempts';
+
+/** The owner enters a pilot code; the server checks it (any letter case) and answers ok or why not. */
+export function useRedeemPilotCode(businessId: string) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (code: string) => {
+      const { data, error } = await supabase.rpc('redeem_pilot_code', { p_business: businessId, p_code: code });
+      if (error) throw error;
+      return data as unknown as { ok: boolean; reason?: PilotRefusal; free_until?: string };
+    },
+    onSuccess: (r) => {
+      if (r.ok) void client.invalidateQueries({ queryKey: planKey(businessId) });
+    },
+  });
 }
 
 export function useRequestPlan(businessId: string) {
@@ -94,8 +159,15 @@ export interface AdminSalon {
   people: number;
   monthly_minor: number;
   plan_currency: CurrencyCode;
-  /** On its free trial (when active). */
+  /** In the public free period (when active). */
   trial: boolean;
+  access_type: AccessType | null;
+  free_until: string | null;
+  pilot_code: string | null;
+  admin_note: string | null;
+  /** Active staff logins (not the owner). */
+  staff: number;
+  last_active: string | null;
 }
 
 export function useAdminSalons() {

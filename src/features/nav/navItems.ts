@@ -66,6 +66,7 @@ export function useBusinessRows() {
     { key: 'attendance', icon: 'clock', href: '/attendance', show: can(role, 'viewAttendance'), section: 'business' },
     { key: 'compliance', icon: 'shield', href: '/compliance', show: can(role, 'viewCompliance'), section: 'business' },
     { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch'), section: 'settings' },
+    { key: 'branches', icon: 'mapPin', href: '/settings/branches', show: can(role, 'manageBranch'), section: 'settings' },
     { key: 'backup', icon: 'archive', href: '/settings/backup', show: can(role, 'backup'), section: 'settings' },
     { key: 'plan', icon: 'creditCard', href: '/plan', show: can(role, 'viewPlan'), section: 'settings' },
     { key: 'admin', icon: 'building', href: '/console', show: platformAdmin.data === true, section: 'settings' },

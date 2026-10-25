@@ -94,14 +94,15 @@ export async function createOwner(
   });
   if (rpcError) throw rpcError;
   const r = data as { business_id: string; branch_id: string; code: string };
-  // Salons need a paid plan to work (docs/06); flows about something else get one. The plan flows start with none:
-  // this salon's free trial is taken away, as for an owner who has used theirs; 'trial' keeps the 7-day trial.
+  // Salons need a paid plan to work while billing is on (docs/06; the browser tests run with billing on); flows about
+  // something else get one. The plan flows start with none: this salon's free period is taken away, as for an owner
+  // who has used theirs; 'trial' keeps the free period it was given.
   if (opts.plan === 'trial') {
     // As signed up.
   } else if (opts.plan !== false) {
     const { error: planError } = await admin
       .from('subscriptions')
-      .upsert({ business_id: r.business_id, paid_until: '2099-12-31', trial: false });
+      .upsert({ business_id: r.business_id, paid_until: '2099-12-31', trial: false, access_type: 'paid' });
     if (planError) throw planError;
   } else {
     const { error: planError } = await admin.from('subscriptions').delete().eq('business_id', r.business_id);

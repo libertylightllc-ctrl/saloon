@@ -440,7 +440,8 @@
       "switch": "Cambiar de usuario",
       "plan": "Plan y facturación",
       "admin": "Consola de la plataforma",
-      "mySales": "Mis ventas"
+      "mySales": "Mis ventas",
+      "branches": "Sucursales"
     },
     "logOut": "Cerrar sesión",
     "title": "Más",
@@ -560,7 +561,8 @@
       "action": "Crear cuenta",
       "haveAccount": "¿Ya tienes una cuenta?",
       "signIn": "Inicia sesión",
-      "offer": "Empieza gratis · Sin tarjeta · Sin renovación automática"
+      "offer": "Empieza gratis · Sin tarjeta · Sin renovación automática",
+      "pilotHint": "Del equipo de Saloqo. Lo usamos al configurar tu salón."
     },
     "forgot": {
       "title": "Restablecer contraseña",
@@ -751,7 +753,7 @@
         "free": {
           "q": "¿Cuánto tiempo es gratis?",
           "a": "Verás tu periodo gratuito en la app, en Más → Plan y facturación. Cuando termina no se cobra nada salvo que elijas un plan, y tus datos se quedan: puedes verlos y exportarlos cuando quieras.",
-          "pilot": "Los salones del piloto tienen 3 meses gratis."
+          "pilot": "Los salones del piloto tienen {{months}} meses gratis."
         },
         "branches": {
           "q": "¿Puedo llevar más de una sucursal?",
@@ -836,6 +838,37 @@
         "step3Body": "Cuenta la caja. Saloqo muestra el efectivo esperado y cualquier diferencia.",
         "stepOf": "Paso {{n}} de {{total}}",
         "next": "Siguiente"
+      },
+      "pilot": {
+        "bar": "Piloto abierto: {{max}} salones de los EAU tienen Saloqo gratis durante {{months}} meses.",
+        "places_one": "Queda {{count}} plaza",
+        "places_other": "Quedan {{count}} plazas",
+        "apply": "Solicitar →",
+        "full": "Piloto completo · Pruébalo gratis",
+        "underPlans": "Salones del piloto: gratis durante {{months}} meses",
+        "title": "Únete al piloto de Saloqo",
+        "lead": "Elegimos {{max}} barberías, salones y spas de los EAU para usar Saloqo gratis durante {{months}} meses. Te ayudamos a configurarlo y tus comentarios deciden lo que construimos después.",
+        "points": {
+          "free": "Gratis durante {{months}} meses — sin tarjeta ni contrato",
+          "whatsapp": "Ayuda para configurarlo por WhatsApp, en tu idioma",
+          "data": "Tus datos siguen siendo tuyos — expórtalos cuando quieras"
+        },
+        "form": {
+          "name": "Tu nombre",
+          "salon": "Nombre del salón",
+          "emirate": "Emirato",
+          "area": "Zona",
+          "type": "Tipo de salón",
+          "staff": "Número de empleados",
+          "whatsapp": "Número de WhatsApp",
+          "language": "Idioma preferido",
+          "ok": "Acepto que me contactéis por WhatsApp sobre el piloto",
+          "submit": "Solicitar el piloto",
+          "thanks": "¡Gracias! Te escribiremos por WhatsApp en 2 días laborables.",
+          "error": "No se ha enviado. Revisa tus datos e inténtalo de nuevo.",
+          "tooMany": "Demasiadas solicitudes desde aquí. Inténtalo de nuevo en una hora.",
+          "full": "El piloto está completo. Aun así puedes probar Saloqo gratis."
+        }
       }
     },
     "google": {
@@ -1014,7 +1047,7 @@
     "pin_locked": "Demasiados PIN incorrectos. Vuelve a intentarlo en 5 minutos o inicia sesión con la contraseña.",
     "wrong_pin": "Ese PIN no es correcto.",
     "switch_expired": "Esa persona debe volver a iniciar sesión con su contraseña.",
-    "plan_required": "El plan de tu salón no está activo, así que esto aún no se puede guardar. El dueño puede activarlo en Más → Plan y facturación.",
+    "plan_required": "El tiempo gratis de tu salón ha terminado, así que esto aún no se puede guardar. El dueño puede elegir un plan en Más → Plan y facturación.",
     "employee_has_login": "Esta persona ya tiene un acceso.",
     "account_deleted": "Tu cuenta se eliminó.",
     "on_break": "Ya estás en un descanso.",
@@ -1044,7 +1077,12 @@
     "photo_missing": "La foto no se subió. Inténtalo de nuevo.",
     "invalid_instagram": "Escribe tu usuario de Instagram: letras, números, puntos y guiones bajos.",
     "room_name_required": "Pon un nombre a la cabina (hasta 40 letras).",
-    "room_taken": "Otra cabina en uso ya tiene este nombre."
+    "room_taken": "Otra cabina en uso ya tiene este nombre.",
+    "billing_off": "Los planes y pagos aún no están abiertos. No se cobra nada; sigue usando la app.",
+    "branch_name_taken": "Otra sucursal ya tiene este nombre.",
+    "too_many_branches": "Un salón puede tener hasta 20 sucursales.",
+    "code_taken": "Ese código ya existe. Elige otro.",
+    "invalid_setting": "Ese valor no está permitido. Revísalo e inténtalo de nuevo."
   },
   "sales": {
     "title": "Ventas",
@@ -2067,8 +2105,9 @@
         "body": "{{preview}}"
       },
       "trial_ending": {
-        "title": "Tu prueba gratis termina mañana",
-        "body": "Mañana es el último día. Después no se puede guardar nada nuevo hasta que el plan esté activo; todo lo guardado se conserva."
+        "title": "Tu tiempo gratis termina en {{count}} días",
+        "body": "Gratis hasta el {{until}}. Elige un plan en Más → Plan y facturación para seguir guardando trabajo nuevo; no se cobra nada si no lo haces y todo lo guardado se conserva.",
+        "title_one": "Tu tiempo gratis termina en {{count}} día"
       },
       "online_booking": {
         "title": "Nueva reserva online",
@@ -2269,7 +2308,6 @@
     "requested": "Pediste {{months}} mes(es) el {{date}}. Se activa en cuanto recibamos el pago.",
     "monthsOption": {
       "1": "1 mes",
-      "3": "3 meses",
       "6": "6 meses",
       "12": "12 meses"
     },
@@ -2287,7 +2325,7 @@
       "action": "Ver plan",
       "staffTitle": "El plan del salón no está activo",
       "staffBody": "Pide al dueño que lo active. Mientras tanto puedes echar un vistazo.",
-      "trialEndedTitle": "Tu prueba gratis ha terminado"
+      "trialEndedTitle": "Tu tiempo gratis ha terminado"
     },
     "extendAction": "Pedir más meses",
     "store": {
@@ -2307,19 +2345,8 @@
     "perMonth": "al mes",
     "people": "{{count}} personas inician sesión: tú y los accesos de tu personal",
     "people_one": "{{count}} persona inicia sesión: tú",
-    "pricing": "{{base}} cubre hasta {{included}} personas; cada persona adicional suma {{extra}} al mes. Las sucursales no cuestan nada extra.",
-    "extraPerson": "Tu plan cubre {{included}} personas y ya inician sesión {{people}}, así que este acceso suma {{extra}} al mes.",
-    "trial": {
-      "pill": "Prueba gratis",
-      "left": "Prueba gratis: quedan {{count}} días, hasta el {{date}}.",
-      "left_one": "Prueba gratis: queda {{count}} día, hasta el {{date}}.",
-      "lastDay": "Hoy es el último día de tu prueba gratis",
-      "ended": "Tu prueba gratis terminó el {{date}}. Activa tu plan para seguir añadiendo trabajo nuevo; todo lo guardado se conserva.",
-      "bannerTitle": "Prueba gratis: quedan {{count}} días",
-      "bannerTitle_one": "Prueba gratis: queda {{count}} día",
-      "bannerBody": "Todo está activo hasta el {{date}}. Activa tu plan cuando quieras para seguir después.",
-      "bannerBodyStore": "Todo está activo hasta el {{date}}."
-    },
+    "pricing": "Cada sucursal cuesta {{base}} al mes para hasta {{included}} personas que inician sesión allí; cada persona extra suma {{extra}} al mes.",
+    "extraPerson": "El precio de esta sucursal cubre {{included}} personas y {{people}} ya inician sesión aquí, así que este acceso suma {{extra}} al mes.",
     "card": {
       "title": "Pagar con tarjeta",
       "body": "Paga ahora con tarjeta de débito o crédito y tu plan se activa al momento. Se cobra en dólares estadounidenses.",
@@ -2332,7 +2359,41 @@
       "done": "Pagado. Tu plan está activo hasta el {{date}}.",
       "check": "Estamos revisando este pago y te contactaremos."
     },
-    "contactToBuy": "Para activar tu plan, escríbenos y te ayudamos a pagar."
+    "contactToBuy": "Para activar tu plan, escríbenos y te ayudamos a pagar.",
+    "access": {
+      "pilot": "Salón del piloto · gratis hasta el {{date}}",
+      "free": "Gratis hasta el {{date}}",
+      "comp": "Gratis · sin fecha de fin",
+      "now": "Gratis por ahora"
+    },
+    "free": {
+      "pill": "Gratis",
+      "pilotPill": "Piloto",
+      "ended": "Tu tiempo gratis terminó el {{date}}. Elige un plan para seguir guardando trabajo nuevo; todo lo guardado se conserva.",
+      "bannerTitle": "Te quedan {{count}} días gratis",
+      "bannerTitle_one": "Te queda {{count}} día gratis",
+      "bannerBody": "Gratis hasta el {{date}}. Elige un plan cuando quieras para seguir después; no se cobra nada si no lo haces.",
+      "bannerBodyStore": "Gratis hasta el {{date}}.",
+      "lastDay": "Hoy es tu último día gratis"
+    },
+    "pilot": {
+      "link": "¿Tienes un código del piloto?",
+      "title": "Únete al piloto con tu código",
+      "field": "Código del piloto",
+      "action": "Usar código",
+      "refused": {
+        "invalid_code": "Ese código no es correcto. Revísalo e inténtalo de nuevo.",
+        "code_expired": "Ese código ha caducado. Pide uno nuevo al equipo de Saloqo.",
+        "code_used_up": "Ese código ya se ha usado.",
+        "pilot_already": "Este salón ya está en el piloto.",
+        "pilot_not_needed": "Este salón ya es gratis.",
+        "pilot_full": "El piloto está completo por ahora.",
+        "too_many_attempts": "Demasiados intentos. Espera una hora y vuelve a intentarlo."
+      }
+    },
+    "branchPeople": "{{count}} personas inician sesión aquí",
+    "branchPeople_one": "{{count}} persona inicia sesión aquí",
+    "perMonthAll": "Al mes, todas las sucursales"
   },
   "admin": {
     "title": "Salones y planes",
@@ -2341,7 +2402,7 @@
     "meta": "Código {{code}} · sucursales {{branches}} · alta {{date}}",
     "requested": "Pidió {{months}} mes(es). {{note}}",
     "asked": "Solicitado",
-    "until": "Hasta el {{date}}",
+    "until": "Pagado hasta el {{date}}",
     "amount": "Monto recibido",
     "note": "Nota",
     "notePlaceholder": "p. ej., ref. de transferencia bancaria",
@@ -2349,7 +2410,7 @@
     "activated": "{{name}}: plan activado",
     "endPlan": "Terminar plan (requiere nota)",
     "ended": "{{name}}: plan terminado",
-    "hint": "El plan cuenta desde hoy, o desde el fin del plan actual o de la prueba gratis si siguen activos. Terminarlo conserva todos los datos del salón.",
+    "hint": "Un pago cuenta desde hoy, o desde el final del tiempo pagado si sigue en curso. Terminarlo conserva todos los datos del salón.",
     "pay": {
       "button": "Datos de pago",
       "title": "Dónde pagan los salones",
@@ -2365,8 +2426,7 @@
         "pay_note": "Nota para los salones (opcional)"
       },
       "saved": "Datos de pago guardados"
-    },
-    "trialUntil": "Prueba hasta el {{date}}"
+    }
   },
   "account": {
     "delete": {
@@ -2592,11 +2652,14 @@
       "plans": "Planes",
       "activity": "Actividad",
       "support": "Soporte",
-      "cards": "Pagos con tarjeta"
+      "cards": "Pagos con tarjeta",
+      "pilot": "Piloto",
+      "settings": "Ajustes",
+      "audit": "Cambios"
     },
     "overview": {
       "salons": "Salones",
-      "salonsSub": "{{active}} con plan · {{trial}} en prueba · {{closed}} cerrados",
+      "salonsSub": "{{active}} de pago · {{trial}} gratis · {{pilot}} piloto · {{comp}} gratis para siempre · {{closed}} cerrados",
       "requests": "Solicitudes de plan pendientes",
       "accounts": "Cuentas de acceso",
       "accountsSub": "{{owners}} dueños · {{staff}} accesos de personal · {{none}} sin salón",
@@ -2607,7 +2670,9 @@
       "salesLine_one": "{{count}} venta",
       "planIncome": "Pagos de planes recibidos",
       "countries": "Salones por país",
-      "none": "Aún no hay nada."
+      "none": "Aún no hay nada.",
+      "pilot": "Plazas libres del piloto",
+      "pilotSub": "{{applications}} solicitudes nuevas"
     },
     "salons": {
       "search": "Buscar salones, dueños, códigos",
@@ -2653,7 +2718,9 @@
         "request": "Solicitado",
         "activate": "Pagado",
         "end": "Terminado",
-        "trial": "Prueba gratis"
+        "trial": "Periodo gratis",
+        "pilot": "Piloto",
+        "access": "Acceso cambiado"
       }
     },
     "activity": {
@@ -2697,6 +2764,86 @@
       "bankHint": "Los salones ven tus datos de pago y te piden activar su plan. Déjalo desactivado hasta tener la empresa y la cuenta bancaria.",
       "bankOff": "Desactivado",
       "bankOn": "Activado"
+    },
+    "access": {
+      "title": "Acceso",
+      "comp": "Gratis para siempre",
+      "pilotUntil": "Piloto · hasta el {{date}}",
+      "freeUntil": "Gratis hasta el {{date}}",
+      "none": "Sin tiempo gratis",
+      "code": "Código del piloto {{code}}",
+      "pilotDays": "Piloto: {{days}} días",
+      "extend": "+30 días",
+      "compAction": "Gratis para siempre",
+      "endNow": "Terminar ahora",
+      "date": "Fecha (año-mes-día)",
+      "pilotUntilAction": "Piloto hasta esta fecha",
+      "setEnd": "Gratis hasta esta fecha",
+      "note": "Nota (solo la ven los dueños de la plataforma)",
+      "saveNote": "Guardar nota",
+      "saved": "Guardado"
+    },
+    "billing": {
+      "title": "Facturación",
+      "on": "Facturación activada",
+      "off": "Facturación desactivada",
+      "onBody": "Los dueños ven precios y planes. Un salón cuyo tiempo gratis terminó no puede guardar trabajo nuevo hasta que pague; sus datos se conservan.",
+      "offBody": "No se pide pagar a nadie y la app no muestra precios ni planes. Todo salón abierto funciona, sean cuales sean sus fechas.",
+      "turnOn": "Activar la facturación",
+      "turnOff": "Desactivar la facturación",
+      "confirmOn": "¿Activar la facturación? Los dueños verán precios, y a los salones cuyo tiempo gratis terminó se les pedirá elegir un plan antes de guardar trabajo nuevo.",
+      "confirmOff": "¿Desactivar la facturación? Todo salón abierto podrá trabajar y no se pedirá pagar a nadie.",
+      "numbers": "Tiempo gratis y piloto",
+      "freeDays": "Días gratis para un salón nuevo",
+      "pilotDays": "Días gratis para un salón del piloto",
+      "pilotMax": "Salones del piloto como máximo"
+    },
+    "pilot": {
+      "applications": "Solicitudes",
+      "noApplications": "Aún no hay solicitudes.",
+      "status": {
+        "new": "Nueva",
+        "approved": "Aprobada",
+        "declined": "Rechazada"
+      },
+      "emirates": {
+        "abu_dhabi": "Abu Dabi",
+        "dubai": "Dubái",
+        "sharjah": "Sharjah",
+        "ajman": "Ajmán",
+        "umm_al_quwain": "Umm al-Quwain",
+        "ras_al_khaimah": "Ras al-Jaima",
+        "fujairah": "Fujairah"
+      },
+      "types": {
+        "barber": "Barbería",
+        "ladies": "Salón de señoras",
+        "unisex": "Salón unisex",
+        "spa": "Spa",
+        "beauty": "Estudio de uñas y belleza"
+      },
+      "staff": "{{count}} empleados",
+      "whatsappOk": "Acepta mensajes por WhatsApp",
+      "approve": "Aprobar",
+      "decline": "Rechazar",
+      "openWhatsApp": "Abrir en WhatsApp",
+      "message": "Hola {{name}}, ¡bienvenido al piloto de Saloqo! Regístrate en saloqo.com, toca «{{link}}» y escribe {{code}}. Tu salón será gratis durante {{days}} días.",
+      "codes": "Códigos del piloto",
+      "noCodes": "Aún no hay códigos.",
+      "code": "Código (vacío: se crea uno)",
+      "days": "Días gratis (vacío: los del piloto)",
+      "maxUses": "Cuántos salones pueden usarlo",
+      "expires": "Válido hasta (año-mes-día, opcional)",
+      "create": "Crear código",
+      "created": "Código {{code}} creado",
+      "codeLine": "{{days}} días · usado {{uses}} de {{max}}",
+      "until": "Válido hasta el {{date}}",
+      "disable": "Desactivar",
+      "disabled": "Desactivado"
+    },
+    "audit": {
+      "empty": "Aún no hay cambios.",
+      "change": "{{before}} → {{after}}"
     }
   },
   "profile": {
@@ -2933,5 +3080,16 @@
     "notFound": {
       "title": "Página no encontrada – Saloqo"
     }
+  },
+  "branches": {
+    "title": "Sucursales",
+    "subtitle": "Todas las sucursales de tu salón, con un solo acceso de dueño",
+    "openNow": "Abierta ahora",
+    "open": "Abrir",
+    "new": "Añadir una sucursal",
+    "name": "Nombre de la sucursal",
+    "add": "Añadir sucursal",
+    "added": "{{name}} añadida",
+    "priceNote": "Esta sucursal suma {{price}} al mes a tu plan para hasta {{included}} personas que inician sesión allí, y {{extra}} por cada persona extra, desde tu próximo pago. Ahora no se cobra nada."
   }
 }

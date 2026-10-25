@@ -1,8 +1,9 @@
--- The plan is priced by people, per salon: the base covers 4 people who sign in, each one after that adds the extra.
+-- The plan is priced by people, per branch: the base covers 4 people who sign in there, each one after that adds the extra.
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(12);
+update platform_settings set billing_enabled = true where true;
+select plan(13);
 grant execute on function public.branch_today(uuid), public.business_today(uuid), public.unique_business_code(text),
   public.branch_setting(uuid, text, jsonb) to authenticated;
 
@@ -65,12 +66,17 @@ select register_staff_member(jsonb_build_object('business_id', current_setting('
 select pg_temp.as_user('00000000-0000-0000-0000-0000000032a0');
 select is(pg_temp.monthly('t.a'), 7000::bigint, '6 people: AED 50 + 2 × 10 = AED 70');
 
--- A login switched off does not count; a second branch does not change the price.
+-- A login switched off does not count; a second branch adds its own price (per branch since 2026-10-25).
 select pg_temp.as_admin();
 update members set active = false where user_id = '00000000-0000-0000-0000-0000000032a5';
-insert into branches (business_id, name, mode) values (current_setting('t.a')::uuid, 'Second branch', 'gents');
+with b as (insert into branches (business_id, name, mode) values (current_setting('t.a')::uuid, 'Second branch', 'gents') returning id)
+select set_config('t.abr2', id::text, false) from b;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000032a0');
-select is(pg_temp.monthly('t.a'), 6000::bigint, 'a login switched off is not counted, and branches cost nothing extra');
+select is(pg_temp.monthly('t.a'), 11000::bigint, 'a login switched off is not counted; a second branch adds AED 50');
+select pg_temp.as_admin();
+delete from branches where id = current_setting('t.abr2')::uuid;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000032a0');
+select is(pg_temp.monthly('t.a'), 6000::bigint, 'one branch again: AED 60');
 select is((plan_status(current_setting('t.a')::uuid) ->> 'people')::int, 5, 'the owner sees 5 people');
 
 -- Outside the UAE: USD 13.99 for up to 4, USD 2.99 for each one after.
@@ -94,11 +100,11 @@ select results_eq($$ select people, monthly_minor, plan_currency from admin_salo
 
 -- The plan request email reads the same price.
 select pg_temp.as_user('00000000-0000-0000-0000-0000000032a0');
-select request_plan(current_setting('t.a')::uuid, 3, null);
+select request_plan(current_setting('t.a')::uuid, 6, null);
 select pg_temp.as_service();
 select results_eq($$ select people, included_people, base_minor, extra_person_minor, monthly_minor, months
                      from claim_plan_alerts() where salon = 'People Salon' $$,
-  $$ values (5, 4, 5000::bigint, 1000::bigint, 6000::bigint, 3) $$, 'the request email has the people and the price');
+  $$ values (5, 4, 5000::bigint, 1000::bigint, 6000::bigint, 6) $$, 'the request email has the people and the price');
 
 -- The website reads the whole price; nobody signed in calls the quote directly.
 set local role anon;

@@ -4,6 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
+update platform_settings set billing_enabled = true where true;
 select plan(12);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
@@ -45,13 +46,13 @@ select pg_temp.as_user('00000000-0000-0000-0000-0000000024b1');
 select is((select bank_iban || ' ' || bank_swift || ' ' || pay_link_url || ' ' || coalesce(pay_note, '∅') from platform_settings),
   'AE070331234567890123456 EBILAEAD https://buy.stripe.com/test_123 ∅', 'a salon owner reads them, tidied');
 
--- The owner asks for 3 months: the platform owner's email is queued.
-select request_plan(current_setting('t.b')::uuid, 3, 'Paying by transfer today');
+-- The owner asks for 6 months: the platform owner's email is queued.
+select request_plan(current_setting('t.b')::uuid, 6, 'Paying by transfer today');
 select pg_temp.as_service();
 select results_eq($$ select salon, code, months, note, monthly_minor, people, currency,
                            array(select e from unnest(admin_emails) e where e like '%@test.local')
                     from claim_plan_alerts() where code = (select code from businesses where id = current_setting('t.b')::uuid) $$,
-  $$ values ('Pay Salon'::text, (select code from businesses where id = current_setting('t.b')::uuid), 3,
+  $$ values ('Pay Salon'::text, (select code from businesses where id = current_setting('t.b')::uuid), 6,
              'Paying by transfer today'::text, 5000::bigint, 1, 'AED'::text, array['pay-a0@test.local']::text[]) $$,
   'the request is handed to plan-alert with the salon, the amount and whom to tell');
 select is((select count(*)::int from claim_plan_alerts()), 0, 'and told only once');

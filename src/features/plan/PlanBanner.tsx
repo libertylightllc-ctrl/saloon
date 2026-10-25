@@ -9,13 +9,14 @@ import { useDates } from '@/lib/useDates';
 import { semantic, spacing, useTheme } from '@/theme';
 import { Button, Card, Icon, PromoBanner, Text } from '@/ui';
 
-import { trialDaysLeft, usePlanStatus } from './api';
+import { freeDaysLeft, usePlanStatus } from './api';
 import { canOfferPlans } from './storePolicy';
 
 /**
- * On Home while the salon has no active plan: on the website the owner is shown the way to switch it on; everyone
- * else (and the owner in the phone apps, see storePolicy) is told why nothing new can be saved. During the free trial
- * the owner sees how long is left (staff are not bothered with it).
+ * On Home, only while billing is on (full update, Phase 6): in the last 14 days of the free period or the pilot the
+ * owner sees how long is left (stronger from 3 days); once it has ended, the owner is shown the way to a plan on the
+ * website, and everyone else (and the owner in the phone apps, see storePolicy) is told why nothing new can be saved —
+ * never a price. While billing is off nothing is shown.
  */
 export function PlanBanner() {
   const { t } = useTranslation();
@@ -26,16 +27,18 @@ export function PlanBanner() {
   const plan = usePlanStatus(business.id);
   if (!plan.data) return null;
   const p = plan.data;
+  if (!p.billing_enabled) return null;
   if (p.active) {
-    if (!p.trial || !p.paid_until || !can(role, 'requestPlan')) return null;
-    const left = trialDaysLeft(p);
+    if (!p.free || p.paid || p.access_type === 'comp' || !p.free_until || !can(role, 'requestPlan')) return null;
+    const left = freeDaysLeft(p);
+    if (left > 14) return null;
     return (
       <Card variant="outlined" style={styles.card} testID="plan-trial">
-        <Icon name="sparkles" size={20} color={theme.colors.primary500} />
+        <Icon name="sparkles" size={20} color={left <= 3 ? semantic.warning.main : theme.colors.primary500} />
         <View style={styles.flex}>
-          <Text variant="h4">{left === 0 ? t('plan.trial.lastDay') : t('plan.trial.bannerTitle', { count: left })}</Text>
+          <Text variant="h4">{left === 0 ? t('plan.free.lastDay') : t('plan.free.bannerTitle', { count: left })}</Text>
           <Text variant="small" color="textSecondary">
-            {t(canOfferPlans ? 'plan.trial.bannerBody' : 'plan.trial.bannerBodyStore', { date: dates.day(p.paid_until, 'd MMM') })}
+            {t(canOfferPlans ? 'plan.free.bannerBody' : 'plan.free.bannerBodyStore', { date: dates.day(p.free_until, 'd MMM') })}
           </Text>
         </View>
         {canOfferPlans ? (
@@ -50,7 +53,7 @@ export function PlanBanner() {
     return (
       <View testID="plan-banner">
         <PromoBanner
-          title={t(p.requested_at ? 'plan.banner.requestedTitle' : p.trial ? 'plan.banner.trialEndedTitle' : 'plan.banner.title')}
+          title={t(p.requested_at ? 'plan.banner.requestedTitle' : p.free_until ? 'plan.banner.trialEndedTitle' : 'plan.banner.title')}
           body={t(p.requested_at ? 'plan.banner.requestedBody' : 'plan.banner.body', { price })}
           actionLabel={t('plan.banner.action')}
           illustration="promo-setup"

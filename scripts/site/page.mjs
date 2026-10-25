@@ -10,12 +10,13 @@ import { head } from './head.mjs';
 import { icon } from './icons.mjs';
 import { faq, finalCall, floating, footer, pricing, steps, trust, types } from './sections-end.mjs';
 import { button, features, hero, HERO_SIZES, keep, owners, proof, siteHeader, video } from './sections-top.mjs';
+import { pilotBar, pilotSection } from './pilot.mjs';
 import { tour } from './shots.mjs';
 import { LANGUAGES, lengthTotal, money, translator } from './text.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const minify = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s*\n\s*/g, '');
-const CSS = minify(['site.css', 'tour.css'].map((f) => readFileSync(join(here, f), 'utf8')).join('\n'));
+const CSS = minify(['site.css', 'tour.css', 'pilot.css'].map((f) => readFileSync(join(here, f), 'utf8')).join('\n'));
 const CLIENT = readFileSync(join(here, 'client.js'), 'utf8');
 
 /**
@@ -70,7 +71,7 @@ function priceSets(row) {
   };
 }
 
-export function renderPage({ root, lang, row, brand, site, supabase, year }) {
+export function renderPage({ root, lang, row, pilot, api, brand, site, supabase, year }) {
   const t = translator(root, lang);
   const rtl = LANGUAGES.find((l) => l.code === lang).rtl;
   const digits = site.whatsappNumber.replace(/\D/g, '');
@@ -84,6 +85,11 @@ export function renderPage({ root, lang, row, brand, site, supabase, year }) {
     site,
     year,
     prices: priceSets(row),
+    // The pilot (full update, Phase 6): its days as months, its size and the places left; null hides it.
+    pilot:
+      pilot && Number(pilot.max) > 0
+        ? { days: Number(pilot.days), months: Math.max(1, Math.round(Number(pilot.days) / 30)), max: Number(pilot.max), placesLeft: Number(pilot.places_left) }
+        : null,
     startLabel: t('auth.landing.tryFree'),
     whatsapp,
     demo: site.demoBookingUrl || (whatsapp ? wa("Hi, I'd like a quick demo of Saloqo for my salon.") : null),
@@ -100,12 +106,27 @@ export function renderPage({ root, lang, row, brand, site, supabase, year }) {
     sets: c.prices ? { uae: { currency: c.prices.uae.currency, base: c.prices.uae.baseMinor, extra: c.prices.uae.extraMinor }, intl: { currency: c.prices.intl.currency, base: c.prices.intl.baseMinor, extra: c.prices.intl.extraMinor } } : null,
     lengths: PRICING.lengths,
     texts: { total: raw('auth.landing.calc.total'), perBranch: raw('auth.landing.calc.perBranch') },
+    // The pilot form posts to the database (the public key, as the app's own page has it); the places are refreshed.
+    pilot: c.pilot && api?.url && api?.key
+      ? {
+          url: api.url,
+          key: api.key,
+          texts: {
+            thanks: raw('auth.landing.pilot.form.thanks'),
+            error: raw('auth.landing.pilot.form.error'),
+            tooMany: raw('auth.landing.pilot.form.tooMany'),
+            placesOne: raw('auth.landing.pilot.places_one'),
+            placesOther: raw('auth.landing.pilot.places_other'),
+          },
+        }
+      : null,
   };
-  const main = [keep(c), owners(c), proof(c), features(c), video(c), types(c), steps(c), pricing(c), trust(c), faq(c), finalCall(c)].join('\n');
+  const main = [keep(c), owners(c), proof(c), features(c), video(c), types(c), steps(c), pricing(c), pilotSection(c), trust(c), faq(c), finalCall(c)].join('\n');
   return `<!doctype html>
 <html lang="${lang}" dir="${rtl ? 'rtl' : 'ltr'}">
 ${head(c, CSS, early(lang))}
 <body>
+${pilotBar(c)}
 ${siteHeader(c)}
 ${hero(c)}
 <main>

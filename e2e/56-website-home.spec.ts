@@ -84,8 +84,7 @@ test.describe('on a computer outside the UAE', () => {
     await expect(id(page, 'landing-made-in')).toContainText('Made in Dubai');
     const faq = await page.evaluate(() => JSON.parse(document.getElementById('faq-jsonld')?.textContent ?? '{}'));
     expect(faq['@type']).toBe('FAQPage');
-    // 14 questions: the second-branch one waits for "Add a branch" (src/config/pricing.ts MULTI_BRANCH).
-    expect(faq.mainEntity).toHaveLength(14);
+    expect(faq.mainEntity).toHaveLength(15);
     expect(faq.mainEntity[0].acceptedAnswer.text.replace(/\u00a0/g, ' ')).toContain('USD 13.99 a month per branch, for up to 4 people');
   });
 });

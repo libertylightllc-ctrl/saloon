@@ -18,7 +18,7 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   await id(page, 'queue-new').click();
   await id(page, `pick-service-${SERVICE[mode].name}`).click();
   await id(page, 'appointment-submit').click();
-  await expect(text(page, /plan isn’t active/)).toBeVisible();
+  await expect(text(page, /free time has ended/)).toBeVisible();
 
   // The cashier sees why.
   const till = await device();
@@ -27,14 +27,14 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   await tab(till, 'more');
   await expect(id(till, 'more-plan')).toHaveCount(0);
 
-  // The owner asks for 3 months.
+  // The owner asks for 6 months (10% off).
   await page.goto('/plan');
   await expect(id(page, 'plan-status')).toContainText('Not active');
-  await id(page, 'plan-months-3').click();
-  await expect(id(page, 'plan-total')).toContainText('AED 150.00');
+  await id(page, 'plan-months-6').click();
+  await expect(id(page, 'plan-total')).toContainText('AED 270.00');
   await id(page, 'plan-note').fill('Paying by bank transfer');
   await id(page, 'plan-request').click();
-  await expect(id(page, 'plan-requested')).toContainText('3 month');
+  await expect(id(page, 'plan-requested')).toContainText('6 month');
   await snap(page, 'plan', mode);
 
   // The platform owner sees the request and records the payment.
@@ -58,7 +58,7 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   await id(page, 'queue-new').click();
   await id(page, `pick-service-${SERVICE[mode].name}`).click();
   await id(page, 'appointment-submit').click();
-  await expect(text(page, /plan isn’t active/)).toHaveCount(0);
+  await expect(text(page, /free time has ended/)).toHaveCount(0);
 
   // Only the platform owner has the admin screen.
   await tab(page, 'more');

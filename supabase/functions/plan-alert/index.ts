@@ -1,5 +1,5 @@
-// Emails the platform owner when a salon asks for its plan (owner, 2026-10-04) and when someone writes to Help &
-// support (2026-10-12), through Resend from
+// Emails the platform owner when a salon asks for its plan (owner, 2026-10-04), when someone writes to Help &
+// support (2026-10-12) and when a salon applies for the pilot (2026-10-25; also to hello@saloqo.com), through Resend from
 // no-reply@saloqo.com. Called by the database when a request is made (dispatch_plan_alerts) and every 10 minutes as a
 // retry; safe to call any time: each request is told once. Needs the RESEND_API_KEY secret (the owner sets it); without
 // it nothing is sent and the requests wait. EMAIL_ENDPOINT overrides Resend on the local stack only (mail-sink).
@@ -10,6 +10,37 @@ import { cors, json } from '../_shared/staff.ts';
 
 const RESEND = 'https://api.resend.com/emails';
 const SITE = 'https://www.saloqo.com';
+/** Pilot applications also go to the address on the website (full update brief, Phase 3). */
+const HELLO = 'hello@saloqo.com';
+
+interface PilotAlert {
+  id: string;
+  name: string;
+  salon_name: string;
+  emirate: string;
+  area: string | null;
+  salon_type: string;
+  staff_count: number;
+  whatsapp: string;
+  language: string;
+  whatsapp_ok: boolean;
+  created_at: string;
+  admin_emails: string[] | null;
+}
+
+function pilotMessage(a: PilotAlert): { subject: string; text: string } {
+  return {
+    subject: `Pilot application: ${a.salon_name}`,
+    text: [
+      `${a.name} applied for the pilot for ${a.salon_name}.`,
+      `Where: ${[a.emirate.replace(/_/g, ' '), a.area].filter(Boolean).join(', ')}`,
+      `Type: ${a.salon_type} · staff: ${a.staff_count} · language: ${a.language}`,
+      `WhatsApp: ${a.whatsapp}${a.whatsapp_ok ? ' (OK to message about the pilot)' : ' (did not tick the OK to message)'}`,
+      '',
+      `Approve or decline in the console: ${SITE}/admin (Pilot).`,
+    ].join('\n'),
+  };
+}
 
 interface Alert {
   event_id: string;
@@ -99,6 +130,10 @@ Deno.serve(async (req) => {
   if (support.error) return json({ error: support.error.message }, 500);
   const supportAlerts = (support.data ?? []) as SupportAlert[];
 
+  const pilot = await admin.rpc('claim_pilot_alerts');
+  if (pilot.error) return json({ error: pilot.error.message }, 500);
+  const pilotAlerts = (pilot.data ?? []) as PilotAlert[];
+
   const endpoint = localOnly('EMAIL_ENDPOINT') || RESEND;
   const send = (to: string[], subject: string, text: string) =>
     to.length > 0
@@ -128,5 +163,11 @@ Deno.serve(async (req) => {
       await admin.rpc('unclaim_plan_alert', { p_event: a.event_id });
     }
   }
-  return json({ sent, waiting: alerts.length + supportAlerts.length - sent });
+  // An application whose email failed is not re-sent (it stays in the console's Pilot tab).
+  for (const a of pilotAlerts) {
+    const { subject, text } = pilotMessage(a);
+    if (await send([...new Set([...(a.admin_emails ?? []), HELLO])], subject, text)) sent++;
+    else console.error(`plan-alert: could not email pilot application ${a.id}; it is in the console`);
+  }
+  return json({ sent, waiting: alerts.length + supportAlerts.length + pilotAlerts.length - sent });
 });

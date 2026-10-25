@@ -60,13 +60,15 @@ export function signUpOutcome(data: { session: unknown; user: { identities?: unk
 
 /**
  * `contact`: the optional mobile / WhatsApp number ("+971501234567") and the WhatsApp OK (website brief 3.3); the
- * database keeps them for the owner when the account is created (owner_contacts).
+ * database keeps them for the owner when the account is created (owner_contacts). `pilotCode`: a pilot code typed at
+ * sign-up, used when the salon is created (a wrong one changes nothing; it can be typed again in Plan & billing).
  */
 export async function signUpOwner(
   name: string,
   email: string,
   password: string,
   contact?: { phone: string; whatsappOk: boolean },
+  pilotCode?: string,
 ): Promise<SignUpOutcome> {
   const { data, error } = await supabase.auth.signUp({
     email: email.trim().toLowerCase(),
@@ -75,6 +77,8 @@ export async function signUpOwner(
       data: {
         display_name: name.trim(),
         ...(contact?.phone ? { phone: contact.phone, whatsapp_ok: contact.whatsappOk } : {}),
+        // Used by the database when the salon is created (full update, Phase 6: start_free_period).
+        ...(pilotCode?.trim() ? { pilot_code: pilotCode.trim().toUpperCase() } : {}),
       },
     },
   });

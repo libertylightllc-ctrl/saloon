@@ -75,7 +75,7 @@ function BrandPanel({ onBack, panel }: { onBack?: (() => void) | true; panel: 's
       <NavyBackdrop glowAt={['60%', '70%']} />
       <TopBar onBack={onBack} />
       {panel === 'signUp' ? (
-        // Sign-up: the free trial, the data line and one real customer's words when there are some (brief 3.6).
+        // Sign-up: free to start, the data line and one real customer’s words when there are some (brief 3.6).
         <View style={styles.panelBody} testID="auth-panel-sign-up">
           <Text variant="section" style={styles.white}>
             {t('auth.signUp.title')}
@@ -134,9 +134,9 @@ export function AuthShell({
 }: {
   title: string;
   subtitle?: string;
-  /** Sign-up: "7 days free · No card needed · Nothing renews by itself" under the title (brief 3.1). */
+  /** Sign-up: "Free to start · No card needed · No auto-renewal" under the title (full update brief, Phase 5). */
   offer?: string;
-  /** What the computer's side panel says: the app (sign-in) or the free trial (sign-up). */
+  /** What the computer’s side panel says: the app (sign-in) or free to start (sign-up). */
   panel?: 'signIn' | 'signUp';
   onBack?: (() => void) | true;
   /** Gents / Ladies above the form: sign-up only (a returning owner's salon already has its type; brief 1.6). */

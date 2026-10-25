@@ -42,7 +42,9 @@ select register_staff_member(jsonb_build_object('business_id', current_setting('
   'role', case when n = 'b1' then 'cashier' else 'staff' end))
 from unnest(array['b1', 'c2', 'd3', 'e4', 'f5']) n;
 select pg_temp.as_admin();
-select set_config('t.until', (select paid_until::text from subscriptions where business_id = current_setting('t.b')::uuid), false);
+-- Billing on (full update, Phase 6); the plan runs on from the end of the free period.
+update platform_settings set billing_enabled = true where true;
+select set_config('t.until', (select free_until::text from subscriptions where business_id = current_setting('t.b')::uuid), false);
 select set_config('t.code', (select code from businesses where id = current_setting('t.b')::uuid), false);
 
 -- Off: nobody. Test: platform admins only. Only the owner.
@@ -58,21 +60,21 @@ insert into platform_admins (user_id) values ('00000000-0000-0000-0000-000000004
 select pg_temp.as_user('00000000-0000-0000-0000-0000000044b1');
 select throws_ok(format($$ select card_checkout_start('%s', 1) $$, current_setting('t.b')), '42501', null, 'a cashier cannot pay for the plan');
 
--- The owner (a platform admin while in test): 3 months for 6 people = (13.99 + 2 × 2.99) × 3 = USD 59.91.
+-- The owner (a platform admin while in test): 6 months for 6 people = (13.99 + 2 × 2.99) × 5.4 = USD 107.84.
 select pg_temp.as_user('00000000-0000-0000-0000-0000000044a0');
-select set_config('t.start', card_checkout_start(current_setting('t.b')::uuid, 3)::text, false);
-select is((current_setting('t.start')::jsonb ->> 'amount_minor')::bigint, 5991::bigint, 'months and extra people in one amount');
+select set_config('t.start', card_checkout_start(current_setting('t.b')::uuid, 6)::text, false);
+select is((current_setting('t.start')::jsonb ->> 'amount_minor')::bigint, 10784::bigint, 'months (10% off) and extra people in one amount');
 select is(current_setting('t.start')::jsonb ->> 'mode', 'test', 'in test mode');
 select set_config('t.req', current_setting('t.start')::jsonb ->> 'request_id', false);
 select throws_ok($$ select card_payment_completed('{}') $$, '42501', null, 'only the server marks a payment paid');
 
--- Creem says it is paid: the plan runs 3 months longer, once.
+-- Creem says it is paid: the plan runs 6 months longer, once.
 select pg_temp.as_service();
 select is(card_payment_completed(jsonb_build_object('request_id', current_setting('t.req'), 'checkout_id', 'ch_1', 'order_id', 'ord_1',
   'mode', 'test', 'paid_minor', 6291, 'paid_currency', 'USD', 'email', 'card-a0@test.local')) ->> 'result', 'paid', 'paid');
 select pg_temp.as_admin();
 select is((select paid_until from subscriptions where business_id = current_setting('t.b')::uuid),
-  (current_setting('t.until')::date + interval '3 months')::date, 'the plan runs 3 months longer than the trial');
+  (current_setting('t.until')::date + interval '6 months')::date, 'the plan runs 6 months on from the free period');
 select is((select row(status, paid_minor, order_id)::text from card_payments where id = current_setting('t.req')::uuid),
   '(paid,6291,ord_1)', 'the payment is paid, with what Creem charged');
 select ok(exists (select 1 from plan_events where business_id = current_setting('t.b')::uuid and kind = 'activate'
@@ -82,7 +84,7 @@ select is(card_payment_completed(jsonb_build_object('request_id', current_settin
   'duplicate', 'the same event again changes nothing');
 select pg_temp.as_admin();
 select is((select paid_until from subscriptions where business_id = current_setting('t.b')::uuid),
-  (current_setting('t.until')::date + interval '3 months')::date, 'not extended twice');
+  (current_setting('t.until')::date + interval '6 months')::date, 'not extended twice');
 
 -- A refund is marked for review; the plan stays.
 select pg_temp.as_service();

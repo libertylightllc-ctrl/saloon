@@ -128,7 +128,9 @@ select throws_ok($$ select pg_temp.book('Late Visitor', '052 222 3333', '17:00')
 select pg_temp.as_user('00000000-0000-0000-0000-0000000042a0');
 select set_online_booking(current_setting('t.br')::uuid, true);
 select pg_temp.as_admin();
-update subscriptions set paid_until = current_date - 2 where business_id = current_setting('t.b')::uuid;
+-- With billing on (full update, Phase 6), the plan and the free period both over.
+update platform_settings set billing_enabled = true where true;
+update subscriptions set paid_until = current_date - 2, free_until = current_date - 2 where business_id = current_setting('t.b')::uuid;
 select pg_temp.as_visitor();
 select is(public_booking_page(current_setting('t.slug')), null, 'a salon whose plan ended takes no online bookings');
 

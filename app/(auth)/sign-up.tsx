@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useRouter } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -24,6 +24,7 @@ const schema = z.object({
   password: z.string().min(8, 'validation.passwordMin'),
   phone: z.object({ dial: z.string(), number: z.string() }).refine((v) => phoneNumberValid(v.number), 'validation.mobile'),
   whatsappOk: z.boolean(),
+  pilotCode: z.string().trim().max(40),
 });
 
 type Values = z.infer<typeof schema>;
@@ -35,12 +36,12 @@ export default function SignUp() {
   usePageMeta(t('meta.signUp.title'), t('meta.signUp.description'));
   const form = useForm<Values>({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', email: '', password: '', phone: { dial: '971', number: '' }, whatsappOk: false },
+    defaultValues: { name: '', email: '', password: '', phone: { dial: '971', number: '' }, whatsappOk: false, pilotCode: '' },
   });
   const signUp = useMutation({
     mutationFn: (v: Values) => {
       const phone = composePhone(v.phone);
-      return signUpOwner(v.name, v.email, v.password, phone ? { phone, whatsappOk: v.whatsappOk } : undefined);
+      return signUpOwner(v.name, v.email, v.password, phone ? { phone, whatsappOk: v.whatsappOk } : undefined, v.pilotCode);
     },
     onSuccess: (outcome) => {
       if (outcome !== 'already_registered') track('signup_completed');
@@ -54,6 +55,8 @@ export default function SignUp() {
     if (started) track('signup_started');
   }, [started]);
   const submit = form.handleSubmit((values) => signUp.mutate(values));
+  // "Have a pilot code?" (full update, Phase 5/6): the field shows only when asked for.
+  const [pilot, setPilot] = useState(false);
   // One line only (full update brief, Phase 5): free to start, no card, no auto-renewal — no number of days.
   const offer = t('auth.signUp.offer');
 
@@ -113,6 +116,19 @@ export default function SignUp() {
             <CheckRow label={t('auth.phone.whatsappOk')} value={field.value} onChange={field.onChange} testID="sign-up-whatsapp-ok" />
           )}
         />
+        {pilot ? (
+          <FormTextField
+            control={form.control}
+            name="pilotCode"
+            label={t('plan.pilot.field')}
+            hint={t('auth.signUp.pilotHint')}
+            autoCapitalize="characters"
+            autoCorrect={false}
+            maxLength={40}
+          />
+        ) : (
+          <Button variant="ghost" size="sm" label={t('plan.pilot.link')} onPress={() => setPilot(true)} testID="sign-up-pilot" />
+        )}
         <FormError error={signUp.error} />
         <Button label={t('auth.signUp.action')} onPress={submit} loading={signUp.isPending} testID="sign-up-submit" />
         <View style={styles.haveAccount}>

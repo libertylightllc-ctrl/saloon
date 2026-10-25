@@ -1,6 +1,6 @@
 /**
  * Paying for the plan by card through Creem (owner, 2026-10-20: the Creem handoff). In test mode only platform
- * admins see Pay by card. The owner picks 3 months; the server asks Creem (the local creem-sink stand-in) for a
+ * admins see Pay by card. The owner picks 6 months (10% off); the server asks Creem (the local creem-sink stand-in) for a
  * checkout with the plan product and the whole amount — the extra people included — and the owner goes to it. Creem's
  * signed "paid" message switches the plan on; a badly signed one is refused; the same message again changes nothing.
  * Back on Plan & billing the owner sees it paid.
@@ -14,12 +14,12 @@ import { id, ownerOn } from './support/ui';
 
 /** The local signing secret the webhook accepts on the local stack only (supabase/config.toml). */
 const LOCAL_SECRET = 'local-creem-webhook';
-const PLAN_3M = 'prod_MEVtqskxRAyCdU3o6VzMU';
+const PLAN_6M = 'prod_61pijGyfC6aRedhxIyypxe';
 const sign = (body: string, secret = LOCAL_SECRET) => createHmac('sha256', secret).update(body).digest('hex');
 const send = (body: string, signature: string) =>
   fetch(`${SUPABASE_URL}/functions/v1/creem-webhook`, { method: 'POST', headers: { 'creem-signature': signature, 'content-type': 'application/json' }, body });
 
-test('an owner pays 3 months by card: one payment with the extra person, the plan switches on once', async ({ page, mode }) => {
+test('an owner pays 6 months by card: one payment with the extra person, the plan switches on once', async ({ page, mode }) => {
   // Test mode: only platform admins see the button (left on: other owners are not admins).
   await admin.from('platform_settings').update({ card_payments: 'test' }).eq('id', true);
   const owner = await createOwner(mode);
@@ -32,17 +32,17 @@ test('an owner pays 3 months by card: one payment with the extra person, the pla
   await page.goto('/plan');
   await expect(id(page, 'plan-card')).toBeVisible();
   await expect(id(page, 'plan-card-test')).toBeVisible();
-  await id(page, 'plan-months-3').click();
-  // (13.99 + 2.99) × 3, tax added by Creem where it applies.
-  await expect(id(page, 'plan-card-total')).toHaveText('USD 50.94 + tax where it applies');
+  await id(page, 'plan-months-6').click();
+  // (13.99 + 2.99) × 5.4 (6 months at 10% off), tax added by Creem where it applies.
+  await expect(id(page, 'plan-card-total')).toHaveText('USD 91.69 + tax where it applies');
 
   // Creem's checkout page (the stand-in's address carries what was asked).
   await page.route('https://checkout.creem.test/**', (route) => route.fulfill({ contentType: 'text/html', body: '<p>Creem test checkout</p>' }));
   await id(page, 'plan-card-pay').click();
   await page.waitForURL('https://checkout.creem.test/**');
   const asked = new URL(page.url()).searchParams;
-  expect(asked.get('product')).toBe(PLAN_3M);
-  expect(asked.get('price')).toBe('5094');
+  expect(asked.get('product')).toBe(PLAN_6M);
+  expect(asked.get('price')).toBe('9169');
   expect(asked.get('email')).toBe(owner.email);
   const requestId = asked.get('request')!;
   expect(asked.get('success')).toMatch(new RegExp(`/plan\\?paid=${requestId}$`));
@@ -58,8 +58,8 @@ test('an owner pays 3 months by card: one payment with the extra person, the pla
       id: pending!.checkout_id,
       object: 'checkout',
       request_id: requestId,
-      order: { id: `ord_${requestId.slice(0, 8)}`, amount: 5349, amount_paid: 5349, currency: 'USD', product: PLAN_3M, status: 'paid' },
-      product: { id: PLAN_3M },
+      order: { id: `ord_${requestId.slice(0, 8)}`, amount: 5349, amount_paid: 5349, currency: 'USD', product: PLAN_6M, status: 'paid' },
+      product: { id: PLAN_6M },
       customer: { email: owner.email },
       custom_fields: [],
       status: 'completed',
@@ -75,10 +75,10 @@ test('an owner pays 3 months by card: one payment with the extra person, the pla
   // Creem retries: the same message again changes nothing.
   expect(await (await send(event, sign(event))).json()).toMatchObject({ result: 'duplicate' });
 
-  const { data: after } = await admin.from('subscriptions').select('paid_until, trial').eq('business_id', owner.businessId).single();
+  const { data: after } = await admin.from('subscriptions').select('paid_until, access_type').eq('business_id', owner.businessId).single();
   const expected = new Date(`${before!.paid_until}T00:00:00Z`);
-  expected.setUTCMonth(expected.getUTCMonth() + 3);
-  expect(after).toMatchObject({ paid_until: expected.toISOString().slice(0, 10), trial: false });
+  expected.setUTCMonth(expected.getUTCMonth() + 6);
+  expect(after).toMatchObject({ paid_until: expected.toISOString().slice(0, 10), access_type: 'paid' });
 
   // Back from Creem: paid, the plan on.
   await page.goto(`/plan?paid=${requestId}`);

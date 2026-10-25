@@ -50,9 +50,11 @@ const navLinks = (c) =>
   [
     ['#features', 'auth.landing.nav.features'],
     ['#pricing', 'auth.landing.nav.pricing'],
+    // UAE visitors only, while there is a pilot (full update, Phases 3 and 6).
+    ...(c.pilot ? [['#pilot', 'auth.landing.nav.pilot', 'uae']] : []),
     ['#faq', 'auth.landing.nav.faq'],
   ]
-    .map(([href, key]) => `<a href="${href}">${esc(c.t(key))}</a>`)
+    .map(([href, key, cls]) => `<a href="${href}"${cls ? ` class="${cls}"` : ''}>${esc(c.t(key))}</a>`)
     .join('');
 
 /**

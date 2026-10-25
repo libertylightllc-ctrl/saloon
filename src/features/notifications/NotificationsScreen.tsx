@@ -41,6 +41,7 @@ export function useNotificationText() {
       at: typeof d.at === 'string' ? dates.at(d.at, business.timezone, 'EEE d MMM · HH:mm') : '',
       date: typeof d.date === 'string' ? dates.day(d.date, 'EEE d MMM') : '',
       expires: typeof d.expires_on === 'string' ? dates.day(d.expires_on, 'd MMM yyyy') : '',
+      until: typeof d.until === 'string' ? dates.day(d.until, 'd MMM yyyy') : '',
       amount: typeof d.amount_minor === 'number' ? formatMoney(d.amount_minor) : '',
       variance: typeof d.variance_minor === 'number' ? formatMoney(d.variance_minor) : '',
       sales_total: typeof d.sales_minor === 'number' ? formatMoney(d.sales_minor) : '',

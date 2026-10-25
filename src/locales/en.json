@@ -440,7 +440,8 @@
       "switch": "Switch user",
       "plan": "Plan & billing",
       "admin": "Platform console",
-      "mySales": "My sales"
+      "mySales": "My sales",
+      "branches": "Branches"
     },
     "logOut": "Log out",
     "title": "More",
@@ -560,7 +561,8 @@
       "action": "Create account",
       "haveAccount": "Already have an account?",
       "signIn": "Sign in",
-      "offer": "Free to start · No card needed · No auto-renewal"
+      "offer": "Free to start · No card needed · No auto-renewal",
+      "pilotHint": "From the Saloqo team. We use it when you set up your salon."
     },
     "forgot": {
       "title": "Reset password",
@@ -751,7 +753,7 @@
         "free": {
           "q": "How long is it free?",
           "a": "You’ll see your free period in the app under More → Plan & billing. When it ends, nothing is charged unless you choose a plan, and your data stays: you can view and export it any time.",
-          "pilot": "Pilot salons get 3 months free."
+          "pilot": "Pilot salons get {{months}} months free."
         },
         "branches": {
           "q": "Can I run more than one branch?",
@@ -836,6 +838,37 @@
         "step3Body": "Count the drawer. Saloqo shows the cash expected and any difference.",
         "stepOf": "Step {{n}} of {{total}}",
         "next": "Next"
+      },
+      "pilot": {
+        "bar": "Pilot open: {{max}} UAE salons get Saloqo free for {{months}} months.",
+        "places_one": "{{count}} place left",
+        "places_other": "{{count}} places left",
+        "apply": "Apply →",
+        "full": "Pilot full · Try it free",
+        "underPlans": "Pilot salons: free for {{months}} months",
+        "title": "Join the Saloqo pilot",
+        "lead": "We’re choosing {{max}} barber shops, salons and spas in the UAE to use Saloqo free for {{months}} months. We help you set it up, and your feedback shapes what we build next.",
+        "points": {
+          "free": "Free for {{months}} months — no card, no contract",
+          "whatsapp": "Setup help on WhatsApp, in your language",
+          "data": "Your data stays yours — export any time"
+        },
+        "form": {
+          "name": "Your name",
+          "salon": "Salon name",
+          "emirate": "Emirate",
+          "area": "Area",
+          "type": "Salon type",
+          "staff": "Number of staff",
+          "whatsapp": "WhatsApp number",
+          "language": "Preferred language",
+          "ok": "OK to contact me on WhatsApp about the pilot",
+          "submit": "Apply for the pilot",
+          "thanks": "Thanks! We’ll message you on WhatsApp within 2 working days.",
+          "error": "That didn’t go through. Check your details and try again.",
+          "tooMany": "Too many applications from here. Try again in an hour.",
+          "full": "The pilot is full. You can still try Saloqo free."
+        }
       }
     },
     "google": {
@@ -1014,7 +1047,7 @@
     "pin_locked": "Too many wrong PINs. Try again in 5 minutes, or sign in with the password.",
     "wrong_pin": "That PIN is not right.",
     "switch_expired": "That person needs to sign in again with their password.",
-    "plan_required": "Your salon’s plan isn’t active, so this can’t be saved yet. The owner can switch it on under More → Plan & billing.",
+    "plan_required": "Your salon’s free time has ended, so this can’t be saved yet. The owner can choose a plan under More → Plan & billing.",
     "employee_has_login": "This person already has a login.",
     "account_deleted": "Your account has been deleted.",
     "on_break": "Already on a break.",
@@ -1044,7 +1077,12 @@
     "photo_missing": "The photo did not upload. Try again.",
     "invalid_instagram": "Enter your Instagram handle: letters, numbers, dots and underscores.",
     "room_name_required": "Give the room a name (up to 40 letters).",
-    "room_taken": "Another room in use already has this name."
+    "room_taken": "Another room in use already has this name.",
+    "billing_off": "Plans and payments are not open yet. Nothing is charged; keep using the app.",
+    "branch_name_taken": "Another branch already has this name.",
+    "too_many_branches": "A salon can have up to 20 branches.",
+    "code_taken": "That code already exists. Choose another.",
+    "invalid_setting": "That value is not allowed. Check it and try again."
   },
   "sales": {
     "title": "Sales",
@@ -2067,8 +2105,9 @@
         "body": "{{preview}}"
       },
       "trial_ending": {
-        "title": "Your free trial ends tomorrow",
-        "body": "Tomorrow is the last day. After that nothing new can be saved until the plan is on; everything saved stays."
+        "title": "Your free time ends in {{count}} days",
+        "body": "Free until {{until}}. Choose a plan in More → Plan & billing to keep saving new work; nothing is charged unless you do, and everything saved stays.",
+        "title_one": "Your free time ends in {{count}} day"
       },
       "online_booking": {
         "title": "New online booking",
@@ -2269,7 +2308,6 @@
     "requested": "You asked for {{months}} month(s) on {{date}}. It switches on as soon as the payment is received.",
     "monthsOption": {
       "1": "1 month",
-      "3": "3 months",
       "6": "6 months",
       "12": "12 months"
     },
@@ -2287,7 +2325,7 @@
       "action": "See plan",
       "staffTitle": "The salon’s plan isn’t active",
       "staffBody": "Ask the owner to switch it on. You can still look around.",
-      "trialEndedTitle": "Your free trial has ended"
+      "trialEndedTitle": "Your free time has ended"
     },
     "extendAction": "Ask to add months",
     "store": {
@@ -2307,19 +2345,8 @@
     "perMonth": "a month",
     "people": "{{count}} people sign in: you and your staff logins",
     "people_one": "{{count}} person signs in: you",
-    "pricing": "{{base}} covers up to {{included}} people; each extra person adds {{extra}} a month. Branches cost nothing extra.",
-    "extraPerson": "Your plan covers {{included}} people and {{people}} already sign in, so this login adds {{extra}} a month.",
-    "trial": {
-      "pill": "Free trial",
-      "left": "Free trial: {{count}} days left, until {{date}}.",
-      "left_one": "Free trial: {{count}} day left, until {{date}}.",
-      "lastDay": "Today is the last day of your free trial",
-      "ended": "Your free trial ended on {{date}}. Switch on your plan to keep adding new work; everything saved stays.",
-      "bannerTitle": "Free trial: {{count}} days left",
-      "bannerTitle_one": "Free trial: {{count}} day left",
-      "bannerBody": "Everything is on until {{date}}. Switch on your plan any time to keep going after that.",
-      "bannerBodyStore": "Everything is on until {{date}}."
-    },
+    "pricing": "Each branch is {{base}} a month for up to {{included}} people who sign in there; each extra person adds {{extra}} a month.",
+    "extraPerson": "This branch’s price covers {{included}} people and {{people}} already sign in here, so this login adds {{extra}} a month.",
     "card": {
       "title": "Pay by card",
       "body": "Pay now with a debit or credit card and your plan switches on at once. Charged in US dollars.",
@@ -2332,7 +2359,41 @@
       "done": "Paid. Your plan is on until {{date}}.",
       "check": "We are checking this payment and will contact you."
     },
-    "contactToBuy": "To switch on your plan, write to us and we will help you pay."
+    "contactToBuy": "To switch on your plan, write to us and we will help you pay.",
+    "access": {
+      "pilot": "Pilot salon · free until {{date}}",
+      "free": "Free until {{date}}",
+      "comp": "Free · no end date",
+      "now": "Free for now"
+    },
+    "free": {
+      "pill": "Free",
+      "pilotPill": "Pilot",
+      "ended": "Your free time ended on {{date}}. Choose a plan to keep saving new work; everything saved stays.",
+      "bannerTitle": "{{count}} days of free time left",
+      "bannerTitle_one": "{{count}} day of free time left",
+      "bannerBody": "Free until {{date}}. Choose a plan any time to keep going after that; nothing is charged unless you do.",
+      "bannerBodyStore": "Free until {{date}}.",
+      "lastDay": "Today is your last free day"
+    },
+    "pilot": {
+      "link": "Have a pilot code?",
+      "title": "Join the pilot with your code",
+      "field": "Pilot code",
+      "action": "Use code",
+      "refused": {
+        "invalid_code": "That code isn’t right. Check it and try again.",
+        "code_expired": "That code has expired. Ask the Saloqo team for a new one.",
+        "code_used_up": "That code has already been used.",
+        "pilot_already": "This salon is already in the pilot.",
+        "pilot_not_needed": "This salon is already free.",
+        "pilot_full": "The pilot is full for now.",
+        "too_many_attempts": "Too many tries. Wait an hour and try again."
+      }
+    },
+    "branchPeople": "{{count}} people sign in here",
+    "branchPeople_one": "{{count}} person signs in here",
+    "perMonthAll": "A month, every branch"
   },
   "admin": {
     "title": "Salons & plans",
@@ -2341,7 +2402,7 @@
     "meta": "Code {{code}} · branches {{branches}} · joined {{date}}",
     "requested": "Asked for {{months}} month(s). {{note}}",
     "asked": "Asked",
-    "until": "Until {{date}}",
+    "until": "Paid until {{date}}",
     "amount": "Amount received",
     "note": "Note",
     "notePlaceholder": "e.g. bank transfer ref",
@@ -2349,7 +2410,7 @@
     "activated": "{{name}}: plan switched on",
     "endPlan": "End plan (note needed)",
     "ended": "{{name}}: plan ended",
-    "hint": "The plan runs from today, or from the end of the current plan or free trial if it is still running. Ending it keeps all the salon’s data.",
+    "hint": "A payment runs from today, or from the end of the paid time if it is still running. Ending it keeps all the salon’s data.",
     "pay": {
       "button": "Payment details",
       "title": "Where salons pay",
@@ -2365,8 +2426,7 @@
         "pay_note": "Note for salons (optional)"
       },
       "saved": "Payment details saved"
-    },
-    "trialUntil": "Trial until {{date}}"
+    }
   },
   "account": {
     "delete": {
@@ -2591,11 +2651,14 @@
       "plans": "Plans",
       "activity": "Activity",
       "support": "Support",
-      "cards": "Card payments"
+      "cards": "Card payments",
+      "pilot": "Pilot",
+      "settings": "Settings",
+      "audit": "Changes"
     },
     "overview": {
       "salons": "Salons",
-      "salonsSub": "{{active}} with a plan · {{trial}} on trial · {{closed}} closed",
+      "salonsSub": "{{active}} paid · {{trial}} free · {{pilot}} pilot · {{comp}} free for good · {{closed}} closed",
       "requests": "Plan requests waiting",
       "accounts": "Sign-in accounts",
       "accountsSub": "{{owners}} owners · {{staff}} staff logins · {{none}} without a salon",
@@ -2606,7 +2669,9 @@
       "salesLine_one": "{{count}} sale",
       "planIncome": "Plan payments received",
       "countries": "Salons by country",
-      "none": "Nothing yet."
+      "none": "Nothing yet.",
+      "pilot": "Pilot places left",
+      "pilotSub": "{{applications}} new applications"
     },
     "salons": {
       "search": "Search salons, owners, codes",
@@ -2652,7 +2717,9 @@
         "request": "Asked",
         "activate": "Paid",
         "end": "Ended",
-        "trial": "Free trial"
+        "trial": "Free period",
+        "pilot": "Pilot",
+        "access": "Access changed"
       }
     },
     "activity": {
@@ -2696,6 +2763,86 @@
       "bankHint": "Salons see your payment details and ask you to switch their plan on. Keep this off until the company and bank account are ready.",
       "bankOff": "Off",
       "bankOn": "On"
+    },
+    "access": {
+      "title": "Access",
+      "comp": "Free for good",
+      "pilotUntil": "Pilot · until {{date}}",
+      "freeUntil": "Free until {{date}}",
+      "none": "No free time",
+      "code": "Pilot code {{code}}",
+      "pilotDays": "Pilot: {{days}} days",
+      "extend": "+30 days",
+      "compAction": "Free for good",
+      "endNow": "End now",
+      "date": "Date (year-month-day)",
+      "pilotUntilAction": "Pilot until this date",
+      "setEnd": "Free until this date",
+      "note": "Note (only platform owners see it)",
+      "saveNote": "Save note",
+      "saved": "Saved"
+    },
+    "billing": {
+      "title": "Billing",
+      "on": "Billing on",
+      "off": "Billing off",
+      "onBody": "Owners see prices and plans. A salon whose free time has ended cannot save new work until it pays; its data stays.",
+      "offBody": "Nobody is asked to pay and no prices or plans show in the app. Every open salon works, whatever its dates.",
+      "turnOn": "Turn billing on",
+      "turnOff": "Turn billing off",
+      "confirmOn": "Turn billing on? Owners will see prices, and salons whose free time has ended will be asked to choose a plan before saving new work.",
+      "confirmOff": "Turn billing off? Every open salon can work and nobody is asked to pay.",
+      "numbers": "Free time and the pilot",
+      "freeDays": "Free days for a new salon",
+      "pilotDays": "Free days for a pilot salon",
+      "pilotMax": "Pilot salons at most"
+    },
+    "pilot": {
+      "applications": "Applications",
+      "noApplications": "No applications yet.",
+      "status": {
+        "new": "New",
+        "approved": "Approved",
+        "declined": "Declined"
+      },
+      "emirates": {
+        "abu_dhabi": "Abu Dhabi",
+        "dubai": "Dubai",
+        "sharjah": "Sharjah",
+        "ajman": "Ajman",
+        "umm_al_quwain": "Umm Al Quwain",
+        "ras_al_khaimah": "Ras Al Khaimah",
+        "fujairah": "Fujairah"
+      },
+      "types": {
+        "barber": "Barber shop",
+        "ladies": "Ladies salon",
+        "unisex": "Unisex salon",
+        "spa": "Spa",
+        "beauty": "Nail and beauty studio"
+      },
+      "staff": "{{count}} staff",
+      "whatsappOk": "OK to message on WhatsApp",
+      "approve": "Approve",
+      "decline": "Decline",
+      "openWhatsApp": "Open in WhatsApp",
+      "message": "Hi {{name}}, welcome to the Saloqo pilot! Sign up at saloqo.com, tap “{{link}}” and type {{code}}. Your salon is then free for {{days}} days.",
+      "codes": "Pilot codes",
+      "noCodes": "No codes yet.",
+      "code": "Code (empty: one is made up)",
+      "days": "Free days (empty: the pilot’s)",
+      "maxUses": "How many salons may use it",
+      "expires": "Valid until (year-month-day, optional)",
+      "create": "Create code",
+      "created": "Code {{code}} created",
+      "codeLine": "{{days}} days · used {{uses}} of {{max}}",
+      "until": "Valid until {{date}}",
+      "disable": "Switch off",
+      "disabled": "Switched off"
+    },
+    "audit": {
+      "empty": "No changes yet.",
+      "change": "{{before}} → {{after}}"
     }
   },
   "profile": {
@@ -2932,5 +3079,16 @@
     "notFound": {
       "title": "Page not found – Saloqo"
     }
+  },
+  "branches": {
+    "title": "Branches",
+    "subtitle": "Every branch of your salon, from one owner login",
+    "openNow": "Open now",
+    "open": "Open",
+    "new": "Add a branch",
+    "name": "Branch name",
+    "add": "Add branch",
+    "added": "Added {{name}}",
+    "priceNote": "This branch adds {{price}} a month to your plan for up to {{included}} people who sign in there, and {{extra}} for each extra person, from your next payment. Nothing is charged now."
   }
 }

@@ -1,4 +1,5 @@
-// What the support assistant knows about Saloqo (2026-10-12; salon types 2026-10-23). Facts only: keep it in step
+// What the support assistant knows about Saloqo (2026-10-12; salon types 2026-10-23; free period, pilot and
+// per-branch prices 2026-10-25, with the days and prices given live from the settings). Facts only: keep it in step
 // with the app and the prices (platform_settings). It is the cached part of every request, so it changes only when
 // the app does.
 export const KNOWLEDGE = `# Saloqo
@@ -12,8 +13,8 @@ chosen at setup and can be changed in More → Branch settings. Languages: Engli
 Português — More → Language in the app, or the language button at the top of the website and the sign-in pages.
 
 ## Signing in
-- Only owners sign up: email and password (or Continue with Google where it shows), then set up the salon: country,
-  branch, open days, tax.
+- Only owners sign up: on the sign-in page, "New here? Create an owner account" (or Continue with Google where it
+  shows), then set up the salon: country, branch, open days, tax.
 - Staff sign in on the "Staff" side of the sign-in page with the salon code, their username and password, which the
   owner gives them. The salon code is on the owner's More page ("Salon code: …") and on the Staff page.
 - An owner who forgot the password: sign-in page → Forgot password? → a code arrives by email.
@@ -27,19 +28,26 @@ Português — More → Language in the app, or the language button at the top o
   (no payroll, no books); staff (barbers/stylists/therapists) see their own queue, their day and their own pay; an accountant
   reads reports and the books without changing them.
 
-## Plan and price
-- Setting up is free (services, team, stock). Using the features needs an active plan.
-- Free trial: a new salon has every feature free for 7 days, with no card and no payment (one trial per owner). Home
-  and More → Plan & billing show the days left; the owner is told the day before it ends. When it ends the salon is
-  locked like an ended plan until the plan is paid; nothing is deleted. A plan paid during the trial starts when the
-  trial ends, so no trial day is lost. A trial cannot be restarted or made longer by the app; ask a person.
-- One price for the whole salon, whatever the number of branches: in the UAE AED 50 a month for up to 4 people who
-  sign in (the owner and staff logins), plus AED 10 a month for each person after that. Outside the UAE USD 13.99 a
-  month for up to 4 people, plus USD 2.99 for each person after that. Staff without a login are not counted.
-- To pay: More → Plan & billing → choose 1, 3, 6 or 12 months → ask for the plan, then pay by bank transfer (with the
-  salon code as the reference) or with the card link shown there. The Saloqo team switches the plan on when the
-  payment arrives. Nothing renews by itself. Paid months are not refunded, except where the law requires.
-- Without an active plan nothing new can be saved, but all data stays: people can still sign in, look and export.
+## Plan and price (the days and prices are in the plan settings given with each conversation)
+- Saloqo is free to start: setting up is free, and a new salon gets a free period with every feature, no card and no
+  payment. Nothing is ever charged unless the owner chooses a plan. Never mention a 7-day trial.
+- The pilot, for salons in the UAE: a limited number of salons are free for longer (the pilot days). Apply on the
+  website's Pilot section (the team answers on WhatsApp), or type a pilot code from the Saloqo team: at sign-up
+  ("Have a pilot code?") or in More → Plan & billing. One pilot per salon; the code works in any letter case. The
+  owner then sees "Pilot salon · free until <date>" in More → Plan & billing.
+- While billing is off (see the plan settings) nobody pays and the app shows no prices or plans; every open salon
+  works. The owner sees only "Free until <date>" (or the pilot line) in More → Plan & billing.
+- The price is per branch, a month: the base price for up to the included people who sign in at that branch, plus the
+  extra for each person after that (AED in the UAE, USD elsewhere). The owner and the accountant count once, at the
+  first branch. Pay for 1 month, 6 months (10% off) or 12 months (the price of 10). No auto-renewal, no contract.
+  Staff without a login are not counted.
+- Branches: the owner adds one in More → Branches → Add a branch (while billing is on, its price is shown first and
+  it joins the next payment; nothing is charged then), and opens another branch from the same page.
+- When billing is on: the owner is reminded 14 and 3 days before the free time ends. To pay: More → Plan & billing →
+  the length → by card where it shows, or bank transfer / payment link and then "Ask for the plan". The Saloqo team
+  switches a transfer on when the payment arrives. Paid months are not refunded, except where the law requires.
+- If the free time has ended with billing on, nothing new can be saved until a plan is chosen; all data stays: people
+  can still sign in, look and export.
 
 ## Everyday work
 - Queue tab → New → Walk-in or Booking: services, the barber/stylist/therapist, date and time, an optional deposit. Then start,
@@ -65,7 +73,7 @@ Português — More → Language in the app, or the language button at the top o
 - Deleting the account: owner only, More → Delete my account. Financial records the law requires are kept.
 
 ## When something goes wrong
-- "Your plan isn't active" or nothing saves: the owner opens More → Plan & billing (also when the free trial has ended).
+- "Your salon's free time has ended" or nothing saves: the owner opens More → Plan & billing.
 - "No connection", or a change not showing on another phone: check the internet, then the refresh button.
 - A receipt does not print: check More → Branch settings → Customer receipt; on a computer the receipt opens the
   browser's print window; on a phone it can be shared or sent on WhatsApp.

@@ -22,7 +22,8 @@ values
    'platform@test.local', crypt('pw-12345', gen_salt('bf')), now(), now(), now(), '{}', '{}');
 insert into platform_admins (user_id) values ('00000000-0000-0000-0000-0000000014ff');
 -- A salon without a plan: trials off for this test (35_free_trial covers the trial).
-update platform_settings set trial_days = 0 where true;
+-- Billing on, no free period (full update, Phase 6): the paid-plan gate itself.
+update platform_settings set billing_enabled = true, public_free_days = 0 where true;
 
 create function pg_temp.as_user(p uuid) returns void language plpgsql as $$
 begin
@@ -74,9 +75,9 @@ select is((plan_status(current_setting('t.b')::uuid) ->> 'active')::boolean, fal
 select throws_ok(format($$ select request_plan('%s', 1, null) $$, current_setting('t.b')), '42501', null,
   'a cashier cannot ask for the plan');
 select pg_temp.as_user('00000000-0000-0000-0000-0000000014aa');
-select lives_ok(format($$ select request_plan('%s', 3, 'Paying by bank transfer') $$, current_setting('t.b')),
-  'the owner asks for 3 months');
-select is((plan_status(current_setting('t.b')::uuid) ->> 'requested_months')::int, 3, 'the request shows');
+select lives_ok(format($$ select request_plan('%s', 6, 'Paying by bank transfer') $$, current_setting('t.b')),
+  'the owner asks for 6 months');
+select is((plan_status(current_setting('t.b')::uuid) ->> 'requested_months')::int, 6, 'the request shows');
 select throws_ok(format($$ select admin_activate('%s', 3, 29700, 'x') $$, current_setting('t.b')), '42501', null,
   'an owner cannot switch on their own plan');
 select throws_ok($$ select * from admin_salons() $$, '42501', null, 'nor list the salons');
@@ -84,7 +85,7 @@ select throws_ok(format($$ insert into subscriptions (business_id, paid_until) v
   current_setting('t.b')), '42501', null, 'nor write the plan table');
 
 select pg_temp.as_user('00000000-0000-0000-0000-0000000014ff');
-select is((select requested_months from admin_salons() where business_id = current_setting('t.b')::uuid), 3,
+select is((select requested_months from admin_salons() where business_id = current_setting('t.b')::uuid), 6,
   'the platform owner sees the request');
 select is(admin_activate(current_setting('t.b')::uuid, 3, 29700, 'Bank transfer ref 1234'),
   (business_today(current_setting('t.b')::uuid) - 1 + interval '3 months')::date, 'paid for 3 months from today');

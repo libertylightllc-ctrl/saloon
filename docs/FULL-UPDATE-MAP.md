@@ -33,3 +33,14 @@ other branches get password-protected previews). Work happens on `website-fixes`
 3. **Comparison table** ("Many salon apps"). These are claims about other products that the code cannot verify; the
    rules ask for true claims only. I would publish them only if you confirm each row.
 4. **Who we are.** `OPERATOR_NAME` is blank: the legal pages keep today's wording until it is set.
+
+## After Phase 6 (25 Oct 2026)
+
+| What | Where |
+|---|---|
+| Access (free period, pilot, paid, free for good) | `subscriptions.access_type`, `free_until`, `pilot_code`, `admin_note`; settings `platform_settings.billing_enabled`, `public_free_days`, `pilot_free_days`, `pilot_max_salons` (migration 66) |
+| The one access check | `plan_active()` (writes via `gate_plan`, the booking page, `plan_status` for the app) |
+| Pilot | `pilot_codes`, `pilot_redemptions`, `pilot_applications`; `redeem_pilot_code`, `apply_for_pilot`, `pilot_status`; website `scripts/site/pilot.mjs`; app `src/features/plan/PilotCodeCard.tsx`, sign-up |
+| Per-branch price | `plan_branch_people`, `plan_branch_lines`, `plan_quote`, `plan_length_tenths` (migration 67); app `src/features/plan/BranchBill.tsx`; lengths `src/config/pricing.json` |
+| Branches | `create_branch`, `set_my_branch`; app More → Branches (`src/features/branches/`) |
+| Admin | `/console` and `/admin` (`src/features/console/`: Salons → Access, Settings, Pilot, Changes; `platform_audit`) |
