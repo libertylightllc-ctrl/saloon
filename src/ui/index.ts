@@ -7,6 +7,7 @@ export { Card } from './Card';
 export { CategoryCircle } from './CategoryCircle';
 export { Chip } from './Chip';
 export { ContourPattern } from './ContourPattern';
+export { DateField } from './DateField';
 export { DateStrip, MonthSwitcher, TimeSlotGrid, type TimeSlot } from './DatePickers';
 export { EmptyState } from './EmptyState';
 export { FitText } from './FitText';

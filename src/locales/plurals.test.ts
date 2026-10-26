@@ -3,7 +3,9 @@ import { i18n, initI18n } from '@/lib/i18n';
 
 const say = async (lang: string, key: string, values: Record<string, unknown>) => {
   await initI18n(lang as 'en');
-  return i18n.getFixedT(lang)(key, values);
+  // Keys come in as plain strings here, so the typed t() is loosened for this test.
+  const t = i18n.getFixedT(lang) as unknown as (k: string, v: Record<string, unknown>) => string;
+  return t(key, values);
 };
 
 it('the console counts one of a thing as one', async () => {

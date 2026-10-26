@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { businessDate } from '@/lib/dates';
 import { isLanguage } from '@/lib/i18n';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
-import { Button, Card, FormError, ListRow, QueryState, StatusPill, Text, TextField, useToast } from '@/ui';
+import { Button, Card, DateField, FormError, ListRow, QueryState, StatusPill, Text, TextField, useToast } from '@/ui';
 
 import {
   useCreatePilotCode,
@@ -47,7 +48,6 @@ export function PilotTab() {
   const [uses, setUses] = useState('1');
   const [expires, setExpires] = useState('');
   const [message, setMessage] = useState<{ text: string; whatsapp: string } | null>(null);
-  const expiresOk = expires.trim() === '' || /^\d{4}-\d{2}-\d{2}$/.test(expires.trim());
 
   return (
     <View style={styles.body}>
@@ -128,11 +128,10 @@ export function PilotTab() {
         <TextField label={t('console.pilot.code')} placeholder={EXAMPLE_CODE} value={code} onChangeText={setCode} autoCapitalize="characters" maxLength={40} testID="pilot-new-code" />
         <TextField label={t('console.pilot.days')} placeholder="90" value={days} onChangeText={setDays} keyboardType="number-pad" testID="pilot-new-days" />
         <TextField label={t('console.pilot.maxUses')} value={uses} onChangeText={setUses} keyboardType="number-pad" testID="pilot-new-uses" />
-        <TextField label={t('console.pilot.expires')} placeholder="2027-01-31" value={expires} onChangeText={setExpires} maxLength={10} />
+        <DateField label={t('console.pilot.expires')} value={expires} onChange={setExpires} min={businessDate()} clearable testID="pilot-new-expires" />
         <FormError error={create.error} />
         <Button
           label={t('console.pilot.create')}
-          disabled={!expiresOk}
           loading={create.isPending}
           onPress={() =>
             create.mutate(
@@ -140,7 +139,7 @@ export function PilotTab() {
                 code: code.trim() || undefined,
                 days: days.trim() ? Number(days) : undefined,
                 max_uses: Number(uses) || 1,
-                expires_on: expires.trim() || undefined,
+                expires_on: expires || undefined,
               },
               { onSuccess: (c) => { toast(t('console.pilot.created', { code: c })); setCode(''); } },
             )

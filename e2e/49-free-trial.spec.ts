@@ -5,6 +5,7 @@
  * refused, everything stays, the owner is shown the way on; a recorded payment opens it again. Billing off is in the
  * SQL tests (35), as switching it here would change every other test running.
  */
+import { format } from 'date-fns';
 import { fromZonedTime } from 'date-fns-tz';
 
 import { admin, createOwner, createStaff, makePlatformAdmin } from './support/api';
@@ -73,6 +74,14 @@ test('a new salon is free to start; the last 14 days are counted down; a pilot c
   await id(office, 'more-admin').click();
   await id(office, 'console-tab-salons').click();
   await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Pilot · until');
+  // A new end date is picked on the calendar (the month of the current end opens), not typed.
+  const { data: pilotSub } = await admin.from('subscriptions').select('free_until').eq('business_id', owner.businessId).single();
+  const pick = `${String(pilotSub!.free_until).slice(0, 7)}-15`;
+  await id(office, `admin-salon-${owner.code}`).click();
+  await id(office, 'access-date').click();
+  await id(office, `access-date-day-${pick}`).click();
+  await id(office, 'access-set-end').click();
+  await expect(id(office, `admin-salon-${owner.code}`)).toContainText(`Pilot · until ${format(new Date(`${pick}T12:00:00`), 'd MMM yyyy')}`);
   await id(office, `admin-salon-${owner.code}`).click();
   await id(office, 'access-end-now').click();
   await page.goto('/plan');

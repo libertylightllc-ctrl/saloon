@@ -11,6 +11,8 @@ common.minutes,{{n}} min,{{n}} دقيقة,{{n}} मिनट,{{n}} منٹ,{{n}} 
 common.more,More,المزيد,और,مزید,Más,Plus,Mais,
 common.nextMonth,Next month,الشهر التالي,अगला महीना,اگلا مہینہ,Mes siguiente,Mois suivant,Próximo mês,
 common.previousMonth,Previous month,الشهر السابق,पिछला महीना,پچھلا مہینہ,Mes anterior,Mois précédent,Mês anterior,
+common.chooseDate,Choose a date,اختر تاريخًا,तारीख़ चुनें,تاریخ چنیں,Elige una fecha,Choisir une date,Escolha uma data,
+common.clearDate,Clear the date,امسح التاريخ,तारीख़ हटाएँ,تاریخ ہٹائیں,Quitar la fecha,Effacer la date,Limpar a data,
 common.notifications,Notifications,الإشعارات,सूचनाएँ,اطلاعات,Notificaciones,Notifications,Notificações,
 common.search,Search,بحث,खोजें,تلاش کریں,Buscar,Rechercher,Pesquisar,
 common.days.mon,Mon,الإثنين,सोम,پیر,Lun,Lun,Seg,
@@ -2583,7 +2585,7 @@ console.access.pilotDays,Pilot: {{days}} days,تجريبي: {{days}} يومًا,
 console.access.extend,+30 days,+30 يومًا,+30 दिन,+30 دن,+30 días,+30 jours,+30 dias,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.access.compAction,Free for good,مجاني دائمًا,हमेशा मुफ़्त,ہمیشہ مفت,Gratis para siempre,Gratuit à vie,Grátis para sempre,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.access.endNow,End now,إنهاء الآن,अभी ख़त्म करें,ابھی ختم کریں,Terminar ahora,Terminer maintenant,Encerrar agora,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
-console.access.date,Date (year-month-day),التاريخ (سنة-شهر-يوم),तारीख़ (वर्ष-माह-दिन),تاریخ (سال-مہینہ-دن),Fecha (año-mes-día),Date (année-mois-jour),Data (ano-mês-dia),"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+console.access.date,Date,التاريخ,तारीख़,تاریخ,Fecha,Date,Data,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.access.pilotUntilAction,Pilot until this date,تجريبي حتى هذا التاريخ,इस तारीख़ तक पायलट,اس تاریخ تک پائلٹ,Piloto hasta esta fecha,Pilote jusqu’à cette date,Piloto até esta data,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.access.setEnd,Free until this date,مجاني حتى هذا التاريخ,इस तारीख़ तक मुफ़्त,اس تاریخ تک مفت,Gratis hasta esta fecha,Gratuit jusqu’à cette date,Grátis até esta data,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.access.note,Note (only platform owners see it),ملاحظة (لا يراها إلا مالكو المنصة),नोट (सिर्फ़ प्लेटफ़ॉर्म मालिक देखते हैं),نوٹ (صرف پلیٹ فارم مالکان دیکھتے ہیں),Nota (solo la ven los dueños de la plataforma),Note (visible seulement par les propriétaires de la plateforme),Nota (só os donos da plataforma veem),"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
@@ -2630,7 +2632,7 @@ console.pilot.noCodes,No codes yet.,لا رموز بعد.,अभी कोई �
 console.pilot.code,Code (empty: one is made up),الرمز (فارغ: يُنشأ تلقائيًا),कोड (ख़ाली: अपने आप बनेगा),کوڈ (خالی: خود بن جائے گا),Código (vacío: se crea uno),Code (vide : un code est créé),Código (vazio: um é criado),"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.pilot.days,Free days (empty: the pilot’s),الأيام المجانية (فارغ: أيام البرنامج),मुफ़्त दिन (ख़ाली: पायलट के),مفت دن (خالی: پائلٹ کے),Días gratis (vacío: los del piloto),Jours gratuits (vide : ceux du pilote),Dias grátis (vazio: os do piloto),"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.pilot.maxUses,How many salons may use it,عدد الصالونات التي يمكنها استخدامه,कितने सैलून इसे इस्तेमाल कर सकते हैं,کتنے سیلون اسے استعمال کر سکتے ہیں,Cuántos salones pueden usarlo,Combien de salons peuvent l’utiliser,Quantos salões podem usar,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
-console.pilot.expires,"Valid until (year-month-day, optional)",صالح حتى (سنة-شهر-يوم، اختياري),"कब तक मान्य (वर्ष-माह-दिन, वैकल्पिक)",کب تک درست (سال-مہینہ-دن، اختیاری),"Válido hasta (año-mes-día, opcional)","Valable jusqu’au (année-mois-jour, facultatif)","Válido até (ano-mês-dia, opcional)","Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+console.pilot.expires,Valid until (optional),صالح حتى (اختياري),कब तक मान्य (वैकल्पिक),کب تک درست (اختیاری),Válido hasta (opcional),Valable jusqu’au (facultatif),Válido até (opcional),"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.pilot.create,Create code,إنشاء رمز,कोड बनाएँ,کوڈ بنائیں,Crear código,Créer le code,Criar código,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.pilot.created,Code {{code}} created,تم إنشاء الرمز {{code}},कोड {{code}} बनाया गया,کوڈ {{code}} بن گیا,Código {{code}} creado,Code {{code}} créé,Código {{code}} criado,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.pilot.codeDays_one,{{count}} day,يوم واحد,{{count}} दिन,{{count}} دن,{{count}} día,{{count}} jour,{{count}} dia,

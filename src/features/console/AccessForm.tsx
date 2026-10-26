@@ -6,7 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import type { AdminSalon } from '@/features/plan/api';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
-import { Button, FormError, Text, TextField, useToast } from '@/ui';
+import { Button, DateField, FormError, Text, TextField, useToast } from '@/ui';
 
 import { useSetAccess, type AccessAction } from './api';
 
@@ -29,7 +29,7 @@ export function AccessForm({ salon, onDone }: { salon: AdminSalon; onDone: () =>
   const set = useSetAccess();
   const [date, setDate] = useState(salon.free_until ?? '');
   const [note, setNote] = useState(salon.admin_note ?? '');
-  const dateOk = /^\d{4}-\d{2}-\d{2}$/.test(date.trim());
+  const dateOk = date !== '';
   const run = (action: AccessAction, extra: { days?: number; until?: string; note?: string } = {}) =>
     set.mutate(
       { businessId: salon.business_id, action, ...extra },
@@ -56,17 +56,10 @@ export function AccessForm({ salon, onDone }: { salon: AdminSalon; onDone: () =>
         {small('comp', t('console.access.compAction'), () => run('comp'))}
         {small('end-now', t('console.access.endNow'), () => run('end_now'))}
       </View>
-      <TextField
-        label={t('console.access.date')}
-        placeholder="2027-01-24"
-        value={date}
-        onChangeText={setDate}
-        maxLength={10}
-        testID="access-date"
-      />
+      <DateField label={t('console.access.date')} value={date} onChange={setDate} testID="access-date" />
       <View style={styles.wrap}>
-        {small('pilot-until', t('console.access.pilotUntilAction'), () => run('pilot', { until: date.trim() }), !dateOk)}
-        {small('set-end', t('console.access.setEnd'), () => run('set_end', { until: date.trim() }), !dateOk)}
+        {small('pilot-until', t('console.access.pilotUntilAction'), () => run('pilot', { until: date }), !dateOk)}
+        {small('set-end', t('console.access.setEnd'), () => run('set_end', { until: date }), !dateOk)}
       </View>
       <TextField label={t('console.access.note')} value={note} onChangeText={setNote} multiline maxLength={500} testID="access-note" />
       {small('note-save', t('console.access.saveNote'), () => run('note', { note }))}

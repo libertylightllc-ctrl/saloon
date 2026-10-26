@@ -6,6 +6,7 @@ import type { Mode } from '@/theme';
 
 import { initials } from './Avatar';
 import { Button } from './Button';
+import { DateField } from './DateField';
 import { HeaderBand } from './HeaderBand';
 import { useOnBand } from './layoutContext';
 import { MoneyInput } from './MoneyInput';
@@ -167,5 +168,27 @@ describe('QueryState', () => {
       </QueryState>,
     );
     expect(screen.getByText('Nothing to compare.')).toBeTruthy();
+  });
+});
+
+describe('DateField', () => {
+  it('picks a day on the month calendar instead of typing it, and an optional date can be cleared', async () => {
+    const onChange = jest.fn();
+    const { rerender } = await renderInApp(
+      <DateField label="Expires" value="" onChange={onChange} min="2027-01-10" clearable testID="expires" />,
+    );
+    expect(screen.getByText('Choose a date')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByTestId('expires'));
+    // January 2027 opens (the first day that can be picked); days before it cannot be picked.
+    expect(screen.getByText('January 2027')).toBeOnTheScreen();
+    expect(screen.getByTestId('expires-day-2027-01-09')).toBeDisabled();
+    await fireEvent.press(screen.getByTestId('expires-day-2027-01-24'));
+    expect(onChange).toHaveBeenLastCalledWith('2027-01-24');
+    expect(screen.queryByTestId('expires-calendar')).toBeNull();
+
+    await rerender(<DateField label="Expires" value="2027-01-24" onChange={onChange} clearable testID="expires" />);
+    expect(screen.getByText('24 Jan 2027')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByTestId('expires-clear'));
+    expect(onChange).toHaveBeenLastCalledWith('');
   });
 });

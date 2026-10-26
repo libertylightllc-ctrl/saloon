@@ -24,6 +24,11 @@ Found by the owner, not yet fixed. When one is fixed, move it to "Done" with the
 ### App and website
 10. Arabic counts everywhere else use one form for every number (for example "5 يومًا" where Arabic says "5 أيام", and "2 يومًا" for "يومان"). 27 counted texts need the Arabic forms for 0, 2, 3–10 and 11–99, as the pilot bar now has.
 
+## Found 26 Oct 2026 while fixing #8
+
+### App
+11. Outside the console, two screens still have dates typed as year-month-day: a licence or document (issued, expires) and a stock item's date. The new calendar field (#8) can replace them.
+
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.
@@ -33,3 +38,4 @@ Found by the owner, not yet fixed. When one is fixed, move it to "Done" with the
 - 26 Oct · #5 Console → Plans: a free period and access changes say "Free until", a pilot "Pilot · until"; only payments say "Paid until" (the database keeps every event's end date in one column).
 - 26 Oct · #6 One plan request at a time: while a request waits, the plan page shows it and offers no second one, and the database refuses a second one ("You already asked for your plan…") — migration 68, which goes to the live database only after the owner's OK.
 - 26 Oct · #7 Console plurals: "1 customer", "1 person signs in", "1 new application", "1 owner", "1 staff login", a pilot code's "1 day", and plan requests "1 month" / "6 months" instead of "month(s)" (also on the owner's plan page). Lines that held several numbers are now one counted text per number.
+- 26 Oct · #8 Console dates are picked on a month calendar (Monday first; the field shows "24 Jan 2027"): a salon's access date and a pilot code's "Valid until" (optional, can be cleared, no past days). The calendar is a shared field, `DateField`, built from the app's own parts so it works on the web and phones.
