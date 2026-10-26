@@ -2450,7 +2450,7 @@
     },
     "privacy": {
       "title": "Politique de confidentialité",
-      "intro": "Cette politique explique ce que {{app}} collecte, pourquoi, et les choix dont vous disposez. Elle est rédigée selon la loi des Émirats arabes unis sur la protection des données personnelles (décret-loi fédéral n° 45 de 2021) et couvre aussi les personnes de l’Union européenne, du Royaume-Uni et du Brésil. {{app}} est un logiciel que les barbiers, salons pour femmes, salons mixtes, spas et instituts d’ongles et de beauté utilisent pour gérer leur journée : file d’attente, ventes, stock, équipe, paie et taxes.",
+      "intro": "Cette politique explique ce que {{app}} collecte, pourquoi, et les choix dont vous disposez. Elle est rédigée selon la loi des Émirats arabes unis sur la protection des données personnelles (décret-loi fédéral n° 45 de 2021, PDPL) et couvre aussi les personnes de l’Union européenne, du Royaume-Uni et du Brésil. {{app}} est un logiciel que les barbiers, salons pour femmes, salons mixtes, spas et instituts d’ongles et de beauté utilisent pour gérer leur journée : file d’attente, ventes, stock, équipe, paie et taxes.",
       "who": {
         "title": "Qui nous sommes",
         "body": "Pour votre compte et la façon dont vous utilisez {{app}}, c’est nous qui décidons de la manière dont vos données sont utilisées : nous sommes le « responsable du traitement ». Pour les informations qu’un salon conserve sur ses propres clients et son personnel, c’est le salon qui est le responsable du traitement : il décide de ce qui est enregistré et pourquoi, et nous les stockons et les traitons pour son compte, selon ses instructions, conformément aux conditions de traitement des données figurant dans nos conditions d’utilisation.",

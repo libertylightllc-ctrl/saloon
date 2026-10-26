@@ -2450,7 +2450,7 @@
     },
     "privacy": {
       "title": "Privacy policy",
-      "intro": "This policy explains what {{app}} collects, why, and the choices you have. It is written for the UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021), and it also covers people in the European Union, the United Kingdom and Brazil. {{app}} is software that barber shops, ladies salons, unisex salons, spas and nail and beauty studios use to run their day: queue, sales, stock, staff, payroll and tax.",
+      "intro": "This policy explains what {{app}} collects, why, and the choices you have. It is written for the UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021, PDPL), and it also covers people in the European Union, the United Kingdom and Brazil. {{app}} is software that barber shops, ladies salons, unisex salons, spas and nail and beauty studios use to run their day: queue, sales, stock, staff, payroll and tax.",
       "who": {
         "title": "Who we are",
         "body": "For your account and how you use {{app}}, we decide how your data is used: we are the “controller”. For the details a salon keeps about its own customers and staff, the salon is the controller: it decides what is recorded and why, and we store and process them for it, on its instructions, under the data processing terms in our terms of use.",
