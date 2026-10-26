@@ -36,7 +36,7 @@ const translations = { ar, hi, ur, es, fr, pt } as Record<string, Tree>;
 /** "x_few" → ["x", "few"]; a key without a plural ending → [key, null]. */
 const pluralOf = (key: string): [string, string | null] => {
   const m = /^(.*)_(zero|one|two|few|many|other)$/.exec(key);
-  return m ? [m[1], m[2]] : [key, null];
+  return m ? [m[1] ?? key, m[2] ?? null] : [key, null];
 };
 
 /** Texts English counts: the ones with a "_one" form. */
@@ -56,7 +56,7 @@ const extraKeys = (code: string, tree: Tree) => {
 };
 
 /** Arabic says "one place" and "two places" without the number, so those forms may leave out {{count}}. */
-const withoutCount = (key: string, names: string[]) =>
+const withoutCount = (key: string, names: (string | undefined)[]) =>
   ['zero', 'one', 'two'].includes(pluralOf(key)[1] ?? '') ? names.filter((n) => n !== 'count') : names;
 
 describe.each(Object.entries(translations))('%s locale', (code, tree) => {

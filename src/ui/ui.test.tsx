@@ -9,6 +9,7 @@ import { Button } from './Button';
 import { HeaderBand } from './HeaderBand';
 import { useOnBand } from './layoutContext';
 import { MoneyInput } from './MoneyInput';
+import { QueryState } from './QueryState';
 import { StatusPill } from './StatusPill';
 import { Stepper } from './Stepper';
 import { SuccessCheck } from './SuccessCheck';
@@ -136,5 +137,35 @@ describe('SuccessCheck', () => {
     const spring = jest.spyOn(Animated, 'spring');
     await renderInApp(<SuccessCheck />);
     await waitFor(() => expect(spring).toHaveBeenCalledTimes(2));
+  });
+});
+
+describe('QueryState', () => {
+  const loaded = <T,>(data: T) => ({ data, isPending: false, isError: false, error: null, refetch: () => undefined });
+  const list = (rows: string[]) => <RNText>{rows.join(', ')}</RNText>;
+
+  it('says a list is empty when it has nothing in it', async () => {
+    await renderInApp(
+      <QueryState query={loaded<string[]>([])} empty="No codes yet.">
+        {list}
+      </QueryState>,
+    );
+    expect(screen.getByText('No codes yet.')).toBeTruthy();
+  });
+
+  it('shows the list when it has rows, and the screen’s own empty rule wins', async () => {
+    const { rerender } = await renderInApp(
+      <QueryState query={loaded(['PILOT-DXB-07'])} empty="No codes yet.">
+        {list}
+      </QueryState>,
+    );
+    expect(screen.getByText('PILOT-DXB-07')).toBeTruthy();
+    expect(screen.queryByText('No codes yet.')).toBeNull();
+    await rerender(
+      <QueryState query={loaded(['only one'])} isEmpty={(rows) => rows.length < 2} empty="Nothing to compare.">
+        {list}
+      </QueryState>,
+    );
+    expect(screen.getByText('Nothing to compare.')).toBeTruthy();
   });
 });
