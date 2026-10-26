@@ -866,6 +866,13 @@
           "submit": "Apply for the pilot",
           "thanks": "Thanks! We’ll message you on WhatsApp within 2 working days.",
           "error": "That didn’t go through. Check your details and try again.",
+          "invalid": {
+            "name": "Enter your name (at least 2 letters).",
+            "salon": "Enter your salon’s name (at least 2 letters).",
+            "staff": "Enter how many staff you have (1 to 500).",
+            "whatsapp": "Enter a WhatsApp number, for example 050 123 4567.",
+            "ok": "Tick this so we can message you about the pilot."
+          },
           "tooMany": "Too many applications from here. Try again in an hour.",
           "full": "The pilot is full. You can still try Saloqo free."
         }

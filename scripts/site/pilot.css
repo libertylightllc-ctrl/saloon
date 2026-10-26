@@ -13,7 +13,9 @@
 .pilot-field{display:flex;flex-direction:column;gap:4px;font-weight:500;flex:1;min-width:0}
 .pilot-field input,.pilot-field select{min-height:48px;padding:0 12px;border:1px solid var(--hairline);border-radius:12px;background:var(--card);color:var(--ink);font:inherit}
 .pilot-pair{display:flex;gap:12px;flex-wrap:wrap}
-.pilot-check{display:flex;gap:10px;align-items:flex-start}
+.pilot-error{margin:0;font-size:14px;font-weight:500;color:var(--danger)}
+.pilot-field [aria-invalid="true"]{border-color:var(--danger)}
+.pilot-check{display:flex;gap:10px;align-items:flex-start;font-weight:400}
 .pilot-check input{width:20px;height:20px;margin:2px 0 0;flex-shrink:0}
 .pilot-form .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .pilot-form button{font:inherit;cursor:pointer}

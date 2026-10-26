@@ -28,7 +28,10 @@ export function pilotUnderPlans(c) {
   return `<p class="center teal-soft uae pilot-note" ${state(true)}${hidden(c, true)}>${esc(c.t('auth.landing.pilot.underPlans', { months: c.pilot.months }))}</p>`;
 }
 
-const field = (label, control) => `<label class="pilot-field"><span>${esc(label)}</span>${control}</label>`;
+/** A labelled field with room under it for its message (client.js fills `data-error-for` when the field is wrong). */
+const field = (name, label, control) =>
+  `<div class="pilot-field"><label for="pf-${name}">${esc(label)}</label>${control.replace(/^<(\w+) /, `<$1 id="pf-${name}" aria-describedby="pf-${name}-error" `)}${error(name)}</div>`;
+const error = (name) => `<p class="pilot-error" id="pf-${name}-error" data-error-for="${name}" hidden></p>`;
 const select = (name, options, selected = '') =>
   `<select name="${name}" required>${options.map(([v, l]) => `<option value="${esc(v)}"${v === selected ? ' selected' : ''}>${esc(l)}</option>`).join('')}</select>`;
 
@@ -43,19 +46,19 @@ export function pilotSection(c) {
   ];
   const tick = `<span class="tick" style="--s:24px">${c.icon('check', { size: 14, stroke: 2.6 })}</span>`;
   const form = `<form class="pilot-form" data-pilot-form novalidate ${state(true)}${hidden(c, true)}>
-${field(t('auth.landing.pilot.form.name'), '<input name="name" autocomplete="name" required minlength="2" maxlength="80">')}
-${field(t('auth.landing.pilot.form.salon'), '<input name="salon_name" autocomplete="organization" required minlength="2" maxlength="80">')}
+${field('name', t('auth.landing.pilot.form.name'), '<input name="name" autocomplete="name" required minlength="2" maxlength="80">')}
+${field('salon_name', t('auth.landing.pilot.form.salon'), '<input name="salon_name" autocomplete="organization" required minlength="2" maxlength="80">')}
 <div class="pilot-pair">
-${field(t('auth.landing.pilot.form.emirate'), select('emirate', EMIRATES.map((e) => [e, t(`console.pilot.emirates.${e}`)]), 'dubai'))}
-${field(t('auth.landing.pilot.form.area'), '<input name="area" maxlength="80">')}
+${field('emirate', t('auth.landing.pilot.form.emirate'), select('emirate', EMIRATES.map((e) => [e, t(`console.pilot.emirates.${e}`)]), 'dubai'))}
+${field('area', t('auth.landing.pilot.form.area'), '<input name="area" maxlength="80">')}
 </div>
 <div class="pilot-pair">
-${field(t('auth.landing.pilot.form.type'), select('salon_type', TYPES.map((k) => [k, t(`console.pilot.types.${k}`)])))}
-${field(t('auth.landing.pilot.form.staff'), '<input name="staff_count" type="number" inputmode="numeric" min="1" max="500" required>')}
+${field('salon_type', t('auth.landing.pilot.form.type'), select('salon_type', TYPES.map((k) => [k, t(`console.pilot.types.${k}`)])))}
+${field('staff_count', t('auth.landing.pilot.form.staff'), '<input name="staff_count" type="number" inputmode="numeric" min="1" max="500" required>')}
 </div>
-${field(t('auth.landing.pilot.form.whatsapp'), '<input name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="+971 50 123 4567" required>')}
-${field(t('auth.landing.pilot.form.language'), select('language', LANGUAGES.map((l) => [l.code, l.name]), c.lang))}
-<label class="pilot-check"><input type="checkbox" name="whatsapp_ok"><span>${esc(t('auth.landing.pilot.form.ok'))}</span></label>
+${field('whatsapp', t('auth.landing.pilot.form.whatsapp'), '<input name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="+971 50 123 4567" required>')}
+${field('language', t('auth.landing.pilot.form.language'), select('language', LANGUAGES.map((l) => [l.code, l.name]), c.lang))}
+<div class="pilot-field"><label class="pilot-check"><input type="checkbox" name="whatsapp_ok" required aria-describedby="pf-whatsapp_ok-error"><span>${esc(t('auth.landing.pilot.form.ok'))}</span></label>${error('whatsapp_ok')}</div>
 <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
 <button class="btn btn-teal" type="submit">${esc(t('auth.landing.pilot.form.submit'))}</button>
 <p class="pilot-out" role="status" aria-live="polite" data-pilot-out></p>

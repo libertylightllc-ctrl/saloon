@@ -866,6 +866,13 @@
           "submit": "Postuler au pilote",
           "thanks": "Merci ! Nous vous écrirons sur WhatsApp sous 2 jours ouvrés.",
           "error": "L’envoi n’a pas abouti. Vérifiez vos informations et réessayez.",
+          "invalid": {
+            "name": "Indiquez votre nom (2 lettres minimum).",
+            "salon": "Indiquez le nom du salon (2 lettres minimum).",
+            "staff": "Indiquez le nombre d’employés (de 1 à 500).",
+            "whatsapp": "Indiquez un numéro WhatsApp, par exemple 050 123 4567.",
+            "ok": "Cochez cette case pour que nous puissions vous écrire au sujet du pilote."
+          },
           "tooMany": "Trop de candidatures d’ici. Réessayez dans une heure.",
           "full": "Le pilote est complet. Vous pouvez quand même essayer Saloqo gratuitement."
         }

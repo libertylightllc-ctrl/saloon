@@ -276,6 +276,50 @@ test.describe('the pilot, for visitors in the UAE', () => {
     expect(errors).toEqual([]);
   });
 
+  test('each empty or wrong field of the pilot form says what it needs, under it; nothing is sent until all are right', async ({ page }) => {
+    const errors = watchErrors(page);
+    let sent = 0;
+    await page.route('**/rest/v1/rpc/apply_for_pilot', (route) => {
+      sent += 1;
+      return route.fulfill({ json: { ok: true } });
+    });
+    await page.goto(`${site}/`);
+    const form = page.locator('[data-pilot-form]');
+    const message = (name: string) => form.locator(`[data-error-for="${name}"]`);
+    await form.locator('button[type="submit"]').click();
+    await expect(message('name')).toHaveText('Enter your name (at least 2 letters).');
+    await expect(message('salon_name')).toHaveText('Enter your salon’s name (at least 2 letters).');
+    await expect(message('staff_count')).toHaveText('Enter how many staff you have (1 to 500).');
+    await expect(message('whatsapp')).toHaveText('Enter a WhatsApp number, for example 050 123 4567.');
+    await expect(message('whatsapp_ok')).toHaveText('Tick this so we can message you about the pilot.');
+    await expect(form.locator('[name="name"]')).toBeFocused();
+    await expect(form.locator('[name="name"]')).toHaveAttribute('aria-invalid', 'true');
+    await expect(message('area')).toBeHidden();
+    // Fixing a field takes its message away at once; a wrong value still has one.
+    await form.locator('[name="name"]').fill('Mariam');
+    await expect(message('name')).toBeHidden();
+    await form.locator('[name="salon_name"]').fill('  ');
+    await form.locator('[name="staff_count"]').fill('600');
+    await form.locator('[name="whatsapp"]').fill('12');
+    await expect(message('salon_name')).toBeVisible();
+    await expect(message('staff_count')).toBeVisible();
+    await expect(message('whatsapp')).toBeVisible();
+    await form.locator('[name="salon_name"]').fill('Al Wasl Ladies');
+    await form.locator('[name="staff_count"]').fill('6');
+    await form.locator('[name="whatsapp"]').fill('050 123 4567');
+    await form.locator('button[type="submit"]').click();
+    // The WhatsApp tick is needed: it is the only way the team can reply.
+    await expect(message('whatsapp_ok')).toBeVisible();
+    await expect(form.locator('[name="whatsapp_ok"]')).toBeFocused();
+    expect(sent).toBe(0);
+    await form.locator('[name="whatsapp_ok"]').check();
+    await expect(message('whatsapp_ok')).toBeHidden();
+    await form.locator('button[type="submit"]').click();
+    await expect(form.locator('[data-pilot-out]')).toHaveText('Thanks! We’ll message you on WhatsApp within 2 working days.');
+    expect(sent).toBe(1);
+    expect(errors).toEqual([]);
+  });
+
   test('in Arabic the places left take the form Arabic uses for that number', async ({ page }) => {
     const cases = [
       [20, 'يتبقى 20 مكانًا'],

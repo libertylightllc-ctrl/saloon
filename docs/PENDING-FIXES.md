@@ -27,5 +27,4 @@ Found by the owner, not yet fixed. When one is fixed, move it to "Done" with the
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.
-
-
+- 26 Oct · #3 Pilot form: every empty or wrong field shows what it needs under it (name and salon name at least 2 letters, staff 1 to 500, a WhatsApp number the database accepts, the WhatsApp tick); the message goes as soon as the field is right, and nothing is sent until all are. The WhatsApp tick is now required: the form has no email, so WhatsApp is the only way to reply.

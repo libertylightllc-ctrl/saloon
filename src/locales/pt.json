@@ -866,6 +866,13 @@
           "submit": "Inscrever-se no piloto",
           "thanks": "Obrigado! Vamos falar com você no WhatsApp em até 2 dias úteis.",
           "error": "Não foi enviado. Confira seus dados e tente de novo.",
+          "invalid": {
+            "name": "Escreva seu nome (pelo menos 2 letras).",
+            "salon": "Escreva o nome do salão (pelo menos 2 letras).",
+            "staff": "Informe quantas pessoas trabalham (de 1 a 500).",
+            "whatsapp": "Escreva um número de WhatsApp, por exemplo 050 123 4567.",
+            "ok": "Marque esta caixa para podermos falar com você sobre o piloto."
+          },
           "tooMany": "Inscrições demais daqui. Tente de novo em uma hora.",
           "full": "O piloto está cheio. Você ainda pode experimentar o Saloqo grátis."
         }

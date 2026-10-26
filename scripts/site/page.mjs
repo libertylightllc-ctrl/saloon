@@ -116,6 +116,13 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
             thanks: raw('auth.landing.pilot.form.thanks'),
             error: raw('auth.landing.pilot.form.error'),
             tooMany: raw('auth.landing.pilot.form.tooMany'),
+            invalid: {
+              name: raw('auth.landing.pilot.form.invalid.name'),
+              salon_name: raw('auth.landing.pilot.form.invalid.salon'),
+              staff_count: raw('auth.landing.pilot.form.invalid.staff'),
+              whatsapp: raw('auth.landing.pilot.form.invalid.whatsapp'),
+              whatsapp_ok: raw('auth.landing.pilot.form.invalid.ok'),
+            },
             // The plural forms the page's language writes (Arabic: six), picked in the browser by Intl.PluralRules;
             // a form it leaves out (Spanish "many", for millions) uses "other".
             places: Object.fromEntries(

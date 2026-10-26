@@ -1,6 +1,6 @@
 /* The website home page (website brief 4.1): the app's home page look (src/features/landing, brandPalette, typeScale)
    in plain CSS. Phones first; 640 px = the app's "compact" edge, 980 px = "wide", 1100 px = three feature columns. */
-:root{--navy:#0B0916;--raised:#16141F;--glow:#1F3A40;--teal:#7FE0D2;--teal-soft:#BDEFE8;--teal-deep:#2F8A7E;--mist:#F7F6FB;--lilac:#EFEAFD;--ink:#15121F;--ink-muted:#5E5B6B;--card:#fff;--hairline:rgba(21,18,31,.08);--on-navy-muted:rgba(255,255,255,.72);--navy-line:rgba(255,255,255,.12);--violet:#6C45F2;--whatsapp:#0E7A4F;--lift:0 40px 80px rgba(11,9,22,.35);--shadow:0 24px 60px rgba(30,20,70,.14)}
+:root{--navy:#0B0916;--raised:#16141F;--glow:#1F3A40;--teal:#7FE0D2;--teal-soft:#BDEFE8;--teal-deep:#2F8A7E;--mist:#F7F6FB;--lilac:#EFEAFD;--ink:#15121F;--ink-muted:#5E5B6B;--card:#fff;--hairline:rgba(21,18,31,.08);--on-navy-muted:rgba(255,255,255,.72);--navy-line:rgba(255,255,255,.12);--violet:#6C45F2;--whatsapp:#0E7A4F;--danger:#B42318;--lift:0 40px 80px rgba(11,9,22,.35);--shadow:0 24px 60px rgba(30,20,70,.14)}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--mist);color:var(--ink);font:400 14px/20px var(--font);-webkit-font-smoothing:antialiased;overflow-x:clip}

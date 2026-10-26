@@ -127,11 +127,34 @@
     if (/^0/.test(d)) return '+971' + d.slice(1);
     return d.charAt(0) === '+' ? d : '+971' + d;
   };
+  // Each wrong field says what it needs under it (the database takes +971 50 123 4567 as +971501234567).
+  var problem = function (el) {
+    if (el.name === 'whatsapp') return /^\+[1-9]\d{6,14}$/.test(phone(el.value)) ? '' : pilot.texts.invalid.whatsapp;
+    if (el.name === 'whatsapp_ok') return el.checked ? '' : pilot.texts.invalid.whatsapp_ok;
+    // Two spaces pass the browser's "at least 2"; the database counts letters without the spaces around them.
+    if (el.name === 'name' || el.name === 'salon_name') return el.value.trim().length >= 2 ? '' : pilot.texts.invalid[el.name];
+    return el.checkValidity() ? '' : pilot.texts.invalid[el.name] || '';
+  };
+  var mark = function (form, el) {
+    var message = problem(el);
+    var slot = form.querySelector('[data-error-for="' + el.name + '"]');
+    if (slot) { slot.textContent = message; slot.hidden = !message; }
+    if (message) el.setAttribute('aria-invalid', 'true'); else el.removeAttribute('aria-invalid');
+    return !message;
+  };
+  var CHECKED = ['name', 'salon_name', 'staff_count', 'whatsapp', 'whatsapp_ok'];
   document.querySelectorAll('[data-pilot-form]').forEach(function (form) {
     var out = form.querySelector('[data-pilot-out]');
+    var tried = false;
+    // After the first try, a message goes away as soon as its field is right.
+    form.addEventListener('input', function (e) { if (tried && CHECKED.indexOf(e.target.name) >= 0) mark(form, e.target); });
+    form.addEventListener('change', function (e) { if (tried && CHECKED.indexOf(e.target.name) >= 0) mark(form, e.target); });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      if (!pilot || !form.reportValidity()) return;
+      if (!pilot) return;
+      tried = true;
+      var wrong = CHECKED.map(function (n) { return form.elements[n]; }).filter(function (el) { return !mark(form, el); });
+      if (wrong.length) { out.textContent = ''; wrong[0].focus(); return; }
       var f = form.elements;
       var button = form.querySelector('button[type="submit"]');
       button.disabled = true;
