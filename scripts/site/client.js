@@ -112,7 +112,9 @@
       if (!s) return;
       var left = Number(s.places_left);
       document.querySelectorAll('[data-pilot-places]').forEach(function (el) {
-        el.textContent = (left === 1 ? pilot.texts.placesOne : pilot.texts.placesOther).replace(/\{\{\s*count\s*\}\}/, String(left));
+        var form = window.Intl && Intl.PluralRules ? new Intl.PluralRules(SQ.lang).select(left) : left === 1 ? 'one' : 'other';
+        var text = pilot.texts.places[form] || pilot.texts.places.other;
+        el.textContent = text.replace(/\{\{\s*count\s*\}\}/, String(left));
       });
       document.querySelectorAll('[data-pilot-open]').forEach(function (el) { el.hidden = left <= 0; });
       document.querySelectorAll('[data-pilot-full]').forEach(function (el) { el.hidden = left > 0; });

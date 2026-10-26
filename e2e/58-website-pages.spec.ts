@@ -275,4 +275,20 @@ test.describe('the pilot, for visitors in the UAE', () => {
     await expect(page.locator('.main-nav a[href="#pilot"]')).toBeHidden();
     expect(errors).toEqual([]);
   });
+
+  test('in Arabic the places left take the form Arabic uses for that number', async ({ page }) => {
+    const cases = [
+      [20, 'يتبقى 20 مكانًا'],
+      [5, 'يتبقى 5 أماكن'],
+      [2, 'يتبقى مكانان'],
+      [1, 'يتبقى مكان واحد'],
+      [100, 'يتبقى 100 مكان'],
+    ] as const;
+    for (const [left, text] of cases) {
+      await page.route('**/rest/v1/rpc/pilot_status', (route) => route.fulfill({ json: { max: 120, days: 90, places_left: left } }));
+      await page.goto(`${site}/ar`);
+      await expect(page.locator('.pilot-bar [data-pilot-places]')).toHaveText(text);
+      await page.unroute('**/rest/v1/rpc/pilot_status');
+    }
+  });
 });

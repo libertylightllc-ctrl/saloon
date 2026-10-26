@@ -98,7 +98,8 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
   };
   // For the page script: the calculator's prices and words (RTL values isolated as the translator does).
   const own = JSON.parse(readFileSync(join(root, 'src', 'locales', `${lang}.json`), 'utf8'));
-  const raw = (key) => key.split('.').reduce((n, k) => n?.[k], own) ?? t(key);
+  const mine = (key) => key.split('.').reduce((n, k) => n?.[k], own);
+  const raw = (key) => mine(key) ?? t(key);
   const sq = {
     lang,
     rtl,
@@ -115,8 +116,13 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
             thanks: raw('auth.landing.pilot.form.thanks'),
             error: raw('auth.landing.pilot.form.error'),
             tooMany: raw('auth.landing.pilot.form.tooMany'),
-            placesOne: raw('auth.landing.pilot.places_one'),
-            placesOther: raw('auth.landing.pilot.places_other'),
+            // The plural forms the page's language writes (Arabic: six), picked in the browser by Intl.PluralRules;
+            // a form it leaves out (Spanish "many", for millions) uses "other".
+            places: Object.fromEntries(
+              ['zero', 'one', 'two', 'few', 'many', 'other']
+                .filter((form) => form === 'other' || mine(`auth.landing.pilot.places_${form}`))
+                .map((form) => [form, raw(`auth.landing.pilot.places_${form}`)]),
+            ),
           },
         }
       : null,

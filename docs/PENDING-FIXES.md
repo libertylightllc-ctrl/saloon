@@ -19,6 +19,13 @@ Found by the owner, not yet fixed. When one is fixed, move it to "Done" with the
 ### App
 9. Home, "Expected cash today", shows −AED 396.92 with no sales and no opening cash (Demo Shop). Find the cause and fix it.
 
+## Found 26 Oct 2026 while fixing #2
+
+### App and website
+10. Arabic counts everywhere else use one form for every number (for example "5 يومًا" where Arabic says "5 أيام", and "2 يومًا" for "يومان"). 27 counted texts need the Arabic forms for 0, 2, 3–10 and 11–99, as the pilot bar now has.
+
 ## Done
 
-(nothing yet)
+- 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.
+
+
