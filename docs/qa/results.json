@@ -1,0 +1,584 @@
+[
+  {
+    "name": "home-en-375-dubai",
+    "url": "https://www.saloqo.com/?qa=1793022889227",
+    "before": {
+      "uae": "1",
+      "dir": "ltr",
+      "headline": "Your salon, balanced to the last dirham.",
+      "price": "AED 50 a month",
+      "perDay": "Under AED 2 a day",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 10,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0004,
+    "switchedTo": "USD",
+    "after": {
+      "uae": "0",
+      "dir": "ltr",
+      "headline": "Your salon, balanced to the last cent.",
+      "price": "USD 13.99 a month",
+      "perDay": "Under USD 0.50 a day",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 0,
+      "shotsUsd": 10,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-en-1280-dubai",
+    "url": "https://www.saloqo.com/?qa=1793022908471",
+    "before": {
+      "uae": "1",
+      "dir": "ltr",
+      "headline": "Your salon, balanced to the last dirham.",
+      "price": "AED 50 a month",
+      "perDay": "Under AED 2 a day",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 11,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0037,
+    "switchedTo": "USD",
+    "after": {
+      "uae": "0",
+      "dir": "ltr",
+      "headline": "Your salon, balanced to the last cent.",
+      "price": "USD 13.99 a month",
+      "perDay": "Under USD 0.50 a day",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 0,
+      "shotsUsd": 11,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-ar-375-dubai",
+    "url": "https://www.saloqo.com/ar?qa=1793022931322",
+    "before": {
+      "uae": "1",
+      "dir": "rtl",
+      "headline": "صالونك، حساباته مضبوطة حتى آخر درهم.",
+      "price": "⁨AED 50⁩ شهريًا",
+      "perDay": "أقل من ⁨AED 2⁩ في اليوم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 10,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.016,
+    "switchedTo": "USD",
+    "after": {
+      "uae": "0",
+      "dir": "rtl",
+      "headline": "صالونك، حساباته مضبوطة حتى آخر سنت.",
+      "price": "⁨USD 13.99⁩ شهريًا",
+      "perDay": "أقل من ⁨USD 0.50⁩ في اليوم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 0,
+      "shotsUsd": 10,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-ar-1280-dubai",
+    "url": "https://www.saloqo.com/ar?qa=1793022952463",
+    "before": {
+      "uae": "1",
+      "dir": "rtl",
+      "headline": "صالونك، حساباته مضبوطة حتى آخر درهم.",
+      "price": "⁨AED 50⁩ شهريًا",
+      "perDay": "أقل من ⁨AED 2⁩ في اليوم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 11,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0007,
+    "switchedTo": "USD",
+    "after": {
+      "uae": "0",
+      "dir": "rtl",
+      "headline": "صالونك، حساباته مضبوطة حتى آخر سنت.",
+      "price": "⁨USD 13.99⁩ شهريًا",
+      "perDay": "أقل من ⁨USD 0.50⁩ في اليوم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 0,
+      "shotsUsd": 11,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-ur-375-dubai",
+    "url": "https://www.saloqo.com/ur?qa=1793022960544",
+    "before": {
+      "uae": "1",
+      "dir": "rtl",
+      "headline": "آپ کا سیلون، آخری درہم تک حساب میں۔",
+      "price": "⁨AED 50⁩ ماہانہ",
+      "perDay": "روزانہ ⁨AED 2⁩ سے کم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 10,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0199,
+    "switchedTo": "USD",
+    "after": {
+      "uae": "0",
+      "dir": "rtl",
+      "headline": "آپ کا سیلون، آخری سینٹ تک حساب میں۔",
+      "price": "⁨USD 13.99⁩ ماہانہ",
+      "perDay": "روزانہ ⁨USD 0.50⁩ سے کم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 0,
+      "shotsUsd": 10,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-ur-1280-dubai",
+    "url": "https://www.saloqo.com/ur?qa=1793022982885",
+    "before": {
+      "uae": "1",
+      "dir": "rtl",
+      "headline": "آپ کا سیلون، آخری درہم تک حساب میں۔",
+      "price": "⁨AED 50⁩ ماہانہ",
+      "perDay": "روزانہ ⁨AED 2⁩ سے کم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 11,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0009,
+    "switchedTo": "USD",
+    "after": {
+      "uae": "0",
+      "dir": "rtl",
+      "headline": "آپ کا سیلون، آخری سینٹ تک حساب میں۔",
+      "price": "⁨USD 13.99⁩ ماہانہ",
+      "perDay": "روزانہ ⁨USD 0.50⁩ سے کم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 0,
+      "shotsUsd": 11,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-en-375-london",
+    "url": "https://www.saloqo.com/?qa=1793022990921",
+    "before": {
+      "uae": "0",
+      "dir": "ltr",
+      "headline": "Your salon, balanced to the last cent.",
+      "price": "USD 13.99 a month",
+      "perDay": "Under USD 0.50 a day",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 0,
+      "shotsUsd": 10,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0,
+    "switchedTo": "AED",
+    "after": {
+      "uae": "1",
+      "dir": "ltr",
+      "headline": "Your salon, balanced to the last dirham.",
+      "price": "AED 50 a month",
+      "perDay": "Under AED 2 a day",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 10,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-en-1280-london",
+    "url": "https://www.saloqo.com/?qa=1793022998747",
+    "before": {
+      "uae": "0",
+      "dir": "ltr",
+      "headline": "Your salon, balanced to the last cent.",
+      "price": "USD 13.99 a month",
+      "perDay": "Under USD 0.50 a day",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 0,
+      "shotsUsd": 11,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0037,
+    "switchedTo": "AED",
+    "after": {
+      "uae": "1",
+      "dir": "ltr",
+      "headline": "Your salon, balanced to the last dirham.",
+      "price": "AED 50 a month",
+      "perDay": "Under AED 2 a day",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 11,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-ar-375-london",
+    "url": "https://www.saloqo.com/ar?qa=1793023006913",
+    "before": {
+      "uae": "0",
+      "dir": "rtl",
+      "headline": "صالونك، حساباته مضبوطة حتى آخر سنت.",
+      "price": "⁨USD 13.99⁩ شهريًا",
+      "perDay": "أقل من ⁨USD 0.50⁩ في اليوم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 0,
+      "shotsUsd": 10,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0172,
+    "switchedTo": "AED",
+    "after": {
+      "uae": "1",
+      "dir": "rtl",
+      "headline": "صالونك، حساباته مضبوطة حتى آخر درهم.",
+      "price": "⁨AED 50⁩ شهريًا",
+      "perDay": "أقل من ⁨AED 2⁩ في اليوم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 10,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-ar-1280-london",
+    "url": "https://www.saloqo.com/ar?qa=1793023014847",
+    "before": {
+      "uae": "0",
+      "dir": "rtl",
+      "headline": "صالونك، حساباته مضبوطة حتى آخر سنت.",
+      "price": "⁨USD 13.99⁩ شهريًا",
+      "perDay": "أقل من ⁨USD 0.50⁩ في اليوم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 0,
+      "shotsUsd": 11,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0287,
+    "switchedTo": "AED",
+    "after": {
+      "uae": "1",
+      "dir": "rtl",
+      "headline": "صالونك، حساباته مضبوطة حتى آخر درهم.",
+      "price": "⁨AED 50⁩ شهريًا",
+      "perDay": "أقل من ⁨AED 2⁩ في اليوم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 11,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-ur-375-london",
+    "url": "https://www.saloqo.com/ur?qa=1793023025540",
+    "before": {
+      "uae": "0",
+      "dir": "rtl",
+      "headline": "آپ کا سیلون، آخری سینٹ تک حساب میں۔",
+      "price": "⁨USD 13.99⁩ ماہانہ",
+      "perDay": "روزانہ ⁨USD 0.50⁩ سے کم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 0,
+      "shotsUsd": 10,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0202,
+    "switchedTo": "AED",
+    "after": {
+      "uae": "1",
+      "dir": "rtl",
+      "headline": "آپ کا سیلون، آخری درہم تک حساب میں۔",
+      "price": "⁨AED 50⁩ ماہانہ",
+      "perDay": "روزانہ ⁨AED 2⁩ سے کم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 10,
+      "shotsAed": 10,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  },
+  {
+    "name": "home-ur-1280-london",
+    "url": "https://www.saloqo.com/ur?qa=1793023033319",
+    "before": {
+      "uae": "0",
+      "dir": "rtl",
+      "headline": "آپ کا سیلون، آخری سینٹ تک حساب میں۔",
+      "price": "⁨USD 13.99⁩ ماہانہ",
+      "perDay": "روزانہ ⁨USD 0.50⁩ سے کم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 0,
+      "shotsUsd": 11,
+      "pilotBar": false,
+      "scrollX": false
+    },
+    "ok": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "cls": 0.0001,
+    "switchedTo": "AED",
+    "after": {
+      "uae": "1",
+      "dir": "rtl",
+      "headline": "آپ کا سیلون، آخری درہم تک حساب میں۔",
+      "price": "⁨AED 50⁩ ماہانہ",
+      "perDay": "روزانہ ⁨AED 2⁩ سے کم",
+      "hero": "https://www.saloqo.com/site/img/star-300.webp",
+      "shots": 11,
+      "shotsAed": 11,
+      "shotsUsd": 0,
+      "pilotBar": true,
+      "scrollX": false
+    },
+    "switched": {
+      "price": true,
+      "screenshots": true,
+      "headline": true,
+      "pilotBar": true
+    },
+    "errors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 ()",
+      "Refused to execute script from 'https://www.saloqo.com/_vercel/insights/script.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+    ]
+  }
+]
