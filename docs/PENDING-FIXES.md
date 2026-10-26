@@ -27,7 +27,7 @@ Found by the owner, not yet fixed. When one is fixed, move it to "Done" with the
 ## Found 26 Oct 2026 while fixing #8
 
 ### App
-11. Outside the console, two screens still have dates typed as year-month-day: a licence or document (issued, expires) and a stock item's date. The new calendar field (#8) can replace them.
+11. Outside the console, two screens still have dates typed as year-month-day: a licence or document (issued, expires) and a stock item's date. The new calendar field (#8) can replace them once it has a quick way to jump a year: documents often expire 1–3 years ahead, and clicking month by month would be slower than typing.
 
 ## Done
 
