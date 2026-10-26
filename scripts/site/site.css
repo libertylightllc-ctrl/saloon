@@ -238,6 +238,18 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .play{position:relative;width:76px;height:76px;border-radius:50%;background:var(--teal);color:var(--navy);display:flex;align-items:center;justify-content:center}
 .video-box iframe,.video-box video{width:100%;height:100%;border:0}
+.compare{padding:48px 0}
+.compare-scroll{width:100%;max-width:880px;margin:0 auto;overflow-x:auto}
+.compare-table{width:100%;border-collapse:collapse;font-size:14px;line-height:20px}
+.compare-table th,.compare-table td{padding:14px 10px;text-align:start;vertical-align:top;border-bottom:1px solid var(--hairline)}
+.compare-table tbody tr:last-child>*{border-bottom:0}
+.compare-table thead th{font-size:15px;font-weight:600}
+.compare-table thead .them,.compare-table td.them{color:var(--ink-muted)}
+.compare-table tbody th{width:38%;font-weight:500}
+.compare-table .us{background:rgba(127,224,210,.16)}
+.compare-table thead .us{border-radius:14px 14px 0 0}
+.compare-table td.us{font-weight:500}
+.compare-table .mark{display:inline-flex;vertical-align:-3px;margin-inline-end:6px;color:var(--teal-deep)}
 @media (max-width:639px){.not-phone{display:none!important}.chip{top:0;bottom:auto;inset-inline-start:0;inset-inline-end:auto;padding:6px 12px;font-size:13px}.brand span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
 @media (min-width:640px){
 .phone-only{display:none!important}
@@ -247,6 +259,7 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .feature-list{grid-template-columns:1fr 1fr}
 .calc-fields{grid-template-columns:repeat(3,1fr)}
 .trust-band{padding:72px 0}
+.compare{padding:72px 0}.compare-table{font-size:16px;line-height:24px}.compare-table th,.compare-table td{padding:16px 20px}
 .hero-body{grid-template-areas:"copy" "facts" "visual";gap:16px 40px;margin-top:40px;justify-items:center}
 .copy{width:100%}
 .facts{margin-top:-4px;justify-self:start}

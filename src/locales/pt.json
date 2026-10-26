@@ -671,6 +671,47 @@
           "languages": "7 idiomas"
         }
       },
+      "compare": {
+        "title": "Por que os salões escolhem o Saloqo",
+        "them": "Muitos apps de salão",
+        "rows": {
+          "locked": {
+            "label": "Recursos travados em planos mais caros",
+            "us": "Nenhum",
+            "them": "Comum"
+          },
+          "branch": {
+            "label": "Cada unidade extra",
+            "us": "{{price}} por mês, até {{people}} pessoas",
+            "them": "Muitas vezes o preço do plano inteiro de novo"
+          },
+          "commission": {
+            "label": "Comissão de agendamento",
+            "us": "Nenhuma, nunca",
+            "them": "Muitas vezes uma % da primeira visita de um cliente novo"
+          },
+          "languages": {
+            "label": "Idiomas da equipe",
+            "us": "7, incluindo árabe, urdu e hindi",
+            "them": "Geralmente inglês e árabe"
+          },
+          "closing": {
+            "label": "Fechamento de caixa diário",
+            "us": "Incluído",
+            "them": "Muitas vezes só no plano mais caro"
+          },
+          "reminders": {
+            "label": "Lembretes de licenças, carteiras de saúde e vistos",
+            "us": "Incluídos",
+            "them": "Raros"
+          },
+          "contract": {
+            "label": "Contrato",
+            "us": "Nenhum, sem renovação automática",
+            "them": "Muitas vezes anual"
+          }
+        }
+      },
       "contact": "Dúvidas? Escreva para {{email}}",
       "about": "Sobre o {{app}}",
       "eyebrow": "Para barbearias, salões, spas e estúdios de unhas e beleza",

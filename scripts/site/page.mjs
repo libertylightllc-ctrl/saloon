@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { compare } from './compare.mjs';
 import { head } from './head.mjs';
 import { icon } from './icons.mjs';
 import { faq, finalCall, floating, footer, pricing, steps, trust, types } from './sections-end.mjs';
@@ -134,7 +135,7 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
         }
       : null,
   };
-  const main = [keep(c), owners(c), proof(c), features(c), video(c), types(c), steps(c), pricing(c), pilotSection(c), trust(c), faq(c), finalCall(c)].join('\n');
+  const main = [keep(c), owners(c), proof(c), features(c), video(c), types(c), steps(c), pricing(c), compare(c), pilotSection(c), trust(c), faq(c), finalCall(c)].join('\n');
   return `<!doctype html>
 <html lang="${lang}" dir="${rtl ? 'rtl' : 'ltr'}">
 ${head(c, CSS, early(lang))}

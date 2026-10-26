@@ -320,6 +320,18 @@ test.describe('the pilot, for visitors in the UAE', () => {
     expect(errors).toEqual([]);
   });
 
+  test('"Why salons choose Saloqo" sets Saloqo beside many salon apps, for UAE visitors only', async ({ page }) => {
+    await page.goto(`${site}/`);
+    const table = page.locator('section.compare table');
+    await expect(page.getByRole('heading', { name: 'Why salons choose Saloqo' })).toBeVisible();
+    await expect(table.locator('thead th')).toHaveText(['Saloqo', 'Many salon apps']);
+    await expect(table.locator('tbody tr')).toHaveCount(7);
+    await expect(table.getByRole('row', { name: /Each extra branch/ })).toContainText('AED 50 a month for up to 4 people');
+    await expect(table.getByRole('row', { name: /Booking commission/ })).toContainText('None, ever');
+    await page.locator('[data-currency="USD"]').click();
+    await expect(page.locator('section.compare')).toBeHidden();
+  });
+
   test('in Arabic the places left take the form Arabic uses for that number', async ({ page }) => {
     const cases = [
       [20, 'يتبقى 20 مكانًا'],

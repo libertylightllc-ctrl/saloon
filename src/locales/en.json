@@ -671,6 +671,47 @@
           "languages": "7 languages"
         }
       },
+      "compare": {
+        "title": "Why salons choose Saloqo",
+        "them": "Many salon apps",
+        "rows": {
+          "locked": {
+            "label": "Features locked behind higher plans",
+            "us": "None",
+            "them": "Common"
+          },
+          "branch": {
+            "label": "Each extra branch",
+            "us": "{{price}} a month for up to {{people}} people",
+            "them": "Often the full plan price again"
+          },
+          "commission": {
+            "label": "Booking commission",
+            "us": "None, ever",
+            "them": "Often a % of a new client’s first visit"
+          },
+          "languages": {
+            "label": "Staff languages",
+            "us": "7, incl. Arabic, Urdu and Hindi",
+            "them": "Usually English and Arabic"
+          },
+          "closing": {
+            "label": "Daily cash closing",
+            "us": "Built in",
+            "them": "Often top plan only"
+          },
+          "reminders": {
+            "label": "Licence, health-card and visa reminders",
+            "us": "Built in",
+            "them": "Rare"
+          },
+          "contract": {
+            "label": "Contract",
+            "us": "None, no auto-renewal",
+            "them": "Often yearly"
+          }
+        }
+      },
       "contact": "Questions? Write to {{email}}",
       "about": "About {{app}}",
       "eyebrow": "For barber shops, salons, spas, nail and beauty studios",

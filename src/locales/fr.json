@@ -671,6 +671,47 @@
           "languages": "7 langues"
         }
       },
+      "compare": {
+        "title": "Pourquoi les salons choisissent Saloqo",
+        "them": "Beaucoup d’apps de salon",
+        "rows": {
+          "locked": {
+            "label": "Fonctions réservées aux offres supérieures",
+            "us": "Aucune",
+            "them": "Courant"
+          },
+          "branch": {
+            "label": "Chaque établissement en plus",
+            "us": "{{price}} par mois, jusqu’à {{people}} personnes",
+            "them": "Souvent le prix complet de l’offre à nouveau"
+          },
+          "commission": {
+            "label": "Commission sur les réservations",
+            "us": "Aucune, jamais",
+            "them": "Souvent un % de la première visite d’un nouveau client"
+          },
+          "languages": {
+            "label": "Langues de l’équipe",
+            "us": "7, dont l’arabe, l’ourdou et l’hindi",
+            "them": "En général l’anglais et l’arabe"
+          },
+          "closing": {
+            "label": "Clôture de caisse quotidienne",
+            "us": "Incluse",
+            "them": "Souvent seulement dans l’offre la plus chère"
+          },
+          "reminders": {
+            "label": "Rappels de licences, cartes de santé et visas",
+            "us": "Inclus",
+            "them": "Rares"
+          },
+          "contract": {
+            "label": "Contrat",
+            "us": "Aucun, sans renouvellement automatique",
+            "them": "Souvent annuel"
+          }
+        }
+      },
       "contact": "Des questions ? Écrivez à {{email}}",
       "about": "À propos de {{app}}",
       "eyebrow": "Pour les barbiers, salons, spas, ongleries et instituts de beauté",
