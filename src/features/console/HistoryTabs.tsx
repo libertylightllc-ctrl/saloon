@@ -11,6 +11,9 @@ import { useActivity, usePlanEvents } from './api';
 
 const ZONE = 'Asia/Dubai';
 const KIND_STATUS = { request: 'pending_approval', activate: 'valid', end: 'cancelled' } as const;
+/** The event's date in words: the column is paid_until for every kind, but a free period, pilot or access change
+ *  stores the end of free time there. */
+const UNTIL = { pilot: 'console.access.pilotUntil', trial: 'console.access.freeUntil', access: 'console.access.freeUntil' } as const;
 
 /** Every plan request, payment and ending, newest first. */
 export function PlansTab() {
@@ -25,11 +28,12 @@ export function PlansTab() {
             <ListRow
               key={e.id}
               title={e.salon}
+              testID={`plan-event-${e.kind}-${e.salon}`}
               meta={[
                 [
                   e.months ? t('console.plans.months', { count: e.months }) : null,
                   e.amount_minor !== null && e.currency ? (isCurrency(e.currency) ? formatMoney(e.amount_minor, e.currency) : `${e.currency} ${e.amount_minor}`) : null,
-                  e.paid_until ? t('admin.until', { date: dates.day(e.paid_until, 'd MMM yyyy') }) : null,
+                  e.paid_until ? t(UNTIL[e.kind as keyof typeof UNTIL] ?? 'admin.until', { date: dates.day(e.paid_until, 'd MMM yyyy') }) : null,
                 ]
                   .filter(Boolean)
                   .join(' · ') || '—',

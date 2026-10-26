@@ -92,6 +92,12 @@ test('a new salon is free to start; the last 14 days are counted down; a pilot c
   await id(office, 'admin-note').fill('Bank transfer ref 7001');
   await id(office, 'admin-activate').click();
   await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Paid until');
+  // The plans list tells free time from paid time.
+  const { data: salon } = await admin.from('businesses').select('name').eq('id', owner.businessId).single();
+  await id(office, 'console-tab-plans').click();
+  await expect(id(office, `plan-event-pilot-${salon!.name}`).first()).toContainText('Pilot · until');
+  await expect(id(office, `plan-event-pilot-${salon!.name}`).first()).not.toContainText('Paid until');
+  await expect(id(office, `plan-event-activate-${salon!.name}`).first()).toContainText('Paid until');
   await expect(id(till, 'plan-banner')).toHaveCount(0);
   await page.goto('/plan');
   await expect(id(page, 'plan-status-line')).toContainText('Paid until');
