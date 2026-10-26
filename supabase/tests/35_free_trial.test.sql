@@ -173,14 +173,15 @@ create function pg_temp.apply(extra jsonb default '{}') returns jsonb language s
 $$;
 select is(pg_temp.apply('{"website":"spam.example"}') ->> 'ok', 'true', 'a bot is thanked');
 select pg_temp.as_admin();
-select is((select count(*)::int from pilot_applications), 0, 'and nothing is kept');
+-- Only this test's rows (made in this transaction): local end-to-end runs leave applications of their own.
+select is((select count(*)::int from pilot_applications where created_at >= now()), 0, 'and nothing is kept');
 select pg_temp.as_anon();
 select is(pg_temp.apply('{"staff_count":0}') ->> 'reason', 'invalid', 'a wrong answer is refused');
 select is(pg_temp.apply() ->> 'ok', 'true', 'a salon applies');
 select pg_temp.apply(), pg_temp.apply();
 select is(pg_temp.apply() ->> 'reason', 'too_many', 'the fourth in an hour from one address waits');
 select pg_temp.as_user('c0');
-select set_config('t.app', (select id::text from admin_pilot_applications() order by created_at limit 1), false);
+select set_config('t.app', (select id::text from admin_pilot_applications() where created_at >= now() order by created_at limit 1), false);
 select ok((admin_decide_pilot_application(current_setting('t.app')::uuid, true) ->> 'code') like 'PILOT-%',
   'approving gives a one-use code for the WhatsApp message');
 select is((select status from admin_pilot_applications() where id = current_setting('t.app')::uuid), 'approved', 'approved');
