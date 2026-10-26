@@ -60,10 +60,10 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                       [s.owner_name, s.owner_email].filter(Boolean).join(' · '),
                       t('admin.meta', { code: s.code, branches: s.branches, date: dates.at(s.created_at, s.timezone, 'd MMM yyyy') }),
                       [countryName(s.country_code, i18n.language), ...(st?.mode ?? '').split(', ').filter(Boolean).map((m) => (isMode(m) ? t(`auth.salonType.${m}`) : m))].filter(Boolean).join(' · '),
-                      t('console.salons.plan', { people: s.people, price: formatMoney(s.monthly_minor, s.plan_currency) }),
+                      [t('console.salons.people', { count: s.people }), t('console.salons.perMonth', { price: formatMoney(s.monthly_minor, s.plan_currency) })].join(' · '),
                       ...(st
                         ? [
-                            t('console.salons.stats', { staff: st.staff, customers: st.customers, services: st.services }),
+                            (['staff', 'customers', 'services'] as const).map((k) => t(`console.salons.${k}`, { count: st[k] })).join(' · '),
                             t('console.salons.sales', {
                               count: st.sales_30d,
                               total: currency ? formatMoney(st.sales_month_minor, currency) : `${st.currency} ${st.sales_month_minor}`,
@@ -73,7 +73,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                               : t('console.salons.never'),
                           ]
                         : []),
-                      ...(s.requested_at ? [t('admin.requested', { months: s.requested_months ?? 1, note: s.request_note ?? '' }).trim()] : []),
+                      ...(s.requested_at ? [t('admin.requested', { count: s.requested_months ?? 1, note: s.request_note ?? '' }).trim()] : []),
                       ...(s.pilot_code ? [t('console.access.code', { code: s.pilot_code })] : []),
                       ...(s.admin_note ? [s.admin_note] : []),
                     ]}

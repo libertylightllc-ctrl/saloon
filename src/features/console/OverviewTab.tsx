@@ -21,9 +21,9 @@ export function OverviewTab() {
         <View style={styles.body}>
           <KpiGrid>
             <KpiCard icon="store" label={t('console.overview.salons')} value={String(o.salons)} sub={t('console.overview.salonsSub', { active: o.salons_plan_active, trial: o.salons_trial, pilot: o.salons_pilot, comp: o.salons_comp, closed: o.salons_closed })} testID="console-salons" />
-            <KpiCard icon="sparkles" label={t('console.overview.pilot')} value={String(o.pilot_places_left)} sub={t('console.overview.pilotSub', { applications: o.pilot_applications_new })} testID="console-pilot" />
+            <KpiCard icon="sparkles" label={t('console.overview.pilot')} value={String(o.pilot_places_left)} sub={t('console.overview.newApplications', { count: o.pilot_applications_new })} testID="console-pilot" />
             <KpiCard icon="creditCard" label={t(o.billing_enabled ? 'console.billing.on' : 'console.billing.off')} value={String(o.plan_requests_open)} sub={t('console.overview.requests')} />
-            <KpiCard icon="users" label={t('console.overview.accounts')} value={String(o.accounts)} sub={t('console.overview.accountsSub', { owners: o.owners, staff: o.staff_logins, none: o.no_salon })} testID="console-accounts" />
+            <KpiCard icon="users" label={t('console.overview.accounts')} value={String(o.accounts)} sub={[t('console.overview.owners', { count: o.owners }), t('console.overview.staffLogins', { count: o.staff_logins }), t('console.overview.noSalon', { count: o.no_salon })].join(' · ')} testID="console-accounts" />
             <KpiCard icon="userPlus" label={t('console.overview.signups')} value={String(o.signups_7d)} sub={t('console.overview.signupsSub', { month: o.signups_30d, active: o.signed_in_7d })} />
           </KpiGrid>
 

@@ -106,7 +106,7 @@ export function PlanScreen() {
                 {p.requested_at ? (
                   <Text color="primaryText" testID="plan-requested">
                     {t('plan.requested', {
-                      months: p.requested_months ?? 1,
+                      count: p.requested_months ?? 1,
                       date: dates.at(p.requested_at, business.timezone, 'd MMM yyyy'),
                     })}
                   </Text>

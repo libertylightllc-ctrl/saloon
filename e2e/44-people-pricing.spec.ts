@@ -37,7 +37,7 @@ test('5 people sign in: AED 60 a month; a new login says what it adds; the conso
   await id(page, 'plan-months-6').click();
   await expect(text(page, 'Total: AED 324.00')).toBeVisible();
   await id(page, 'plan-request').click();
-  await expect(id(page, 'plan-requested')).toContainText('6 month(s)');
+  await expect(id(page, 'plan-requested')).toContainText('You asked for 6 months');
 
   const platform = await createOwner(mode);
   await makePlatformAdmin(platform.email);

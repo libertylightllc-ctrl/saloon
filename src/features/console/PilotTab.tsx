@@ -156,7 +156,7 @@ export function PilotTab() {
                 key={c.code}
                 title={c.code}
                 meta={[
-                  t('console.pilot.codeLine', { days: c.days, uses: c.uses, max: c.max_uses }),
+                  [t('console.pilot.codeDays', { count: c.days }), t('console.pilot.used', { uses: c.uses, max: c.max_uses })].join(' · '),
                   ...(c.expires_on ? [t('console.pilot.until', { date: dates.day(c.expires_on, 'd MMM yyyy') })] : []),
                   ...(c.note ? [c.note] : []),
                 ]}
