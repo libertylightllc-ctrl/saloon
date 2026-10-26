@@ -1127,6 +1127,7 @@
     "room_name_required": "Give the room a name (up to 40 letters).",
     "room_taken": "Another room in use already has this name.",
     "billing_off": "Plans and payments are not open yet. Nothing is charged; keep using the app.",
+    "plan_requested": "You already asked for your plan. It switches on as soon as the payment is received; to change the request, contact us.",
     "branch_name_taken": "Another branch already has this name.",
     "too_many_branches": "A salon can have up to 20 branches.",
     "code_taken": "That code already exists. Choose another.",

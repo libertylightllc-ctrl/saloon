@@ -122,9 +122,10 @@ export function PlanScreen() {
                 <Button label={t('support.contactTitle')} icon="messageCircle" variant="outline" onPress={() => router.push('/support')} />
               </Card>
             ) : null}
-            {/* By bank transfer or a card link, once switched on (brief 5.3): pay first, then tell us (the request below). */}
+            {/* By bank transfer or a card link, once switched on (brief 5.3): pay first, then tell us (the request below).
+                One request at a time: while it waits, the line above says so and there is nothing to send again. */}
             {owner && billing && pay.bank ? <HowToPay code={business.code} /> : null}
-            {owner && billing && pay.bank ? (
+            {owner && billing && pay.bank && !p.requested_at ? (
               <Card variant="outlined" style={styles.card}>
                 <TextField label={t('plan.note')} placeholder={t('plan.notePlaceholder')} value={note} onChangeText={setNote} testID="plan-note" />
                 <FormError error={request.error} />

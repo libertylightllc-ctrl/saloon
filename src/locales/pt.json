@@ -1127,6 +1127,7 @@
     "room_name_required": "Dê um nome à sala (até 40 letras).",
     "room_taken": "Outra sala em uso já tem este nome.",
     "billing_off": "Planos e pagamentos ainda não estão abertos. Nada é cobrado; continue usando o app.",
+    "plan_requested": "Você já pediu seu plano. Ele é ativado assim que o pagamento for recebido; para mudar o pedido, fale com a gente.",
     "branch_name_taken": "Outra filial já tem esse nome.",
     "too_many_branches": "Um salão pode ter até 20 filiais.",
     "code_taken": "Esse código já existe. Escolha outro.",

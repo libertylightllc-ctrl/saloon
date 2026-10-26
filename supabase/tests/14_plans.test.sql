@@ -3,7 +3,7 @@
 -- activates; the owner asks for it; staff see why they are refused.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(24);
+select plan(27);
 -- The checks below work out dates and codes with internal helpers that the app's sign-in roles cannot call (migration
 -- 33); they are allowed here, inside this test's transaction only (rolled back at the end).
 grant execute on function public.branch_today(uuid), public.branch_tz(uuid), public.business_today(uuid),
@@ -78,6 +78,10 @@ select pg_temp.as_user('00000000-0000-0000-0000-0000000014aa');
 select lives_ok(format($$ select request_plan('%s', 6, 'Paying by bank transfer') $$, current_setting('t.b')),
   'the owner asks for 6 months');
 select is((plan_status(current_setting('t.b')::uuid) ->> 'requested_months')::int, 6, 'the request shows');
+select throws_ok(format($$ select request_plan('%s', 12, null) $$, current_setting('t.b')), '22023', 'plan_requested',
+  'while it waits, a second request is refused');
+select is((select count(*)::int from plan_events where business_id = current_setting('t.b')::uuid and kind = 'request'), 1,
+  'so there is one request, and one email');
 select throws_ok(format($$ select admin_activate('%s', 3, 29700, 'x') $$, current_setting('t.b')), '42501', null,
   'an owner cannot switch on their own plan');
 select throws_ok($$ select * from admin_salons() $$, '42501', null, 'nor list the salons');
@@ -94,6 +98,8 @@ select is(admin_activate(current_setting('t.b')::uuid, 1, 5000, null),
 
 select pg_temp.as_user('00000000-0000-0000-0000-0000000014aa');
 select is((plan_status(current_setting('t.b')::uuid) ->> 'requested_at'), null, 'the request is settled');
+select lives_ok(format($$ select request_plan('%s', 12, null) $$, current_setting('t.b')),
+  'once it is paid, the owner can ask again (to extend)');
 select lives_ok(format($$ select create_sale(jsonb_build_object('branch_id', '%s', 'client_ref', 'p2',
   'lines', '[{"kind":"custom","name":"Fade","unit_price_minor":5000}]'::jsonb,
   'payments', '[{"method":"cash","amount_minor":5000}]'::jsonb)) $$, current_setting('t.br')), 'with a plan the salon sells');

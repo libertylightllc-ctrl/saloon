@@ -1127,6 +1127,7 @@
     "room_name_required": "Donnez un nom à la cabine (40 caractères maximum).",
     "room_taken": "Une autre cabine utilisée porte déjà ce nom.",
     "billing_off": "Les formules et paiements ne sont pas encore ouverts. Rien n’est facturé ; continuez à utiliser l’app.",
+    "plan_requested": "Vous avez déjà demandé votre abonnement. Il s’active dès réception du paiement ; pour modifier la demande, contactez-nous.",
     "branch_name_taken": "Un autre établissement porte déjà ce nom.",
     "too_many_branches": "Un salon peut avoir jusqu’à 20 établissements.",
     "code_taken": "Ce code existe déjà. Choisissez-en un autre.",

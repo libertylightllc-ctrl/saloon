@@ -1127,6 +1127,7 @@
     "room_name_required": "Pon un nombre a la cabina (hasta 40 letras).",
     "room_taken": "Otra cabina en uso ya tiene este nombre.",
     "billing_off": "Los planes y pagos aún no están abiertos. No se cobra nada; sigue usando la app.",
+    "plan_requested": "Ya pediste tu plan. Se activa en cuanto recibamos el pago; para cambiar la solicitud, contáctanos.",
     "branch_name_taken": "Otra sucursal ya tiene este nombre.",
     "too_many_branches": "Un salón puede tener hasta 20 sucursales.",
     "code_taken": "Ese código ya existe. Elige otro.",
