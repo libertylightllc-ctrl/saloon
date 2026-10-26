@@ -2,7 +2,7 @@
 
 | Screen | Button | Result |
 |---|---|---|
-| Home | Refresh app | updates the screen |
+| Home | Refresh app | opens /notifications |
 | Home | Notifications, 0 unread | opens /notifications |
 | Home | Cash closing | opens /cash-closing |
 | Home | Stock | opens /inventory |
@@ -21,7 +21,7 @@
 | Reports tab | Previous month | shows "September 2026" |
 | Reports tab | Next month | shows "November 2026" |
 | Reports tab | Print / PDF | prints the receipt ("Monthly business") |
-| Reports tab | Export CSV | downloads e2e-gents-mvnva2xzduql-monthly-2026-10.csv |
+| Reports tab | Export CSV | downloads e2e-gents-mvp7b5ltfhk8-monthly-2026-10.csv |
 | Reports tab | Home | opens / |
 | Reports tab | Reports | already selected |
 | Reports tab | Accounting | opens /accounts-tab |
@@ -37,7 +37,7 @@
 | Reports · customers | Previous month | shows "September 2026" |
 | Reports · customers | Next month | shows "November 2026" |
 | Reports · customers | Print / PDF | prints the receipt ("Customer list") |
-| Reports · customers | Export CSV | downloads e2e-gents-mvnva2xzduql-customers-2026-10.csv |
+| Reports · customers | Export CSV | downloads e2e-gents-mvp7b5ltfhk8-customers-2026-10.csv |
 | Accounting tab | Months | opens /accounts/close-period |
 | Accounting tab | Overview | already selected |
 | Accounting tab | Journal | shows "Opening stock" |
@@ -50,7 +50,7 @@
 | Accounting tab | Accounting | already selected |
 | Accounting tab | More | opens /more |
 | Close month | Back | opens /accounts |
-| Close month | Export ledger CSV | downloads e2e-gents-mvnva2xzduql-ledger.csv |
+| Close month | Export ledger CSV | downloads e2e-gents-mvp7b5ltfhk8-ledger.csv |
 | More | Edit profile | opens /profile |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
@@ -76,16 +76,19 @@
 | Expenses | Back | opens /more |
 | Expenses | Previous month | shows "September 2026" |
 | Expenses | Next month | shows "November 2026" |
-| Expenses | Tea & Food | opens /expenses/8845b513-6a6c-4218-8271-a56be84ab0d5 |
+| Expenses | Tea & Food | opens /expenses/b9192d2b-2aff-4739-b208-33d55cc01acc |
 | Purchases | Back | opens /more |
 | Purchases | Bills | already selected |
 | Purchases | Suppliers | shows "30 days to pay" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/8d967337-9ef8-42b3-87c3-b51c8a4ee18e |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/d12ef35e-8486-4dc7-9bee-a5f129e855f3 |
 | Staff | Back | opens /more |
 | Staff | Attendance | opens /attendance |
 | Staff | Payroll | opens /payroll |
-| Staff | Rafiq E2E | opens /staff/582cbc7a-f7c3-4f0a-82d4-55ff4fb6f210 |
+| Staff | Rafiq E2E | opens /staff/387cee06-e8b0-4fe3-8fd0-cbbb2c73c66b |
 | Payroll | Back | opens /more |
 | Payroll | Previous month | shows "September 2026" |
 | Payroll | Next month | shows "November 2026" |
 | Plan & billing | Back | opens / |
+| Plan & billing | 1 month | already selected |
+| Plan & billing | 6 months | shows "Total: AED 270.00" |
+| Plan & billing | 12 months | shows "Total: AED 500.00" |
