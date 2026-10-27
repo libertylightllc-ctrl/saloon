@@ -34,7 +34,19 @@ attempt=0
 while [ $attempt -lt 5 ]; do
   attempt=$((attempt+1))
   wait_quiet
-  npx supabase db reset > /dev/null 2>&1
+  # A reset can fail on its own (2026-10-27: it left an empty database just after a load-175 spell), so check it,
+  # keep its output, and try again before any run.
+  reset_ok=0
+  for r in 1 2 3; do
+    if npx supabase db reset > "$S/reset.log" 2>&1 && docker exec supabase_db_salon-app psql -U postgres -d postgres -X -At \
+      -c "select count(*) from supabase_migrations.schema_migrations" 2>/dev/null | grep -qE '^[1-9]'; then reset_ok=1; break; fi
+    echo "$(date +%H:%M) database reset failed (try $r): $(grep -iE 'error|failed' "$S/reset.log" | head -1)" >> "$S/proof-status.txt"
+    sleep 60
+  done
+  if [ $reset_ok -eq 0 ]; then
+    echo "STOPPED: the database reset failed 3 times — see $S/reset.log" >> "$S/final-summary.txt"
+    exit 1
+  fi
   docker start supabase_edge_runtime_salon-app > /dev/null 2>&1
   date -u +%Y-%m-%dT%H:%M:%S > "$S/final-start.txt"
   for i in 1 2 3; do
