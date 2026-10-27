@@ -1784,7 +1784,6 @@
       "location": "Kept at",
       "locationHint": "Store room, colour station…",
       "assignedHint": "Chair 2, the team…",
-      "dateFormat": "Use year-month-day, like 2026-10-31.",
       "active": "In use",
       "activeHint": "Items no longer used are hidden but keep their history.",
       "montaji": "Montaji registration no.",

@@ -3,7 +3,7 @@
  * and puts it back with its details; an empty checklist item is deleted from its row's "⋯". */
 import { admin, createOwner, createStaff, dubaiDate } from './support/api';
 import { expect, test } from './support/fixtures';
-import { id, ownerOn, snap, tab, text } from './support/ui';
+import { id, ownerOn, pickDate, snap, tab, text } from './support/ui';
 
 test('owner edits and deletes compliance items, and puts one back', async ({ page, mode }) => {
   const owner = await createOwner(mode);
@@ -18,7 +18,7 @@ test('owner edits and deletes compliance items, and puts one back', async ({ pag
   await id(page, `doc-menu-trade_licence-${branch}`).click();
   await id(page, 'doc-action-add').click();
   await id(page, 'doc-number').fill('CN-1234');
-  await id(page, 'doc-expires').fill(dubaiDate(200));
+  await pickDate(page, 'doc-expires', dubaiDate(200), dubaiDate());
   await id(page, 'doc-save').click();
   await expect(text(page, 'Saved', true)).toBeVisible();
   await expect(id(page, `doc-trade_licence-${branch}`)).toContainText('CN-1234');

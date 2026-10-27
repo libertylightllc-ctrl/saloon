@@ -1784,7 +1784,6 @@
       "location": "Emplacement",
       "locationHint": "Réserve, poste coloration…",
       "assignedHint": "Fauteuil 2, l’équipe…",
-      "dateFormat": "Utilisez année-mois-jour, comme 2026-10-31.",
       "active": "En usage",
       "activeHint": "Les articles qui ne sont plus utilisés sont masqués mais gardent leur historique.",
       "montaji": "N° d’enregistrement Montaji",

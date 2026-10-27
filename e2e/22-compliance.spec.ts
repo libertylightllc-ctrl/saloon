@@ -6,7 +6,7 @@ import path from 'path';
 
 import { admin, createOwner, createStaff, dubaiDate } from './support/api';
 import { expect, test } from './support/fixtures';
-import { back, id, ownerOn, printedText, staffOn, tab, text } from './support/ui';
+import { back, id, ownerOn, pickDate, printedText, staffOn, tab, text } from './support/ui';
 
 const PHOTO = path.join(__dirname, 'fixtures', 'receipt.jpg');
 
@@ -30,8 +30,8 @@ test('owner keeps the register: licence, a renewed health card, Montaji, binder;
   await id(page, `doc-trade_licence-${branch}`).click();
   await id(page, 'doc-edit').click();
   await id(page, 'doc-number').fill('CN-1234567');
-  await id(page, 'doc-issued').fill(dubaiDate(-300));
-  await id(page, 'doc-expires').fill(dubaiDate(65));
+  await pickDate(page, 'doc-issued', dubaiDate(-300), dubaiDate());
+  await pickDate(page, 'doc-expires', dubaiDate(65), dubaiDate());
   await id(page, 'doc-cost').fill('15000');
   await choosePhoto(page);
   await id(page, 'doc-save').click();
@@ -47,14 +47,14 @@ test('owner keeps the register: licence, a renewed health card, Montaji, binder;
   await id(page, `doc-health_card-${barber.name}`).click();
   await id(page, 'doc-edit').click();
   await id(page, 'doc-number').fill('HC-55');
-  await id(page, 'doc-expires').fill(dubaiDate(10));
+  await pickDate(page, 'doc-expires', dubaiDate(10), dubaiDate());
   await choosePhoto(page);
   await id(page, 'doc-save').click();
   await expect(text(page, 'Due soon', true).first()).toBeVisible();
   await id(page, 'doc-edit').click();
   await expect(text(page, 'Renewing keeps the old version in the history.')).toBeVisible();
   await id(page, 'doc-number').fill('HC-56');
-  await id(page, 'doc-expires').fill(dubaiDate(375));
+  await pickDate(page, 'doc-expires', dubaiDate(375), dubaiDate());
   await id(page, 'doc-save').click();
   await expect(text(page, 'Renewed', true)).toBeVisible();
   await expect(id(page, 'doc-detail-version')).toHaveText('2');

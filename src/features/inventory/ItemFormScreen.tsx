@@ -5,10 +5,10 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { isUae } from '@/lib/countries';
-import { isBusinessDate } from '@/lib/dates';
+import type { BusinessDate } from '@/lib/dates';
 import { normalizeDigits } from '@/lib/money';
 import { spacing } from '@/theme';
-import { Button, Chip, FormError, HeaderBand, MoneyInput, QueryState, Screen, SegmentTabs, SwitchRow, Text, TextField, useToast } from '@/ui';
+import { Button, Chip, DateField, FormError, HeaderBand, MoneyInput, QueryState, Screen, SegmentTabs, SwitchRow, Text, TextField, useToast } from '@/ui';
 
 import { useInventory, useItemPackSize, useSaveItem, type ItemKind, type ItemUnit, type StockItem } from './api';
 
@@ -47,7 +47,7 @@ function ItemForm({ header, item, packSize }: { header: ReactNode; item: StockIt
   const [price, setPrice] = useState<number | null>(item?.sell_price_minor ?? null);
   const [location, setLocation] = useState(item?.location ?? '');
   const [condition, setCondition] = useState<'good' | 'needs_service'>(item?.condition ?? 'good');
-  const [serviceDate, setServiceDate] = useState(item?.next_service_date ?? '');
+  const [serviceDate, setServiceDate] = useState<BusinessDate | ''>(item?.next_service_date ?? '');
   const [assigned, setAssigned] = useState(item?.assigned_to ?? '');
   const [montaji, setMontaji] = useState(item?.montaji_reg_no ?? '');
   const [active, setActive] = useState(item?.active ?? true);
@@ -55,11 +55,10 @@ function ItemForm({ header, item, packSize }: { header: ReactNode; item: StockIt
 
   const reorderN = reorder.trim() === '' ? 0 : Number(normalizeDigits(reorder).replace(',', '.'));
   const reorderOk = Number.isFinite(reorderN) && reorderN >= 0;
-  const dateOk = serviceDate.trim() === '' || isBusinessDate(serviceDate.trim());
   const priceOk = kind !== 'retail' || (price !== null && price >= 0);
   const packN = pack.trim() === '' ? 1 : Number(normalizeDigits(pack).replace(',', '.'));
   const packOk = Number.isFinite(packN) && packN > 0;
-  const ok = name.trim().length > 0 && reorderOk && dateOk && priceOk && packOk;
+  const ok = name.trim().length > 0 && reorderOk && priceOk && packOk;
 
   // Save stays pinned at the bottom, like the other forms.
   const saveButton = (
@@ -78,7 +77,7 @@ function ItemForm({ header, item, packSize }: { header: ReactNode; item: StockIt
               sell_price_minor: kind === 'retail' ? price : null,
               location: location.trim() || null,
               condition: kind === 'tool' ? condition : null,
-              next_service_date: kind === 'tool' && serviceDate.trim() ? serviceDate.trim() : null,
+              next_service_date: kind === 'tool' && serviceDate ? serviceDate : null,
               assigned_to: kind === 'tool' ? assigned.trim() || null : null,
               montaji_reg_no: kind === 'tool' ? null : montaji.trim() || null,
               pack_size: kind === 'tool' ? 1 : packN,
@@ -147,14 +146,7 @@ function ItemForm({ header, item, packSize }: { header: ReactNode; item: StockIt
               onChange={setCondition}
               testID="item-condition"
             />
-            <TextField
-              label={t('inventory.nextService')}
-              placeholder="2026-10-31"
-              value={serviceDate}
-              onChangeText={setServiceDate}
-              error={dateOk ? undefined : t('inventory.fields.dateFormat')}
-              testID="item-service-date"
-            />
+            <DateField label={t('inventory.nextService')} value={serviceDate} onChange={setServiceDate} clearable testID="item-service-date" />
             <TextField label={t('inventory.assigned')} placeholder={t('inventory.fields.assignedHint')} value={assigned} onChangeText={setAssigned} maxLength={60} testID="item-assigned" />
           </>
         ) : null}

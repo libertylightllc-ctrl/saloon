@@ -1,6 +1,7 @@
 /**
  * A date picked on a month calendar instead of typed as year-month-day (owner's fix list #8, 26 Oct 2026). The field
- * shows the date in words ("24 Jan 2027"); tapping it opens the month below it, Monday first as the UAE week. Built
+ * shows the date in words ("24 Jan 2027"); tapping it opens the month below it, Monday first as the UAE week, with
+ * the years around it one tap away (#11: documents often expire 1–3 years ahead). Built
  * from the app's own parts, so it works the same on the web and on phones. The value stays a business date
  * ('2027-01-24'), or '' when an optional date is cleared.
  */
@@ -13,6 +14,7 @@ import { businessDate, monthKey, shiftBusinessDate, type BusinessDate, type Mont
 import { useDates } from '@/lib/useDates';
 import { semantic, spacing, useTheme } from '@/theme';
 
+import { Chip } from './Chip';
 import { MonthSwitcher } from './DatePickers';
 import { Icon } from './Icon';
 import { IconButton } from './IconButton';
@@ -58,7 +60,10 @@ export function DateField({
   const { t } = useTranslation();
   const dates = useDates();
   const [open, setOpen] = useState(false);
-  const [month, setMonth] = useState<MonthKey>(monthKey(value || min || businessDate()));
+  // An empty field opens on this month, or on the first month that can be picked when that is later.
+  const today = businessDate();
+  const [month, setMonth] = useState<MonthKey>(monthKey(value || (min && min > today ? min : today)));
+  const year = Number(month.slice(0, 4));
   const borderColor = error ? semantic.error.main : open ? theme.colors.primary400 : theme.colors.border;
   return (
     <View style={styles.wrap}>
@@ -86,6 +91,18 @@ export function DateField({
       {open ? (
         <View style={[styles.calendar, { borderColor: theme.colors.border, borderRadius: theme.radius.md, backgroundColor: theme.colors.surface }]} testID={testID ? `${testID}-calendar` : undefined}>
           <MonthSwitcher value={month} onChange={setMonth} onBand={false} />
+          {/* A year away in one tap (a licence often runs 1–3 years); the shown year sits in the middle. */}
+          <View style={styles.years}>
+            {[-2, -1, 0, 1, 2].map((d) => (
+              <Chip
+                key={year + d}
+                label={dates.day(`${year + d}-01-01`, 'yyyy')}
+                selected={d === 0}
+                onPress={() => setMonth(`${year + d}-${month.slice(5)}` as MonthKey)}
+                testID={testID ? `${testID}-year-${year + d}` : undefined}
+              />
+            ))}
+          </View>
           <View style={styles.week}>
             {Array.from({ length: 7 }, (_, i) => (
               <Text key={i} variant="small" color="textSecondary" align="center" style={styles.cell}>
@@ -142,6 +159,7 @@ const styles = StyleSheet.create({
   open: { flex: 1, minHeight: 46, flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   flex: { flex: 1 },
   calendar: { borderWidth: 1, padding: spacing.md, gap: spacing.xs, maxWidth: 360 },
+  years: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: spacing.xs, marginBottom: spacing.xs },
   week: { flexDirection: 'row' },
   cell: { flex: 1, minHeight: 40 },
   day: { alignItems: 'center', justifyContent: 'center' },

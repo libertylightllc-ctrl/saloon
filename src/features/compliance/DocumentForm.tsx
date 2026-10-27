@@ -6,13 +6,11 @@ import { useWorkspace } from '@/features/auth/session';
 import { PhotoButtons, PickedPreview } from '@/features/moneyout/ReceiptPhoto';
 import type { PickedPhoto } from '@/features/moneyout/receipts';
 import { useStaffDirectory } from '@/features/staff/api';
-import { isBusinessDate } from '@/lib/dates';
+import type { BusinessDate } from '@/lib/dates';
 import { spacing } from '@/theme';
-import { Button, Chip, FormError, MoneyInput, Text, TextField, useToast } from '@/ui';
+import { Button, Chip, DateField, FormError, MoneyInput, Text, TextField, useToast } from '@/ui';
 
 import { useSaveDocument, useUpdateDocument, type HolderType, type Slot } from './api';
-
-const dateOk = (v: string) => v.trim() === '' || isBusinessDate(v.trim());
 
 /**
  * Add details to a slot, renew it (a new version), add the owner's own record, or (`edit`) correct the current version
@@ -40,8 +38,8 @@ export function DocumentForm({
   const [holder, setHolder] = useState<HolderType>('premises');
   const [employeeId, setEmployeeId] = useState<string | null>(null);
   const [number, setNumber] = useState(renewing ? '' : (slot?.number ?? ''));
-  const [issued, setIssued] = useState(editing ? (slot?.issued_on ?? '') : '');
-  const [expires, setExpires] = useState(editing ? (slot?.expires_on ?? '') : '');
+  const [issued, setIssued] = useState<BusinessDate | ''>(editing ? (slot?.issued_on ?? '') : '');
+  const [expires, setExpires] = useState<BusinessDate | ''>(editing ? (slot?.expires_on ?? '') : '');
   const [cost, setCost] = useState<number | null>(slot?.renewal_cost_minor ?? null);
   const [reminder, setReminder] = useState(String(slot?.reminder_days ?? 30));
   const [photo, setPhoto] = useState<PickedPhoto | null>(null);
@@ -49,10 +47,8 @@ export function DocumentForm({
   const ok =
     (slot !== null || (name.trim().length > 0 && (holder !== 'employee' || employeeId))) &&
     (!renamable || name.trim().length > 0) &&
-    dateOk(issued) &&
-    dateOk(expires) &&
     reminderOk &&
-    (!issued.trim() || !expires.trim() || expires.trim() >= issued.trim());
+    (!issued || !expires || expires >= issued);
 
   return (
     <>
@@ -79,14 +75,8 @@ export function DocumentForm({
         </>
       ) : null}
       <TextField label={t('compliance.fields.number')} value={number} onChangeText={setNumber} maxLength={60} testID="doc-number" />
-      <View style={styles.row}>
-        <View style={styles.flex}>
-          <TextField label={t('compliance.fields.issued')} placeholder="2026-01-31" value={issued} onChangeText={setIssued} maxLength={10} error={dateOk(issued) ? undefined : t('inventory.fields.dateFormat')} testID="doc-issued" />
-        </View>
-        <View style={styles.flex}>
-          <TextField label={t('compliance.fields.expires')} placeholder="2027-01-31" value={expires} onChangeText={setExpires} maxLength={10} error={dateOk(expires) ? undefined : t('inventory.fields.dateFormat')} testID="doc-expires" />
-        </View>
-      </View>
+      <DateField label={t('compliance.fields.issued')} value={issued} onChange={setIssued} clearable testID="doc-issued" />
+      <DateField label={t('compliance.fields.expires')} value={expires} onChange={setExpires} min={issued || undefined} clearable testID="doc-expires" />
       <MoneyInput label={t('compliance.fields.cost')} value={cost} onChange={setCost} testID="doc-cost" />
       <TextField label={t('compliance.fields.reminder')} value={reminder} onChangeText={setReminder} keyboardType="number-pad" error={reminderOk ? undefined : t('validation.range')} testID="doc-reminder" />
       <Text variant="bodyStrong">{t('compliance.fields.evidence')}</Text>
@@ -104,8 +94,8 @@ export function DocumentForm({
                   doc_type: renamable ? name.trim() : slot!.doc_type,
                   holder_type: slot!.holder_type,
                   number: number.trim() || null,
-                  issued_on: issued.trim() || null,
-                  expires_on: expires.trim() || null,
+                  issued_on: issued || null,
+                  expires_on: expires || null,
                   renewal_cost_minor: cost,
                   reminder_days: Number(reminder),
                   photo,
@@ -124,8 +114,8 @@ export function DocumentForm({
                   branch_id: slot ? slot.branch_id : holder === 'employee' ? null : branch.id,
                   employee_id: slot ? slot.employee_id : holder === 'employee' ? employeeId : null,
                   number: number.trim() || null,
-                  issued_on: issued.trim() || null,
-                  expires_on: expires.trim() || null,
+                  issued_on: issued || null,
+                  expires_on: expires || null,
                   renewal_cost_minor: cost,
                   reminder_days: Number(reminder),
                   photo,
@@ -146,6 +136,4 @@ export function DocumentForm({
 
 const styles = StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  row: { flexDirection: 'row', gap: spacing.sm },
-  flex: { flex: 1 },
 });

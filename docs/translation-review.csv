@@ -1178,7 +1178,6 @@ inventory.fields.price,Selling price,سعر البيع,बिक्री मू
 inventory.fields.location,Kept at,مكانه,कहाँ रखा है,کہاں رکھا ہے,Ubicación,Emplacement,Guardado em,
 inventory.fields.locationHint,"Store room, colour station…",المخزن، ركن الصبغة…,"स्टोर रूम, कलर स्टेशन…",اسٹور روم، کلر اسٹیشن…,"Almacén, puesto de color…","Réserve, poste coloration…","Depósito, estação de coloração…",
 inventory.fields.assignedHint,"Chair 2, the team…",الكرسي 2، الفريق…,"कुर्सी 2, टीम…",کرسی 2، ٹیم…,"Sillón 2, el equipo…","Fauteuil 2, l’équipe…","Cadeira 2, a equipe…",
-inventory.fields.dateFormat,"Use year-month-day, like 2026-10-31.",استخدم سنة-شهر-يوم، مثل 2026-10-31.,"साल-महीना-दिन लिखें, जैसे 2026-10-31।",سال-مہینہ-دن لکھیں، جیسے 2026-10-31۔,"Usa año-mes-día, como 2026-10-31.","Utilisez année-mois-jour, comme 2026-10-31.","Use ano-mês-dia, como 2026-10-31.",
 inventory.fields.active,In use,قيد الاستخدام,उपयोग में,استعمال میں,En uso,En usage,Em uso,
 inventory.fields.activeHint,Items no longer used are hidden but keep their history.,الأصناف غير المستخدمة تُخفى وتحتفظ بسجلها.,"बंद आइटम छिप जाते हैं, इतिहास रहता है।",بند آئٹم چھپ جاتے ہیں، تاریخ رہتی ہے۔,"Los artículos que ya no se usan se ocultan, pero conservan su historial.",Les articles qui ne sont plus utilisés sont masqués mais gardent leur historique.,"Itens que não são mais usados ficam ocultos, mas mantêm o histórico.",
 inventory.fields.montaji,Montaji registration no.,رقم التسجيل في منتجي,Montaji पंजीकरण नंबर,Montaji رجسٹریشن نمبر,N.º de registro Montaji,N° d’enregistrement Montaji,Nº de registro Montaji,

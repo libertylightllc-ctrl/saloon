@@ -112,3 +112,22 @@ export function printedText(page: Page): Promise<string> {
     () => (document.querySelector('[data-printout]')?.shadowRoot?.querySelector('.printout') as HTMLElement | null)?.innerText ?? '',
   );
 }
+
+/**
+ * Picks `date` (yyyy-MM-dd) on a calendar date field (src/ui/DateField.tsx) whose calendar opens on `from`'s month
+ * (its date, or today for an empty field): the year by its chips, then the month, then the day.
+ */
+export async function pickDate(page: Page, testId: string, date: string, from: string) {
+  await id(page, testId).click();
+  const [y, m] = date.split('-').map(Number) as [number, number];
+  let [year, month] = from.split('-').map(Number) as [number, number];
+  while (year !== y) {
+    year += Math.max(-2, Math.min(2, y - year));
+    await id(page, `${testId}-year-${year}`).click();
+  }
+  const calendar = id(page, `${testId}-calendar`);
+  for (; month !== m; month += m > month ? 1 : -1) {
+    await calendar.getByRole('button', { name: m > month ? 'Next month' : 'Previous month' }).click();
+  }
+  await id(page, `${testId}-day-${date}`).click();
+}

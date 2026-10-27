@@ -1784,7 +1784,6 @@
       "location": "Ubicación",
       "locationHint": "Almacén, puesto de color…",
       "assignedHint": "Sillón 2, el equipo…",
-      "dateFormat": "Usa año-mes-día, como 2026-10-31.",
       "active": "En uso",
       "activeHint": "Los artículos que ya no se usan se ocultan, pero conservan su historial.",
       "montaji": "N.º de registro Montaji",

@@ -192,6 +192,19 @@ describe('DateField', () => {
     await fireEvent.press(screen.getByTestId('expires-clear'));
     expect(onChange).toHaveBeenLastCalledWith('');
   });
+
+  it('jumps a year at a time for dates years ahead or back (#11)', async () => {
+    const onChange = jest.fn();
+    await renderInApp(<DateField label="Expires" value="2026-10-27" onChange={onChange} testID="expires" />);
+    await fireEvent.press(screen.getByTestId('expires'));
+    expect(screen.getByText('October 2026')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByTestId('expires-year-2028'));
+    expect(screen.getByText('October 2028')).toBeOnTheScreen();
+    // The shown year moves to the middle, so 2030 is now one tap away.
+    await fireEvent.press(screen.getByTestId('expires-year-2030'));
+    await fireEvent.press(screen.getByTestId('expires-day-2030-10-31'));
+    expect(onChange).toHaveBeenLastCalledWith('2030-10-31');
+  });
 });
 
 describe('FormError', () => {
