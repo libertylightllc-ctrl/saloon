@@ -94,7 +94,13 @@ export function ExpenseFormScreen() {
     <>
       <Screen
         header={<HeaderBand title={t('expenses.newTitle')} onBack />}
-        footer={<Button label={t('expenses.save')} onPress={save} disabled={!ready} loading={record.isPending || attach.isPending} testID="expense-save" />}
+        footer={
+          // The error sits by Save, which stays pinned, so "not enough cash in the drawer" is seen without scrolling.
+          <View style={styles.footer}>
+            <FormError error={record.error} />
+            <Button label={t('expenses.save')} onPress={save} disabled={!ready} loading={record.isPending || attach.isPending} testID="expense-save" />
+          </View>
+        }
       >
         <View style={styles.body}>
           <MoneyInput label={t('expenses.amount')} value={amount} onChange={setAmount} testID="expense-amount" />
@@ -147,7 +153,6 @@ export function ExpenseFormScreen() {
           <Section title={t('receipts.photo')}>
             {photo ? <PickedPreview photo={photo} onRemove={() => setPhoto(null)} /> : <PhotoButtons onPicked={setPhoto} />}
           </Section>
-          <FormError error={record.error} />
         </View>
       </Screen>
       <BottomSheet open={newCategory !== null} onClose={() => setNewCategory(null)} title={t('expenses.newCategory')}>
@@ -180,4 +185,5 @@ const styles = StyleSheet.create({
   body: { gap: spacing.xl },
   section: { gap: spacing.sm },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  footer: { gap: spacing.sm },
 });

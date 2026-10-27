@@ -38,6 +38,7 @@ export function KpiCard({ label, value, delta, sub, icon, hero, action, style, t
     <Card
       style={[hero ? styles.hero : styles.card, style]}
       padding={hero ? spacing.xl : spacing.lg}
+      testID={testID}
     >
       <View style={styles.labelRow}>
         {icon ? (
