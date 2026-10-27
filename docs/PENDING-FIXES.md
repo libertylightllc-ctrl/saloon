@@ -29,6 +29,11 @@ Found by the owner, not yet fixed. When one is fixed, move it to "Done" with the
 ### App
 11. Outside the console, two screens still have dates typed as year-month-day: a licence or document (issued, expires) and a stock item's date. The new calendar field (#8) can replace them once it has a quick way to jump a year: documents often expire 1–3 years ahead, and clicking month by month would be slower than typing.
 
+## Found 27 Oct 2026 while testing
+
+### Admin (console)
+12. Salons tab is slow with many salons: it works out each salon's price, plan and counts one by one (about 3–4 ms a salon). With 667 test salons on the local database it takes 2–3 seconds, and on a busy machine more than 15 (a browser test timed out waiting for it on 27 Oct). Live has a handful of salons, so it is fine today; it needs paging or one combined query before the platform has hundreds.
+
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.
