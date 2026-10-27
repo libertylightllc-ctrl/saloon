@@ -99,8 +99,12 @@ home.salesToday,Sales today,مبيعات اليوم,आज की बिक्�
 home.salesSub,{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},
 home.servicesCount,{{count}} services,{{count}} خدمة,{{count}} सेवाएँ,{{count}} خدمات,{{count}} servicios,{{count}} services,{{count}} serviços,
 home.servicesCount_one,{{count}} service,{{count}} خدمة,{{count}} सेवा,{{count}} خدمت,{{count}} servicio,{{count}} service,{{count}} serviço,
+home.servicesCount_two,—,خدمتان,,,,,,Arabic only: 2
+home.servicesCount_few,—,{{count}} خدمات,,,,,,Arabic only: 3 to 10
 home.salesCount,{{count}} sales,{{count}} عملية بيع,{{count}} बिक्री,{{count}} فروخت,{{count}} ventas,{{count}} ventes,{{count}} vendas,
 home.salesCount_one,{{count}} sale,{{count}} عملية بيع,{{count}} बिक्री,{{count}} فروخت,{{count}} venta,{{count}} vente,{{count}} venda,
+home.salesCount_two,—,عمليتا بيع,,,,,,Arabic only: 2
+home.salesCount_few,—,{{count}} عمليات بيع,,,,,,Arabic only: 3 to 10
 home.appointmentsToday,Visits today,مواعيد اليوم,आज की अपॉइंटमेंट,آج کی ملاقاتیں,Visitas de hoy,Visites du jour,Atendimentos hoje,
 home.doneCount,{{n}} done,{{n}} مكتمل,{{n}} पूरे,{{n}} مکمل,{{n}} completadas,Terminés : {{n}},{{n}} concluídos,
 home.appointmentsSub,{{waiting}} waiting · {{booked}} booked · {{noShow}} no-show,{{waiting}} ينتظر · {{booked}} محجوز · {{noShow}} لم يحضر,{{waiting}} इंतज़ार में · {{booked}} बुक · {{noShow}} नहीं आए,{{waiting}} منتظر · {{booked}} بک · {{noShow}} نہیں آئے,{{waiting}} esperando · {{booked}} con cita · {{noShow}} sin presentarse,{{waiting}} en attente · {{booked}} réservés · {{noShow}} absents,{{waiting}} aguardando · {{booked}} agendados · {{noShow}} faltas,
@@ -156,23 +160,37 @@ home.attention.closePending,Cash close {{date}} waiting for approval,إغلاق 
 home.attention.closePendingSub,Difference {{amount}},الفرق {{amount}},अंतर {{amount}},فرق {{amount}},Diferencia {{amount}},Écart {{amount}},Diferença de {{amount}},
 home.attention.unclosed,{{date}} was not closed,لم يُغلق {{date}},{{date}} बंद नहीं हुआ,{{date}} بند نہیں ہوا,El {{date}} no se cerró,La journée du {{date}} n’a pas été clôturée,O dia {{date}} não foi fechado,
 home.attention.unclosedSub,Count and close it before today,عُدّه وأغلقه قبل اليوم,आज से पहले इसे गिनकर बंद करें,آج سے پہلے اسے گن کر بند کریں,Cuenta y cierra ese día antes de seguir con hoy,Comptez la caisse et clôturez-la avant de travailler aujourd’hui,Conte e feche esse dia antes de fechar o de hoje,
-home.attention.lowStock,{{count}} items low on stock,{{count}} أصناف مخزونها منخفض,{{count}} आइटम का स्टॉक कम,{{count}} آئٹم کا اسٹاک کم,{{count}} productos con poco stock,{{count}} articles en stock bas,{{count}} itens com estoque baixo,
+home.attention.lowStock,{{count}} items low on stock,{{count}} صنف مخزونها منخفض,{{count}} आइटम का स्टॉक कम,{{count}} آئٹم کا اسٹاک کم,{{count}} productos con poco stock,{{count}} articles en stock bas,{{count}} itens com estoque baixo,
 home.attention.lowStock_one,{{count}} item low on stock,{{count}} صنف مخزونه منخفض,{{count}} आइटम का स्टॉक कम,{{count}} آئٹم کا اسٹاک کم,{{count}} producto con poco stock,{{count}} article en stock bas,{{count}} item com estoque baixo,
-home.attention.toolsDue,{{count}} tools need a service,{{count}} أدوات تحتاج صيانة,{{count}} औज़ारों को सर्विस चाहिए,{{count}} اوزار کو سروس چاہیے,{{count}} herramientas necesitan mantenimiento,{{count}} outils à entretenir,{{count}} ferramentas precisam de manutenção,
+home.attention.lowStock_two,—,صنفان مخزونهما منخفض,,,,,,Arabic only: 2
+home.attention.lowStock_few,—,{{count}} أصناف مخزونها منخفض,,,,,,Arabic only: 3 to 10
+home.attention.lowStock_many,—,{{count}} صنفًا مخزونها منخفض,,,,,,Arabic only: 11 to 99
+home.attention.toolsDue,{{count}} tools need a service,{{count}} أداة تحتاج صيانة,{{count}} औज़ारों को सर्विस चाहिए,{{count}} اوزار کو سروس چاہیے,{{count}} herramientas necesitan mantenimiento,{{count}} outils à entretenir,{{count}} ferramentas precisam de manutenção,
 home.attention.toolsDue_one,{{count}} tool needs a service,{{count}} أداة تحتاج صيانة,{{count}} औज़ार को सर्विस चाहिए,{{count}} اوزار کو سروس چاہیے,{{count}} herramienta necesita mantenimiento,{{count}} outil à entretenir,{{count}} ferramenta precisa de manutenção,
+home.attention.toolsDue_two,—,أداتان تحتاجان صيانة,,,,,,Arabic only: 2
+home.attention.toolsDue_few,—,{{count}} أدوات تحتاج صيانة,,,,,,Arabic only: 3 to 10
 home.attention.toolsDueSub,Service due within a week,الصيانة خلال أسبوع,एक हफ़्ते में सर्विस,ایک ہفتے میں سروس,Mantenimiento en menos de una semana,Entretien prévu d’ici une semaine,Manutenção prevista para os próximos 7 dias,
-home.attention.billsOverdue,{{count}} supplier bills overdue,{{count}} فواتير موردين متأخرة,{{count}} सप्लायर बिल बकाया,{{count}} سپلائر بل واجب الادا,{{count}} facturas de proveedores vencidas,{{count}} factures fournisseurs en retard,{{count}} contas de fornecedores em atraso,
+home.attention.billsOverdue,{{count}} supplier bills overdue,{{count}} فاتورة مورد متأخرة,{{count}} सप्लायर बिल बकाया,{{count}} سپلائر بل واجب الادا,{{count}} facturas de proveedores vencidas,{{count}} factures fournisseurs en retard,{{count}} contas de fornecedores em atraso,
 home.attention.billsOverdue_one,{{count}} supplier bill overdue,{{count}} فاتورة مورد متأخرة,{{count}} सप्लायर बिल बकाया,{{count}} سپلائر بل واجب الادا,{{count}} factura de proveedor vencida,{{count}} facture fournisseur en retard,{{count}} conta de fornecedor em atraso,
-home.attention.billsDue,{{count}} supplier bills due this week,{{count}} فواتير موردين مستحقة هذا الأسبوع,इस हफ़्ते {{count}} सप्लायर बिल देय,اس ہفتے {{count}} سپلائر بل واجب,{{count}} facturas de proveedores vencen esta semana,{{count}} factures fournisseurs à payer cette semaine,{{count}} contas de fornecedores vencem esta semana,
+home.attention.billsOverdue_two,—,فاتورتا مورد متأخرتان,,,,,,Arabic only: 2
+home.attention.billsOverdue_few,—,{{count}} فواتير موردين متأخرة,,,,,,Arabic only: 3 to 10
+home.attention.billsDue,{{count}} supplier bills due this week,{{count}} فاتورة مورد مستحقة هذا الأسبوع,इस हफ़्ते {{count}} सप्लायर बिल देय,اس ہفتے {{count}} سپلائر بل واجب,{{count}} facturas de proveedores vencen esta semana,{{count}} factures fournisseurs à payer cette semaine,{{count}} contas de fornecedores vencem esta semana,
 home.attention.billsDue_one,{{count}} supplier bill due this week,{{count}} فاتورة مورد مستحقة هذا الأسبوع,इस हफ़्ते {{count}} सप्लायर बिल देय,اس ہفتے {{count}} سپلائر بل واجب,{{count}} factura de proveedor vence esta semana,{{count}} facture fournisseur à payer cette semaine,{{count}} conta de fornecedor vence esta semana,
+home.attention.billsDue_two,—,فاتورتا مورد مستحقتان هذا الأسبوع,,,,,,Arabic only: 2
+home.attention.billsDue_few,—,{{count}} فواتير موردين مستحقة هذا الأسبوع,,,,,,Arabic only: 3 to 10
 home.attention.billsSub,{{amount}} to pay,{{amount}} للدفع,{{amount}} देना है,{{amount}} ادا کرنا ہے,{{amount}} por pagar,{{amount}} à payer,{{amount}} a pagar,
 home.attention.payrollPending,Payroll {{month}} waiting for approval,رواتب {{month}} بانتظار الاعتماد,{{month}} का पेरोल मंज़ूरी बाकी,{{month}} کا پے رول منظوری باقی,Nómina de {{month}} pendiente de aprobación,Paie de {{month}} en attente d’approbation,Folha de pagamento de {{month}} aguardando aprovação,
 home.attention.payrollPendingSub,Check it and approve to pay,راجعها واعتمدها للدفع,जाँचें और भुगतान के लिए मंज़ूर करें,جانچیں اور ادائیگی کے لیے منظور کریں,Revísala y apruébala para pagar,Vérifiez-la et approuvez-la pour payer,Confira e aprove para pagar,
-home.attention.wpsMissing,{{count}} salaries need WPS proof,{{count}} رواتب تحتاج إثبات حماية الأجور,{{count}} वेतन के WPS सबूत बाकी,{{count}} تنخواہوں کا WPS ثبوت باقی,{{count}} sueldos necesitan comprobante WPS,{{count}} salaires sans preuve WPS,{{count}} salários precisam de comprovante WPS,
+home.attention.wpsMissing,{{count}} salaries need WPS proof,{{count}} راتب يحتاج إثبات حماية الأجور,{{count}} वेतन के WPS सबूत बाकी,{{count}} تنخواہوں کا WPS ثبوت باقی,{{count}} sueldos necesitan comprobante WPS,{{count}} salaires sans preuve WPS,{{count}} salários precisam de comprovante WPS,
 home.attention.wpsMissing_one,{{count}} salary needs WPS proof,{{count}} راتب يحتاج إثبات حماية الأجور,{{count}} वेतन का WPS सबूत बाकी,{{count}} تنخواہ کا WPS ثبوت باقی,{{count}} sueldo necesita comprobante WPS,{{count}} salaire sans preuve WPS,{{count}} salário precisa de comprovante WPS,
+home.attention.wpsMissing_two,—,راتبان يحتاجان إثبات حماية الأجور,,,,,,Arabic only: 2
+home.attention.wpsMissing_few,—,{{count}} رواتب تحتاج إثبات حماية الأجور,,,,,,Arabic only: 3 to 10
+home.attention.wpsMissing_many,—,{{count}} راتبًا تحتاج إثبات حماية الأجور,,,,,,Arabic only: 11 to 99
 home.attention.wpsMissingSub,Target: 85% proven by day 5,الهدف: 85% مثبت بحلول اليوم 5,लक्ष्य: 5 तारीख तक 85%,ہدف: 5 تاریخ تک 85%,Meta: 85% comprobado antes del día 5,Objectif : 85 % justifiés d’ici le 5,Meta: 85% comprovados até o dia 5,
-home.attention.compliance,{{count}} compliance records need attention,{{count}} سجلات امتثال تحتاج انتباهًا,{{count}} अनुपालन रिकॉर्ड पर ध्यान दें,{{count}} تعمیل ریکارڈز پر توجہ دیں,{{count}} registros de cumplimiento requieren atención,{{count}} documents de conformité à traiter,{{count}} registros de conformidade precisam de atenção,
+home.attention.compliance,{{count}} compliance records need attention,{{count}} سجل امتثال يحتاج انتباهًا,{{count}} अनुपालन रिकॉर्ड पर ध्यान दें,{{count}} تعمیل ریکارڈز پر توجہ دیں,{{count}} registros de cumplimiento requieren atención,{{count}} documents de conformité à traiter,{{count}} registros de conformidade precisam de atenção,
 home.attention.compliance_one,{{count}} compliance record needs attention,{{count}} سجل امتثال يحتاج انتباهًا,{{count}} अनुपालन रिकॉर्ड पर ध्यान दें,{{count}} تعمیل ریکارڈ پر توجہ دیں,{{count}} registro de cumplimiento requiere atención,{{count}} document de conformité à traiter,{{count}} registro de conformidade precisa de atenção,
+home.attention.compliance_two,—,سجلا امتثال يحتاجان انتباهًا,,,,,,Arabic only: 2
+home.attention.compliance_few,—,{{count}} سجلات امتثال تحتاج انتباهًا,,,,,,Arabic only: 3 to 10
 home.attention.complianceSub,Inspection readiness {{pct}}%,الجاهزية للتفتيش {{pct}}%,निरीक्षण तैयारी {{pct}}%,معائنے کی تیاری {{pct}}%,Preparación para inspección: {{pct}}%,Prêt pour l’inspection à {{pct}} %,Preparação para inspeção: {{pct}}%,
 home.attention.hygiene,Today's hygiene log is not signed,سجل النظافة لليوم غير موقّع,आज का स्वच्छता लॉग साइन नहीं,آج کا صفائی لاگ دستخط شدہ نہیں,El registro de higiene de hoy no está firmado,Le registre d’hygiène du jour n’est pas signé,O registro de higiene de hoje não foi assinado,
 home.attention.hygieneSub,"Tools, towels, surfaces, floors, waste",الأدوات، المناشف، الأسطح، الأرضيات، النفايات,"औज़ार, तौलिये, सतहें, फ़र्श, कचरा",اوزار، تولیے، سطحیں، فرش، کچرا,"Herramientas, toallas, superficies, suelos, residuos","Outils, serviettes, surfaces, sols, déchets","Ferramentas, toalhas, superfícies, pisos, lixo",
@@ -305,13 +323,17 @@ customers.add,Add customer,إضافة عميل,ग्राहक जोड़�
 customers.new,New,جديد,नया,نیا,Nuevo,Nouveau,Novo,
 customers.noMatch,No customer matches that search.,لا يوجد عميل مطابق.,कोई ग्राहक नहीं मिला।,کوئی گاہک نہیں ملا۔,Ningún cliente coincide con la búsqueda.,Aucun client ne correspond à cette recherche.,Nenhum cliente corresponde a essa pesquisa.,
 customers.noPhone,No phone,بدون هاتف,फ़ोन नहीं,فون نہیں,Sin teléfono,Pas de téléphone,Sem telefone,
-customers.noShows,{{count}} no-shows,{{count}} مرات عدم حضور,{{count}} बार नहीं आए,{{count}} بار نہیں آئے,{{count}} inasistencias,{{count}} absences,{{count}} faltas,
+customers.noShows,{{count}} no-shows,{{count}} مرة عدم حضور,{{count}} बार नहीं आए,{{count}} بار نہیں آئے,{{count}} inasistencias,{{count}} absences,{{count}} faltas,
 customers.noShows_one,{{count}} no-show,{{count}} مرة عدم حضور,{{count}} बार नहीं आए,{{count}} بار نہیں آئے,{{count}} inasistencia,{{count}} absence,{{count}} falta,
+customers.noShows_two,—,مرتا عدم حضور,,,,,,Arabic only: 2
+customers.noShows_few,—,{{count}} مرات عدم حضور,,,,,,Arabic only: 3 to 10
 customers.noShowsLabel,No-shows,عدم الحضور,नहीं आए,غیر حاضری,Inasistencias,Absences,Faltas,
 customers.visits,Visits,الزيارات,विज़िट,وزٹ,Visitas,Visites,Visitas,
 customers.lastVisit,Last visit,آخر زيارة,आखिरी विज़िट,آخری وزٹ,Última visita,Dernière visite,Última visita,
-customers.visitsLine,{{count}} visits · last {{last}},{{count}} زيارات · آخرها {{last}},{{count}} विज़िट · आखिरी {{last}},{{count}} وزٹ · آخری {{last}},{{count}} visitas · última {{last}},{{count}} visites · dernière : {{last}},{{count}} visitas · última: {{last}},
+customers.visitsLine,{{count}} visits · last {{last}},{{count}} زيارة · آخرها {{last}},{{count}} विज़िट · आखिरी {{last}},{{count}} وزٹ · آخری {{last}},{{count}} visitas · última {{last}},{{count}} visites · dernière : {{last}},{{count}} visitas · última: {{last}},
 customers.visitsLine_one,{{count}} visit · last {{last}},{{count}} زيارة · آخرها {{last}},{{count}} विज़िट · आखिरी {{last}},{{count}} وزٹ · آخری {{last}},{{count}} visita · última {{last}},{{count}} visite · dernière : {{last}},{{count}} visita · última: {{last}},
+customers.visitsLine_two,—,زيارتان · آخرها {{last}},,,,,,Arabic only: 2
+customers.visitsLine_few,—,{{count}} زيارات · آخرها {{last}},,,,,,Arabic only: 3 to 10
 customers.tapToChange,Tap to change,اضغط للتغيير,बदलने के लिए टैप करें,بدلنے کے لیے ٹیپ کریں,Toca para cambiar,Touchez pour modifier,Toque para alterar,
 customers.profile,Customer,العميل,ग्राहक,گاہک,Cliente,Client,Cliente,
 customers.book,Book,احجز,बुक करें,بک کریں,Reservar,Réserver,Agendar,
@@ -703,8 +725,10 @@ services.editCategory,Edit category,تعديل الفئة,कैटेगरी 
 services.categorySaved,Category saved,تم حفظ الفئة,कैटेगरी सेव हुई,کیٹیگری محفوظ ہو گئی,Categoría guardada,Catégorie enregistrée,Categoria salva,
 services.categoryArchived,Category archived,تمت أرشفة الفئة,कैटेगरी आर्काइव हुई,کیٹیگری آرکائیو ہو گئی,Categoría archivada,Catégorie archivée,Categoria arquivada,
 services.archiveCategory,Archive category,أرشفة الفئة,कैटेगरी आर्काइव करें,کیٹیگری آرکائیو کریں,Archivar categoría,Archiver la catégorie,Arquivar categoria,
-services.countInCategory,{{count}} services,{{count}} خدمات,{{count}} सर्विस,{{count}} سروسز,{{count}} servicios,{{count}} services,{{count}} serviços,
+services.countInCategory,{{count}} services,{{count}} خدمة,{{count}} सर्विस,{{count}} سروسز,{{count}} servicios,{{count}} services,{{count}} serviços,
 services.countInCategory_one,{{count}} service,{{count}} خدمة,{{count}} सर्विस,{{count}} سروس,{{count}} servicio,{{count}} service,{{count}} serviço,
+services.countInCategory_two,—,خدمتان,,,,,,Arabic only: 2
+services.countInCategory_few,—,{{count}} خدمات,,,,,,Arabic only: 3 to 10
 services.iconOption,Icon {{n}},أيقونة {{n}},आइकन {{n}},آئیکن {{n}},Icono {{n}},Icône {{n}},Ícone {{n}},
 team.codeExplain,Staff sign in with this salon code plus their username.,يسجّل الموظفون الدخول برمز الصالون هذا مع اسم المستخدم.,स्टाफ इस सैलून कोड और अपने यूज़रनेम से साइन इन करता है।,عملہ اس سیلون کوڈ اور اپنے یوزر نیم سے سائن ان کرتا ہے۔,El personal inicia sesión con este código de salón y su usuario.,Les employés se connectent avec ce code de salon et leur nom d’utilisateur.,A equipe entra com este código do salão e o próprio nome de usuário.,
 team.create,Create login,إنشاء الحساب,लॉगिन बनाएँ,لاگ ان بنائیں,Crear acceso,Créer l’accès,Criar login,
@@ -942,6 +966,9 @@ purchases.dueOn,Due {{date}},تستحق {{date}},देय {{date}},واجب {{d
 purchases.overdueSince,Overdue since {{date}},متأخرة منذ {{date}},{{date}} से बकाया,{{date}} سے واجب الادا,Vencida desde el {{date}},En retard depuis le {{date}},Em atraso desde {{date}},
 purchases.termsDays,{{count}} days to pay,{{count}} يوم للدفع,भुगतान के {{count}} दिन,ادائیگی کے {{count}} دن,{{count}} días para pagar,{{count}} jours pour payer,{{count}} dias para pagar,
 purchases.termsDays_one,{{count}} day to pay,{{count}} يوم للدفع,भुगतान के {{count}} दिन,ادائیگی کے {{count}} دن,{{count}} día para pagar,{{count}} jour pour payer,{{count}} dia para pagar,
+purchases.termsDays_two,—,يومان للدفع,,,,,,Arabic only: 2
+purchases.termsDays_few,—,{{count}} أيام للدفع,,,,,,Arabic only: 3 to 10
+purchases.termsDays_many,—,{{count}} يومًا للدفع,,,,,,Arabic only: 11 to 99
 purchases.newSupplier,New supplier,مورد جديد,नया सप्लायर,نیا سپلائر,Nuevo proveedor,Nouveau fournisseur,Novo fornecedor,
 purchases.editSupplier,Edit supplier,تعديل المورد,सप्लायर बदलें,سپلائر میں ترمیم,Editar proveedor,Modifier le fournisseur,Editar fornecedor,
 purchases.supplierName,Supplier name,اسم المورد,सप्लायर का नाम,سپلائر کا نام,Nombre del proveedor,Nom du fournisseur,Nome do fornecedor,
@@ -1452,6 +1479,9 @@ notifications.types.low_stock.title,Low on stock,مخزون منخفض,स्ट
 notifications.types.low_stock.body,{{item}} · {{qty}} {{unit}} left,{{item}} · تبقى {{qty}} {{unit}},{{item}} · {{qty}} {{unit}} बचा,{{item}} · {{qty}} {{unit}} باقی,{{item}} · quedan {{qty}} {{unit}},{{item}} · reste {{qty}} {{unit}},{{item}} · restam {{qty}} {{unit}},
 notifications.types.document_due.title,Document due in {{count}} days,مستند يستحق خلال {{count}} يوم,दस्तावेज़ {{count}} दिन में देय,دستاویز {{count}} دن میں واجب,Documento vence en {{count}} días,Document à échéance dans {{count}} jours,Documento vence em {{count}} dias,
 notifications.types.document_due.title_one,Document due in {{count}} day,مستند يستحق خلال {{count}} يوم,दस्तावेज़ {{count}} दिन में देय,دستاویز {{count}} دن میں واجب,Documento vence en {{count}} día,Document à échéance dans {{count}} jour,Documento vence em {{count}} dia,
+notifications.types.document_due.title_two,—,مستند يستحق خلال يومين,,,,,,Arabic only: 2
+notifications.types.document_due.title_few,—,مستند يستحق خلال {{count}} أيام,,,,,,Arabic only: 3 to 10
+notifications.types.document_due.title_many,—,مستند يستحق خلال {{count}} يومًا,,,,,,Arabic only: 11 to 99
 notifications.types.document_due.body,{{doc}} · {{holder}} · {{expires}},{{doc}} · {{holder}} · {{expires}},{{doc}} · {{holder}} · {{expires}},{{doc}} · {{holder}} · {{expires}},{{doc}} · {{holder}} · {{expires}},{{doc}} · {{holder}} · {{expires}},{{doc}} · {{holder}} · {{expires}},
 notifications.types.payroll_generated.title,Payroll worked out,تم حساب الرواتب,पेरोल निकाला गया,پے رول نکال لیا,Nómina calculada,Paie calculée,Folha calculada,
 notifications.types.payroll_generated.body,{{period}} is ready to check and approve,{{period}} جاهز للمراجعة والاعتماد,{{period}} जाँच और मंज़ूरी के लिए तैयार,{{period}} جانچ اور منظوری کے لیے تیار,{{period}} está lista para revisar y aprobar,La paie de {{period}} est prête à être vérifiée et approuvée,A folha de {{period}} está pronta para conferir e aprovar,
@@ -1619,7 +1649,9 @@ plan.included.complianceUae,UAE compliance and hygiene log,الامتثال في
 plan.requestTitle,Switch on your plan,فعّل خطتك,अपना प्लान चालू करें,اپنا پلان فعال کریں,Activa tu plan,Activer votre abonnement,Ativar seu plano,
 plan.extendTitle,Pay for more months,ادفع لأشهر إضافية,और महीनों का भुगतान करें,مزید مہینوں کی ادائیگی کریں,Paga más meses,Payer des mois supplémentaires,Pagar mais meses,
 plan.requested_one,You asked for {{count}} month on {{date}}. It switches on as soon as the payment is received.,طلبت شهرًا واحدًا في {{date}}. تُفعّل فور استلام الدفعة.,आपने {{date}} को {{count}} महीना माँगा। भुगतान मिलते ही चालू होगा।,آپ نے {{date}} کو {{count}} مہینہ مانگا۔ ادائیگی ملتے ہی فعال ہوگا۔,Pediste {{count}} mes el {{date}}. Se activa en cuanto recibamos el pago.,Vous avez demandé {{count}} mois le {{date}}. L’abonnement s’active dès réception du paiement.,Você pediu {{count}} mês em {{date}}. O plano é ativado assim que o pagamento for recebido.,
-plan.requested,You asked for {{count}} months on {{date}}. It switches on as soon as the payment is received.,طلبت {{count}} أشهر في {{date}}. تُفعّل فور استلام الدفعة.,आपने {{date}} को {{count}} महीने माँगे। भुगतान मिलते ही चालू होगा।,آپ نے {{date}} کو {{count}} مہینے مانگے۔ ادائیگی ملتے ہی فعال ہوگا۔,Pediste {{count}} meses el {{date}}. Se activa en cuanto recibamos el pago.,Vous avez demandé {{count}} mois le {{date}}. L’abonnement s’active dès réception du paiement.,Você pediu {{count}} meses em {{date}}. O plano é ativado assim que o pagamento for recebido.,
+plan.requested_two,—,طلبت شهرين في {{date}}. تُفعّل فور استلام الدفعة.,,,,,,Arabic only: 2
+plan.requested_few,—,طلبت {{count}} أشهر في {{date}}. تُفعّل فور استلام الدفعة.,,,,,,Arabic only: 3 to 10
+plan.requested,You asked for {{count}} months on {{date}}. It switches on as soon as the payment is received.,طلبت {{count}} شهر في {{date}}. تُفعّل فور استلام الدفعة.,आपने {{date}} को {{count}} महीने माँगे। भुगतान मिलते ही चालू होगा।,آپ نے {{date}} کو {{count}} مہینے مانگے۔ ادائیگی ملتے ہی فعال ہوگا۔,Pediste {{count}} meses el {{date}}. Se activa en cuanto recibamos el pago.,Vous avez demandé {{count}} mois le {{date}}. L’abonnement s’active dès réception du paiement.,Você pediu {{count}} meses em {{date}}. O plano é ativado assim que o pagamento for recebido.,
 plan.requested_many,—,طلبت {{count}} شهرًا في {{date}}. تُفعّل فور استلام الدفعة.,,,,,,Arabic only: 11 to 99 (12 months)
 plan.monthsOption.1,1 month,شهر واحد,1 महीना,1 مہینہ,1 mes,1 mois,1 mês,
 plan.monthsOption.6,6 months,6 أشهر,6 महीने,6 مہینے,6 meses,6 mois,6 meses,
@@ -1655,7 +1687,9 @@ admin.subtitle,"Every salon, and who asked for a plan",كل الصالونات �
 admin.empty,No salons yet.,لا صالونات بعد.,अभी कोई सैलून नहीं।,ابھی کوئی سیلون نہیں۔,Aún no hay salones.,Aucun salon pour l’instant.,Nenhum salão ainda.,
 admin.meta,Code {{code}} · branches {{branches}} · joined {{date}},الرمز {{code}} · الفروع {{branches}} · انضم {{date}},कोड {{code}} · ब्रांच {{branches}} · जुड़े {{date}},کوڈ {{code}} · برانچز {{branches}} · شامل {{date}},Código {{code}} · sucursales {{branches}} · alta {{date}},Code {{code}} · succursales {{branches}} · inscrit le {{date}},Código {{code}} · filiais {{branches}} · entrou em {{date}},
 admin.requested_one,Asked for {{count}} month. {{note}},طلب شهرًا واحدًا. {{note}},{{count}} महीना माँगा। {{note}},{{count}} مہینہ مانگا۔ {{note}},Pidió {{count}} mes. {{note}},A demandé {{count}} mois. {{note}},Pediu {{count}} mês. {{note}},
-admin.requested,Asked for {{count}} months. {{note}},طلب {{count}} أشهر. {{note}},{{count}} महीने माँगे। {{note}},{{count}} مہینے مانگے۔ {{note}},Pidió {{count}} meses. {{note}},A demandé {{count}} mois. {{note}},Pediu {{count}} meses. {{note}},
+admin.requested_two,—,طلب شهرين. {{note}},,,,,,Arabic only: 2
+admin.requested_few,—,طلب {{count}} أشهر. {{note}},,,,,,Arabic only: 3 to 10
+admin.requested,Asked for {{count}} months. {{note}},طلب {{count}} شهر. {{note}},{{count}} महीने माँगे। {{note}},{{count}} مہینے مانگے۔ {{note}},Pidió {{count}} meses. {{note}},A demandé {{count}} mois. {{note}},Pediu {{count}} meses. {{note}},
 admin.requested_many,—,طلب {{count}} شهرًا. {{note}},,,,,,Arabic only: 11 to 99 (12 months)
 admin.asked,Asked,طلب,माँगा,مانگا,Solicitado,Demandé,Pedido,
 admin.amount,Amount received,المبلغ المستلم,मिली राशि,موصول رقم,Monto recibido,Montant reçu,Valor recebido,
@@ -1879,8 +1913,10 @@ console.overview.newApplications,{{count}} new applications,طلبات جديد�
 console.overview.signups,Sign-ups this week,التسجيلات هذا الأسبوع,इस हफ़्ते साइन-अप,اس ہفتے سائن اپ,Registros esta semana,Inscriptions cette semaine,Cadastros nesta semana,
 console.overview.signupsSub,{{month}} in 30 days · {{active}} signed in this week,{{month}} خلال 30 يومًا · {{active}} سجّلوا الدخول هذا الأسبوع,30 दिनों में {{month}} · इस हफ़्ते {{active}} ने साइन इन किया,30 دن میں {{month}} · اس ہفتے {{active}} نے سائن اِن کیا,{{month}} en 30 días · {{active}} iniciaron sesión esta semana,{{month}} sur 30 jours · {{active}} connectés cette semaine,{{month}} em 30 dias · {{active}} entraram nesta semana,
 console.overview.salesMonth,"Sales this month, all salons",مبيعات هذا الشهر، كل الصالونات,"इस महीने की बिक्री, सभी सैलून",اس ماہ کی فروخت، تمام سیلون,"Ventas de este mes, todos los salones","Ventes du mois, tous salons","Vendas deste mês, todos os salões",
-console.overview.salesLine,{{count}} sales,{{count}} عمليات بيع,{{count}} बिक्री,{{count}} فروخت,{{count}} ventas,{{count}} ventes,{{count}} vendas,
+console.overview.salesLine,{{count}} sales,{{count}} عملية بيع,{{count}} बिक्री,{{count}} فروخت,{{count}} ventas,{{count}} ventes,{{count}} vendas,
 console.overview.salesLine_one,{{count}} sale,{{count}} عملية بيع,{{count}} बिक्री,{{count}} فروخت,{{count}} venta,{{count}} vente,{{count}} venda,
+console.overview.salesLine_two,—,عمليتا بيع,,,,,,Arabic only: 2
+console.overview.salesLine_few,—,{{count}} عمليات بيع,,,,,,Arabic only: 3 to 10
 console.overview.planIncome,Plan payments received,مدفوعات الخطط المستلمة,मिले प्लान भुगतान,موصول پلان ادائیگیاں,Pagos de planes recibidos,Paiements d’abonnement reçus,Pagamentos de planos recebidos,
 console.overview.countries,Salons by country,الصالونات حسب الدولة,देश के हिसाब से सैलून,ملک کے لحاظ سے سیلون,Salones por país,Salons par pays,Salões por país,
 console.overview.none,Nothing yet.,لا شيء بعد.,अभी कुछ नहीं।,ابھی کچھ نہیں۔,Aún no hay nada.,Rien pour l’instant.,Nada ainda.,
@@ -1894,8 +1930,10 @@ console.salons.services,{{count}} services,الخدمات: {{count}},{{count}} �
 console.salons.people_one,{{count}} person signs in,عدد من يسجّلون الدخول: {{count}},{{count}} व्यक्ति साइन इन करता है,{{count}} فرد سائن اِن کرتا ہے,{{count}} persona inicia sesión,{{count}} personne se connecte,{{count}} pessoa entra no app,
 console.salons.people,{{count}} people sign in,عدد من يسجّلون الدخول: {{count}},{{count}} लोग साइन इन करते हैं,{{count}} افراد سائن اِن کرتے ہیں,{{count}} personas inician sesión,{{count}} personnes se connectent,{{count}} pessoas entram no app,
 console.salons.perMonth,{{price}} a month,{{price}} شهريًا,{{price}} प्रति माह,{{price}} ماہانہ,{{price}} al mes,{{price}} par mois,{{price}} por mês,
-console.salons.sales,{{count}} sales in 30 days · {{total}} this month,{{count}} عمليات بيع خلال 30 يومًا · {{total}} هذا الشهر,30 दिनों में {{count}} बिक्री · इस महीने {{total}},30 دن میں {{count}} فروخت · اس ماہ {{total}},{{count}} ventas en 30 días · {{total}} este mes,{{count}} ventes sur 30 jours · {{total}} ce mois-ci,{{count}} vendas em 30 dias · {{total}} este mês,
+console.salons.sales,{{count}} sales in 30 days · {{total}} this month,{{count}} عملية بيع خلال 30 يومًا · {{total}} هذا الشهر,30 दिनों में {{count}} बिक्री · इस महीने {{total}},30 دن میں {{count}} فروخت · اس ماہ {{total}},{{count}} ventas en 30 días · {{total}} este mes,{{count}} ventes sur 30 jours · {{total}} ce mois-ci,{{count}} vendas em 30 dias · {{total}} este mês,
 console.salons.sales_one,{{count}} sale in 30 days · {{total}} this month,{{count}} عملية بيع خلال 30 يومًا · {{total}} هذا الشهر,30 दिनों में {{count}} बिक्री · इस महीने {{total}},30 دن میں {{count}} فروخت · اس ماہ {{total}},{{count}} venta en 30 días · {{total}} este mes,{{count}} vente sur 30 jours · {{total}} ce mois-ci,{{count}} venda em 30 dias · {{total}} este mês,
+console.salons.sales_two,—,عمليتا بيع خلال 30 يومًا · {{total}} هذا الشهر,,,,,,Arabic only: 2
+console.salons.sales_few,—,{{count}} عمليات بيع خلال 30 يومًا · {{total}} هذا الشهر,,,,,,Arabic only: 3 to 10
 console.salons.lastActive,Last signed in {{date}},آخر تسجيل دخول {{date}},आख़िरी साइन इन {{date}},آخری سائن اِن {{date}},Último inicio de sesión: {{date}},Dernière connexion : {{date}},Último acesso: {{date}},
 console.salons.never,Nobody has signed in yet,لم يسجّل أحد الدخول بعد,अभी तक किसी ने साइन इन नहीं किया,ابھی تک کسی نے سائن اِن نہیں کیا,Nadie ha iniciado sesión todavía,Personne ne s’est encore connecté,Ninguém entrou ainda,
 console.salons.closed,Closed,مغلق,बंद,بند,Cerrado,Fermé,Fechado,
@@ -1920,8 +1958,11 @@ console.owners.added,Platform owner added,تمت إضافة مالك للمنص�
 console.owners.remove,Remove,إزالة,हटाएँ,ہٹائیں,Quitar,Retirer,Remover,
 console.owners.removed,Platform owner removed,تمت إزالة مالك المنصة,प्लेटफ़ॉर्म मालिक हटाया गया,پلیٹ فارم مالک ہٹا دیا گیا,Dueño de la plataforma quitado,Propriétaire de la plateforme retiré,Proprietário da plataforma removido,
 console.plans.empty,No plan requests or payments yet.,لا طلبات خطط أو مدفوعات بعد.,अभी कोई प्लान अनुरोध या भुगतान नहीं।,ابھی کوئی پلان درخواست یا ادائیگی نہیں۔,Aún no hay solicitudes ni pagos de planes.,Aucune demande ni aucun paiement d’abonnement pour l’instant.,Nenhum pedido ou pagamento de plano ainda.,
-console.plans.months,{{count}} months,{{count}} أشهر,{{count}} महीने,{{count}} مہینے,{{count}} meses,{{count}} mois,{{count}} meses,
+console.plans.months,{{count}} months,{{count}} شهر,{{count}} महीने,{{count}} مہینے,{{count}} meses,{{count}} mois,{{count}} meses,
 console.plans.months_one,{{count}} month,{{count}} شهر,{{count}} महीना,{{count}} مہینہ,{{count}} mes,{{count}} mois,{{count}} mês,
+console.plans.months_two,—,شهران,,,,,,Arabic only: 2
+console.plans.months_few,—,{{count}} أشهر,,,,,,Arabic only: 3 to 10
+console.plans.months_many,—,{{count}} شهرًا,,,,,,Arabic only: 11 to 99
 console.plans.kinds.request,Asked,طلب,माँगा,مانگا,Solicitado,Demandé,Pedido,
 console.plans.kinds.activate,Paid,دفعة,भुगतान हुआ,ادا ہوا,Pagado,Payé,Pago,
 console.plans.kinds.end,Ended,انتهاء,बंद,ختم,Terminado,Terminé,Encerrado,
@@ -2103,8 +2144,10 @@ booking.anyone,Anyone,أي شخص,कोई भी,کوئی بھی,Cualquiera,N�
 booking.today,Today,اليوم,आज,آج,Hoy,Aujourd’hui,Hoje,Online booking link (2026-10-20); machine draft
 booking.tomorrow,Tomorrow,غدًا,कल,کل,Mañana,Demain,Amanhã,Online booking link (2026-10-20); machine draft
 booking.book,Book,احجز,बुक करें,بک کریں,Reservar,Réserver,Reservar,Online booking link (2026-10-20); machine draft
-booking.servicesCount,{{count}} services,{{count}} خدمات,{{count}} सेवाएँ,{{count}} سروسز,{{count}} servicios,{{count}} prestations,{{count}} serviços,Online booking link (2026-10-20); machine draft
+booking.servicesCount,{{count}} services,{{count}} خدمة,{{count}} सेवाएँ,{{count}} سروسز,{{count}} servicios,{{count}} prestations,{{count}} serviços,Online booking link (2026-10-20); machine draft
 booking.servicesCount_one,{{count}} service,{{count}} خدمة,{{count}} सेवा,{{count}} سروس,{{count}} servicio,{{count}} prestation,{{count}} serviço,Online booking link (2026-10-20); machine draft
+booking.servicesCount_two,—,خدمتان,,,,,,Arabic only: 2
+booking.servicesCount_few,—,{{count}} خدمات,,,,,,Arabic only: 3 to 10
 booking.steps.services,Choose services,اختر الخدمات,सेवाएँ चुनें,سروسز منتخب کریں,Elige servicios,Choisissez vos prestations,Escolha os serviços,Online booking link (2026-10-20); machine draft
 booking.steps.staff,With,مع,किसके साथ,کس کے ساتھ,Con,Avec,Com,Online booking link (2026-10-20); machine draft
 booking.steps.day,Day,التاريخ,तारीख,تاریخ,Día,Jour,Dia,Online booking link (2026-10-20); machine draft
@@ -2133,6 +2176,8 @@ booking.whatsappText,"Hello, I booked {{services}} for {{when}}. Name: {{name}}.
 booking.cancel,Cancel booking,إلغاء الحجز,बुकिंग रद्द करें,بکنگ منسوخ کریں,Cancelar reserva,Annuler la réservation,Cancelar reserva,Online booking link (2026-10-20); machine draft
 booking.tooLate,"To cancel less than {{count}} hours before, call the salon.",للإلغاء قبل أقل من {{count}} ساعة، اتصل بالصالون.,{{count}} घंटे से कम पहले रद्द करने के लिए सैलून को कॉल करें।,{{count}} گھنٹے سے کم پہلے منسوخ کرنے کے لیے سیلون کو کال کریں۔,"Para cancelar con menos de {{count}} horas de antelación, llama al salón.","Pour annuler moins de {{count}} heures avant, appelez le salon.","Para cancelar com menos de {{count}} horas de antecedência, ligue para o salão.",Online booking link (2026-10-20); machine draft
 booking.tooLate_one,"To cancel less than {{count}} hour before, call the salon.",للإلغاء قبل أقل من {{count}} ساعة، اتصل بالصالون.,{{count}} घंटे से कम पहले रद्द करने के लिए सैलून को कॉल करें।,{{count}} گھنٹے سے کم پہلے منسوخ کرنے کے لیے سیلون کو کال کریں۔,"Para cancelar con menos de {{count}} hora de antelación, llama al salón.","Pour annuler moins d’{{count}} heure avant, appelez le salon.","Para cancelar com menos de {{count}} hora de antecedência, ligue para o salão.",Online booking link (2026-10-20); machine draft
+booking.tooLate_two,—,للإلغاء قبل أقل من ساعتين، اتصل بالصالون.,,,,,,Arabic only: 2
+booking.tooLate_few,—,للإلغاء قبل أقل من {{count}} ساعات، اتصل بالصالون.,,,,,,Arabic only: 3 to 10
 booking.again,Book another appointment,احجز موعدًا آخر,एक और अपॉइंटमेंट बुक करें,ایک اور اپائنٹمنٹ بک کریں,Reservar otra cita,Prendre un autre rendez-vous,Marcar outro horário,Online booking link (2026-10-20); machine draft
 booking.cancelText,Cancel your booking for {{when}}?,هل تريد إلغاء حجزك في {{when}}؟,{{when}} की अपनी बुकिंग रद्द करें?,{{when}} کی اپنی بکنگ منسوخ کریں؟,¿Cancelar tu reserva del {{when}}?,Annuler votre réservation du {{when}} ?,Cancelar sua reserva de {{when}}?,Online booking link (2026-10-20); machine draft
 booking.cancelConfirm,"Yes, cancel it",نعم، ألغِه,"हाँ, रद्द करें",ہاں، منسوخ کریں,"Sí, cancelarla","Oui, annuler","Sim, cancelar",Online booking link (2026-10-20); machine draft
@@ -2182,8 +2227,11 @@ console.cards.modes.test,Test,اختبار,टेस्ट,ٹیسٹ,Prueba,Test,
 console.cards.modes.live,Live,مباشر,लाइव,لائیو,En vivo,En direct,Ao vivo,Card payments by Creem (2026-10-20); machine draft
 console.cards.empty,No card payments yet.,لا توجد مدفوعات بطاقات بعد.,अभी कोई कार्ड भुगतान नहीं।,ابھی کوئی کارڈ ادائیگی نہیں۔,Aún no hay pagos con tarjeta.,Aucun paiement par carte pour l’instant.,Nenhum pagamento com cartão ainda.,Card payments by Creem (2026-10-20); machine draft
 console.cards.unmatched,No salon matched,لم يُطابَق أي صالون,कोई सैलून मेल नहीं खाया,کوئی سیلون میل نہیں کھایا,Ningún salón coincide,Aucun salon correspondant,Nenhum salão correspondente,Card payments by Creem (2026-10-20); machine draft
-console.cards.extra,+{{count}} people,+{{count}} أشخاص,+{{count}} लोग,+{{count}} افراد,+{{count}} personas,+{{count}} personnes,+{{count}} pessoas,Card payments by Creem (2026-10-20); machine draft
+console.cards.extra,+{{count}} people,+{{count}} شخص,+{{count}} लोग,+{{count}} افراد,+{{count}} personas,+{{count}} personnes,+{{count}} pessoas,Card payments by Creem (2026-10-20); machine draft
 console.cards.extra_one,+{{count}} person,+{{count}} شخص,+{{count}} व्यक्ति,+{{count}} فرد,+{{count}} persona,+{{count}} personne,+{{count}} pessoa,Card payments by Creem (2026-10-20); machine draft
+console.cards.extra_two,—,+شخصان,,,,,,Arabic only: 2
+console.cards.extra_few,—,+{{count}} أشخاص,,,,,,Arabic only: 3 to 10
+console.cards.extra_many,—,+{{count}} شخصًا,,,,,,Arabic only: 11 to 99
 console.cards.status.pending,Waiting,بانتظار,प्रतीक्षा,انتظار,En espera,En attente,Aguardando,Card payments by Creem (2026-10-20); machine draft
 console.cards.status.paid,Paid,مدفوع,भुगतान हुआ,ادا شدہ,Pagado,Payé,Pago,Card payments by Creem (2026-10-20); machine draft
 console.cards.status.refunded,Refunded,مسترد,रिफ़ंड हुआ,رقم واپس,Reembolsado,Remboursé,Reembolsado,Card payments by Creem (2026-10-20); machine draft
@@ -2536,8 +2584,11 @@ plan.access.now,Free for now,مجاني حاليًا,अभी मुफ़्�
 plan.free.pill,Free,مجاني,मुफ़्त,مفت,Gratis,Gratuit,Grátis,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.free.pilotPill,Pilot,تجريبي,पायलट,پائلٹ,Piloto,Pilote,Piloto,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.free.ended,Your free time ended on {{date}}. Choose a plan to keep saving new work; everything saved stays.,انتهت فترتك المجانية في {{date}}. اختر خطة لمواصلة حفظ عمل جديد؛ ويبقى كل ما حُفظ.,आपका मुफ़्त समय {{date}} को ख़त्म हो गया। नया काम सहेजते रहने के लिए प्लान चुनें; सहेजा हुआ सब कुछ बना रहता है।,آپ کا مفت وقت {{date}} کو ختم ہو گیا۔ نیا کام محفوظ کرتے رہنے کے لیے پلان چنیں؛ محفوظ کیا ہوا سب کچھ رہتا ہے۔,Tu tiempo gratis terminó el {{date}}. Elige un plan para seguir guardando trabajo nuevo; todo lo guardado se conserva.,Votre période gratuite s’est terminée le {{date}}. Choisissez une formule pour continuer à enregistrer ; tout ce qui est enregistré reste.,Seu tempo grátis terminou em {{date}}. Escolha um plano para continuar salvando trabalho novo; tudo o que foi salvo fica.,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
-plan.free.bannerTitle,{{count}} days of free time left,متبقٍ {{count}} يومًا من الفترة المجانية,मुफ़्त समय के {{count}} दिन बाकी,مفت وقت کے {{count}} دن باقی,Te quedan {{count}} días gratis,Il reste {{count}} jours gratuits,Restam {{count}} dias grátis,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+plan.free.bannerTitle,{{count}} days of free time left,متبقٍ {{count}} يوم من الفترة المجانية,मुफ़्त समय के {{count}} दिन बाकी,مفت وقت کے {{count}} دن باقی,Te quedan {{count}} días gratis,Il reste {{count}} jours gratuits,Restam {{count}} dias grátis,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.free.bannerTitle_one,{{count}} day of free time left,متبقٍ {{count}} يوم من الفترة المجانية,मुफ़्त समय का {{count}} दिन बाकी,مفت وقت کا {{count}} دن باقی,Te queda {{count}} día gratis,Il reste {{count}} jour gratuit,Resta {{count}} dia grátis,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+plan.free.bannerTitle_two,—,متبقٍ يومان من الفترة المجانية,,,,,,Arabic only: 2
+plan.free.bannerTitle_few,—,متبقٍ {{count}} أيام من الفترة المجانية,,,,,,Arabic only: 3 to 10
+plan.free.bannerTitle_many,—,متبقٍ {{count}} يومًا من الفترة المجانية,,,,,,Arabic only: 11 to 99
 plan.free.bannerBody,Free until {{date}}. Choose a plan any time to keep going after that; nothing is charged unless you do.,مجاني حتى {{date}}. اختر خطة متى شئت للاستمرار بعد ذلك؛ ولا يُخصم شيء ما لم تفعل.,"{{date}} तक मुफ़्त। उसके बाद जारी रखने के लिए कभी भी प्लान चुनें; जब तक आप न चुनें, कुछ नहीं लिया जाता।",{{date}} تک مفت۔ اس کے بعد جاری رکھنے کے لیے کبھی بھی پلان چنیں؛ جب تک آپ نہ چنیں، کچھ نہیں کاٹا جاتا۔,Gratis hasta el {{date}}. Elige un plan cuando quieras para seguir después; no se cobra nada si no lo haces.,Gratuit jusqu’au {{date}}. Choisissez une formule quand vous voulez pour continuer ensuite ; rien n’est facturé sinon.,Grátis até {{date}}. Escolha um plano quando quiser para continuar depois; nada é cobrado se você não escolher.,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.free.bannerBodyStore,Free until {{date}}.,مجاني حتى {{date}}.,{{date}} तक मुफ़्त।,{{date}} تک مفت۔,Gratis hasta el {{date}}.,Gratuit jusqu’au {{date}}.,Grátis até {{date}}.,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.free.lastDay,Today is your last free day,اليوم هو آخر يوم مجاني لك,आज आपका आख़िरी मुफ़्त दिन है,آج آپ کا آخری مفت دن ہے,Hoy es tu último día gratis,Aujourd’hui est votre dernier jour gratuit,Hoje é seu último dia grátis,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
@@ -2552,8 +2603,11 @@ plan.pilot.refused.pilot_already,This salon is already in the pilot.,هذا ال
 plan.pilot.refused.pilot_not_needed,This salon is already free.,هذا الصالون مجاني بالفعل.,यह सैलून पहले से मुफ़्त है।,یہ سیلون پہلے سے مفت ہے۔,Este salón ya es gratis.,Ce salon est déjà gratuit.,Este salão já é grátis.,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.pilot.refused.pilot_full,The pilot is full for now.,البرنامج التجريبي مكتمل حاليًا.,पायलट अभी भरा हुआ है।,پائلٹ ابھی بھرا ہوا ہے۔,El piloto está completo por ahora.,Le pilote est complet pour l’instant.,O piloto está cheio por enquanto.,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.pilot.refused.too_many_attempts,Too many tries. Wait an hour and try again.,محاولات كثيرة. انتظر ساعة وحاول مجددًا.,बहुत ज़्यादा कोशिशें। एक घंटा रुककर फिर कोशिश करें।,بہت زیادہ کوششیں۔ ایک گھنٹہ رک کر دوبارہ کوشش کریں۔,Demasiados intentos. Espera una hora y vuelve a intentarlo.,Trop d’essais. Attendez une heure et réessayez.,Tentativas demais. Espere uma hora e tente de novo.,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
-plan.branchPeople,{{count}} people sign in here,{{count}} أشخاص يسجّلون الدخول هنا,{{count}} लोग यहाँ साइन इन करते हैं,{{count}} افراد یہاں سائن اِن کرتے ہیں,{{count}} personas inician sesión aquí,{{count}} personnes se connectent ici,{{count}} pessoas entram aqui,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+plan.branchPeople,{{count}} people sign in here,{{count}} شخص يسجّلون الدخول هنا,{{count}} लोग यहाँ साइन इन करते हैं,{{count}} افراد یہاں سائن اِن کرتے ہیں,{{count}} personas inician sesión aquí,{{count}} personnes se connectent ici,{{count}} pessoas entram aqui,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.branchPeople_one,{{count}} person signs in here,{{count}} شخص يسجّل الدخول هنا,{{count}} व्यक्ति यहाँ साइन इन करता है,{{count}} فرد یہاں سائن اِن کرتا ہے,{{count}} persona inicia sesión aquí,{{count}} personne se connecte ici,{{count}} pessoa entra aqui,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+plan.branchPeople_two,—,شخصان يسجّلان الدخول هنا,,,,,,Arabic only: 2
+plan.branchPeople_few,—,{{count}} أشخاص يسجّلون الدخول هنا,,,,,,Arabic only: 3 to 10
+plan.branchPeople_many,—,{{count}} شخصًا يسجّلون الدخول هنا,,,,,,Arabic only: 11 to 99
 plan.perMonthAll,"A month, every branch",شهريًا، كل الفروع,"हर महीने, सभी ब्रांच",ماہانہ، تمام برانچیں,"Al mes, todas las sucursales","Par mois, tous les établissements","Por mês, todas as filiais","Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.pricing,Each branch is {{base}} a month for up to {{included}} people who sign in there; each extra person adds {{extra}} a month.,كل فرع بسعر {{base}} شهريًا لما يصل إلى {{included}} أشخاص يسجّلون الدخول فيه؛ ويضيف كل شخص إضافي {{extra}} شهريًا.,"हर ब्रांच {{base}} प्रति माह है, वहाँ साइन इन करने वाले {{included}} लोगों तक; हर अतिरिक्त व्यक्ति {{extra}} प्रति माह जोड़ता है।",ہر برانچ {{base}} ماہانہ ہے، وہاں سائن اِن کرنے والے {{included}} افراد تک؛ ہر اضافی فرد {{extra}} ماہانہ بڑھاتا ہے۔,Cada sucursal cuesta {{base}} al mes para hasta {{included}} personas que inician sesión allí; cada persona extra suma {{extra}} al mes.,Chaque établissement coûte {{base}} par mois pour {{included}} personnes qui s’y connectent au maximum ; chaque personne en plus ajoute {{extra}} par mois.,Cada filial custa {{base}} por mês para até {{included}} pessoas que entram nela; cada pessoa extra soma {{extra}} por mês.,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 plan.extraPerson,"This branch’s price covers {{included}} people and {{people}} already sign in here, so this login adds {{extra}} a month.",سعر هذا الفرع يشمل {{included}} أشخاص، ويسجّل {{people}} الدخول هنا بالفعل، لذا يضيف هذا الحساب {{extra}} شهريًا.,"इस ब्रांच की कीमत में {{included}} लोग शामिल हैं और {{people}} पहले से यहाँ साइन इन करते हैं, इसलिए यह लॉगिन {{extra}} प्रति माह जोड़ता है।",اس برانچ کی قیمت میں {{included}} افراد شامل ہیں اور {{people}} پہلے سے یہاں سائن اِن کرتے ہیں، اس لیے یہ لاگ اِن {{extra}} ماہانہ بڑھاتا ہے۔,"El precio de esta sucursal cubre {{included}} personas y {{people}} ya inician sesión aquí, así que este acceso suma {{extra}} al mes.",Le prix de cet établissement couvre {{included}} personnes et {{people}} s’y connectent déjà : ce compte ajoute {{extra}} par mois.,"O preço desta filial cobre {{included}} pessoas e {{people}} já entram aqui, então este acesso soma {{extra}} por mês.","Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
@@ -2649,15 +2703,21 @@ console.pilot.expires,Valid until (optional),صالح حتى (اختياري),�
 console.pilot.create,Create code,إنشاء رمز,कोड बनाएँ,کوڈ بنائیں,Crear código,Créer le code,Criar código,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.pilot.created,Code {{code}} created,تم إنشاء الرمز {{code}},कोड {{code}} बनाया गया,کوڈ {{code}} بن گیا,Código {{code}} creado,Code {{code}} créé,Código {{code}} criado,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.pilot.codeDays_one,{{count}} day,يوم واحد,{{count}} दिन,{{count}} دن,{{count}} día,{{count}} jour,{{count}} dia,
-console.pilot.codeDays,{{count}} days,{{count}} يومًا,{{count}} दिन,{{count}} دن,{{count}} días,{{count}} jours,{{count}} dias,
+console.pilot.codeDays_two,—,يومان,,,,,,Arabic only: 2
+console.pilot.codeDays_few,—,{{count}} أيام,,,,,,Arabic only: 3 to 10
+console.pilot.codeDays_many,—,{{count}} يومًا,,,,,,Arabic only: 11 to 99
+console.pilot.codeDays,{{count}} days,{{count}} يوم,{{count}} दिन,{{count}} دن,{{count}} días,{{count}} jours,{{count}} dias,
 console.pilot.used,used {{uses}} of {{max}},استُخدم {{uses}} من {{max}},{{max}} में से {{uses}} इस्तेमाल,{{max}} میں سے {{uses}} استعمال,usado {{uses}} de {{max}},utilisé {{uses}} sur {{max}},usado {{uses}} de {{max}},
 console.pilot.until,Valid until {{date}},صالح حتى {{date}},{{date}} तक मान्य,{{date}} تک درست,Válido hasta el {{date}},Valable jusqu’au {{date}},Válido até {{date}},"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.pilot.disable,Switch off,إيقاف,बंद करें,بند کریں,Desactivar,Désactiver,Desativar,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.pilot.disabled,Switched off,متوقف,बंद,بند,Desactivado,Désactivé,Desativado,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.audit.empty,No changes yet.,لا تغييرات بعد.,अभी कोई बदलाव नहीं।,ابھی کوئی تبدیلی نہیں۔,Aún no hay cambios.,Pas encore de modifications.,Nenhuma alteração ainda.,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.audit.change,{{before}} → {{after}},{{before}} ← {{after}},{{before}} → {{after}},{{before}} ← {{after}},{{before}} → {{after}},{{before}} → {{after}},{{before}} → {{after}},"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
-notifications.types.trial_ending.title,Your free time ends in {{count}} days,تنتهي فترتك المجانية بعد {{count}} أيام,आपका मुफ़्त समय {{count}} दिन में ख़त्म होगा,آپ کا مفت وقت {{count}} دن میں ختم ہوگا,Tu tiempo gratis termina en {{count}} días,Votre période gratuite se termine dans {{count}} jours,Seu tempo grátis termina em {{count}} dias,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+notifications.types.trial_ending.title,Your free time ends in {{count}} days,تنتهي فترتك المجانية بعد {{count}} يوم,आपका मुफ़्त समय {{count}} दिन में ख़त्म होगा,آپ کا مفت وقت {{count}} دن میں ختم ہوگا,Tu tiempo gratis termina en {{count}} días,Votre période gratuite se termine dans {{count}} jours,Seu tempo grátis termina em {{count}} dias,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 notifications.types.trial_ending.title_one,Your free time ends in {{count}} day,تنتهي فترتك المجانية بعد {{count}} يوم,आपका मुफ़्त समय {{count}} दिन में ख़त्म होगा,آپ کا مفت وقت {{count}} دن میں ختم ہوگا,Tu tiempo gratis termina en {{count}} día,Votre période gratuite se termine dans {{count}} jour,Seu tempo grátis termina em {{count}} dia,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+notifications.types.trial_ending.title_two,—,تنتهي فترتك المجانية بعد يومين,,,,,,Arabic only: 2
+notifications.types.trial_ending.title_few,—,تنتهي فترتك المجانية بعد {{count}} أيام,,,,,,Arabic only: 3 to 10
+notifications.types.trial_ending.title_many,—,تنتهي فترتك المجانية بعد {{count}} يومًا,,,,,,Arabic only: 11 to 99
 notifications.types.trial_ending.body,"Free until {{until}}. Choose a plan in More → Plan & billing to keep saving new work; nothing is charged unless you do, and everything saved stays.",مجاني حتى {{until}}. اختر خطة من المزيد ← الخطة والفوترة لمواصلة حفظ عمل جديد؛ لا يُخصم شيء ما لم تفعل، ويبقى كل ما حُفظ.,"{{until}} तक मुफ़्त। नया काम सहेजते रहने के लिए और → प्लान और बिलिंग में प्लान चुनें; जब तक आप न चुनें कुछ नहीं लिया जाता, और सहेजा हुआ सब कुछ रहता है।",{{until}} تک مفت۔ نیا کام محفوظ کرتے رہنے کے لیے مزید ← پلان اور بلنگ میں پلان چنیں؛ جب تک آپ نہ چنیں کچھ نہیں کاٹا جاتا، اور محفوظ کیا ہوا سب کچھ رہتا ہے۔,Gratis hasta el {{until}}. Elige un plan en Más → Plan y facturación para seguir guardando trabajo nuevo; no se cobra nada si no lo haces y todo lo guardado se conserva.,"Gratuit jusqu’au {{until}}. Choisissez une formule dans Plus → Abonnement et facturation pour continuer à enregistrer ; rien n’est facturé sinon, et tout ce qui est enregistré reste.","Grátis até {{until}}. Escolha um plano em Mais → Plano e cobrança para continuar salvando trabalho novo; nada é cobrado se você não escolher, e tudo o que foi salvo fica.","Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 auth.landing.pilot.bar,Pilot open: {{max}} UAE salons get Saloqo free for {{months}} months.,البرنامج التجريبي مفتوح: {{max}} صالونًا في الإمارات تحصل على Saloqo مجانًا لمدة {{months}} أشهر.,पायलट खुला है: UAE के {{max}} सैलून को Saloqo {{months}} महीने मुफ़्त मिलेगा।,پائلٹ کھلا ہے: UAE کے {{max}} سیلونز کو Saloqo {{months}} مہینے مفت ملے گا۔,Piloto abierto: {{max}} salones de los EAU tienen Saloqo gratis durante {{months}} meses.,Pilote ouvert : {{max}} salons aux Émirats ont Saloqo gratuit pendant {{months}} mois.,Piloto aberto: {{max}} salões dos EAU têm o Saloqo grátis por {{months}} meses.,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 auth.landing.pilot.places_zero,—,لم يتبقَّ أي مكان,,,,,,Arabic only: 0

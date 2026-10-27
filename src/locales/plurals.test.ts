@@ -24,3 +24,21 @@ it('a plan request names its months in words that fit the number', async () => {
   expect(await say('ar', 'admin.requested', { count: 6, note: '' })).toMatch(/أشهر/);
   expect(await say('ar', 'admin.requested', { count: 12, note: '' })).toMatch(/شهرًا/);
 });
+
+it('Arabic counts use the form each number takes (owner’s fix list #10)', async () => {
+  // Right-to-left text isolates each number (U+2068 … U+2069) so it reads the right way round; the words are checked here.
+  const sayAr = async (key: string, values: Record<string, unknown>) =>
+    (await say('ar', key, values)).replace(/[\u2066-\u2069]/g, '');
+  const days = async (count: number) => sayAr('console.pilot.codeDays', { count });
+  expect(await days(1)).toBe('يوم واحد');
+  expect(await days(2)).toBe('يومان');
+  expect(await days(5)).toBe('5 أيام');
+  expect(await days(15)).toBe('15 يومًا');
+  expect(await days(100)).toBe('100 يوم');
+  expect(await sayAr('home.attention.lowStock', { count: 3 })).toBe('3 أصناف مخزونها منخفض');
+  expect(await sayAr('home.attention.lowStock', { count: 2 })).toBe('صنفان مخزونهما منخفض');
+  expect(await sayAr('plan.requested', { count: 2, date: '1 Nov' })).toMatch(
+    /^طلبت شهرين في 1 Nov\./,
+  );
+  expect(await sayAr('plan.requested', { count: 12, date: '1 Nov' })).toMatch(/^طلبت 12 شهرًا/);
+});
