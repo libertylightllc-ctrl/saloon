@@ -169,3 +169,15 @@ export function usePayTips(branchId: string, businessId: string) {
     onSuccess: done,
   });
 }
+
+/** Cash put into the drawer today, from the owner's pocket or drawn from the bank (Dr cash, Cr owner equity / bank). */
+export function useAddDrawerCash(branchId: string, businessId: string) {
+  const done = useInvalidateClosing(branchId, businessId);
+  return useMutation({
+    mutationFn: async (input: { amount_minor: number; from: 'owner' | 'bank'; note: string }) => {
+      const { error } = await supabase.rpc('add_drawer_cash', { p: asJson({ ...input, branch_id: branchId }) });
+      if (error) throw error;
+    },
+    onSuccess: done,
+  });
+}

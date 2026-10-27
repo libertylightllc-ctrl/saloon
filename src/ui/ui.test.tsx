@@ -7,6 +7,7 @@ import type { Mode } from '@/theme';
 import { initials } from './Avatar';
 import { Button } from './Button';
 import { DateField } from './DateField';
+import { FormError } from './FormError';
 import { HeaderBand } from './HeaderBand';
 import { useOnBand } from './layoutContext';
 import { MoneyInput } from './MoneyInput';
@@ -190,5 +191,19 @@ describe('DateField', () => {
     expect(screen.getByText('24 Jan 2027')).toBeOnTheScreen();
     await fireEvent.press(screen.getByTestId('expires-clear'));
     expect(onChange).toHaveBeenLastCalledWith('');
+  });
+});
+
+describe('FormError', () => {
+  it('says how much cash the drawer holds when a cash payment is bigger than the drawer', async () => {
+    await renderInApp(<FormError error={{ message: 'not_enough_cash: 6000' }} />);
+    expect(screen.getByTestId('form-error')).toHaveTextContent(
+      'There isn’t enough cash in the drawer for this. Pay another way, or first add the cash you put in, on Cash closing. Cash in the drawer: AED\u00a060.00.',
+    );
+  });
+
+  it('still names the short items when stock runs out', async () => {
+    await renderInApp(<FormError error={{ message: 'insufficient_stock: Beard Color 20 ml' }} />);
+    expect(screen.getByTestId('form-error')).toHaveTextContent('Not enough stock: Beard Color 20 ml');
   });
 });

@@ -196,7 +196,7 @@
     "timesCount": "{{n}}×",
     "recentActivity": "Atividade recente",
     "viewAuditTrail": "Ver histórico de auditoria",
-    "cashSub": "Saldo inicial do caixa mais as vendas em dinheiro de hoje",
+    "cashSub": "O que deveria haver na gaveta agora",
     "noSalesYet": "Nenhuma venda hoje ainda.",
     "me": {
       "services": "Meus serviços hoje",
@@ -232,7 +232,8 @@
       "hygieneSub": "Ferramentas, toalhas, superfícies, pisos, lixo"
     },
     "attentionClose": "Fechar",
-    "viewClosing": "Fechamento de caixa"
+    "viewClosing": "Fechamento de caixa",
+    "cashBelowZero": "Saiu mais dinheiro do que entrou. Conte a gaveta."
   },
   "queue": {
     "title": "Fila",
@@ -1133,7 +1134,9 @@
     "branch_name_taken": "Outra filial já tem esse nome.",
     "too_many_branches": "Um salão pode ter até 20 filiais.",
     "code_taken": "Esse código já existe. Escolha outro.",
-    "invalid_setting": "Esse valor não é permitido. Confira e tente de novo."
+    "invalid_setting": "Esse valor não é permitido. Confira e tente de novo.",
+    "not_enough_cash": "Não há dinheiro suficiente na gaveta para isto. Pague de outra forma ou, primeiro, adicione o dinheiro que você colocou, em Fechamento de caixa.",
+    "cashInDrawer": "Dinheiro na gaveta: {{amount}}."
   },
   "sales": {
     "title": "Vendas",
@@ -1427,7 +1430,8 @@
       "staff_advance_reversal": "Adiantamentos estornados",
       "payroll": "Folha de pagamento",
       "payroll_payment": "Salários pagos",
-      "deposit_forfeit_reversal": "Sinais retidos (desfeito)"
+      "deposit_forfeit_reversal": "Sinais retidos (desfeito)",
+      "cash_added": "Dinheiro adicionado"
     },
     "months": "Meses",
     "exportLedger": "Exportar razão em CSV",
@@ -1686,6 +1690,19 @@
       "draft": "Rascunho",
       "pending_approval": "Aguardando aprovação",
       "approved": "Aprovado"
+    },
+    "addCash": {
+      "button": "Adicionar dinheiro",
+      "title": "Adicionar dinheiro à gaveta",
+      "hint": "Dinheiro colocado na gaveta: troco para o dia ou dinheiro para um pagamento em dinheiro.",
+      "amount": "Valor",
+      "from": {
+        "owner": "Do proprietário",
+        "bank": "Do banco"
+      },
+      "note": "Observação (opcional)",
+      "save": "Adicionar à gaveta",
+      "saved": "{{amount}} adicionados à gaveta"
     }
   },
   "inventory": {

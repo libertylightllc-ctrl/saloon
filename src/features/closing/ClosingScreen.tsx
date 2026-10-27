@@ -10,6 +10,7 @@ import { useDates } from '@/lib/useDates';
 import { semantic, spacing } from '@/theme';
 import { Card, EmptyState, HeaderBand, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text, type StatusKey } from '@/ui';
 
+import { AddCash } from './AddCash';
 import { useClosingHistory, useClosingPreview, type ClosingStatus } from './api';
 import { CloseSummary } from './CloseSummary';
 import { CountForm } from './CountForm';
@@ -57,6 +58,7 @@ export function ClosingScreen() {
           return (
             <View style={styles.body}>
               <ExpectedCard preview={p} />
+              {counting && p.is_today && can(role, 'countCash') ? <AddCash /> : null}
               {p.closing?.returned_reason && status === 'draft' ? (
                 <Card variant="outlined" style={styles.card}>
                   <StatusPill tone="warning" label={t('closing.sentBack')} />

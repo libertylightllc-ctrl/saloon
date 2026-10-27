@@ -42,13 +42,16 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
       value={formatMoney(cash)}
       delta={change !== null && change !== 0 ? { label: `${Math.abs(change)}%`, trend: change > 0 ? 'up' : 'down' } : undefined}
       sub={
-        closed === 'approved'
-          ? t('home.dayClosed')
-          : closed === 'pending_approval'
-            ? t('home.dayPending')
-            : change !== null
-              ? t('home.vsYesterday')
-              : t('home.cashSub')
+        // Below zero only from records made before the drawer was checked (owner's fix list #9): say how to fix it.
+        cash < 0
+          ? t('home.cashBelowZero')
+          : closed === 'approved'
+            ? t('home.dayClosed')
+            : closed === 'pending_approval'
+              ? t('home.dayPending')
+              : change !== null
+                ? t('home.vsYesterday')
+                : t('home.cashSub')
       }
       action={
         can(role, 'viewClosing') ? (

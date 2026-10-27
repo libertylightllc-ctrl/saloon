@@ -3798,6 +3798,7 @@ export type Database = {
         }[];
       };
       acct: { Args: { p_business: string; p_key: string }; Returns: string };
+      add_drawer_cash: { Args: { p: Json }; Returns: Json };
       adjust_stock: { Args: { p: Json }; Returns: Json };
       admin_accounts: {
         Args: Record<PropertyKey, never>;
@@ -4290,6 +4291,7 @@ export type Database = {
       dispatch_push: { Args: Record<PropertyKey, never>; Returns: number };
       dispatch_support_assistant: { Args: Record<PropertyKey, never>; Returns: number };
       doc_label: { Args: { p_type: string }; Returns: string };
+      drawer_cash: { Args: { p_branch: string }; Returns: number };
       employee_has_history: { Args: { p_id: string }; Returns: boolean };
       expected_cash: { Args: { p_branch: string; p_date?: string }; Returns: number };
       fmt_money: { Args: { p_currency?: string; p_minor: number }; Returns: string };

@@ -196,7 +196,7 @@
     "timesCount": "{{n}}×",
     "recentActivity": "Actividad reciente",
     "viewAuditTrail": "Ver registro de auditoría",
-    "cashSub": "Efectivo inicial más las ventas en efectivo de hoy",
+    "cashSub": "Lo que debería haber en la caja ahora",
     "noSalesYet": "Aún no hay ventas hoy.",
     "me": {
       "services": "Mis servicios de hoy",
@@ -232,7 +232,8 @@
       "hygieneSub": "Herramientas, toallas, superficies, suelos, residuos"
     },
     "attentionClose": "Cerrar",
-    "viewClosing": "Cierre de caja"
+    "viewClosing": "Cierre de caja",
+    "cashBelowZero": "Salió más efectivo del que entró. Cuenta la caja."
   },
   "queue": {
     "title": "Fila",
@@ -1133,7 +1134,9 @@
     "branch_name_taken": "Otra sucursal ya tiene este nombre.",
     "too_many_branches": "Un salón puede tener hasta 20 sucursales.",
     "code_taken": "Ese código ya existe. Elige otro.",
-    "invalid_setting": "Ese valor no está permitido. Revísalo e inténtalo de nuevo."
+    "invalid_setting": "Ese valor no está permitido. Revísalo e inténtalo de nuevo.",
+    "not_enough_cash": "No hay suficiente efectivo en la caja para esto. Paga de otra forma o, primero, añade el efectivo que pusiste, en Cierre de caja.",
+    "cashInDrawer": "Efectivo en la caja: {{amount}}."
   },
   "sales": {
     "title": "Ventas",
@@ -1427,7 +1430,8 @@
       "staff_advance_reversal": "Adelantos revertidos",
       "payroll": "Nómina",
       "payroll_payment": "Sueldos pagados",
-      "deposit_forfeit_reversal": "Anticipos retenidos (deshecho)"
+      "deposit_forfeit_reversal": "Anticipos retenidos (deshecho)",
+      "cash_added": "Efectivo añadido"
     },
     "months": "Meses",
     "exportLedger": "Exportar libro mayor en CSV",
@@ -1686,6 +1690,19 @@
       "draft": "Borrador",
       "pending_approval": "Pendiente de aprobación",
       "approved": "Aprobado"
+    },
+    "addCash": {
+      "button": "Añadir efectivo",
+      "title": "Añadir efectivo a la caja",
+      "hint": "Efectivo que se pone en la caja: cambio para el día o dinero para un pago en efectivo.",
+      "amount": "Importe",
+      "from": {
+        "owner": "Del dueño",
+        "bank": "Del banco"
+      },
+      "note": "Nota (opcional)",
+      "save": "Añadir a la caja",
+      "saved": "{{amount}} añadidos a la caja"
     }
   },
   "inventory": {

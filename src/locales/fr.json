@@ -196,7 +196,7 @@
     "timesCount": "{{n}}×",
     "recentActivity": "Activité récente",
     "viewAuditTrail": "Voir le journal d’audit",
-    "cashSub": "Fond de caisse plus ventes en espèces du jour",
+    "cashSub": "Ce que le tiroir devrait contenir maintenant",
     "noSalesYet": "Aucune vente pour l’instant aujourd’hui.",
     "me": {
       "services": "Mes services du jour",
@@ -232,7 +232,8 @@
       "hygieneSub": "Outils, serviettes, surfaces, sols, déchets"
     },
     "attentionClose": "Fermer",
-    "viewClosing": "Clôture de caisse"
+    "viewClosing": "Clôture de caisse",
+    "cashBelowZero": "Plus d’espèces sont sorties que rentrées. Comptez le tiroir."
   },
   "queue": {
     "title": "File d’attente",
@@ -1133,7 +1134,9 @@
     "branch_name_taken": "Un autre établissement porte déjà ce nom.",
     "too_many_branches": "Un salon peut avoir jusqu’à 20 établissements.",
     "code_taken": "Ce code existe déjà. Choisissez-en un autre.",
-    "invalid_setting": "Cette valeur n’est pas autorisée. Vérifiez-la et réessayez."
+    "invalid_setting": "Cette valeur n’est pas autorisée. Vérifiez-la et réessayez.",
+    "not_enough_cash": "Il n’y a pas assez d’espèces dans le tiroir pour cela. Payez autrement, ou ajoutez d’abord les espèces que vous y avez mises, dans Clôture de caisse.",
+    "cashInDrawer": "Espèces dans le tiroir : {{amount}}."
   },
   "sales": {
     "title": "Ventes",
@@ -1427,7 +1430,8 @@
       "staff_advance_reversal": "Avances contrepassées",
       "payroll": "Paie",
       "payroll_payment": "Salaires versés",
-      "deposit_forfeit_reversal": "Acomptes conservés (annulé)"
+      "deposit_forfeit_reversal": "Acomptes conservés (annulé)",
+      "cash_added": "Espèces ajoutées"
     },
     "months": "Mois",
     "exportLedger": "Exporter le grand livre en CSV",
@@ -1686,6 +1690,19 @@
       "draft": "Brouillon",
       "pending_approval": "À approuver",
       "approved": "Approuvée"
+    },
+    "addCash": {
+      "button": "Ajouter des espèces",
+      "title": "Ajouter des espèces dans le tiroir",
+      "hint": "Espèces mises dans le tiroir : de la monnaie pour la journée, ou de l’argent pour un paiement en espèces.",
+      "amount": "Montant",
+      "from": {
+        "owner": "Du propriétaire",
+        "bank": "De la banque"
+      },
+      "note": "Note (facultatif)",
+      "save": "Ajouter au tiroir",
+      "saved": "{{amount}} ajoutés au tiroir"
     }
   },
   "inventory": {

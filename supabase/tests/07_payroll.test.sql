@@ -4,7 +4,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 -- Paid plans are tested in 14_plans; here every salon may work.
 select set_config('salon.plan_check', 'off', false);
-select plan(42);
+select plan(44);
 -- The checks below work out dates and codes with internal helpers that the app's sign-in roles cannot call (migration
 -- 33); they are allowed here, inside this test's transaction only (rolled back at the end).
 grant execute on function public.branch_today(uuid), public.branch_tz(uuid), public.business_today(uuid),
@@ -158,9 +158,14 @@ select is((select count(*)::int from payroll_lines), 2, 'the accountant sees eve
 select pg_temp.as_user('00000000-0000-0000-0000-00000000060a');
 select lives_ok(format($$ select pay_payroll_line('%s', 'bank') $$, (pg_temp.line(current_setting('t.rafiq'))).id),
   'owner pays Rafiq by bank');
+-- Imran's AED 2,050.00 in cash, with AED 500.00 in the drawer: refused until the owner brings cash from the bank.
+select throws_ok(format($$ select pay_payroll_line('%s', 'cash') $$, (pg_temp.line(current_setting('t.imran'))).id), '22023',
+  'not_enough_cash: 50000', 'a cash salary bigger than the drawer is refused');
+select lives_ok(format($$ select add_drawer_cash('{"branch_id":"%s","amount_minor":200000,"from":"bank"}') $$,
+  current_setting('t.br')), 'the owner adds AED 2,000.00 drawn from the bank');
 select lives_ok(format($$ select pay_payroll_line('%s', 'cash') $$, (pg_temp.line(current_setting('t.imran'))).id),
-  'and Imran in cash');
-select is(expected_cash(current_setting('t.br')::uuid), 50000 - 205000::bigint, 'cash pay leaves the drawer');
+  'and pays Imran in cash');
+select is(expected_cash(current_setting('t.br')::uuid), 50000 + 200000 - 205000::bigint, 'cash pay leaves the drawer');
 select is((dashboard_today(current_setting('t.br')::uuid) -> 'payroll' ->> 'wps_missing')::int, 1,
   'Home flags the WPS salary paid without proof');
 select is(pg_temp.account_balance('salaries_payable'), 0::bigint, 'nothing left owed');

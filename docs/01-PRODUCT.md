@@ -216,6 +216,9 @@ the compliance template for that mode. Owner can edit everything after.
   \+ cash sale payments + cash deposits received
   − cash refunds − cash deposit refunds
   − cash expenses − supplier cash payments − cash payroll & advances − tip payouts
+  \+ cash added to the drawer (from the owner or the bank)
+- The drawer never goes below zero: a cash payment bigger than the cash in the drawer is refused. Cash put in
+  (change for the day, the owner's money for a payment) is recorded first with "Add cash" (owner or cashier).
 - Cashier enters counted cash (optional denomination helper), picks "counted by", ticks
   "I confirm the count was done with the drawer closed to sales", saves draft or submits.
 - Variance ≠ 0 requires a reason. Owner approves → record is locked, variance is posted to "Cash over/short".

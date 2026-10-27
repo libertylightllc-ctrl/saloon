@@ -7,7 +7,7 @@ export const ERROR_CODES = [
   'opening_cash_already_set', 'category_required', 'not_found', 'service_unavailable', 'services_required',
   'time_required', 'slot_taken', 'room_required', 'deposit_method_required', 'invalid_status', 'reason_required',
   'lines_required', 'invalid_line', 'invalid_qty', 'invalid_discount', 'invalid_tip', 'invalid_payment',
-  'payment_mismatch', 'insufficient_stock', 'period_closed', 'username_taken', 'weak_password', 'invalid_username',
+  'payment_mismatch', 'insufficient_stock', 'not_enough_cash', 'period_closed', 'username_taken', 'weak_password', 'invalid_username',
   'name_required', 'invalid_commission', 'wrong_password', 'disabled', 'email_taken', 'no_internet',
   'rate_limited', 'invalid_code', 'unknown_salon', 'confirm_email', 'category_exists', 'unknown_setting',
   'invalid_role', 'day_closed', 'invalid_date', 'count_required', 'confirm_required', 'previous_close_pending',

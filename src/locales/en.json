@@ -196,7 +196,7 @@
     "timesCount": "{{n}}×",
     "recentActivity": "Recent activity",
     "viewAuditTrail": "View audit trail",
-    "cashSub": "Opening cash plus today's cash sales",
+    "cashSub": "What the drawer should hold now",
     "noSalesYet": "No sales yet today.",
     "me": {
       "services": "My services today",
@@ -232,7 +232,8 @@
       "hygieneSub": "Tools, towels, surfaces, floors, waste"
     },
     "attentionClose": "Close",
-    "viewClosing": "Cash closing"
+    "viewClosing": "Cash closing",
+    "cashBelowZero": "More cash went out than came in. Count the drawer."
   },
   "queue": {
     "title": "Queue",
@@ -1133,7 +1134,9 @@
     "branch_name_taken": "Another branch already has this name.",
     "too_many_branches": "A salon can have up to 20 branches.",
     "code_taken": "That code already exists. Choose another.",
-    "invalid_setting": "That value is not allowed. Check it and try again."
+    "invalid_setting": "That value is not allowed. Check it and try again.",
+    "not_enough_cash": "There isn’t enough cash in the drawer for this. Pay another way, or first add the cash you put in, on Cash closing.",
+    "cashInDrawer": "Cash in the drawer: {{amount}}."
   },
   "sales": {
     "title": "Sales",
@@ -1427,7 +1430,8 @@
       "staff_advance_reversal": "Reversed advances",
       "payroll": "Payroll",
       "payroll_payment": "Salaries paid",
-      "deposit_forfeit_reversal": "Deposits kept (undone)"
+      "deposit_forfeit_reversal": "Deposits kept (undone)",
+      "cash_added": "Cash added"
     },
     "months": "Months",
     "exportLedger": "Export ledger CSV",
@@ -1686,6 +1690,19 @@
       "draft": "Draft",
       "pending_approval": "Pending approval",
       "approved": "Approved"
+    },
+    "addCash": {
+      "button": "Add cash",
+      "title": "Add cash to the drawer",
+      "hint": "Cash put into the drawer: change for the day, or money for a cash payment.",
+      "amount": "Amount",
+      "from": {
+        "owner": "From the owner",
+        "bank": "From the bank"
+      },
+      "note": "Note (optional)",
+      "save": "Add to the drawer",
+      "saved": "{{amount}} added to the drawer"
     }
   },
   "inventory": {

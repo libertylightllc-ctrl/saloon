@@ -9,6 +9,7 @@ select plan(3);
 create temp table reviewed (name text primary key) on commit drop;
 insert into reviewed values
     ('account_totals'),
+    ('add_drawer_cash'),
     ('adjust_stock'),
     ('admin_accounts'),
     ('admin_activate'),
