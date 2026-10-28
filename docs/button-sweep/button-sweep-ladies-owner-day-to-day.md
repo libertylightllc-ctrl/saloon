@@ -14,7 +14,7 @@
 | Home | Renew | opens /compliance |
 | Home | Review | opens /compliance |
 | Home | Open queue | opens /queue |
-| Home | Start | shows "Started 4:02 PM" |
+| Home | Start | shows "Started 3:13 PM" |
 | Home | View audit trail | opens /accounts |
 | Home | Home | already selected |
 | Home | Queue | opens /queue |
@@ -78,9 +78,7 @@
 | New booking | Waxing · AED 60.00 | shows "30 min · AED 60.00" |
 | New booking | Any stylist | already selected |
 | New booking | Aisha E2E | selects it |
-| New booking | Monday 26 October | already selected |
-| New booking | Tuesday 27 October | shows "12:00 AM" |
-| New booking | Wednesday 28 October | shows "12:00 AM" |
+| New booking | Wednesday 28 October | already selected |
 | New booking | Thursday 29 October | shows "12:00 AM" |
 | New booking | Friday 30 October | shows "12:00 AM" |
 | New booking | Saturday 31 October | shows "12:00 AM" |
@@ -92,7 +90,11 @@
 | New booking | Friday 6 November | shows "12:00 AM" |
 | New booking | Saturday 7 November | shows "12:00 AM" |
 | New booking | Sunday 8 November | shows "12:00 AM" |
-| New booking | 4:30 PM | disabled until the form is valid / state allows |
+| New booking | Monday 9 November | shows "12:00 AM" |
+| New booking | Tuesday 10 November | shows "12:00 AM" |
+| New booking | 3:30 PM | disabled until the form is valid / state allows |
+| New booking | 4:00 PM | selects it |
+| New booking | 4:30 PM | selects it |
 | New booking | 5:00 PM | selects it |
 | New booking | 5:30 PM | selects it |
 | New booking | 6:00 PM | selects it |
@@ -170,12 +172,12 @@
 | Checkout | One more Blow-dry | shows "2 in the basket" |
 | Checkout | Cash | already selected |
 | Checkout | Card | selects it |
-| Checkout | Wallet | selects it |
+| Checkout | Wallet | shows "Aisha E2E" |
 | Checkout | Split | shows "Left to allocate: AED 80.00" |
 | Checkout | Save sale · AED 80.00 | shows "Nothing added yet" |
 | Checkout | Close | updates the screen |
 | Customers | New | opens /customers/form |
-| Customers | Sweep Customer | opens /customers/39040ebd-0681-404b-8957-4a21c7dc6b4c |
+| Customers | Sweep Customer | opens /customers/1d7c69cb-4278-4fe5-9ca4-ec4c8531188e |
 | Customers | Home | opens / |
 | Customers | Queue | opens /queue |
 | Customers | Sale | opens /sale |
@@ -271,11 +273,11 @@
 | Categories | Spa & massage | shows "Edit category" |
 | Categories | Bridal | shows "Edit category" |
 | Sales | Back | opens /more |
-| Sales | Sale #1002 | opens /sales/6ffe9a5d-5feb-4f64-8787-830a397aa462 |
-| Sales | Sale #1001 | opens /sales/f37d46a6-cf5a-46c9-9252-a18a638c1a62 |
+| Sales | Sale #1002 | opens /sales/ec1e0d9c-f2b1-4317-868f-08c9980552c0 |
+| Sales | Sale #1001 | opens /sales/635ed5e1-b40b-4699-a2db-4741fff81e3d |
 | Sale detail | Back | opens /sales |
-| Sale detail | Print receipt | prints the receipt ("E2E ladies mvp7h7ljo7nv") |
-| Sale detail | Send on WhatsApp | opens api.whatsapp.com in a new tab |
+| Sale detail | Print receipt | prints the receipt ("E2E ladies mvs0kio0gwg2") |
+| Sale detail | Send on WhatsApp | opens wa.me in a new tab |
 | Sale detail | Refund | shows "Refund sale #1001" |
 | Branch settings | Back | opens /more |
 | Branch settings | Gents salon Barber shops and gents salons | shows "Switch to Gents salon" |
@@ -304,7 +306,7 @@
 | Expenses | New | opens /expenses/new |
 | Expenses | Previous month | shows "September 2026" |
 | Expenses | Next month | shows "November 2026" |
-| Expenses | Tea & Food | opens /expenses/c1828dff-3ee1-4541-b843-8a42633174fe |
+| Expenses | Tea & Food | opens /expenses/fa4a1fe1-2d98-4171-9adc-711a8790b907 |
 | New expense | Back | opens /expenses |
 | New expense | Tea & Food | selects it |
 | New expense | Electricity | selects it |
@@ -326,8 +328,6 @@
 | New expense | Cash | already selected |
 | New expense | Card | shows "Paid from the bank; the drawer is not affected." |
 | New expense | Bank transfer | shows "Paid from the bank; the drawer is not affected." |
-| New expense | Tuesday 13 October | selects it |
-| New expense | Wednesday 14 October | selects it |
 | New expense | Thursday 15 October | selects it |
 | New expense | Friday 16 October | selects it |
 | New expense | Saturday 17 October | selects it |
@@ -339,7 +339,9 @@
 | New expense | Friday 23 October | selects it |
 | New expense | Saturday 24 October | selects it |
 | New expense | Sunday 25 October | selects it |
-| New expense | Monday 26 October | already selected |
+| New expense | Monday 26 October | selects it |
+| New expense | Tuesday 27 October | selects it |
+| New expense | Wednesday 28 October | already selected |
 | New expense | Choose photo | opens the photo picker |
 | New expense | Save expense | disabled until the form is valid / state allows |
 | Expense detail | Back | opens /expenses |
@@ -349,12 +351,10 @@
 | Purchases | New bill | opens /purchases/new |
 | Purchases | Bills | already selected |
 | Purchases | Suppliers | shows "New supplier" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/c63b6071-ad91-4844-873e-b910dd78db5d |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/fbffea34-1bd2-48ab-923f-d703ef345e5c |
 | New bill | Back | opens /purchases |
 | New bill | Sweep Supplier | selects it |
 | New bill | New supplier | shows "Supplier name" |
-| New bill | Tuesday 13 October | selects it |
-| New bill | Wednesday 14 October | selects it |
 | New bill | Thursday 15 October | selects it |
 | New bill | Friday 16 October | selects it |
 | New bill | Saturday 17 October | selects it |
@@ -366,7 +366,9 @@
 | New bill | Friday 23 October | selects it |
 | New bill | Saturday 24 October | selects it |
 | New bill | Sunday 25 October | selects it |
-| New bill | Monday 26 October | already selected |
+| New bill | Monday 26 October | selects it |
+| New bill | Tuesday 27 October | selects it |
+| New bill | Wednesday 28 October | already selected |
 | New bill | Credit | already selected |
 | New bill | Cash | shows "Paid now: recorded as a payment to the supplier." |
 | New bill | Card | shows "Paid now: recorded as a payment to the supplier." |
@@ -377,15 +379,16 @@
 | New bill | Save bill · AED 0.00 | disabled until the form is valid / state allows |
 | Bill detail | Back | opens /purchases |
 | Bill detail | Choose photo | opens the photo picker |
-| Bill detail | Print / PDF | prints the receipt ("E2E ladies mvp7h7ljo7nv") |
+| Bill detail | Print / PDF | prints the receipt ("E2E ladies mvs0kio0gwg2") |
 | Bill detail | Pay supplier | shows "AED 30.00 left to pay." |
 | Bill detail | Reverse bill | shows "Only unpaid bills can be reversed. Stock it added " |
 | Cash closing | Back | opens /more |
+| Cash closing | Add cash | shows "Add cash to the drawer" |
 | Cash closing | Count notes & coins | shows "Notes & coins" |
-| Cash closing | Owner o7nv | already selected |
+| Cash closing | Owner gwg2 | already selected |
 | Cash closing | Save draft | shows "Draft" |
 | Cash closing | Approve closing | disabled until the form is valid / state allows |
-| Cash closing | Mon 26 Oct | opens /cash-closing/2026-10-26 |
+| Cash closing | Wed 28 Oct | opens /cash-closing/2026-10-28 |
 | Inventory | Back | opens /more |
 | Inventory | Add item | opens /inventory/form |
 | Inventory | All | already selected |
@@ -396,19 +399,19 @@
 | Inventory | Stock count | opens /inventory/count |
 | Inventory | Opening stock | opens /inventory/opening |
 | Inventory | Order | opens /purchases/new |
-| Inventory | Black soap | opens /inventory/a6f45ba4-4f25-4bf8-9e7b-41b522743c4e |
-| Inventory | Developer 20 Vol | opens /inventory/2a563282-16fa-4f57-91aa-1891c7e5fb9c |
-| Inventory | Face masks | opens /inventory/bbcbaac8-179f-4063-ab78-570c131f6a39 |
-| Inventory | Gel polish | opens /inventory/a73b0fc0-f46d-4ef7-bb21-fbfcd558a460 |
-| Inventory | Gloves | opens /inventory/40ba250a-814c-49ff-85f7-528203219182 |
-| Inventory | Hair Color | opens /inventory/2994c44b-bb82-4244-a65e-14ff92c98d37 |
-| Inventory | Heat spray | opens /inventory/8039a8c7-4af6-4aa6-a063-13208d7597f3 |
-| Inventory | Massage oil | opens /inventory/0916250c-e83d-40f1-b745-5918c4d340c5 |
-| Inventory | Nail polish | opens /inventory/f087dd67-720b-47c6-9fcb-6e677d5dbc8a |
-| Inventory | Styling cream | opens /inventory/e18ffd12-8bb5-4db9-9f2d-2b13550b8ed0 |
-| Inventory | Sweep Oil | opens /inventory/409ca64f-0009-44c8-834a-e25059516edc |
-| Inventory | Thread | opens /inventory/6695aa99-99a0-46af-8e70-711aa30af6b6 |
-| Inventory | Wax | opens /inventory/ace92671-d736-4fb1-a058-58ee600a1485 |
+| Inventory | Black soap | opens /inventory/615996c7-ea8b-425b-babf-41688311f02d |
+| Inventory | Developer 20 Vol | opens /inventory/8e364a6d-5e6f-4fa7-a02e-f937c8306654 |
+| Inventory | Face masks | opens /inventory/21fc0fef-28e0-4d97-97a0-639c765db416 |
+| Inventory | Gel polish | opens /inventory/bdbfb768-468c-4de2-b6f2-f6981c9f1c68 |
+| Inventory | Gloves | opens /inventory/16e00df8-b2d3-4371-80d2-253abce23028 |
+| Inventory | Hair Color | opens /inventory/f520f24b-a990-409f-9c5d-db58d2fee275 |
+| Inventory | Heat spray | opens /inventory/1f11db9b-0310-4a74-8241-025009b12d89 |
+| Inventory | Massage oil | opens /inventory/4c125b69-63b7-4c0c-bc84-a7c554e18b6f |
+| Inventory | Nail polish | opens /inventory/6f0d48a2-4f02-4fa0-9627-c47ac37ab3ac |
+| Inventory | Styling cream | opens /inventory/e252118a-7972-4ab1-a4ea-479ecb559cba |
+| Inventory | Sweep Oil | opens /inventory/d9838030-3495-493f-93aa-1ca39d1b328d |
+| Inventory | Thread | opens /inventory/eb368c3a-a38e-4f3d-8967-e83dec4766dd |
+| Inventory | Wax | opens /inventory/a5940fdf-a6e1-46e0-aa08-ab15dd578e84 |
 | Item detail | Back | opens /inventory |
 | Item detail | Adjust stock | shows "On hand now: 5 pc. Every change needs a reason." |
 | Item detail | Edit | opens /inventory/form |

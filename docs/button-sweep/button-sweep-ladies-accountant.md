@@ -2,7 +2,7 @@
 
 | Screen | Button | Result |
 |---|---|---|
-| Home | Refresh app | opens /notifications |
+| Home | Refresh app | updates the screen |
 | Home | Notifications, 0 unread | opens /notifications |
 | Home | Stock | opens /inventory |
 | Home | Cash closing | opens /cash-closing |
@@ -21,7 +21,7 @@
 | Reports tab | Previous month | shows "September 2026" |
 | Reports tab | Next month | shows "November 2026" |
 | Reports tab | Print / PDF | prints the receipt ("Monthly business") |
-| Reports tab | Export CSV | downloads e2e-ladies-mvp8b9kufetc-monthly-2026-10.csv |
+| Reports tab | Export CSV | downloads e2e-ladies-mvs1hlphxd8r-monthly-2026-10.csv |
 | Reports tab | Home | opens / |
 | Reports tab | Reports | already selected |
 | Reports tab | Accounting | opens /accounts-tab |
@@ -37,7 +37,7 @@
 | Reports · customers | Previous month | shows "September 2026" |
 | Reports · customers | Next month | shows "November 2026" |
 | Reports · customers | Print / PDF | prints the receipt ("Customer list") |
-| Reports · customers | Export CSV | downloads e2e-ladies-mvp8b9kufetc-customers-2026-10.csv |
+| Reports · customers | Export CSV | downloads e2e-ladies-mvs1hlphxd8r-customers-2026-10.csv |
 | Accounting tab | Months | opens /accounts/close-period |
 | Accounting tab | Overview | already selected |
 | Accounting tab | Journal | shows "Opening stock" |
@@ -50,7 +50,7 @@
 | Accounting tab | Accounting | already selected |
 | Accounting tab | More | opens /more |
 | Close month | Back | opens /accounts |
-| Close month | Export ledger CSV | downloads e2e-ladies-mvp8b9kufetc-ledger.csv |
+| Close month | Export ledger CSV | downloads e2e-ladies-mvs1hlphxd8r-ledger.csv |
 | More | Edit profile | opens /profile |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
@@ -76,15 +76,15 @@
 | Expenses | Back | opens /more |
 | Expenses | Previous month | shows "September 2026" |
 | Expenses | Next month | shows "November 2026" |
-| Expenses | Tea & Food | opens /expenses/0ae89fe4-3142-4de9-ab8f-c0794ee839b2 |
+| Expenses | Tea & Food | opens /expenses/03614c7d-ab75-4f29-86bf-b9d5bea05b06 |
 | Purchases | Back | opens /more |
 | Purchases | Bills | already selected |
 | Purchases | Suppliers | shows "30 days to pay" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/c6cd7d23-aaca-4aaa-aba1-b1c8dc73ed4f |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/32a60216-4ac6-426a-99fb-08e93649e16f |
 | Staff | Back | opens /more |
 | Staff | Attendance | opens /attendance |
 | Staff | Payroll | opens /payroll |
-| Staff | Aisha E2E | opens /staff/f0083adb-4953-44a2-bd78-ea69a32cb2c9 |
+| Staff | Aisha E2E | opens /staff/1d17f226-2922-4b70-b98a-5d450731f94c |
 | Payroll | Back | opens /more |
 | Payroll | Previous month | shows "September 2026" |
 | Payroll | Next month | shows "November 2026" |

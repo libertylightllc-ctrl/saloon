@@ -2,7 +2,7 @@
 
 | Screen | Button | Result |
 |---|---|---|
-| Home | Refresh app | opens /notifications |
+| Home | Refresh app | updates the screen |
 | Home | Notifications, 0 unread | opens /notifications |
 | Home | Cash closing | opens /cash-closing |
 | Home | Stock | opens /inventory |
@@ -21,7 +21,7 @@
 | Reports tab | Previous month | shows "September 2026" |
 | Reports tab | Next month | shows "November 2026" |
 | Reports tab | Print / PDF | prints the receipt ("Monthly business") |
-| Reports tab | Export CSV | downloads e2e-gents-mvp7b5ltfhk8-monthly-2026-10.csv |
+| Reports tab | Export CSV | downloads e2e-gents-mvs05kd9t25x-monthly-2026-10.csv |
 | Reports tab | Home | opens / |
 | Reports tab | Reports | already selected |
 | Reports tab | Accounting | opens /accounts-tab |
@@ -31,13 +31,13 @@
 | Reports · customers | Staff sales | shows "Sales" |
 | Reports · customers | Daily closing | shows "Days closed" |
 | Reports · customers | Stock movement | shows "Items" |
-| Reports · customers | Cash shortage | shows "Short days" |
+| Reports · customers | Cash shortage | shows "Owner control summary" |
 | Reports · customers | Customer list | already selected |
 | Reports · customers | VAT | shows "VAT collected" |
 | Reports · customers | Previous month | shows "September 2026" |
 | Reports · customers | Next month | shows "November 2026" |
 | Reports · customers | Print / PDF | prints the receipt ("Customer list") |
-| Reports · customers | Export CSV | downloads e2e-gents-mvp7b5ltfhk8-customers-2026-10.csv |
+| Reports · customers | Export CSV | downloads e2e-gents-mvs05kd9t25x-customers-2026-10.csv |
 | Accounting tab | Months | opens /accounts/close-period |
 | Accounting tab | Overview | already selected |
 | Accounting tab | Journal | shows "Opening stock" |
@@ -50,7 +50,7 @@
 | Accounting tab | Accounting | already selected |
 | Accounting tab | More | opens /more |
 | Close month | Back | opens /accounts |
-| Close month | Export ledger CSV | downloads e2e-gents-mvp7b5ltfhk8-ledger.csv |
+| Close month | Export ledger CSV | downloads e2e-gents-mvs05kd9t25x-ledger.csv |
 | More | Edit profile | opens /profile |
 | More | Services | opens /services |
 | More | Inventory & tools | opens /inventory |
@@ -64,7 +64,7 @@
 | More | Attendance | opens /attendance |
 | More | Plan & billing | opens /plan |
 | More | Language, English | shows "العربية" |
-| More | Refresh app | opens /notifications |
+| More | Refresh app | updates the screen |
 | More | Quick-switch PIN | shows "On a shared counter phone, switch back to yourself" |
 | More | Sign out | covered by flow 9 |
 | More | Help & support | opens /support |
@@ -76,15 +76,15 @@
 | Expenses | Back | opens /more |
 | Expenses | Previous month | shows "September 2026" |
 | Expenses | Next month | shows "November 2026" |
-| Expenses | Tea & Food | opens /expenses/b9192d2b-2aff-4739-b208-33d55cc01acc |
+| Expenses | Tea & Food | opens /expenses/4e33ff1e-52ba-41e2-a803-2037fdb79dce |
 | Purchases | Back | opens /more |
 | Purchases | Bills | already selected |
-| Purchases | Suppliers | shows "30 days to pay" |
-| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/d12ef35e-8486-4dc7-9bee-a5f129e855f3 |
+| Purchases | Suppliers | shows "Owed to suppliers" |
+| Purchases | PUR-00001 · Sweep Supplier | opens /purchases/9d90e6db-e930-446b-b905-1b01706a0f10 |
 | Staff | Back | opens /more |
 | Staff | Attendance | opens /attendance |
 | Staff | Payroll | opens /payroll |
-| Staff | Rafiq E2E | opens /staff/387cee06-e8b0-4fe3-8fd0-cbbb2c73c66b |
+| Staff | Rafiq E2E | opens /staff/b3af28e7-561a-4fdd-a365-3e494eea63fa |
 | Payroll | Back | opens /more |
 | Payroll | Previous month | shows "September 2026" |
 | Payroll | Next month | shows "November 2026" |

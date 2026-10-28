@@ -14,10 +14,10 @@
 | Staff | Add staff | opens /staff/form |
 | Staff | Attendance | opens /attendance |
 | Staff | Payroll | opens /payroll |
-| Staff | Aisha E2E | opens /staff/0579ce32-4c69-40d9-945a-930e6924acad |
+| Staff | Aisha E2E | opens /staff/47a79627-fb03-4538-beb8-2ceaa76f281a |
 | Staff profile | Back | opens /staff |
 | Staff profile | Edit | opens /staff/form |
-| Staff profile | Password & sign-in | shows "Staff · @staf1f955n" |
+| Staff profile | Password & sign-in | shows "Staff · @staf9izv4x" |
 | Staff profile | Remove from staff | shows "Remove Aisha E2E?" |
 | Staff form | Back | opens /staff |
 | Staff form | Stylist | already selected |
@@ -26,8 +26,6 @@
 | Staff form | Manager | selects it |
 | Staff form | Save | shows "Staff saved" |
 | Attendance | Back | opens /more |
-| Attendance | Tuesday 13 October | shows "Tuesday 13 October" |
-| Attendance | Wednesday 14 October | shows "Wednesday 14 October" |
 | Attendance | Thursday 15 October | shows "Thursday 15 October" |
 | Attendance | Friday 16 October | shows "Friday 16 October" |
 | Attendance | Saturday 17 October | shows "Saturday 17 October" |
@@ -39,7 +37,9 @@
 | Attendance | Friday 23 October | shows "Friday 23 October" |
 | Attendance | Saturday 24 October | shows "Saturday 24 October" |
 | Attendance | Sunday 25 October | shows "Sunday 25 October" |
-| Attendance | Monday 26 October | already selected |
+| Attendance | Monday 26 October | shows "Monday 26 October" |
+| Attendance | Tuesday 27 October | shows "Tuesday 27 October" |
+| Attendance | Wednesday 28 October | already selected |
 | Attendance | Clock in | shows "Attendance · Aisha E2E" |
 | Payroll | Back | opens /more |
 | Payroll | Bonuses & advances | opens /payroll/adjustments |
@@ -73,18 +73,18 @@
 | Compliance · binder | Inspection binder | already selected |
 | Compliance · binder | Hygiene log | shows "Today's checklist" |
 | Compliance · binder | WPS & Montaji | shows "No paid payroll month yet." |
-| Compliance · binder | Export PDF | prints the receipt ("Inspection binder — E2E ladies mvp7hretc") |
+| Compliance · binder | Export PDF | prints the receipt ("Inspection binder — E2E ladies mvs0y9yo3") |
 | Compliance · hygiene | Back | opens /more |
 | Compliance · hygiene | Expiry register | shows "Inspection readiness" |
 | Compliance · hygiene | Inspection binder | shows "Show this to an inspector, or export it as a PDF." |
 | Compliance · hygiene | Hygiene log | already selected |
 | Compliance · hygiene | WPS & Montaji | shows "No paid payroll month yet." |
 | Compliance · hygiene | Choose photo | opens the photo picker |
-| Compliance · hygiene | Sign the log | shows "Signed by Owner cqic" |
+| Compliance · hygiene | Sign the log | shows "Signed by Owner 3f6k" |
 | Compliance · WPS & Montaji | Back | opens /more |
 | Compliance · WPS & Montaji | Expiry register | shows "Inspection readiness" |
 | Compliance · WPS & Montaji | Inspection binder | shows "Show this to an inspector, or export it as a PDF." |
-| Compliance · WPS & Montaji | Hygiene log | shows "Signed by Owner cqic" |
+| Compliance · WPS & Montaji | Hygiene log | shows "Signed by Owner 3f6k" |
 | Compliance · WPS & Montaji | WPS & Montaji | already selected |
 | Compliance · WPS & Montaji | Black soap | opens /inventory/form |
 | Compliance · WPS & Montaji | Developer 20 Vol | opens /inventory/form |
@@ -116,7 +116,7 @@
 | Reports | Previous month | shows "September 2026" |
 | Reports | Next month | shows "November 2026" |
 | Reports | Print / PDF | prints the receipt ("Monthly business") |
-| Reports | Export CSV | downloads e2e-ladies-mvp7hretcqic-monthly-2026-10.csv |
+| Reports | Export CSV | downloads e2e-ladies-mvs0y9yo3f6k-monthly-2026-10.csv |
 | Reports · staff sales | Back | opens / |
 | Reports · staff sales | Monthly business | shows "AED 80.00" |
 | Reports · staff sales | Staff sales | already selected |
@@ -128,7 +128,7 @@
 | Reports · staff sales | Previous month | shows "September 2026" |
 | Reports · staff sales | Next month | shows "November 2026" |
 | Reports · staff sales | Print / PDF | prints the receipt ("Staff sales") |
-| Reports · staff sales | Export CSV | downloads e2e-ladies-mvp7hretcqic-staff-2026-10.csv |
+| Reports · staff sales | Export CSV | downloads e2e-ladies-mvs0y9yo3f6k-staff-2026-10.csv |
 | Reports · daily closing | Back | opens / |
 | Reports · daily closing | Monthly business | shows "Sales" |
 | Reports · daily closing | Staff sales | shows "Sales" |
@@ -140,7 +140,7 @@
 | Reports · daily closing | Previous month | shows "September 2026" |
 | Reports · daily closing | Next month | shows "November 2026" |
 | Reports · daily closing | Print / PDF | prints the receipt ("Daily closing") |
-| Reports · daily closing | Export CSV | downloads e2e-ladies-mvp7hretcqic-closing-2026-10.csv |
+| Reports · daily closing | Export CSV | downloads e2e-ladies-mvs0y9yo3f6k-closing-2026-10.csv |
 | Reports · stock | Back | opens / |
 | Reports · stock | Monthly business | shows "Sales" |
 | Reports · stock | Staff sales | shows "Sales" |
@@ -152,7 +152,7 @@
 | Reports · stock | Previous month | shows "September 2026" |
 | Reports · stock | Next month | shows "November 2026" |
 | Reports · stock | Print / PDF | prints the receipt ("Stock movement") |
-| Reports · stock | Export CSV | downloads e2e-ladies-mvp7hretcqic-stock-2026-10.csv |
+| Reports · stock | Export CSV | downloads e2e-ladies-mvs0y9yo3f6k-stock-2026-10.csv |
 | Reports · cash shortage | Back | opens / |
 | Reports · cash shortage | Monthly business | shows "Sales" |
 | Reports · cash shortage | Staff sales | shows "Sales" |
@@ -164,7 +164,7 @@
 | Reports · cash shortage | Previous month | shows "September 2026" |
 | Reports · cash shortage | Next month | shows "November 2026" |
 | Reports · cash shortage | Print / PDF | prints the receipt ("Cash shortage") |
-| Reports · cash shortage | Export CSV | downloads e2e-ladies-mvp7hretcqic-shortages-2026-10.csv |
+| Reports · cash shortage | Export CSV | downloads e2e-ladies-mvs0y9yo3f6k-shortages-2026-10.csv |
 | Reports · customers | Back | opens / |
 | Reports · customers | Monthly business | shows "Sales" |
 | Reports · customers | Staff sales | shows "Sales" |
@@ -176,7 +176,7 @@
 | Reports · customers | Previous month | shows "September 2026" |
 | Reports · customers | Next month | shows "November 2026" |
 | Reports · customers | Print / PDF | prints the receipt ("Customer list") |
-| Reports · customers | Export CSV | downloads e2e-ladies-mvp7hretcqic-customers-2026-10.csv |
+| Reports · customers | Export CSV | downloads e2e-ladies-mvs0y9yo3f6k-customers-2026-10.csv |
 | Reports · VAT | Back | opens / |
 | Reports · VAT | Monthly business | shows "AED 80.00" |
 | Reports · VAT | Staff sales | shows "Services" |
@@ -188,9 +188,9 @@
 | Reports · VAT | Previous month | shows "September 2026" |
 | Reports · VAT | Next month | shows "November 2026" |
 | Reports · VAT | Print / PDF | prints the receipt ("VAT") |
-| Reports · VAT | Export CSV | downloads e2e-ladies-mvp7hretcqic-vat-2026-10.csv |
+| Reports · VAT | Export CSV | downloads e2e-ladies-mvs0y9yo3f6k-vat-2026-10.csv |
 | Close month | Back | opens /accounts |
-| Close month | Export ledger CSV | downloads e2e-ladies-mvp7hretcqic-ledger.csv |
+| Close month | Export ledger CSV | downloads e2e-ladies-mvs0y9yo3f6k-ledger.csv |
 | Backup & recovery | Back | opens /more |
 | Backup & recovery | Download backup (ZIP) | updates the screen |
 | Plan & billing | Back | opens / |
@@ -198,7 +198,7 @@
 | Plan & billing | 6 months | shows "Total: AED 270.00" |
 | Plan & billing | 12 months | shows "Total: AED 500.00" |
 | Plan & billing | Pay by card | opens buy.stripe.com in a new tab |
-| Plan & billing | Ask to add months | shows "You asked for 1 month(s) on 26 Oct 2026. It switch" |
+| Plan & billing | Ask to add months | shows "You asked for 1 month on 28 Oct 2026. It switches " |
 | Plan & billing | Have a pilot code? | shows "Join the pilot with your code" |
 | Privacy policy | Back | opens / |
 | Privacy policy | Terms of use | opens /terms |
