@@ -2767,7 +2767,9 @@
       "close": "Close this salon",
       "closeHint": "Every login of this salon is switched off and its plan ends. Nothing is deleted: its records stay, and a platform owner among its logins keeps this console.",
       "closeReason": "Reason (needed)",
-      "closedToast": "{{name}} closed"
+      "closedToast": "{{name}} closed",
+      "showing": "Showing {{shown}} of {{total}}",
+      "showMore": "Show more"
     },
     "accounts": {
       "title": "Accounts ({{count}})",

@@ -45,6 +45,8 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   await tab(office, 'more');
   await id(office, 'more-admin').click();
   await id(office, 'console-tab-salons').click();
+  // The list draws 50 salons at a time; search finds this one wherever it is.
+  await id(office, 'console-salon-search').fill(owner.code);
   await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Paying by bank transfer');
   await id(office, `admin-salon-${owner.code}`).click();
   // 6 months at 10% off: AED 50 × 5.4.

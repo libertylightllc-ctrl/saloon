@@ -29,6 +29,8 @@ import { AccessForm, accessLabel } from './AccessForm';
 import { useCloseSalon, useSalonStats } from './api';
 
 const MONTHS = [1, 6, 12] as const;
+// Salons drawn at a time: hundreds of rows at once made the tab slow (owner's fix list #12). Search covers them all.
+const PAGE = 50;
 
 /** Every salon: owner, plan and request, and what it does — staff, customers, sales, last activity. */
 export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name: string }) => void }) {
@@ -38,17 +40,28 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
   const stats = useSalonStats();
   const [open, setOpen] = useState<AdminSalon | null>(null);
   const [search, setSearch] = useState('');
+  const [shown, setShown] = useState(PAGE);
   const q = search.trim().toLowerCase();
+  const onSearch = (v: string) => {
+    setSearch(v);
+    setShown(PAGE);
+  };
 
   return (
     <>
-      <SearchBar value={search} onChangeText={setSearch} placeholder={t('console.salons.search')} testID="console-salon-search" />
+      <SearchBar value={search} onChangeText={onSearch} placeholder={t('console.salons.search')} testID="console-salon-search" />
+      {stats.isError ? (
+        <View style={styles.more}>
+          <FormError error={stats.error} testID="console-stats-error" />
+          <Button label={t('common.retry')} variant="secondary" size="md" onPress={() => void stats.refetch()} testID="console-stats-retry" />
+        </View>
+      ) : null}
       <QueryState query={salons} isEmpty={(rows) => rows.length === 0} empty={<EmptyState illustration="no-results" message={t('admin.empty')} />}>
-        {(rows) => (
-          <View style={styles.list}>
-            {rows
-              .filter((s) => !q || [s.name, s.code, s.owner_name, s.owner_email].some((v) => v?.toLowerCase().includes(q)))
-              .map((s) => {
+        {(rows) => {
+          const matches = rows.filter((s) => !q || [s.name, s.code, s.owner_name, s.owner_email].some((v) => v?.toLowerCase().includes(q)));
+          return (
+            <View style={styles.list}>
+              {matches.slice(0, shown).map((s) => {
                 const st = stats.data?.get(s.business_id);
                 const currency = st && isCurrency(st.currency) ? st.currency : undefined;
                 return (
@@ -92,8 +105,17 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                   />
                 );
               })}
-          </View>
-        )}
+              {matches.length > shown ? (
+                <View style={styles.more}>
+                  <Text variant="small" color="textSecondary" tabular testID="console-salons-showing">
+                    {t('console.salons.showing', { shown, total: matches.length })}
+                  </Text>
+                  <Button label={t('console.salons.showMore')} variant="secondary" size="md" onPress={() => setShown((n) => n + PAGE)} testID="console-salons-more" />
+                </View>
+              ) : null}
+            </View>
+          );
+        }}
       </QueryState>
       <BottomSheet open={open !== null} onClose={() => setOpen(null)} title={open?.name ?? ''}>
         {open ? (
@@ -231,5 +253,6 @@ function CloseSalon({ salon, onDone }: { salon: AdminSalon; onDone: () => void }
 const styles = StyleSheet.create({
   list: { gap: spacing.sm },
   badges: { flexDirection: 'row', gap: spacing.xs, flexWrap: 'wrap' },
+  more: { gap: spacing.sm, alignItems: 'center' },
   sheet: { gap: spacing.lg },
 });

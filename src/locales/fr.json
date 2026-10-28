@@ -2768,7 +2768,9 @@
       "close": "Fermer ce salon",
       "closeHint": "Tous les accès de ce salon sont désactivés et son abonnement prend fin. Rien n’est supprimé : ses données restent, et un propriétaire de la plateforme parmi ses accès garde cette console.",
       "closeReason": "Motif (obligatoire)",
-      "closedToast": "{{name}} fermé"
+      "closedToast": "{{name}} fermé",
+      "showing": "{{shown}} sur {{total}} affichés",
+      "showMore": "Afficher plus"
     },
     "accounts": {
       "title": "Comptes ({{count}})",

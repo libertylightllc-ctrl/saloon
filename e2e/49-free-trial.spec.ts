@@ -73,6 +73,8 @@ test('a new salon is free to start; the last 14 days are counted down; a pilot c
   await tab(office, 'more');
   await id(office, 'more-admin').click();
   await id(office, 'console-tab-salons').click();
+  // The list draws 50 salons at a time; search finds this one wherever it is.
+  await id(office, 'console-salon-search').fill(owner.code);
   await expect(id(office, `admin-salon-${owner.code}`)).toContainText('Pilot · until');
   // A new end date is picked on the calendar (the month of the current end opens), not typed.
   const { data: pilotSub } = await admin.from('subscriptions').select('free_until').eq('business_id', owner.businessId).single();

@@ -2768,7 +2768,9 @@
       "close": "Fechar este salão",
       "closeHint": "Todos os acessos deste salão são desativados e o plano termina. Nada é excluído: os registros ficam, e um proprietário da plataforma entre os acessos mantém este console.",
       "closeReason": "Motivo (obrigatório)",
-      "closedToast": "{{name}} fechado"
+      "closedToast": "{{name}} fechado",
+      "showing": "Mostrando {{shown}} de {{total}}",
+      "showMore": "Mostrar mais"
     },
     "accounts": {
       "title": "Contas ({{count}})",
