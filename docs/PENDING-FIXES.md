@@ -34,6 +34,36 @@ Found by the owner, not yet fixed. When one is fixed, move it to "Done" with the
 ### Admin (console)
 12. Salons tab is slow with many salons: it works out each salon's price, plan and counts one by one (about 3–4 ms a salon). With 667 test salons on the local database it takes 2–3 seconds, and on a busy machine more than 15 (a browser test timed out waiting for it on 27 Oct). Live has a handful of salons, so it is fine today; it needs paging or one combined query before the platform has hundreds.
 
+## Round 2 (owner's brief SALOQO_FIXES_ROUND2.md, from a check of the live site on 28 Oct 2026)
+
+### Part A — first
+13. A1 Remove the Dubai claims: "Built in Dubai…" in the hero and "Made in Dubai" in the footer, in all 7 languages. Keep "For salons in Dubai, Sharjah…". A "Made in" line or company details only when set in config.
+14. A2 FAQ "How long is it free?": the days from the settings (new salon, pilot) instead of "You'll see your free period in the app".
+15. A3 One free period everywhere: 6 Plans records still say "7-day free trial" with the old end date while the Salons tab shows the 30-day date.
+
+### Part B — homepage on phones (10,041 px tall at 390 px; target 6,500 px or less, pilot in the first 3 screens for UAE visitors)
+16. B1 Pilot right after the hero for UAE visitors.
+17. B2 Pricing cards as one swipe row on phones; "See everything included" toggle.
+18. B3 Comparison table: 3 rows on phones and "Compare all".
+19. B4 FAQ: 6 questions on phones and "More questions" (all stay in the HTML and JSON-LD).
+20. B5 WhatsApp button and footer link while the number is set; the brief's pre-filled text.
+
+### Part C — sign-up
+21. C1 No "Confirm password" on sign-up.
+22. C2 No email-confirmation wall before starting; a "Confirm your email" banner; confirmed email needed only to buy a plan (plan first, security).
+23. C3 Salon type (4 types) in the first setup step, not on sign-up.
+24. C4 Duplicate sign-ups: existing email goes to sign in; a WhatsApp number that already has a salon is asked about; the console flags likely duplicates.
+
+### Part D — public booking page
+25. D1 Per-salon link preview (title, description, a 1200×630 card with the logo).
+26. D2 The salon's logo and address line on the page.
+
+### Part E — console
+27. E1 "Test salon" switch: test salons left out of the Overview numbers and labelled "Test".
+28. E2 Changes tab with readable labels; empty states for Changes and Pilot → Applications.
+29. E3 Duplicate plan requests merged in the console.
+30. E4 "1 branch" / "2 branches" in Console → Salons, all 7 languages.
+
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.

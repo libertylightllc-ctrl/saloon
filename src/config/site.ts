@@ -7,6 +7,8 @@
  * - demoVideoUrl: YouTube, Vimeo or MP4; the video section is hidden while empty
  * - operatorName: who is responsible for Saloqo, named in "Who we are" of the privacy policy (full update, Phase 5);
  *   while empty the policy names the app only. Never a company form, licence or tax number (the owner's rule).
+ * - madeIn: e.g. "Dubai, UAE", shown as "Made in …" in the footers; empty until the company is registered (owner's
+ *   fix list round 2, A1: the site must not say where Saloqo is made before then)
  * - stats: e.g. { "value": "120+", "label": "salons" } — real numbers only
  * - testimonials: real customers only
  */

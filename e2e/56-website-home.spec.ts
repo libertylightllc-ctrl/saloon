@@ -81,7 +81,8 @@ test.describe('on a computer outside the UAE', () => {
     await expect(id(page, 'landing-sticky')).toHaveCount(0);
     await expect(id(page, 'landing-feature-staff')).toHaveText('Rosters, clock-in with late flags, commission, advances and payroll.');
     await expect(id(page, 'landing-feature-compliance')).not.toContainText('UAE');
-    await expect(id(page, 'landing-made-in')).toContainText('Made in Dubai');
+    // No "Made in …" until the company is registered (owner's fix list round 2, A1).
+    await expect(id(page, 'landing-made-in')).toHaveText(`© ${new Date().getFullYear()} Saloqo`);
     const faq = await page.evaluate(() => JSON.parse(document.getElementById('faq-jsonld')?.textContent ?? '{}'));
     expect(faq['@type']).toBe('FAQPage');
     expect(faq.mainEntity).toHaveLength(15);

@@ -149,8 +149,9 @@ ${button(c, { label: c.startLabel, href: '#types', icon: 'chevronRight', attrs: 
 
 const SOCIAL = { instagram: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube', linkedin: 'LinkedIn', facebook: 'Facebook' };
 
-/** The footer: languages, the emirates (UAE visitors), contact, legal pages, social links, AED | USD, "Made in Dubai".
- *  No licence, TRN, company name or address (full update brief: Saloqo is not yet a registered company). */
+/** The footer: languages, the emirates (UAE visitors), contact, legal pages, social links, AED | USD, "© 2026 Saloqo"
+ *  ("· Made in …" only once the config has a place). No licence, TRN, company name or address (full update brief:
+ *  Saloqo is not yet a registered company). */
 export function footer(c) {
   const t = c.t;
   const langs = LANGUAGES.map((l) => `<a href="${pathOf(l.code)}" hreflang="${l.code}" lang="${l.code}" data-lang="${l.code}"${l.code === c.lang ? ' aria-current="page"' : ''}>${esc(l.name)}</a>`).join('');
@@ -173,7 +174,7 @@ export function footer(c) {
 <p class="uae t-small center areas">${esc(t('auth.landing.uaeAreas'))}</p>
 <nav class="langs" aria-label="${esc(t('language.title'))}">${c.icon('languages', { size: 16 })}${langs}</nav>
 ${email}<nav class="links">${links}</nav>${socialHtml}${currency}
-<p class="t-small center">© ${c.year} ${esc(c.brand.appName)} · ${esc(t('auth.landing.footer.madeIn', { place: c.madeIn }))}</p>
+<p class="t-small center">© ${c.year} ${esc(c.brand.appName)}${c.madeIn ? ` · ${esc(t('auth.landing.footer.madeIn', { place: c.madeIn }))}` : ''}</p>
 </div></footer>`;
 }
 

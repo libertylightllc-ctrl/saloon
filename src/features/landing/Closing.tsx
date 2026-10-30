@@ -106,7 +106,8 @@ export function Footer() {
         </View>
       ) : null}
       <Text variant="small" color="textSecondary" align="center" testID="landing-made-in">
-        {`© ${new Date().getFullYear()} ${brand.appName} · ${t('auth.landing.footer.madeIn', { place: madeInPlace(t) })}`}
+        {`© ${new Date().getFullYear()} ${brand.appName}`}
+        {site.madeIn ? ` · ${t('auth.landing.footer.madeIn', { place: madeInPlace(t) })}` : null}
       </Text>
     </Band>
   );

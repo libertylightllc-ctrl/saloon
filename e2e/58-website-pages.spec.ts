@@ -80,6 +80,20 @@ test('search engines read the words, the price and the questions without JavaScr
   expect(sitemap).not.toContain('/sign-in');
 });
 
+// Owner's fix list round 2, A1: the company is not registered yet, so no page says where Saloqo is made; who it
+// serves ("For salons in Dubai, Sharjah…") stays.
+test('no page in any language says where Saloqo is made', async ({ request }) => {
+  const made = ['Built in Dubai', 'Made in', 'صُنع في', 'दुबई में बना', 'में बनाया गया', 'دبئی میں بنی', 'میں بنایا گیا', 'Hecha en Dubái', 'Hecho en', 'Conçue à Dubaï', 'Conçu à Dubaï', 'Feito em'];
+  for (const path of ['/', '/ar', '/hi', '/ur', '/es', '/fr', '/pt']) {
+    const html = await (await request.get(`${site}${path}`)).text();
+    for (const words of made) expect(html, `${path}: ${words}`).not.toContain(words);
+    expect(html, path).toContain(`<p class="t-small center">© ${new Date().getFullYear()} Saloqo</p>`);
+  }
+  const en = await (await request.get(`${site}/`)).text();
+  expect(en).toContain('in 7 languages. For barber shops, salons and spas.');
+  expect(en).toContain('For salons in Dubai, Sharjah, Abu Dhabi, Ajman, Ras Al Khaimah, Fujairah, Umm Al Quwain and Al Ain.');
+});
+
 test('every page of the app opens; any other address is a real "not found"; contact, privacy and terms have their titles', async ({ request }) => {
   // Every screen in app/ (the build stops if vercel.json misses one), as a visitor without the signed-in cookie.
   const routes: string[] = JSON.parse(
