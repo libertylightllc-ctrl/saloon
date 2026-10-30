@@ -1,7 +1,8 @@
 /**
  * The home page on a phone (owner's fix list round 2, Part B, from a check of the live site on 28 Oct 2026: 10,041 px
  * tall at 390 px wide, the pilot form starting at 6,575 px). The pilot right after the hero for UAE visitors; the plans
- * in one sideways row and every feature behind a button (computers keep the page as it was).
+ * in one sideways row and every feature behind a button; three comparison rows, the rest behind a button (computers
+ * keep the page as it was).
  */
 import { expect, test } from './support/fixtures';
 import { useSite } from './support/site';
@@ -54,20 +55,34 @@ test.describe('on a phone in the UAE', () => {
     // The calculator stays.
     await expect(page.locator('[data-calc-form]')).toBeVisible();
   });
+
+  test('B3: the comparison shows booking commission, each extra branch and daily cash closing, then "Compare all"', async ({ page }) => {
+    await page.goto(`${site()}/`);
+    const rows = page.locator('section.compare tbody tr');
+    await expect(rows).toHaveCount(7);
+    await expect(rows.filter({ visible: true }).locator('th')).toHaveText(['Each extra branch', 'Booking commission', 'Daily cash closing']);
+    const button = page.locator('[data-more-btn="compare"]');
+    await expect(button).toHaveText('Compare all');
+    await button.click();
+    await expect(rows.filter({ visible: true })).toHaveCount(7);
+    await expect(button).toHaveText('Show less');
+  });
 });
 
 test.describe('on a computer in the UAE', () => {
   test.use({ viewport: { width: 1280, height: 800 }, timezoneId: 'Asia/Dubai' });
 
-  test('B2: as before: the three plans side by side, every feature listed, no button', async ({ page }) => {
+  test('B2, B3: as before: the three plans side by side, every feature and comparison row, no buttons', async ({ page }) => {
     await page.goto(`${site()}/`);
     const [one, twelve] = [await page.getByTestId('plan-1').boundingBox(), await page.getByTestId('plan-12').boundingBox()];
     expect(twelve!.y).toBe(one!.y);
     expect(twelve!.x + twelve!.width).toBeLessThan(1280);
     await expect(page.locator('#pricing .feature-list')).toBeVisible();
     await expect(page.locator('#pricing .dots')).toBeHidden();
-    await expect(page.locator('[data-more-btn]')).toHaveCount(1);
-    await expect(page.locator('[data-more-btn]')).toBeHidden();
+    // B3: every comparison row, no buttons.
+    await expect(page.locator('section.compare tbody tr').filter({ visible: true })).toHaveCount(7);
+    await expect(page.locator('[data-more-btn]')).toHaveCount(2);
+    for (const button of await page.locator('[data-more-btn]').all()) await expect(button).toBeHidden();
   });
 });
 
