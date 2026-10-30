@@ -924,6 +924,12 @@
           "tooMany": "Trop de candidatures d’ici. Réessayez dans une heure.",
           "full": "Le pilote est complet. Vous pouvez quand même essayer Saloqo gratuitement."
         }
+      },
+      "more": {
+        "included": "Voir tout ce qui est inclus",
+        "compare": "Tout comparer",
+        "questions": "Plus de questions",
+        "less": "Afficher moins"
       }
     },
     "google": {

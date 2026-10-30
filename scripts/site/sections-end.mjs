@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 
 import { pilotUnderPlans } from './pilot.mjs';
 import { phone } from './shots.mjs';
-import { button } from './sections-top.mjs';
+import { button, dots, moreButton } from './sections-top.mjs';
 import { esc, LANGUAGES, pathOf } from './text.mjs';
 
 const external = ' target="_blank" rel="noopener noreferrer"';
@@ -69,6 +69,8 @@ const MULTI = JSON.parse(readFileSync(new URL('../../src/config/pricing.json', i
 
 const FEATURES = ['queue', 'bookingPage', 'sale', 'closing', 'roles', 'payroll', 'stock', 'reminders', 'books', ...(MULTI ? ['branches'] : []), 'languages'];
 
+/** Price: the three billing lengths (one sideways row on a phone, owner's fix list round 2, B2), the per-day line,
+ *  every feature (behind "See everything included" on a phone) and the price calculator. */
 export function pricing(c) {
   if (!c.prices) return '';
   const t = c.t;
@@ -83,12 +85,12 @@ export function pricing(c) {
   return `<section class="band navy pricing" id="pricing"><div class="backdrop glow-pricing"></div><div class="inner stack center-items">
 <h2 class="t-section center">${esc(t('auth.landing.pricing.title'))}</h2>
 <p class="t-h3 teal center" data-testid="landing-trial">${esc(t('auth.landing.pricing.trial'))}</p>
-<div class="plans">${c.prices.uae.lengths.map((_, i) => planCard(c, i)).join('')}</div>
+<div class="swipe-wrap plans-wrap"><div class="plans swipe" data-swipe>${c.prices.uae.lengths.map((_, i) => planCard(c, i)).join('')}</div>${dots(c.prices.uae.lengths.length)}</div>
 ${pilotUnderPlans(c)}
 <p class="strong teal center" data-testid="landing-per-day">${both(c, (p) => t('auth.landing.pricing.perDay', { price: p.perDay }))}</p>
-<div class="every-plan"><h3 class="t-h3 center">${esc(t('auth.landing.pricing.everyPlan'))}</h3>
-<ul class="feature-list">${FEATURES.map((k) => `<li>${tick}<span>${feature(k)}</span></li>`).join('')}</ul>
-<p class="center teal-soft">${esc(t('auth.landing.pricing.inEveryPlan'))}</p></div>
+<div class="every-plan" data-more><div class="every-list more-extra"><h3 class="t-h3 center">${esc(t('auth.landing.pricing.everyPlan'))}</h3>
+<ul class="feature-list">${FEATURES.map((k) => `<li>${tick}<span>${feature(k)}</span></li>`).join('')}</ul></div>
+<p class="center teal-soft">${esc(t('auth.landing.pricing.inEveryPlan'))}</p>${moreButton(c, 'included')}</div>
 <form class="calc" data-calc-form aria-labelledby="calc-title" onsubmit="return false">
 <h3 class="t-h3" id="calc-title">${esc(t('auth.landing.calc.title'))}</h3>
 <div class="calc-fields">

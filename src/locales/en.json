@@ -924,6 +924,12 @@
           "tooMany": "Too many applications from here. Try again in an hour.",
           "full": "The pilot is full. You can still try Saloqo free."
         }
+      },
+      "more": {
+        "included": "See everything included",
+        "compare": "Compare all",
+        "questions": "More questions",
+        "less": "Show less"
       }
     },
     "google": {

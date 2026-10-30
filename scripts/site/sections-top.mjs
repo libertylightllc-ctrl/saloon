@@ -17,6 +17,14 @@ export const HERO_SIZES = '(min-width: 980px) 270px, (min-width: 640px) 233px, 1
 export const button = (c, { label, href, kind = 'teal', icon, attrs = '', cls = '' }) =>
   `<a class="btn btn-${kind} ${cls}" href="${esc(href)}"${attrs}><span>${esc(label)}</span>${icon ? c.icon(icon, { size: 18, flip: icon === 'chevronRight' }) : ''}</a>`;
 
+/**
+ * "See everything included", "Compare all", "More questions" (owner's fix list round 2, B2–B4): on a phone, the parts
+ * marked `more-extra` inside the `data-more` box wait behind this button (site.css, client.js); wider screens and a
+ * page without its script show everything, and search engines read it all.
+ */
+export const moreButton = (c, key) =>
+  `<button type="button" class="more-btn" aria-expanded="false" data-more-btn="${key}" data-less="${esc(c.t('auth.landing.more.less'))}">${esc(c.t(`auth.landing.more.${key}`))}</button>`;
+
 const external = ' target="_blank" rel="noopener noreferrer"';
 
 function languageMenu(c) {
@@ -160,7 +168,7 @@ const BIG = [
 /** WPS and the UAE checklist only for visitors in the UAE (brief 2.12); `.uae` / `.intl` are switched by the script. */
 const UAE_ONLY = ['staff', 'compliance', 'sale'];
 
-const dots = (n) => `<div class="dots" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<i${i === 0 ? ' class="on"' : ''}></i>`).join('')}</div>`;
+export const dots = (n) => `<div class="dots" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<i${i === 0 ? ' class="on"' : ''}></i>`).join('')}</div>`;
 
 export function features(c) {
   const t = c.t;

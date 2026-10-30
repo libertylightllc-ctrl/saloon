@@ -1,6 +1,6 @@
 /* The home page's small script (website brief 4.1; full update brief): the visitor's currency (and the footer's
-   AED | USD switch), the price calculator, the menus, sideways rows, the video, the tour, and the hand-over to the app (salon
-   type and language, as the app stores them).
+   AED | USD switch), the price calculator, the menus, sideways rows, the phone's "show more" buttons, the video, the
+   tour, and the hand-over to the app (salon type and language, as the app stores them).
    window.SQ is written by page.mjs. Everything here is optional: the page works without it. */
 (function () {
   var SQ = window.SQ;
@@ -274,6 +274,21 @@
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') document.querySelectorAll('details.lang[open], details.menu[open]').forEach(function (d) { d.open = false; });
+  });
+
+  // "See everything included", "Compare all", "More questions" on a phone (owner's fix list round 2, B2–B4): the button
+  // shows the rest and then offers "Show less", which keeps the button on screen as the box closes.
+  document.querySelectorAll('[data-more]').forEach(function (box) {
+    var button = box.querySelector('[data-more-btn]');
+    if (!button) return;
+    var more = button.textContent;
+    button.addEventListener('click', function () {
+      var open = box.classList.toggle('open');
+      button.setAttribute('aria-expanded', String(open));
+      button.textContent = open ? button.getAttribute('data-less') : more;
+      if (open) track('more_open', { part: button.getAttribute('data-more-btn') });
+      else button.scrollIntoView({ block: 'center' });
+    });
   });
 
   // Sideways rows: the dot of the card in view.

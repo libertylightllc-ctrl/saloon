@@ -22,6 +22,7 @@ const CLIENT = readFileSync(join(here, 'client.js'), 'utf8');
 
 /**
  * Runs first, in <head>:
+ * - marks the page as having its script (`html.js`: the phone's "show more" buttons, site.css);
  * - a sign-in link (email confirmation, Google) comes back to "/" with its details in the address: on to the app,
  *   which signs the person in;
  * - someone signed in on this device goes into the app (the `sq_in` cookie tells Vercel to serve the app at "/"; once
@@ -31,7 +32,7 @@ const CLIENT = readFileSync(join(here, 'client.js'), 'utf8');
  *   /api/geo answers; the hero's largest picture in that currency's set starts loading at once;
  * - Vercel Web Analytics only on a real address (a server on this computer has no /_vercel/).
  */
-const early = (lang) => `(function(){var d=document.documentElement,s=null;try{s=localStorage}catch(e){}
+const early = (lang) => `(function(){var d=document.documentElement,s=null;d.classList.add('js');try{s=localStorage}catch(e){}
 if(/(^|[#&])(access_token|error_description|error)=/.test(location.hash)||/[?&](code|token_hash)=/.test(location.search)){location.replace('/auth-callback'+location.search+location.hash);return}
 try{if(s)for(var i=0;i<s.length;i++){if(/^sb-.+-auth-token$/.test(s.key(i))){if(!sessionStorage.getItem('sq.toApp')){sessionStorage.setItem('sq.toApp','1');document.cookie='sq_in=1; path=/; max-age=31536000; samesite=lax; secure';location.replace('/');return}break}}}catch(e){}
 var codes=${JSON.stringify(LANGUAGES.map((l) => l.code))};

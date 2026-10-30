@@ -924,6 +924,12 @@
           "tooMany": "Inscrições demais daqui. Tente de novo em uma hora.",
           "full": "O piloto está cheio. Você ainda pode experimentar o Saloqo grátis."
         }
+      },
+      "more": {
+        "included": "Ver tudo o que está incluído",
+        "compare": "Comparar tudo",
+        "questions": "Mais perguntas",
+        "less": "Mostrar menos"
       }
     },
     "google": {

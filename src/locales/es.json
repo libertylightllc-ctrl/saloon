@@ -924,6 +924,12 @@
           "tooMany": "Demasiadas solicitudes desde aquí. Inténtalo de nuevo en una hora.",
           "full": "El piloto está completo. Aun así puedes probar Saloqo gratis."
         }
+      },
+      "more": {
+        "included": "Ver todo lo incluido",
+        "compare": "Comparar todo",
+        "questions": "Más preguntas",
+        "less": "Mostrar menos"
       }
     },
     "google": {

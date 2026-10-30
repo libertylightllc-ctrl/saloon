@@ -149,6 +149,7 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .dots{display:flex;justify-content:center;gap:6px}
 .dots i{width:7px;height:7px;border-radius:4px;background:var(--hairline);transition:width .2s}
 .dots i.on{width:20px;background:var(--teal-deep)}
+.navy .dots i{background:var(--navy-line)}.navy .dots i.on{background:var(--teal)}
 .big{position:relative;display:flex;flex-direction:column;max-height:470px;border-radius:28px;overflow:hidden;background:var(--lilac)}
 .big.navy{background:var(--navy)}
 .big-copy{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;gap:12px;padding:32px}
@@ -177,14 +178,17 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .num{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--teal-soft);color:var(--teal-deep);font-weight:500;flex-shrink:0}
 /* Price. */
 .pricing{padding:48px 0}
-/* Three billing lengths (full update brief, Phase 3). */
-.plans{display:grid;grid-template-columns:1fr;gap:16px;width:100%;max-width:1000px;margin-top:8px}
+/* Three billing lengths (full update brief, Phase 3): on a phone one sideways row, a card and the next one's edge
+   (owner's fix list round 2, B2); stacked from 640 px, three across from 980 px. */
+.plans-wrap{width:100%;max-width:1000px;margin-top:8px}
+.plans>.plan{flex:0 0 82vw}
 .plan{position:relative;display:flex;flex-direction:column;gap:10px;padding:24px;border-radius:24px;border:1px solid var(--navy-line);background:var(--raised)}
 .plan.best{border:2px solid var(--teal)}
 .badge{align-self:flex-start;padding:4px 12px;border-radius:999px;background:var(--teal);color:var(--navy);font-size:12px;font-weight:600}
 .plan-price{font-size:24px;line-height:32px;font-weight:600;font-variant-numeric:tabular-nums}
 .plan-btn{margin-top:auto;width:100%}
 .every-plan{display:flex;flex-direction:column;gap:12px;width:100%;max-width:820px;margin-top:8px}
+.every-list{display:flex;flex-direction:column;gap:12px}
 .feature-list{display:grid;grid-template-columns:1fr;gap:10px}
 .feature-list li{display:flex;align-items:center;gap:12px}
 .calc{display:flex;flex-direction:column;gap:12px;width:100%;max-width:820px;padding:24px;border-radius:24px;border:1px solid var(--navy-line);background:var(--raised)}
@@ -229,6 +233,11 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .langs a[aria-current]{color:var(--ink);font-weight:500}
 .links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
 .links a{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 10px;border-radius:12px;color:var(--violet);font-size:14px;font-weight:500}
+/* "See everything included", "Compare all", "More questions" (owner's fix list round 2, B2–B4; sections-top.mjs
+   moreButton): on a phone with the page script, the `more-extra` parts wait behind the button. */
+.more-btn{display:none;align-self:center;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:999px;border:1.5px solid var(--hairline);background:var(--card);color:var(--violet);font:inherit;font-weight:500;cursor:pointer}
+.navy .more-btn{border-color:var(--navy-line);background:transparent;color:var(--teal-soft)}
+@media (max-width:639px){html.js .more-btn{display:inline-flex}html.js [data-more]:not(.open) .more-extra{display:none!important}}
 /* The phone's sticky bar and the computer's round WhatsApp button (brief 2.3, 2.4). */
 .wa-round{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:var(--whatsapp);color:#fff;box-shadow:var(--lift);flex-shrink:0}
 .wa-round.floating{position:fixed;z-index:10;bottom:24px;inset-inline-end:24px;width:60px;height:60px}
@@ -257,6 +266,7 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 [dir=rtl] .t-hero{line-height:93px}[dir=rtl] .t-section{line-height:69px}
 .signin{min-height:44px;padding:0 16px;border:1.5px solid var(--navy-line);color:#fff;font-size:15px}
 .feature-list{grid-template-columns:1fr 1fr}
+.plans{display:grid;grid-template-columns:1fr;gap:16px;margin:0;padding:0;overflow:visible}
 .calc-fields{grid-template-columns:repeat(3,1fr)}
 .trust-band{padding:72px 0}
 .compare{padding:72px 0}.compare-table{font-size:16px;line-height:24px}.compare-table th,.compare-table td{padding:16px 20px}
