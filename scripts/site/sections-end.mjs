@@ -35,9 +35,11 @@ export function types(c) {
 </div></section>`;
 }
 
+/** "Up and running in minutes"; not on a phone (owner's fix list round 2, Part B: a shorter page), where the sign-up
+ *  itself walks through the same steps. */
 export function steps(c) {
   const items = [1, 2, 3].map((n) => `<li><span class="num" aria-hidden="true"><span class="phone-only">${n}</span><span class="not-phone">0${n}</span></span><span class="step-text">${esc(c.t(`auth.landing.steps.${n}`))}</span></li>`).join('');
-  return `<section class="band card steps"><div class="inner stack-lg"><h2 class="t-section center">${esc(c.t('auth.landing.stepsTitle'))}</h2><ol class="step-list">${items}</ol></div></section>`;
+  return `<section class="band card steps not-phone"><div class="inner stack-lg"><h2 class="t-section center">${esc(c.t('auth.landing.stepsTitle'))}</h2><ol class="step-list">${items}</ol></div></section>`;
 }
 
 /** The UAE visitor's text and everyone else's, side by side; site.css shows one (`html[data-uae]`). */
@@ -108,11 +110,12 @@ ${MULTI ? `<li>${both(c, (p) => t('auth.landing.calc.example2', { price: p.examp
 </div></section>`;
 }
 
-/** "Your data is safe" (facts the code shows), "Works in your browser", and the emirates for UAE visitors. */
+/** "Your data is safe" (facts the code shows) and "Works in your browser"; not on a phone, where the FAQ's "Is my data
+ *  safe?" and the hero say the same (owner's fix list round 2, Part B: a shorter page). */
 export function trust(c) {
   const t = c.t;
   const items = ['https', 'separate', 'roles', 'export'].map((k) => `<li>${c.icon('shield', { size: 18 })}<span>${esc(t(`auth.landing.safe.${k}`))}</span></li>`).join('');
-  return `<section class="band card trust-band" aria-labelledby="safe-title"><div class="inner trust-grid">
+  return `<section class="band card trust-band not-phone" aria-labelledby="safe-title"><div class="inner trust-grid">
 <div><h2 class="t-h2" id="safe-title">${esc(t('auth.landing.safe.title'))}</h2><ul class="safe-list">${items}</ul></div>
 <div class="browser"><span class="ring">${c.icon('smartphone', { size: 20 })}</span><h2 class="t-h2">${esc(t('auth.landing.browser.title'))}</h2><p class="muted">${esc(t('auth.landing.browser.body'))}</p></div>
 </div></section>`;

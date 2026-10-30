@@ -98,7 +98,7 @@ export function hero(c) {
 <div class="inner hero-inner">
 <div class="hero-body">
 <div class="copy">
-<p class="eyebrow on-navy">${c.icon('sparkles', { size: 14 })}<span>${esc(t('auth.landing.eyebrow'))}</span></p>
+<p class="eyebrow on-navy not-phone">${c.icon('sparkles', { size: 14 })}<span>${esc(t('auth.landing.eyebrow'))}</span></p>
 <h1 class="t-hero" id="hero-title"><span class="uae">${esc(t('auth.landing.headline'))}</span><span class="intl">${esc(t('auth.landing.headlineIntl'))}</span></h1>
 <p class="t-lead muted">${esc(t('auth.landing.lead'))}</p>
 <div class="ctas" id="hero-cta">${button(c, { label: c.startLabel, href: '#types', icon: 'chevronRight', attrs: ' data-start="hero"' })}${button(c, { label: t('auth.landing.seeHow'), href: c.site.demoVideoUrl ? '#video' : '#features', kind: 'outline', attrs: ' data-tour' })}${demo}</div>
@@ -127,12 +127,14 @@ export function keep(c) {
 
 const tick = (c, size = 28) => `<span class="tick" style="--s:${size}px">${c.icon('check', { size: Math.round(size * 0.6), stroke: 2.6 })}</span>`;
 
+/** "Made for salon owners"; not on a phone (owner's fix list round 2, Part B: a shorter page), where the features say
+ *  the same. */
 export function owners(c) {
   const items = ['live', 'closing', 'pay', 'reminders', 'stock', 'reports'];
-  return `<section class="band mist owners"><div class="inner owners-row">
+  return `<section class="band mist owners not-phone"><div class="inner owners-row">
 <div class="owners-visual wide-only"><span class="halo"></span>${phone(c, 'gents-reports', 290, -4)}</div>
 <div class="copy">
-<p class="eyebrow">${c.icon('sparkles', { size: 14 })}<span>${esc(c.t('auth.landing.owners.eyebrow'))}</span></p>
+<p class="eyebrow not-phone">${c.icon('sparkles', { size: 14 })}<span>${esc(c.t('auth.landing.owners.eyebrow'))}</span></p>
 <h2 class="t-section">${esc(c.t('auth.landing.owners.title'))}</h2>
 <p class="t-lead muted">${esc(c.t('auth.landing.owners.lead'))}</p>
 <ul class="ticks">${items.map((k) => `<li>${tick(c)}<span>${esc(c.t(`auth.landing.owners.items.${k}`))}</span></li>`).join('')}</ul>

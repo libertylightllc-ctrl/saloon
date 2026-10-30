@@ -259,6 +259,11 @@ html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
 .compare-table thead .us{border-radius:14px 14px 0 0}
 .compare-table td.us{font-weight:500}
 .compare-table .mark{display:inline-flex;vertical-align:-3px;margin-inline-end:6px;color:var(--teal-deep)}
+/* A shorter page on a phone (owner's fix list round 2, Part B: 6,500 px or less at 390 px): closer sections, the
+   calculator's first two choices side by side, section titles a size down, shorter feature tiles, no star over the
+   last call, the footer's links on one line. "Made for salon owners", "Up and running in minutes" and "Your data is
+   safe" are left out on a phone (`not-phone`): the features, the sign-up and the FAQ say the same. */
+@media (max-width:639px){.owners,.features,.types,.steps,.pricing,.compare,.trust-band,.faq,.final,.pilot{padding:32px 0}.calc-fields{grid-template-columns:1fr 1fr}.calc-fields label:nth-child(3){grid-column:1/-1}.final-star{display:none}.links a{padding:0 6px}.t-section{font-size:28px;line-height:36px}[dir=rtl] .t-section{line-height:43px}.big{max-height:400px}.pilot-form,.pilot-full{padding:16px}}
 @media (max-width:639px){.not-phone{display:none!important}.chip{top:0;bottom:auto;inset-inline-start:0;inset-inline-end:auto;padding:6px 12px;font-size:13px}.brand span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
 @media (min-width:640px){
 .phone-only{display:none!important}

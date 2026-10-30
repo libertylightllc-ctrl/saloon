@@ -47,8 +47,10 @@ export function pilotSection(c) {
   ];
   const tick = `<span class="tick" style="--s:24px">${c.icon('check', { size: 14, stroke: 2.6 })}</span>`;
   const form = `<form class="pilot-form" data-pilot-form novalidate ${state(true)}${hidden(c, true)}>
+<div class="pilot-pair">
 ${field('name', t('auth.landing.pilot.form.name'), '<input name="name" autocomplete="name" required minlength="2" maxlength="80">')}
 ${field('salon_name', t('auth.landing.pilot.form.salon'), '<input name="salon_name" autocomplete="organization" required minlength="2" maxlength="80">')}
+</div>
 <div class="pilot-pair">
 ${field('emirate', t('auth.landing.pilot.form.emirate'), select('emirate', EMIRATES.map((e) => [e, t(`console.pilot.emirates.${e}`)]), 'dubai'))}
 ${field('area', t('auth.landing.pilot.form.area'), '<input name="area" maxlength="80">')}

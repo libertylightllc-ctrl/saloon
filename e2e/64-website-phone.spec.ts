@@ -2,7 +2,8 @@
  * The home page on a phone (owner's fix list round 2, Part B, from a check of the live site on 28 Oct 2026: 10,041 px
  * tall at 390 px wide, the pilot form starting at 6,575 px). The pilot right after the hero for UAE visitors; the plans
  * in one sideways row and every feature behind a button; three comparison rows and six questions, the rest behind a
- * button (computers keep the page as it was); a WhatsApp button and footer link once the config has a number.
+ * button; three sections the rest of the page repeats left out (computers keep the page as it was); a WhatsApp button
+ * and footer link once the config has a number. The page: 6,500 px or less.
  */
 import { readFileSync } from 'node:fs';
 
@@ -108,6 +109,13 @@ test.describe('on a phone in the UAE', () => {
     expect(faq.mainEntity).toHaveLength(15);
   });
 
+  test('the page is 6,500 px tall or less; the sections the features, sign-up and FAQ repeat are left out', async ({ page }) => {
+    await page.goto(`${site()}/`);
+    expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(6500);
+    for (const part of ['section.owners', 'section.steps', 'section.trust-band']) await expect(page.locator(part)).toBeHidden();
+    await expect(page.locator('details[data-faq="data"]')).toHaveCount(1);
+  });
+
   test('B5: no WhatsApp number in the config, no WhatsApp button or link', async ({ page }) => {
     await page.goto(`${site()}/`);
     await expect(page.locator('a[href*="wa.me"]')).toHaveCount(0);
@@ -134,7 +142,7 @@ test.describe('on a phone in the UAE', () => {
 test.describe('on a computer in the UAE', () => {
   test.use({ viewport: { width: 1280, height: 800 }, timezoneId: 'Asia/Dubai' });
 
-  test('B2–B4: as before: the three plans side by side, every feature, comparison row and question, no buttons', async ({ page }) => {
+  test('B2–B4: as before: the three plans side by side, every feature, comparison row, question and section, no buttons', async ({ page }) => {
     await page.goto(`${site()}/`);
     const [one, twelve] = [await page.getByTestId('plan-1').boundingBox(), await page.getByTestId('plan-12').boundingBox()];
     expect(twelve!.y).toBe(one!.y);
@@ -146,6 +154,7 @@ test.describe('on a computer in the UAE', () => {
     await expect(page.locator('details[data-faq]').filter({ visible: true })).toHaveCount(15);
     await expect(page.locator('[data-more-btn]')).toHaveCount(3);
     for (const button of await page.locator('[data-more-btn]').all()) await expect(button).toBeHidden();
+    for (const part of ['section.owners', 'section.steps', 'section.trust-band']) await expect(page.locator(part)).toBeVisible();
   });
 });
 
