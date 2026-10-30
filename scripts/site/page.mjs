@@ -137,7 +137,9 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
         }
       : null,
   };
-  const main = [keep(c), owners(c), proof(c), features(c), video(c), types(c), steps(c), pricing(c), compare(c), pilotSection(c), trust(c), faq(c), finalCall(c)].join('\n');
+  // The pilot is the main offer (owner's fix list round 2, B1): right after the hero, for UAE visitors only (its section
+  // is `.uae`); everyone else gets the page as before.
+  const main = [pilotSection(c), keep(c), owners(c), proof(c), features(c), video(c), types(c), steps(c), pricing(c), compare(c), trust(c), faq(c), finalCall(c)].join('\n');
   return `<!doctype html>
 <html lang="${lang}" dir="${rtl ? 'rtl' : 'ltr'}">
 ${head(c, CSS, early(lang))}

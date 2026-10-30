@@ -1,8 +1,9 @@
 /**
  * The pilot on the home page (full update brief, Phases 3 and 6): for UAE visitors only (`.uae`), with the numbers from
  * the settings and the places from the real count of pilot salons (`c.pilot`, read at build time; client.js refreshes
- * the places). A bar above the header, a line under the plans and a section with the application form; when the pilot
- * is full, "Pilot full · Try it free" instead. Nothing while the pilot is not set up (`c.pilot` null).
+ * the places). A bar above the header, a line under the plans and a section with the application form, right after the
+ * hero (owner's fix list round 2, B1); when the pilot is full, "Pilot full · Try it free" instead. Nothing while the
+ * pilot is not set up (`c.pilot` null).
  */
 import { esc, LANGUAGES } from './text.mjs';
 
