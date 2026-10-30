@@ -55,6 +55,11 @@ test('search engines read the words, the price and the questions without JavaScr
   expect(html).toContain('No auto-renewal. No contract.');
   expect(html).not.toMatch(/7[- ]day|7 days|Nothing renews/i);
   expect(html).toContain('How much does it cost?');
+  // "How long is it free?" with the days from Console → Settings (owner's fix list round 2, A2): the pilot's for UAE
+  // visitors while it has places; search engines get the new salon's days only.
+  expect(html).toContain('New salons get 30 days free. <span class="uae" data-pilot-open>Pilot salons get 90 days free. </span>Nothing is charged unless you choose a plan');
+  expect(html).toContain('"text":"New salons get 30 days free. Nothing is charged unless you choose a plan, and your data stays: you can view and export it any time."');
+  expect(html).not.toContain('under More → Plan &amp; billing');
   expect(html).toContain('"@type":"SoftwareApplication"');
   expect(html).toContain('"@type":"FAQPage"');
   expect(html).toContain('<link rel="canonical" href="https://www.saloqo.com/">');

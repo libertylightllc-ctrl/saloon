@@ -14,7 +14,8 @@ export interface LandingPrice {
   /** "Under" this a day (src/config/pricing.json: AED 2, USD 0.50). */
   perDay: string;
   people: number;
-  trialDays: number;
+  /** A new salon's free days (Console → Settings, "Free days for a new salon"). */
+  freeDays: number;
 }
 
 /** Null until both the price and the visitor's country are known. */
@@ -30,6 +31,6 @@ export function useLandingPrice(): LandingPrice | null {
     extra: priceText(uae ? p.extra_person_minor : p.intl_extra_person_minor, currency),
     perDay: priceText(PER_DAY_UNDER[currency] ?? Math.ceil(minor / 30), currency),
     people: p.included_people,
-    trialDays: p.trial_days,
+    freeDays: p.public_free_days,
   };
 }

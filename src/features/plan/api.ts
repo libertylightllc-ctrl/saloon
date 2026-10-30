@@ -219,7 +219,7 @@ export function usePublicPrices() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('platform_settings')
-        .select('price_per_branch_minor, currency, intl_price_per_branch_minor, intl_currency, included_people, extra_person_minor, intl_extra_person_minor, trial_days')
+        .select('price_per_branch_minor, currency, intl_price_per_branch_minor, intl_currency, included_people, extra_person_minor, intl_extra_person_minor, public_free_days')
         .single();
       if (error) throw error;
       return data;

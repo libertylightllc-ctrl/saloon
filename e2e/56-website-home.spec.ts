@@ -60,7 +60,8 @@ test.describe('on a phone in the UAE', () => {
     await id(page, 'landing-faq-price').click();
     await expect(id(page, 'landing-faq-price-answer')).toContainText('AED 50 a month per branch, for up to 4 people');
     await id(page, 'landing-faq-free').click();
-    await expect(id(page, 'landing-faq-free-answer')).toContainText('nothing is charged unless you choose a plan');
+    // The days from Console → Settings (owner's fix list round 2, A2).
+    await expect(id(page, 'landing-faq-free-answer')).toHaveText('New salons get 30 days free. Nothing is charged unless you choose a plan, and your data stays: you can view and export it any time.');
 
     // Hidden while the owner has not filled them in (src/config/site.ts).
     for (const hidden of ['landing-proof', 'landing-video', 'landing-demo', 'landing-demo-pricing', 'landing-legal', 'landing-floating-whatsapp']) {

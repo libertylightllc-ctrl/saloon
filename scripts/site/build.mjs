@@ -34,12 +34,12 @@ function env(key) {
   return (process.env[key] ?? fromFiles[key] ?? '').trim();
 }
 
-/** Today's plan prices and trial (the columns visitors may read). Without them the page leaves the price out. */
+/** Today's plan prices and a new salon's free days (the columns visitors may read). Without them the page leaves the price out. */
 async function prices(url, key) {
   if (!url || !key) return null;
   try {
     const response = await fetch(
-      `${url}/rest/v1/platform_settings?select=price_per_branch_minor,currency,intl_price_per_branch_minor,intl_currency,included_people,extra_person_minor,intl_extra_person_minor,trial_days`,
+      `${url}/rest/v1/platform_settings?select=price_per_branch_minor,currency,intl_price_per_branch_minor,intl_currency,included_people,extra_person_minor,intl_extra_person_minor,public_free_days`,
       { headers: { apikey: key }, signal: AbortSignal.timeout(10_000) },
     );
     if (!response.ok) throw new Error(`HTTP ${response.status}`);

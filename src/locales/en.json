@@ -797,7 +797,11 @@
         "free": {
           "q": "How long is it free?",
           "a": "You’ll see your free period in the app under More → Plan & billing. When it ends, nothing is charged unless you choose a plan, and your data stays: you can view and export it any time.",
-          "pilot": "Pilot salons get {{months}} months free."
+          "newDays_one": "New salons get {{count}} day free.",
+          "newDays_other": "New salons get {{count}} days free.",
+          "pilotDays_one": "Pilot salons get {{count}} day free.",
+          "pilotDays_other": "Pilot salons get {{count}} days free.",
+          "rest": "Nothing is charged unless you choose a plan, and your data stays: you can view and export it any time."
         },
         "branches": {
           "q": "Can I run more than one branch?",

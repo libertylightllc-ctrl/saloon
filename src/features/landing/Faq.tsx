@@ -38,10 +38,13 @@ export function Faq({ onOpen }: { onOpen?: (key: string) => void }) {
   const price = useLandingPrice();
   const [open, setOpen] = useState<string | null>(null);
   // Answers with the visitor's price (full update brief: per branch, from the one pricing config).
+  // "How long is it free?" says the days from the settings (owner's fix list round 2, A2).
   const answer = (k: (typeof FAQ_KEYS)[number]) =>
     k === 'price' && !price
       ? t('auth.landing.faq.price.aNoPrice')
-      : t(`auth.landing.faq.${k}.a`, { price: price?.price ?? '', people: price?.people ?? 4, extra: price?.extra ?? '' });
+      : k === 'free' && price
+        ? [price.freeDays > 0 ? t('auth.landing.faq.free.newDays', { count: price.freeDays }) : '', t('auth.landing.faq.free.rest')].filter(Boolean).join(' ')
+        : t(`auth.landing.faq.${k}.a`, { price: price?.price ?? '', people: price?.people ?? 4, extra: price?.extra ?? '' });
 
   // The same questions for search engines (FAQPage), in the page's language.
   useEffect(() => {

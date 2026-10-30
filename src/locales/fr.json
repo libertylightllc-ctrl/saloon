@@ -797,7 +797,11 @@
         "free": {
           "q": "Combien de temps est-ce gratuit ?",
           "a": "Votre période gratuite s’affiche dans l’app, sous Plus → Abonnement et facturation. À la fin, rien n’est facturé sauf si vous choisissez une formule, et vos données restent : vous pouvez les consulter et les exporter à tout moment.",
-          "pilot": "Les salons du pilote ont {{months}} mois gratuits."
+          "newDays_one": "Les nouveaux salons ont {{count}} jour gratuit.",
+          "newDays_other": "Les nouveaux salons ont {{count}} jours gratuits.",
+          "pilotDays_one": "Les salons du pilote ont {{count}} jour gratuit.",
+          "pilotDays_other": "Les salons du pilote ont {{count}} jours gratuits.",
+          "rest": "Rien n’est facturé sauf si vous choisissez une formule, et vos données restent : vous pouvez les consulter et les exporter à tout moment."
         },
         "branches": {
           "q": "Puis-je gérer plusieurs établissements ?",

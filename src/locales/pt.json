@@ -797,7 +797,11 @@
         "free": {
           "q": "Por quanto tempo é grátis?",
           "a": "Você vê seu período grátis no app, em Mais → Plano e cobrança. Quando termina, nada é cobrado a menos que você escolha um plano, e seus dados ficam: você pode vê-los e exportá-los quando quiser.",
-          "pilot": "Os salões do piloto têm {{months}} meses grátis."
+          "newDays_one": "Salões novos têm {{count}} dia grátis.",
+          "newDays_other": "Salões novos têm {{count}} dias grátis.",
+          "pilotDays_one": "Os salões do piloto têm {{count}} dia grátis.",
+          "pilotDays_other": "Os salões do piloto têm {{count}} dias grátis.",
+          "rest": "Nada é cobrado a menos que você escolha um plano, e seus dados ficam: você pode vê-los e exportá-los quando quiser."
         },
         "branches": {
           "q": "Posso ter mais de uma unidade?",

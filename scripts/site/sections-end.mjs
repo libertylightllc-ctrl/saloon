@@ -120,9 +120,17 @@ export function trust(c) {
 export const FAQ_KEYS = ['price', 'free', ...(MULTI ? ['branches'] : []), 'uaeCost', 'card', 'staffSignIn', 'languages', 'types', 'data', 'staff', 'printer', 'devices', 'homeScreen', 'bookingApp', 'countries'];
 const PRICED = ['price', 'branches', 'uaeCost'];
 
+/** "How long is it free?" from the settings (owner's fix list round 2, A2): a new salon's days, then what happens
+ *  after; [first, rest], or null when the build could not read the settings. */
+function freeParts(c) {
+  if (c.freeDays == null) return null;
+  return [c.freeDays > 0 ? c.t('auth.landing.faq.free.newDays', { count: c.freeDays }) : '', c.t('auth.landing.faq.free.rest')];
+}
+
 /** One answer as plain text, with one region's prices (`p` a price set, or null without prices). */
 export function faqAnswer(c, k, p) {
   if (k === 'price' && !p) return c.t('auth.landing.faq.price.aNoPrice');
+  if (k === 'free' && freeParts(c)) return freeParts(c).filter(Boolean).join(' ');
   return c.t(`auth.landing.faq.${k}.a`, { price: p?.price ?? '', people: c.prices?.people ?? 4, extra: p?.extra ?? '' });
 }
 
@@ -131,8 +139,13 @@ export const faqQuestion = (c, k) => c.t(`auth.landing.faq.${k}.q`);
 export function faq(c) {
   const items = FAQ_KEYS.map((k) => {
     let answer = PRICED.includes(k) && c.prices ? both(c, (p) => faqAnswer(c, k, p)) : esc(faqAnswer(c, k, null));
-    // UAE visitors read the pilot's free months too, while it has places (full update, Phase 6).
-    if (k === 'free' && c.pilot?.placesLeft) answer += `<span class="uae"> ${esc(c.t('auth.landing.faq.free.pilot', { months: c.pilot.months }))}</span>`;
+    // UAE visitors read the pilot's free days too, between the two, while it has places (full update, Phase 6); the
+    // page script hides it once the pilot fills up. Search engines get the answer without it.
+    const free = k === 'free' && freeParts(c);
+    if (free) {
+      const pilot = c.pilot?.placesLeft ? `<span class="uae" data-pilot-open>${esc(c.t('auth.landing.faq.free.pilotDays', { count: c.pilot.days }))} </span>` : '';
+      answer = `${free[0] ? `${esc(free[0])} ` : ''}${pilot}${esc(free[1])}`;
+    }
     return `<details class="faq-item" data-faq="${k}"><summary><span>${esc(faqQuestion(c, k))}</span>${c.icon('plus', { size: 20, cls: 'plus' })}${c.icon('minus', { size: 20, cls: 'minus' })}</summary><p class="muted">${answer}</p></details>`;
   }).join('');
   return `<section class="band mist faq" id="faq"><div class="inner stack"><h2 class="t-section center">${esc(c.t('auth.landing.faq.title'))}</h2><div class="faq-list">${items}</div></div></section>`;

@@ -797,7 +797,11 @@
         "free": {
           "q": "¿Cuánto tiempo es gratis?",
           "a": "Verás tu periodo gratuito en la app, en Más → Plan y facturación. Cuando termina no se cobra nada salvo que elijas un plan, y tus datos se quedan: puedes verlos y exportarlos cuando quieras.",
-          "pilot": "Los salones del piloto tienen {{months}} meses gratis."
+          "newDays_one": "Los salones nuevos tienen {{count}} día gratis.",
+          "newDays_other": "Los salones nuevos tienen {{count}} días gratis.",
+          "pilotDays_one": "Los salones del piloto tienen {{count}} día gratis.",
+          "pilotDays_other": "Los salones del piloto tienen {{count}} días gratis.",
+          "rest": "No se cobra nada salvo que elijas un plan, y tus datos se quedan: puedes verlos y exportarlos cuando quieras."
         },
         "branches": {
           "q": "¿Puedo llevar más de una sucursal?",

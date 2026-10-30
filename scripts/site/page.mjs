@@ -86,6 +86,8 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
     site,
     year,
     prices: priceSets(row),
+    // A new salon's free days ("Free days for a new salon"); null when the settings could not be read.
+    freeDays: row?.public_free_days == null ? null : Number(row.public_free_days),
     // The pilot (full update, Phase 6): its days as months, its size and the places left; null hides it.
     pilot:
       pilot && Number(pilot.max) > 0
