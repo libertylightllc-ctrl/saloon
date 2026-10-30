@@ -2,7 +2,10 @@
  * Values only the owner has (website brief, 22 Oct 2026), kept in site.json (the website's build reads it too). Every
  * element that uses one is hidden while it is empty: no invented numbers, testimonials or logos — real ones only.
  *
- * - whatsappNumber: international format, digits only, e.g. "9715XXXXXXXX"
+ * - whatsappNumber: international format, digits only, e.g. "9715XXXXXXXX"; the website's round WhatsApp button and
+ *   footer link appear once it is set
+ * - whatsappDefaultText / whatsappPilotText: the message WhatsApp opens with; the website's UAE visitors get the pilot's
+ *   while the pilot is on (owner's fix list round 2, B5)
  * - demoBookingUrl: optional calendar link; if empty, "Book a demo" opens WhatsApp (or nothing without a number)
  * - demoVideoUrl: YouTube, Vimeo or MP4; the video section is hidden while empty
  * - operatorName: who is responsible for Saloqo, named in "Who we are" of the privacy policy (full update, Phase 5);

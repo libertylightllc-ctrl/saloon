@@ -2,12 +2,37 @@
  * The home page on a phone (owner's fix list round 2, Part B, from a check of the live site on 28 Oct 2026: 10,041 px
  * tall at 390 px wide, the pilot form starting at 6,575 px). The pilot right after the hero for UAE visitors; the plans
  * in one sideways row and every feature behind a button; three comparison rows and six questions, the rest behind a
- * button (computers keep the page as it was).
+ * button (computers keep the page as it was); a WhatsApp button and footer link once the config has a number.
  */
+import { readFileSync } from 'node:fs';
+
+import type { Page } from '@playwright/test';
+
 import { expect, test } from './support/fixtures';
 import { useSite } from './support/site';
 
 const site = useSite(8300);
+
+/**
+ * The home page with a WhatsApp number in the config (B5; the real config has none yet): rendered as the build does,
+ * with the pilot on, and opened at http://wa.test/ (its pictures and fonts are left out).
+ */
+async function withWhatsApp(page: Page, lang = 'en') {
+  const { renderPage } = await import('../scripts/site/page.mjs');
+  const read = (file: string) => JSON.parse(readFileSync(file, 'utf8'));
+  const brand = read('src/config/brand.json');
+  const config = { ...read('src/config/site.json'), supportEmail: brand.supportEmail, whatsappNumber: '971500000001' };
+  const pilot = { max: 20, days: 90, places_left: 16 };
+  const html = renderPage({ root: process.cwd(), lang, row: null, pilot, api: null, brand, site: config, supabase: {}, year: 2026 });
+  await page.route('http://wa.test/**', (route) =>
+    route.request().resourceType() === 'document' ? route.fulfill({ contentType: 'text/html', body: html }) : route.abort(),
+  );
+  await page.goto(`http://wa.test/${lang === 'en' ? '' : lang}`);
+}
+
+const PILOT_TEXT = "Hi Saloqo, I'd like to know more about the pilot for my salon.";
+const APP_TEXT = "Hi Saloqo, I'd like to know more about the app for my salon.";
+const waTo = (text: string) => `https://wa.me/971500000001?text=${encodeURIComponent(text)}`;
 
 test.describe('on a phone in the UAE', () => {
   test.use({ viewport: { width: 390, height: 844 }, timezoneId: 'Asia/Dubai', locale: 'en-US' });
@@ -82,6 +107,28 @@ test.describe('on a phone in the UAE', () => {
     const faq = await page.evaluate(() => JSON.parse(document.getElementById('faq-jsonld')?.textContent ?? '{}'));
     expect(faq.mainEntity).toHaveLength(15);
   });
+
+  test('B5: no WhatsApp number in the config, no WhatsApp button or link', async ({ page }) => {
+    await page.goto(`${site()}/`);
+    await expect(page.locator('a[href*="wa.me"]')).toHaveCount(0);
+  });
+
+  test('B5: with a number, a round WhatsApp button bottom right and a footer link, both asking about the pilot', async ({ page }) => {
+    await withWhatsApp(page);
+    const button = page.locator('a.floating:visible');
+    await expect(button).toHaveCount(1);
+    await expect(button).toHaveAttribute('href', waTo(PILOT_TEXT));
+    const box = (await button.boundingBox())!;
+    expect(box.x + box.width).toBeGreaterThan(390 - 40);
+    expect(box.y + box.height).toBeGreaterThan(844 - 40);
+    await expect(page.locator('footer a:visible', { hasText: 'WhatsApp us' })).toHaveAttribute('href', waTo(PILOT_TEXT));
+  });
+
+  test('B5: in Arabic the WhatsApp button sits bottom left', async ({ page }) => {
+    await withWhatsApp(page, 'ar');
+    const box = (await page.locator('a.floating:visible').boundingBox())!;
+    expect(box.x).toBeLessThan(40);
+  });
 });
 
 test.describe('on a computer in the UAE', () => {
@@ -110,5 +157,11 @@ test.describe('on a phone outside the UAE', () => {
     await expect(page.locator('#pilot')).toBeHidden();
     await expect(page.locator('.pilot-bar')).toBeHidden();
     await expect(page.locator('main > section:visible').first()).toHaveClass(/keep/);
+  });
+
+  test('B5: the WhatsApp button and footer link open with the usual message (no pilot outside the UAE)', async ({ page }) => {
+    await withWhatsApp(page);
+    await expect(page.locator('a.floating:visible')).toHaveAttribute('href', waTo(APP_TEXT));
+    await expect(page.locator('footer a:visible', { hasText: 'WhatsApp us' })).toHaveAttribute('href', waTo(APP_TEXT));
   });
 });

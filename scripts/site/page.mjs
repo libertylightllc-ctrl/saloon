@@ -79,6 +79,7 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
   const digits = site.whatsappNumber.replace(/\D/g, '');
   const wa = (text) => `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
   const whatsapp = digits.length >= 8 ? wa(site.whatsappDefaultText) : null;
+  const hasPilot = Boolean(pilot && Number(pilot.max) > 0);
   const c = {
     t,
     lang,
@@ -91,11 +92,13 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
     freeDays: row?.public_free_days == null ? null : Number(row.public_free_days),
     // The pilot (full update, Phase 6): its days as months, its size and the places left; null hides it.
     pilot:
-      pilot && Number(pilot.max) > 0
+      hasPilot
         ? { days: Number(pilot.days), months: Math.max(1, Math.round(Number(pilot.days) / 30)), max: Number(pilot.max), placesLeft: Number(pilot.places_left) }
         : null,
     startLabel: t('auth.landing.tryFree'),
     whatsapp,
+    // UAE visitors ask about the pilot while it is on (owner's fix list round 2, B5).
+    whatsappPilot: whatsapp && hasPilot ? wa(site.whatsappPilotText) : null,
     demo: site.demoBookingUrl || (whatsapp ? wa("Hi, I'd like a quick demo of Saloqo for my salon.") : null),
     madeIn: site.madeIn === 'Dubai, UAE' ? t('auth.landing.place.dubai') : site.madeIn,
     icon: (name, options) => icon(root, name, options),
