@@ -1,8 +1,8 @@
 /**
  * The home page on a phone (owner's fix list round 2, Part B, from a check of the live site on 28 Oct 2026: 10,041 px
  * tall at 390 px wide, the pilot form starting at 6,575 px). The pilot right after the hero for UAE visitors; the plans
- * in one sideways row and every feature behind a button; three comparison rows, the rest behind a button (computers
- * keep the page as it was).
+ * in one sideways row and every feature behind a button; three comparison rows and six questions, the rest behind a
+ * button (computers keep the page as it was).
  */
 import { expect, test } from './support/fixtures';
 import { useSite } from './support/site';
@@ -67,21 +67,37 @@ test.describe('on a phone in the UAE', () => {
     await expect(rows.filter({ visible: true })).toHaveCount(7);
     await expect(button).toHaveText('Show less');
   });
+
+  test('B4: six questions, then "More questions" for the rest; all of them in the page and in the search engines\' FAQ', async ({ page }) => {
+    await page.goto(`${site()}/`);
+    const items = page.locator('details[data-faq]');
+    await expect(items).toHaveCount(15);
+    await expect(items.filter({ visible: true })).toHaveCount(6);
+    const button = page.locator('[data-more-btn="questions"]');
+    await expect(button).toHaveText('More questions');
+    await button.click();
+    await expect(items.filter({ visible: true })).toHaveCount(15);
+    await page.locator('details[data-faq="countries"] summary').click();
+    await expect(page.locator('details[data-faq="countries"] p')).toBeVisible();
+    const faq = await page.evaluate(() => JSON.parse(document.getElementById('faq-jsonld')?.textContent ?? '{}'));
+    expect(faq.mainEntity).toHaveLength(15);
+  });
 });
 
 test.describe('on a computer in the UAE', () => {
   test.use({ viewport: { width: 1280, height: 800 }, timezoneId: 'Asia/Dubai' });
 
-  test('B2, B3: as before: the three plans side by side, every feature and comparison row, no buttons', async ({ page }) => {
+  test('B2–B4: as before: the three plans side by side, every feature, comparison row and question, no buttons', async ({ page }) => {
     await page.goto(`${site()}/`);
     const [one, twelve] = [await page.getByTestId('plan-1').boundingBox(), await page.getByTestId('plan-12').boundingBox()];
     expect(twelve!.y).toBe(one!.y);
     expect(twelve!.x + twelve!.width).toBeLessThan(1280);
     await expect(page.locator('#pricing .feature-list')).toBeVisible();
     await expect(page.locator('#pricing .dots')).toBeHidden();
-    // B3: every comparison row, no buttons.
+    // B3, B4: every comparison row and question, no buttons.
     await expect(page.locator('section.compare tbody tr').filter({ visible: true })).toHaveCount(7);
-    await expect(page.locator('[data-more-btn]')).toHaveCount(2);
+    await expect(page.locator('details[data-faq]').filter({ visible: true })).toHaveCount(15);
+    await expect(page.locator('[data-more-btn]')).toHaveCount(3);
     for (const button of await page.locator('[data-more-btn]').all()) await expect(button).toBeHidden();
   });
 });

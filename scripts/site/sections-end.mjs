@@ -138,8 +138,12 @@ export function faqAnswer(c, k, p) {
 
 export const faqQuestion = (c, k) => c.t(`auth.landing.faq.${k}.q`);
 
+/** On a phone the first questions show and the rest wait behind "More questions" (owner's fix list round 2, B4); every
+ *  question stays in the page and in the search engines' FAQ (head.mjs). */
+const FAQ_FIRST = 6;
+
 export function faq(c) {
-  const items = FAQ_KEYS.map((k) => {
+  const items = FAQ_KEYS.map((k, i) => {
     let answer = PRICED.includes(k) && c.prices ? both(c, (p) => faqAnswer(c, k, p)) : esc(faqAnswer(c, k, null));
     // UAE visitors read the pilot's free days too, between the two, while it has places (full update, Phase 6); the
     // page script hides it once the pilot fills up. Search engines get the answer without it.
@@ -148,9 +152,9 @@ export function faq(c) {
       const pilot = c.pilot?.placesLeft ? `<span class="uae" data-pilot-open>${esc(c.t('auth.landing.faq.free.pilotDays', { count: c.pilot.days }))} </span>` : '';
       answer = `${free[0] ? `${esc(free[0])} ` : ''}${pilot}${esc(free[1])}`;
     }
-    return `<details class="faq-item" data-faq="${k}"><summary><span>${esc(faqQuestion(c, k))}</span>${c.icon('plus', { size: 20, cls: 'plus' })}${c.icon('minus', { size: 20, cls: 'minus' })}</summary><p class="muted">${answer}</p></details>`;
+    return `<details class="faq-item${i < FAQ_FIRST ? '' : ' more-extra'}" data-faq="${k}"><summary><span>${esc(faqQuestion(c, k))}</span>${c.icon('plus', { size: 20, cls: 'plus' })}${c.icon('minus', { size: 20, cls: 'minus' })}</summary><p class="muted">${answer}</p></details>`;
   }).join('');
-  return `<section class="band mist faq" id="faq"><div class="inner stack"><h2 class="t-section center">${esc(c.t('auth.landing.faq.title'))}</h2><div class="faq-list">${items}</div></div></section>`;
+  return `<section class="band mist faq" id="faq"><div class="inner stack" data-more><h2 class="t-section center">${esc(c.t('auth.landing.faq.title'))}</h2><div class="faq-list">${items}</div>${moreButton(c, 'questions')}</div></section>`;
 }
 
 export function finalCall(c) {
