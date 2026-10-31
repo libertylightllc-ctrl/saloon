@@ -27,6 +27,24 @@ test('a new owner is signed straight in, and the link is sent at once', async ({
   await expect.poll(() => confirmedHow(email), { timeout: 20_000 }).toBe('link');
 });
 
+test('on a slow phone too: the link confirms when the app starts after the sign-in was taken from the address', async ({ page }) => {
+  // Start-up can finish before the app listens; the sign-in then arrives as INITIAL_SESSION (it failed this way once
+  // under load). Chrome running 8× slower makes that happen every time.
+  const email = `confirm-slow-${Date.now()}@e2e.test`;
+  const since = Date.now();
+  await page.goto('/sign-up');
+  await field(page, 'name').fill('Slow Phone');
+  await field(page, 'email').fill(email);
+  await field(page, 'password').fill('Owner1234!');
+  await id(page, 'sign-up-submit').click();
+  await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });
+  const link = await openedConfirmLink(email, since);
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setCPUThrottlingRate', { rate: 8 });
+  await page.goto(link);
+  await expect.poll(() => confirmedHow(email), { timeout: 30_000 }).toBe('link');
+});
+
 test('until the link is opened, Home asks and a plan cannot be bought; the link confirms', async ({ page, mode }) => {
   const owner = await createOwner(mode, { plan: false, emailConfirmed: false });
   await ownerOn(page, mode, owner.email, owner.password);

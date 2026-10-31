@@ -7,6 +7,7 @@ import type { Session } from '@supabase/supabase-js';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Platform } from 'react-native';
 
+import { arrivedFromLink } from '@/lib/analytics';
 import type { Tables } from '@/lib/database.types';
 import { errorCode, functionError, type ErrorCode } from '@/lib/errors';
 import { redrawTexts, setTaxTerms } from '@/lib/i18n';
@@ -95,6 +96,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const generation = useRef(0);
   const currentUser = useRef<string | null>(null);
   const currentMember = useRef<string | null>(null);
+  const linkSignInSeen = useRef(false);
   /**
    * Set while this person deletes their own account. The server switches their login off before it answers, and the
    * live member watch can sign them out first: that is then expected, and they are told the account was deleted
@@ -178,7 +180,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setLoaded({ member: null, business: null, branch: null, employeeId: null });
         setStatus('signedOut');
       }
-      if (event === 'SIGNED_IN') {
+      // On the web, start-up takes a link's sign-in from the address. If it finishes before this listener is added, the
+      // sign-in arrives as INITIAL_SESSION instead of SIGNED_IN (it did once in the confirm-email test, under load).
+      const fromLink = event === 'INITIAL_SESSION' && next !== null && arrivedFromLink !== null && !linkSignInSeen.current;
+      if (event === 'SIGNED_IN' || fromLink) {
+        linkSignInSeen.current = true;
         // A sign-in from the emailed link confirms the address (owner's fix list C2), also before the salon is set up.
         if (next && !next.user.email?.endsWith('.staff.internal')) {
           queryClient
