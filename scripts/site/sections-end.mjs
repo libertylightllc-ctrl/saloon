@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 
 import { pilotUnderPlans } from './pilot.mjs';
 import { phone } from './shots.mjs';
-import { button, dots, moreButton } from './sections-top.mjs';
+import { button, dots, moreButton, waHref } from './sections-top.mjs';
 import { esc, LANGUAGES, pathOf } from './text.mjs';
 
 const external = ' target="_blank" rel="noopener noreferrer"';
@@ -171,12 +171,8 @@ ${button(c, { label: c.startLabel, href: '#types', icon: 'chevronRight', attrs: 
 
 const SOCIAL = { instagram: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube', linkedin: 'LinkedIn', facebook: 'Facebook' };
 
-/** A WhatsApp link: with the pilot on, UAE visitors' opens with the pilot's message and everyone else's with the usual
- *  one (owner's fix list round 2, B5; site.css shows the visitor's). */
-const whatsappLink = (c, cls, attrs, inner) =>
-  c.whatsappPilot
-    ? `<a class="${cls} uae" href="${esc(c.whatsappPilot)}"${attrs}>${inner}</a><a class="${cls} intl" href="${esc(c.whatsapp)}"${attrs}>${inner}</a>`
-    : `<a class="${cls}" href="${esc(c.whatsapp)}"${attrs}>${inner}</a>`;
+/** A WhatsApp link with the message from Console → Settings → Contact, shown only while a number is set (see waHref). */
+const whatsappLink = (c, cls, attrs, inner) => `<a class="${cls ? `${cls} ` : ''}wa-on"${waHref(c)}${attrs}>${inner}</a>`;
 
 /** The footer: languages, the emirates (UAE visitors), contact, legal pages, social links, AED | USD, "© 2026 Saloqo"
  *  ("· Made in …" only once the config has a place). No licence, TRN, company name or address (full update brief:
@@ -186,11 +182,12 @@ export function footer(c) {
   const langs = LANGUAGES.map((l) => `<a href="${pathOf(l.code)}" hreflang="${l.code}" lang="${l.code}" data-lang="${l.code}"${l.code === c.lang ? ' aria-current="page"' : ''}>${esc(l.name)}</a>`).join('');
   const email = c.brand.supportEmail.endsWith('@example.com') ? '' : `<p class="t-small center"><a href="mailto:${esc(c.brand.supportEmail)}">${esc(t('auth.landing.contact', { email: c.brand.supportEmail }))}</a></p>`;
   const chat = c.icon('messageCircle', { size: 16 });
-  const contact = c.whatsapp
-    ? `<a href="${esc(c.whatsapp)}"${external} data-event="cta_whatsapp">${chat}${esc(t('support.contactTitle'))}</a>`
-    : `<a href="/contact" data-keep-lang>${chat}${esc(t('support.contactTitle'))}</a>`;
+  // "Contact us": WhatsApp while a number is set, else the contact page (only one of the two shows).
+  const contact =
+    whatsappLink(c, '', `${external} data-event="cta_whatsapp"`, `${chat}${esc(t('support.contactTitle'))}`) +
+    `<a class="wa-off" href="/contact" data-keep-lang>${chat}${esc(t('support.contactTitle'))}</a>`;
   const links = [
-    c.whatsapp ? whatsappLink(c, 'wa-footer', `${external} data-event="cta_whatsapp"`, esc(t('auth.landing.whatsapp'))) : '',
+    whatsappLink(c, 'wa-footer', `${external} data-event="cta_whatsapp"`, esc(t('auth.landing.whatsapp'))),
     contact,
     `<a href="/privacy" data-keep-lang>${esc(t('legal.privacy.title'))}</a>`,
     `<a href="/terms" data-keep-lang>${esc(t('legal.terms.title'))}</a>`,
@@ -207,9 +204,7 @@ ${email}<nav class="links">${links}</nav>${socialHtml}${currency}
 </div></footer>`;
 }
 
-/** A round WhatsApp button in the corner (bottom right; bottom left in Arabic and Urdu), once a number is set. */
+/** A round WhatsApp button in the corner (bottom right; bottom left in Arabic and Urdu), while a number is set. */
 export function floating(c) {
-  return c.whatsapp
-    ? whatsappLink(c, 'wa-round floating', `${external} aria-label="${esc(c.t('auth.landing.whatsapp'))}" data-event="cta_whatsapp"`, c.icon('messageCircle', { size: 26 }))
-    : '';
+  return whatsappLink(c, 'wa-round floating', `${external} aria-label="${esc(c.t('auth.landing.whatsapp'))}" data-event="cta_whatsapp"`, c.icon('messageCircle', { size: 26 }));
 }

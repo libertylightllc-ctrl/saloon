@@ -98,16 +98,34 @@
     });
   }
 
-  // The pilot (full update, Phase 6; pilot.mjs): the places left from the database, and the application form.
-  var pilot = SQ && SQ.pilot;
+  // The database's public functions (the public key, as the app's own page has it).
+  var api = SQ && SQ.api;
   var call = function (fn, body) {
-    return fetch(pilot.url + '/rest/v1/rpc/' + fn, {
+    return fetch(api.url + '/rest/v1/rpc/' + fn, {
       method: 'POST',
-      headers: { apikey: pilot.key, Authorization: 'Bearer ' + pilot.key, 'Content-Type': 'application/json' },
+      headers: { apikey: api.key, Authorization: 'Bearer ' + api.key, 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     }).then(function (r) { return r.ok ? r.json() : null; });
   };
-  if (pilot && window.fetch) {
+
+  // WhatsApp (owner's fix list A4): the number and message saved in Console → Settings → Contact. Every WhatsApp link
+  // is in the page; html[data-wa] shows them (site.css), and here they get today's number without a new build.
+  if (api && window.fetch) {
+    call('site_contact', {}).then(function (s) {
+      if (!s) return;
+      var digits = String(s.whatsapp_number || '').replace(/\D/g, '');
+      if (digits.length < 8) return doc.removeAttribute('data-wa');
+      document.querySelectorAll('a[data-wa-link]').forEach(function (a) {
+        var text = a.getAttribute('data-wa-text') || s.whatsapp_message || '';
+        a.href = 'https://wa.me/' + digits + '?text=' + encodeURIComponent(text);
+      });
+      doc.setAttribute('data-wa', '');
+    }).catch(function () {});
+  }
+
+  // The pilot (full update, Phase 6; pilot.mjs): the places left from the database, and the application form.
+  var pilot = SQ && SQ.pilot;
+  if (api && pilot && window.fetch) {
     call('pilot_status', {}).then(function (s) {
       if (!s) return;
       var left = Number(s.places_left);

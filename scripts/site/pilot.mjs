@@ -42,7 +42,8 @@ export function pilotSection(c) {
   const p = c.pilot;
   const points = [
     t('auth.landing.pilot.points.free', { months: p.months }),
-    ...(c.whatsapp ? [t('auth.landing.pilot.points.whatsapp')] : []),
+    // Shown while a WhatsApp number is set (class wa-on).
+    [t('auth.landing.pilot.points.whatsapp'), 'wa-on'],
     t('auth.landing.pilot.points.data'),
   ];
   const tick = `<span class="tick" style="--s:24px">${c.icon('check', { size: 14, stroke: 2.6 })}</span>`;
@@ -70,7 +71,7 @@ ${field('language', t('auth.landing.pilot.form.language'), select('language', LA
   return `<section class="band card pilot uae" id="pilot" aria-labelledby="pilot-title"><div class="inner pilot-row">
 <div class="pilot-copy"><h2 class="t-section" id="pilot-title">${esc(t('auth.landing.pilot.title'))}</h2>
 <p class="t-lead muted">${esc(t('auth.landing.pilot.lead', { max: p.max, months: p.months }))}</p>
-<ul class="ticks">${points.map((x) => `<li>${tick}<span>${esc(x)}</span></li>`).join('')}</ul></div>
+<ul class="ticks">${points.map((x) => (Array.isArray(x) ? `<li class="${x[1]}">${tick}<span>${esc(x[0])}</span></li>` : `<li>${tick}<span>${esc(x)}</span></li>`)).join('')}</ul></div>
 ${form}${full}
 </div></section>`;
 }

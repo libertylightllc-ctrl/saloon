@@ -2946,6 +2946,14 @@
     "audit": {
       "empty": "No changes yet.",
       "change": "{{before}} → {{after}}"
+    },
+    "contact": {
+      "title": "Contact",
+      "number": "WhatsApp number",
+      "numberHint": "With the country code, for example +971 50 123 4567. Every \"WhatsApp us\" button in the app and on the website opens it. Leave it empty to hide them.",
+      "numberWrong": "Start with + and the country code, for example +971 50 123 4567.",
+      "message": "WhatsApp message",
+      "messageHint": "The chat opens with this text ready to send. Empty goes back to the usual message."
     }
   },
   "profile": {

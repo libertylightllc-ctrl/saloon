@@ -4,6 +4,7 @@
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import type { ContactSetting } from '@/features/landing/contact';
 import { useIsPlatformAdmin } from '@/features/plan/api';
 import { supabase } from '@/lib/supabase';
 
@@ -162,6 +163,22 @@ export function useSetBilling() {
       if (error) throw error;
     },
     onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}
+
+/** The WhatsApp number and message (owner's fix list A4): typed as people write them; the database keeps +E.164. */
+export function useSetContact() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ number, message }: { number: string; message: string }) => {
+      const { data, error } = await supabase.rpc('admin_set_contact', { p_number: number, p_message: message });
+      if (error) throw error;
+      return data as unknown as ContactSetting;
+    },
+    onSuccess: () => {
+      void client.invalidateQueries({ queryKey: ['site-contact'] });
+      void client.invalidateQueries({ queryKey: ['platform'] });
+    },
   });
 }
 

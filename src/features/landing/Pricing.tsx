@@ -10,12 +10,13 @@ import { StyleSheet, View } from 'react-native';
 import { brandPalette as B, spacing } from '@/theme';
 import { Text } from '@/ui';
 
-import { demoHref } from './contact';
+import { useContact } from './contact';
 import { Band, BrandButton, NavyBackdrop, Tick, useLandingLayout } from './parts';
 import { useLandingPrice } from './price';
 
 export function Pricing({ startLabel, onStart, onLayoutRange }: { startLabel: string; onStart: () => void; onLayoutRange?: (top: number, bottom: number) => void }) {
   const { t } = useTranslation();
+  const { demoHref } = useContact();
   const { compact } = useLandingLayout();
   const p = useLandingPrice();
   if (!p) return null;

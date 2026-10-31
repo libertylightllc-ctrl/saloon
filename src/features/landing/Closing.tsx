@@ -11,7 +11,7 @@ import { brandPalette as B, spacing } from '@/theme';
 import { Button, Text } from '@/ui';
 
 import star from '../../../assets/images/splash-icon.png';
-import { hasWhatsApp, madeInPlace, mailtoUrl, whatsappUrl } from './contact';
+import { madeInPlace, mailtoUrl, useContact } from './contact';
 import { ContactButton } from './ContactButton';
 import { Band, BrandButton, NavyBackdrop, useLandingLayout } from './parts';
 
@@ -75,6 +75,7 @@ export function FinalCall({ label, onPress, onLayoutRange }: { label: string; on
 
 export function Footer() {
   const { t } = useTranslation();
+  const { hasWhatsApp, whatsappUrl } = useContact();
   const insets = useSafeAreaInsets();
   const social = Object.entries(site.social).filter(([, url]) => url) as [keyof typeof site.social, string][];
   return (

@@ -29,6 +29,8 @@ img{max-width:100%}
 .center{text-align:center}.center-items{align-items:center}.narrow{max-width:560px}
 /* Where the visitor is (set by the page script): the UAE price and lines, or the international ones. */
 html[data-uae="1"] .intl,html:not([data-uae="1"]) .uae{display:none}
+/* WhatsApp links show only while a number is set in Console → Settings → Contact (client.js keeps data-wa current). */
+html:not([data-wa]) .wa-on,html[data-wa] .wa-off{display:none!important}
 /* Bands and their content width. */
 .band{position:relative;width:100%;overflow:hidden}
 .navy{background:var(--navy);color:#fff}.mist{background:var(--mist)}.lilac{background:var(--lilac)}.card{background:var(--card)}

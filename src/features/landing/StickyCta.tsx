@@ -10,11 +10,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { brandPalette as B, spacing } from '@/theme';
 import { Icon } from '@/ui';
 
-import { hasWhatsApp, whatsappUrl } from './contact';
+import { useContact } from './contact';
 import { BrandButton } from './parts';
 
 function WhatsAppRound({ size, testID }: { size: number; testID: string }) {
   const { t } = useTranslation();
+  const { whatsappUrl } = useContact();
   return (
     <Pressable
       accessibilityRole="link"
@@ -30,6 +31,7 @@ function WhatsAppRound({ size, testID }: { size: number; testID: string }) {
 
 export function StickyBar({ visible, label, onStart }: { visible: boolean; label: string; onStart: () => void }) {
   const insets = useSafeAreaInsets();
+  const { hasWhatsApp } = useContact();
   if (!visible) return null;
   return (
     <View style={[styles.bar, { paddingBottom: insets.bottom + spacing.md }]} testID="landing-sticky">
@@ -42,6 +44,7 @@ export function StickyBar({ visible, label, onStart }: { visible: boolean; label
 }
 
 export function FloatingWhatsApp() {
+  const { hasWhatsApp } = useContact();
   if (!hasWhatsApp) return null;
   return (
     <View style={styles.floating} pointerEvents="box-none">

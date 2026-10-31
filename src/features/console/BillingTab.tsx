@@ -6,11 +6,12 @@ import { spacing } from '@/theme';
 import { Button, Card, FormError, QueryState, StatusPill, Text, TextField, useToast } from '@/ui';
 
 import { useBillingSettings, useSetBilling, type BillingSettings } from './api';
+import { ContactCard } from './ContactCard';
 
 /**
  * Settings (full update, Phase 6 g): billing on or off for everyone — with a confirmation, as it decides whether
  * owners see prices and whether an ended free period stops new work — the public free days, the pilot's days and how
- * many pilot salons there can be.
+ * many pilot salons there can be; and the WhatsApp number and message (owner's fix list A4).
  */
 export function BillingTab() {
   const settings = useBillingSettings();
@@ -123,6 +124,7 @@ function BillingSettingsForm({ b }: { b: BillingSettings }) {
           testID="console-billing-save"
         />
       </Card>
+      <ContactCard />
     </View>
   );
 }

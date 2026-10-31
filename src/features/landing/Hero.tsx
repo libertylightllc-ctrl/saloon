@@ -15,7 +15,7 @@ import gentsQueue from '../../../assets/images/landing/gents-queue.webp';
 import ladiesHome from '../../../assets/images/landing/ladies-home.webp';
 import queueCard from '../../../assets/images/landing/queue-card.webp';
 import star from '../../../assets/images/splash-icon.png';
-import { demoHref, hasWhatsApp, whatsappUrl } from './contact';
+import { useContact } from './contact';
 import { useVisitorInUae } from './visitor';
 import { Band, BrandButton, Eyebrow, NavyBackdrop, PhoneShot, useLandingLayout } from './parts';
 
@@ -45,6 +45,7 @@ export function Hero({
   trialLine: string | null;
 }) {
   const { t } = useTranslation();
+  const { demoHref, hasWhatsApp, whatsappUrl } = useContact();
   const insets = useSafeAreaInsets();
   const { wide, compact } = useLandingLayout();
   const uae = useVisitorInUae();

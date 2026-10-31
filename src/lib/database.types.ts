@@ -2341,6 +2341,8 @@ export type Database = {
           public_free_days: number;
           support_assistant: boolean;
           trial_days: number;
+          whatsapp_message: string;
+          whatsapp_number: string;
         };
         Insert: {
           bank_account_name?: string | null;
@@ -2365,6 +2367,8 @@ export type Database = {
           public_free_days?: number;
           support_assistant?: boolean;
           trial_days?: number;
+          whatsapp_message?: string;
+          whatsapp_number?: string;
         };
         Update: {
           bank_account_name?: string | null;
@@ -2389,6 +2393,8 @@ export type Database = {
           public_free_days?: number;
           support_assistant?: boolean;
           trial_days?: number;
+          whatsapp_message?: string;
+          whatsapp_number?: string;
         };
         Relationships: [];
       };
@@ -3974,6 +3980,7 @@ export type Database = {
       admin_set_access: { Args: { p: Json; p_business: string }; Returns: Json };
       admin_set_bank_transfer: { Args: { p_on: boolean }; Returns: undefined };
       admin_set_billing: { Args: { p: Json }; Returns: Json };
+      admin_set_contact: { Args: { p_message: string; p_number: string }; Returns: Json };
       admin_set_card_payments: { Args: { p_mode: string }; Returns: undefined };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
       admin_set_platform_owner: { Args: { p_email: string; p_on: boolean }; Returns: undefined };
@@ -4647,6 +4654,7 @@ export type Database = {
       shift_at: { Args: { p_employee: string; p_local: string }; Returns: Record<string, unknown> };
       shift_minutes: { Args: { p_end: string; p_start: string }; Returns: Record<string, unknown> };
       sign_hygiene_log: { Args: { p: Json }; Returns: string };
+      site_contact: { Args: Record<PropertyKey, never>; Returns: Json };
       staff_directory: {
         Args: { p_business: string };
         Returns: {

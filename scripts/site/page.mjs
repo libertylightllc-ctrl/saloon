@@ -73,12 +73,12 @@ function priceSets(row) {
   };
 }
 
-export function renderPage({ root, lang, row, pilot, api, brand, site, supabase, year }) {
+export function renderPage({ root, lang, row, pilot, contact, api, brand, site, supabase, year }) {
   const t = translator(root, lang);
   const rtl = LANGUAGES.find((l) => l.code === lang).rtl;
-  const digits = site.whatsappNumber.replace(/\D/g, '');
-  const wa = (text) => `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
-  const whatsapp = digits.length >= 8 ? wa(site.whatsappDefaultText) : null;
+  // WhatsApp (owner's fix list A4): the number and message from Console → Settings → Contact as the build read them;
+  // the page script reads them again when the page opens, so a change shows without a new build.
+  const digits = (contact?.whatsapp_number ?? '').replace(/\D/g, '');
   const hasPilot = Boolean(pilot && Number(pilot.max) > 0);
   const c = {
     t,
@@ -96,10 +96,9 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
         ? { days: Number(pilot.days), months: Math.max(1, Math.round(Number(pilot.days) / 30)), max: Number(pilot.max), placesLeft: Number(pilot.places_left) }
         : null,
     startLabel: t('auth.landing.tryFree'),
-    whatsapp,
-    // UAE visitors ask about the pilot while it is on (owner's fix list round 2, B5).
-    whatsappPilot: whatsapp && hasPilot ? wa(site.whatsappPilotText) : null,
-    demo: site.demoBookingUrl || (whatsapp ? wa("Hi, I'd like a quick demo of Saloqo for my salon.") : null),
+    hasWhatsApp: digits.length >= 8,
+    waMessage: contact?.whatsapp_message ?? '',
+    wa: (text) => `https://wa.me/${digits}?text=${encodeURIComponent(text)}`,
     madeIn: site.madeIn === 'Dubai, UAE' ? t('auth.landing.place.dubai') : site.madeIn,
     icon: (name, options) => icon(root, name, options),
   };
@@ -114,11 +113,11 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
     sets: c.prices ? { uae: { currency: c.prices.uae.currency, base: c.prices.uae.baseMinor, extra: c.prices.uae.extraMinor }, intl: { currency: c.prices.intl.currency, base: c.prices.intl.baseMinor, extra: c.prices.intl.extraMinor } } : null,
     lengths: PRICING.lengths,
     texts: { total: raw('auth.landing.calc.total'), perBranch: raw('auth.landing.calc.perBranch') },
+    // The database (its public key, as the app's own page has it): the WhatsApp setting is read again from it.
+    api: api?.url && api?.key ? { url: api.url, key: api.key } : null,
     // The pilot form posts to the database (the public key, as the app's own page has it); the places are refreshed.
     pilot: c.pilot && api?.url && api?.key
       ? {
-          url: api.url,
-          key: api.key,
           texts: {
             thanks: raw('auth.landing.pilot.form.thanks'),
             error: raw('auth.landing.pilot.form.error'),
@@ -145,7 +144,7 @@ export function renderPage({ root, lang, row, pilot, api, brand, site, supabase,
   // is `.uae`); everyone else gets the page as before.
   const main = [pilotSection(c), keep(c), owners(c), proof(c), features(c), video(c), types(c), steps(c), pricing(c), compare(c), trust(c), faq(c), finalCall(c)].join('\n');
   return `<!doctype html>
-<html lang="${lang}" dir="${rtl ? 'rtl' : 'ltr'}">
+<html lang="${lang}" dir="${rtl ? 'rtl' : 'ltr'}"${c.hasWhatsApp ? ' data-wa' : ''}>
 ${head(c, CSS, early(lang))}
 <body>
 ${pilotBar(c)}

@@ -51,12 +51,11 @@ async function prices(url, key) {
   }
 }
 
-/** The pilot as visitors see it (full update, Phase 6): its days, size and places left; null leaves it out (a
- *  database without the pilot yet). */
-async function pilotStatus(url, key) {
+/** A public database function's answer, or null (with a warning) when it cannot be read. */
+async function publicRpc(url, key, fn, missing) {
   if (!url || !key) return null;
   try {
-    const response = await fetch(`${url}/rest/v1/rpc/pilot_status`, {
+    const response = await fetch(`${url}/rest/v1/rpc/${fn}`, {
       method: 'POST',
       headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: '{}',
@@ -65,7 +64,7 @@ async function pilotStatus(url, key) {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return await response.json();
   } catch (error) {
-    console.warn(`Website: no pilot from ${url} (${error.message}); the pilot is left out.`);
+    console.warn(`Website: no ${fn} from ${url} (${error.message}); ${missing}.`);
     return null;
   }
 }
@@ -102,12 +101,15 @@ async function main() {
   // "auto" (local development) is the local database next to the page, as src/lib/supabase.ts resolves it.
   const api = { url: !supabase.url || supabase.url === 'auto' ? 'http://127.0.0.1:54321' : supabase.url.replace(/\/$/, ''), key: supabase.key };
   const row = await prices(api.url, api.key);
-  const pilot = await pilotStatus(api.url, api.key);
+  // The pilot as visitors see it (full update, Phase 6): its days, size and places left; null leaves it out.
+  const pilot = await publicRpc(api.url, api.key, 'pilot_status', 'the pilot is left out');
+  // The WhatsApp number and message (owner's fix list A4); the page reads them again when it opens.
+  const contact = await publicRpc(api.url, api.key, 'site_contact', 'WhatsApp waits for the page to read it');
   const year = new Date().getFullYear();
 
   mkdirSync(join(dist, 'site'), { recursive: true });
   for (const { code } of LANGUAGES) {
-    const html = renderPage({ root, lang: code, row, pilot, api, brand, site, supabase, year });
+    const html = renderPage({ root, lang: code, row, pilot, contact, api, brand, site, supabase, year });
     writeFileSync(join(dist, 'site', `${code}.html`), html);
     console.log(`Website: ${pathOf(code)} → site/${code}.html (${Math.round(html.length / 1024)} KB)`);
   }

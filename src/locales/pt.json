@@ -2947,6 +2947,14 @@
     "audit": {
       "empty": "Nenhuma alteração ainda.",
       "change": "{{before}} → {{after}}"
+    },
+    "contact": {
+      "title": "Contato",
+      "number": "Número do WhatsApp",
+      "numberHint": "Com o código do país, por exemplo +971 50 123 4567. Todos os botões \"Fale no WhatsApp\" do app e do site abrem esse número. Deixe vazio para ocultá-los.",
+      "numberWrong": "Comece com + e o código do país, por exemplo +971 50 123 4567.",
+      "message": "Mensagem do WhatsApp",
+      "messageHint": "A conversa abre com este texto pronto para enviar. Se ficar vazio, volta a mensagem de sempre."
     }
   },
   "profile": {

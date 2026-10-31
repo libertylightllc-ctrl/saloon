@@ -14,6 +14,14 @@ const img = (name, w, h, alt = '', load = true) =>
 export const HERO_SIZES = '(min-width: 980px) 270px, (min-width: 640px) 233px, 173px';
 
 /** The page's buttons (parts.tsx BrandButton): always real links. */
+/**
+ * A WhatsApp link's address and markers (owner's fix list A4). Every WhatsApp link is in the page, with class `wa-on`:
+ * shown while a number is set (`html[data-wa]`, site.css) and pointed at it again when the page opens (client.js), so
+ * a number saved in Console → Settings shows without a new build. `text`: a message of its own (Book a demo).
+ */
+export const DEMO_TEXT = "Hi, I'd like a quick demo of Saloqo for my salon.";
+export const waHref = (c, text) => ` href="${esc(c.wa(text ?? c.waMessage))}" data-wa-link${text ? ` data-wa-text="${esc(text)}"` : ''}`;
+
 export const button = (c, { label, href, kind = 'teal', icon, attrs = '', cls = '' }) =>
   `<a class="btn btn-${kind} ${cls}" href="${esc(href)}"${attrs}><span>${esc(label)}</span>${icon ? c.icon(icon, { size: 18, flip: icon === 'chevronRight' }) : ''}</a>`;
 
@@ -71,9 +79,7 @@ const navLinks = (c) =>
  */
 export function siteHeader(c) {
   const t = c.t;
-  const wa = c.whatsapp
-    ? `<a class="wa-link not-phone" href="${esc(c.whatsapp)}"${external} data-event="cta_whatsapp" aria-label="${esc(t('auth.landing.whatsapp'))}">${c.icon('messageCircle', { size: 18 })}</a>`
-    : '';
+  const wa = `<a class="wa-link not-phone wa-on"${waHref(c)}${external} data-event="cta_whatsapp" aria-label="${esc(t('auth.landing.whatsapp'))}">${c.icon('messageCircle', { size: 18 })}</a>`;
   const langs = LANGUAGES.map(
     (l) => `<a href="${pathOf(l.code)}" hreflang="${l.code}" lang="${l.code}" data-lang="${l.code}"${l.code === c.lang ? ' aria-current="page"' : ''}>${esc(l.name)}</a>`,
   ).join('');
@@ -83,7 +89,7 @@ export function siteHeader(c) {
 <nav class="main-nav wide-only" aria-label="${esc(t('auth.landing.nav.menu'))}">${navLinks(c)}</nav>
 <div class="header-actions">${wa}<span class="not-phone">${languageMenu(c)}</span><a class="signin not-phone" href="/sign-in" data-keep-lang>${esc(t('auth.landing.signIn'))}</a>${button(c, { label: t('auth.landing.tryFree'), href: '#types', attrs: ' data-start="header"', cls: 'btn-sm' })}
 <details class="menu narrow-only"><summary aria-label="${esc(t('auth.landing.nav.menu'))}">${c.icon('menu', { size: 22 })}</summary>
-<nav class="menu-panel">${navLinks(c)}<a href="/sign-in" data-keep-lang>${esc(t('auth.landing.signIn'))}</a>${c.whatsapp ? `<a href="${esc(c.whatsapp)}"${external} data-event="cta_whatsapp">${esc(t('auth.landing.whatsapp'))}</a>` : ''}<div class="menu-langs">${c.icon('languages', { size: 16 })}${langs}</div></nav></details>
+<nav class="menu-panel">${navLinks(c)}<a href="/sign-in" data-keep-lang>${esc(t('auth.landing.signIn'))}</a><a class="wa-on"${waHref(c)}${external} data-event="cta_whatsapp">${esc(t('auth.landing.whatsapp'))}</a><div class="menu-langs">${c.icon('languages', { size: 16 })}${langs}</div></nav></details>
 </div>
 </div>
 </header>`;
@@ -91,8 +97,11 @@ export function siteHeader(c) {
 
 export function hero(c) {
   const t = c.t;
-  const ask = c.whatsapp ? `<a class="ask" href="${esc(c.whatsapp)}"${external} data-event="cta_whatsapp">${c.icon('messageCircle', { size: 16 })}<span>${esc(t('auth.landing.askWhatsApp'))}</span></a>` : '';
-  const demo = c.demo ? button(c, { label: t('auth.landing.demo'), href: c.demo, kind: 'outline', attrs: `${external} data-event="cta_book_demo"`, cls: 'not-phone' }) : '';
+  const ask = `<a class="ask wa-on"${waHref(c)}${external} data-event="cta_whatsapp">${c.icon('messageCircle', { size: 16 })}<span>${esc(t('auth.landing.askWhatsApp'))}</span></a>`;
+  // "Book a demo": the owner's calendar link, else WhatsApp with a ready message (hidden without a number).
+  const demo = c.site.demoBookingUrl
+    ? button(c, { label: t('auth.landing.demo'), href: c.site.demoBookingUrl, kind: 'outline', attrs: `${external} data-event="cta_book_demo"`, cls: 'not-phone' })
+    : button(c, { label: t('auth.landing.demo'), href: c.wa(DEMO_TEXT), kind: 'outline', attrs: `${external} data-wa-link data-wa-text="${esc(DEMO_TEXT)}" data-event="cta_book_demo"`, cls: 'not-phone wa-on' });
   return `<section class="hero navy" aria-labelledby="hero-title">
 <div class="backdrop glow-hero"></div>
 <div class="inner hero-inner">
