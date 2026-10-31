@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { ConfirmEmailPlanNote, useEmailConfirmation } from '@/features/auth/ConfirmEmail';
 import { useWorkspace } from '@/features/auth/session';
 import { isUae } from '@/lib/countries';
 import { can } from '@/lib/permissions';
@@ -51,6 +52,7 @@ export function PlanScreen() {
   const { business, role } = useWorkspace();
   const plan = usePlanStatus(business.id);
   const request = useRequestPlan(business.id);
+  const { unconfirmed } = useEmailConfirmation();
   const [months, setMonths] = useState<PlanMonths>(1);
   const [note, setNote] = useState('');
   const owner = can(role, 'requestPlan') && canOfferPlans;
@@ -113,6 +115,8 @@ export function PlanScreen() {
                 ) : null}
               </Card>
             ) : null}
+            {/* A plan needs a confirmed address (owner's fix list C2): why the buttons below are off. */}
+            {owner && billing ? <ConfirmEmailPlanNote /> : null}
             {/* By card: paid and switched on at once. */}
             {owner && billing ? <PayByCard businessId={business.id} plan={p} months={months} admin={admin} /> : null}
             {/* Neither way to pay is on: ask us (brief 5.3). */}
@@ -132,6 +136,7 @@ export function PlanScreen() {
                 <Button
                   label={t(p.paid ? 'plan.extendAction' : 'plan.requestAction')}
                   loading={request.isPending}
+                  disabled={unconfirmed}
                   onPress={() =>
                     request.mutate({ months, note }, { onSuccess: () => { setNote(''); toast(t('plan.requestSent')); } })
                   }

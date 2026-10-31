@@ -19,6 +19,7 @@ insert into reviewed values
     ('admin_end_plan'),
     ('admin_overview'),
     ('admin_plan_events'),
+    ('admin_salon_duplicates'),
     ('admin_salon_stats'),
     ('admin_salons'),
     ('admin_set_payment_details'),
@@ -124,6 +125,7 @@ insert into reviewed values
     ('set_my_branch'),
     ('admin_set_billing'),
     ('admin_set_access'),
+    ('admin_set_contact'),
     ('admin_pilot_codes'),
     ('admin_create_pilot_code'),
     ('admin_disable_pilot_code'),
@@ -131,6 +133,9 @@ insert into reviewed values
     ('admin_decide_pilot_application'),
     ('admin_platform_audit'),
     ('apply_for_pilot'),
+    ('confirm_my_email'),
+    ('phone_has_salon'),
+    ('site_contact'),
     ('pilot_status'),
     ('set_online_booking'),
     ('set_branch_mode'),
@@ -168,10 +173,13 @@ select is(
         where n.nspname = 'public' and p.prosecdef and has_function_privilege('anon', p.oid, 'EXECUTE') order by 1),
   -- The visitors' support chat (2026-10-12), reading needs the secret kept on the visitor's device; one receipt for
   -- the holder of its secret link (2026-10-19); a salon's booking page when its owner switched it on, and one booking
-  -- for the holder of its secret link (2026-10-20); the pilot's form and places on the website (2026-10-25).
-  array['apply_for_pilot', 'pilot_status', 'public_book', 'public_booking', 'public_booking_cancel', 'public_booking_page',
-        'public_booking_slots', 'public_receipt', 'support_guest_send', 'support_guest_thread']::text[],
-  'signed-out visitors can call only the visitor support chat, the receipt link, the booking page and the pilot form');
+  -- for the holder of its secret link (2026-10-20); the pilot's form and places on the website (2026-10-25); the
+  -- WhatsApp number on the website, and yes/no on whether a number already has a salon, 10 an hour (2026-10-31).
+  array['apply_for_pilot', 'phone_has_salon', 'pilot_status', 'public_book', 'public_booking', 'public_booking_cancel',
+        'public_booking_page', 'public_booking_slots', 'public_receipt', 'site_contact', 'support_guest_send',
+        'support_guest_thread']::text[],
+  'signed-out visitors can call only the visitor support chat, the receipt link, the booking page, the pilot form, the
+  WhatsApp number and the sign-up number check');
 
 select is(
   array(select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace

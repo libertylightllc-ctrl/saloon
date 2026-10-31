@@ -15,7 +15,7 @@ export const ERROR_CODES = [
   'photo_too_large', 'camera_denied', 'invalid_roster', 'invalid_time', 'already_clocked_in', 'not_clocked_in',
   'payroll_approved', 'evidence_required', 'tax2_name_required', 'logo_missing', 'photo_missing', 'invalid_instagram', 'room_name_required', 'room_taken', 'booking_unavailable', 'invalid_booking_link', 'link_taken', 'too_late_to_cancel', 'too_many_bookings', 'card_unavailable', 'already_signed', 'already_requested', 'invalid_token',
   'plan_required', 'billing_off', 'plan_requested', 'branch_name_taken', 'too_many_branches', 'code_taken', 'invalid_setting', 'employee_has_login', 'account_deleted', 'on_break', 'not_on_break', 'not_balanced', 'invalid_pin', 'pin_locked', 'wrong_pin', 'switch_expired', 'server_busy',
-  'invalid_country', 'invalid_tax_rate', 'invalid_iban', 'invalid_swift', 'invalid_link', 'document_exists', 'country_locked', 'invalid_phone', 'wrong_current_password', 'days_required', 'message_required', 'invalid_email', 'unknown',
+  'invalid_country', 'invalid_tax_rate', 'invalid_iban', 'invalid_swift', 'invalid_link', 'document_exists', 'country_locked', 'invalid_phone', 'wrong_current_password', 'days_required', 'message_required', 'invalid_email', 'email_unconfirmed', 'unknown',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];
@@ -51,7 +51,7 @@ export function errorCode(error: unknown): ErrorCode {
   if (/invalid login credentials/i.test(message)) return 'wrong_password';
   if (/banned/i.test(message)) return 'disabled';
   if (/already (been )?registered|user already exists/i.test(message)) return 'email_taken';
-  if (/rate limit|too many requests/i.test(message)) return 'rate_limited';
+  if (status === 429 || /rate limit|too many requests|you can only request this after/i.test(message)) return 'rate_limited';
   if (/payload too large|exceeded the maximum allowed size/i.test(message)) return 'photo_too_large';
   if (/row-level security/i.test(message)) return 'not_allowed';
   if (/token has expired or is invalid|invalid otp|otp.*expired/i.test(message)) return 'invalid_code';

@@ -1,5 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
+import { brand } from '@/config/brand';
+import { track } from '@/lib/analytics';
 import { AppError, errorCode } from '@/lib/errors';
 import { detachedClient, supabase } from '@/lib/supabase';
 
@@ -85,7 +88,24 @@ export async function signUpOwner(
   // With "Confirm email" off Supabase says so outright (owner's fix list C2/C4): the same "already has an account".
   if (error && (error.code === 'user_already_exists' || /already registered/i.test(error.message))) return 'already_registered';
   if (error) raise(error);
-  return signUpOutcome(data);
+  const outcome = signUpOutcome(data);
+  // No confirmation wall (owner's fix list C2): signed straight in, and the link to confirm the address is on its way.
+  if (outcome === 'signed_in') sendConfirmLink(email).catch(() => undefined);
+  return outcome;
+}
+
+/**
+ * "Confirm your email" (owner's fix list C2): a sign-in link to the owner's inbox (Supabase's "Magic Link" email, worded
+ * "Confirm your email for Saloqo"). Opening it signs them in on that browser, and the app counts the address as
+ * confirmed (confirm_my_email). It comes back to the website: on the web to this same site, from the phone apps to
+ * the live site, where the record is made; the app sees it at its next check.
+ */
+export async function sendConfirmLink(email: string): Promise<void> {
+  const { error } = await supabase.auth.signInWithOtp({
+    email: email.trim().toLowerCase(),
+    options: { shouldCreateUser: false, emailRedirectTo: Platform.OS === 'web' ? `${window.location.origin}/` : `${brand.website}/` },
+  });
+  if (error) raise(error);
 }
 
 /**
@@ -95,6 +115,24 @@ export async function signUpOwner(
 export async function phoneHasSalon(phone: string): Promise<boolean> {
   const { data, error } = await supabase.rpc('phone_has_salon', { p_phone: phone });
   return !error && data === true;
+}
+
+export interface EmailConfirmation {
+  confirmed: boolean;
+  /** Confirmed by this sign-in (an emailed link or a reset code). */
+  newly: boolean;
+}
+
+/**
+ * Whether the signed-in address is confirmed (owner's fix list C2). A sign-in that came through the inbox (the emailed
+ * link) confirms it there and then, so this is asked after every sign-in, on whatever screen.
+ */
+export async function askEmailConfirmed(): Promise<EmailConfirmation> {
+  const { data, error } = await supabase.rpc('confirm_my_email');
+  if (error) throw error;
+  const result = data as unknown as EmailConfirmation;
+  if (result.newly) track('email_confirmed');
+  return result;
 }
 
 /** Sends the confirmation email again (Supabase limits how often). */
@@ -117,7 +155,13 @@ export async function resetPasswordWithCode(email: string, code: string, passwor
   const recovery = detachedClient();
   const { error } = await recovery.auth.verifyOtp({ email: address, token: code.trim(), type: 'recovery' });
   if (error) raise(error);
+  // The code came to the inbox, so the address is confirmed (owner's fix list C2). If it was not before, whoever made
+  // the account may not be the inbox's owner: once the new password is saved, every other device is signed out.
+  const { data: confirmed } = await recovery.rpc('confirm_my_email');
   const { error: updateError } = await recovery.auth.updateUser({ password });
+  if (!updateError && (confirmed as { newly?: boolean } | null)?.newly) {
+    await recovery.auth.signOut({ scope: 'others' }).catch(() => undefined);
+  }
   await recovery.auth.signOut({ scope: 'local' }).catch(() => undefined);
   if (updateError) raise(updateError);
   await signInOwner(address, password);

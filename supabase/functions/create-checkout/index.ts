@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
   });
   const { data, error } = await asOwner.rpc('card_checkout_start', { p_business: body.business_id, p_months: body.months });
   if (error) {
-    const code = /card_unavailable|not_allowed|invalid_amount/.exec(error.message)?.[0] ?? 'unknown';
+    const code = /card_unavailable|not_allowed|invalid_amount|email_unconfirmed/.exec(error.message)?.[0] ?? 'unknown';
     return fail(code, code === 'not_allowed' ? 403 : 400);
   }
   const start = data as CheckoutStart;

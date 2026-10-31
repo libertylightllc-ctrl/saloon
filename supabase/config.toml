@@ -201,6 +201,11 @@ web3 = 30
 subject = "Your password reset code"
 content_path = "./supabase/templates/recovery.html"
 
+# The "Confirm your email" link (owner's fix list C2): with "Confirm email" off, owners confirm with a sign-in link.
+[auth.email.template.magic_link]
+subject = "Confirm your email for Saloqo"
+content_path = "./supabase/templates/magic_link.html"
+
 [auth.email]
 # Allow/disallow new user signups via email to your project.
 enable_signup = true

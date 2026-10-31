@@ -957,6 +957,13 @@
       "code": "Prefijo {{code}}",
       "pick": "Prefijo del país",
       "search": "Buscar país"
+    },
+    "confirmEmail": {
+      "banner": "Confirma tu email: enviamos un enlace a {{email}}.",
+      "resend": "Reenviar",
+      "sent": "Enviado. Revisa tu bandeja de entrada y también la carpeta de spam.",
+      "planTitle": "Confirma tu email para comprar un plan",
+      "planBody": "Enviamos un enlace a {{email}}. Ábrelo y luego vuelve aquí."
     }
   },
   "setup": {
@@ -1148,7 +1155,8 @@
     "code_taken": "Ese código ya existe. Elige otro.",
     "invalid_setting": "Ese valor no está permitido. Revísalo e inténtalo de nuevo.",
     "not_enough_cash": "No hay suficiente efectivo en la caja para esto. Paga de otra forma o, primero, añade el efectivo que pusiste, en Cierre de caja.",
-    "cashInDrawer": "Efectivo en la caja: {{amount}}."
+    "cashInDrawer": "Efectivo en la caja: {{amount}}.",
+    "email_unconfirmed": "Primero confirma tu email: abre el enlace que te enviamos."
   },
   "sales": {
     "title": "Ventas",

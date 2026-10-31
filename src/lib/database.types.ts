@@ -1101,6 +1101,12 @@ export type Database = {
           },
         ];
       };
+      email_confirmations: {
+        Row: { confirmed_at: string; email: string; how: string; user_id: string };
+        Insert: { confirmed_at?: string; email: string; how: string; user_id: string };
+        Update: { confirmed_at?: string; email?: string; how?: string; user_id?: string };
+        Relationships: [];
+      };
       employees: {
         Row: {
           active: boolean;
@@ -4257,6 +4263,7 @@ export type Database = {
       closing_preview: { Args: { p_branch: string; p_date?: string }; Returns: Json };
       commission_for: { Args: { p_employee: string; p_period: string }; Returns: number };
       compliance_readiness: { Args: { p_business: string }; Returns: number };
+      confirm_my_email: { Args: Record<PropertyKey, never>; Returns: Json };
       compliance_status: {
         Args: { p_business: string };
         Returns: {

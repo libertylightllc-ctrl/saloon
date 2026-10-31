@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { useEmailConfirmation } from '@/features/auth/ConfirmEmail';
 import { BILLING_LENGTHS, lengthTotal } from '@/config/pricing';
 import { isCurrency } from '@/lib/currencies';
 import { formatMoney } from '@/lib/money';
@@ -22,6 +23,8 @@ export function PayByCard({ businessId, plan, months, admin }: { businessId: str
   const { t } = useTranslation();
   const price = useCardPrice();
   const pay = usePayByCard(businessId);
+  // A confirmed address first (owner's fix list C2); the Plan page says why.
+  const { unconfirmed } = useEmailConfirmation();
   const p = price.data;
   if (!p || p.card_payments === 'off' || (p.card_payments === 'test' && !admin)) return null;
   const currency = isCurrency(p.intl_currency) ? p.intl_currency : 'USD';
@@ -53,6 +56,7 @@ export function PayByCard({ businessId, plan, months, admin }: { businessId: str
         label={t('plan.card.action', { total: formatMoney(total, currency) })}
         icon="creditCard"
         loading={pay.isPending}
+        disabled={unconfirmed}
         onPress={() => pay.mutate(months)}
         testID="plan-card-pay"
       />

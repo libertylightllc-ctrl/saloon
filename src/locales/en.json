@@ -957,6 +957,13 @@
       "code": "Country code {{code}}",
       "pick": "Country code",
       "search": "Search countries"
+    },
+    "confirmEmail": {
+      "banner": "Confirm your email: we sent a link to {{email}}.",
+      "resend": "Resend",
+      "sent": "Sent. Check your inbox, and your spam folder too.",
+      "planTitle": "Confirm your email to buy a plan",
+      "planBody": "We sent a link to {{email}}. Open it, then come back here."
     }
   },
   "setup": {
@@ -1148,7 +1155,8 @@
     "code_taken": "That code already exists. Choose another.",
     "invalid_setting": "That value is not allowed. Check it and try again.",
     "not_enough_cash": "There isn’t enough cash in the drawer for this. Pay another way, or first add the cash you put in, on Cash closing.",
-    "cashInDrawer": "Cash in the drawer: {{amount}}."
+    "cashInDrawer": "Cash in the drawer: {{amount}}.",
+    "email_unconfirmed": "Confirm your email first: open the link we sent you."
   },
   "sales": {
     "title": "Sales",

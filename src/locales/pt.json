@@ -957,6 +957,13 @@
       "code": "Código do país {{code}}",
       "pick": "Código do país",
       "search": "Buscar país"
+    },
+    "confirmEmail": {
+      "banner": "Confirme seu e-mail: enviamos um link para {{email}}.",
+      "resend": "Reenviar",
+      "sent": "Enviado. Verifique sua caixa de entrada e também a pasta de spam.",
+      "planTitle": "Confirme seu e-mail para comprar um plano",
+      "planBody": "Enviamos um link para {{email}}. Abra-o e depois volte aqui."
     }
   },
   "setup": {
@@ -1148,7 +1155,8 @@
     "code_taken": "Esse código já existe. Escolha outro.",
     "invalid_setting": "Esse valor não é permitido. Confira e tente de novo.",
     "not_enough_cash": "Não há dinheiro suficiente na gaveta para isto. Pague de outra forma ou, primeiro, adicione o dinheiro que você colocou, em Fechamento de caixa.",
-    "cashInDrawer": "Dinheiro na gaveta: {{amount}}."
+    "cashInDrawer": "Dinheiro na gaveta: {{amount}}.",
+    "email_unconfirmed": "Primeiro confirme seu e-mail: abra o link que enviamos."
   },
   "sales": {
     "title": "Vendas",

@@ -30,6 +30,7 @@ import { useDashboard, type Dashboard } from './api';
 import { HomeTop } from './HomeHeader';
 import { RecentActivity, RevenueCards, StaffToday, TopServices } from './HomeSections';
 import { PlanBanner } from '@/features/plan/PlanBanner';
+import { ConfirmEmailBanner } from '@/features/auth/ConfirmEmail';
 
 import { MoneyCards } from './MoneyCards';
 import { NeedsAttention } from './NeedsAttention';
@@ -176,6 +177,7 @@ export function HomeScreen() {
               // doing on the right.
               return (
                 <View style={styles.sections}>
+                  <ConfirmEmailBanner />
                   <PlanBanner />
                   {money ? <MoneyCards data={data} row /> : null}
                   {mine_}
@@ -199,6 +201,7 @@ export function HomeScreen() {
             }
             return (
               <View style={styles.sections}>
+                <ConfirmEmailBanner />
                 <PlanBanner />
                 {money ? <MoneyCards data={data} /> : null}
                 {mine_}

@@ -13,6 +13,7 @@ import { redrawTexts, setTaxTerms } from '@/lib/i18n';
 import { formatBps, setActiveCurrency } from '@/lib/money';
 import type { BranchRules, Role } from '@/lib/permissions';
 import { queryClient } from '@/lib/queryClient';
+import { askEmailConfirmed } from './api';
 import { forget } from './quickSwitch';
 import { useSiteCookie } from './siteCookie';
 import { registeredPushToken } from '@/features/notifications/pushToken';
@@ -178,6 +179,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setStatus('signedOut');
       }
       if (event === 'SIGNED_IN') {
+        // A sign-in from the emailed link confirms the address (owner's fix list C2), also before the salon is set up.
+        if (next && !next.user.email?.endsWith('.staff.internal')) {
+          queryClient
+            .fetchQuery({ queryKey: ['email-confirmed', next.user.id], queryFn: askEmailConfirmed, staleTime: 0 })
+            .catch(() => undefined);
+        }
         supabase.rpc('log_access', { p_event: 'sign_in', p_device: Platform.OS }).then(
           () => undefined,
           () => undefined,

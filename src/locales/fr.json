@@ -957,6 +957,13 @@
       "code": "Indicatif {{code}}",
       "pick": "Indicatif du pays",
       "search": "Rechercher un pays"
+    },
+    "confirmEmail": {
+      "banner": "Confirmez votre e-mail : nous avons envoyé un lien à {{email}}.",
+      "resend": "Renvoyer",
+      "sent": "Envoyé. Vérifiez votre boîte de réception, et aussi vos spams.",
+      "planTitle": "Confirmez votre e-mail pour acheter une offre",
+      "planBody": "Nous avons envoyé un lien à {{email}}. Ouvrez-le, puis revenez ici."
     }
   },
   "setup": {
@@ -1148,7 +1155,8 @@
     "code_taken": "Ce code existe déjà. Choisissez-en un autre.",
     "invalid_setting": "Cette valeur n’est pas autorisée. Vérifiez-la et réessayez.",
     "not_enough_cash": "Il n’y a pas assez d’espèces dans le tiroir pour cela. Payez autrement, ou ajoutez d’abord les espèces que vous y avez mises, dans Clôture de caisse.",
-    "cashInDrawer": "Espèces dans le tiroir : {{amount}}."
+    "cashInDrawer": "Espèces dans le tiroir : {{amount}}.",
+    "email_unconfirmed": "Confirmez d'abord votre e-mail : ouvrez le lien que nous vous avons envoyé."
   },
   "sales": {
     "title": "Ventes",

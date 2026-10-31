@@ -63,19 +63,34 @@ export const SAUDI: Country = {
 /** An owner with a set-up business, created the way the setup wizard does it. */
 export async function createOwner(
   mode: SalonMode,
-  opts: { vat?: boolean; openingCash?: number; businessName?: string; plan?: boolean | 'trial'; country?: Country } = {},
+  opts: {
+    vat?: boolean;
+    openingCash?: number;
+    businessName?: string;
+    plan?: boolean | 'trial';
+    country?: Country;
+    /** false: the owner has not opened the "Confirm your email" link yet (owner's fix list C2). */
+    emailConfirmed?: boolean;
+  } = {},
 ): Promise<Owner> {
   const id = uid();
   const email = `owner-${id}@e2e.test`;
   const password = 'Owner1234!';
   const name = `Owner ${id.slice(-4)}`;
-  const { error } = await admin.auth.admin.createUser({
+  const { data: created, error } = await admin.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
     user_metadata: { display_name: name },
   });
   if (error) throw error;
+  // Like an owner who has opened the "Confirm your email" link (owner's fix list C2), unless asked otherwise.
+  if (opts.emailConfirmed !== false) {
+    const { error: confirmError } = await admin
+      .from('email_confirmations')
+      .insert({ user_id: created.user.id, email, how: 'admin' });
+    if (confirmError) throw confirmError;
+  }
   const client = await userClient(email, password);
   const { data, error: rpcError } = await client.rpc('create_business', {
     p: {
@@ -192,6 +207,32 @@ export async function latestCode(email: string): Promise<string> {
     await new Promise((r) => setTimeout(r, 500));
   }
   throw new Error(`No recovery email for ${email}`);
+}
+
+/**
+ * The "Confirm your email" link (owner's fix list C2) from the newest email to this address, sent after `since`, opened
+ * the way a mail app would: the auth server checks it and answers with where to go, the sign-in in the address's
+ * hash. Returned as a path on the app under test (the local auth server only sends people back to its own list of
+ * addresses).
+ */
+export async function openedConfirmLink(email: string, since: number): Promise<string> {
+  for (let i = 0; i < 30; i++) {
+    const res = await fetch(`${MAILPIT_URL}/api/v1/search?query=${encodeURIComponent(`to:${email}`)}&limit=1`);
+    const list = (await res.json()) as { messages?: { ID: string; Created: string }[] };
+    const found = list.messages?.[0];
+    if (found && new Date(found.Created).getTime() >= since - 2000) {
+      const msg = (await (await fetch(`${MAILPIT_URL}/api/v1/message/${found.ID}`)).json()) as { HTML?: string };
+      const link = /href="([^"]*\/auth\/v1\/verify[^"]*)"/.exec(msg.HTML ?? '')?.[1]?.replace(/&amp;/g, '&');
+      if (link) {
+        const verified = await fetch(link, { redirect: 'manual' });
+        const hash = new URL(verified.headers.get('location') ?? '').hash;
+        if (!hash.includes('access_token')) throw new Error(`The link did not sign in: ${hash}`);
+        return `/auth-callback${hash}`;
+      }
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  throw new Error(`No confirmation email for ${email}`);
 }
 
 export interface SaleRow {
