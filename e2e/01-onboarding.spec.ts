@@ -17,7 +17,11 @@ test('fresh device → type → themed sign-in → owner sign-up → setup → e
   // password field (brief 3.2); the offer under the title and above the button (brief 3.1).
   await id(page, 'link-sign-up').click();
   await expect(id(page, 'salon-type-gents')).toHaveCount(0);
+  // One password box with its show/hide eye, no "Confirm password" (owner's fix list C1).
   await expect(field(page, 'confirm')).toHaveCount(0);
+  await expect(page.locator('input[type="password"]').filter({ visible: true })).toHaveCount(1);
+  await expect(page.getByText('Confirm password').filter({ visible: true })).toHaveCount(0);
+  await expect(id(page, 'field-password-reveal')).toBeVisible();
   await expect(id(page, 'auth-offer')).toHaveText('Free to start · No card needed · No auto-renewal');
   await expect(id(page, 'sign-up-offer-small')).toHaveCount(0);
   await expect(id(page, 'sign-up-to-sign-in')).toBeVisible();
