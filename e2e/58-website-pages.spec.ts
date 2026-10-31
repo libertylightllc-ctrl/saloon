@@ -107,7 +107,11 @@ test('every page of the app opens; any other address is a real "not found"; cont
   expect(routes.length).toBeGreaterThan(50);
   for (const route of routes) {
     const res = await request.get(`${site}/${route}`, { maxRedirects: 0 });
-    expect.soft(res.status(), route).toBe(route === 'welcome' ? 308 : 200);
+    if (route.startsWith('b/')) {
+      // A booking link goes to its preview function first (D1), which runs only on Vercel; "?app=1" skips it.
+      expect.soft(res.headers()['x-function'], route).toBe('/api/booking-preview?slug=x1');
+      expect.soft((await request.get(`${site}/${route}?app=1`, { maxRedirects: 0 })).status(), `${route}?app=1`).toBe(200);
+    } else expect.soft(res.status(), route).toBe(route === 'welcome' ? 308 : 200);
   }
   for (const path of ['/nope', '/queue/extra', '/wp-login.php', '/b']) {
     const res = await request.get(`${site}${path}`);

@@ -6,6 +6,8 @@
  *   npm run build:web:local && node scripts/serve-web.mjs 8090 [dist]
  *
  * /api/* and /_vercel/* answer 404 (the functions and Web Analytics run only on Vercel; the pages work without them).
+ * An address that vercel.json sends to a function (a booking link, D1) answers 404 too, naming the function in an
+ * "x-function" header, so a test can check where it would go.
  */
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -41,7 +43,11 @@ createServer((req, res) => {
   const url = new URL(req.url, 'http://local');
   const jar = cookies(req.headers.cookie);
   const has = (c) =>
-    c.type === 'cookie' ? c.key in jar : c.type === 'header' && new RegExp(`^${c.value}$`).test(String(req.headers[c.key] ?? ''));
+    c.type === 'cookie'
+      ? c.key in jar
+      : c.type === 'query'
+        ? url.searchParams.has(c.key)
+        : c.type === 'header' && new RegExp(`^${c.value}$`).test(String(req.headers[c.key] ?? ''));
   const applies = (rule) => !(rule.missing ?? []).some(has) && (rule.has ?? []).every(has);
   // "trailingSlash": false — "/queue/" → "/queue".
   if (config.trailingSlash === false && url.pathname.length > 1 && url.pathname.endsWith('/')) {
@@ -55,18 +61,23 @@ createServer((req, res) => {
     return;
   }
   let target = file(url.pathname);
+  let fn = null;
   if (!target && !/^\/(api|_vercel)\//.test(url.pathname)) {
     for (const rule of config.rewrites) {
       const values = match(rule.source, url.pathname);
       if (!values || !applies(rule)) continue;
-      target = file(rule.destination.replace(/:(\w+)/g, (_, n) => values[n]));
+      const destination = rule.destination.replace(/:(\w+)/g, (_, n) => values[n]);
+      if (destination.startsWith('/api/')) fn = destination;
+      else target = file(destination);
       break;
     }
   }
   if (!target) {
     // No page here: Vercel answers 404 with dist/404.html.
     const page = file('/404.html');
-    res.writeHead(404, { 'content-type': page ? TYPES['.html'] : 'text/plain' }).end(page ? readFileSync(page) : 'Not found');
+    res
+      .writeHead(404, { 'content-type': page ? TYPES['.html'] : 'text/plain', ...(fn ? { 'x-function': fn } : {}) })
+      .end(page ? readFileSync(page) : 'Not found');
     return;
   }
   res.writeHead(200, { 'content-type': TYPES[extname(target)] ?? 'application/octet-stream' }).end(readFileSync(target));
