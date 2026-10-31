@@ -18,13 +18,13 @@ test('a beauty & wellness studio: picked on the home page, set up with its own s
   await id(page, 'sign-up-submit').click();
 
   await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });
-  await field(page, 'businessName').fill('Calm Studio');
-  await id(page, 'setup-next').click();
-  await id(page, 'setup-next').click(); // country: UAE
-  // The type picked on the home page is already chosen.
+  // Step 1 is the type (owner's fix list C3); the one picked on the home page is already chosen.
   await expect(id(page, 'setup-mode-wellness')).toBeVisible();
   await expect(id(page, 'setup-mode-unisex')).toBeVisible();
   await id(page, 'setup-next').click();
+  await field(page, 'businessName').fill('Calm Studio');
+  await id(page, 'setup-next').click();
+  await id(page, 'setup-next').click(); // country: UAE
   await field(page, 'branchName').fill('Marina');
   await id(page, 'setup-next').click();
   await id(page, 'setup-next').click(); // create
