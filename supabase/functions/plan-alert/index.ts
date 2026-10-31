@@ -7,40 +7,12 @@ import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { localOnly, secret } from '../_shared/env.ts';
 import { cors, json } from '../_shared/staff.ts';
+import { pilotMessage, type PilotAlert } from './pilot.ts';
 
 const RESEND = 'https://api.resend.com/emails';
 const SITE = 'https://www.saloqo.com';
 /** Pilot applications also go to the address on the website (full update brief, Phase 3). */
 const HELLO = 'hello@saloqo.com';
-
-interface PilotAlert {
-  id: string;
-  name: string;
-  salon_name: string;
-  emirate: string;
-  area: string | null;
-  salon_type: string;
-  staff_count: number;
-  whatsapp: string;
-  language: string;
-  whatsapp_ok: boolean;
-  created_at: string;
-  admin_emails: string[] | null;
-}
-
-function pilotMessage(a: PilotAlert): { subject: string; text: string } {
-  return {
-    subject: `Pilot application: ${a.salon_name}`,
-    text: [
-      `${a.name} applied for the pilot for ${a.salon_name}.`,
-      `Where: ${[a.emirate.replace(/_/g, ' '), a.area].filter(Boolean).join(', ')}`,
-      `Type: ${a.salon_type} · staff: ${a.staff_count} · language: ${a.language}`,
-      `WhatsApp: ${a.whatsapp}${a.whatsapp_ok ? ' (OK to message about the pilot)' : ' (did not tick the OK to message)'}`,
-      '',
-      `Approve or decline in the console: ${SITE}/admin (Pilot).`,
-    ].join('\n'),
-  };
-}
 
 interface Alert {
   event_id: string;
