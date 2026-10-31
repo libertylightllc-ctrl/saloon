@@ -77,6 +77,7 @@ insert into reviewed values
     ('public_book'),
     ('public_booking'),
     ('public_booking_cancel'),
+    ('public_booking_link'),
     ('public_booking_page'),
     ('public_booking_slots'),
     ('public_receipt'),
@@ -175,9 +176,10 @@ select is(
   -- the holder of its secret link (2026-10-19); a salon's booking page when its owner switched it on, and one booking
   -- for the holder of its secret link (2026-10-20); the pilot's form and places on the website (2026-10-25); the
   -- WhatsApp number on the website, and yes/no on whether a number already has a salon, 10 an hour (2026-10-31).
+  -- Where a salon's old booking link leads now (2026-11-01).
   array['apply_for_pilot', 'phone_has_salon', 'pilot_status', 'public_book', 'public_booking', 'public_booking_cancel',
-        'public_booking_page', 'public_booking_slots', 'public_receipt', 'site_contact', 'support_guest_send',
-        'support_guest_thread']::text[],
+        'public_booking_link', 'public_booking_page', 'public_booking_slots', 'public_receipt', 'site_contact',
+        'support_guest_send', 'support_guest_thread']::text[],
   'signed-out visitors can call only the visitor support chat, the receipt link, the booking page, the pilot form, the
   WhatsApp number and the sign-up number check');
 

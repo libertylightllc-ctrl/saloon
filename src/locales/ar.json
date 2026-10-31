@@ -3236,7 +3236,8 @@
       "saveInstagram": "حفظ إنستغرام",
       "instagramSaved": "تم حفظ إنستغرام",
       "instagramRemoved": "تمت إزالة إنستغرام",
-      "instagramPlaceholder": "@salonak"
+      "instagramPlaceholder": "@salonak",
+      "oldLinkWorks": "رابطك القديم يبقى يعمل: يوجّه الناس إلى الرابط الجديد."
     },
     "instagram": "إنستغرام",
     "openDays": "مفتوح {{days}}",

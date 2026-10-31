@@ -4,7 +4,7 @@
  * Ladies) and the visitor's language. The booking lands in the salon's queue at once.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +20,7 @@ import { formatMoney, sum } from '@/lib/money';
 import { spacing, ThemeProvider } from '@/theme';
 import { Button, EmptyState, FormError, FormTextField, HeaderBand, QueryState, Screen, SectionHeader, Text } from '@/ui';
 
-import { useBook, useBookingPage, useBookingSlots, type BookingPage } from './api';
+import { useBook, useBookingLinkNow, useBookingPage, useBookingSlots, type BookingPage } from './api';
 import { DayChips, ServiceList, StaffChips, TimeGrid } from './BookingPickers';
 import { SalonCard } from './SalonCard';
 
@@ -34,6 +34,9 @@ type Details = z.infer<typeof schema>;
 export function BookingScreen({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const page = useBookingPage(slug);
+  // An old link goes on to the salon's current one (owner's fix list D3; the website already redirects it).
+  const now = useBookingLinkNow(slug, page.data === null);
+  if (now.data) return <Redirect href={`/b/${now.data}`} />;
   return (
     <QueryState query={page}>
       {(p) =>
@@ -41,7 +44,7 @@ export function BookingScreen({ slug }: { slug: string }) {
           <ThemeProvider mode={p.salon.mode}>
             <BookingForm slug={slug} page={p} />
           </ThemeProvider>
-        ) : (
+        ) : now.isPending ? null : (
           <Screen header={<HeaderBand title={t('booking.title')} />}>
             <EmptyState illustration="no-results" message={t('booking.notFound')} />
           </Screen>

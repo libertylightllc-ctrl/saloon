@@ -59,6 +59,19 @@ export function useBookingPage(slug: string) {
   });
 }
 
+/** Where an old booking link leads now (owner's fix list D3): the salon's current link, or null. */
+export function useBookingLinkNow(slug: string, enabled: boolean) {
+  return useQuery({
+    queryKey: ['booking-link', slug],
+    enabled,
+    queryFn: async (): Promise<string | null> => {
+      const { data, error } = await supabase.rpc('public_booking_link', { p_slug: slug });
+      if (error) throw error;
+      return data ?? null;
+    },
+  });
+}
+
 /** Free start times on a day for the picked services, with anyone (null) or one person. */
 export function useBookingSlots(slug: string, date: BusinessDate | null, serviceIds: string[], employeeId: string | null) {
   return useQuery({

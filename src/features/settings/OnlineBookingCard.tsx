@@ -86,6 +86,9 @@ export function OnlineBookingCard() {
                 }
                 testID="online-booking-save-link"
               />
+              <Text variant="small" color="textSecondary" testID="online-booking-old-link">
+                {t('booking.owner.oldLinkWorks')}
+              </Text>
             </View>
           ) : null}
           <BookingProfileFields />

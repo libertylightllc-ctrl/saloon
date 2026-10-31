@@ -3163,7 +3163,8 @@
       "saveInstagram": "Save Instagram",
       "instagramSaved": "Instagram saved",
       "instagramRemoved": "Instagram removed",
-      "instagramPlaceholder": "@yoursalon"
+      "instagramPlaceholder": "@yoursalon",
+      "oldLinkWorks": "Your old link keeps working: it sends people to the new one."
     },
     "instagram": "Instagram",
     "openDays": "Open {{days}}",

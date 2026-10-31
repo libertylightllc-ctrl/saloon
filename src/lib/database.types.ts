@@ -4474,6 +4474,7 @@ export type Database = {
       public_book: { Args: { p: Json }; Returns: Json };
       public_booking: { Args: { p_token: string }; Returns: Json };
       public_booking_cancel: { Args: { p_token: string }; Returns: undefined };
+      public_booking_link: { Args: { p_slug: string }; Returns: string };
       public_booking_page: { Args: { p_slug: string }; Returns: Json };
       public_booking_slots: {
         Args: { p_date: string; p_employee?: string; p_services: string[]; p_slug: string };
