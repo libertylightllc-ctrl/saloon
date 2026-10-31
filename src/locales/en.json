@@ -2768,7 +2768,9 @@
       "none": "Nothing yet.",
       "pilot": "Pilot places left",
       "review_one": "{{count}} new application – review",
-      "review": "{{count}} new applications – review"
+      "review": "{{count}} new applications – review",
+      "testsLeftOut": "{{count}} test salons are left out of these numbers.",
+      "testsLeftOut_one": "{{count}} test salon is left out of these numbers."
     },
     "salons": {
       "search": "Search salons, owners, codes",
@@ -2797,7 +2799,12 @@
       "sameName": "Same owner name as {{salons}}",
       "samePhone": "Same number as {{salons}}",
       "branches": "{{count}} branches",
-      "branches_one": "{{count}} branch"
+      "branches_one": "{{count}} branch",
+      "test": "Test",
+      "testSwitch": "Test salon",
+      "testHint": "Left out of the Overview numbers and the pilot’s places, and labelled “Test” in the lists. The salon works as before.",
+      "testMarked": "{{name}} is now a test salon",
+      "testUnmarked": "{{name}} is no longer a test salon"
     },
     "accounts": {
       "title": "Accounts ({{count}})",
@@ -2994,7 +3001,9 @@
       "codeMadeUntil": "Pilot code {{code}} made: {{length}}, {{uses}}, valid until {{date}}",
       "codeOff": "Pilot code {{code}} switched off",
       "approved": "{{salon}}: pilot application approved, code {{code}}",
-      "declined": "{{salon}}: pilot application declined"
+      "declined": "{{salon}}: pilot application declined",
+      "testOn": "{{salon}}: marked as a test salon",
+      "testOff": "{{salon}}: no longer a test salon"
     },
     "contact": {
       "title": "Contact",

@@ -3958,6 +3958,8 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: { business_id: string; others: string[]; reason: string }[];
       };
+      admin_set_test_salon: { Args: { p_business: string; p_test: boolean }; Returns: boolean };
+      admin_test_salons: { Args: Record<PropertyKey, never>; Returns: { business_id: string }[] };
       admin_salons: {
         Args: Record<PropertyKey, never>;
         Returns: {

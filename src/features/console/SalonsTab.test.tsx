@@ -1,7 +1,8 @@
 /**
  * The console's Salons list draws 50 salons at a time (owner's fix list #12): hundreds of rows at once made the tab
  * slow. "Show more" adds the next 50, and search looks through every salon, not only the ones drawn. Salons that look
- * like the same owner are marked, naming the others (final brief C4). Branches are counted in words (E4).
+ * like the same owner are marked, naming the others (final brief C4). Branches are counted in words (E4). Test salons
+ * are labelled "Test" (E1).
  */
 import { fireEvent, screen } from '@testing-library/react-native';
 
@@ -52,6 +53,8 @@ jest.mock('./api', () => ({
       : { data: new Map(), isError: false, error: null, refetch: mockRefetchStats },
   useCloseSalon: () => ({ mutate: jest.fn(), isPending: false, error: null }),
   useSalonDuplicates: () => ({ data: new Map([['b-3', { name: ['Salon 7'], phone: ['Salon 7', 'Salon 9'] }]]) }),
+  useTestSalons: () => ({ data: new Set(['b-5']) }),
+  useSetTestSalon: () => ({ mutate: jest.fn(), isPending: false, error: null }),
 }));
 jest.mock('./AccessForm', () => ({ AccessForm: () => null, accessLabel: () => 'Free until 1 Dec 2026' }));
 // The bottom sheet's animation library does not load in tests; no sheet is opened here.
@@ -119,4 +122,10 @@ it('counts branches in words: "1 branch", "2 branches", and Arabic’s own forms
     expect.stringMatching(/11\S* فرعًا$/),
     expect.stringMatching(/100\S* فرع$/),
   ]);
+});
+
+it('labels a test salon "Test", and only that one (final brief E1)', async () => {
+  await renderInApp(<SalonsTab onHistory={jest.fn()} />);
+  expect(screen.getByTestId('admin-salon-salon5')).toHaveTextContent(/Test/);
+  expect(screen.getByTestId('admin-salon-salon4')).not.toHaveTextContent(/Test/);
 });

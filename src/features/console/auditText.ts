@@ -88,6 +88,8 @@ export function auditSentence(r: AuditRow, t: Translate, day: Day): string {
       return t('console.audit.approved', { salon, code: text(a.code) ?? '—' });
     case 'pilot_application:decline':
       return t('console.audit.declined', { salon });
+    case 'salon:test':
+      return t(a.test === true ? 'console.audit.testOn' : 'console.audit.testOff', { salon });
     default:
       return raw(r, t);
   }

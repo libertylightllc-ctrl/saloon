@@ -2769,7 +2769,9 @@
       "none": "Nada ainda.",
       "pilot": "Vagas restantes no piloto",
       "review_one": "{{count}} inscrição nova – rever",
-      "review": "{{count}} inscrições novas – rever"
+      "review": "{{count}} inscrições novas – rever",
+      "testsLeftOut": "{{count}} salões de teste ficam fora destes números.",
+      "testsLeftOut_one": "{{count}} salão de teste fica fora destes números."
     },
     "salons": {
       "search": "Pesquisar salões, proprietários, códigos",
@@ -2798,7 +2800,12 @@
       "sameName": "Mesmo nome de dono que {{salons}}",
       "samePhone": "Mesmo número que {{salons}}",
       "branches": "{{count}} filiais",
-      "branches_one": "{{count}} filial"
+      "branches_one": "{{count}} filial",
+      "test": "Teste",
+      "testSwitch": "Salão de teste",
+      "testHint": "Fica fora dos números da Visão geral e das vagas do piloto, e aparece como “Teste” nas listas. O salão funciona como antes.",
+      "testMarked": "{{name}} agora é um salão de teste",
+      "testUnmarked": "{{name}} não é mais um salão de teste"
     },
     "accounts": {
       "title": "Contas ({{count}})",
@@ -2995,7 +3002,9 @@
       "codeMadeUntil": "Código do piloto {{code}} criado: {{length}}, {{uses}}, válido até {{date}}",
       "codeOff": "Código do piloto {{code}} desativado",
       "approved": "{{salon}}: inscrição no piloto aprovada, código {{code}}",
-      "declined": "{{salon}}: inscrição no piloto recusada"
+      "declined": "{{salon}}: inscrição no piloto recusada",
+      "testOn": "{{salon}}: marcado como salão de teste",
+      "testOff": "{{salon}}: não é mais um salão de teste"
     },
     "contact": {
       "title": "Contato",

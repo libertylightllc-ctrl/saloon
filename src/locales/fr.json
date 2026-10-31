@@ -2769,7 +2769,9 @@
       "none": "Rien pour l’instant.",
       "pilot": "Places restantes du pilote",
       "review_one": "{{count}} nouvelle candidature – à examiner",
-      "review": "{{count}} nouvelles candidatures – à examiner"
+      "review": "{{count}} nouvelles candidatures – à examiner",
+      "testsLeftOut": "{{count}} salons de test sont exclus de ces chiffres.",
+      "testsLeftOut_one": "{{count}} salon de test est exclu de ces chiffres."
     },
     "salons": {
       "search": "Rechercher salons, propriétaires, codes",
@@ -2798,7 +2800,12 @@
       "sameName": "Même nom de propriétaire que {{salons}}",
       "samePhone": "Même numéro que {{salons}}",
       "branches": "{{count}} succursales",
-      "branches_one": "{{count}} succursale"
+      "branches_one": "{{count}} succursale",
+      "test": "Test",
+      "testSwitch": "Salon de test",
+      "testHint": "Exclu des chiffres de la Vue d’ensemble et des places du pilote, et marqué « Test » dans les listes. Le salon fonctionne comme avant.",
+      "testMarked": "{{name}} est maintenant un salon de test",
+      "testUnmarked": "{{name}} n’est plus un salon de test"
     },
     "accounts": {
       "title": "Comptes ({{count}})",
@@ -2995,7 +3002,9 @@
       "codeMadeUntil": "Code pilote {{code}} créé : {{length}}, {{uses}}, valable jusqu’au {{date}}",
       "codeOff": "Code pilote {{code}} désactivé",
       "approved": "{{salon}} : candidature au pilote acceptée, code {{code}}",
-      "declined": "{{salon}} : candidature au pilote refusée"
+      "declined": "{{salon}} : candidature au pilote refusée",
+      "testOn": "{{salon}} : marqué comme salon de test",
+      "testOff": "{{salon}} : n’est plus un salon de test"
     },
     "contact": {
       "title": "Contact",

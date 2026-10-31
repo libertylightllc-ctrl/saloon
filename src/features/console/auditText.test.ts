@@ -69,6 +69,11 @@ it('a salon’s access, the pilot codes and applications', () => {
   expect(say(row('pilot_application:decline', { status: 'new' }, { status: 'declined', code: null }, { subject: 'Demo pilot' }))).toBe('Demo pilot: pilot application declined');
 });
 
+it('a salon marked as a test salon, and back (final brief E1)', () => {
+  expect(say(row('salon:test', { test: false }, { test: true }, { salon: 'Red Rose' }))).toBe('Red Rose: marked as a test salon');
+  expect(say(row('salon:test', { test: true }, { test: false }, { salon: 'Red Rose' }))).toBe('Red Rose: no longer a test salon');
+});
+
 it('a kind of change it does not know keeps the old form rather than hiding it', () => {
   expect(say(row('something:new', { a: 1 }, { a: 2 }, { salon: 'X' }))).toBe('something:new · X · a: 1 → a: 2');
 });

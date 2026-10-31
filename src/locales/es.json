@@ -2769,7 +2769,9 @@
       "none": "Aún no hay nada.",
       "pilot": "Plazas libres del piloto",
       "review_one": "{{count}} solicitud nueva – revisar",
-      "review": "{{count}} solicitudes nuevas – revisar"
+      "review": "{{count}} solicitudes nuevas – revisar",
+      "testsLeftOut": "{{count}} salones de prueba no cuentan en estas cifras.",
+      "testsLeftOut_one": "{{count}} salón de prueba no cuenta en estas cifras."
     },
     "salons": {
       "search": "Buscar salones, dueños, códigos",
@@ -2798,7 +2800,12 @@
       "sameName": "Mismo nombre de dueño que {{salons}}",
       "samePhone": "Mismo número que {{salons}}",
       "branches": "{{count}} sucursales",
-      "branches_one": "{{count}} sucursal"
+      "branches_one": "{{count}} sucursal",
+      "test": "Prueba",
+      "testSwitch": "Salón de prueba",
+      "testHint": "No cuenta en las cifras del Resumen ni en las plazas del piloto, y aparece como «Prueba» en las listas. El salón funciona igual.",
+      "testMarked": "{{name}} ahora es un salón de prueba",
+      "testUnmarked": "{{name}} ya no es un salón de prueba"
     },
     "accounts": {
       "title": "Cuentas ({{count}})",
@@ -2995,7 +3002,9 @@
       "codeMadeUntil": "Código del piloto {{code}} creado: {{length}}, {{uses}}, válido hasta el {{date}}",
       "codeOff": "Código del piloto {{code}} desactivado",
       "approved": "{{salon}}: solicitud del piloto aprobada, código {{code}}",
-      "declined": "{{salon}}: solicitud del piloto rechazada"
+      "declined": "{{salon}}: solicitud del piloto rechazada",
+      "testOn": "{{salon}}: marcado como salón de prueba",
+      "testOff": "{{salon}}: ya no es un salón de prueba"
     },
     "contact": {
       "title": "Contacto",

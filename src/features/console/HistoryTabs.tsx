@@ -7,7 +7,7 @@ import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Chip, EmptyState, ListRow, QueryState, StatusPill } from '@/ui';
 
-import { useActivity, usePlanEvents } from './api';
+import { useActivity, usePlanEvents, useTestSalons } from './api';
 import { mergeRepeatRequests } from './planEvents';
 
 const ZONE = 'Asia/Dubai';
@@ -21,6 +21,7 @@ export function PlansTab() {
   const { t } = useTranslation();
   const dates = useDates();
   const events = usePlanEvents();
+  const tests = useTestSalons();
   return (
     <QueryState query={events} isEmpty={(rows) => rows.length === 0} empty={<EmptyState illustration="no-results" message={t('console.plans.empty')} />}>
       {(rows) => (
@@ -42,10 +43,13 @@ export function PlansTab() {
                 ...(e.repeats > 1 ? [t('console.plans.repeats', { count: e.repeats, date: dates.at(e.first_at, ZONE, 'd MMM yyyy · HH:mm') })] : []),
               ]}
               badges={
-                <StatusPill
-                  status={KIND_STATUS[e.kind as keyof typeof KIND_STATUS] ?? 'pending_approval'}
-                  label={t(`console.plans.kinds.${e.kind}` as 'console.plans.kinds.request', { defaultValue: e.kind })}
-                />
+                <View style={styles.badges}>
+                  <StatusPill
+                    status={KIND_STATUS[e.kind as keyof typeof KIND_STATUS] ?? 'pending_approval'}
+                    label={t(`console.plans.kinds.${e.kind}` as 'console.plans.kinds.request', { defaultValue: e.kind })}
+                  />
+                  {tests.data?.has(e.business_id) ? <StatusPill tone="info" label={t('console.salons.test')} /> : null}
+                </View>
               }
             />
           ))}
@@ -86,5 +90,6 @@ export function ActivityTab({ salon, onClear }: { salon: { id: string; name: str
 
 const styles = StyleSheet.create({
   list: { gap: spacing.sm },
+  badges: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
   filter: { flexDirection: 'row' },
 });

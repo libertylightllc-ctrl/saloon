@@ -16,6 +16,8 @@ export interface Overview {
   salons_trial: number;
   salons_pilot: number;
   salons_comp: number;
+  /** Test salons, left out of every other number here (final brief E1). */
+  salons_test: number;
   billing_enabled: boolean;
   pilot_places_left: number;
   pilot_applications_new: number;
@@ -197,6 +199,30 @@ export function useSetContact() {
 }
 
 export type AccessAction = 'pilot' | 'extend' | 'set_end' | 'end_now' | 'comp' | 'note';
+
+/** The salons marked as test salons (final brief E1): labelled "Test" in the lists, left out of the Overview. */
+export function useTestSalons() {
+  return useQuery({
+    queryKey: ['platform', 'test-salons'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('admin_test_salons');
+      if (error) throw error;
+      return new Set((data ?? []).map((r) => r.business_id));
+    },
+  });
+}
+
+/** Mark or unmark a test salon; the Overview, the lists and Changes follow. */
+export function useSetTestSalon() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (v: { businessId: string; test: boolean }) => {
+      const { error } = await supabase.rpc('admin_set_test_salon', { p_business: v.businessId, p_test: v.test });
+      if (error) throw error;
+    },
+    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}
 
 /** One salon's access: make pilot (days or a date), extend 30 days, set the end, end now, free for good, the note. */
 export function useSetAccess() {

@@ -13,7 +13,8 @@ const money = (minor: number, currency: string) => (isCurrency(currency) ? forma
 
 /**
  * Totals across the service: salons and plans, people, sign-ups, countries, sales and plan income. New pilot
- * applications are a highlighted link to Pilot → Applications (owner's fix list A1).
+ * applications are a highlighted link to Pilot → Applications (owner's fix list A1). Test salons are left out of all
+ * of it, and the last line says how many (final brief E1).
  */
 export function OverviewTab({ onOpenPilot }: { onOpenPilot: () => void }) {
   const { t, i18n } = useTranslation();
@@ -55,8 +56,14 @@ export function OverviewTab({ onOpenPilot }: { onOpenPilot: () => void }) {
 
           <SectionHeader title={t('console.overview.countries')} />
           {o.countries.map((c) => (
-            <ListRow key={c.code} title={countryName(c.code, i18n.language)} trailing={<Text variant="bodyStrong" tabular>{c.salons}</Text>} />
+            <ListRow key={c.code} title={countryName(c.code, i18n.language)} trailing={<Text variant="bodyStrong" tabular>{c.salons}</Text>} testID={`console-country-${c.code}`} />
           ))}
+
+          {o.salons_test > 0 ? (
+            <Text variant="small" color="textSecondary" testID="console-tests-left-out">
+              {t('console.overview.testsLeftOut', { count: o.salons_test })}
+            </Text>
+          ) : null}
         </View>
       )}
     </QueryState>

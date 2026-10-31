@@ -6,7 +6,7 @@ import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Button, Card, FormError, ListRow, QueryState, SearchBar, SectionHeader, StatusPill, Text, TextField, useToast } from '@/ui';
 
-import { useAccounts, useSetPlatformOwner, type Account } from './api';
+import { useAccounts, useSetPlatformOwner, useTestSalons, type Account } from './api';
 
 const ZONE = 'Asia/Dubai';
 
@@ -19,6 +19,8 @@ export function AccountsTab() {
   const toast = useToast();
   const dates = useDates();
   const accounts = useAccounts();
+  const tests = useTestSalons();
+  const isTest = (a: Account) => !!a.business_id && !!tests.data?.has(a.business_id);
   const setOwner = useSetPlatformOwner();
   const [email, setEmail] = useState('');
   const [search, setSearch] = useState('');
@@ -107,9 +109,10 @@ export function AccountsTab() {
                     : []),
                 ]}
                 badges={
-                  a.platform_owner || a.active === false || a.provider !== 'email' || !a.confirmed ? (
+                  a.platform_owner || a.active === false || a.provider !== 'email' || !a.confirmed || isTest(a) ? (
                     <View style={styles.badges}>
                       {a.platform_owner ? <StatusPill tone="primary" label={t('console.owners.badge')} /> : null}
+                      {isTest(a) ? <StatusPill tone="info" label={t('console.salons.test')} /> : null}
                       {a.active === false ? <StatusPill status="cancelled" label={t('console.accounts.inactive')} /> : null}
                       {a.provider !== 'email' ? <StatusPill tone="neutral" label={a.provider} /> : null}
                       {!a.confirmed ? <StatusPill tone="warning" label={t('console.accounts.unconfirmed')} /> : null}

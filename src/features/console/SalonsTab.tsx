@@ -26,7 +26,8 @@ import {
 } from '@/ui';
 
 import { AccessForm, accessLabel } from './AccessForm';
-import { useCloseSalon, useSalonDuplicates, useSalonStats } from './api';
+import { useCloseSalon, useSalonDuplicates, useSalonStats, useTestSalons } from './api';
+import { TestSalonSwitch } from './TestSalonSwitch';
 
 const MONTHS = [1, 6, 12] as const;
 // Salons drawn at a time: hundreds of rows at once made the tab slow (owner's fix list #12). Search covers them all.
@@ -39,6 +40,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
   const salons = useAdminSalons();
   const stats = useSalonStats();
   const duplicates = useSalonDuplicates();
+  const tests = useTestSalons();
   const [open, setOpen] = useState<AdminSalon | null>(null);
   const [search, setSearch] = useState('');
   const [shown, setShown] = useState(PAGE);
@@ -103,6 +105,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                         {s.requested_at ? <StatusPill status="pending_approval" label={t('admin.asked')} /> : null}
                         {st?.closed ? <StatusPill status="cancelled" label={t('console.salons.closed')} /> : null}
                         {dup ? <StatusPill status="pending_approval" label={t('console.salons.duplicate')} /> : null}
+                        {tests.data?.has(s.business_id) ? <StatusPill tone="info" label={t('console.salons.test')} /> : null}
                       </View>
                     }
                     chevron
@@ -137,6 +140,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
               }}
               testID="console-salon-history"
             />
+            <TestSalonSwitch salon={open} />
             <AccessForm salon={open} onDone={() => setOpen(null)} />
             <SalonPlanForm salon={open} onDone={() => setOpen(null)} />
             {stats.data?.get(open.business_id)?.closed ? null : <CloseSalon salon={open} onDone={() => setOpen(null)} />}

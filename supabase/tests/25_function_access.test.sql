@@ -127,6 +127,9 @@ insert into reviewed values
     ('admin_set_billing'),
     ('admin_set_access'),
     ('admin_set_contact'),
+    -- Test salons (final brief E1, 2026-11-01): platform owner checked inside.
+    ('admin_set_test_salon'),
+    ('admin_test_salons'),
     ('admin_pilot_codes'),
     ('admin_create_pilot_code'),
     ('admin_disable_pilot_code'),
