@@ -965,15 +965,15 @@
     "steps": {
       "business": {
         "title": "Tu negocio",
-        "subtitle": "Paso 1 de 5"
+        "subtitle": "Paso 2 de 5"
       },
       "country": {
         "title": "¿Dónde está tu salón?",
-        "subtitle": "Paso 2 de 5"
+        "subtitle": "Paso 3 de 5"
       },
       "mode": {
         "title": "Tipo de salón",
-        "subtitle": "Paso 3 de 5"
+        "subtitle": "Paso 1 de 5"
       },
       "branch": {
         "title": "Primera sucursal",
@@ -1008,7 +1008,8 @@
       "on": "Registrado para {{tax}}",
       "offDetail": "Los precios no llevan {{tax}}. Los recibos no muestran un {{taxId}}.",
       "onDetail": "Al cobrar se aplica y los recibos pasan a ser facturas fiscales con tu {{taxId}}. Puedes cambiar todo esto más tarde en Ajustes de la sucursal."
-    }
+    },
+    "chooseType": "Elige el tipo de tu salón para continuar."
   },
   "validation": {
     "required": "Obligatorio",

@@ -43,6 +43,8 @@ test('an owner gives a WhatsApp number at sign-up and says OK; setup does not as
   await id(page, 'sign-up-submit').click();
 
   await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });
+  await id(page, 'setup-next').click(); // salon type, picked on the home page
+  await expect(field(page, 'businessName')).toBeVisible();
   await expect(field(page, 'ownerPhone')).toHaveCount(0);
   const contact = await contactOf(email);
   expect(contact).toMatchObject({ phone: '+971501234567', whatsapp_ok: true, source: 'sign_up' });
@@ -62,12 +64,12 @@ test('an owner who gave no number is asked once, in setup', async ({ page, mode 
 
   await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });
   expect(await contactOf(email)).toBeNull();
+  await id(page, 'setup-next').click(); // salon type, picked on the home page
   await expect(field(page, 'ownerPhone')).toBeVisible();
   await field(page, 'businessName').fill(`Contact ${mode} salon`);
   await field(page, 'ownerPhone').fill('0509876543');
   await id(page, 'setup-next').click();
   await id(page, 'setup-next').click(); // country: UAE
-  await id(page, 'setup-next').click(); // salon type, picked on the home page
   await field(page, 'branchName').fill('Main');
   await id(page, 'setup-next').click();
   await id(page, 'setup-next').click(); // create

@@ -965,15 +965,15 @@
     "steps": {
       "business": {
         "title": "Votre entreprise",
-        "subtitle": "Étape 1 sur 5"
+        "subtitle": "Étape 2 sur 5"
       },
       "country": {
         "title": "Où se trouve votre salon ?",
-        "subtitle": "Étape 2 sur 5"
+        "subtitle": "Étape 3 sur 5"
       },
       "mode": {
         "title": "Type de salon",
-        "subtitle": "Étape 3 sur 5"
+        "subtitle": "Étape 1 sur 5"
       },
       "branch": {
         "title": "Première succursale",
@@ -1008,7 +1008,8 @@
       "on": "Assujetti à la {{tax}}",
       "offDetail": "Les prix sont sans {{tax}}. Les reçus n’affichent pas de {{taxId}}.",
       "onDetail": "La caisse l’applique et les reçus deviennent des factures fiscales avec votre {{taxId}}. Vous pourrez tout modifier plus tard dans les paramètres de la succursale."
-    }
+    },
+    "chooseType": "Choisissez le type de votre salon pour continuer."
   },
   "validation": {
     "required": "Obligatoire",

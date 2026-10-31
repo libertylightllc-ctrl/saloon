@@ -65,10 +65,16 @@ test('a pilot application is approved with a code; the owner signs up with it an
   await field(page, 'pilotCode').fill(code.toLowerCase());
   await id(page, 'sign-up-submit').click();
   await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });
+  // No type picked on the home page: none is chosen for the owner (owner's fix list C3), and setup asks for one.
+  for (const type of ['gents', 'ladies', 'unisex', 'wellness']) await expect(id(page, `setup-mode-${type}`)).toHaveAttribute('aria-checked', 'false');
+  await id(page, 'setup-next').click();
+  await expect(id(page, 'setup-mode-error')).toHaveText('Choose your salon type to go on.');
+  await id(page, `setup-mode-${mode}`).click();
+  await expect(id(page, 'setup-mode-error')).toHaveCount(0);
+  await id(page, 'setup-next').click();
   await field(page, 'businessName').fill(salon);
   await id(page, 'setup-next').click();
   await id(page, 'setup-next').click(); // country: UAE
-  await id(page, 'setup-next').click(); // the salon type
   await field(page, 'branchName').fill('Al Wasl');
   await id(page, 'setup-next').click();
   await id(page, 'setup-next').click(); // create

@@ -32,13 +32,14 @@ test('fresh device → type → themed sign-in → owner sign-up → setup → e
   await field(page, 'password').fill('Owner1234!');
   await id(page, 'sign-up-submit').click();
 
-  // Setup wizard: mode is pre-selected from the device choice.
+  // Setup wizard: the salon type is step 1 (owner's fix list C3), pre-selected from the type picked on the home page.
   await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });
+  await expect(text(page, 'Step 1 of 5')).toBeVisible();
+  await expect(id(page, `setup-mode-${mode}`)).toHaveAttribute('aria-checked', 'true');
+  await id(page, 'setup-next').click();
   await field(page, 'businessName').fill(`Test ${mode} salon`);
   await id(page, 'setup-next').click();
   await id(page, 'setup-next').click(); // country: UAE
-  await expect(id(page, `setup-mode-${mode}`)).toHaveAttribute('aria-checked', 'true');
-  await id(page, 'setup-next').click();
   await field(page, 'branchName').fill('Main branch');
   await id(page, 'setup-next').click();
   await field(page, 'openingCash').fill('500');

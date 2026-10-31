@@ -965,15 +965,15 @@
     "steps": {
       "business": {
         "title": "Your business",
-        "subtitle": "Step 1 of 5"
+        "subtitle": "Step 2 of 5"
       },
       "country": {
         "title": "Where is your salon?",
-        "subtitle": "Step 2 of 5"
+        "subtitle": "Step 3 of 5"
       },
       "mode": {
         "title": "Salon type",
-        "subtitle": "Step 3 of 5"
+        "subtitle": "Step 1 of 5"
       },
       "branch": {
         "title": "First branch",
@@ -1008,7 +1008,8 @@
       "on": "Registered for {{tax}}",
       "offDetail": "Prices have no {{tax}}. Receipts do not show a {{taxId}}.",
       "onDetail": "Checkout charges it and receipts become tax invoices with your {{taxId}}. You can change all of this later in Branch settings."
-    }
+    },
+    "chooseType": "Choose your salon type to go on."
   },
   "validation": {
     "required": "Required",

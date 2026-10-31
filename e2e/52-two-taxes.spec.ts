@@ -113,13 +113,13 @@ test('a new Quebec salon picks its province at setup: GST 5% and QST 9.975%', as
   await id(page, 'sign-up-submit').click();
 
   await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });
+  await id(page, 'setup-next').click(); // salon type
   await field(page, 'businessName').fill(name);
   await id(page, 'setup-next').click();
   await id(page, 'setup-country-search').fill('canada');
   await id(page, 'setup-country-CA').click();
   await expect(id(page, 'setup-country-picked')).toContainText('CAD');
   await id(page, 'setup-next').click();
-  await id(page, 'setup-next').click(); // salon type
   await field(page, 'branchName').fill('Plateau');
   await id(page, 'setup-next').click();
   await id(page, 'setup-vat').click();

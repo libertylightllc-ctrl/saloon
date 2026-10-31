@@ -965,15 +965,15 @@
     "steps": {
       "business": {
         "title": "Seu negócio",
-        "subtitle": "Etapa 1 de 5"
+        "subtitle": "Etapa 2 de 5"
       },
       "country": {
         "title": "Onde fica seu salão?",
-        "subtitle": "Etapa 2 de 5"
+        "subtitle": "Etapa 3 de 5"
       },
       "mode": {
         "title": "Tipo de salão",
-        "subtitle": "Etapa 3 de 5"
+        "subtitle": "Etapa 1 de 5"
       },
       "branch": {
         "title": "Primeira filial",
@@ -1008,7 +1008,8 @@
       "on": "Contribuinte de {{tax}}",
       "offDetail": "Os preços não têm {{tax}}. Os recibos não mostram {{taxId}}.",
       "onDetail": "O caixa cobra o imposto e os recibos viram faturas fiscais com seu {{taxId}}. Você pode mudar tudo isso depois em Configurações da filial."
-    }
+    },
+    "chooseType": "Escolha o tipo do seu salão para continuar."
   },
   "validation": {
     "required": "Obrigatório",

@@ -34,6 +34,7 @@ test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt
   await id(page, 'sign-up-submit').click();
 
   await expect(id(page, 'setup-next')).toBeVisible({ timeout: 30_000 });
+  await id(page, 'setup-next').click(); // salon type
   await field(page, 'businessName').fill(name);
   await id(page, 'setup-next').click();
   // The phone is in Dubai, so the UAE is proposed; the owner picks the United States.
@@ -44,7 +45,6 @@ test('a New York salon: dollars, sales tax 8.875% added at the till, the receipt
   await expect(id(page, 'setup-country-picked')).toContainText('America/New_York');
   await snap(page, 'setup-country', mode);
   await id(page, 'setup-next').click();
-  await id(page, 'setup-next').click(); // salon type
   await field(page, 'branchName').fill('Williamsburg');
   await id(page, 'setup-next').click();
   // Registered for sales tax: 8.875%, added at the till, no tax number yet.

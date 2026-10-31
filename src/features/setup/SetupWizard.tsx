@@ -17,7 +17,7 @@ import { isUae } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
 import { parseTaxRate, setActiveCurrency } from '@/lib/money';
 import { asJson, supabase } from '@/lib/supabase';
-import { MODES, spacing } from '@/theme';
+import { MODES, semantic, spacing } from '@/theme';
 import {
   Button,
   FormDaysField,
@@ -45,7 +45,7 @@ const schema = z
     country: z.string().regex(/^[A-Z]{2}$/),
     currency: z.string().regex(/^[A-Z]{3}$/, 'validation.required'),
     timezone: z.string().trim().regex(ZONE, 'validation.timezone'),
-    mode: z.enum(MODES),
+    mode: z.enum(MODES, { message: 'setup.chooseType' }),
     branchName: z.string().trim().max(80),
     address: z.string().trim().max(160),
     phone: z.string().trim().regex(/^$|^\+?[0-9 ]{7,20}$/, 'validation.phone'),
@@ -66,10 +66,11 @@ const schema = z
 
 type Values = z.infer<typeof schema>;
 
+// The salon type comes first (owner's fix list C3): it sets the look of everything after it.
 const STEPS: { key: 'business' | 'country' | 'mode' | 'branch' | 'tax'; fields: FieldPath<Values>[] }[] = [
+  { key: 'mode', fields: ['mode'] },
   { key: 'business', fields: ['businessName', 'ownerName', 'ownerPhone'] },
   { key: 'country', fields: ['country', 'currency', 'timezone'] },
-  { key: 'mode', fields: ['mode'] },
   { key: 'branch', fields: ['branchName', 'address', 'phone', 'days'] },
   {
     key: 'tax',
@@ -97,7 +98,8 @@ export function SetupWizard() {
       businessName: '',
       ownerName: suggestedName,
       ...where,
-      mode: salonType ?? 'gents',
+      // The type picked on the home page; none picked, none chosen for the owner.
+      mode: salonType ?? undefined,
       branchName: '',
       address: '',
       phone: '',
@@ -208,7 +210,7 @@ export function SetupWizard() {
           <Controller
             control={form.control}
             name="mode"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <View style={styles.modes}>
                 {MODES.map((mode) => (
                   <ModeCard
@@ -218,10 +220,16 @@ export function SetupWizard() {
                     selected={field.value === mode}
                     onPress={() => {
                       field.onChange(mode);
+                      form.clearErrors('mode');
                       setSalonType(mode); // the wizard re-themes live
                     }}
                   />
                 ))}
+                {fieldState.error ? (
+                  <Text variant="small" style={{ color: semantic.error.hover }} accessibilityLiveRegion="polite" testID="setup-mode-error">
+                    {t('setup.chooseType')}
+                  </Text>
+                ) : null}
               </View>
             )}
           />
