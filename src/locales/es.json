@@ -3188,7 +3188,10 @@
     "booking": {
       "title": "Reserva en {{salon}} – Saloqo",
       "titleWhere": "Reserva en {{salon}} – {{where}}",
-      "description": "Reserva online en {{salon}}: servicios, precios y horas libres. Sin cuenta."
+      "description": "Reserva online en {{salon}}: servicios, precios y horas libres. Sin cuenta.",
+      "services": "{{count}} servicios · reserva online, sin app",
+      "services_one": "{{count}} servicio · reserva online, sin app",
+      "card": "Reserva online · sin app"
     },
     "contact": {
       "title": "Contactar con Saloqo",

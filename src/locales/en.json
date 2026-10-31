@@ -3187,7 +3187,10 @@
     "booking": {
       "title": "Book at {{salon}} – Saloqo",
       "titleWhere": "Book at {{salon}} – {{where}}",
-      "description": "Book online at {{salon}}: services, prices and free times. No account needed."
+      "description": "Book online at {{salon}}: services, prices and free times. No account needed.",
+      "services": "{{count}} services · book online, no app needed",
+      "services_one": "{{count}} service · book online, no app needed",
+      "card": "Book online · no app needed"
     },
     "contact": {
       "title": "Contact Saloqo",

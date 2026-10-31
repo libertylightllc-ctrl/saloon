@@ -22,6 +22,7 @@ import { Button, EmptyState, FormError, FormTextField, HeaderBand, QueryState, S
 
 import { useBook, useBookingLinkNow, useBookingPage, useBookingSlots, type BookingPage } from './api';
 import { DayChips, ServiceList, StaffChips, TimeGrid } from './BookingPickers';
+import { bookingMeta } from './meta';
 import { SalonCard } from './SalonCard';
 
 const schema = z.object({
@@ -56,14 +57,9 @@ export function BookingScreen({ slug }: { slug: string }) {
 
 function BookingForm({ slug, page }: { slug: string; page: BookingPage }) {
   const { t } = useTranslation();
-  const s = page.salon;
-  // "Book at Al Barsha Gents – Al Barsha": the branch says where, when it differs from the salon's name.
-  usePageMeta(
-    s.branch_name && s.branch_name !== s.business_name
-      ? t('meta.booking.titleWhere', { salon: s.business_name, where: s.branch_name })
-      : t('meta.booking.title', { salon: s.business_name }),
-    t('meta.booking.description', { salon: s.business_name }),
-  );
+  // "Book at Al Barsha Gents – Dubai", "12 services · book online, no app needed" (as the link preview says).
+  const meta = bookingMeta(page.salon, page.services.length, t as (key: string, values?: Record<string, unknown>) => string);
+  usePageMeta(meta.title, meta.description);
   const router = useRouter();
   const currency = isCurrency(page.salon.currency) ? page.salon.currency : 'AED';
   const [services, setServices] = useState<string[]>([]);

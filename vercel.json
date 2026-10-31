@@ -5,6 +5,11 @@
   "buildCommand": "node scripts/check-web-env.mjs && npx expo export -p web && node scripts/site/build.mjs",
   "outputDirectory": "dist",
   "trailingSlash": false,
+  "functions": {
+    "api/booking-card.ts": {
+      "includeFiles": "node_modules/@expo-google-fonts/poppins/{500Medium,600SemiBold}/*.ttf"
+    }
+  },
   "redirects": [
     {
       "source": "/welcome",
@@ -40,11 +45,10 @@
     },
     {
       "source": "/b/:slug",
-      "has": [
+      "missing": [
         {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*(WhatsApp|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Slackbot|TelegramBot|Discordbot|SkypeUriPreview|Pinterestbot|Snap URL Preview|redditbot|Embedly).*"
+          "type": "query",
+          "key": "app"
         }
       ],
       "destination": "/api/booking-preview?slug=:slug"

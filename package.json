@@ -29,6 +29,7 @@
     "@shopify/flash-list": "2.0.2",
     "@supabase/supabase-js": "^2.109.0",
     "@tanstack/react-query": "^5.103.2",
+    "@vercel/og": "0.11.1",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "expo": "~57.0.24",
