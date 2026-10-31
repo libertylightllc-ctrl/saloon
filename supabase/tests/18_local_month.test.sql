@@ -36,8 +36,10 @@ update businesses set timezone = 'Pacific/Kiritimati' where id = current_setting
 select pg_temp.as_user('00000000-0000-0000-0000-0000000018aa');
 select lives_ok(format($$ select generate_payroll('%s', to_char(business_today('%s'), 'YYYY-MM')) $$,
   current_setting('t.b'), current_setting('t.b')), 'its own month counts, whatever the UTC date');
-select is((select period from payroll_runs where business_id = current_setting('t.b')::uuid order by generated_at desc limit 1),
-  to_char(now() at time zone 'Pacific/Kiritimati', 'YYYY-MM'), 'and the run is for that local month');
+-- (Both runs are made in this one transaction, so they share a time: look for the run, not the latest one.)
+select ok(exists (select 1 from payroll_runs where business_id = current_setting('t.b')::uuid
+                  and period = to_char(now() at time zone 'Pacific/Kiritimati', 'YYYY-MM')),
+  'and the run is for that local month');
 
 select * from finish();
 rollback;
