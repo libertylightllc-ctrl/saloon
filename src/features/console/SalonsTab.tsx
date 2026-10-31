@@ -73,7 +73,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                     title={s.name}
                     meta={[
                       [s.owner_name, s.owner_email].filter(Boolean).join(' · '),
-                      t('admin.meta', { code: s.code, branches: s.branches, date: dates.at(s.created_at, s.timezone, 'd MMM yyyy') }),
+                      t('admin.meta', { code: s.code, branches: t('console.salons.branches', { count: s.branches }), date: dates.at(s.created_at, s.timezone, 'd MMM yyyy') }),
                       [countryName(s.country_code, i18n.language), ...(st?.mode ?? '').split(', ').filter(Boolean).map((m) => (isMode(m) ? t(`auth.salonType.${m}`) : m))].filter(Boolean).join(' · '),
                       [t('console.salons.people', { count: s.people }), t('console.salons.perMonth', { price: formatMoney(s.monthly_minor, s.plan_currency) })].join(' · '),
                       ...(st

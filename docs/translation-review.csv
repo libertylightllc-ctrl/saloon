@@ -1684,7 +1684,7 @@ plan.people_one,{{count}} person signs in: you,عدد من يسجّل الدخو
 admin.title,Salons & plans,الصالونات والخطط,सैलून और प्लान,سیلون اور پلان,Salones y planes,Salons et abonnements,Salões e planos,
 admin.subtitle,"Every salon, and who asked for a plan",كل الصالونات ومن طلب خطة,"हर सैलून, और किसने प्लान माँगा",ہر سیلون، اور کس نے پلان مانگا,Todos los salones y quién pidió un plan,"Tous les salons, et qui a demandé un abonnement",Todos os salões e quem pediu um plano,
 admin.empty,No salons yet.,لا صالونات بعد.,अभी कोई सैलून नहीं।,ابھی کوئی سیلون نہیں۔,Aún no hay salones.,Aucun salon pour l’instant.,Nenhum salão ainda.,
-admin.meta,Code {{code}} · branches {{branches}} · joined {{date}},الرمز {{code}} · الفروع {{branches}} · انضم {{date}},कोड {{code}} · ब्रांच {{branches}} · जुड़े {{date}},کوڈ {{code}} · برانچز {{branches}} · شامل {{date}},Código {{code}} · sucursales {{branches}} · alta {{date}},Code {{code}} · succursales {{branches}} · inscrit le {{date}},Código {{code}} · filiais {{branches}} · entrou em {{date}},
+admin.meta,Code {{code}} · {{branches}} · joined {{date}},الرمز {{code}} · {{branches}} · انضم {{date}},कोड {{code}} · {{branches}} · जुड़े {{date}},کوڈ {{code}} · {{branches}} · شامل {{date}},Código {{code}} · {{branches}} · alta {{date}},Code {{code}} · {{branches}} · inscrit le {{date}},Código {{code}} · {{branches}} · entrou em {{date}},
 admin.requested_one,Asked for {{count}} month. {{note}},طلب شهرًا واحدًا. {{note}},{{count}} महीना माँगा। {{note}},{{count}} مہینہ مانگا۔ {{note}},Pidió {{count}} mes. {{note}},A demandé {{count}} mois. {{note}},Pediu {{count}} mês. {{note}},
 admin.requested_two,—,طلب شهرين. {{note}},,,,,,Arabic only: 2
 admin.requested_few,—,طلب {{count}} أشهر. {{note}},,,,,,Arabic only: 3 to 10
@@ -1946,6 +1946,11 @@ console.salons.showMore,Show more,عرض المزيد,और दिखाएँ,
 console.salons.duplicate,Possible duplicate,قد يكون مكررًا,संभावित डुप्लिकेट,ممکنہ ڈپلیکیٹ,Posible duplicado,Doublon possible,Possível duplicado,
 console.salons.sameName,Same owner name as {{salons}},اسم المالك نفسه في {{salons}},{{salons}} जैसा ही मालिक का नाम,{{salons}} جیسا ہی مالک کا نام,Mismo nombre de dueño que {{salons}},Même nom de propriétaire que {{salons}},Mesmo nome de dono que {{salons}},
 console.salons.samePhone,Same number as {{salons}},الرقم نفسه في {{salons}},{{salons}} जैसा ही नंबर,{{salons}} جیسا ہی نمبر,Mismo número que {{salons}},Même numéro que {{salons}},Mesmo número que {{salons}},
+console.salons.branches,{{count}} branches,{{count}} فرع,{{count}} ब्रांचें,{{count}} برانچز,{{count}} sucursales,{{count}} succursales,{{count}} filiais,
+console.salons.branches_one,{{count}} branch,فرع واحد,{{count}} ब्रांच,{{count}} برانچ,{{count}} sucursal,{{count}} succursale,{{count}} filial,
+console.salons.branches_two,—,فرعان,,,,,,Arabic only: 2
+console.salons.branches_few,—,{{count}} فروع,,,,,,Arabic only: 3–10
+console.salons.branches_many,—,{{count}} فرعًا,,,,,,Arabic only: 11–99
 console.accounts.title,Accounts ({{count}}),الحسابات ({{count}}),खाते ({{count}}),اکاؤنٹس ({{count}}),Cuentas ({{count}}),Comptes ({{count}}),Contas ({{count}}),
 console.accounts.search,"Search emails, usernames, names, salons",ابحث في البريد وأسماء المستخدمين والأسماء والصالونات,"ईमेल, यूज़रनेम, नाम, सैलून खोजें",ای میل، یوزر نیم، نام، سیلون تلاش کریں,"Buscar correos, usuarios, nombres, salones","Rechercher e-mails, noms d’utilisateur, noms, salons","Pesquisar e-mails, nomes de usuário, nomes, salões",
 console.accounts.noSalon,no salon,بلا صالون,कोई सैलून नहीं,کوئی سیلون نہیں,sin salón,aucun salon,sem salão,

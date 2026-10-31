@@ -2487,7 +2487,7 @@
     "title": "Salons et abonnements",
     "subtitle": "Tous les salons, et qui a demandé un abonnement",
     "empty": "Aucun salon pour l’instant.",
-    "meta": "Code {{code}} · succursales {{branches}} · inscrit le {{date}}",
+    "meta": "Code {{code}} · {{branches}} · inscrit le {{date}}",
     "requested_one": "A demandé {{count}} mois. {{note}}",
     "requested": "A demandé {{count}} mois. {{note}}",
     "asked": "Demandé",
@@ -2795,7 +2795,9 @@
       "showMore": "Afficher plus",
       "duplicate": "Doublon possible",
       "sameName": "Même nom de propriétaire que {{salons}}",
-      "samePhone": "Même numéro que {{salons}}"
+      "samePhone": "Même numéro que {{salons}}",
+      "branches": "{{count}} succursales",
+      "branches_one": "{{count}} succursale"
     },
     "accounts": {
       "title": "Comptes ({{count}})",

@@ -2487,7 +2487,7 @@
     "title": "سیلون اور پلان",
     "subtitle": "ہر سیلون، اور کس نے پلان مانگا",
     "empty": "ابھی کوئی سیلون نہیں۔",
-    "meta": "کوڈ {{code}} · برانچز {{branches}} · شامل {{date}}",
+    "meta": "کوڈ {{code}} · {{branches}} · شامل {{date}}",
     "requested_one": "{{count}} مہینہ مانگا۔ {{note}}",
     "requested": "{{count}} مہینے مانگے۔ {{note}}",
     "asked": "مانگا",
@@ -2795,7 +2795,9 @@
       "showMore": "مزید دکھائیں",
       "duplicate": "ممکنہ ڈپلیکیٹ",
       "sameName": "{{salons}} جیسا ہی مالک کا نام",
-      "samePhone": "{{salons}} جیسا ہی نمبر"
+      "samePhone": "{{salons}} جیسا ہی نمبر",
+      "branches": "{{count}} برانچز",
+      "branches_one": "{{count}} برانچ"
     },
     "accounts": {
       "title": "اکاؤنٹس ({{count}})",

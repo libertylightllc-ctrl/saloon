@@ -1,11 +1,13 @@
 /**
  * The console's Salons list draws 50 salons at a time (owner's fix list #12): hundreds of rows at once made the tab
  * slow. "Show more" adds the next 50, and search looks through every salon, not only the ones drawn. Salons that look
- * like the same owner are marked, naming the others (final brief C4).
+ * like the same owner are marked, naming the others (final brief C4). Branches are counted in words (E4).
  */
 import { fireEvent, screen } from '@testing-library/react-native';
 
 import type { AdminSalon } from '@/features/plan/api';
+import { i18n } from '@/lib/i18n';
+import arabic from '@/locales/ar.json';
 import { renderInApp, warmUpRendering } from '@/ui/testUtils';
 
 import { SalonsTab } from './SalonsTab';
@@ -17,7 +19,7 @@ const mockSalons: AdminSalon[] = Array.from({ length: 60 }, (_, i) => ({
   created_at: '2026-10-01T08:00:00Z',
   owner_name: `Owner ${i}`,
   owner_email: null,
-  branches: 1,
+  branches: i === 2 ? 2 : 1,
   paid_until: null,
   active: true,
   requested_at: null,
@@ -101,4 +103,20 @@ it('marks a likely duplicate and names the other salons', async () => {
   expect(row).toHaveTextContent(/Same owner name as Salon 7/);
   expect(row).toHaveTextContent(/Same number as Salon 7, Salon 9/);
   expect(screen.getByTestId('admin-salon-salon4')).not.toHaveTextContent(/Possible duplicate/);
+});
+
+it('counts branches in words: "1 branch", "2 branches", and Arabic’s own forms (final brief E4)', async () => {
+  await renderInApp(<SalonsTab onHistory={jest.fn()} />);
+  expect(screen.getByTestId('admin-salon-salon0')).toHaveTextContent(/Code salon0 · 1 branch · joined 1 Oct 2026/);
+  expect(screen.getByTestId('admin-salon-salon2')).toHaveTextContent(/Code salon2 · 2 branches · joined 1 Oct 2026/);
+  if (!i18n.hasResourceBundle('ar', 'translation')) i18n.addResourceBundle('ar', 'translation', arabic);
+  const ar = i18n.getFixedT('ar');
+  const branches = (count: number) => ar('console.salons.branches', { count });
+  expect([1, 2, 3, 11, 100].map(branches)).toEqual([
+    expect.stringMatching(/^فرع واحد$/),
+    expect.stringMatching(/^فرعان$/),
+    expect.stringMatching(/3\S* فروع$/),
+    expect.stringMatching(/11\S* فرعًا$/),
+    expect.stringMatching(/100\S* فرع$/),
+  ]);
 });

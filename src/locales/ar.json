@@ -2539,7 +2539,7 @@
     "title": "الصالونات والخطط",
     "subtitle": "كل الصالونات ومن طلب خطة",
     "empty": "لا صالونات بعد.",
-    "meta": "الرمز {{code}} · الفروع {{branches}} · انضم {{date}}",
+    "meta": "الرمز {{code}} · {{branches}} · انضم {{date}}",
     "requested_one": "طلب شهرًا واحدًا. {{note}}",
     "requested_two": "طلب شهرين. {{note}}",
     "requested_few": "طلب {{count}} أشهر. {{note}}",
@@ -2854,7 +2854,12 @@
       "showMore": "عرض المزيد",
       "duplicate": "قد يكون مكررًا",
       "sameName": "اسم المالك نفسه في {{salons}}",
-      "samePhone": "الرقم نفسه في {{salons}}"
+      "samePhone": "الرقم نفسه في {{salons}}",
+      "branches": "{{count}} فرع",
+      "branches_one": "فرع واحد",
+      "branches_two": "فرعان",
+      "branches_few": "{{count}} فروع",
+      "branches_many": "{{count}} فرعًا"
     },
     "accounts": {
       "title": "الحسابات ({{count}})",

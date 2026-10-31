@@ -2487,7 +2487,7 @@
     "title": "Salons & plans",
     "subtitle": "Every salon, and who asked for a plan",
     "empty": "No salons yet.",
-    "meta": "Code {{code}} · branches {{branches}} · joined {{date}}",
+    "meta": "Code {{code}} · {{branches}} · joined {{date}}",
     "requested_one": "Asked for {{count}} month. {{note}}",
     "requested": "Asked for {{count}} months. {{note}}",
     "asked": "Asked",
@@ -2794,7 +2794,9 @@
       "showMore": "Show more",
       "duplicate": "Possible duplicate",
       "sameName": "Same owner name as {{salons}}",
-      "samePhone": "Same number as {{salons}}"
+      "samePhone": "Same number as {{salons}}",
+      "branches": "{{count}} branches",
+      "branches_one": "{{count}} branch"
     },
     "accounts": {
       "title": "Accounts ({{count}})",

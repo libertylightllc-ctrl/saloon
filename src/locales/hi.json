@@ -2487,7 +2487,7 @@
     "title": "सैलून और प्लान",
     "subtitle": "हर सैलून, और किसने प्लान माँगा",
     "empty": "अभी कोई सैलून नहीं।",
-    "meta": "कोड {{code}} · ब्रांच {{branches}} · जुड़े {{date}}",
+    "meta": "कोड {{code}} · {{branches}} · जुड़े {{date}}",
     "requested_one": "{{count}} महीना माँगा। {{note}}",
     "requested": "{{count}} महीने माँगे। {{note}}",
     "asked": "माँगा",
@@ -2795,7 +2795,9 @@
       "showMore": "और दिखाएँ",
       "duplicate": "संभावित डुप्लिकेट",
       "sameName": "{{salons}} जैसा ही मालिक का नाम",
-      "samePhone": "{{salons}} जैसा ही नंबर"
+      "samePhone": "{{salons}} जैसा ही नंबर",
+      "branches": "{{count}} ब्रांचें",
+      "branches_one": "{{count}} ब्रांच"
     },
     "accounts": {
       "title": "खाते ({{count}})",

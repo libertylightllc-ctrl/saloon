@@ -2487,7 +2487,7 @@
     "title": "Salões e planos",
     "subtitle": "Todos os salões e quem pediu um plano",
     "empty": "Nenhum salão ainda.",
-    "meta": "Código {{code}} · filiais {{branches}} · entrou em {{date}}",
+    "meta": "Código {{code}} · {{branches}} · entrou em {{date}}",
     "requested_one": "Pediu {{count}} mês. {{note}}",
     "requested": "Pediu {{count}} meses. {{note}}",
     "asked": "Pedido",
@@ -2795,7 +2795,9 @@
       "showMore": "Mostrar mais",
       "duplicate": "Possível duplicado",
       "sameName": "Mesmo nome de dono que {{salons}}",
-      "samePhone": "Mesmo número que {{salons}}"
+      "samePhone": "Mesmo número que {{salons}}",
+      "branches": "{{count}} filiais",
+      "branches_one": "{{count}} filial"
     },
     "accounts": {
       "title": "Contas ({{count}})",
