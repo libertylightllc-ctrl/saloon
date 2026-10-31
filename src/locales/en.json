@@ -565,7 +565,9 @@
       "haveAccount": "Already have an account?",
       "signIn": "Sign in",
       "offer": "Free to start · No card needed · No auto-renewal",
-      "pilotHint": "From the Saloqo team. We use it when you set up your salon."
+      "pilotHint": "From the Saloqo team. We use it when you set up your salon.",
+      "phoneTaken": "This number already has a salon on Saloqo. Sign in instead?",
+      "continueAnyway": "Continue anyway"
     },
     "forgot": {
       "title": "Reset password",
@@ -946,8 +948,7 @@
     },
     "alreadyRegistered": {
       "title": "This email already has an account",
-      "body": "{{email}} is already signed up. Sign in, continue with Google, or reset your password.",
-      "reset": "Reset my password"
+      "body": "{{email}} is already signed up. Sign in, continue with Google, or reset your password."
     },
     "phone": {
       "label": "Mobile or WhatsApp number (optional)",
@@ -2782,7 +2783,10 @@
       "closeReason": "Reason (needed)",
       "closedToast": "{{name}} closed",
       "showing": "Showing {{shown}} of {{total}}",
-      "showMore": "Show more"
+      "showMore": "Show more",
+      "duplicate": "Possible duplicate",
+      "sameName": "Same owner name as {{salons}}",
+      "samePhone": "Same number as {{salons}}"
     },
     "accounts": {
       "title": "Accounts ({{count}})",

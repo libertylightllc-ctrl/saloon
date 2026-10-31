@@ -1,6 +1,7 @@
 /**
  * The console's Salons list draws 50 salons at a time (owner's fix list #12): hundreds of rows at once made the tab
- * slow. "Show more" adds the next 50, and search looks through every salon, not only the ones drawn.
+ * slow. "Show more" adds the next 50, and search looks through every salon, not only the ones drawn. Salons that look
+ * like the same owner are marked, naming the others (final brief C4).
  */
 import { fireEvent, screen } from '@testing-library/react-native';
 
@@ -48,6 +49,7 @@ jest.mock('./api', () => ({
       ? { data: undefined, isError: true, error: { message: 'canceling statement due to statement timeout' }, refetch: mockRefetchStats }
       : { data: new Map(), isError: false, error: null, refetch: mockRefetchStats },
   useCloseSalon: () => ({ mutate: jest.fn(), isPending: false, error: null }),
+  useSalonDuplicates: () => ({ data: new Map([['b-3', { name: ['Salon 7'], phone: ['Salon 7', 'Salon 9'] }]]) }),
 }));
 jest.mock('./AccessForm', () => ({ AccessForm: () => null, accessLabel: () => 'Free until 1 Dec 2026' }));
 // The bottom sheet's animation library does not load in tests; no sheet is opened here.
@@ -90,4 +92,13 @@ it('when the activity lines fail to load, it says so and offers to try again; th
   await fireEvent.press(screen.getByTestId('console-stats-retry'));
   expect(mockRefetchStats).toHaveBeenCalled();
   mockStatsFailed = false;
+});
+
+it('marks a likely duplicate and names the other salons', async () => {
+  await renderInApp(<SalonsTab onHistory={jest.fn()} />);
+  const row = screen.getByTestId('admin-salon-salon3');
+  expect(row).toHaveTextContent(/Possible duplicate/);
+  expect(row).toHaveTextContent(/Same owner name as Salon 7/);
+  expect(row).toHaveTextContent(/Same number as Salon 7, Salon 9/);
+  expect(screen.getByTestId('admin-salon-salon4')).not.toHaveTextContent(/Possible duplicate/);
 });

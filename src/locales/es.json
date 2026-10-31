@@ -565,7 +565,9 @@
       "haveAccount": "¿Ya tienes una cuenta?",
       "signIn": "Inicia sesión",
       "offer": "Empieza gratis · Sin tarjeta · Sin renovación automática",
-      "pilotHint": "Del equipo de Saloqo. Lo usamos al configurar tu salón."
+      "pilotHint": "Del equipo de Saloqo. Lo usamos al configurar tu salón.",
+      "phoneTaken": "Este número ya tiene un salón en Saloqo. ¿Prefieres iniciar sesión?",
+      "continueAnyway": "Continuar de todos modos"
     },
     "forgot": {
       "title": "Restablecer contraseña",
@@ -946,8 +948,7 @@
     },
     "alreadyRegistered": {
       "title": "Este correo ya tiene una cuenta",
-      "body": "{{email}} ya está registrado. Inicia sesión, continúa con Google o restablece tu contraseña.",
-      "reset": "Restablecer mi contraseña"
+      "body": "{{email}} ya está registrado. Inicia sesión, continúa con Google o restablece tu contraseña."
     },
     "phone": {
       "label": "Número de móvil o WhatsApp (opcional)",
@@ -2783,7 +2784,10 @@
       "closeReason": "Motivo (obligatorio)",
       "closedToast": "{{name}} cerrado",
       "showing": "Mostrando {{shown}} de {{total}}",
-      "showMore": "Mostrar más"
+      "showMore": "Mostrar más",
+      "duplicate": "Posible duplicado",
+      "sameName": "Mismo nombre de dueño que {{salons}}",
+      "samePhone": "Mismo número que {{salons}}"
     },
     "accounts": {
       "title": "Cuentas ({{count}})",

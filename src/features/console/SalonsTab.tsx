@@ -26,7 +26,7 @@ import {
 } from '@/ui';
 
 import { AccessForm, accessLabel } from './AccessForm';
-import { useCloseSalon, useSalonStats } from './api';
+import { useCloseSalon, useSalonDuplicates, useSalonStats } from './api';
 
 const MONTHS = [1, 6, 12] as const;
 // Salons drawn at a time: hundreds of rows at once made the tab slow (owner's fix list #12). Search covers them all.
@@ -38,6 +38,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
   const dates = useDates();
   const salons = useAdminSalons();
   const stats = useSalonStats();
+  const duplicates = useSalonDuplicates();
   const [open, setOpen] = useState<AdminSalon | null>(null);
   const [search, setSearch] = useState('');
   const [shown, setShown] = useState(PAGE);
@@ -64,6 +65,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
               {matches.slice(0, shown).map((s) => {
                 const st = stats.data?.get(s.business_id);
                 const currency = st && isCurrency(st.currency) ? st.currency : undefined;
+                const dup = duplicates.data?.get(s.business_id);
                 return (
                   <ListRow
                     key={s.business_id}
@@ -89,6 +91,8 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                       ...(s.requested_at ? [t('admin.requested', { count: s.requested_months ?? 1, note: s.request_note ?? '' }).trim()] : []),
                       ...(s.pilot_code ? [t('console.access.code', { code: s.pilot_code })] : []),
                       ...(s.admin_note ? [s.admin_note] : []),
+                      ...(dup?.name ? [t('console.salons.sameName', { salons: dup.name.join(', ') })] : []),
+                      ...(dup?.phone ? [t('console.salons.samePhone', { salons: dup.phone.join(', ') })] : []),
                     ]}
                     badges={
                       <View style={styles.badges}>
@@ -98,6 +102,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                         />
                         {s.requested_at ? <StatusPill status="pending_approval" label={t('admin.asked')} /> : null}
                         {st?.closed ? <StatusPill status="cancelled" label={t('console.salons.closed')} /> : null}
+                        {dup ? <StatusPill status="pending_approval" label={t('console.salons.duplicate')} /> : null}
                       </View>
                     }
                     chevron

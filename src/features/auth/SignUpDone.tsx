@@ -50,7 +50,7 @@ export function SignUpDone({ outcome, email }: { outcome: Exclude<SignUpOutcome,
         <>
           <Button label={t('auth.checkInbox.signIn')} onPress={() => router.replace('/sign-in')} testID="sign-up-to-sign-in" />
           <Button
-            label={t('auth.alreadyRegistered.reset')}
+            label={t('auth.signIn.forgot')}
             variant="secondary"
             onPress={() => router.replace('/forgot-password')}
             testID="sign-up-to-reset"

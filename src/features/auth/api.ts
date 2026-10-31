@@ -82,8 +82,19 @@ export async function signUpOwner(
       },
     },
   });
+  // With "Confirm email" off Supabase says so outright (owner's fix list C2/C4): the same "already has an account".
+  if (error && (error.code === 'user_already_exists' || /already registered/i.test(error.message))) return 'already_registered';
   if (error) raise(error);
   return signUpOutcome(data);
+}
+
+/**
+ * Whether an open salon's owner already gave this number (owner's fix list C4), asked before the account is made. Yes
+ * or no only, and limited by the database; anything going wrong means no, so sign-up is never stopped by it.
+ */
+export async function phoneHasSalon(phone: string): Promise<boolean> {
+  const { data, error } = await supabase.rpc('phone_has_salon', { p_phone: phone });
+  return !error && data === true;
 }
 
 /** Sends the confirmation email again (Supabase limits how often). */

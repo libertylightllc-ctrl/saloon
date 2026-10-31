@@ -565,7 +565,9 @@
       "haveAccount": "Já tem uma conta?",
       "signIn": "Entrar",
       "offer": "Comece grátis · Sem cartão · Sem renovação automática",
-      "pilotHint": "Da equipe do Saloqo. Usamos quando você configura seu salão."
+      "pilotHint": "Da equipe do Saloqo. Usamos quando você configura seu salão.",
+      "phoneTaken": "Este número já tem um salão no Saloqo. Prefere entrar?",
+      "continueAnyway": "Continuar mesmo assim"
     },
     "forgot": {
       "title": "Redefinir senha",
@@ -946,8 +948,7 @@
     },
     "alreadyRegistered": {
       "title": "Este e-mail já tem uma conta",
-      "body": "{{email}} já está cadastrado. Entre, continue com Google ou redefina sua senha.",
-      "reset": "Redefinir minha senha"
+      "body": "{{email}} já está cadastrado. Entre, continue com Google ou redefina sua senha."
     },
     "phone": {
       "label": "Número de celular ou WhatsApp (opcional)",
@@ -2783,7 +2784,10 @@
       "closeReason": "Motivo (obrigatório)",
       "closedToast": "{{name}} fechado",
       "showing": "Mostrando {{shown}} de {{total}}",
-      "showMore": "Mostrar mais"
+      "showMore": "Mostrar mais",
+      "duplicate": "Possível duplicado",
+      "sameName": "Mesmo nome de dono que {{salons}}",
+      "samePhone": "Mesmo número que {{salons}}"
     },
     "accounts": {
       "title": "Contas ({{count}})",

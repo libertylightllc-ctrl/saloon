@@ -3948,6 +3948,10 @@ export type Database = {
           staff: number;
         }[];
       };
+      admin_salon_duplicates: {
+        Args: Record<PropertyKey, never>;
+        Returns: { business_id: string; others: string[]; reason: string }[];
+      };
       admin_salons: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -4404,6 +4408,7 @@ export type Database = {
           status: string;
         }[];
       };
+      phone_has_salon: { Args: { p_phone: string }; Returns: boolean };
       pilot_active_count: { Args: Record<PropertyKey, never>; Returns: number };
       pilot_redeem: { Args: { p_business: string; p_code: string; p_user: string }; Returns: Json };
       pilot_status: { Args: Record<PropertyKey, never>; Returns: Json };

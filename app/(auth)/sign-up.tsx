@@ -2,15 +2,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
-import { signUpOwner } from '@/features/auth/api';
+import { phoneHasSalon, signUpOwner } from '@/features/auth/api';
 import { AuthShell } from '@/features/auth/AuthShell';
 import { GoogleButton } from '@/features/auth/GoogleButton';
 import { composePhone, PhoneField, phoneNumberValid } from '@/features/auth/PhoneField';
+import { PhoneTaken } from '@/features/auth/PhoneTaken';
 import { SignUpDone } from '@/features/auth/SignUpDone';
 import { track } from '@/lib/analytics';
 import { usePageMeta } from '@/lib/pageMeta';
@@ -54,7 +55,21 @@ export default function SignUp() {
   useEffect(() => {
     if (started) track('signup_started');
   }, [started]);
-  const submit = form.handleSubmit((values) => signUp.mutate(values));
+  // A number an open salon already has (owner's fix list C4) is asked about once; going on signs up as usual.
+  const [taken, setTaken] = useState<string | null>(null);
+  const [goOn, setGoOn] = useState<string | null>(null);
+  const [checking, setChecking] = useState(false);
+  const phoneNow = composePhone(useWatch({ control: form.control, name: 'phone' }));
+  const submit = form.handleSubmit(async (values) => {
+    const phone = composePhone(values.phone);
+    if (phone && phone !== goOn) {
+      setChecking(true);
+      const known = await phoneHasSalon(phone);
+      setChecking(false);
+      if (known) return setTaken(phone);
+    }
+    signUp.mutate(values);
+  });
   // "Have a pilot code?" (full update, Phase 5/6): the field shows only when asked for.
   const [pilot, setPilot] = useState(false);
   // One line only (full update brief, Phase 5): free to start, no card, no auto-renewal — no number of days.
@@ -130,7 +145,16 @@ export default function SignUp() {
           <Button variant="ghost" size="sm" label={t('plan.pilot.link')} onPress={() => setPilot(true)} testID="sign-up-pilot" />
         )}
         <FormError error={signUp.error} />
-        <Button label={t('auth.signUp.action')} onPress={submit} loading={signUp.isPending} testID="sign-up-submit" />
+        {taken && taken === phoneNow ? (
+          <PhoneTaken
+            onContinue={() => {
+              setGoOn(taken);
+              setTaken(null);
+              signUp.mutate(form.getValues());
+            }}
+          />
+        ) : null}
+        <Button label={t('auth.signUp.action')} onPress={submit} loading={signUp.isPending || checking} testID="sign-up-submit" />
         <View style={styles.haveAccount}>
           <Text color="textSecondary">{t('auth.signUp.haveAccount')}</Text>
           <Link href="/sign-in" asChild>

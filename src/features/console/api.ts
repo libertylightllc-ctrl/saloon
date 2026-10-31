@@ -55,6 +55,20 @@ export function useSalonStats() {
   });
 }
 
+/** Salons that look like the same owner (owner's fix list C4): same owner name or number, with the other salons. */
+export function useSalonDuplicates() {
+  return useQuery({
+    queryKey: ['platform', 'salon-duplicates'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('admin_salon_duplicates');
+      if (error) throw error;
+      const bySalon = new Map<string, { name?: string[]; phone?: string[] }>();
+      for (const d of data ?? []) bySalon.set(d.business_id, { ...bySalon.get(d.business_id), [d.reason]: d.others });
+      return bySalon;
+    },
+  });
+}
+
 export type Account = {
   user_id: string;
   email: string | null;
