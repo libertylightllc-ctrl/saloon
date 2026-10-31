@@ -2911,7 +2911,8 @@
       "repeats": "أُرسل {{count}} مرة، أول مرة في {{date}}",
       "repeats_two": "أُرسل مرتين، أول مرة في {{date}}",
       "repeats_few": "أُرسل {{count}} مرات، أول مرة في {{date}}",
-      "repeats_many": "أُرسل {{count}} مرة، أول مرة في {{date}}"
+      "repeats_many": "أُرسل {{count}} مرة، أول مرة في {{date}}",
+      "repeats_one": "أُرسل مرة واحدة، في {{date}}"
     },
     "activity": {
       "empty": "لا سجل بعد."

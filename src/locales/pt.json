@@ -2840,7 +2840,8 @@
         "pilot": "Piloto",
         "access": "Acesso alterado"
       },
-      "repeats": "Enviado {{count}} vezes, a primeira em {{date}}"
+      "repeats": "Enviado {{count}} vezes, a primeira em {{date}}",
+      "repeats_one": "Enviado uma vez, em {{date}}"
     },
     "activity": {
       "empty": "Nenhum histórico ainda."

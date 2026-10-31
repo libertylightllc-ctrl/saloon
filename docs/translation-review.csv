@@ -2671,6 +2671,7 @@ console.plans.kinds.trial,Free period,فترة مجانية,मुफ़्त �
 console.plans.kinds.pilot,Pilot,تجريبي,पायलट,پائلٹ,Piloto,Pilote,Piloto,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.plans.kinds.access,Access changed,تغيّر الوصول,पहुँच बदली,رسائی بدلی,Acceso cambiado,Accès modifié,Acesso alterado,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.plans.repeats,"Sent {{count}} times, first on {{date}}",أُرسل {{count}} مرة، أول مرة في {{date}},"{{count}} बार भेजा गया, पहली बार {{date}} को",{{count}} بار بھیجا گیا، پہلی بار {{date}} کو,"Enviada {{count}} veces, la primera el {{date}}","Envoyée {{count}} fois, la première le {{date}}","Enviado {{count}} vezes, a primeira em {{date}}",
+console.plans.repeats_one,"Sent once, on {{date}}",أُرسل مرة واحدة، في {{date}},"एक बार भेजा गया, {{date}} को",ایک بار بھیجا گیا، {{date}} کو,"Enviada una vez, el {{date}}","Envoyée une fois, le {{date}}","Enviado uma vez, em {{date}}",
 console.plans.repeats_two,—,أُرسل مرتين، أول مرة في {{date}},,,,,,Arabic only: 2
 console.plans.repeats_few,—,أُرسل {{count}} مرات، أول مرة في {{date}},,,,,,Arabic only: 3–10
 console.plans.repeats_many,—,أُرسل {{count}} مرة، أول مرة في {{date}},,,,,,Arabic only: 11–99

@@ -2839,7 +2839,8 @@
         "pilot": "Pilot",
         "access": "Access changed"
       },
-      "repeats": "Sent {{count}} times, first on {{date}}"
+      "repeats": "Sent {{count}} times, first on {{date}}",
+      "repeats_one": "Sent once, on {{date}}"
     },
     "activity": {
       "empty": "No history yet."
