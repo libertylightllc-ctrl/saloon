@@ -2934,7 +2934,10 @@
       "used": "utilisé {{uses}} sur {{max}}",
       "until": "Valable jusqu’au {{date}}",
       "disable": "Désactiver",
-      "disabled": "Désactivé"
+      "disabled": "Désactivé",
+      "salonOwner": "Salon : {{salon}} · Propriétaire : {{owner}}",
+      "language": "Langue : {{language}}",
+      "received": "Reçue le {{date}}"
     },
     "audit": {
       "empty": "Pas encore de modifications.",

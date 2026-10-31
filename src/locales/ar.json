@@ -3002,7 +3002,10 @@
       "used": "استُخدم {{uses}} من {{max}}",
       "until": "صالح حتى {{date}}",
       "disable": "إيقاف",
-      "disabled": "متوقف"
+      "disabled": "متوقف",
+      "salonOwner": "الصالون: {{salon}} · المالك: {{owner}}",
+      "language": "اللغة: {{language}}",
+      "received": "وصل في {{date}}"
     },
     "audit": {
       "empty": "لا تغييرات بعد.",

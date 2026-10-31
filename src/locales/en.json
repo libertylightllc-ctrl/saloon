@@ -2933,7 +2933,10 @@
       "used": "used {{uses}} of {{max}}",
       "until": "Valid until {{date}}",
       "disable": "Switch off",
-      "disabled": "Switched off"
+      "disabled": "Switched off",
+      "salonOwner": "Salon: {{salon}} · Owner: {{owner}}",
+      "language": "Language: {{language}}",
+      "received": "Received {{date}}"
     },
     "audit": {
       "empty": "No changes yet.",

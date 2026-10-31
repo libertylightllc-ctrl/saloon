@@ -2934,7 +2934,10 @@
       "used": "{{max}} में से {{uses}} इस्तेमाल",
       "until": "{{date}} तक मान्य",
       "disable": "बंद करें",
-      "disabled": "बंद"
+      "disabled": "बंद",
+      "salonOwner": "सैलून: {{salon}} · मालिक: {{owner}}",
+      "language": "भाषा: {{language}}",
+      "received": "{{date}} को मिला"
     },
     "audit": {
       "empty": "अभी कोई बदलाव नहीं।",

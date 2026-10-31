@@ -2934,7 +2934,10 @@
       "used": "{{max}} میں سے {{uses}} استعمال",
       "until": "{{date}} تک درست",
       "disable": "بند کریں",
-      "disabled": "بند"
+      "disabled": "بند",
+      "salonOwner": "سیلون: {{salon}} · مالک: {{owner}}",
+      "language": "زبان: {{language}}",
+      "received": "{{date}} کو موصول ہوا"
     },
     "audit": {
       "empty": "ابھی کوئی تبدیلی نہیں۔",

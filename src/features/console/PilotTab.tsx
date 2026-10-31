@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { businessDate } from '@/lib/dates';
-import { isLanguage } from '@/lib/i18n';
+import { isLanguage, LANGUAGES } from '@/lib/i18n';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Button, Card, DateField, FormError, ListRow, QueryState, StatusPill, Text, TextField, useToast } from '@/ui';
@@ -19,6 +19,16 @@ import {
 
 /** A code's shape, as an example in the field (not words to translate). */
 const EXAMPLE_CODE = 'PILOT-DXB-07';
+
+/** "Dubai · Al Barsha"; the area is left out when it only repeats the emirate (fix list A3). */
+export function placeLine(emirateName: string, emirate: string, area: string | null): string {
+  const same = (v: string) => v.trim().toLowerCase().replace(/[\s_-]+/g, ' ');
+  const repeats = !area?.trim() || [emirateName, emirate].some((e) => same(e) === same(area));
+  return repeats ? emirateName : `${emirateName} · ${area!.trim()}`;
+}
+
+/** The language a salon chose, in its own words (English, العربية …), as in the app's language list. */
+const languageName = (code: string) => LANGUAGES.find((l) => l.code === code)?.nativeName ?? code.toUpperCase();
 
 /** The approved salon's message, in the language it chose, ready to send on WhatsApp. */
 function useWelcome() {
@@ -70,8 +80,8 @@ export function PilotTab() {
             {rows.map((a) => (
               <Card key={a.id} variant="outlined" style={styles.card} testID={`pilot-app-${a.salon_name}`}>
                 <View style={styles.row}>
-                  <Text variant="bodyStrong" style={styles.flex}>
-                    {a.salon_name} · {a.name}
+                  <Text variant="bodyStrong" style={styles.flex} selectable>
+                    {t('console.pilot.salonOwner', { salon: a.salon_name, owner: a.name })}
                   </Text>
                   <StatusPill
                     status={a.status === 'approved' ? 'valid' : a.status === 'declined' ? 'cancelled' : 'pending_approval'}
@@ -79,18 +89,29 @@ export function PilotTab() {
                   />
                 </View>
                 <Text variant="small" color="textSecondary" selectable>
+                  {placeLine(t(`console.pilot.emirates.${a.emirate}` as 'console.pilot.emirates.dubai'), a.emirate, a.area)}
+                </Text>
+                <Text variant="small" color="textSecondary" selectable>
                   {[
-                    t(`console.pilot.emirates.${a.emirate}` as 'console.pilot.emirates.dubai'),
-                    a.area,
                     t(`console.pilot.types.${a.salon_type}` as 'console.pilot.types.barber'),
                     t('console.pilot.staff', { count: a.staff_count }),
-                    a.whatsapp,
-                    a.language.toUpperCase(),
-                    a.whatsapp_ok ? t('console.pilot.whatsappOk') : null,
-                    dates.at(a.created_at, 'Asia/Dubai', 'd MMM yyyy'),
-                  ]
-                    .filter(Boolean)
-                    .join(' · ')}
+                    t('console.pilot.language', { language: languageName(a.language) }),
+                  ].join(' · ')}
+                </Text>
+                <View style={styles.row}>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    icon="messageCircle"
+                    label={a.whatsapp}
+                    href={`https://wa.me/${a.whatsapp.replace(/\D/g, '')}`}
+                    external
+                    testID={`pilot-chat-${a.salon_name}`}
+                  />
+                  {a.whatsapp_ok ? <Text variant="small" color="textSecondary">{`${t('console.pilot.whatsappOk')} ✓`}</Text> : null}
+                </View>
+                <Text variant="small" color="textSecondary">
+                  {t('console.pilot.received', { date: dates.at(a.created_at, 'Asia/Dubai', 'd MMM yyyy · HH:mm') })}
                 </Text>
                 {a.code ? <Text variant="small">{t('console.access.code', { code: a.code })}</Text> : null}
                 {a.status === 'new' ? (
