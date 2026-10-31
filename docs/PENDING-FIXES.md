@@ -64,6 +64,22 @@ Found by the owner, not yet fixed. When one is fixed, move it to "Done" with the
 29. E3 Duplicate plan requests merged in the console.
 30. E4 "1 branch" / "2 branches" in Console → Salons, all 7 languages.
 
+## Final brief (owner's SALOQO_FIXES_FINAL.md, from checks of the live site on 31 Oct 2026; replaces the earlier briefs)
+
+Parts C, D and E are #21 to #30 above; the final brief adds D3 and changes E3 (below). B5 moved into A4.
+
+### Part A — pilot and contact (first)
+31. A1 Badges for new pilot applications (platform owners): "Pilot (1)", a dot on "Platform console" in More, the bell, "(1) Platform console" in the browser tab, and the Overview card's "1 new application – review" as a link to Pilot → Applications. They clear when each is approved or declined.
+32. A2 Email to hello@saloqo.com for every new application: subject "New pilot application: <salon> (<emirate>)", every field, the date and a link to Pilot → Applications.
+33. A3 The application card: "Salon: … · Owner: …", "<Emirate> · <Area>" (no repeat), "<Type> · <N> staff · Language: …", the WhatsApp number as a chat link with "OK to message on WhatsApp ✓", the date and time.
+34. A4 WhatsApp number and message in Console → Settings → Contact (logged in Changes); every WhatsApp link in the app and the homepage's floating button and footer link use it, hidden while empty.
+
+### Part D
+35. D3 A changed booking link keeps the old address as a permanent redirect to the new one.
+
+### Part E
+36. E3 (changed) While a request waits, the Plan page says "Request sent, we'll be in touch" instead of the button; the console merges duplicates (Asil Trims has two).
+
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.
@@ -90,3 +106,5 @@ Found by the owner, not yet fixed. When one is fixed, move it to "Done" with the
 - 31 Oct · #19 (B4) On a phone the FAQ shows the first 6 questions, then "More questions"; all 15 stay in the page and in the search engines' FAQ. Computers unchanged.
 - 31 Oct · #20 (B5) The round WhatsApp button (bottom right; bottom left in Arabic and Urdu) and the footer's WhatsApp link show once a number is in src/config/site.json (still empty, so still hidden); UAE visitors' message is "Hi Saloqo, I'd like to know more about the pilot for my salon." The button texts are in all 7 languages.
 - 31 Oct · Part B height: the home page at 390 px, UAE visitor, English, is 6,243 px (was 10,041 on the live check, 9,881 after Part A). Three sections that repeat other parts of the page are left out on phones only (see DECISIONS, 31 Oct). A test keeps the page at 6,500 px or less.
+- 31 Oct · #16 to #19 (Part B) are live on saloqo.com, deployed at once on the owner's word ("deploy B now") without the full proof: its three tries were thrown out because other work on the Mac filled the disk and pushed the load to 65–226 (every failure was "no space left" or a sign-in timeout, none from the code). Live at 390 px wide, UAE visitor: English 6,243 px, Arabic 6,008, Hindi 6,131, Urdu 6,074, Spanish 6,651, French 6,703, Portuguese 6,639; the pilot starts at 1,013 px; 6 of 15 questions and 3 comparison rows until their buttons. #20 (B5) is live too but stays hidden until A4 gives it a number.
+- 31 Oct · #33 (A3) The application card: "Salon: Demo pilot · Owner: Sorry", "Dubai · Al Barsha" (the area left out when it repeats the emirate), "Barber shop · 4 staff · Language: English" (the language in its own words), the WhatsApp number as a chat link with "OK to message on WhatsApp ✓", "Received 30 Oct 2026 · 14:05" (Dubai time). Commit 5ee8072.
