@@ -56,7 +56,13 @@ export function SalonCard({ salon }: { salon: BookingSalon & { open_days?: numbe
       ) : null}
       <View style={styles.row}>
         {salon.logo_path ? (
-          <Image source={{ uri: logoUrl(salon.logo_path) }} style={styles.logo} resizeMode="contain" accessibilityIgnoresInvertColors />
+          <Image
+            source={{ uri: logoUrl(salon.logo_path) }}
+            style={styles.logo}
+            resizeMode="contain"
+            accessibilityIgnoresInvertColors
+            testID="booking-logo"
+          />
         ) : (
           <View style={[styles.mark, { backgroundColor: theme.colors.primary50, borderRadius: theme.radius.md }]}>
             <Icon name="scissors" size={22} color={theme.colors.primary500} />
@@ -68,7 +74,7 @@ export function SalonCard({ salon }: { salon: BookingSalon & { open_days?: numbe
           </Text>
           {salon.branch_name !== salon.business_name ? <Text color="textSecondary">{salon.branch_name}</Text> : null}
           {salon.address ? (
-            <Text variant="small" color="textSecondary">
+            <Text variant="small" color="textSecondary" testID="booking-address">
               {salon.address}
             </Text>
           ) : null}
