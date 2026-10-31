@@ -2481,7 +2481,8 @@
     },
     "branchPeople": "{{count}} personas inician sesión aquí",
     "branchPeople_one": "{{count}} persona inicia sesión aquí",
-    "perMonthAll": "Al mes, todas las sucursales"
+    "perMonthAll": "Al mes, todas las sucursales",
+    "requestWaiting": "Solicitud enviada, nos pondremos en contacto"
   },
   "admin": {
     "title": "Salones y planes",
@@ -2831,7 +2832,8 @@
         "trial": "Periodo gratis",
         "pilot": "Piloto",
         "access": "Acceso cambiado"
-      }
+      },
+      "repeats": "Enviada {{count}} veces, la primera el {{date}}"
     },
     "activity": {
       "empty": "Aún no hay historial."

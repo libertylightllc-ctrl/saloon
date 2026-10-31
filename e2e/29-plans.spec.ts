@@ -34,6 +34,7 @@ test('owner asks for the plan; the platform owner records the payment; the salon
   await expect(id(page, 'plan-total')).toContainText('AED 270.00');
   await id(page, 'plan-note').fill('Paying by bank transfer');
   await id(page, 'plan-request').click();
+  await expect(id(page, 'plan-requested')).toContainText('Request sent, we’ll be in touch');
   await expect(id(page, 'plan-requested')).toContainText('6 month');
   // One request at a time: while it waits there is nothing to send again.
   await expect(id(page, 'plan-request')).toHaveCount(0);

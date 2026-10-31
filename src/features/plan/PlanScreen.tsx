@@ -18,6 +18,7 @@ import { payOptions, useCardPrice } from './cardApi';
 import { HowToPay } from './HowToPay';
 import { CardReturn, PayByCard } from './PayByCard';
 import { PilotCodeCard } from './PilotCodeCard';
+import { RequestWaiting } from './RequestWaiting';
 import { canOfferPlans } from './storePolicy';
 
 /**
@@ -105,16 +106,10 @@ export function PlanScreen() {
             {owner && billing ? (
               <Card variant="outlined" style={styles.card}>
                 <Text variant="h4">{t(p.paid ? 'plan.extendTitle' : 'plan.requestTitle')}</Text>
-                {p.requested_at ? (
-                  <Text color="primaryText" testID="plan-requested">
-                    {t('plan.requested', {
-                      count: p.requested_months ?? 1,
-                      date: dates.at(p.requested_at, business.timezone, 'd MMM yyyy'),
-                    })}
-                  </Text>
-                ) : null}
               </Card>
             ) : null}
+            {/* A waiting request, billing on or off (final brief E3): it says so, and there is nothing to send again. */}
+            {owner ? <RequestWaiting plan={p} timeZone={business.timezone} /> : null}
             {/* A plan needs a confirmed address (owner's fix list C2): why the buttons below are off. */}
             {owner && billing ? <ConfirmEmailPlanNote /> : null}
             {/* By card: paid and switched on at once. */}
@@ -127,7 +122,7 @@ export function PlanScreen() {
               </Card>
             ) : null}
             {/* By bank transfer or a card link, once switched on (brief 5.3): pay first, then tell us (the request below).
-                One request at a time: while it waits, the line above says so and there is nothing to send again. */}
+                One request at a time: while it waits, the card above says so and there is nothing to send again. */}
             {owner && billing && pay.bank ? <HowToPay code={business.code} /> : null}
             {owner && billing && pay.bank && !p.requested_at ? (
               <Card variant="outlined" style={styles.card}>

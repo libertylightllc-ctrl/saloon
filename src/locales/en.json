@@ -2481,7 +2481,8 @@
     },
     "branchPeople": "{{count}} people sign in here",
     "branchPeople_one": "{{count}} person signs in here",
-    "perMonthAll": "A month, every branch"
+    "perMonthAll": "A month, every branch",
+    "requestWaiting": "Request sent, we’ll be in touch"
   },
   "admin": {
     "title": "Salons & plans",
@@ -2830,7 +2831,8 @@
         "trial": "Free period",
         "pilot": "Pilot",
         "access": "Access changed"
-      }
+      },
+      "repeats": "Sent {{count}} times, first on {{date}}"
     },
     "activity": {
       "empty": "No history yet."

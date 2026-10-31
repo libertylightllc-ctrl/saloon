@@ -2533,7 +2533,8 @@
     "branchPeople_two": "شخصان يسجّلان الدخول هنا",
     "branchPeople_few": "{{count}} أشخاص يسجّلون الدخول هنا",
     "branchPeople_many": "{{count}} شخصًا يسجّلون الدخول هنا",
-    "perMonthAll": "شهريًا، كل الفروع"
+    "perMonthAll": "شهريًا، كل الفروع",
+    "requestWaiting": "تم إرسال طلبك، وسنتواصل معك"
   },
   "admin": {
     "title": "الصالونات والخطط",
@@ -2896,7 +2897,11 @@
         "trial": "فترة مجانية",
         "pilot": "تجريبي",
         "access": "تغيّر الوصول"
-      }
+      },
+      "repeats": "أُرسل {{count}} مرة، أول مرة في {{date}}",
+      "repeats_two": "أُرسل مرتين، أول مرة في {{date}}",
+      "repeats_few": "أُرسل {{count}} مرات، أول مرة في {{date}}",
+      "repeats_many": "أُرسل {{count}} مرة، أول مرة في {{date}}"
     },
     "activity": {
       "empty": "لا سجل بعد."

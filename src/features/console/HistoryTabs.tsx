@@ -8,6 +8,7 @@ import { spacing } from '@/theme';
 import { Chip, EmptyState, ListRow, QueryState, StatusPill } from '@/ui';
 
 import { useActivity, usePlanEvents } from './api';
+import { mergeRepeatRequests } from './planEvents';
 
 const ZONE = 'Asia/Dubai';
 const KIND_STATUS = { request: 'pending_approval', activate: 'valid', end: 'cancelled' } as const;
@@ -15,7 +16,7 @@ const KIND_STATUS = { request: 'pending_approval', activate: 'valid', end: 'canc
  *  stores the end of free time there. */
 const UNTIL = { pilot: 'console.access.pilotUntil', trial: 'console.access.freeUntil', access: 'console.access.freeUntil' } as const;
 
-/** Every plan request, payment and ending, newest first. */
+/** Every plan request, payment and ending, newest first; a request sent again is one row (final brief E3). */
 export function PlansTab() {
   const { t } = useTranslation();
   const dates = useDates();
@@ -24,7 +25,7 @@ export function PlansTab() {
     <QueryState query={events} isEmpty={(rows) => rows.length === 0} empty={<EmptyState illustration="no-results" message={t('console.plans.empty')} />}>
       {(rows) => (
         <View style={styles.list}>
-          {rows.map((e) => (
+          {mergeRepeatRequests(rows).map((e) => (
             <ListRow
               key={e.id}
               title={e.salon}
@@ -38,6 +39,7 @@ export function PlansTab() {
                   .filter(Boolean)
                   .join(' · ') || '—',
                 [dates.at(e.created_at, ZONE, 'd MMM yyyy · HH:mm'), e.by_name, e.note].filter(Boolean).join(' · '),
+                ...(e.repeats > 1 ? [t('console.plans.repeats', { count: e.repeats, date: dates.at(e.first_at, ZONE, 'd MMM yyyy · HH:mm') })] : []),
               ]}
               badges={
                 <StatusPill

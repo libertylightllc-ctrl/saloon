@@ -2481,7 +2481,8 @@
     },
     "branchPeople": "{{count}} personnes se connectent ici",
     "branchPeople_one": "{{count}} personne se connecte ici",
-    "perMonthAll": "Par mois, tous les établissements"
+    "perMonthAll": "Par mois, tous les établissements",
+    "requestWaiting": "Demande envoyée, nous vous recontacterons"
   },
   "admin": {
     "title": "Salons et abonnements",
@@ -2831,7 +2832,8 @@
         "trial": "Période gratuite",
         "pilot": "Pilote",
         "access": "Accès modifié"
-      }
+      },
+      "repeats": "Envoyée {{count}} fois, la première le {{date}}"
     },
     "activity": {
       "empty": "Aucun historique pour l’instant."
