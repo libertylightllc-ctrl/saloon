@@ -6,15 +6,17 @@ import { spacing } from '@/theme';
 import { ListRow, QueryState } from '@/ui';
 
 import { usePlatformAudit } from './api';
+import { auditSentence } from './auditText';
 
-const show = (v: Record<string, unknown> | null) =>
-  v ? Object.entries(v).map(([k, x]) => `${k}: ${x === null ? '—' : String(x)}`).join(', ') : '—';
-
-/** The platform owners' record (full update, Phase 6 g): who changed what, when, the old and the new value. */
+/**
+ * The platform owners' record (full update, Phase 6 g): what changed, as a sentence (final brief E2), who and when.
+ * A change made by the database itself (a correction of old records) is an "Automatic update".
+ */
 export function AuditTab() {
   const { t } = useTranslation();
   const dates = useDates();
   const audit = usePlatformAudit();
+  const say = t as (key: string, values?: Record<string, unknown>) => string;
   return (
     <QueryState query={audit} empty={t('console.audit.empty')}>
       {(rows) => (
@@ -22,11 +24,8 @@ export function AuditTab() {
           {rows.map((r) => (
             <ListRow
               key={r.id}
-              title={[r.action, r.salon ?? r.subject].filter(Boolean).join(' · ')}
-              meta={[
-                t('console.audit.change', { before: show(r.before), after: show(r.after) }),
-                [r.actor ?? '—', dates.at(r.created_at, 'Asia/Dubai', 'd MMM yyyy · HH:mm')].join(' · '),
-              ]}
+              title={auditSentence(r, say, (d, pattern) => dates.day(d, pattern))}
+              meta={[[r.actor ?? t('console.audit.system'), dates.at(r.created_at, 'Asia/Dubai', 'd MMM yyyy · HH:mm')].join(' · ')]}
               testID={`audit-${r.action}`}
             />
           ))}

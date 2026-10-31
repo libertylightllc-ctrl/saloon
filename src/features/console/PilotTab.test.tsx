@@ -27,7 +27,7 @@ const app = (over: Partial<PilotApplication>): PilotApplication => ({
   ...over,
 });
 
-const mockApps = [app({}), app({ id: 'a2', salon_name: 'Fade Lab', name: 'Omar', area: 'Al Barsha', language: 'ar', whatsapp_ok: false })];
+let mockApps = [app({}), app({ id: 'a2', salon_name: 'Fade Lab', name: 'Omar', area: 'Al Barsha', language: 'ar', whatsapp_ok: false })];
 const mockIdle = { mutate: jest.fn(), isPending: false, error: null, variables: undefined };
 const mockDone = (data: unknown) => ({ data, isPending: false, isError: false, error: null, refetch: jest.fn() });
 jest.mock('./api', () => ({
@@ -63,4 +63,12 @@ it('leaves the area out when it only repeats the emirate', () => {
   expect(placeLine('Ras Al Khaimah', 'ras_al_khaimah', ' ras al khaimah ')).toBe('Ras Al Khaimah');
   expect(placeLine('Dubai', 'dubai', null)).toBe('Dubai');
   expect(placeLine('Dubai', 'dubai', 'Deira')).toBe('Dubai · Deira');
+});
+
+it('says so when no one has applied yet (final brief E2)', async () => {
+  const before = mockApps;
+  mockApps = [];
+  await renderInApp(<PilotTab />);
+  expect(screen.getByText('No applications yet.')).toBeTruthy();
+  mockApps = before;
 });
