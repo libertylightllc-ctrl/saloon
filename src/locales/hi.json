@@ -2756,7 +2756,9 @@
       "planIncome": "मिले प्लान भुगतान",
       "countries": "देश के हिसाब से सैलून",
       "none": "अभी कुछ नहीं।",
-      "pilot": "पायलट में बची जगहें"
+      "pilot": "पायलट में बची जगहें",
+      "review_one": "{{count}} नया आवेदन – देखें",
+      "review": "{{count}} नए आवेदन – देखें"
     },
     "salons": {
       "search": "सैलून, मालिक, कोड खोजें",
@@ -2937,7 +2939,10 @@
       "disabled": "बंद",
       "salonOwner": "सैलून: {{salon}} · मालिक: {{owner}}",
       "language": "भाषा: {{language}}",
-      "received": "{{date}} को मिला"
+      "received": "{{date}} को मिला",
+      "newCount_one": "{{count}} नया पायलट आवेदन",
+      "newCount": "{{count}} नए पायलट आवेदन",
+      "review": "देखें"
     },
     "audit": {
       "empty": "अभी कोई बदलाव नहीं।",

@@ -8,7 +8,7 @@ import { useRefreshApp } from '@/features/app/RefreshButton';
 import { PinSheet, SwitchUserSheet } from '@/features/auth/QuickSwitchSheets';
 import { useHasPin } from '@/features/auth/quickSwitch';
 import { useSession, useWorkspace } from '@/features/auth/session';
-import { useBusinessRows } from '@/features/nav/navItems';
+import { useBusinessRows, useNavBadges } from '@/features/nav/navItems';
 import { LanguageSheet } from '@/features/settings/LanguageSheet';
 import { useSupportUnread } from '@/features/support/api';
 import { LANGUAGES } from '@/lib/i18n';
@@ -30,6 +30,7 @@ export function MoreScreen() {
   const unread = useSupportUnread();
   const [signingOut, setSigningOut] = useState(false);
   const shown = useBusinessRows();
+  const badges = useNavBadges();
 
   return (
     <>
@@ -62,6 +63,7 @@ export function MoreScreen() {
                   index={i}
                   label={t(`more.rows.${row.key}`)}
                   last={i === shown.length - 1}
+                  badge={badges[row.key]}
                   onPress={() => router.push(row.href)}
                   testID={`more-${row.key}`}
                 />

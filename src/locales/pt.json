@@ -2756,7 +2756,9 @@
       "planIncome": "Pagamentos de planos recebidos",
       "countries": "Salões por país",
       "none": "Nada ainda.",
-      "pilot": "Vagas restantes no piloto"
+      "pilot": "Vagas restantes no piloto",
+      "review_one": "{{count}} inscrição nova – rever",
+      "review": "{{count}} inscrições novas – rever"
     },
     "salons": {
       "search": "Pesquisar salões, proprietários, códigos",
@@ -2937,7 +2939,10 @@
       "disabled": "Desativado",
       "salonOwner": "Salão: {{salon}} · Proprietário: {{owner}}",
       "language": "Idioma: {{language}}",
-      "received": "Recebida em {{date}}"
+      "received": "Recebida em {{date}}",
+      "newCount_one": "{{count}} inscrição nova no piloto",
+      "newCount": "{{count}} inscrições novas no piloto",
+      "review": "Rever"
     },
     "audit": {
       "empty": "Nenhuma alteração ainda.",

@@ -2755,7 +2755,9 @@
       "planIncome": "Plan payments received",
       "countries": "Salons by country",
       "none": "Nothing yet.",
-      "pilot": "Pilot places left"
+      "pilot": "Pilot places left",
+      "review_one": "{{count}} new application – review",
+      "review": "{{count}} new applications – review"
     },
     "salons": {
       "search": "Search salons, owners, codes",
@@ -2936,7 +2938,10 @@
       "disabled": "Switched off",
       "salonOwner": "Salon: {{salon}} · Owner: {{owner}}",
       "language": "Language: {{language}}",
-      "received": "Received {{date}}"
+      "received": "Received {{date}}",
+      "newCount_one": "{{count}} new pilot application",
+      "newCount": "{{count}} new pilot applications",
+      "review": "Review"
     },
     "audit": {
       "empty": "No changes yet.",

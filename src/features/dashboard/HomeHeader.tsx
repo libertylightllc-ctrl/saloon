@@ -6,6 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import { brand } from '@/config/brand';
 import { RefreshButton } from '@/features/app/RefreshButton';
 import { useWorkspace } from '@/features/auth/session';
+import { useNewPilotApplications } from '@/features/console/api';
 import { useUnreadCount } from '@/features/notifications/api';
 import { businessDate, formatDayLabel } from '@/lib/dates';
 import { can } from '@/lib/permissions';
@@ -17,18 +18,22 @@ export function partOfDay(timeZone: string, at = new Date()): 'morning' | 'after
   return hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
 }
 
-/** The bell with the unread count; opens the notifications list. */
+/**
+ * The bell with the unread count, plus, for platform owners, the pilot applications still New (owner's fix list A1;
+ * the list shows them first); opens the notifications list.
+ */
 function Bell({ variant }: { variant: 'surface' | 'plain' }) {
   const { t } = useTranslation();
   const router = useRouter();
   const { member } = useWorkspace();
   const unread = useUnreadCount(member.id);
+  const count = (unread.data ?? 0) + useNewPilotApplications();
   return (
     <IconButton
       icon="bell"
       variant={variant}
-      accessibilityLabel={t('notifications.open', { count: unread.data ?? 0 })}
-      badge={unread.data ? unread.data : undefined}
+      accessibilityLabel={t('notifications.open', { count })}
+      badge={count || undefined}
       onPress={() => router.push('/notifications')}
       testID="home-bell"
     />

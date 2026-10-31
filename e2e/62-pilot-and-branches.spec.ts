@@ -27,14 +27,33 @@ test('a pilot application is approved with a code; the owner signs up with it an
   await makePlatformAdmin(platform.email);
   const office = await device();
   await ownerOn(office, mode, platform.email, platform.password);
-  await office.goto('/admin');
-  await id(office, 'console-tab-pilot').click();
+
+  // A new application shows on the bell (with a row first in the list that opens Pilot) and on More's "Platform
+  // console" (owner's fix list A1). Other tests may apply at the same time, so the counts are "at least one".
+  await expect(id(office, 'home-bell')).toHaveAccessibleName(/[1-9]\d* unread/);
+  await office.goto('/more');
+  await expect(id(office, 'more-admin-badge')).toHaveText(/^([1-9]|9\+)$/);
+  await office.goto('/notifications');
+  await id(office, 'notification-pilot-new').click();
+  await expect(office).toHaveURL(/\/console\?tab=pilot/);
+  // The tab and the browser tab count them; the Overview card links to them.
+  await expect(id(office, 'console-tab-pilot')).toHaveText(/^Pilot \(\d+\)$/);
+  await expect(office).toHaveTitle(/^\(\d+\) Platform console$/);
+  await id(office, 'console-tab-overview').click();
+  await id(office, 'console-pilot-review').click();
+  await expect(id(office, `pilot-app-${salon}`)).toContainText('Salon: ' + salon + ' · Owner: Mariam');
   await expect(id(office, `pilot-app-${salon}`)).toContainText('Ladies salon');
   await id(office, `pilot-approve-${salon}`).click();
   const message = id(office, 'console-pilot-message');
   await expect(message).toContainText('welcome to the Saloqo pilot');
   const code = /PILOT-[A-Z0-9]+/.exec((await message.innerText()) ?? '')![0];
   await expect(id(office, `pilot-app-${salon}`)).toContainText('Approved');
+  // Approved: the counts go down with it (to what is still New, if other tests applied meanwhile).
+  await expect(async () => {
+    const { count } = await admin.from('pilot_applications').select('id', { count: 'exact', head: true }).eq('status', 'new');
+    await expect(id(office, 'console-tab-pilot')).toHaveText(count ? `Pilot (${count})` : 'Pilot', { timeout: 2_000 });
+    await expect(office).toHaveTitle(count ? `(${count}) Platform console` : 'Platform console', { timeout: 2_000 });
+  }).toPass({ timeout: 20_000 });
 
   // The owner signs up with the code ("Have a pilot code?") and sets up the salon.
   const email = `pilot-${uid()}@e2e.test`;

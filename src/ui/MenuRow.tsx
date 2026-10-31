@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { semantic, spacing, useTheme } from '@/theme';
 
+import { CountBadge } from './CountBadge';
 import { Icon, type IconName } from './Icon';
 import { Text } from './Text';
 
@@ -16,11 +17,13 @@ export interface MenuRowProps {
   danger?: boolean;
   /** Hide the divider under the last row of a group. */
   last?: boolean;
+  /** Something waiting there, as a red count before the chevron; `label` is what a screen reader says. */
+  badge?: { count: number; label: string };
   testID?: string;
 }
 
 /** Icon in a small pastel square, label, chevron — the Barber kit's Profile list. */
-export function MenuRow({ icon, label, value, onPress, index = 0, danger, last, testID }: MenuRowProps) {
+export function MenuRow({ icon, label, value, onPress, index = 0, danger, last, badge, testID }: MenuRowProps) {
   const theme = useTheme();
   const { categoryFills, categoryIcons } = theme.colors;
   const fill = danger ? semantic.error.surface : categoryFills[index % categoryFills.length];
@@ -31,7 +34,7 @@ export function MenuRow({ icon, label, value, onPress, index = 0, danger, last, 
       onPress={onPress}
       testID={testID}
       accessibilityRole="button"
-      accessibilityLabel={value ? `${label}, ${value}` : label}
+      accessibilityLabel={[label, value, badge?.count ? badge.label : null].filter(Boolean).join(', ')}
       style={({ pressed }) => [
         styles.row,
         !last && {
@@ -52,6 +55,7 @@ export function MenuRow({ icon, label, value, onPress, index = 0, danger, last, 
           {value}
         </Text>
       ) : null}
+      {badge ? <CountBadge count={badge.count} testID={testID ? `${testID}-badge` : undefined} /> : null}
       <Icon name="chevronRight" size={18} color={theme.colors.textSecondary} />
     </Pressable>
   );

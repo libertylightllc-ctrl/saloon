@@ -4,6 +4,7 @@
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { useIsPlatformAdmin } from '@/features/plan/api';
 import { supabase } from '@/lib/supabase';
 
 export interface Overview {
@@ -247,15 +248,28 @@ export interface PilotApplication {
   decided_at: string | null;
 }
 
+const pilotApplications = {
+  queryKey: ['platform', 'pilot-applications'],
+  queryFn: async (): Promise<PilotApplication[]> => {
+    const { data, error } = await supabase.rpc('admin_pilot_applications');
+    if (error) throw error;
+    return (data ?? []) as unknown as PilotApplication[];
+  },
+};
+
 export function usePilotApplications() {
-  return useQuery({
-    queryKey: ['platform', 'pilot-applications'],
-    queryFn: async (): Promise<PilotApplication[]> => {
-      const { data, error } = await supabase.rpc('admin_pilot_applications');
-      if (error) throw error;
-      return (data ?? []) as unknown as PilotApplication[];
-    },
-  });
+  return useQuery(pilotApplications);
+}
+
+/**
+ * How many applications are still New, for the badges (owner's fix list A1: the Pilot tab, More, the sidebar, the
+ * bell, the browser tab): platform owners only, looked at again every 2 minutes; 0 for everyone else. Approving or
+ * declining one refreshes it at once (the decision refreshes every platform query).
+ */
+export function useNewPilotApplications(): number {
+  const admin = useIsPlatformAdmin();
+  const apps = useQuery({ ...pilotApplications, enabled: admin.data === true, refetchInterval: 2 * 60_000 });
+  return admin.data === true ? (apps.data ?? []).filter((a) => a.status === 'new').length : 0;
 }
 
 /** Approve (a one-use code for the pilot's days, for a WhatsApp message) or decline. */

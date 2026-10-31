@@ -5,14 +5,17 @@ import { countryName } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
 import { formatMoney } from '@/lib/money';
 import { spacing } from '@/theme';
-import { KpiCard, KpiGrid, ListRow, QueryState, SectionHeader, Text } from '@/ui';
+import { Button, KpiCard, KpiGrid, ListRow, QueryState, SectionHeader, Text } from '@/ui';
 
 import { useOverview } from './api';
 
 const money = (minor: number, currency: string) => (isCurrency(currency) ? formatMoney(minor, currency) : `${currency} ${minor}`);
 
-/** Totals across the service: salons and plans, people, sign-ups, countries, sales and plan income. */
-export function OverviewTab() {
+/**
+ * Totals across the service: salons and plans, people, sign-ups, countries, sales and plan income. New pilot
+ * applications are a highlighted link to Pilot → Applications (owner's fix list A1).
+ */
+export function OverviewTab({ onOpenPilot }: { onOpenPilot: () => void }) {
   const { t, i18n } = useTranslation();
   const overview = useOverview();
   return (
@@ -21,7 +24,18 @@ export function OverviewTab() {
         <View style={styles.body}>
           <KpiGrid>
             <KpiCard icon="store" label={t('console.overview.salons')} value={String(o.salons)} sub={t('console.overview.salonsSub', { active: o.salons_plan_active, trial: o.salons_trial, pilot: o.salons_pilot, comp: o.salons_comp, closed: o.salons_closed })} testID="console-salons" />
-            <KpiCard icon="sparkles" label={t('console.overview.pilot')} value={String(o.pilot_places_left)} sub={t('console.overview.newApplications', { count: o.pilot_applications_new })} testID="console-pilot" />
+            <KpiCard
+              icon="sparkles"
+              label={t('console.overview.pilot')}
+              value={String(o.pilot_places_left)}
+              sub={o.pilot_applications_new ? undefined : t('console.overview.newApplications', { count: 0 })}
+              action={
+                o.pilot_applications_new ? (
+                  <Button size="sm" label={t('console.overview.review', { count: o.pilot_applications_new })} onPress={onOpenPilot} testID="console-pilot-review" />
+                ) : undefined
+              }
+              testID="console-pilot"
+            />
             <KpiCard icon="creditCard" label={t(o.billing_enabled ? 'console.billing.on' : 'console.billing.off')} value={String(o.plan_requests_open)} sub={t('console.overview.requests')} />
             <KpiCard icon="users" label={t('console.overview.accounts')} value={String(o.accounts)} sub={[t('console.overview.owners', { count: o.owners }), t('console.overview.staffLogins', { count: o.staff_logins }), t('console.overview.noSalon', { count: o.no_salon })].join(' · ')} testID="console-accounts" />
             <KpiCard icon="userPlus" label={t('console.overview.signups')} value={String(o.signups_7d)} sub={t('console.overview.signupsSub', { month: o.signups_30d, active: o.signed_in_7d })} />

@@ -6,6 +6,7 @@ import type { Href } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { useWorkspace } from '@/features/auth/session';
+import { useNewPilotApplications } from '@/features/console/api';
 import { useIsPlatformAdmin } from '@/features/plan/api';
 import { can, tabsFor, type TabKey } from '@/lib/permissions';
 import type { IconName } from '@/ui';
@@ -15,6 +16,18 @@ export interface NavItem {
   icon: IconName;
   href: Href;
   label: string;
+  /** Something waiting there (a red count); `label` is what a screen reader says. */
+  badge?: { count: number; label: string };
+}
+
+/**
+ * The counts on business rows, by row key: "Platform console" shows the pilot applications still New (owner's fix
+ * list A1; platform owners only).
+ */
+export function useNavBadges(): Partial<Record<string, { count: number; label: string }>> {
+  const { t } = useTranslation();
+  const pilot = useNewPilotApplications();
+  return pilot > 0 ? { admin: { count: pilot, label: t('console.pilot.newCount', { count: pilot }) } } : {};
 }
 
 export type NavSectionKey = 'today' | 'money' | 'business' | 'settings';
@@ -83,6 +96,7 @@ export function useNavSections(): { key: NavSectionKey; title: string; items: Na
   const { role, rules } = useWorkspace();
   const tabItems = useTabItems();
   const rows = useBusinessRows();
+  const badges = useNavBadges();
   const tabs = tabsFor(role, rules).filter((k) => k !== 'more');
   const duplicate = new Set<string>([
     ...(tabs.includes('reports-tab') ? ['reports'] : []),
@@ -92,7 +106,7 @@ export function useNavSections(): { key: NavSectionKey; title: string; items: Na
   const section = (key: NavSectionKey): NavItem[] =>
     rows
       .filter((r) => r.section === key && !duplicate.has(r.key))
-      .map((r) => ({ key: r.key, icon: r.icon, href: r.href, label: t(`more.rows.${r.key}`) }));
+      .map((r) => ({ key: r.key, icon: r.icon, href: r.href, label: t(`more.rows.${r.key}`), badge: badges[r.key] }));
   return [
     { key: 'today' as const, title: t('nav.today'), items: today },
     { key: 'money' as const, title: t('nav.money'), items: section('money') },

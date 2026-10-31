@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useWorkspace } from '@/features/auth/session';
 import { brand } from '@/config/brand';
 import { spacing, useTheme } from '@/theme';
-import { Avatar, BrandMark, Icon, NAV_WIDTH, Text, useLayoutSize } from '@/ui';
+import { Avatar, BrandMark, CountBadge, Icon, NAV_WIDTH, Text, useLayoutSize } from '@/ui';
 
 import { activeKey, useNavSections, type NavItem } from './navItems';
 
@@ -103,7 +103,7 @@ function SidebarItem({ item, active, onPress }: { item: NavItem; active: boolean
       onPress={onPress}
       accessibilityRole="link"
       aria-current={active ? 'page' : undefined}
-      accessibilityLabel={item.label}
+      accessibilityLabel={item.badge?.count ? `${item.label}, ${item.badge.label}` : item.label}
       testID={`nav-${item.key}`}
       style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
         styles.item,
@@ -115,6 +115,7 @@ function SidebarItem({ item, active, onPress }: { item: NavItem; active: boolean
       <Text weight={active ? 'semibold' : 'regular'} color={active ? 'primaryText' : 'text'} numberOfLines={1} style={styles.flex}>
         {item.label}
       </Text>
+      {item.badge ? <CountBadge count={item.badge.count} testID={`nav-${item.key}-badge`} /> : null}
     </Pressable>
   );
 }
@@ -146,7 +147,9 @@ function Rail() {
   const sections = useNavSections();
   const all = sections.flatMap((s) => s.items);
   const counter = railItems(sections, all).map((i) => (i.key === 'cashClosing' ? { ...i, label: t('nav.short.cashClosing') } : i));
-  const items: NavItem[] = [...counter, { key: 'more', icon: 'grid', href: '/more', label: t('tabs.more') }];
+  // A count on a page under More (the console's new pilot applications) shows on More.
+  const waiting = all.find((i) => i.badge && !counter.some((c) => c.key === i.key))?.badge;
+  const items: NavItem[] = [...counter, { key: 'more', icon: 'grid', href: '/more', label: t('tabs.more'), badge: waiting }];
   // A page that is not on the rail lights More, where it lives.
   const active = activeKey(pathname, items) ?? (activeKey(pathname, all) ? 'more' : null);
   const { colors } = theme;
@@ -167,11 +170,12 @@ function Rail() {
               onPress={() => go(item.href)}
               accessibilityRole="link"
               aria-current={on ? 'page' : undefined}
-              accessibilityLabel={item.label}
+              accessibilityLabel={item.badge?.count ? `${item.label}, ${item.badge.label}` : item.label}
               testID={`nav-${item.key}`}
               style={[styles.railItem, { borderRadius: theme.radius.md }, on && { backgroundColor: colors.primary100 }]}
             >
               <Icon name={item.icon} size={22} color={on ? colors.primaryText : colors.textSecondary} strokeWidth={on ? 2 : 1.75} />
+              {item.badge ? <CountBadge count={item.badge.count} style={styles.railBadge} testID={`nav-${item.key}-badge`} /> : null}
               <Text variant="micro" weight={on ? 'semibold' : 'medium'} color={on ? 'primaryText' : 'textSecondary'} numberOfLines={1} align="center">
                 {item.label}
               </Text>
@@ -196,4 +200,5 @@ const styles = StyleSheet.create({
   rail: { width: NAV_WIDTH.tablet, alignItems: 'center', gap: spacing.lg, borderEndWidth: StyleSheet.hairlineWidth },
   railItems: { alignItems: 'center', gap: spacing.xs },
   railItem: { width: 68, minHeight: 56, alignItems: 'center', justifyContent: 'center', gap: 2, paddingHorizontal: 2 },
+  railBadge: { position: 'absolute', top: 4, end: 10 },
 });
