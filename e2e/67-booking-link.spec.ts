@@ -1,7 +1,9 @@
 /**
  * The booking link, shared (owner's fix list D, 2026-10-31): the page shows the salon's logo and address (D2); a link the
  * owner changes keeps the old address working, sending visitors on to the new one (D3), and no other salon can take it.
- * The link preview itself (D1) is drawn by the website's server functions: api/_lib/bookingPreview.test.ts.
+ * Links changed before old links were kept are found again in the salon's Activity (1 Nov). The link preview itself
+ * (D1) and the website's redirect are drawn by the website's server functions: api/_lib/bookingPreview.test.ts and
+ * api/booking-preview.test.ts.
  */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -63,4 +65,28 @@ test('a changed booking link: the old one still brings visitors to the salon, an
   await later.goto(`/b/${old}`);
   await expect(text(later, 'This booking page is not available. The salon may have switched it off.')).toBeVisible();
   await expect(later).toHaveURL(new RegExp(`/b/${old}$`));
+});
+
+test('a link changed before old links were kept still brings visitors to the salon; a link no salon had says so', async ({ device, mode }) => {
+  const owner = await createOwner(mode);
+  const { data: first, error } = await owner.client.rpc('set_online_booking', { p_branch: owner.branchId, p_on: true });
+  expect(error).toBeNull();
+  // As Red Rose's was on 31 Oct: the link changed, with only the Activity to show for it.
+  const now = `${first.slice(0, 30)}-now`;
+  expect((await admin.from('branches').update({ booking_slug: now }).eq('id', owner.branchId)).error).toBeNull();
+  expect((await admin.from('booking_old_links').delete().eq('branch_id', owner.branchId)).error).toBeNull();
+  const activity = { business_id: owner.businessId, branch_id: owner.branchId, action: 'update', entity_type: 'branch', entity_id: owner.branchId };
+  expect((await admin.from('audit_log').insert({ ...activity, summary: `Online booking on: ${now}` })).error).toBeNull();
+  const found = await admin.rpc('backfill_booking_old_links');
+  expect(found.error).toBeNull();
+  expect(found.data).toBeGreaterThan(0);
+
+  const visitor = await device();
+  await visitor.goto(`/b/${first}`);
+  await expect(visitor).toHaveURL(new RegExp(`/b/${now}$`));
+  await expect(id(visitor, 'booking-salon')).toBeVisible();
+
+  await visitor.goto(`/b/never-was-${Date.now() % 100_000}`);
+  await expect(text(visitor, "We can't find a booking page at this link. Check the link, or ask the salon for its booking link.")).toBeVisible();
+  await expect(text(visitor, 'This booking page is not available. The salon may have switched it off.')).toHaveCount(0);
 });

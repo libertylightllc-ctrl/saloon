@@ -3215,7 +3215,8 @@
     "instagram": "Instagram",
     "openDays": "Open {{days}}",
     "everyDay": "Open every day",
-    "poweredBy": "Free booking page by {{app}}"
+    "poweredBy": "Free booking page by {{app}}",
+    "noSuchLink": "We can't find a booking page at this link. Check the link, or ask the salon for its booking link."
   },
   "meta": {
     "welcome": {

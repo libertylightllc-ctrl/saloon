@@ -4485,6 +4485,7 @@ export type Database = {
           starts_at: string;
         }[];
       };
+      public_booking_status: { Args: { p_slug: string }; Returns: Json };
       public_receipt: { Args: { p_token: string }; Returns: Json };
       public_staff_name: { Args: { p_full: string }; Returns: string };
       purchase_no: { Args: { p_number: number }; Returns: string };

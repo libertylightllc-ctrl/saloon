@@ -59,15 +59,20 @@ export function useBookingPage(slug: string) {
   });
 }
 
-/** Where an old booking link leads now (owner's fix list D3): the salon's current link, or null. */
-export function useBookingLinkNow(slug: string, enabled: boolean) {
+/**
+ * What a link without a page is (owner's fix list D3, 1 Nov): one the salon used before ('moved', with its current link),
+ * one whose salon switched booking off ('off'), or one no salon ever had ('unknown').
+ */
+export type BookingLinkStatus = { status: 'open' | 'off' | 'unknown' } | { status: 'moved'; link: string };
+
+export function useBookingLinkStatus(slug: string, enabled: boolean) {
   return useQuery({
     queryKey: ['booking-link', slug],
     enabled,
-    queryFn: async (): Promise<string | null> => {
-      const { data, error } = await supabase.rpc('public_booking_link', { p_slug: slug });
+    queryFn: async (): Promise<BookingLinkStatus> => {
+      const { data, error } = await supabase.rpc('public_booking_status', { p_slug: slug });
       if (error) throw error;
-      return data ?? null;
+      return data as unknown as BookingLinkStatus;
     },
   });
 }

@@ -20,7 +20,7 @@ import { formatMoney, sum } from '@/lib/money';
 import { spacing, ThemeProvider } from '@/theme';
 import { Button, EmptyState, FormError, FormTextField, HeaderBand, QueryState, Screen, SectionHeader, Text } from '@/ui';
 
-import { useBook, useBookingLinkNow, useBookingPage, useBookingSlots, type BookingPage } from './api';
+import { useBook, useBookingLinkStatus, useBookingPage, useBookingSlots, type BookingPage } from './api';
 import { DayChips, ServiceList, StaffChips, TimeGrid } from './BookingPickers';
 import { bookingMeta } from './meta';
 import { SalonCard } from './SalonCard';
@@ -35,9 +35,10 @@ type Details = z.infer<typeof schema>;
 export function BookingScreen({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const page = useBookingPage(slug);
-  // An old link goes on to the salon's current one (owner's fix list D3; the website already redirects it).
-  const now = useBookingLinkNow(slug, page.data === null);
-  if (now.data) return <Redirect href={`/b/${now.data}`} />;
+  // An old link goes on to the salon's current one (owner's fix list D3; the website already redirects it). "Not
+  // available" only for a salon's link whose page is off; a link no salon ever had says so.
+  const link = useBookingLinkStatus(slug, page.data === null);
+  if (link.data?.status === 'moved') return <Redirect href={`/b/${link.data.link}`} />;
   return (
     <QueryState query={page}>
       {(p) =>
@@ -45,9 +46,12 @@ export function BookingScreen({ slug }: { slug: string }) {
           <ThemeProvider mode={p.salon.mode}>
             <BookingForm slug={slug} page={p} />
           </ThemeProvider>
-        ) : now.isPending ? null : (
+        ) : link.isPending ? null : (
           <Screen header={<HeaderBand title={t('booking.title')} />}>
-            <EmptyState illustration="no-results" message={t('booking.notFound')} />
+            <EmptyState
+              illustration="no-results"
+              message={t(link.data?.status === 'unknown' ? 'booking.noSuchLink' : 'booking.notFound')}
+            />
           </Screen>
         )
       }

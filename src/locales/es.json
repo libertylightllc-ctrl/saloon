@@ -3216,7 +3216,8 @@
     "instagram": "Instagram",
     "openDays": "Abierto: {{days}}",
     "everyDay": "Abierto todos los días",
-    "poweredBy": "Página de reservas gratis de {{app}}"
+    "poweredBy": "Página de reservas gratis de {{app}}",
+    "noSuchLink": "No encontramos ninguna página de reservas en este enlace. Revisa el enlace o pide al salón su enlace de reservas."
   },
   "meta": {
     "welcome": {
