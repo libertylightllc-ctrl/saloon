@@ -6,13 +6,12 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { ImageResponse } from '@vercel/og';
-
 import brand from '../src/config/brand.json';
 import { bookingPlace } from '../src/features/booking/meta';
 import { cardTree } from './_lib/bookingCard';
 import { bookingPage, storageUrl } from './_lib/bookingData';
 import { english, publicFile } from './_lib/bookingPreview';
+import loadOg from './_lib/loadOg.cjs';
 
 const LOGO_TYPES = /^image\/(png|jpeg)$/;
 
@@ -43,12 +42,17 @@ async function logoData(url: string): Promise<string | null> {
 }
 
 export async function GET(request: Request): Promise<Response> {
-  const saloqo = new Response(null, { status: 302, headers: { location: `${brand.website}/og-image.jpg`, 'cache-control': 'public, s-maxage=600' } });
+  // Saloqo's own card; after a failure, what went wrong goes along in a header (the picture itself has no room for it).
+  const saloqo = (problem?: string) =>
+    new Response(null, {
+      status: 302,
+      headers: { location: `${brand.website}/og-image.jpg`, 'cache-control': 'public, s-maxage=600', ...(problem ? { 'x-card-problem': problem } : {}) },
+    });
   const slug = (new URL(request.url).searchParams.get('slug') ?? '').toLowerCase().slice(0, 60);
   const { page } = await bookingPage(slug);
   const salon = page?.salon;
   const logo = salon?.logo_path ? await logoData(publicFile(storageUrl(), salon.logo_path)) : null;
-  if (!salon || !logo) return saloqo;
+  if (!salon || !logo) return saloqo();
   try {
     const tree = cardTree({
       logo,
@@ -59,6 +63,7 @@ export async function GET(request: Request): Promise<Response> {
     });
     // Drawn in full here, so a failure falls back to Saloqo's card instead of a broken picture.
     const poppins = fonts();
+    const { ImageResponse } = await loadOg();
     const png = await new ImageResponse(tree, { width: 1200, height: 630, fonts: poppins }).arrayBuffer();
     return new Response(png, {
       headers: {
@@ -67,7 +72,14 @@ export async function GET(request: Request): Promise<Response> {
         'x-card-font': poppins ? 'poppins' : 'built-in',
       },
     });
-  } catch {
-    return saloqo;
+  } catch (error) {
+    return saloqo(problem(error));
   }
+}
+
+/** One line: the error's code (or name) and message. */
+function problem(error: unknown): string {
+  if (!(error instanceof Error)) return String(error).slice(0, 200);
+  const code = (error as NodeJS.ErrnoException).code ?? error.name;
+  return `${code}: ${error.message}`.split('\n')[0]!.slice(0, 200);
 }

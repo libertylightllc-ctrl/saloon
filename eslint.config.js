@@ -71,7 +71,7 @@ module.exports = defineConfig([
   },
   {
     // Pinned in package.json for the preview picture; a node_modules shared with another checkout may not have it.
-    files: ['api/booking-card.ts'],
+    files: ['api/_lib/loadOg.cjs'],
     settings: { 'import/core-modules': ['@vercel/og'] },
   },
   {
