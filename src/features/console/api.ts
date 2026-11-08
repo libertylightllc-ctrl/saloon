@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { ContactSetting } from '@/features/landing/contact';
 import { useIsPlatformAdmin } from '@/features/plan/api';
+import { allPages } from '@/lib/allPages';
 import { supabase } from '@/lib/supabase';
 
 export interface Overview {
@@ -52,9 +53,8 @@ export function useSalonStats() {
   return useQuery({
     queryKey: ['platform', 'salon-stats'],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('admin_salon_stats');
-      if (error) throw error;
-      return new Map((data ?? []).map((s) => [s.business_id, { ...s, sales_month_minor: Number(s.sales_month_minor) }]));
+      const data = await allPages((from, to) => supabase.rpc('admin_salon_stats').order('business_id').range(from, to));
+      return new Map(data.map((s) => [s.business_id, { ...s, sales_month_minor: Number(s.sales_month_minor) }]));
     },
   });
 }
@@ -64,10 +64,11 @@ export function useSalonDuplicates() {
   return useQuery({
     queryKey: ['platform', 'salon-duplicates'],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('admin_salon_duplicates');
-      if (error) throw error;
+      const data = await allPages((from, to) =>
+        supabase.rpc('admin_salon_duplicates').order('business_id').order('reason').range(from, to),
+      );
       const bySalon = new Map<string, { name?: string[]; phone?: string[] }>();
-      for (const d of data ?? []) bySalon.set(d.business_id, { ...bySalon.get(d.business_id), [d.reason]: d.others });
+      for (const d of data) bySalon.set(d.business_id, { ...bySalon.get(d.business_id), [d.reason]: d.others });
       return bySalon;
     },
   });
@@ -97,9 +98,8 @@ export function useAccounts() {
   return useQuery({
     queryKey: ['platform', 'accounts'],
     queryFn: async (): Promise<Account[]> => {
-      const { data, error } = await supabase.rpc('admin_accounts');
-      if (error) throw error;
-      return (data ?? []) as Account[];
+      // Newest first, as the function orders them, past the API's 1,000 rows.
+      return (await allPages((from, to) => supabase.rpc('admin_accounts').range(from, to))) as Account[];
     },
   });
 }
@@ -207,9 +207,8 @@ export function useTestSalons() {
   return useQuery({
     queryKey: ['platform', 'test-salons'],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('admin_test_salons');
-      if (error) throw error;
-      return new Set((data ?? []).map((r) => r.business_id));
+      const data = await allPages((from, to) => supabase.rpc('admin_test_salons').order('business_id').range(from, to));
+      return new Set(data.map((r) => r.business_id));
     },
   });
 }

@@ -86,6 +86,9 @@ Parts C, D and E are #21 to #30 above; the final brief adds D3 and changes E3 (b
 ### Console
 38. An "Ended" status for salons whose free, paid or pilot period is over and that are not closed: "N ended" in the Overview's salon breakdown so the groups add up to the total; "Ended on <date>" on salon cards in place of "Free until / Paid until"; a status filter in Console → Salons (All / Paid / Free / Pilot / Ended / Closed / Test). All 7 languages, no change to billing rules.
 
+### Found while doing #38
+39. The console's salon, activity, duplicate, test-salon and account lists stop at 1,000 rows: the API answers at most 1,000 a request. Past 1,000 salons some go missing from Console → Salons, others lose their activity lines and "Closed" mark, and the status filter's counts come out short. (The local test database passed 1,000 salons; saloqo.com has 14.)
+
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.
