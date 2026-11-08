@@ -6,6 +6,9 @@ import { renderInApp, warmUpRendering } from './testUtils';
 import { TOAST_MS, useToast } from './Toast';
 
 warmUpRendering();
+// From a cold cache the first toast takes over a second on its own; with every test file starting at once on a busy
+// Mac it passed Jest's 5 s limit (8 Nov 2026).
+jest.setTimeout(30_000);
 
 const handle: { show?: ReturnType<typeof useToast> } = {};
 function Grab() {
