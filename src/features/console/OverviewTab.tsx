@@ -14,7 +14,8 @@ const money = (minor: number, currency: string) => (isCurrency(currency) ? forma
 /**
  * Totals across the service: salons and plans, people, sign-ups, countries, sales and plan income. New pilot
  * applications are a highlighted link to Pilot → Applications (owner's fix list A1). Test salons are left out of all
- * of it, and the last line says how many (final brief E1).
+ * of it, and the last line says how many (final brief E1). The salon groups — paid, free, pilot, free for good and
+ * ended — add up to the salon total; closed salons are named apart (owner, 2026-11-08).
  */
 export function OverviewTab({ onOpenPilot }: { onOpenPilot: () => void }) {
   const { t, i18n } = useTranslation();
@@ -24,7 +25,21 @@ export function OverviewTab({ onOpenPilot }: { onOpenPilot: () => void }) {
       {(o) => (
         <View style={styles.body}>
           <KpiGrid>
-            <KpiCard icon="store" label={t('console.overview.salons')} value={String(o.salons)} sub={t('console.overview.salonsSub', { active: o.salons_plan_active, trial: o.salons_trial, pilot: o.salons_pilot, comp: o.salons_comp, closed: o.salons_closed })} testID="console-salons" />
+            <KpiCard
+              icon="store"
+              label={t('console.overview.salons')}
+              value={String(o.salons)}
+              sub={t('console.overview.salonsSub', {
+                active: o.salons_plan_active,
+                trial: o.salons_trial,
+                pilot: o.salons_pilot,
+                comp: o.salons_comp,
+                ended: o.salons_ended,
+                closed: o.salons_closed,
+              })}
+              subLines={8}
+              testID="console-salons"
+            />
             <KpiCard
               icon="sparkles"
               label={t('console.overview.pilot')}

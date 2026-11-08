@@ -3971,6 +3971,7 @@ export type Database = {
           code: string;
           country_code: string;
           created_at: string;
+          ended_on: string;
           free_until: string;
           last_active: string;
           monthly_minor: number;
@@ -3985,6 +3986,7 @@ export type Database = {
           requested_at: string;
           requested_months: number;
           staff: number;
+          status: string;
           timezone: string;
           trial: boolean;
         }[];
@@ -4620,6 +4622,10 @@ export type Database = {
       rostered: {
         Args: { p_date: string; p_employee: string; p_from: number; p_to: number };
         Returns: boolean;
+      };
+      salon_status: {
+        Args: { p_access: string; p_closed: string; p_free: string; p_paid: string; p_today: string };
+        Returns: string;
       };
       save_document: { Args: { p: Json }; Returns: string };
       save_employee: { Args: { p: Json }; Returns: string };

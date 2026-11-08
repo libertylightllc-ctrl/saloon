@@ -16,6 +16,8 @@ export interface Overview {
   salons_trial: number;
   salons_pilot: number;
   salons_comp: number;
+  /** Open salons whose last period is over (owner, 2026-11-08): with the four above, they add up to `salons`. */
+  salons_ended: number;
   /** Test salons, left out of every other number here (final brief E1). */
   salons_test: number;
   billing_enabled: boolean;

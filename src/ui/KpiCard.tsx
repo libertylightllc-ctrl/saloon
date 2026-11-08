@@ -21,6 +21,8 @@ export interface KpiCardProps {
   value: string;
   delta?: KpiDelta;
   sub?: string;
+  /** Lines the sub may take before it is cut (2). */
+  subLines?: number;
   icon?: IconName;
   /** Bigger value and an action slot (Home "Expected cash today"). */
   hero?: boolean;
@@ -29,7 +31,7 @@ export interface KpiCardProps {
   testID?: string;
 }
 
-export function KpiCard({ label, value, delta, sub, icon, hero, action, style, testID }: KpiCardProps) {
+export function KpiCard({ label, value, delta, sub, subLines = 2, icon, hero, action, style, testID }: KpiCardProps) {
   const theme = useTheme();
   const good = delta ? (delta.good ?? delta.trend === 'up') : true;
   const tone = good ? semantic.success : semantic.error;
@@ -63,7 +65,7 @@ export function KpiCard({ label, value, delta, sub, icon, hero, action, style, t
             </View>
           ) : null}
           {sub ? (
-            <Text variant="small" color="textSecondary" numberOfLines={2} style={styles.flex}>
+            <Text variant="small" color="textSecondary" numberOfLines={subLines} style={styles.flex} testID={testID ? `${testID}-sub` : undefined}>
               {sub}
             </Text>
           ) : null}

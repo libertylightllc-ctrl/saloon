@@ -81,6 +81,11 @@ Parts C, D and E are #21 to #30 above; the final brief adds D3 and changes E3 (b
 ### Part E
 36. E3 (changed) While a request waits, the Plan page says "Request sent, we'll be in touch" instead of the button; the console merges duplicates (Asil Trims has two).
 
+## Owner, 8 Nov 2026
+
+### Console
+38. An "Ended" status for salons whose free, paid or pilot period is over and that are not closed: "N ended" in the Overview's salon breakdown so the groups add up to the total; "Ended on <date>" on salon cards in place of "Free until / Paid until"; a status filter in Console → Salons (All / Paid / Free / Pilot / Ended / Closed / Test). All 7 languages, no change to billing rules.
+
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.

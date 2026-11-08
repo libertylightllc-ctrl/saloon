@@ -2749,7 +2749,7 @@
     },
     "overview": {
       "salons": "Salons",
-      "salonsSub": "{{active}} payants · {{trial}} gratuits · {{pilot}} pilote · {{comp}} gratuits à vie · {{closed}} fermés",
+      "salonsSub": "{{active}} payants · {{trial}} gratuits · {{pilot}} pilote · {{comp}} gratuits à vie · {{ended}} terminés. Non comptés : {{closed}} fermés",
       "requests": "Demandes d’abonnement en attente",
       "accounts": "Comptes de connexion",
       "owners_one": "{{count}} propriétaire",
@@ -2805,7 +2805,17 @@
       "testSwitch": "Salon de test",
       "testHint": "Exclu des chiffres de la Vue d’ensemble et des places du pilote, et marqué « Test » dans les listes. Le salon fonctionne comme avant.",
       "testMarked": "{{name}} est maintenant un salon de test",
-      "testUnmarked": "{{name}} n’est plus un salon de test"
+      "testUnmarked": "{{name}} n’est plus un salon de test",
+      "status": {
+        "all": "Tous",
+        "paid": "Payants",
+        "free": "Gratuits",
+        "pilot": "Pilote",
+        "ended": "Terminés",
+        "closed": "Fermés",
+        "test": "Test"
+      },
+      "noneHere": "Aucun salon ici."
     },
     "accounts": {
       "title": "Comptes ({{count}})",
@@ -2901,7 +2911,8 @@
       "setEnd": "Gratuit jusqu’à cette date",
       "note": "Note (visible seulement par les propriétaires de la plateforme)",
       "saveNote": "Enregistrer la note",
-      "saved": "Enregistré"
+      "saved": "Enregistré",
+      "endedOn": "Terminé le {{date}}"
     },
     "billing": {
       "title": "Facturation",

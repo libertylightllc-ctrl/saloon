@@ -27,13 +27,20 @@ import {
 
 import { AccessForm, accessLabel } from './AccessForm';
 import { useCloseSalon, useSalonDuplicates, useSalonStats, useTestSalons } from './api';
+import { inFilter, SALON_FILTERS, type SalonFilter } from './salonFilter';
 import { TestSalonSwitch } from './TestSalonSwitch';
 
 const MONTHS = [1, 6, 12] as const;
 // Salons drawn at a time: hundreds of rows at once made the tab slow (owner's fix list #12). Search covers them all.
 const PAGE = 50;
+const NO_TESTS: ReadonlySet<string> = new Set();
+/** The pill's colour for each status: running green or amber, over grey-red. */
+const TONE = { paid: 'valid', comp: 'valid', free: 'due_soon', pilot: 'due_soon', ended: 'expired', closed: 'expired' } as const;
 
-/** Every salon: owner, plan and request, and what it does — staff, customers, sales, last activity. */
+/**
+ * Every salon: owner, plan and request, and what it does — staff, customers, sales, last activity. A status filter
+ * (All, Paid, Free, Pilot, Ended, Closed, Test) works with the search; each pill counts its salons.
+ */
 export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name: string }) => void }) {
   const { t, i18n } = useTranslation();
   const dates = useDates();
@@ -43,10 +50,15 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
   const tests = useTestSalons();
   const [open, setOpen] = useState<AdminSalon | null>(null);
   const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState<SalonFilter>('all');
   const [shown, setShown] = useState(PAGE);
   const q = search.trim().toLowerCase();
   const onSearch = (v: string) => {
     setSearch(v);
+    setShown(PAGE);
+  };
+  const onFilter = (f: SalonFilter) => {
+    setFilter(f);
     setShown(PAGE);
   };
 
@@ -61,9 +73,22 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
       ) : null}
       <QueryState query={salons} isEmpty={(rows) => rows.length === 0} empty={<EmptyState illustration="no-results" message={t('admin.empty')} />}>
         {(rows) => {
-          const matches = rows.filter((s) => !q || [s.name, s.code, s.owner_name, s.owner_email].some((v) => v?.toLowerCase().includes(q)));
+          const testSet = tests.data ?? NO_TESTS;
+          const found = rows.filter((s) => !q || [s.name, s.code, s.owner_name, s.owner_email].some((v) => v?.toLowerCase().includes(q)));
+          const matches = found.filter((s) => inFilter(s, filter, testSet));
           return (
             <View style={styles.list}>
+              <PillTabs<SalonFilter>
+                items={SALON_FILTERS.map((f) => ({
+                  key: f,
+                  label: t(`console.salons.status.${f}`),
+                  count: found.filter((s) => inFilter(s, f, testSet)).length,
+                }))}
+                value={filter}
+                onChange={onFilter}
+                testID="console-salon-filter"
+              />
+              {matches.length === 0 ? <EmptyState illustration="no-results" message={t('console.salons.noneHere')} /> : null}
               {matches.slice(0, shown).map((s) => {
                 const st = stats.data?.get(s.business_id);
                 const currency = st && isCurrency(st.currency) ? st.currency : undefined;
@@ -98,10 +123,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                     ]}
                     badges={
                       <View style={styles.badges}>
-                        <StatusPill
-                          status={s.active ? (s.access_type === 'paid' || s.access_type === 'comp' ? 'valid' : 'due_soon') : 'expired'}
-                          label={accessLabel(s, t, (d) => dates.day(d, 'd MMM yyyy'))}
-                        />
+                        <StatusPill status={TONE[s.status] ?? 'expired'} label={accessLabel(s, t, (d) => dates.day(d, 'd MMM yyyy'))} />
                         {s.requested_at ? <StatusPill status="pending_approval" label={t('admin.asked')} /> : null}
                         {st?.closed ? <StatusPill status="cancelled" label={t('console.salons.closed')} /> : null}
                         {dup ? <StatusPill status="pending_approval" label={t('console.salons.duplicate')} /> : null}

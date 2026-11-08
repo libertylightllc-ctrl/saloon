@@ -10,6 +10,12 @@ export const planKey = (businessId: string) => ['plan', businessId] as const;
 
 export type AccessType = 'trial' | 'pilot' | 'paid' | 'comp';
 
+/**
+ * A salon's group in the platform console (owner, 2026-11-08), one each, so the Overview's groups add up: closed,
+ * free for good ('comp'), paid, pilot, another free period, or ended (its last period is over). The database decides it.
+ */
+export type SalonStatus = 'closed' | 'comp' | 'paid' | 'pilot' | 'free' | 'ended';
+
 /** One branch's line of the bill: its people (the owner and the accountant count at the first branch) and price. */
 export interface BranchLine {
   branch_id: string;
@@ -168,6 +174,9 @@ export interface AdminSalon {
   /** Active staff logins (not the owner). */
   staff: number;
   last_active: string | null;
+  status: SalonStatus;
+  /** For an ended salon: the day its last free, paid or pilot period ended. */
+  ended_on: string | null;
 }
 
 export function useAdminSalons() {
@@ -181,6 +190,7 @@ export function useAdminSalons() {
         monthly_minor: Number(s.monthly_minor),
         plan_currency: isCurrency(s.plan_currency) ? s.plan_currency : 'AED',
         access_type: (s.access_type as AccessType | null) ?? null,
+        status: s.status as SalonStatus,
       }));
     },
   });

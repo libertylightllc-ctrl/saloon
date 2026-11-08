@@ -10,10 +10,15 @@ import { Button, DateField, FormError, Text, TextField, useToast } from '@/ui';
 
 import { useSetAccess, type AccessAction } from './api';
 
-/** A salon's access in words: free for good, pilot or free until a date, paid until a date. */
-export function accessLabel(s: Pick<AdminSalon, 'access_type' | 'free_until' | 'paid_until'>, t: TFunction, day: (d: string) => string): string {
+/** A salon's access in words: free for good, pilot or free until a date, paid until a date, or the day it ended. */
+export function accessLabel(
+  s: Pick<AdminSalon, 'access_type' | 'free_until' | 'paid_until' | 'status' | 'ended_on'>,
+  t: TFunction,
+  day: (d: string) => string,
+): string {
+  if (s.status === 'ended') return s.ended_on ? t('console.access.endedOn', { date: day(s.ended_on) }) : t('console.access.none');
   if (s.access_type === 'comp') return t('console.access.comp');
-  if (s.access_type === 'paid' && s.paid_until) return t('admin.until', { date: day(s.paid_until) });
+  if ((s.status === 'paid' || s.access_type === 'paid') && s.paid_until) return t('admin.until', { date: day(s.paid_until) });
   if (s.free_until) return t(s.access_type === 'pilot' ? 'console.access.pilotUntil' : 'console.access.freeUntil', { date: day(s.free_until) });
   return t('console.access.none');
 }

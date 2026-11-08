@@ -2748,7 +2748,7 @@
     },
     "overview": {
       "salons": "Salons",
-      "salonsSub": "{{active}} paid · {{trial}} free · {{pilot}} pilot · {{comp}} free for good · {{closed}} closed",
+      "salonsSub": "{{active}} paid · {{trial}} free · {{pilot}} pilot · {{comp}} free for good · {{ended}} ended. Not counted: {{closed}} closed",
       "requests": "Plan requests waiting",
       "accounts": "Sign-in accounts",
       "owners_one": "{{count}} owner",
@@ -2804,7 +2804,17 @@
       "testSwitch": "Test salon",
       "testHint": "Left out of the Overview numbers and the pilot’s places, and labelled “Test” in the lists. The salon works as before.",
       "testMarked": "{{name}} is now a test salon",
-      "testUnmarked": "{{name}} is no longer a test salon"
+      "testUnmarked": "{{name}} is no longer a test salon",
+      "status": {
+        "all": "All",
+        "paid": "Paid",
+        "free": "Free",
+        "pilot": "Pilot",
+        "ended": "Ended",
+        "closed": "Closed",
+        "test": "Test"
+      },
+      "noneHere": "No salons here."
     },
     "accounts": {
       "title": "Accounts ({{count}})",
@@ -2900,7 +2910,8 @@
       "setEnd": "Free until this date",
       "note": "Note (only platform owners see it)",
       "saveNote": "Save note",
-      "saved": "Saved"
+      "saved": "Saved",
+      "endedOn": "Ended on {{date}}"
     },
     "billing": {
       "title": "Billing",

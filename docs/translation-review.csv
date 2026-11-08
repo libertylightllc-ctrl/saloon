@@ -1956,6 +1956,14 @@ console.salons.testUnmarked,{{name}} is no longer a test salon,{{name}} لم ي�
 console.salons.branches_two,—,فرعان,,,,,,Arabic only: 2
 console.salons.branches_few,—,{{count}} فروع,,,,,,Arabic only: 3–10
 console.salons.branches_many,—,{{count}} فرعًا,,,,,,Arabic only: 11–99
+console.salons.status.all,All,الكل,सभी,سب,Todos,Tous,Todos,
+console.salons.status.paid,Paid,مدفوع,भुगतान,ادا شدہ,De pago,Payants,Pagos,
+console.salons.status.free,Free,مجاني,मुफ़्त,مفت,Gratis,Gratuits,Grátis,
+console.salons.status.pilot,Pilot,تجريبي,पायलट,پائلٹ,Piloto,Pilote,Piloto,
+console.salons.status.ended,Ended,منتهي,समाप्त,ختم,Terminados,Terminés,Encerrados,
+console.salons.status.closed,Closed,مغلق,बंद,بند,Cerrados,Fermés,Fechados,
+console.salons.status.test,Test,اختبار,टेस्ट,ٹیسٹ,Prueba,Test,Teste,
+console.salons.noneHere,No salons here.,لا صالونات هنا.,यहाँ कोई सैलून नहीं।,یہاں کوئی سیلون نہیں۔,No hay salones aquí.,Aucun salon ici.,Nenhum salão aqui.,
 console.accounts.title,Accounts ({{count}}),الحسابات ({{count}}),खाते ({{count}}),اکاؤنٹس ({{count}}),Cuentas ({{count}}),Comptes ({{count}}),Contas ({{count}}),
 console.accounts.search,"Search emails, usernames, names, salons",ابحث في البريد وأسماء المستخدمين والأسماء والصالونات,"ईमेल, यूज़रनेम, नाम, सैलून खोजें",ای میل، یوزر نیم، نام، سیلون تلاش کریں,"Buscar correos, usuarios, nombres, salones","Rechercher e-mails, noms d’utilisateur, noms, salons","Pesquisar e-mails, nomes de usuário, nomes, salões",
 console.accounts.noSalon,no salon,بلا صالون,कोई सैलून नहीं,کوئی سیلون نہیں,sin salón,aucun salon,sem salão,
@@ -2676,7 +2684,7 @@ console.plans.repeats_one,"Sent once, on {{date}}",أُرسل مرة واحدة�
 console.plans.repeats_two,—,أُرسل مرتين، أول مرة في {{date}},,,,,,Arabic only: 2
 console.plans.repeats_few,—,أُرسل {{count}} مرات، أول مرة في {{date}},,,,,,Arabic only: 3–10
 console.plans.repeats_many,—,أُرسل {{count}} مرة، أول مرة في {{date}},,,,,,Arabic only: 11–99
-console.overview.salonsSub,{{active}} paid · {{trial}} free · {{pilot}} pilot · {{comp}} free for good · {{closed}} closed,{{active}} مدفوع · {{trial}} مجاني · {{pilot}} تجريبي · {{comp}} مجاني دائمًا · {{closed}} مغلق,{{active}} भुगतान · {{trial}} मुफ़्त · {{pilot}} पायलट · {{comp}} हमेशा मुफ़्त · {{closed}} बंद,{{active}} ادا شدہ · {{trial}} مفت · {{pilot}} پائلٹ · {{comp}} ہمیشہ مفت · {{closed}} بند,{{active}} de pago · {{trial}} gratis · {{pilot}} piloto · {{comp}} gratis para siempre · {{closed}} cerrados,{{active}} payants · {{trial}} gratuits · {{pilot}} pilote · {{comp}} gratuits à vie · {{closed}} fermés,{{active}} pagos · {{trial}} grátis · {{pilot}} piloto · {{comp}} grátis para sempre · {{closed}} fechados,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+console.overview.salonsSub,{{active}} paid · {{trial}} free · {{pilot}} pilot · {{comp}} free for good · {{ended}} ended. Not counted: {{closed}} closed,{{active}} مدفوع · {{trial}} مجاني · {{pilot}} تجريبي · {{comp}} مجاني دائمًا · {{ended}} منتهي. غير محسوب: {{closed}} مغلق,{{active}} भुगतान · {{trial}} मुफ़्त · {{pilot}} पायलट · {{comp}} हमेशा मुफ़्त · {{ended}} समाप्त। गिनती में नहीं: {{closed}} बंद,{{active}} ادا شدہ · {{trial}} مفت · {{pilot}} پائلٹ · {{comp}} ہمیشہ مفت · {{ended}} ختم۔ شمار میں نہیں: {{closed}} بند,{{active}} de pago · {{trial}} gratis · {{pilot}} piloto · {{comp}} gratis para siempre · {{ended}} terminados. Sin contar: {{closed}} cerrados,{{active}} payants · {{trial}} gratuits · {{pilot}} pilote · {{comp}} gratuits à vie · {{ended}} terminés. Non comptés : {{closed}} fermés,{{active}} pagos · {{trial}} grátis · {{pilot}} piloto · {{comp}} grátis para sempre · {{ended}} encerrados. Fora da conta: {{closed}} fechados,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.overview.pilot,Pilot places left,الأماكن المتبقية في البرنامج التجريبي,पायलट में बची जगहें,پائلٹ میں باقی جگہیں,Plazas libres del piloto,Places restantes du pilote,Vagas restantes no piloto,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.overview.review_one,{{count}} new application – review,طلبات جديدة: {{count}} – راجعها,{{count}} नया आवेदन – देखें,{{count}} نئی درخواست – دیکھیں,{{count}} solicitud nueva – revisar,{{count}} nouvelle candidature – à examiner,{{count}} inscrição nova – rever,
 console.overview.review,{{count}} new applications – review,طلبات جديدة: {{count}} – راجعها,{{count}} नए आवेदन – देखें,{{count}} نئی درخواستیں – دیکھیں,{{count}} solicitudes nuevas – revisar,{{count}} nouvelles candidatures – à examiner,{{count}} inscrições novas – rever,
@@ -2701,6 +2709,7 @@ console.access.setEnd,Free until this date,مجاني حتى هذا التاري
 console.access.note,Note (only platform owners see it),ملاحظة (لا يراها إلا مالكو المنصة),नोट (सिर्फ़ प्लेटफ़ॉर्म मालिक देखते हैं),نوٹ (صرف پلیٹ فارم مالکان دیکھتے ہیں),Nota (solo la ven los dueños de la plataforma),Note (visible seulement par les propriétaires de la plateforme),Nota (só os donos da plataforma veem),"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.access.saveNote,Save note,حفظ الملاحظة,नोट सहेजें,نوٹ محفوظ کریں,Guardar nota,Enregistrer la note,Salvar nota,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.access.saved,Saved,تم الحفظ,सहेजा गया,محفوظ ہو گیا,Guardado,Enregistré,Salvo,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
+console.access.endedOn,Ended on {{date}},انتهى في {{date}},{{date}} को समाप्त,{{date}} کو ختم,Terminó el {{date}},Terminé le {{date}},Encerrado em {{date}},
 console.billing.title,Billing,الفوترة,बिलिंग,بلنگ,Facturación,Facturation,Cobrança,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.billing.on,Billing on,الفوترة مفعّلة,बिलिंग चालू,بلنگ آن,Facturación activada,Facturation activée,Cobrança ligada,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"
 console.billing.off,Billing off,الفوترة متوقفة,बिलिंग बंद,بلنگ آف,Facturación desactivada,Facturation désactivée,Cobrança desligada,"Full update P6: free period, pilot, branches, console (machine draft, TODO review)"

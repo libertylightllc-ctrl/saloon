@@ -2749,7 +2749,7 @@
     },
     "overview": {
       "salons": "Salões",
-      "salonsSub": "{{active}} pagos · {{trial}} grátis · {{pilot}} piloto · {{comp}} grátis para sempre · {{closed}} fechados",
+      "salonsSub": "{{active}} pagos · {{trial}} grátis · {{pilot}} piloto · {{comp}} grátis para sempre · {{ended}} encerrados. Fora da conta: {{closed}} fechados",
       "requests": "Pedidos de plano pendentes",
       "accounts": "Contas de acesso",
       "owners_one": "{{count}} proprietário",
@@ -2805,7 +2805,17 @@
       "testSwitch": "Salão de teste",
       "testHint": "Fica fora dos números da Visão geral e das vagas do piloto, e aparece como “Teste” nas listas. O salão funciona como antes.",
       "testMarked": "{{name}} agora é um salão de teste",
-      "testUnmarked": "{{name}} não é mais um salão de teste"
+      "testUnmarked": "{{name}} não é mais um salão de teste",
+      "status": {
+        "all": "Todos",
+        "paid": "Pagos",
+        "free": "Grátis",
+        "pilot": "Piloto",
+        "ended": "Encerrados",
+        "closed": "Fechados",
+        "test": "Teste"
+      },
+      "noneHere": "Nenhum salão aqui."
     },
     "accounts": {
       "title": "Contas ({{count}})",
@@ -2901,7 +2911,8 @@
       "setEnd": "Grátis até esta data",
       "note": "Nota (só os donos da plataforma veem)",
       "saveNote": "Salvar nota",
-      "saved": "Salvo"
+      "saved": "Salvo",
+      "endedOn": "Encerrado em {{date}}"
     },
     "billing": {
       "title": "Cobrança",

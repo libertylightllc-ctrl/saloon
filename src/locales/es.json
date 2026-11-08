@@ -2749,7 +2749,7 @@
     },
     "overview": {
       "salons": "Salones",
-      "salonsSub": "{{active}} de pago · {{trial}} gratis · {{pilot}} piloto · {{comp}} gratis para siempre · {{closed}} cerrados",
+      "salonsSub": "{{active}} de pago · {{trial}} gratis · {{pilot}} piloto · {{comp}} gratis para siempre · {{ended}} terminados. Sin contar: {{closed}} cerrados",
       "requests": "Solicitudes de plan pendientes",
       "accounts": "Cuentas de acceso",
       "owners_one": "{{count}} dueño",
@@ -2805,7 +2805,17 @@
       "testSwitch": "Salón de prueba",
       "testHint": "No cuenta en las cifras del Resumen ni en las plazas del piloto, y aparece como «Prueba» en las listas. El salón funciona igual.",
       "testMarked": "{{name}} ahora es un salón de prueba",
-      "testUnmarked": "{{name}} ya no es un salón de prueba"
+      "testUnmarked": "{{name}} ya no es un salón de prueba",
+      "status": {
+        "all": "Todos",
+        "paid": "De pago",
+        "free": "Gratis",
+        "pilot": "Piloto",
+        "ended": "Terminados",
+        "closed": "Cerrados",
+        "test": "Prueba"
+      },
+      "noneHere": "No hay salones aquí."
     },
     "accounts": {
       "title": "Cuentas ({{count}})",
@@ -2901,7 +2911,8 @@
       "setEnd": "Gratis hasta esta fecha",
       "note": "Nota (solo la ven los dueños de la plataforma)",
       "saveNote": "Guardar nota",
-      "saved": "Guardado"
+      "saved": "Guardado",
+      "endedOn": "Terminó el {{date}}"
     },
     "billing": {
       "title": "Facturación",

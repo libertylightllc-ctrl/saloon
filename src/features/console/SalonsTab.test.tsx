@@ -2,7 +2,7 @@
  * The console's Salons list draws 50 salons at a time (owner's fix list #12): hundreds of rows at once made the tab
  * slow. "Show more" adds the next 50, and search looks through every salon, not only the ones drawn. Salons that look
  * like the same owner are marked, naming the others (final brief C4). Branches are counted in words (E4). Test salons
- * are labelled "Test" (E1).
+ * are labelled "Test" (E1). A status filter shows one group at a time, with the search (owner, 2026-11-08).
  */
 import { fireEvent, screen } from '@testing-library/react-native';
 
@@ -38,6 +38,9 @@ const mockSalons: AdminSalon[] = Array.from({ length: 60 }, (_, i) => ({
   admin_note: null,
   staff: 0,
   last_active: null,
+  // One of each group; the rest in a free period. Salon 5 is a test salon whose period is over.
+  status: ({ 5: 'ended', 10: 'ended', 11: 'paid', 12: 'closed', 13: 'comp', 14: 'pilot' } as const)[i] ?? 'free',
+  ended_on: i === 5 ? '2026-10-30' : i === 10 ? '2026-11-05' : null,
 }));
 
 jest.mock('@/features/plan/api', () => ({
@@ -128,4 +131,37 @@ it('labels a test salon "Test", and only that one (final brief E1)', async () =>
   await renderInApp(<SalonsTab onHistory={jest.fn()} />);
   expect(screen.getByTestId('admin-salon-salon5')).toHaveTextContent(/Test/);
   expect(screen.getByTestId('admin-salon-salon4')).not.toHaveTextContent(/Test/);
+});
+
+it('the status filter counts each group and shows only its salons; a test salon is only under All and Test', async () => {
+  await renderInApp(<SalonsTab onHistory={jest.fn()} />);
+  const pill = (f: string) => screen.getByTestId(`console-salon-filter-${f}`);
+  expect(pill('all')).toHaveTextContent('All 60');
+  expect(pill('paid')).toHaveTextContent('Paid 1');
+  // Free includes free for good (salon 13).
+  expect(pill('free')).toHaveTextContent('Free 55');
+  expect(pill('pilot')).toHaveTextContent('Pilot 1');
+  expect(pill('ended')).toHaveTextContent('Ended 1');
+  expect(pill('closed')).toHaveTextContent('Closed 1');
+  expect(pill('test')).toHaveTextContent('Test 1');
+
+  await fireEvent.press(pill('ended'));
+  expect(rows().map((r) => r.props.testID)).toEqual(['admin-salon-salon10']);
+  await fireEvent.press(pill('test'));
+  expect(rows().map((r) => r.props.testID)).toEqual(['admin-salon-salon5']);
+  await fireEvent.press(pill('free'));
+  expect(rows()).toHaveLength(50);
+  expect(screen.getByTestId('console-salons-showing')).toHaveTextContent('Showing 50 of 55');
+
+  // With a search: the counts follow it, and a group with none of its salons says so.
+  await fireEvent.changeText(screen.getByTestId('console-salon-search'), 'salon1');
+  expect(pill('all')).toHaveTextContent('All 11');
+  expect(pill('ended')).toHaveTextContent('Ended 1');
+  expect(pill('test')).toHaveTextContent('Test 0');
+  await fireEvent.press(pill('test'));
+  expect(rows()).toHaveLength(0);
+  expect(screen.getByText('No salons here.')).toBeTruthy();
+  await fireEvent.press(pill('all'));
+  expect(rows()).toHaveLength(11);
+  expect(screen.queryByText('No salons here.')).toBeNull();
 });
