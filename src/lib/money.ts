@@ -269,3 +269,12 @@ export function formatBps(bps: Bps | TaxRate): string {
   const body = fraction ? `${whole}.${fraction}` : String(whole);
   return `${bps < 0 ? '-' : ''}${body}%`;
 }
+
+/**
+ * The change from `before` to `now` in basis points, or null when a percentage would mislead (owner's app check A8):
+ * either side is zero (an empty month is not "▼ 100%") or the sign flipped (a loss that turned into a profit).
+ */
+export function changeBps(now: number, before: number): number | null {
+  if (now === 0 || before === 0 || Math.sign(now) !== Math.sign(before)) return null;
+  return Math.round(((now - before) * 10_000) / Math.abs(before));
+}

@@ -4,8 +4,9 @@
  */
 import type { TFunction } from 'i18next';
 
+import { shiftMonth } from '@/lib/dates';
 import type { CsvCell } from '@/lib/exportFile';
-import { formatAmount, formatBps, formatMoney, sum } from '@/lib/money';
+import { changeBps, formatAmount, formatBps, formatMoney, sum } from '@/lib/money';
 
 import type { ReportData, VatRow } from './api';
 
@@ -49,10 +50,11 @@ interface Helpers {
 const csvMoney = (minor: number | null) => (minor === null ? '' : formatAmount(minor, undefined, { grouping: false }));
 const qty = (n: number) => String(Math.round(n * 1000) / 1000);
 
-function change(now: number, before: number, upIsGood: boolean) {
-  if (before === 0) return undefined;
-  const bps = Math.round(((now - before) * 10_000) / Math.abs(before));
-  return { label: formatBps(Math.abs(bps)), trend: bps >= 0 ? ('up' as const) : ('down' as const), good: bps >= 0 === upIsGood };
+/** "▲ 30% vs Oct"; nothing when either month is zero, the sign flipped or nothing changed (owner's app check A8). */
+function change(now: number, before: number, upIsGood: boolean, vs: (pct: string) => string) {
+  const bps = changeBps(now, before);
+  if (!bps) return undefined;
+  return { label: vs(formatBps(Math.abs(bps))), trend: bps > 0 ? ('up' as const) : ('down' as const), good: bps > 0 === upIsGood };
 }
 
 export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): ReportView {
@@ -64,6 +66,7 @@ export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): 
       const prevResult = r.prev_revenue_minor - r.prev_costs_minor;
       const active = r.days.filter((d) => d.sales || d.refunds_minor || d.expenses_minor);
       const tips = (d: (typeof r.days)[number]) => d.tips_minor ?? 0;
+      const vs = (pct: string) => R('vsMonth', { pct, month: day(`${shiftMonth(r.month, -1)}-01`, 'MMM') });
       return {
         // Sales never include the tip; tips are their own figure (owner's app check A7).
         kpis: [
@@ -74,10 +77,10 @@ export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): 
             label: R('kpi.revenue'),
             value: formatMoney(r.revenue_minor),
             sub: R('kpi.revenueSub'),
-            delta: change(r.revenue_minor, r.prev_revenue_minor, true),
+            delta: change(r.revenue_minor, r.prev_revenue_minor, true, vs),
           },
-          { key: 'costs', label: R('kpi.costs'), value: formatMoney(r.costs_minor), delta: change(r.costs_minor, r.prev_costs_minor, false) },
-          { key: 'result', label: R('kpi.result'), value: formatMoney(result), delta: change(result, prevResult, true) },
+          { key: 'costs', label: R('kpi.costs'), value: formatMoney(r.costs_minor), delta: change(r.costs_minor, r.prev_costs_minor, false, vs) },
+          { key: 'result', label: R('kpi.result'), value: formatMoney(result), delta: change(result, prevResult, true, vs) },
         ],
         chart: { title: R('chart.salesByDay'), money: true, bars: r.days.map((d) => ({ label: day(d.date, 'd'), value: d.sales_minor })) },
         columns: [{ label: R('col.date') }, { label: R('col.sales'), numeric: true }, { label: R('col.tips'), numeric: true }, { label: R('col.services'), numeric: true }, { label: R('col.refunds'), numeric: true }, { label: R('col.expenses'), numeric: true }],

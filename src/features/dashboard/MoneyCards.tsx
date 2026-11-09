@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
-import { formatMoney } from '@/lib/money';
+import { changeBps, formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
 import { Button, KpiCard, KpiGrid, useContentWidth } from '@/ui';
@@ -27,7 +27,8 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
   const closed = data.closing?.today_status;
   const cash = data.expected_cash ?? 0;
   const yesterday = data.expected_cash_yesterday ?? 0;
-  const change = yesterday > 0 ? Math.round(((cash - yesterday) / yesterday) * 100) : null;
+  // Whole percent vs yesterday; none when either day is zero (owner's app check A8).
+  const change = Math.round((changeBps(cash, yesterday) ?? 0) / 100);
   const a = data.appointments;
   // Side by side, every card fills its cell so the row's bottoms line up.
   const fill = row ? styles.fill : undefined;
@@ -40,7 +41,7 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
       icon="banknote"
       label={t('home.expectedCash')}
       value={formatMoney(cash)}
-      delta={change !== null && change !== 0 ? { label: `${Math.abs(change)}%`, trend: change > 0 ? 'up' : 'down' } : undefined}
+      delta={change !== 0 ? { label: t('home.vsYesterday', { pct: `${Math.abs(change)}%` }), trend: change > 0 ? 'up' : 'down' } : undefined}
       sub={
         // Below zero only from records made before the drawer was checked (owner's fix list #9): say how to fix it.
         cash < 0

@@ -137,7 +137,7 @@
     "subline": "{{queue}} في الانتظار · {{booked}} محجوز",
     "searchPlaceholder": "ابحث عن العملاء والخدمات والمبيعات",
     "expectedCash": "النقد المتوقع اليوم",
-    "vsYesterday": "مقارنة بالأمس",
+    "vsYesterday": "{{pct}} مقارنة بالأمس",
     "closeDay": "إغلاق اليوم",
     "salesToday": "مبيعات اليوم",
     "salesSub": "{{services}} · {{sales}}",
@@ -2433,7 +2433,8 @@
       "refunds": "المرتجعات",
       "purchases": "فواتير الموردين ({{tax}} المدخلات)",
       "expenses": "المصروفات ({{tax}} المدخلات)"
-    }
+    },
+    "vsMonth": "{{pct}} مقارنة بـ{{month}}"
   },
   "backup": {
     "title": "النسخ الاحتياطي والاستعادة",

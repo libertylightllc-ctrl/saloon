@@ -137,7 +137,7 @@
     "subline": "File : {{queue}} · Réservés : {{booked}}",
     "searchPlaceholder": "Rechercher clients, services, ventes",
     "expectedCash": "Espèces attendues aujourd’hui",
-    "vsYesterday": "vs hier",
+    "vsYesterday": "{{pct}} vs hier",
     "closeDay": "Clôturer la journée",
     "salesToday": "Ventes du jour",
     "salesSub": "{{services}} · {{sales}}",
@@ -2381,7 +2381,8 @@
       "refunds": "Remboursements",
       "purchases": "Factures fournisseurs ({{tax}} déductible)",
       "expenses": "Dépenses ({{tax}} déductible)"
-    }
+    },
+    "vsMonth": "{{pct}} vs {{month}}"
   },
   "backup": {
     "title": "Sauvegarde et restauration",

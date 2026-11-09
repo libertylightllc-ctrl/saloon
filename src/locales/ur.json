@@ -137,7 +137,7 @@
     "subline": "{{queue}} قطار میں · {{booked}} بک",
     "searchPlaceholder": "گاہک، خدمات، فروخت تلاش کریں",
     "expectedCash": "آج متوقع نقد",
-    "vsYesterday": "کل کے مقابلے میں",
+    "vsYesterday": "کل کے مقابلے میں {{pct}}",
     "closeDay": "دن بند کریں",
     "salesToday": "آج کی فروخت",
     "salesSub": "{{services}} · {{sales}}",
@@ -2381,7 +2381,8 @@
       "refunds": "رقم واپسی",
       "purchases": "سپلائر بل (ان پٹ {{tax}})",
       "expenses": "اخراجات (ان پٹ {{tax}})"
-    }
+    },
+    "vsMonth": "{{month}} کے مقابلے میں {{pct}}"
   },
   "backup": {
     "title": "بیک اپ اور بحالی",

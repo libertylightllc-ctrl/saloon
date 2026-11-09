@@ -1,6 +1,7 @@
 import {
   add,
   allocate,
+  changeBps,
   formatAmount,
   formatBps,
   formatMoney,
@@ -191,5 +192,18 @@ describe('tax rates with a decimal basis point', () => {
     expect(vatFromInclusive(10888, 887.5)).toBe(888);
     expect(vatFromInclusive(11000, 1000)).toBe(1000);
     expect(() => vatOnTop(100, 887.55)).toThrow(RangeError);
+  });
+});
+
+describe('changeBps', () => {
+  it('is the change in basis points', () => {
+    expect(changeBps(13_000, 10_000)).toBe(3_000);
+    expect(changeBps(-500, -1_000)).toBe(5_000);
+  });
+
+  it('says nothing when a percentage would mislead (owner’s app check A8)', () => {
+    expect(changeBps(0, 50_000)).toBeNull();
+    expect(changeBps(50_000, 0)).toBeNull();
+    expect(changeBps(3_000, -5_000)).toBeNull();
   });
 });

@@ -137,7 +137,7 @@
     "subline": "{{queue}} en la fila · {{booked}} con cita",
     "searchPlaceholder": "Buscar clientes, servicios, ventas",
     "expectedCash": "Efectivo esperado hoy",
-    "vsYesterday": "vs. ayer",
+    "vsYesterday": "{{pct}} vs. ayer",
     "closeDay": "Cerrar el día",
     "salesToday": "Ventas de hoy",
     "salesSub": "{{services}} · {{sales}}",
@@ -2381,7 +2381,8 @@
       "refunds": "Reembolsos",
       "purchases": "Facturas de proveedores ({{tax}} soportado)",
       "expenses": "Gastos ({{tax}} soportado)"
-    }
+    },
+    "vsMonth": "{{pct}} vs. {{month}}"
   },
   "backup": {
     "title": "Copia de seguridad y recuperación",

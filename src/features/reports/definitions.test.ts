@@ -32,13 +32,32 @@ describe('buildReport', () => {
       ['costs', 'AED\u00a015.00'],
       ['result', 'AED\u00a0115.00'],
     ]);
-    expect(view.kpis[2]!.delta).toEqual({ label: '30%', trend: 'up', good: true });
+    expect(view.kpis[2]!.delta).toEqual({ label: 'reports.vsMonth:{"pct":"30%","month":"2026-08-01"}', trend: 'up', good: true });
     expect(view.kpis[2]!.sub).toBe('reports.kpi.revenueSub:{}');
     // Lower costs are good news.
-    expect(view.kpis[3]!.delta).toEqual({ label: '25%', trend: 'down', good: true });
+    expect(view.kpis[3]!.delta).toMatchObject({ label: 'reports.vsMonth:{"pct":"25%","month":"2026-08-01"}', trend: 'down', good: true });
     expect(view.rows.map((r) => r.id)).toEqual(['2026-09-01', '2026-09-03']);
     expect(view.rows[1]!.csv).toEqual(['2026-09-03', '52.50', '10.00', '2', '21.00', '0.00']);
     expect(view.chart.bars).toHaveLength(3);
+  });
+
+  it('monthly: no percent when either month is zero or a loss turned into a profit (owner’s app check A8)', () => {
+    const month = (revenue: number, costs: number, prevRevenue: number, prevCosts: number) =>
+      buildReport(
+        {
+          type: 'monthly',
+          data: { month: '2026-11', days: [], revenue_minor: revenue, costs_minor: costs, prev_revenue_minor: prevRevenue, prev_costs_minor: prevCosts },
+        },
+        { t, day },
+      ).kpis;
+    // A new month with nothing in it yet: no "▼ 100%".
+    expect(month(0, 0, 50_000, 20_000).map((k) => k.delta)).toEqual([undefined, undefined, undefined, undefined, undefined]);
+    // Last month a loss (-5,000), this month a profit (+3,000): no percent for the result.
+    const flipped = month(13_000, 10_000, 10_000, 15_000);
+    expect(flipped[4]!.delta).toBeUndefined();
+    expect(flipped[2]!.delta).toMatchObject({ trend: 'up', good: true });
+    // Costs went down: good news.
+    expect(flipped[3]!.delta).toMatchObject({ trend: 'down', good: true, label: 'reports.vsMonth:{"pct":"33.33%","month":"2026-10-01"}' });
   });
 
   it('closing: newest day first; a short day is marked as an error', () => {

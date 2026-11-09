@@ -137,7 +137,7 @@
     "subline": "{{queue}} in the queue · {{booked}} booked",
     "searchPlaceholder": "Search customers, services, sales",
     "expectedCash": "Expected cash today",
-    "vsYesterday": "vs yesterday",
+    "vsYesterday": "{{pct}} vs yesterday",
     "closeDay": "Close day",
     "salesToday": "Sales today",
     "salesSub": "{{services}} · {{sales}}",
@@ -2381,7 +2381,8 @@
       "refunds": "Refunds",
       "purchases": "Supplier bills (input {{tax}})",
       "expenses": "Expenses (input {{tax}})"
-    }
+    },
+    "vsMonth": "{{pct}} vs {{month}}"
   },
   "backup": {
     "title": "Backup & recovery",

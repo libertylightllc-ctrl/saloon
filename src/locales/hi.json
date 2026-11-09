@@ -137,7 +137,7 @@
     "subline": "{{queue}} कतार में · {{booked}} बुक",
     "searchPlaceholder": "ग्राहक, सेवाएँ, बिक्री खोजें",
     "expectedCash": "आज अपेक्षित नकद",
-    "vsYesterday": "कल की तुलना में",
+    "vsYesterday": "कल की तुलना में {{pct}}",
     "closeDay": "दिन बंद करें",
     "salesToday": "आज की बिक्री",
     "salesSub": "{{services}} · {{sales}}",
@@ -2381,7 +2381,8 @@
       "refunds": "रिफ़ंड",
       "purchases": "सप्लायर बिल (इनपुट {{tax}})",
       "expenses": "ख़र्च (इनपुट {{tax}})"
-    }
+    },
+    "vsMonth": "{{month}} की तुलना में {{pct}}"
   },
   "backup": {
     "title": "बैकअप और रिकवरी",

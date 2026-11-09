@@ -98,7 +98,7 @@ home.greeting.evening,"Good evening, {{name}}",مساء الخير، {{name}},"�
 home.subline,{{queue}} in the queue · {{booked}} booked,{{queue}} في الانتظار · {{booked}} محجوز,{{queue}} कतार में · {{booked}} बुक,{{queue}} قطار میں · {{booked}} بک,{{queue}} en la fila · {{booked}} con cita,File : {{queue}} · Réservés : {{booked}},{{queue}} na fila · {{booked}} agendados,
 home.searchPlaceholder,"Search customers, services, sales",ابحث عن العملاء والخدمات والمبيعات,"ग्राहक, सेवाएँ, बिक्री खोजें",گاہک، خدمات، فروخت تلاش کریں,"Buscar clientes, servicios, ventas","Rechercher clients, services, ventes","Pesquisar clientes, serviços, vendas",
 home.expectedCash,Expected cash today,النقد المتوقع اليوم,आज अपेक्षित नकद,آج متوقع نقد,Efectivo esperado hoy,Espèces attendues aujourd’hui,Dinheiro esperado hoje,
-home.vsYesterday,vs yesterday,مقارنة بالأمس,कल की तुलना में,کل کے مقابلے میں,vs. ayer,vs hier,vs. ontem,
+home.vsYesterday,{{pct}} vs yesterday,{{pct}} مقارنة بالأمس,कल की तुलना में {{pct}},کل کے مقابلے میں {{pct}},{{pct}} vs. ayer,{{pct}} vs hier,{{pct}} vs. ontem,
 home.closeDay,Close day,إغلاق اليوم,दिन बंद करें,دن بند کریں,Cerrar el día,Clôturer la journée,Fechar o dia,
 home.salesToday,Sales today,مبيعات اليوم,आज की बिक्री,آج کی فروخت,Ventas de hoy,Ventes du jour,Vendas hoje,
 home.salesSub,{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},{{services}} · {{sales}},
@@ -2182,6 +2182,7 @@ validation.province,Pick your province,اختر مقاطعتك,अपना प�
 reports.kpi.tax2Output,"Of it, {{name}}",منها {{name}},इसमें से {{name}},اس میں سے {{name}},"De ello, {{name}}",Dont {{name}},"Dos quais, {{name}}",Canada provinces and two taxes (2026-10-19); machine draft
 reports.kpi.tax2Generic,second tax,الضريبة الثانية,दूसरा टैक्स,دوسرا ٹیکس,segundo impuesto,deuxième taxe,segundo imposto,Canada provinces and two taxes (2026-10-19); machine draft
 reports.kpi.revenueSub,After refunds and discounts,بعد المرتجعات والخصومات,रिफ़ंड और छूट के बाद,ریفنڈ اور رعایت کے بعد,Después de reembolsos y descuentos,Après remboursements et remises,Após reembolsos e descontos,
+reports.vsMonth,{{pct}} vs {{month}},{{pct}} مقارنة بـ{{month}},{{month}} की तुलना में {{pct}},{{month}} کے مقابلے میں {{pct}},{{pct}} vs. {{month}},{{pct}} vs {{month}},{{pct}} vs. {{month}},
 accounts.tax2Collected,{{name}} collected (owed to the tax office),{{name}} المحصلة (مستحقة لمصلحة الضرائب),{{name}} वसूला गया (टैक्स विभाग को देय),{{name}} وصول کیا گیا (ٹیکس دفتر کو واجب الادا),{{name}} cobrado (a pagar a Hacienda),{{name}} perçue (due au fisc),{{name}} cobrado (devido ao fisco),Canada provinces and two taxes (2026-10-19); machine draft
 accounts.names.tax2_payable,Second sales tax payable,ضريبة المبيعات الثانية المستحقة,दूसरा सेल्स टैक्स देय,دوسرا سیلز ٹیکس واجب الادا,Segundo impuesto sobre ventas por pagar,Deuxième taxe de vente à payer,Segundo imposto sobre vendas a pagar,Canada provinces and two taxes (2026-10-19); machine draft
 accounts.stockDiffTitle,Stock doesn't match,المخزون غير مطابق,स्टॉक मेल नहीं खाता,اسٹاک میل نہیں کھاتا,El stock no cuadra,Le stock ne correspond pas,O stock não bate,

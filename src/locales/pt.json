@@ -137,7 +137,7 @@
     "subline": "{{queue}} na fila · {{booked}} agendados",
     "searchPlaceholder": "Pesquisar clientes, serviços, vendas",
     "expectedCash": "Dinheiro esperado hoje",
-    "vsYesterday": "vs. ontem",
+    "vsYesterday": "{{pct}} vs. ontem",
     "closeDay": "Fechar o dia",
     "salesToday": "Vendas hoje",
     "salesSub": "{{services}} · {{sales}}",
@@ -2381,7 +2381,8 @@
       "refunds": "Reembolsos",
       "purchases": "Contas de fornecedores ({{tax}} de entrada)",
       "expenses": "Despesas ({{tax}} de entrada)"
-    }
+    },
+    "vsMonth": "{{pct}} vs. {{month}}"
   },
   "backup": {
     "title": "Backup e recuperação",
