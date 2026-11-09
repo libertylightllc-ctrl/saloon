@@ -67,6 +67,9 @@ test('owner adds a product, sells it, refunds it to stock, adjusts and counts; H
   await back(page);
   await id(page, 'more-inventory').click();
   await expect(id(page, `item-${product}-qty`)).toHaveText('10 pc');
+  // The new salon's other items have no stock yet: Inventory counts them as out of stock (owner's app check A6).
+  const lowBefore = Number(await id(page, 'inventory-low-value').innerText());
+  await expect(id(page, 'inventory-low')).toContainText(`Out of stock: ${lowBefore}`);
 
   // Adjust: one broke.
   await id(page, `item-${product}`).click();
@@ -96,7 +99,7 @@ test('owner adds a product, sells it, refunds it to stock, adjusts and counts; H
   await expect(text(page, 'Count saved: 1 changed, -AED 150.00')).toBeVisible();
   await expect(id(page, `item-${product}-qty`)).toHaveText('3 pc');
   await expect(id(page, `item-${product}`)).toContainText('Low');
-  await expect(id(page, 'inventory-low-value')).toHaveText('1');
+  await expect(id(page, 'inventory-low-value')).toHaveText(String(lowBefore + 1));
   await expectMoney(page, 'inventory-value-value', 7_500);
   await id(page, 'inventory-filter-low').click();
   await expect(id(page, `item-${product}`)).toBeVisible();
