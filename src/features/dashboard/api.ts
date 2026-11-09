@@ -27,7 +27,17 @@ export interface Dashboard {
   stock?: { low: number; low_items: string[]; tools_due: number };
   bills?: { overdue_count: number; overdue_minor: number; due_soon_count: number; due_soon_minor: number } | null;
   payroll?: { pending_period: string | null; wps_missing: number } | null;
-  compliance?: { readiness: number; attention: number; expired: number } | null;
+  /** One count per record status (owner's app check A4), and the days to the nearest expiry in its reminder window. */
+  compliance?: {
+    readiness: number;
+    attention: number;
+    expired: number;
+    missing: number;
+    missing_date: number;
+    evidence_missing: number;
+    due_soon: number;
+    soonest_days: number | null;
+  } | null;
   hygiene_signed?: boolean | null;
   closing?: {
     today_status: 'open' | 'draft' | 'pending_approval' | 'approved';

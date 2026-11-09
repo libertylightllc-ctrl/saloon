@@ -229,7 +229,11 @@
       "compliance_one": "{{count}} تعمیل ریکارڈ پر توجہ دیں",
       "complianceSub": "معائنے کی تیاری {{pct}}%",
       "hygiene": "آج کا صفائی لاگ دستخط شدہ نہیں",
-      "hygieneSub": "اوزار، تولیے، سطحیں، فرش، کچرا"
+      "hygieneSub": "اوزار، تولیے، سطحیں، فرش، کچرا",
+      "compliancePart": "{{label}}: {{count}}",
+      "expiresToday": "آج ختم",
+      "expiresIn_one": "1 دن میں ختم",
+      "expiresIn": "{{count}} دن میں ختم"
     },
     "attentionClose": "بند کریں",
     "viewClosing": "کیش کلوزنگ",

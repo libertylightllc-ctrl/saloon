@@ -229,7 +229,11 @@
       "compliance_one": "{{count}} document de conformité à traiter",
       "complianceSub": "Prêt pour l’inspection à {{pct}} %",
       "hygiene": "Le registre d’hygiène du jour n’est pas signé",
-      "hygieneSub": "Outils, serviettes, surfaces, sols, déchets"
+      "hygieneSub": "Outils, serviettes, surfaces, sols, déchets",
+      "compliancePart": "{{label}} : {{count}}",
+      "expiresToday": "Expire aujourd'hui",
+      "expiresIn_one": "Expire dans 1 jour",
+      "expiresIn": "Expire dans {{count}} jours"
     },
     "attentionClose": "Fermer",
     "viewClosing": "Clôture de caisse",

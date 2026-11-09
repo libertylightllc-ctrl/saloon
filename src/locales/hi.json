@@ -229,7 +229,11 @@
       "compliance_one": "{{count}} अनुपालन रिकॉर्ड पर ध्यान दें",
       "complianceSub": "निरीक्षण तैयारी {{pct}}%",
       "hygiene": "आज का स्वच्छता लॉग साइन नहीं",
-      "hygieneSub": "औज़ार, तौलिये, सतहें, फ़र्श, कचरा"
+      "hygieneSub": "औज़ार, तौलिये, सतहें, फ़र्श, कचरा",
+      "compliancePart": "{{label}}: {{count}}",
+      "expiresToday": "आज समाप्त",
+      "expiresIn_one": "1 दिन में समाप्त",
+      "expiresIn": "{{count}} दिन में समाप्त"
     },
     "attentionClose": "बंद करें",
     "viewClosing": "कैश क्लोज़िंग",

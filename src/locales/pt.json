@@ -229,7 +229,11 @@
       "compliance_one": "{{count}} registro de conformidade precisa de atenção",
       "complianceSub": "Preparação para inspeção: {{pct}}%",
       "hygiene": "O registro de higiene de hoje não foi assinado",
-      "hygieneSub": "Ferramentas, toalhas, superfícies, pisos, lixo"
+      "hygieneSub": "Ferramentas, toalhas, superfícies, pisos, lixo",
+      "compliancePart": "{{label}}: {{count}}",
+      "expiresToday": "Expira hoje",
+      "expiresIn_one": "Expira em 1 dia",
+      "expiresIn": "Expira em {{count}} dias"
     },
     "attentionClose": "Fechar",
     "viewClosing": "Fechamento de caixa",

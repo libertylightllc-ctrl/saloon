@@ -1,8 +1,10 @@
 import { useRouter, type Href } from 'expo-router';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { DOC_STATUS } from '@/features/compliance/labels';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
@@ -16,6 +18,8 @@ interface Item {
   title: string;
   sub: string;
   status: StatusKey;
+  /** The pill's words when the status name alone would mislead (a compliance record expiring in 2 days). */
+  label?: string;
   action: string;
   href: Href;
 }
@@ -121,12 +125,15 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
       });
     }
   }
-  if (data.compliance && data.compliance.attention > 0) {
+  const compliance = data.compliance;
+  if (compliance && compliance.attention > 0) {
     items.push({
       key: 'compliance',
-      title: t('home.attention.compliance', { count: data.compliance.attention }),
-      sub: t('home.attention.complianceSub', { pct: data.compliance.readiness }),
-      status: data.compliance.expired > 0 ? 'expired' : 'due_soon',
+      title: t('home.attention.compliance', { count: compliance.attention }),
+      sub: COMPLIANCE_ORDER.filter((s) => compliance[s] > 0)
+        .map((s) => t('home.attention.compliancePart', { label: t(`compliance.status.${s}`), count: compliance[s] }))
+        .join(' · '),
+      ...compliancePill(compliance, t),
       action: t('home.attentionActions.renew'),
       href: '/compliance',
     });
@@ -152,7 +159,7 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
           testID={`attention-${item.key}`}
           title={item.title}
           meta={[item.sub]}
-          badges={<StatusPill status={item.status} />}
+          badges={<StatusPill status={item.status} label={item.label} />}
           trailing={
             <Button
               label={item.action}
@@ -171,3 +178,21 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
 const styles = StyleSheet.create({
   block: { gap: spacing.md },
 });
+
+const COMPLIANCE_ORDER = ['expired', 'missing', 'evidence_missing', 'missing_date', 'due_soon'] as const;
+
+/**
+ * The compliance line's pill (owner's app check A4): "Expired" only when a date has passed; otherwise the nearest
+ * expiry ("Expires in 2 days"), then a record never entered, a missing scan, a missing date.
+ */
+export function compliancePill(c: NonNullable<Dashboard['compliance']>, t: TFunction): { status: StatusKey; label?: string } {
+  if (c.expired > 0) return { status: 'expired' };
+  if (c.soonest_days !== null) {
+    return {
+      status: 'due_soon',
+      label: c.soonest_days === 0 ? t('home.attention.expiresToday') : t('home.attention.expiresIn', { count: c.soonest_days }),
+    };
+  }
+  const worst = COMPLIANCE_ORDER.find((s) => c[s] > 0) ?? 'due_soon';
+  return { status: DOC_STATUS[worst], label: t(`compliance.status.${worst}`) };
+}

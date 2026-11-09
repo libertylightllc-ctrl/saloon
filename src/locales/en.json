@@ -229,7 +229,11 @@
       "compliance_one": "{{count}} compliance record needs attention",
       "complianceSub": "Inspection readiness {{pct}}%",
       "hygiene": "Today's hygiene log is not signed",
-      "hygieneSub": "Tools, towels, surfaces, floors, waste"
+      "hygieneSub": "Tools, towels, surfaces, floors, waste",
+      "compliancePart": "{{label}}: {{count}}",
+      "expiresToday": "Expires today",
+      "expiresIn_one": "Expires in 1 day",
+      "expiresIn": "Expires in {{count}} days"
     },
     "attentionClose": "Close",
     "viewClosing": "Cash closing",

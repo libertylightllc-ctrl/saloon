@@ -229,7 +229,11 @@
       "compliance_one": "{{count}} registro de cumplimiento requiere atención",
       "complianceSub": "Preparación para inspección: {{pct}}%",
       "hygiene": "El registro de higiene de hoy no está firmado",
-      "hygieneSub": "Herramientas, toallas, superficies, suelos, residuos"
+      "hygieneSub": "Herramientas, toallas, superficies, suelos, residuos",
+      "compliancePart": "{{label}}: {{count}}",
+      "expiresToday": "Vence hoy",
+      "expiresIn_one": "Vence en 1 día",
+      "expiresIn": "Vence en {{count}} días"
     },
     "attentionClose": "Cerrar",
     "viewClosing": "Cierre de caja",

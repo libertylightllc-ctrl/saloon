@@ -247,7 +247,14 @@
       "compliance_few": "{{count}} سجلات امتثال تحتاج انتباهًا",
       "complianceSub": "الجاهزية للتفتيش {{pct}}%",
       "hygiene": "سجل النظافة لليوم غير موقّع",
-      "hygieneSub": "الأدوات، المناشف، الأسطح، الأرضيات، النفايات"
+      "hygieneSub": "الأدوات، المناشف، الأسطح، الأرضيات، النفايات",
+      "compliancePart": "{{label}}: {{count}}",
+      "expiresToday": "ينتهي اليوم",
+      "expiresIn_one": "ينتهي خلال يوم واحد",
+      "expiresIn": "ينتهي خلال {{count}} يوم",
+      "expiresIn_two": "ينتهي خلال يومين",
+      "expiresIn_few": "ينتهي خلال {{count}} أيام",
+      "expiresIn_many": "ينتهي خلال {{count}} يومًا"
     },
     "attentionClose": "إغلاق",
     "viewClosing": "إغلاق النقدية",
