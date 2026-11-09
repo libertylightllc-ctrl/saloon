@@ -238,7 +238,9 @@
       "compliancePart": "{{label}}: {{count}}",
       "expiresToday": "آج ختم",
       "expiresIn_one": "1 دن میں ختم",
-      "expiresIn": "{{count}} دن میں ختم"
+      "expiresIn": "{{count}} دن میں ختم",
+      "outOfStock": "{{count}} آئٹم کا اسٹاک ختم",
+      "outOfStock_one": "{{count}} آئٹم کا اسٹاک ختم"
     },
     "attentionClose": "بند کریں",
     "viewClosing": "کیش کلوزنگ",
@@ -1752,7 +1754,7 @@
     "add": "آئٹم شامل کریں",
     "filters": {
       "all": "سب",
-      "low": "کم اسٹاک",
+      "low": "کم یا ختم",
       "consumable": "استعمال کا سامان",
       "retail": "فروخت کا سامان",
       "tool": "اوزار"
@@ -1769,7 +1771,7 @@
       "pairs": "جوڑے"
     },
     "value": "اسٹاک کی مالیت",
-    "lowCount": "کم اسٹاک",
+    "lowCount": "کم یا ختم اسٹاک",
     "activeItems": "فعال آئٹم",
     "movements": "تبدیلیاں",
     "movementsSub": "پچھلے 30 دن",
@@ -1845,7 +1847,10 @@
       "cost": "فی عدد لاگت",
       "save": "ابتدائی اسٹاک محفوظ کریں · {{value}}",
       "saved": "{{n}} آئٹم کا ابتدائی اسٹاک محفوظ ہو گیا"
-    }
+    },
+    "outCount": "اسٹاک ختم: {{n}}",
+    "lowShort": "کم اسٹاک: {{n}}",
+    "countNeeded": "اسٹاک گنتی ضروری"
   },
   "receipts": {
     "photo": "رسید کی تصویر",
@@ -2197,7 +2202,9 @@
       },
       "low_stock": {
         "title": "اسٹاک کم",
-        "body": "{{item}} · {{qty}} {{unit}} باقی"
+        "body": "{{item}} · {{qty}} {{unit}} باقی",
+        "outTitle": "اسٹاک ختم",
+        "outBody": "{{item}} · کچھ باقی نہیں"
       },
       "document_due": {
         "title": "دستاویز {{count}} دن میں واجب",
@@ -2214,7 +2221,8 @@
       },
       "daily_digest": {
         "title": "صبح بخیر — {{branch}}",
-        "body": "کل {{sales}} فروخت سے {{sales_total}} · {{pending_closes}} کلوز منظوری باقی · {{low_stock}} کم اسٹاک"
+        "body": "کل: {{sales_total}} · فروخت: {{sales}}",
+        "closes": "کلوز منظوری باقی: {{n}}"
       },
       "support_reply": {
         "title": "Saloqo سپورٹ نے جواب دیا",
@@ -2362,7 +2370,7 @@
       "closeOver": "آخری کلوزنگ {{date}}: {{amount}} زیادہ",
       "closeBalanced": "آخری کلوزنگ {{date}}: برابر",
       "suppliers": "سپلائرز کا بقایا: {{amount}}",
-      "lowItems": "کم اسٹاک والے آئٹمز: {{count}}",
+      "lowItems": "کم یا ختم اسٹاک والے آئٹمز: {{count}}",
       "compliance": "تعمیل کے مسائل: {{count}}"
     },
     "moreRows": "{{total}} میں سے پہلی {{shown}} سطریں دکھائی جا رہی ہیں۔ PDF اور CSV میں سب ہیں۔",

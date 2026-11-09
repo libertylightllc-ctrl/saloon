@@ -238,7 +238,9 @@
       "compliancePart": "{{label}} : {{count}}",
       "expiresToday": "Expire aujourd'hui",
       "expiresIn_one": "Expire dans 1 jour",
-      "expiresIn": "Expire dans {{count}} jours"
+      "expiresIn": "Expire dans {{count}} jours",
+      "outOfStock": "{{count}} articles en rupture de stock",
+      "outOfStock_one": "{{count}} article en rupture de stock"
     },
     "attentionClose": "Fermer",
     "viewClosing": "Clôture de caisse",
@@ -1752,7 +1754,7 @@
     "add": "Ajouter un article",
     "filters": {
       "all": "Tous",
-      "low": "Stock bas",
+      "low": "Bas ou rupture",
       "consumable": "Consommables",
       "retail": "Revente",
       "tool": "Outils"
@@ -1769,7 +1771,7 @@
       "pairs": "Paires"
     },
     "value": "Valeur du stock",
-    "lowCount": "Stock bas",
+    "lowCount": "Stock bas ou en rupture",
     "activeItems": "Articles actifs",
     "movements": "Mouvements",
     "movementsSub": "30 derniers jours",
@@ -1845,7 +1847,10 @@
       "cost": "Coût unitaire",
       "save": "Enregistrer le stock initial · {{value}}",
       "saved": "Stock initial enregistré pour {{n}} article(s)"
-    }
+    },
+    "outCount": "En rupture : {{n}}",
+    "lowShort": "Stock bas : {{n}}",
+    "countNeeded": "Inventaire à faire"
   },
   "receipts": {
     "photo": "Photo du reçu",
@@ -2197,7 +2202,9 @@
       },
       "low_stock": {
         "title": "Stock bas",
-        "body": "{{item}} · reste {{qty}} {{unit}}"
+        "body": "{{item}} · reste {{qty}} {{unit}}",
+        "outTitle": "Rupture de stock",
+        "outBody": "{{item}} · plus rien"
       },
       "document_due": {
         "title": "Document à échéance dans {{count}} jours",
@@ -2214,7 +2221,8 @@
       },
       "daily_digest": {
         "title": "Bonjour — {{branch}}",
-        "body": "Hier : {{sales_total}} sur {{sales}} ventes · {{pending_closes}} clôtures à approuver · {{low_stock}} en stock bas"
+        "body": "Hier : {{sales_total}} · Ventes : {{sales}}",
+        "closes": "Clôtures à approuver : {{n}}"
       },
       "support_reply": {
         "title": "L’assistance Saloqo a répondu",
@@ -2362,7 +2370,7 @@
       "closeOver": "Dernière clôture {{date}} : excédent de {{amount}}",
       "closeBalanced": "Dernière clôture {{date}} : équilibrée",
       "suppliers": "Dû aux fournisseurs : {{amount}}",
-      "lowItems": "Stock bas : {{count}}",
+      "lowItems": "Stock bas ou en rupture : {{count}}",
       "compliance": "Problèmes de conformité : {{count}}"
     },
     "moreRows": "Affichage des {{shown}} premières lignes sur {{total}}. Le PDF et le CSV les contiennent toutes.",

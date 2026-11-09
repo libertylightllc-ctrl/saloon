@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -28,6 +29,19 @@ const ICON: Record<(typeof TYPES)[number], IconName> = {
   trial_ending: 'sparkles',
 };
 
+/**
+ * The morning summary's extra parts, each only when there is something to say (owner's app check A6: out of stock
+ * is counted apart from low; written "label: number" so every number reads right in every language).
+ */
+export function digestParts(d: Record<string, unknown>, t: TFunction): string[] {
+  const n = (k: string) => (typeof d[k] === 'number' ? d[k] : 0);
+  return [
+    ...(n('pending_closes') > 0 ? [t('notifications.types.daily_digest.closes', { n: n('pending_closes') })] : []),
+    ...(n('out_of_stock') > 0 ? [t('inventory.outCount', { n: n('out_of_stock') })] : []),
+    ...(n('low_stock') > 0 ? [t('inventory.lowShort', { n: n('low_stock') })] : []),
+  ];
+}
+
 /** The words for a notification in the app language (the stored English text is for push). */
 export function useNotificationText() {
   const { t } = useTranslation();
@@ -50,7 +64,14 @@ export function useNotificationText() {
       customer: d.customer ?? t('queue.guest'),
       count: typeof d.days === 'number' ? d.days : 0,
     };
-    return { title: t(`notifications.types.${type}.title`, values), body: t(`notifications.types.${type}.body`, values) };
+    if (type === 'low_stock' && d.out) {
+      return { title: t('notifications.types.low_stock.outTitle'), body: t('notifications.types.low_stock.outBody', values) };
+    }
+    const body = t(`notifications.types.${type}.body`, values);
+    if (type === 'daily_digest') {
+      return { title: t('notifications.types.daily_digest.title', values), body: [body, ...digestParts(d, t)].join(' · ') };
+    }
+    return { title: t(`notifications.types.${type}.title`, values), body };
   };
 }
 

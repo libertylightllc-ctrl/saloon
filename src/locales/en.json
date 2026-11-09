@@ -238,7 +238,9 @@
       "compliancePart": "{{label}}: {{count}}",
       "expiresToday": "Expires today",
       "expiresIn_one": "Expires in 1 day",
-      "expiresIn": "Expires in {{count}} days"
+      "expiresIn": "Expires in {{count}} days",
+      "outOfStock": "{{count}} items out of stock",
+      "outOfStock_one": "{{count}} item out of stock"
     },
     "attentionClose": "Close",
     "viewClosing": "Cash closing",
@@ -1752,7 +1754,7 @@
     "add": "Add item",
     "filters": {
       "all": "All",
-      "low": "Low stock",
+      "low": "Low or out",
       "consumable": "Consumables",
       "retail": "Retail",
       "tool": "Tools"
@@ -1769,7 +1771,7 @@
       "pairs": "Pairs"
     },
     "value": "Stock value",
-    "lowCount": "Low stock",
+    "lowCount": "Low or out of stock",
     "activeItems": "Active items",
     "movements": "Movements",
     "movementsSub": "Last 30 days",
@@ -1845,7 +1847,10 @@
       "cost": "Cost each",
       "save": "Save opening stock · {{value}}",
       "saved": "Opening stock saved for {{n}} item(s)"
-    }
+    },
+    "outCount": "Out of stock: {{n}}",
+    "lowShort": "Low stock: {{n}}",
+    "countNeeded": "Stock count needed"
   },
   "receipts": {
     "photo": "Receipt photo",
@@ -2197,7 +2202,9 @@
       },
       "low_stock": {
         "title": "Low on stock",
-        "body": "{{item}} · {{qty}} {{unit}} left"
+        "body": "{{item}} · {{qty}} {{unit}} left",
+        "outTitle": "Out of stock",
+        "outBody": "{{item}} · none left"
       },
       "document_due": {
         "title": "Document due in {{count}} days",
@@ -2214,7 +2221,8 @@
       },
       "daily_digest": {
         "title": "Good morning — {{branch}}",
-        "body": "Yesterday {{sales_total}} from {{sales}} sales · {{pending_closes}} closes to approve · {{low_stock}} low on stock"
+        "body": "Yesterday: {{sales_total}} · Sales: {{sales}}",
+        "closes": "Closes to approve: {{n}}"
       },
       "support_reply": {
         "title": "Saloqo support answered",
@@ -2362,7 +2370,7 @@
       "closeOver": "Last close {{date}}: over by {{amount}}",
       "closeBalanced": "Last close {{date}}: balanced",
       "suppliers": "Owed to suppliers: {{amount}}",
-      "lowItems": "Low on stock: {{count}}",
+      "lowItems": "Low or out of stock: {{count}}",
       "compliance": "Compliance issues: {{count}}"
     },
     "moreRows": "Showing the first {{shown}} of {{total}} rows. The PDF and CSV have them all.",

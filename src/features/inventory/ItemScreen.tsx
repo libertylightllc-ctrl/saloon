@@ -27,7 +27,7 @@ import {
 } from '@/ui';
 
 import { useAdjustStock, useInventory, useMovements, type StockItem } from './api';
-import { qtyText } from './labels';
+import { qtyText, stockPill } from './labels';
 
 function Row({ label, value, testID }: { label: string; value: string; testID?: string }) {
   return (
@@ -87,7 +87,7 @@ export function ItemScreen() {
                       {item.assigned_to ? <Row label={t('inventory.assigned')} value={item.assigned_to} /> : null}
                     </>
                   ) : null}
-                  {item.low ? <StatusPill status={item.qty <= 0 ? 'out_of_stock' : 'low'} /> : null}
+                  {item.low ? <StatusPill {...stockPill(item, t)} /> : null}
                 </Card>
                 {can(role, 'manageInventory') ? (
                   <View style={styles.actions}>

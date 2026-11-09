@@ -31,7 +31,8 @@ export interface Dashboard {
   }[];
   activity?: { summary: string; at: string; actor: string | null }[];
   money_out?: { expenses_minor: number; supplier_payments_minor: number };
-  stock?: { low: number; low_items: string[]; tools_due: number };
+  /** Low is above 0; out is 0 or below, only items that had stock here (owner's app check A6). */
+  stock?: { low: number; low_items: string[]; out?: number; out_items?: string[]; tools_due: number };
   bills?: { overdue_count: number; overdue_minor: number; due_soon_count: number; due_soon_minor: number } | null;
   payroll?: { pending_period: string | null; wps_missing: number } | null;
   /** One count per record status (owner's app check A4), and the days to the nearest expiry in its reminder window. */

@@ -238,7 +238,9 @@
       "compliancePart": "{{label}}: {{count}}",
       "expiresToday": "Vence hoy",
       "expiresIn_one": "Vence en 1 día",
-      "expiresIn": "Vence en {{count}} días"
+      "expiresIn": "Vence en {{count}} días",
+      "outOfStock": "{{count}} productos sin stock",
+      "outOfStock_one": "{{count}} producto sin stock"
     },
     "attentionClose": "Cerrar",
     "viewClosing": "Cierre de caja",
@@ -1752,7 +1754,7 @@
     "add": "Agregar artículo",
     "filters": {
       "all": "Todos",
-      "low": "Poco stock",
+      "low": "Poco o agotado",
       "consumable": "Consumibles",
       "retail": "Venta",
       "tool": "Herramientas"
@@ -1769,7 +1771,7 @@
       "pairs": "Pares"
     },
     "value": "Valor del stock",
-    "lowCount": "Poco stock",
+    "lowCount": "Poco stock o agotado",
     "activeItems": "Artículos activos",
     "movements": "Movimientos",
     "movementsSub": "Últimos 30 días",
@@ -1845,7 +1847,10 @@
       "cost": "Costo unitario",
       "save": "Guardar stock inicial · {{value}}",
       "saved": "Stock inicial guardado para {{n}} artículo(s)"
-    }
+    },
+    "outCount": "Sin stock: {{n}}",
+    "lowShort": "Poco stock: {{n}}",
+    "countNeeded": "Hace falta contar el stock"
   },
   "receipts": {
     "photo": "Foto del recibo",
@@ -2197,7 +2202,9 @@
       },
       "low_stock": {
         "title": "Poco stock",
-        "body": "{{item}} · quedan {{qty}} {{unit}}"
+        "body": "{{item}} · quedan {{qty}} {{unit}}",
+        "outTitle": "Sin stock",
+        "outBody": "{{item}} · no queda nada"
       },
       "document_due": {
         "title": "Documento vence en {{count}} días",
@@ -2214,7 +2221,8 @@
       },
       "daily_digest": {
         "title": "Buenos días — {{branch}}",
-        "body": "Ayer {{sales_total}} en {{sales}} ventas · {{pending_closes}} cierres por aprobar · {{low_stock}} con poco stock"
+        "body": "Ayer: {{sales_total}} · Ventas: {{sales}}",
+        "closes": "Cierres por aprobar: {{n}}"
       },
       "support_reply": {
         "title": "El soporte de Saloqo respondió",
@@ -2362,7 +2370,7 @@
       "closeOver": "Último cierre {{date}}: sobran {{amount}}",
       "closeBalanced": "Último cierre {{date}}: cuadra",
       "suppliers": "Deuda con proveedores: {{amount}}",
-      "lowItems": "Con poco stock: {{count}}",
+      "lowItems": "Con poco stock o agotados: {{count}}",
       "compliance": "Problemas de cumplimiento: {{count}}"
     },
     "moreRows": "Se muestran las primeras {{shown}} de {{total}} filas. El PDF y el CSV las incluyen todas.",

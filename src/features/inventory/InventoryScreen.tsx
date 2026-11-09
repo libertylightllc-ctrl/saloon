@@ -7,7 +7,7 @@ import { useWorkspace } from '@/features/auth/session';
 import { formatMoney, sum } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
-import { spacing } from '@/theme';
+import { semantic, spacing } from '@/theme';
 import {
   Button,
   EmptyState,
@@ -27,7 +27,7 @@ import {
 } from '@/ui';
 
 import { useInventory, type ItemKind, type StockItem } from './api';
-import { qtyText } from './labels';
+import { qtyText, stockPill } from './labels';
 
 type Filter = 'all' | 'low' | ItemKind;
 const FILTERS: Filter[] = ['all', 'low', 'consumable', 'retail', 'tool'];
@@ -87,7 +87,13 @@ export function InventoryScreen() {
                 {can(role, 'viewMoney') ? (
                   <KpiCard icon="wallet" label={t('inventory.value')} value={formatMoney(value)} testID="inventory-value" />
                 ) : null}
-                <KpiCard icon="alert" label={t('inventory.lowCount')} value={String(active.filter((i) => i.low).length)} testID="inventory-low" />
+                <KpiCard
+                  icon="alert"
+                  label={t('inventory.lowCount')}
+                  value={String(active.filter((i) => i.low).length)}
+                  sub={t('inventory.outCount', { n: active.filter((i) => i.low && i.qty <= 0).length })}
+                  testID="inventory-low"
+                />
                 <KpiCard icon="package" label={t('inventory.activeItems')} value={String(active.length)} />
                 <KpiCard
                   icon="rotate"
@@ -132,7 +138,7 @@ export function InventoryScreen() {
                     ]}
                     badges={
                       i.low ? (
-                        <StatusPill status={i.qty <= 0 ? 'out_of_stock' : 'low'} />
+                        <StatusPill {...stockPill(i, t)} />
                       ) : i.condition === 'needs_service' ? (
                         <StatusPill tone="warning" label={t('inventory.conditions.needs_service')} />
                       ) : !i.active ? (
@@ -141,7 +147,7 @@ export function InventoryScreen() {
                     }
                     trailing={
                       <View style={styles.trailing}>
-                        <Text variant="bodyStrong" tabular testID={`item-${i.name}-qty`}>
+                        <Text variant="bodyStrong" tabular style={i.qty < 0 ? styles.negative : undefined} testID={`item-${i.name}-qty`}>
                           {qtyText(i.qty, i.unit, t)}
                         </Text>
                         {i.value_minor !== null && i.kind !== 'tool' ? (
@@ -170,4 +176,5 @@ const styles = StyleSheet.create({
   // Phones: the buttons share the width evenly (two to a row, an odd last one takes the row) instead of a ragged row.
   actionCell: { flexGrow: 1, flexBasis: 140 },
   trailing: { alignItems: 'flex-end', gap: 2 },
+  negative: { color: semantic.error.hover },
 });

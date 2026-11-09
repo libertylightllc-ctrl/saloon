@@ -238,7 +238,9 @@
       "compliancePart": "{{label}}: {{count}}",
       "expiresToday": "आज समाप्त",
       "expiresIn_one": "1 दिन में समाप्त",
-      "expiresIn": "{{count}} दिन में समाप्त"
+      "expiresIn": "{{count}} दिन में समाप्त",
+      "outOfStock": "{{count}} आइटम का स्टॉक ख़त्म",
+      "outOfStock_one": "{{count}} आइटम का स्टॉक ख़त्म"
     },
     "attentionClose": "बंद करें",
     "viewClosing": "कैश क्लोज़िंग",
@@ -1752,7 +1754,7 @@
     "add": "आइटम जोड़ें",
     "filters": {
       "all": "सभी",
-      "low": "कम स्टॉक",
+      "low": "कम या ख़त्म",
       "consumable": "खपत का सामान",
       "retail": "बिक्री का सामान",
       "tool": "औज़ार"
@@ -1769,7 +1771,7 @@
       "pairs": "जोड़े"
     },
     "value": "स्टॉक मूल्य",
-    "lowCount": "कम स्टॉक",
+    "lowCount": "कम या ख़त्म स्टॉक",
     "activeItems": "सक्रिय आइटम",
     "movements": "बदलाव",
     "movementsSub": "पिछले 30 दिन",
@@ -1845,7 +1847,10 @@
       "cost": "प्रति नग लागत",
       "save": "शुरुआती स्टॉक सहेजें · {{value}}",
       "saved": "{{n}} आइटम का शुरुआती स्टॉक सहेजा गया"
-    }
+    },
+    "outCount": "स्टॉक ख़त्म: {{n}}",
+    "lowShort": "कम स्टॉक: {{n}}",
+    "countNeeded": "स्टॉक गिनती ज़रूरी"
   },
   "receipts": {
     "photo": "रसीद की फ़ोटो",
@@ -2197,7 +2202,9 @@
       },
       "low_stock": {
         "title": "स्टॉक कम",
-        "body": "{{item}} · {{qty}} {{unit}} बचा"
+        "body": "{{item}} · {{qty}} {{unit}} बचा",
+        "outTitle": "स्टॉक ख़त्म",
+        "outBody": "{{item}} · कुछ नहीं बचा"
       },
       "document_due": {
         "title": "दस्तावेज़ {{count}} दिन में देय",
@@ -2214,7 +2221,8 @@
       },
       "daily_digest": {
         "title": "सुप्रभात — {{branch}}",
-        "body": "कल {{sales}} बिक्री से {{sales_total}} · {{pending_closes}} क्लोज़ मंज़ूरी बाकी · {{low_stock}} कम स्टॉक"
+        "body": "कल: {{sales_total}} · बिक्री: {{sales}}",
+        "closes": "क्लोज़ मंज़ूरी बाकी: {{n}}"
       },
       "support_reply": {
         "title": "Saloqo सपोर्ट ने जवाब दिया",
@@ -2362,7 +2370,7 @@
       "closeOver": "आख़िरी क्लोज़िंग {{date}}: {{amount}} ज़्यादा",
       "closeBalanced": "आख़िरी क्लोज़िंग {{date}}: बराबर",
       "suppliers": "सप्लायरों का बकाया: {{amount}}",
-      "lowItems": "कम स्टॉक वाले आइटम: {{count}}",
+      "lowItems": "कम या ख़त्म स्टॉक वाले आइटम: {{count}}",
       "compliance": "अनुपालन समस्याएँ: {{count}}"
     },
     "moreRows": "{{total}} में से पहली {{shown}} पंक्तियाँ दिख रही हैं। PDF और CSV में सब हैं।",

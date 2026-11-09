@@ -259,7 +259,12 @@
       "expiresIn": "ينتهي خلال {{count}} يوم",
       "expiresIn_two": "ينتهي خلال يومين",
       "expiresIn_few": "ينتهي خلال {{count}} أيام",
-      "expiresIn_many": "ينتهي خلال {{count}} يومًا"
+      "expiresIn_many": "ينتهي خلال {{count}} يومًا",
+      "outOfStock": "{{count}} صنف نفد مخزونها",
+      "outOfStock_one": "{{count}} صنف نفد مخزونه",
+      "outOfStock_two": "صنفان نفد مخزونهما",
+      "outOfStock_few": "{{count}} أصناف نفد مخزونها",
+      "outOfStock_many": "{{count}} صنفًا نفد مخزونها"
     },
     "attentionClose": "إغلاق",
     "viewClosing": "إغلاق النقدية",
@@ -1792,7 +1797,7 @@
     "add": "إضافة صنف",
     "filters": {
       "all": "الكل",
-      "low": "مخزون منخفض",
+      "low": "منخفض أو نفد",
       "consumable": "مستهلكات",
       "retail": "للبيع",
       "tool": "أدوات"
@@ -1809,7 +1814,7 @@
       "pairs": "أزواج"
     },
     "value": "قيمة المخزون",
-    "lowCount": "مخزون منخفض",
+    "lowCount": "منخفض أو نفد",
     "activeItems": "أصناف نشطة",
     "movements": "الحركات",
     "movementsSub": "آخر 30 يومًا",
@@ -1885,7 +1890,10 @@
       "cost": "تكلفة الواحدة",
       "save": "حفظ المخزون الافتتاحي · {{value}}",
       "saved": "حُفظ المخزون الافتتاحي لـ {{n}} صنف"
-    }
+    },
+    "outCount": "نفد من المخزون: {{n}}",
+    "lowShort": "مخزون منخفض: {{n}}",
+    "countNeeded": "يلزم جرد المخزون"
   },
   "receipts": {
     "photo": "صورة الإيصال",
@@ -2240,7 +2248,9 @@
       },
       "low_stock": {
         "title": "مخزون منخفض",
-        "body": "{{item}} · تبقى {{qty}} {{unit}}"
+        "body": "{{item}} · تبقى {{qty}} {{unit}}",
+        "outTitle": "نفد من المخزون",
+        "outBody": "{{item}} · لم يتبقَّ شيء"
       },
       "document_due": {
         "title": "مستند يستحق خلال {{count}} يوم",
@@ -2260,7 +2270,8 @@
       },
       "daily_digest": {
         "title": "صباح الخير — {{branch}}",
-        "body": "أمس {{sales_total}} من {{sales}} مبيعات · {{pending_closes}} إغلاقات للاعتماد · {{low_stock}} منخفضة"
+        "body": "أمس: {{sales_total}} · المبيعات: {{sales}}",
+        "closes": "إغلاقات للاعتماد: {{n}}"
       },
       "support_reply": {
         "title": "ردّ دعم Saloqo",
@@ -2411,7 +2422,7 @@
       "closeOver": "آخر إغلاق {{date}}: زيادة {{amount}}",
       "closeBalanced": "آخر إغلاق {{date}}: متوازن",
       "suppliers": "مستحق للموردين: {{amount}}",
-      "lowItems": "أصناف منخفضة المخزون: {{count}}",
+      "lowItems": "أصناف منخفضة أو نفدت: {{count}}",
       "compliance": "مشاكل الامتثال: {{count}}"
     },
     "moreRows": "عرض أول {{shown}} من {{total}} صفًا. ملف PDF وCSV يحتويان الكل.",

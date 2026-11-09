@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import type { StockItem } from '@/features/inventory/api';
-import { qtyText } from '@/features/inventory/labels';
+import { qtyText, stockPill } from '@/features/inventory/labels';
 import { formatMoney } from '@/lib/money';
 import { spacing, useTheme } from '@/theme';
 import { Card, StatusPill, Stepper, Text, Thumb } from '@/ui';
@@ -37,7 +37,7 @@ export function ProductTile({
           </Text>
         </View>
       </View>
-      {item.low ? <StatusPill status={item.qty <= 0 ? 'out_of_stock' : 'low'} /> : null}
+      {item.low ? <StatusPill {...stockPill(item, t)} /> : null}
       {/* Price and stepper sit at the tile's foot, so a row of tiles lines up when one name takes two lines. */}
       <View style={styles.foot}>
         <Text variant="h4" weight="bold" tabular numberOfLines={1}>
