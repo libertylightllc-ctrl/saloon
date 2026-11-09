@@ -1156,7 +1156,8 @@
     "invalid_setting": "Cette valeur n’est pas autorisée. Vérifiez-la et réessayez.",
     "not_enough_cash": "Il n’y a pas assez d’espèces dans le tiroir pour cela. Payez autrement, ou ajoutez d’abord les espèces que vous y avez mises, dans Clôture de caisse.",
     "cashInDrawer": "Espèces dans le tiroir : {{amount}}.",
-    "email_unconfirmed": "Confirmez d'abord votre e-mail : ouvrez le lien que nous vous avons envoyé."
+    "email_unconfirmed": "Confirmez d'abord votre e-mail : ouvrez le lien que nous vous avons envoyé.",
+    "tip_not_refunded": "C'est plus que les prestations et produits. Activez « Rembourser aussi le pourboire » pour rembourser le pourboire."
   },
   "sales": {
     "title": "Ventes",
@@ -1181,7 +1182,9 @@
     },
     "restock": "Remettre les produits en stock",
     "restockHint": "Uniquement si toute la vente est remboursée et que les produits peuvent être revendus.",
-    "by": "par {{name}}"
+    "by": "par {{name}}",
+    "refundTip": "Rembourser aussi le pourboire",
+    "refundTipHint": "Le pourboire de {{amount}} revient au {{staff}}. Laissez désactivé et le remboursement ne porte que sur les prestations et produits."
   },
   "receipt": {
     "receipt": "Reçu",
@@ -2302,7 +2305,8 @@
       "visitsThisMonth": "Visites ce mois-ci",
       "entries": "Écritures",
       "taxable": "Montant hors {{tax}}",
-      "vat": "{{tax}}"
+      "vat": "{{tax}}",
+      "revenueNet": "Revenu après remboursements"
     },
     "status": {
       "open": "Non clôturé",

@@ -1,6 +1,6 @@
 -- Commission is never taken on a tip (owner, 2026-10-01): it is a share of the services after discount and without
--- VAT; the whole tip goes to the staff member. A partial refund (pro-rata over services, VAT and tip) lowers the
--- commission by the same share.
+-- VAT; the whole tip goes to the staff member. A partial refund comes out of the services, not the tip (owner, 9 Nov
+-- 2026), and lowers the commission by the services' share.
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
@@ -61,12 +61,12 @@ select lives_ok(format($$ select generate_payroll('%s', to_char(branch_today('%s
 select is((select commission_minor from payroll_lines where employee_id = current_setting('t.emp')::uuid), 1800::bigint,
   'and the payslip shows AED 18.00 commission');
 
--- Half the sale refunded (AED 27.50: half the service and half the tip): half the commission goes.
+-- AED 27.50 refunded: all of it from the AED 45.00 service, none from the tip, so 27.50/45 of the commission goes.
 select refund_sale(jsonb_build_object('sale_id', current_setting('t.sale'), 'amount_minor', 2750, 'method', 'cash',
   'reason', 'Half the colour redone'));
 select pg_temp.as_admin();
 select is(commission_for(current_setting('t.emp')::uuid, to_char(branch_today(current_setting('t.br')::uuid), 'YYYY-MM')),
-  900::bigint, 'a half refund leaves AED 9.00 (half the service), still nothing from the tip');
+  700::bigint, 'a AED 27.50 refund leaves AED 7.00 commission, still nothing from the tip');
 
 select * from finish();
 rollback;

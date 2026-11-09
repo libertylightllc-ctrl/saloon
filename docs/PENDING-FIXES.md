@@ -89,6 +89,25 @@ Parts C, D and E are #21 to #30 above; the final brief adds D3 and changes E3 (b
 ### Found while doing #38
 39. The console's salon, activity, duplicate, test-salon and account lists stop at 1,000 rows: the API answers at most 1,000 a request. Past 1,000 salons some go missing from Console → Salons, others lose their activity lines and "Closed" mark, and the status filter's counts come out short. (The local test database passed 1,000 salons; saloqo.com has 14.)
 
+## Owner's app check, 9 Nov 2026 (SALOQO_APP_FIXES.md: one salon checked as owner, accountant, cashier and staff)
+
+### Part A — wrong numbers or wrong status (first)
+40. (A1) Payroll is approved without being worked out again: a sale saved after it was worked out is missing from the commission. Show "N changes since this was worked out" with "Work out again", and refuse approval until then (on the server). An approved month stays as it is, with a note of the commission it missed.
+41. (A2) A part refund takes money from the stylist's tip (QAR 10 off a QAR 40 + 5 tip took 1.11 from the tip), and commission is worked out with the tip in it. Refunds come out of the services and products; the tip only when "Also refund the tip" is on. Staff sales shows tips kept and revenue after refunds.
+42. (A3) Inventory's stock value and the books' 1200 Stock differ (50 fils): stock used below zero was costed at 0 and never caught up when stock arrived. Keep the two equal; warn on Trial balance when they differ; a "Fix the difference" entry for the owner and accountant.
+43. (A4) Home says "Expired" for compliance records that are missing or about to expire. Show the real status.
+44. (A5) Home → Staff today shows staff on their day off as "Available". Use the roster and clock-ins: Day off, Not in yet, Late · not in, On shift, With client, Absent (also D2: "11 h 37 min", D3).
+45. (A6) Items at 0 or below are not counted ("Low stock 0" with 10 of 12 items at 0). Count them as Out of stock on Inventory; on Home and the morning summary, items that had stock before. Negative stock in red with "Stock count needed".
+46. (A7) "Sales" means two things in Reports (Monthly includes the tip, Staff sales doesn't). Sales never include tips; tips shown apart; "Revenue (books)" says "after refunds and discounts".
+47. (A8) Percent badges on an empty month ("▼ 100%"). Label "vs <last month>", hide when either month is zero, costs going down are good.
+
+### Parts B–F (plans to the owner before code)
+48. (B) Five login types (Owner, Manager, Front desk, Stylist / therapist, Accountant) with the brief's permission table, owner controls, blind cash count, manager PIN approval, approvals list, notifications by login, each login's Home and menu, server tests for every row.
+49. (C) Payroll and payslips: base pay by days employed (start and leaving dates), full payslip with PDF and "Paid on", bonus on the payroll line, payroll notification cleared on approval.
+50. (D) Attendance: open shifts closed at day end as "No clock-out", long durations in hours, "Late · not in" / "Absent".
+51. (E) Old alerts expire; dates on Recent activity; activity text translated; plurals; AI support answers (bold, real menu paths); help questions by login; staff see refunds on their own sales; small wording.
+52. (F) Phone number checks (country format, country code on customers), VAT tab only when registered, change the salon code once, "Last signed in" on staff.
+
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.

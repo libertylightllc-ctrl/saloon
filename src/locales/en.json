@@ -1156,7 +1156,8 @@
     "invalid_setting": "That value is not allowed. Check it and try again.",
     "not_enough_cash": "There isn’t enough cash in the drawer for this. Pay another way, or first add the cash you put in, on Cash closing.",
     "cashInDrawer": "Cash in the drawer: {{amount}}.",
-    "email_unconfirmed": "Confirm your email first: open the link we sent you."
+    "email_unconfirmed": "Confirm your email first: open the link we sent you.",
+    "tip_not_refunded": "That is more than the services and products. Switch on \"Also refund the tip\" to refund the tip too."
   },
   "sales": {
     "title": "Sales",
@@ -1181,7 +1182,9 @@
     },
     "restock": "Put the products back in stock",
     "restockHint": "Only when the whole sale is refunded and the products can be sold again.",
-    "by": "by {{name}}"
+    "by": "by {{name}}",
+    "refundTip": "Also refund the tip",
+    "refundTipHint": "The {{amount}} tip is the {{staff}}'s. Leave this off and the refund comes out of the services and products only."
   },
   "receipt": {
     "receipt": "Receipt",
@@ -2302,7 +2305,8 @@
       "visitsThisMonth": "Visits this month",
       "entries": "Entries",
       "taxable": "Amount without {{tax}}",
-      "vat": "{{tax}}"
+      "vat": "{{tax}}",
+      "revenueNet": "Revenue after refunds"
     },
     "status": {
       "open": "Not closed",

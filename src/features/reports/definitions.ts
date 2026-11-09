@@ -88,7 +88,7 @@ export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): 
           { key: 'tips', label: R('kpi.tips'), value: formatMoney(sum(rows.map((r) => r.tips_minor))) },
         ],
         chart: { title: R('chart.salesByPerson'), money: true, bars: rows.map((r) => ({ label: r.full_name, value: r.sales_minor })) },
-        columns: [{ label: R('col.person') }, { label: R('col.services'), numeric: true }, { label: R('col.sales'), numeric: true }, { label: R('col.revenue'), numeric: true }, { label: R('col.commission'), numeric: true }, { label: R('col.tips'), numeric: true }, { label: R('col.days'), numeric: true }],
+        columns: [{ label: R('col.person') }, { label: R('col.services'), numeric: true }, { label: R('col.sales'), numeric: true }, { label: R('col.revenueNet'), numeric: true }, { label: R('col.commission'), numeric: true }, { label: R('col.tips'), numeric: true }, { label: R('col.days'), numeric: true }],
         rows: rows.map((r) => ({
           id: r.employee_id,
           cells: [r.full_name, qty(r.services), formatMoney(r.sales_minor), formatMoney(r.revenue_minor), formatMoney(r.commission_minor), formatMoney(r.tips_minor), R('daysLate', { days: r.days_worked, late: r.late_days })],

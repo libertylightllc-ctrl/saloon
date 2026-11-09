@@ -110,6 +110,8 @@ export function useRefundSale(branchId: string) {
       reason: string;
       idempotency_key: string;
       restock?: boolean;
+      /** Also refund the stylist's tip (only what goes past the services and products comes out of it). */
+      refund_tip?: boolean;
     }) => {
       const { data, error } = await supabase.rpc('refund_sale', { p: asJson(input) });
       if (error) throw error;

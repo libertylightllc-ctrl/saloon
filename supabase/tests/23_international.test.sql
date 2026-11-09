@@ -54,7 +54,7 @@ select is((select sum(l.credit_minor) from journal_lines l join journal_entries 
 select is((select summary from audit_log where entity_type = 'sale' and entity_id = current_setting('t.sale')::uuid),
   'Saved sale #1001 · USD 113.88', 'the history speaks dollars');
 select lives_ok(format($$ select refund_sale(jsonb_build_object('sale_id', '%s', 'amount_minor', 11388, 'method', 'card',
-  'reason', 'Wrong customer')) $$, current_setting('t.sale')), 'a full refund goes through');
+  'reason', 'Wrong customer', 'refund_tip', true)) $$, current_setting('t.sale')), 'a full refund goes through');
 select is((select fmt_money(-2500)), '-USD 25.00', 'money without a currency is the salon''s');
 select is(plan_status(current_setting('t.us')::uuid) ->> 'currency', 'USD', 'the plan is priced in dollars');
 select is((plan_status(current_setting('t.us')::uuid) ->> 'monthly_minor')::bigint, 1399::bigint, 'USD 13.99 a month for up to 4 people');

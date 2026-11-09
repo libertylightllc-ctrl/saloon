@@ -82,7 +82,7 @@ select is((report_monthly(current_setting('t.br')::uuid, current_setting('t.mont
 -- ── Staff sales ──────────────────────────────────────────────────────────────────────────
 select results_eq(format($$ select sales_minor, revenue_minor, tips_minor from report_staff(%L, %L) where employee_id = %L $$,
   current_setting('t.br'), current_setting('t.month'), current_setting('t.emp')),
-  $$ values (15750::bigint, 15000::bigint, 1000::bigint) $$, 'staff: sales, revenue without VAT, tips');
+  $$ values (15750::bigint, 13000::bigint, 1000::bigint) $$, 'staff: sales, revenue without VAT after the refund, tips kept');
 select is((select commission_minor from report_staff(current_setting('t.br')::uuid, current_setting('t.month'))
   where employee_id = current_setting('t.emp')::uuid), 1300::bigint, 'staff: 10% commission, less the refunded 20% of sale 1');
 

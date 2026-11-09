@@ -1156,7 +1156,8 @@
     "invalid_setting": "Ese valor no está permitido. Revísalo e inténtalo de nuevo.",
     "not_enough_cash": "No hay suficiente efectivo en la caja para esto. Paga de otra forma o, primero, añade el efectivo que pusiste, en Cierre de caja.",
     "cashInDrawer": "Efectivo en la caja: {{amount}}.",
-    "email_unconfirmed": "Primero confirma tu email: abre el enlace que te enviamos."
+    "email_unconfirmed": "Primero confirma tu email: abre el enlace que te enviamos.",
+    "tip_not_refunded": "Es más que los servicios y productos. Activa \"Devolver también la propina\" para devolver la propina."
   },
   "sales": {
     "title": "Ventas",
@@ -1181,7 +1182,9 @@
     },
     "restock": "Devolver los productos al stock",
     "restockHint": "Solo si se reembolsa la venta completa y los productos se pueden volver a vender.",
-    "by": "por {{name}}"
+    "by": "por {{name}}",
+    "refundTip": "Devolver también la propina",
+    "refundTipHint": "La propina de {{amount}} es del {{staff}}. Si lo dejas apagado, el reembolso sale solo de los servicios y productos."
   },
   "receipt": {
     "receipt": "Recibo",
@@ -2302,7 +2305,8 @@
       "visitsThisMonth": "Visitas este mes",
       "entries": "Registros",
       "taxable": "Monto sin {{tax}}",
-      "vat": "{{tax}}"
+      "vat": "{{tax}}",
+      "revenueNet": "Ingresos tras reembolsos"
     },
     "status": {
       "open": "Sin cerrar",

@@ -1156,7 +1156,8 @@
     "invalid_setting": "Esse valor não é permitido. Confira e tente de novo.",
     "not_enough_cash": "Não há dinheiro suficiente na gaveta para isto. Pague de outra forma ou, primeiro, adicione o dinheiro que você colocou, em Fechamento de caixa.",
     "cashInDrawer": "Dinheiro na gaveta: {{amount}}.",
-    "email_unconfirmed": "Primeiro confirme seu e-mail: abra o link que enviamos."
+    "email_unconfirmed": "Primeiro confirme seu e-mail: abra o link que enviamos.",
+    "tip_not_refunded": "É mais do que os serviços e produtos. Ligue \"Reembolsar também a gorjeta\" para reembolsar a gorjeta."
   },
   "sales": {
     "title": "Vendas",
@@ -1181,7 +1182,9 @@
     },
     "restock": "Devolver os produtos ao estoque",
     "restockHint": "Só quando a venda inteira é reembolsada e os produtos podem ser vendidos de novo.",
-    "by": "por {{name}}"
+    "by": "por {{name}}",
+    "refundTip": "Reembolsar também a gorjeta",
+    "refundTipHint": "A gorjeta de {{amount}} é do {{staff}}. Deixe desligado e o reembolso sai só dos serviços e produtos."
   },
   "receipt": {
     "receipt": "Recibo",
@@ -2302,7 +2305,8 @@
       "visitsThisMonth": "Visitas este mês",
       "entries": "Lançamentos",
       "taxable": "Valor sem {{tax}}",
-      "vat": "{{tax}}"
+      "vat": "{{tax}}",
+      "revenueNet": "Receita após reembolsos"
     },
     "status": {
       "open": "Não fechado",
