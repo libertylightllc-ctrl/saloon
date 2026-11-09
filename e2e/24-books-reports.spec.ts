@@ -92,7 +92,7 @@ test('owner reads every report, exports PDF and CSV, closes last month and expor
   await expect(id(page, 'report-chart')).toBeVisible();
   await snap(page, 'report-monthly', mode);
   const monthly = await download(page, 'report-csv');
-  expect(monthly.split('\r\n')[0]).toContain('Date,Sales,Services,Refunds,Expenses');
+  expect(monthly.split('\r\n')[0]).toContain('Date,Sales,Tips,Services,Refunds,Expenses');
   expect(monthly).toContain(`${dubaiDate()},200.00`);
   await id(page, 'report-pdf').click();
   await expect
