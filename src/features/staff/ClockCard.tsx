@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { clockText } from '@/lib/clock';
+import { formatDuration } from '@/lib/duration';
 import { businessDate } from '@/lib/dates';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
@@ -43,7 +44,7 @@ export function ClockCard() {
                   : action === 'resume'
                     ? t('attendance.backAtWorkMe')
                     : r.late
-                      ? t('attendance.clockedInMeLate', { n: r.late_minutes })
+                      ? t('attendance.clockedInMeLate', { time: formatDuration(t, r.late_minutes) })
                       : t('attendance.clockedInMe'),
           );
         },
@@ -54,7 +55,7 @@ export function ClockCard() {
   const summary = [
     me.shift_start ? t('attendance.shift', { from: clockText(me.shift_start), to: clockText(me.shift_end ?? '') }) : me.status === 'off' ? t('staff.off') : t('attendance.noShift'),
     me.clock_in ? t('attendance.inOut', { in: time(me.clock_in), out: me.clock_out ? time(me.clock_out) : '…' }) : null,
-    me.break_minutes > 0 ? t('attendance.breaksTotal', { n: me.break_minutes }) : null,
+    me.break_minutes > 0 ? t('attendance.breaksTotal', { time: formatDuration(t, me.break_minutes) }) : null,
   ]
     .filter(Boolean)
     .join(' · ');
@@ -70,7 +71,7 @@ export function ClockCard() {
             </Text>
           </View>
           {me.status === 'on_break' ? <StatusPill status="waiting" label={t('attendance.status.on_break')} /> : null}
-          {me.late ? <StatusPill tone="warning" label={t('attendance.lateBy', { n: me.late_minutes })} /> : null}
+          {me.late ? <StatusPill tone="warning" label={t('attendance.lateBy', { time: formatDuration(t, me.late_minutes) })} /> : null}
         </View>
         <FormError error={clock.error} />
         {me.status === 'on_shift' ? (

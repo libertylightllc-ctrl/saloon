@@ -35,7 +35,8 @@ export interface StaffMember {
   roster: Shift[];
 }
 
-export type AttendanceStatus = 'on_shift' | 'on_break' | 'done' | 'not_in' | 'off';
+/** late_not_in: past the grace minutes with no clock-in; absent: the shift ended with no clock-in. */
+export type AttendanceStatus = 'on_shift' | 'on_break' | 'done' | 'not_in' | 'late_not_in' | 'absent' | 'off';
 /** Clock in / out, a break, or back to work after clocking out (the time away counts as a break). */
 export type ClockAction = 'in' | 'out' | 'break_start' | 'break_end' | 'resume';
 

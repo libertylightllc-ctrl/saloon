@@ -1,13 +1,15 @@
 import { useRouter } from 'expo-router';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { formatDuration } from '@/lib/duration';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { DirectionView, spacing, useTheme } from '@/theme';
-import { Avatar, Card, ListRow, SectionHeader, StatusPill, Text } from '@/ui';
+import { Avatar, Card, ListRow, SectionHeader, StatusPill, Text, type StatusKey } from '@/ui';
 
 import type { Dashboard } from './api';
 
@@ -92,6 +94,35 @@ export function RevenueCards({ data }: { data: Dashboard }) {
   );
 }
 
+type StaffPerson = NonNullable<Dashboard['staff_today']>[number];
+
+/**
+ * What someone is doing now, from the roster and the clock (owner's app check A5): "Day off", "Not in yet", then
+ * "Late · not in", then "Absent" for a shift nobody clocked in to; "On shift", "With client". "Available" is left for
+ * someone with no roster at all who has not clocked in (a salon that does not use rosters).
+ */
+export function staffPill(person: Pick<StaffPerson, 'busy' | 'status'>, t: TFunction): { status: StatusKey; label: string } {
+  if (person.busy) return { status: 'in_progress', label: t('home.staffState.with_client') };
+  switch (person.status ?? 'available') {
+    case 'on_shift':
+      return { status: 'completed', label: t('home.staffState.on_shift') };
+    case 'on_break':
+      return { status: 'pending_approval', label: t('attendance.status.on_break') };
+    case 'done':
+      return { status: 'cancelled', label: t('attendance.status.done') };
+    case 'not_in':
+      return { status: 'waiting', label: t('attendance.status.not_in') };
+    case 'late_not_in':
+      return { status: 'overdue', label: t('attendance.status.late_not_in') };
+    case 'absent':
+      return { status: 'expired', label: t('attendance.status.absent') };
+    case 'off':
+      return { status: 'cancelled', label: t('attendance.status.off') };
+    default:
+      return { status: 'completed', label: t('home.staffState.available') };
+  }
+}
+
 export function StaffToday({ data }: { data: Dashboard }) {
   const { t } = useTranslation();
   const staff = data.staff_today ?? [];
@@ -104,7 +135,10 @@ export function StaffToday({ data }: { data: Dashboard }) {
           key={person.employee_id}
           title={person.name}
           leading={<Avatar name={person.name} color={person.colour ?? undefined} size={44} />}
-          meta={[t('home.staffLine', { services: t('home.servicesCount', { count: Number(person.services) }), sales: formatMoney(person.sales_minor) })]}
+          meta={[
+            t('home.staffLine', { services: t('home.servicesCount', { count: Number(person.services) }), sales: formatMoney(person.sales_minor) }),
+            ...(person.late_minutes ? [t('attendance.lateBy', { time: formatDuration(t, person.late_minutes) })] : []),
+          ]}
           trailing={
             <>
               {person.commission_minor !== null ? (
@@ -112,10 +146,7 @@ export function StaffToday({ data }: { data: Dashboard }) {
                   {formatMoney(person.commission_minor)}
                 </Text>
               ) : null}
-              <StatusPill
-                tone={person.busy ? 'info' : 'success'}
-                label={t(person.busy ? 'home.staffState.with_client' : 'home.staffState.available')}
-              />
+              <StatusPill {...staffPill(person, t)} />
             </>
           }
         />

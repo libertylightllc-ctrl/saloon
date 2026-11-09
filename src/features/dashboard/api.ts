@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { keys } from '@/features/live/useLiveSync';
+import type { AttendanceStatus } from '@/features/staff/api';
 import { supabase } from '@/lib/supabase';
 
 export interface Dashboard {
@@ -21,6 +22,12 @@ export interface Dashboard {
     /** Null for cashiers (no payroll on their Home). */
     commission_minor: number | null;
     busy: boolean;
+    /** From the roster and the clock (owner's app check A5): 'available' means no roster at all and not clocked in. */
+    status?: AttendanceStatus | 'available';
+    /** Set when they clocked in late today. */
+    late_minutes: number | null;
+    shift_start: string | null;
+    shift_end: string | null;
   }[];
   activity?: { summary: string; at: string; actor: string | null }[];
   money_out?: { expenses_minor: number; supplier_payments_minor: number };

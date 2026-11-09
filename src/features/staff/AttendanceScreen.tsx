@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { clockText } from '@/lib/clock';
+import { formatDuration } from '@/lib/duration';
 import { businessDate, formatAt, shiftBusinessDate, type BusinessDate } from '@/lib/dates';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
@@ -34,12 +35,16 @@ const STATUS: Record<AttendanceStatus, StatusKey> = {
   on_break: 'pending_approval',
   done: 'completed',
   not_in: 'waiting',
+  late_not_in: 'overdue',
+  absent: 'expired',
   off: 'cancelled',
 };
 
 /** What the front desk can record for someone in each state; the first is offered on the row. */
 const ACTIONS: Record<AttendanceStatus, ClockAction[]> = {
   not_in: ['in'],
+  late_not_in: ['in'],
+  absent: ['in'],
   off: ['in'],
   on_shift: ['out', 'break_start'],
   on_break: ['break_end', 'out'],
@@ -77,7 +82,7 @@ export function AttendanceScreen() {
                     title={r.full_name}
                     meta={[
                       r.shift_start ? t('attendance.shift', { from: clockText(r.shift_start), to: clockText(r.shift_end ?? '') }) : r.status === 'off' ? t('staff.off') : t('attendance.noShift'),
-                      ...(r.break_minutes > 0 ? [t('attendance.breaksTotal', { n: r.break_minutes })] : []),
+                      ...(r.break_minutes > 0 ? [t('attendance.breaksTotal', { time: formatDuration(t, r.break_minutes) })] : []),
                       ...(r.clock_in
                         ? [
                             t('attendance.inOut', {
@@ -90,7 +95,7 @@ export function AttendanceScreen() {
                     badges={
                       <View style={styles.badges}>
                         <StatusPill status={STATUS[r.status]} label={t(`attendance.status.${r.status}`)} />
-                        {r.late ? <StatusPill tone="warning" label={t('attendance.lateBy', { n: r.late_minutes })} /> : null}
+                        {r.late ? <StatusPill tone="warning" label={t('attendance.lateBy', { time: formatDuration(t, r.late_minutes) })} /> : null}
                       </View>
                     }
                     trailing={
@@ -166,7 +171,7 @@ function RecordForm({ row, onDone }: { row: AttendanceRow; onDone: () => void })
                     ? t('attendance.clockedOut', { name: row.full_name })
                     : action === 'in'
                       ? r.late
-                        ? t('attendance.clockedInLate', { name: row.full_name, n: r.late_minutes })
+                        ? t('attendance.clockedInLate', { name: row.full_name, time: formatDuration(t, r.late_minutes) })
                         : t('attendance.clockedIn', { name: row.full_name })
                       : t(`attendance.recorded.${action}`, { name: row.full_name }),
                 );
