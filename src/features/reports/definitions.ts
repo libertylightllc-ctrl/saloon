@@ -13,6 +13,8 @@ export interface ReportKpi {
   key: string;
   label: string;
   value: string;
+  /** A line under the figure saying what it counts. */
+  sub?: string;
   /** vs last month, where there is one. */
   delta?: { label: string; trend: 'up' | 'down'; good: boolean };
 }
@@ -61,19 +63,28 @@ export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): 
       const result = r.revenue_minor - r.costs_minor;
       const prevResult = r.prev_revenue_minor - r.prev_costs_minor;
       const active = r.days.filter((d) => d.sales || d.refunds_minor || d.expenses_minor);
+      const tips = (d: (typeof r.days)[number]) => d.tips_minor ?? 0;
       return {
+        // Sales never include the tip; tips are their own figure (owner's app check A7).
         kpis: [
           { key: 'sales', label: R('kpi.sales'), value: formatMoney(sum(r.days.map((d) => d.sales_minor))) },
-          { key: 'revenue', label: R('kpi.revenue'), value: formatMoney(r.revenue_minor), delta: change(r.revenue_minor, r.prev_revenue_minor, true) },
+          { key: 'tips', label: R('kpi.tips'), value: formatMoney(sum(r.days.map(tips))) },
+          {
+            key: 'revenue',
+            label: R('kpi.revenue'),
+            value: formatMoney(r.revenue_minor),
+            sub: R('kpi.revenueSub'),
+            delta: change(r.revenue_minor, r.prev_revenue_minor, true),
+          },
           { key: 'costs', label: R('kpi.costs'), value: formatMoney(r.costs_minor), delta: change(r.costs_minor, r.prev_costs_minor, false) },
           { key: 'result', label: R('kpi.result'), value: formatMoney(result), delta: change(result, prevResult, true) },
         ],
         chart: { title: R('chart.salesByDay'), money: true, bars: r.days.map((d) => ({ label: day(d.date, 'd'), value: d.sales_minor })) },
-        columns: [{ label: R('col.date') }, { label: R('col.sales'), numeric: true }, { label: R('col.services'), numeric: true }, { label: R('col.refunds'), numeric: true }, { label: R('col.expenses'), numeric: true }],
+        columns: [{ label: R('col.date') }, { label: R('col.sales'), numeric: true }, { label: R('col.tips'), numeric: true }, { label: R('col.services'), numeric: true }, { label: R('col.refunds'), numeric: true }, { label: R('col.expenses'), numeric: true }],
         rows: active.map((d) => ({
           id: d.date,
-          cells: [day(d.date, 'EEE d MMM'), formatMoney(d.sales_minor), qty(d.services), formatMoney(d.refunds_minor), formatMoney(d.expenses_minor)],
-          csv: [d.date, csvMoney(d.sales_minor), qty(d.services), csvMoney(d.refunds_minor), csvMoney(d.expenses_minor)],
+          cells: [day(d.date, 'EEE d MMM'), formatMoney(d.sales_minor), formatMoney(tips(d)), qty(d.services), formatMoney(d.refunds_minor), formatMoney(d.expenses_minor)],
+          csv: [d.date, csvMoney(d.sales_minor), csvMoney(tips(d)), qty(d.services), csvMoney(d.refunds_minor), csvMoney(d.expenses_minor)],
         })),
         empty: R('empty.monthly'),
       };
@@ -224,7 +235,7 @@ export function csvHeader(type: ReportData['type'], t: TFunction): string[] {
   const C = (key: string) => t(`reports.col.${key}` as 'reports.title') as string;
   switch (type) {
     case 'monthly':
-      return [C('date'), C('sales'), C('services'), C('refunds'), C('expenses')];
+      return [C('date'), C('sales'), C('tips'), C('services'), C('refunds'), C('expenses')];
     case 'staff':
       return [C('person'), C('services'), C('sales'), C('revenue'), C('commission'), C('tips'), C('daysWorked'), C('lateDays')];
     case 'closing':

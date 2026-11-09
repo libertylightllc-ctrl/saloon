@@ -15,7 +15,7 @@ describe('buildReport', () => {
           days: [
             { date: '2026-09-01', sales_minor: 10_500, sales: 1, services: 1, refunds_minor: 0, expenses_minor: 1_500 },
             { date: '2026-09-02', sales_minor: 0, sales: 0, services: 0, refunds_minor: 0, expenses_minor: 0 },
-            { date: '2026-09-03', sales_minor: 6_250, sales: 1, services: 2, refunds_minor: 2_100, expenses_minor: 0 },
+            { date: '2026-09-03', sales_minor: 5_250, tips_minor: 1_000, sales: 1, services: 2, refunds_minor: 2_100, expenses_minor: 0 },
           ],
           revenue_minor: 13_000,
           costs_minor: 1_500,
@@ -26,16 +26,18 @@ describe('buildReport', () => {
       { t, day },
     );
     expect(view.kpis.map((k) => [k.key, k.value])).toEqual([
-      ['sales', 'AED\u00a0167.50'],
+      ['sales', 'AED\u00a0157.50'],
+      ['tips', 'AED\u00a010.00'],
       ['revenue', 'AED\u00a0130.00'],
       ['costs', 'AED\u00a015.00'],
       ['result', 'AED\u00a0115.00'],
     ]);
-    expect(view.kpis[1]!.delta).toEqual({ label: '30%', trend: 'up', good: true });
+    expect(view.kpis[2]!.delta).toEqual({ label: '30%', trend: 'up', good: true });
+    expect(view.kpis[2]!.sub).toBe('reports.kpi.revenueSub:{}');
     // Lower costs are good news.
-    expect(view.kpis[2]!.delta).toEqual({ label: '25%', trend: 'down', good: true });
+    expect(view.kpis[3]!.delta).toEqual({ label: '25%', trend: 'down', good: true });
     expect(view.rows.map((r) => r.id)).toEqual(['2026-09-01', '2026-09-03']);
-    expect(view.rows[1]!.csv).toEqual(['2026-09-03', '62.50', '2', '21.00', '0.00']);
+    expect(view.rows[1]!.csv).toEqual(['2026-09-03', '52.50', '10.00', '2', '21.00', '0.00']);
     expect(view.chart.bars).toHaveLength(3);
   });
 

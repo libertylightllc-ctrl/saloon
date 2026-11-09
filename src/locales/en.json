@@ -244,7 +244,8 @@
     },
     "attentionClose": "Close",
     "viewClosing": "Cash closing",
-    "cashBelowZero": "More cash went out than came in. Count the drawer."
+    "cashBelowZero": "More cash went out than came in. Count the drawer.",
+    "tipsPart": "Tips: {{amount}}"
   },
   "queue": {
     "title": "Queue",
@@ -2291,7 +2292,8 @@
       "vatDue": "{{tax}} to pay",
       "vatRefund": "{{tax}} to get back",
       "tax2Output": "Of it, {{name}}",
-      "tax2Generic": "second tax"
+      "tax2Generic": "second tax",
+      "revenueSub": "After refunds and discounts"
     },
     "chart": {
       "salesByDay": "Sales by day",

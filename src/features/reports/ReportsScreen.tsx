@@ -114,7 +114,7 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
               <View style={styles.body}>
                 <View style={styles.kpis}>
                   {view.kpis.map((k) => (
-                    <KpiCard key={k.key} label={k.label} value={k.value} delta={k.delta} style={styles.kpi} testID={`report-kpi-${k.key}`} />
+                    <KpiCard key={k.key} label={k.label} value={k.value} sub={k.sub} delta={k.delta} style={styles.kpi} testID={`report-kpi-${k.key}`} />
                   ))}
                 </View>
                 <Suspense fallback={null}>

@@ -244,7 +244,8 @@
     },
     "attentionClose": "Cerrar",
     "viewClosing": "Cierre de caja",
-    "cashBelowZero": "Salió más efectivo del que entró. Cuenta la caja."
+    "cashBelowZero": "Salió más efectivo del que entró. Cuenta la caja.",
+    "tipsPart": "Propinas: {{amount}}"
   },
   "queue": {
     "title": "Fila",
@@ -2291,7 +2292,8 @@
       "vatDue": "{{tax}} a pagar",
       "vatRefund": "{{tax}} a recuperar",
       "tax2Output": "De ello, {{name}}",
-      "tax2Generic": "segundo impuesto"
+      "tax2Generic": "segundo impuesto",
+      "revenueSub": "Después de reembolsos y descuentos"
     },
     "chart": {
       "salesByDay": "Ventas por día",

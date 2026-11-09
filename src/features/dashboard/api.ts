@@ -9,7 +9,8 @@ export interface Dashboard {
   role: string;
   expected_cash?: number;
   expected_cash_yesterday?: number;
-  sales?: { count: number; total_minor: number; refunded_minor: number; services: number };
+  /** total_minor is without the tip; tips_minor is the day's tips (owner's app check A7). */
+  sales?: { count: number; total_minor: number; tips_minor?: number; refunded_minor: number; services: number };
   payment_mix?: { cash: number; card: number; wallet: number; deposits: number };
   revenue_7d?: { date: string; total_minor: number }[];
   top_services?: { name: string; count: number; revenue_minor: number }[];

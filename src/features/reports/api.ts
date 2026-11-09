@@ -10,7 +10,10 @@ export type ReportType = (typeof REPORT_TYPES)[number];
 
 export interface MonthlyDay {
   date: string;
+  /** Without the tip (owner's app check A7). */
   sales_minor: number;
+  /** Absent from servers before migration 85. */
+  tips_minor?: number;
   sales: number;
   services: number;
   refunds_minor: number;

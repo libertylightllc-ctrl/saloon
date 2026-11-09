@@ -244,7 +244,8 @@
     },
     "attentionClose": "Fermer",
     "viewClosing": "Clôture de caisse",
-    "cashBelowZero": "Plus d’espèces sont sorties que rentrées. Comptez le tiroir."
+    "cashBelowZero": "Plus d’espèces sont sorties que rentrées. Comptez le tiroir.",
+    "tipsPart": "Pourboires : {{amount}}"
   },
   "queue": {
     "title": "File d’attente",
@@ -2291,7 +2292,8 @@
       "vatDue": "{{tax}} à payer",
       "vatRefund": "{{tax}} à récupérer",
       "tax2Output": "Dont {{name}}",
-      "tax2Generic": "deuxième taxe"
+      "tax2Generic": "deuxième taxe",
+      "revenueSub": "Après remboursements et remises"
     },
     "chart": {
       "salesByDay": "Ventes par jour",

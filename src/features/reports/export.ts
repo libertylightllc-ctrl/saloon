@@ -21,7 +21,7 @@ export interface ReportDocContext {
 export function reportHtml(view: ReportView, ctx: ReportDocContext): string {
   const e = escapeHtml;
   const kpis = view.kpis
-    .map((k) => `<div class="kpi"><div class="muted">${e(k.label)}</div><div class="big">${e(k.value)}</div>${k.delta ? `<div class="muted">${k.delta.trend === 'up' ? '▲' : '▼'} ${e(k.delta.label)}</div>` : ''}</div>`)
+    .map((k) => `<div class="kpi"><div class="muted">${e(k.label)}</div><div class="big">${e(k.value)}</div>${k.sub ? `<div class="muted">${e(k.sub)}</div>` : ''}${k.delta ? `<div class="muted">${k.delta.trend === 'up' ? '▲' : '▼'} ${e(k.delta.label)}</div>` : ''}</div>`)
     .join('');
   const head = view.columns.map((c) => `<th class="${c.numeric ? 'num' : ''}">${e(c.label)}</th>`).join('');
   const body = view.rows

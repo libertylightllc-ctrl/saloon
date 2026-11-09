@@ -214,6 +214,7 @@ home.attention.outOfStock_many,,{{count}} صنفًا نفد مخزونها,,,,,,
 home.attentionClose,Close,إغلاق,बंद करें,بند کریں,Cerrar,Fermer,Fechar,
 home.viewClosing,Cash closing,إغلاق النقدية,कैश क्लोज़िंग,کیش کلوزنگ,Cierre de caja,Clôture de caisse,Fechamento de caixa,
 home.cashBelowZero,More cash went out than came in. Count the drawer.,خرج نقد أكثر مما دخل. عُدّ الدرج.,"जितनी नकद आई, उससे ज़्यादा गई। दराज़ गिनें।",جتنی نقد آئی، اس سے زیادہ گئی۔ دراز گنیں۔,Salió más efectivo del que entró. Cuenta la caja.,Plus d’espèces sont sorties que rentrées. Comptez le tiroir.,Saiu mais dinheiro do que entrou. Conte a gaveta.,
+home.tipsPart,Tips: {{amount}},الإكراميات: {{amount}},टिप: {{amount}},ٹپ: {{amount}},Propinas: {{amount}},Pourboires : {{amount}},Gorjetas: {{amount}},
 queue.title,Queue,الطابور,कतार,قطار,Fila,File d’attente,Fila,
 queue.new,New,جديد,नया,نیا,Nuevo,Nouveau,Novo,
 queue.guest,Guest,ضيف,मेहमान,مہمان,Invitado,Client de passage,Cliente avulso,
@@ -2180,6 +2181,7 @@ tax.second.hint,"Charged beside the first, like PST or QST in Canada. Receipts s
 validation.province,Pick your province,اختر مقاطعتك,अपना प्रांत चुनें,اپنا صوبہ منتخب کریں,Elige tu provincia,Choisissez votre province,Escolha sua província,Canada provinces and two taxes (2026-10-19); machine draft
 reports.kpi.tax2Output,"Of it, {{name}}",منها {{name}},इसमें से {{name}},اس میں سے {{name}},"De ello, {{name}}",Dont {{name}},"Dos quais, {{name}}",Canada provinces and two taxes (2026-10-19); machine draft
 reports.kpi.tax2Generic,second tax,الضريبة الثانية,दूसरा टैक्स,دوسرا ٹیکس,segundo impuesto,deuxième taxe,segundo imposto,Canada provinces and two taxes (2026-10-19); machine draft
+reports.kpi.revenueSub,After refunds and discounts,بعد المرتجعات والخصومات,रिफ़ंड और छूट के बाद,ریفنڈ اور رعایت کے بعد,Después de reembolsos y descuentos,Après remboursements et remises,Após reembolsos e descontos,
 accounts.tax2Collected,{{name}} collected (owed to the tax office),{{name}} المحصلة (مستحقة لمصلحة الضرائب),{{name}} वसूला गया (टैक्स विभाग को देय),{{name}} وصول کیا گیا (ٹیکس دفتر کو واجب الادا),{{name}} cobrado (a pagar a Hacienda),{{name}} perçue (due au fisc),{{name}} cobrado (devido ao fisco),Canada provinces and two taxes (2026-10-19); machine draft
 accounts.names.tax2_payable,Second sales tax payable,ضريبة المبيعات الثانية المستحقة,दूसरा सेल्स टैक्स देय,دوسرا سیلز ٹیکس واجب الادا,Segundo impuesto sobre ventas por pagar,Deuxième taxe de vente à payer,Segundo imposto sobre vendas a pagar,Canada provinces and two taxes (2026-10-19); machine draft
 accounts.stockDiffTitle,Stock doesn't match,المخزون غير مطابق,स्टॉक मेल नहीं खाता,اسٹاک میل نہیں کھاتا,El stock no cuadra,Le stock ne correspond pas,O stock não bate,

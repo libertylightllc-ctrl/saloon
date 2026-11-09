@@ -244,7 +244,8 @@
     },
     "attentionClose": "बंद करें",
     "viewClosing": "कैश क्लोज़िंग",
-    "cashBelowZero": "जितनी नकद आई, उससे ज़्यादा गई। दराज़ गिनें।"
+    "cashBelowZero": "जितनी नकद आई, उससे ज़्यादा गई। दराज़ गिनें।",
+    "tipsPart": "टिप: {{amount}}"
   },
   "queue": {
     "title": "कतार",
@@ -2291,7 +2292,8 @@
       "vatDue": "देय {{tax}}",
       "vatRefund": "वापस मिलने वाला {{tax}}",
       "tax2Output": "इसमें से {{name}}",
-      "tax2Generic": "दूसरा टैक्स"
+      "tax2Generic": "दूसरा टैक्स",
+      "revenueSub": "रिफ़ंड और छूट के बाद"
     },
     "chart": {
       "salesByDay": "दिन के हिसाब से बिक्री",

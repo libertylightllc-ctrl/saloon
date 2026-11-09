@@ -268,7 +268,8 @@
     },
     "attentionClose": "إغلاق",
     "viewClosing": "إغلاق النقدية",
-    "cashBelowZero": "خرج نقد أكثر مما دخل. عُدّ الدرج."
+    "cashBelowZero": "خرج نقد أكثر مما دخل. عُدّ الدرج.",
+    "tipsPart": "الإكراميات: {{amount}}"
   },
   "queue": {
     "title": "الطابور",
@@ -2343,7 +2344,8 @@
       "vatDue": "{{tax}} المستحقة",
       "vatRefund": "{{tax}} المستردة",
       "tax2Output": "منها {{name}}",
-      "tax2Generic": "الضريبة الثانية"
+      "tax2Generic": "الضريبة الثانية",
+      "revenueSub": "بعد المرتجعات والخصومات"
     },
     "chart": {
       "salesByDay": "المبيعات حسب اليوم",

@@ -99,7 +99,8 @@ test('the same checkout in Arabic (right-to-left), VAT on', async ({ page, mode 
   const r = await splitSale(page, mode, true, split);
   await expectSaleRow(owner.branchId, true, r, split);
   await tab(page, 'index');
-  await expectMoney(page, 'kpi-sales-value', r.due);
+  // Sales today leave the tip out; it is shown apart (owner's app check A7).
+  await expectMoney(page, 'kpi-sales-value', r.due - TIP);
   // The date under the greeting uses Arabic day and month names, with 0-9 digits.
   const month = ar.localize.month(Number(dubaiDate(0).slice(5, 7)) - 1 as Month, { width: 'abbreviated' });
   const day = String(Number(dubaiDate(0).slice(8)));

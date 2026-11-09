@@ -244,7 +244,8 @@
     },
     "attentionClose": "بند کریں",
     "viewClosing": "کیش کلوزنگ",
-    "cashBelowZero": "جتنی نقد آئی، اس سے زیادہ گئی۔ دراز گنیں۔"
+    "cashBelowZero": "جتنی نقد آئی، اس سے زیادہ گئی۔ دراز گنیں۔",
+    "tipsPart": "ٹپ: {{amount}}"
   },
   "queue": {
     "title": "قطار",
@@ -2291,7 +2292,8 @@
       "vatDue": "واجب الادا {{tax}}",
       "vatRefund": "واپس ملنے والا {{tax}}",
       "tax2Output": "اس میں سے {{name}}",
-      "tax2Generic": "دوسرا ٹیکس"
+      "tax2Generic": "دوسرا ٹیکس",
+      "revenueSub": "ریفنڈ اور رعایت کے بعد"
     },
     "chart": {
       "salesByDay": "دن کے حساب سے فروخت",

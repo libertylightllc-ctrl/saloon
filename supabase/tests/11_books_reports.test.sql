@@ -4,7 +4,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 -- Paid plans are tested in 14_plans; here every salon may work.
 select set_config('salon.plan_check', 'off', false);
-select plan(25);
+select plan(27);
 -- The checks below work out dates and codes with internal helpers that the app's sign-in roles cannot call (migration
 -- 33); they are allowed here, inside this test's transaction only (rolled back at the end).
 grant execute on function public.branch_today(uuid), public.branch_tz(uuid), public.business_today(uuid),
@@ -71,7 +71,12 @@ select record_expense(jsonb_build_object('branch_id', current_setting('t.br'), '
 
 -- ── Monthly business ─────────────────────────────────────────────────────────────────────
 select is((select sum((d ->> 'sales_minor')::bigint)::bigint from jsonb_array_elements(report_monthly(current_setting('t.br')::uuid,
-  current_setting('t.month')) -> 'days') d), 16750::bigint, 'monthly: the days add up to both sales (105.00 + 62.50)');
+  current_setting('t.month')) -> 'days') d), 15750::bigint, 'monthly: the days add up to both sales without the tip (105.00 + 52.50)');
+select is((select sum((d ->> 'tips_minor')::bigint)::bigint from jsonb_array_elements(report_monthly(current_setting('t.br')::uuid,
+  current_setting('t.month')) -> 'days') d), 1000::bigint, 'monthly: the tip is given apart');
+select is(array[(dashboard_today(current_setting('t.br')::uuid) -> 'sales' ->> 'total_minor')::bigint,
+                (dashboard_today(current_setting('t.br')::uuid) -> 'sales' ->> 'tips_minor')::bigint], array[15750, 1000]::bigint[],
+          'Home: sales today without the tip, the tip apart');
 select is((select sum((d ->> 'expenses_minor')::bigint)::bigint from jsonb_array_elements(report_monthly(current_setting('t.br')::uuid,
   current_setting('t.month')) -> 'days') d), 1500::bigint, 'monthly: expenses by day');
 select is((report_monthly(current_setting('t.br')::uuid, current_setting('t.month')) ->> 'revenue_minor')::bigint,

@@ -244,7 +244,8 @@
     },
     "attentionClose": "Fechar",
     "viewClosing": "Fechamento de caixa",
-    "cashBelowZero": "Saiu mais dinheiro do que entrou. Conte a gaveta."
+    "cashBelowZero": "Saiu mais dinheiro do que entrou. Conte a gaveta.",
+    "tipsPart": "Gorjetas: {{amount}}"
   },
   "queue": {
     "title": "Fila",
@@ -2291,7 +2292,8 @@
       "vatDue": "{{tax}} a pagar",
       "vatRefund": "{{tax}} a recuperar",
       "tax2Output": "Dos quais, {{name}}",
-      "tax2Generic": "segundo imposto"
+      "tax2Generic": "segundo imposto",
+      "revenueSub": "Após reembolsos e descontos"
     },
     "chart": {
       "salesByDay": "Vendas por dia",
