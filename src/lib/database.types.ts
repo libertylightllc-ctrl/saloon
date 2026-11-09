@@ -4407,6 +4407,7 @@ export type Database = {
         Returns: string;
       };
       pay_payroll_line: { Args: { p_line: string; p_method: string }; Returns: undefined };
+      payroll_changes: { Args: { p_run: string }; Returns: Json };
       pay_supplier: { Args: { p: Json }; Returns: Json };
       pay_tips: { Args: { p: Json }; Returns: Json };
       period_list: {

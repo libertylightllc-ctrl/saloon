@@ -1157,7 +1157,8 @@
     "not_enough_cash": "Não há dinheiro suficiente na gaveta para isto. Pague de outra forma ou, primeiro, adicione o dinheiro que você colocou, em Fechamento de caixa.",
     "cashInDrawer": "Dinheiro na gaveta: {{amount}}.",
     "email_unconfirmed": "Primeiro confirme seu e-mail: abra o link que enviamos.",
-    "tip_not_refunded": "É mais do que os serviços e produtos. Ligue \"Reembolsar também a gorjeta\" para reembolsar a gorjeta."
+    "tip_not_refunded": "É mais do que os serviços e produtos. Ligue \"Reembolsar também a gorjeta\" para reembolsar a gorjeta.",
+    "payroll_changed": "Esta folha mudou desde o cálculo. Calcule de novo e depois aprove."
   },
   "sales": {
     "title": "Vendas",
@@ -2022,7 +2023,13 @@
     "adjustmentSaved": "Salvo",
     "reverse": "Estornar",
     "adjustmentReversed": "Estornado",
-    "reversedBecause": "Estornado: {{reason}}"
+    "reversedBecause": "Estornado: {{reason}}",
+    "workedOutAt": "Calculado em {{date}}",
+    "changesSince_one": "1 alteração desde o cálculo. Calcule de novo antes de aprovar.",
+    "changesSince": "{{count}} alterações desde o cálculo. Calcule de novo antes de aprovar.",
+    "changedSince": "Os dados de pagamento mudaram desde o cálculo. Calcule de novo antes de aprovar.",
+    "missedNote": "A comissão das vendas após {{date}} não está incluída ({{amount}}). Pode pagá-la como bónus.",
+    "missedLine": "{{name}}: {{amount}}"
   },
   "myPay": {
     "title": "Meus ganhos",

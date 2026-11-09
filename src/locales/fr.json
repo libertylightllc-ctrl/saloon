@@ -1157,7 +1157,8 @@
     "not_enough_cash": "Il n’y a pas assez d’espèces dans le tiroir pour cela. Payez autrement, ou ajoutez d’abord les espèces que vous y avez mises, dans Clôture de caisse.",
     "cashInDrawer": "Espèces dans le tiroir : {{amount}}.",
     "email_unconfirmed": "Confirmez d'abord votre e-mail : ouvrez le lien que nous vous avons envoyé.",
-    "tip_not_refunded": "C'est plus que les prestations et produits. Activez « Rembourser aussi le pourboire » pour rembourser le pourboire."
+    "tip_not_refunded": "C'est plus que les prestations et produits. Activez « Rembourser aussi le pourboire » pour rembourser le pourboire.",
+    "payroll_changed": "Cette paie a changé depuis le calcul. Recalculez-la, puis approuvez."
   },
   "sales": {
     "title": "Ventes",
@@ -2022,7 +2023,13 @@
     "adjustmentSaved": "Enregistré",
     "reverse": "Contrepasser",
     "adjustmentReversed": "Contrepassé",
-    "reversedBecause": "Contrepassé : {{reason}}"
+    "reversedBecause": "Contrepassé : {{reason}}",
+    "workedOutAt": "Calculé le {{date}}",
+    "changesSince_one": "1 changement depuis le calcul. Recalculez avant d'approuver.",
+    "changesSince": "{{count}} changements depuis le calcul. Recalculez avant d'approuver.",
+    "changedSince": "Les données de paie ont changé depuis le calcul. Recalculez avant d'approuver.",
+    "missedNote": "La commission des ventes après le {{date}} n'est pas incluse ({{amount}}). Vous pouvez la verser en prime.",
+    "missedLine": "{{name}} : {{amount}}"
   },
   "myPay": {
     "title": "Ma paie",

@@ -1157,7 +1157,8 @@
     "not_enough_cash": "No hay suficiente efectivo en la caja para esto. Paga de otra forma o, primero, añade el efectivo que pusiste, en Cierre de caja.",
     "cashInDrawer": "Efectivo en la caja: {{amount}}.",
     "email_unconfirmed": "Primero confirma tu email: abre el enlace que te enviamos.",
-    "tip_not_refunded": "Es más que los servicios y productos. Activa \"Devolver también la propina\" para devolver la propina."
+    "tip_not_refunded": "Es más que los servicios y productos. Activa \"Devolver también la propina\" para devolver la propina.",
+    "payroll_changed": "Esta nómina cambió desde que se calculó. Vuelve a calcularla y luego apruébala."
   },
   "sales": {
     "title": "Ventas",
@@ -2022,7 +2023,13 @@
     "adjustmentSaved": "Guardado",
     "reverse": "Revertir",
     "adjustmentReversed": "Revertido",
-    "reversedBecause": "Revertido: {{reason}}"
+    "reversedBecause": "Revertido: {{reason}}",
+    "workedOutAt": "Calculado el {{date}}",
+    "changesSince_one": "1 cambio desde que se calculó. Vuelve a calcularlo antes de aprobar.",
+    "changesSince": "{{count}} cambios desde que se calculó. Vuelve a calcularlo antes de aprobar.",
+    "changedSince": "Los datos de pago cambiaron desde que se calculó. Vuelve a calcularlo antes de aprobar.",
+    "missedNote": "La comisión de las ventas posteriores al {{date}} no está incluida ({{amount}}). Puedes pagarla como bonificación.",
+    "missedLine": "{{name}}: {{amount}}"
   },
   "myPay": {
     "title": "Mi pago",

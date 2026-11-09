@@ -10,7 +10,8 @@ import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
 import { Button, Card, EmptyState, FormError, HeaderBand, ListRow, MonthSwitcher, QueryState, Screen, StatusPill, Text, useToast, type StatusKey } from '@/ui';
 
-import { useApprovePayroll, useGeneratePayroll, usePayrollRun, type Payslip, type RunStatus } from './api';
+import { useApprovePayroll, useGeneratePayroll, usePayrollChanges, usePayrollRun, type Payslip, type RunStatus } from './api';
+import { PayrollChangesNote } from './PayrollChanges';
 import { PayslipSheet, SlipRow } from './PayslipSheet';
 
 const RUN_STATUS: Record<RunStatus, StatusKey> = { generated: 'pending_approval', approved: 'due_soon', paid: 'paid' };
@@ -24,6 +25,8 @@ export function PayrollScreen() {
   const thisMonth = businessMonth(new Date(), business.timezone);
   const [month, setMonth] = useState<MonthKey>(thisMonth);
   const run = usePayrollRun(business.id, month);
+  const changes = usePayrollChanges(business.id, run.data?.id ?? null);
+  const stale = changes.data?.stale === true;
   const generate = useGeneratePayroll(business.id, branch.id);
   const approve = useApprovePayroll(business.id, branch.id);
   const [open, setOpen] = useState<Payslip | null>(null);
@@ -33,7 +36,10 @@ export function PayrollScreen() {
     <>
       <Screen
         refreshing={run.isRefetching}
-        onRefresh={() => void run.refetch()}
+        onRefresh={() => {
+          void run.refetch();
+          void changes.refetch();
+        }}
         header={
           <HeaderBand
             title={t('payroll.title')}
@@ -80,12 +86,13 @@ export function PayrollScreen() {
                   ) : (
                     <Text color="textSecondary">{t('payroll.noneYet')}</Text>
                   )}
+                  {r && changes.data ? <PayrollChangesNote changes={changes.data} timezone={business.timezone} /> : null}
                   <FormError error={generate.error ?? approve.error} />
                   {owner && (!r || r.status === 'generated') && month <= thisMonth ? (
                     <View style={styles.actions}>
                       <Button
                         label={t(r ? 'payroll.regenerate' : 'payroll.generate')}
-                        variant={r ? 'outline' : 'primary'}
+                        variant={r && !stale ? 'outline' : 'primary'}
                         size="md"
                         loading={generate.isPending}
                         onPress={() => generate.mutate(month, { onSuccess: () => toast(t('payroll.generated')) })}
@@ -95,7 +102,7 @@ export function PayrollScreen() {
                         <Button
                           label={t('payroll.approve')}
                           size="md"
-                          disabled={lines.length === 0}
+                          disabled={lines.length === 0 || stale || changes.isLoading}
                           loading={approve.isPending}
                           onPress={() => approve.mutate(r.id, { onSuccess: () => toast(t('payroll.approved')) })}
                           testID="payroll-approve"

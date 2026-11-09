@@ -1157,7 +1157,8 @@
     "not_enough_cash": "There isn’t enough cash in the drawer for this. Pay another way, or first add the cash you put in, on Cash closing.",
     "cashInDrawer": "Cash in the drawer: {{amount}}.",
     "email_unconfirmed": "Confirm your email first: open the link we sent you.",
-    "tip_not_refunded": "That is more than the services and products. Switch on \"Also refund the tip\" to refund the tip too."
+    "tip_not_refunded": "That is more than the services and products. Switch on \"Also refund the tip\" to refund the tip too.",
+    "payroll_changed": "This payroll changed since it was worked out. Work it out again, then approve."
   },
   "sales": {
     "title": "Sales",
@@ -2022,7 +2023,13 @@
     "adjustmentSaved": "Saved",
     "reverse": "Reverse",
     "adjustmentReversed": "Reversed",
-    "reversedBecause": "Reversed: {{reason}}"
+    "reversedBecause": "Reversed: {{reason}}",
+    "workedOutAt": "Worked out {{date}}",
+    "changesSince_one": "1 change since this was worked out. Work it out again before approving.",
+    "changesSince": "{{count}} changes since this was worked out. Work it out again before approving.",
+    "changedSince": "Pay details changed since this was worked out. Work it out again before approving.",
+    "missedNote": "Commission from sales after {{date}} isn't included ({{amount}}). You can pay it as a bonus.",
+    "missedLine": "{{name}}: {{amount}}"
   },
   "myPay": {
     "title": "My pay",

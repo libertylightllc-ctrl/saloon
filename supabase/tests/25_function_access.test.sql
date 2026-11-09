@@ -128,6 +128,8 @@ insert into reviewed values
     ('admin_set_billing'),
     ('admin_set_access'),
     ('admin_set_contact'),
+    -- Payroll changes since the work-out (owner's app check A1, 2026-11-09): owner or accountant checked inside.
+    ('payroll_changes'),
     -- Test salons (final brief E1, 2026-11-01): platform owner checked inside.
     ('admin_set_test_salon'),
     ('admin_test_salons'),

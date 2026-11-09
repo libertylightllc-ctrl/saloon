@@ -70,6 +70,37 @@ export function usePayrollRun(businessId: string, period: MonthKey) {
   });
 }
 
+export interface PayrollChanges {
+  generated_at: string;
+  /** The lines differ from what the month comes to now: approval is refused until it is worked out again. */
+  stale: boolean;
+  /** Sales, refunds and pay changes saved after the work-out. */
+  changes: number;
+  /** An approved month: commission on its sales saved after the work-out, by person. */
+  missed: { employee_id: string; full_name: string; commission_minor: number }[];
+  missed_minor: number;
+}
+
+/** What changed since the month was worked out (owner and accountant); looked at again each time the payroll opens. */
+export function usePayrollChanges(businessId: string, runId: string | null) {
+  return useQuery({
+    enabled: Boolean(runId),
+    queryKey: [...keys.payroll(businessId), 'changes', runId],
+    refetchOnMount: 'always',
+    queryFn: async (): Promise<PayrollChanges> => {
+      const { data, error } = await supabase.rpc('payroll_changes', { p_run: runId! });
+      if (error) throw error;
+      const c = data as unknown as PayrollChanges;
+      return {
+        ...c,
+        changes: Number(c.changes),
+        missed_minor: Number(c.missed_minor),
+        missed: (c.missed ?? []).map((m) => ({ ...m, commission_minor: Number(m.commission_minor) })),
+      };
+    },
+  });
+}
+
 export function useAdjustments(businessId: string, period: MonthKey) {
   return useQuery({
     queryKey: [...keys.payroll(businessId), 'adjustments', period],
