@@ -50,9 +50,7 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
             ? t('home.dayClosed')
             : closed === 'pending_approval'
               ? t('home.dayPending')
-              : change !== null
-                ? t('home.vsYesterday')
-                : t('home.cashSub')
+              : t('home.cashSub')
       }
       action={
         can(role, 'viewClosing') ? (
