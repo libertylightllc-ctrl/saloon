@@ -79,7 +79,8 @@ export function InventoryScreen() {
         {(rows) => {
           const active = rows.filter((i) => i.active);
           const shown = rows.filter(matches);
-          const value = sum(active.map((i) => i.value_minor ?? 0));
+          // Every item's value, archived ones too, as the books hold them (owner's app check A3).
+          const value = sum(rows.map((i) => i.value_minor ?? 0));
           return (
             <View style={styles.body}>
               <KpiGrid>

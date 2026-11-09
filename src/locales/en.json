@@ -1455,7 +1455,9 @@
       "payroll": "Payroll",
       "payroll_payment": "Salaries paid",
       "deposit_forfeit_reversal": "Deposits kept (undone)",
-      "cash_added": "Cash added"
+      "cash_added": "Cash added",
+      "stock_recost": "Stock costed again",
+      "stock_difference": "Stock differences"
     },
     "months": "Months",
     "exportLedger": "Export ledger CSV",
@@ -1491,7 +1493,13 @@
       "reopenedToast": "{{month}} is open again",
       "hint": "Only finished months can be closed. The books must balance."
     },
-    "tax2Collected": "{{name}} collected (owed to the tax office)"
+    "tax2Collected": "{{name}} collected (owed to the tax office)",
+    "stockDiffTitle": "Stock doesn't match",
+    "stockDiff": "1200 Stock in the books is {{books}}, but the stock in Inventory is worth {{stock}}: {{amount}} apart.",
+    "stockFix": "Fix the difference",
+    "stockFixConfirm": "This adds one \"Stock difference\" entry of {{amount}} so the two agree. Nothing already recorded changes.",
+    "stockFixDo": "Add the entry",
+    "stockFixed": "Stock difference fixed"
   },
   "settingUp": {
     "title": "{{name}} is being set up",

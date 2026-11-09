@@ -1455,7 +1455,9 @@
       "payroll": "पेरोल",
       "payroll_payment": "दिए गए वेतन",
       "deposit_forfeit_reversal": "रखी गई जमा राशि (वापस ली गई)",
-      "cash_added": "जोड़ी गई नकद"
+      "cash_added": "जोड़ी गई नकद",
+      "stock_recost": "स्टॉक की लागत दोबारा",
+      "stock_difference": "स्टॉक अंतर"
     },
     "months": "महीने",
     "exportLedger": "लेजर CSV निर्यात",
@@ -1491,7 +1493,13 @@
       "reopenedToast": "{{month}} फिर खुल गया",
       "hint": "सिर्फ़ पूरे हुए महीने बंद होते हैं। खाते बराबर होने चाहिए।"
     },
-    "tax2Collected": "{{name}} वसूला गया (टैक्स विभाग को देय)"
+    "tax2Collected": "{{name}} वसूला गया (टैक्स विभाग को देय)",
+    "stockDiffTitle": "स्टॉक मेल नहीं खाता",
+    "stockDiff": "खातों में 1200 स्टॉक {{books}} है, पर इन्वेंटरी में स्टॉक की कीमत {{stock}} है: {{amount}} का अंतर।",
+    "stockFix": "अंतर ठीक करें",
+    "stockFixConfirm": "इससे {{amount}} की एक \"स्टॉक अंतर\" एंट्री जुड़ेगी ताकि दोनों मेल खाएँ। पहले से दर्ज कुछ नहीं बदलेगा।",
+    "stockFixDo": "एंट्री जोड़ें",
+    "stockFixed": "स्टॉक अंतर ठीक हो गया"
   },
   "settingUp": {
     "title": "{{name}} तैयार किया जा रहा है",

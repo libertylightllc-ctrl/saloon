@@ -1489,7 +1489,9 @@
       "payroll": "الرواتب",
       "payroll_payment": "رواتب مدفوعة",
       "deposit_forfeit_reversal": "عربون محتفظ به (تم التراجع)",
-      "cash_added": "نقد مُضاف"
+      "cash_added": "نقد مُضاف",
+      "stock_recost": "إعادة تكلفة المخزون",
+      "stock_difference": "فروق المخزون"
     },
     "months": "الأشهر",
     "exportLedger": "تصدير دفتر الأستاذ CSV",
@@ -1525,7 +1527,13 @@
       "reopenedToast": "{{month}} مفتوح مجددًا",
       "hint": "تُغلق الأشهر المنتهية فقط، ويجب أن تكون الدفاتر متوازنة."
     },
-    "tax2Collected": "{{name}} المحصلة (مستحقة لمصلحة الضرائب)"
+    "tax2Collected": "{{name}} المحصلة (مستحقة لمصلحة الضرائب)",
+    "stockDiffTitle": "المخزون غير مطابق",
+    "stockDiff": "رصيد 1200 المخزون في الدفاتر {{books}}، لكن قيمة المخزون في صفحة المخزون {{stock}}: الفرق {{amount}}.",
+    "stockFix": "تصحيح الفرق",
+    "stockFixConfirm": "سيُضاف قيد واحد \"فرق المخزون\" بقيمة {{amount}} ليتطابق الرقمان. لن يتغير أي شيء مسجّل.",
+    "stockFixDo": "إضافة القيد",
+    "stockFixed": "تم تصحيح فرق المخزون"
   },
   "settingUp": {
     "title": "يجري إعداد {{name}}",

@@ -1,5 +1,5 @@
 /** The owner's books: read-only views of the ledger and the history (owner and accountant). */
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { keys } from '@/features/live/useLiveSync';
 import type { BusinessDate } from '@/lib/dates';
@@ -28,6 +28,40 @@ export function useAccountTotals(businessId: string, from: BusinessDate | null, 
       if (error) throw error;
       return (data ?? []).map((r) => ({ ...r, debit_minor: Number(r.debit_minor), credit_minor: Number(r.credit_minor) }));
     },
+  });
+}
+
+export interface StockCheck {
+  /** The stock's value: every branch and item (archived ones too), below zero counted below zero. */
+  stock_minor: number;
+  /** 1200 Stock in the books. */
+  books_minor: number;
+  difference_minor: number;
+}
+
+/** Do the books' stock and the stock's own value agree (owner's app check A3)? Owner and accountant. */
+export function useStockCheck(businessId: string) {
+  return useQuery({
+    queryKey: ['accounts', businessId, 'stock-check'],
+    queryFn: async (): Promise<StockCheck> => {
+      const { data, error } = await supabase.rpc('stock_books_check', { p_business: businessId });
+      if (error) throw error;
+      const c = data as unknown as StockCheck;
+      return { stock_minor: Number(c.stock_minor), books_minor: Number(c.books_minor), difference_minor: Number(c.difference_minor) };
+    },
+  });
+}
+
+/** One "Stock difference" entry for what is left between the two; nothing recorded changes. */
+export function useFixStockDifference(businessId: string) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.rpc('fix_stock_difference', { p_business: businessId });
+      if (error) throw error;
+      return Number(data);
+    },
+    onSuccess: () => void client.invalidateQueries({ queryKey: ['accounts', businessId] }),
   });
 }
 

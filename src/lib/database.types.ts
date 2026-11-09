@@ -4408,6 +4408,8 @@ export type Database = {
       };
       pay_payroll_line: { Args: { p_line: string; p_method: string }; Returns: undefined };
       payroll_changes: { Args: { p_run: string }; Returns: Json };
+      stock_books_check: { Args: { p_business: string }; Returns: Json };
+      fix_stock_difference: { Args: { p_business: string }; Returns: number };
       pay_supplier: { Args: { p: Json }; Returns: Json };
       pay_tips: { Args: { p: Json }; Returns: Json };
       period_list: {

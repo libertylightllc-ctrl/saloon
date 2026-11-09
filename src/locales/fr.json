@@ -1455,7 +1455,9 @@
       "payroll": "Paie",
       "payroll_payment": "Salaires versés",
       "deposit_forfeit_reversal": "Acomptes conservés (annulé)",
-      "cash_added": "Espèces ajoutées"
+      "cash_added": "Espèces ajoutées",
+      "stock_recost": "Stock recalculé",
+      "stock_difference": "Écarts de stock"
     },
     "months": "Mois",
     "exportLedger": "Exporter le grand livre en CSV",
@@ -1491,7 +1493,13 @@
       "reopenedToast": "{{month}} est rouvert",
       "hint": "Seuls les mois terminés peuvent être clôturés. Les comptes doivent être équilibrés."
     },
-    "tax2Collected": "{{name}} perçue (due au fisc)"
+    "tax2Collected": "{{name}} perçue (due au fisc)",
+    "stockDiffTitle": "Le stock ne correspond pas",
+    "stockDiff": "1200 Stock dans les comptes est de {{books}}, mais le stock dans l'inventaire vaut {{stock}} : {{amount}} d'écart.",
+    "stockFix": "Corriger l'écart",
+    "stockFixConfirm": "Cela ajoute une écriture « Écart de stock » de {{amount}} pour que les deux correspondent. Rien de déjà enregistré ne change.",
+    "stockFixDo": "Ajouter l'écriture",
+    "stockFixed": "Écart de stock corrigé"
   },
   "settingUp": {
     "title": "{{name}} est en cours de configuration",

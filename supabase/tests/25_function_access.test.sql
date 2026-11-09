@@ -130,6 +130,9 @@ insert into reviewed values
     ('admin_set_contact'),
     -- Payroll changes since the work-out (owner's app check A1, 2026-11-09): owner or accountant checked inside.
     ('payroll_changes'),
+    -- Stock value against the books (owner's app check A3, 2026-11-09): owner or accountant checked inside.
+    ('stock_books_check'),
+    ('fix_stock_difference'),
     -- Test salons (final brief E1, 2026-11-01): platform owner checked inside.
     ('admin_set_test_salon'),
     ('admin_test_salons'),

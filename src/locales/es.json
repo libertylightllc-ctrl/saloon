@@ -1455,7 +1455,9 @@
       "payroll": "Nómina",
       "payroll_payment": "Sueldos pagados",
       "deposit_forfeit_reversal": "Anticipos retenidos (deshecho)",
-      "cash_added": "Efectivo añadido"
+      "cash_added": "Efectivo añadido",
+      "stock_recost": "Stock recosteado",
+      "stock_difference": "Diferencias de stock"
     },
     "months": "Meses",
     "exportLedger": "Exportar libro mayor en CSV",
@@ -1491,7 +1493,13 @@
       "reopenedToast": "{{month}} está abierto de nuevo",
       "hint": "Solo se pueden cerrar los meses terminados. Los libros deben cuadrar."
     },
-    "tax2Collected": "{{name}} cobrado (a pagar a Hacienda)"
+    "tax2Collected": "{{name}} cobrado (a pagar a Hacienda)",
+    "stockDiffTitle": "El stock no cuadra",
+    "stockDiff": "1200 Stock en los libros es {{books}}, pero el stock en Inventario vale {{stock}}: {{amount}} de diferencia.",
+    "stockFix": "Corregir la diferencia",
+    "stockFixConfirm": "Esto añade un asiento \"Diferencia de stock\" de {{amount}} para que cuadren. Nada de lo registrado cambia.",
+    "stockFixDo": "Añadir el asiento",
+    "stockFixed": "Diferencia de stock corregida"
   },
   "settingUp": {
     "title": "{{name}} se está configurando",

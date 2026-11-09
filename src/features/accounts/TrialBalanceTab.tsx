@@ -7,6 +7,7 @@ import { spacing, useTheme } from '@/theme';
 import { Card, QueryState, StatusPill, Text } from '@/ui';
 
 import { useAccountTotals } from './api';
+import { StockCheckNote } from './StockCheck';
 import { useLedgerLabels } from './labels';
 
 /** Every account with a balance, debit or credit side, and the check that both sides agree. */
@@ -36,6 +37,7 @@ export function TrialBalanceTab() {
         const balanced = debits === credits;
         return (
           <View style={styles.body}>
+            <StockCheckNote />
             <View style={styles.head}>
               <StatusPill tone={balanced ? 'success' : 'error'} label={t(balanced ? 'accounts.balancedYes' : 'accounts.balancedNo')} />
               <Text variant="small" color="textSecondary" style={styles.flex}>

@@ -1455,7 +1455,9 @@
       "payroll": "Folha de pagamento",
       "payroll_payment": "Salários pagos",
       "deposit_forfeit_reversal": "Sinais retidos (desfeito)",
-      "cash_added": "Dinheiro adicionado"
+      "cash_added": "Dinheiro adicionado",
+      "stock_recost": "Stock recusteado",
+      "stock_difference": "Diferenças de stock"
     },
     "months": "Meses",
     "exportLedger": "Exportar razão em CSV",
@@ -1491,7 +1493,13 @@
       "reopenedToast": "{{month}} está aberto de novo",
       "hint": "Só meses já encerrados podem ser fechados. Os livros precisam estar equilibrados."
     },
-    "tax2Collected": "{{name}} cobrado (devido ao fisco)"
+    "tax2Collected": "{{name}} cobrado (devido ao fisco)",
+    "stockDiffTitle": "O stock não bate",
+    "stockDiff": "1200 Stock nos livros é {{books}}, mas o stock no Inventário vale {{stock}}: {{amount}} de diferença.",
+    "stockFix": "Corrigir a diferença",
+    "stockFixConfirm": "Isto adiciona um lançamento \"Diferença de stock\" de {{amount}} para que os dois batam. Nada do que já foi registado muda.",
+    "stockFixDo": "Adicionar o lançamento",
+    "stockFixed": "Diferença de stock corrigida"
   },
   "settingUp": {
     "title": "Estamos configurando {{name}}",
