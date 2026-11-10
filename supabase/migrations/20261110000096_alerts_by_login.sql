@@ -337,7 +337,10 @@ begin
     new.requested_name || case when new.approved_by is distinct from new.requested_by
                                then ' · approved by ' || new.approved_name else '' end
     || coalesce(' · ' || new.reason, ''),
-    coalesce(new.ref_type, 'approval'), coalesce(new.ref_id, new.id),
+    -- A refund opens its sale; anything else opens what it was for, or the Approvals list.
+    case when new.ref_type = 'refund' then 'sale' else coalesce(new.ref_type, 'approval') end,
+    case when new.ref_type = 'refund' then (select sale_id from refunds where id = new.ref_id)
+         else coalesce(new.ref_id, new.id) end,
     jsonb_build_object('action', new.action, 'amount', new.amount, 'limit', new.limit_amount,
                        'by', new.requested_name, 'approved_by', new.approved_name, 'reason', new.reason),
     'approval:' || new.id);

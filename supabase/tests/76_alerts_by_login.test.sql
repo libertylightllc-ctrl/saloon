@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(74);
+select plan(75);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -284,6 +284,8 @@ select is((select title || ' · ' || body from notifications where member_id = c
   'a 25% discount on Mona''s PIN: the owner is told, with the limit it went over');
 select is((select title || ' · ' || body from notifications where member_id = current_setting('t.ma0')::uuid
            and type = 'refund_made'), 'Refund AED 10.00 · Mona · Client unhappy', 'a refund by the manager: the owner is told');
+select is((select entity_type || ':' || entity_id from notifications where member_id = current_setting('t.ma0')::uuid
+           and type = 'refund_made'), 'sale:' || current_setting('t.s1'), 'and the alert opens the sale');
 select is(pg_temp.n('b1', 'refund_made') + pg_temp.n('b4', 'refund_made') + pg_temp.n('b1', 'discount_over_limit')
           + pg_temp.n('b2', 'discount_over_limit'), 0, 'nobody else');
 select pg_temp.as_user('a0');
