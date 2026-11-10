@@ -69,3 +69,47 @@ export function useApproveWithPin(branchId: string) {
     },
   });
 }
+
+/** A line of Reports → Approvals: a PIN approval that was used, or a manager's or the owner's own action with a reason. */
+export interface ApprovalLogRow {
+  id: string;
+  action: ApprovalAction;
+  method: 'pin' | 'reason';
+  /** A discount in basis points; money in minor units. */
+  amount: number | null;
+  limit_amount: number | null;
+  reason: string | null;
+  requested_name: string;
+  approved_name: string;
+  ref_type: string | null;
+  ref_id: string | null;
+  details: Record<string, unknown>;
+  created_at: string;
+}
+
+/** The branch's approvals in [from, to), newest first (owner, and managers of the branch). */
+export function useApprovalLog(branchId: string, from: Date, to: Date) {
+  return useQuery({
+    queryKey: ['approval-log', branchId, from.toISOString()],
+    queryFn: async (): Promise<ApprovalLogRow[]> => {
+      const { data, error } = await supabase
+        .from('approvals')
+        .select('id, action, method, amount, limit_amount, reason, requested_name, approved_name, ref_type, ref_id, details, created_at')
+        .eq('branch_id', branchId)
+        .not('used_at', 'is', null)
+        .gte('created_at', from.toISOString())
+        .lt('created_at', to.toISOString())
+        .order('created_at', { ascending: false })
+        .limit(500);
+      if (error) throw error;
+      return (data ?? []).map((r) => ({
+        ...r,
+        action: r.action as ApprovalAction,
+        method: r.method as ApprovalLogRow['method'],
+        amount: r.amount === null ? null : Number(r.amount),
+        limit_amount: r.limit_amount === null ? null : Number(r.limit_amount),
+        details: (r.details ?? {}) as Record<string, unknown>,
+      }));
+    },
+  });
+}

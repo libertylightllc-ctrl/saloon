@@ -504,7 +504,9 @@
       "suppliersBills": "Fornecedores e contas",
       "payroll": "Folha de pagamento",
       "hygiene": "Registro de higiene",
-      "myClients": "Meus clientes"
+      "myClients": "Meus clientes",
+      "approvals": "Aprovações",
+      "myReport": "Minhas vendas e comissão"
     },
     "logOut": "Sair",
     "title": "Mais",
@@ -1561,14 +1563,15 @@
       "reopen": "Reabrir",
       "closeTitle": "Fechar {{month}}?",
       "reopenTitle": "Reabrir {{month}}",
-      "closeBody": "Depois de fechado, nada pode ser lançado neste mês: nenhuma venda, custo ou correção com data nele. Você pode reabri-lo depois, informando um motivo.",
+      "closeBody": "Depois de fechado, nada pode ser lançado neste mês: nem vendas, nem custos, nem correções com essa data. O dono pode reabri-lo depois, com um motivo.",
       "reopenBody": "Reabrir permite fazer lançamentos neste mês de novo. O motivo fica guardado no histórico.",
       "reason": "Motivo",
       "confirmClose": "Fechar o mês",
       "confirmReopen": "Reabrir o mês",
       "closedToast": "{{month}} está fechado",
       "reopenedToast": "{{month}} está aberto de novo",
-      "hint": "Só meses já encerrados podem ser fechados. Os livros precisam estar equilibrados."
+      "hint": "Só meses já encerrados podem ser fechados. Os livros precisam estar equilibrados.",
+      "ownerReopens": "Só o dono pode reabrir um mês fechado."
     },
     "tax2Collected": "{{name}} cobrado (devido ao fisco)",
     "stockDiffTitle": "O stock não bate",
@@ -2370,7 +2373,8 @@
       "stock": "Movimentação de estoque",
       "shortages": "Faltas de caixa",
       "customers": "Lista de clientes",
-      "vat": "{{tax}}"
+      "vat": "{{tax}}",
+      "no_shows": "Faltas"
     },
     "kpi": {
       "sales": "Vendas",
@@ -2398,7 +2402,11 @@
       "vatRefund": "{{tax}} a recuperar",
       "tax2Output": "Dos quais, {{name}}",
       "tax2Generic": "segundo imposto",
-      "revenueSub": "Após reembolsos e descontos"
+      "revenueSub": "Após reembolsos e descontos",
+      "noShows": "Faltas",
+      "depositsKept": "Sinais retidos",
+      "depositsKeptSub": "{{count}} sinais retidos",
+      "depositsKeptSub_one": "1 sinal retido"
     },
     "chart": {
       "salesByDay": "Vendas por dia",
@@ -2406,7 +2414,8 @@
       "differenceByDay": "Diferença de caixa por dia",
       "valueByItem": "Valor do estoque por item",
       "topCustomers": "Melhores clientes do mês",
-      "vatByKind": "{{tax}} por tipo"
+      "vatByKind": "{{tax}} por tipo",
+      "noShowsByDay": "Faltas por dia"
     },
     "col": {
       "date": "Data",
@@ -2447,7 +2456,9 @@
       "entries": "Lançamentos",
       "taxable": "Valor sem {{tax}}",
       "vat": "{{tax}}",
-      "revenueNet": "Receita após reembolsos"
+      "revenueNet": "Receita após reembolsos",
+      "deposit": "Sinal",
+      "depositStatus": "Situação do sinal"
     },
     "status": {
       "open": "Não fechado",
@@ -2462,7 +2473,8 @@
       "stock": "Nenhum item de estoque ainda.",
       "shortages": "Nenhuma diferença de caixa neste mês.",
       "customers": "Nenhum cliente ainda.",
-      "vat": "Nenhum {{tax}} neste mês. O {{tax}} é registrado quando a filial é contribuinte (Configurações da filial)."
+      "vat": "Nenhum {{tax}} neste mês. O {{tax}} é registrado quando a filial é contribuinte (Configurações da filial).",
+      "noShows": "Nenhuma falta neste mês."
     },
     "daysLate": "{{days}} dias · {{late}} com atraso",
     "print": "Imprimir",
@@ -2487,7 +2499,14 @@
       "purchases": "Contas de fornecedores ({{tax}} de entrada)",
       "expenses": "Despesas ({{tax}} de entrada)"
     },
-    "vsMonth": "{{pct}} vs. {{month}}"
+    "vsMonth": "{{pct}} vs. {{month}}",
+    "depositStatus": {
+      "none": "Sem sinal",
+      "held": "Retido",
+      "applied": "Usado na conta",
+      "forfeited": "Retido",
+      "refunded": "Devolvido"
+    }
   },
   "backup": {
     "title": "Backup e recuperação",
@@ -3600,5 +3619,23 @@
     "priced": "Entrega com preço: conta {{number}}",
     "afterPricing": "Salvar transforma em conta do fornecedor (a pagar; pague pela conta) e coloca no estoque.",
     "savePrices": "Salvar conta · {{amount}}"
+  },
+  "approvalLog": {
+    "title": "Aprovações",
+    "subtitle": "Aprovações com PIN e ações acima do limite, com nomes e motivos",
+    "empty": "Nenhuma aprovação neste mês.",
+    "count": "{{count}} aprovações",
+    "count_one": "1 aprovação",
+    "discount": "Desconto {{pct}}",
+    "refund": "Reembolso {{amount}}",
+    "depositRefund": "Sinal devolvido {{amount}}",
+    "clockOther": "Ponto batido para outra pessoa",
+    "byPin": "Pedido por {{asked}} · aprovado por {{approved}} com o PIN",
+    "byReason": "Por {{name}}, com motivo",
+    "reason": "Motivo: {{reason}}",
+    "method": {
+      "pin": "PIN",
+      "reason": "Motivo"
+    }
   }
 }

@@ -13,7 +13,8 @@ import { BottomSheet, Button, EmptyState, FormError, HeaderBand, ListRow, QueryS
 
 import { ledgerRows, usePeriodAction, usePeriods, type Period } from './periods';
 
-/** Close month: lock a finished month so nothing more can be posted into it; reopen with a reason. */
+/** Close month (owner, accountant): lock a finished month so nothing more can be posted into it; the owner reopens one
+ * with a reason. */
 export function ClosePeriodScreen() {
   const { t } = useTranslation();
   const toast = useToast();
@@ -21,7 +22,8 @@ export function ClosePeriodScreen() {
   const { business, role } = useWorkspace();
   const periods = usePeriods(business.id);
   const action = usePeriodAction(business.id);
-  const owner = can(role, 'closePeriod');
+  const closes = can(role, 'closePeriod');
+  const reopens = can(role, 'reopenPeriod');
   const thisMonth = businessMonth(new Date(), business.timezone);
   const [open, setOpen] = useState<{ period: Period; action: 'close' | 'reopen' } | null>(null);
   const [reason, setReason] = useState('');
@@ -79,7 +81,7 @@ export function ClosePeriodScreen() {
                       ]}
                       badges={<StatusPill status={p.status === 'closed' ? 'paid' : 'due_soon'} label={t(`accounts.period.status.${p.status}`)} />}
                       trailing={
-                        owner && (p.status === 'closed' || finished) ? (
+                        (p.status === 'closed' ? reopens : closes && finished) ? (
                           <Button
                             label={t(p.status === 'closed' ? 'accounts.period.reopen' : 'accounts.period.close')}
                             variant={p.status === 'closed' ? 'outline' : 'row'}
@@ -100,6 +102,11 @@ export function ClosePeriodScreen() {
                 <Text variant="small" color="textSecondary">
                   {t('accounts.period.hint')}
                 </Text>
+                {closes && !reopens ? (
+                  <Text variant="small" color="textSecondary" testID="period-owner-reopens">
+                    {t('accounts.period.ownerReopens')}
+                  </Text>
+                ) : null}
               </View>
             )}
           </QueryState>

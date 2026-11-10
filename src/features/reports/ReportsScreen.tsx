@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { lazy, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
@@ -11,9 +11,9 @@ import { fileSlug, printHtml, shareCsv, sharePdf } from '@/lib/exportFile';
 import { isLanguage, isRtlLanguage, taxDisplayName } from '@/lib/i18n';
 import { useDates } from '@/lib/useDates';
 import { semantic, spacing, useTheme } from '@/theme';
-import { Button, FormError, HeaderBand, KpiCard, MonthSwitcher, PillTabs, QueryState, Screen } from '@/ui';
+import { Button, FormError, HeaderBand, KpiCard, ListRow, MonthSwitcher, PillTabs, QueryState, Screen } from '@/ui';
 
-import { REPORT_TYPES, useOwnerControl, useReport, type ReportType } from './api';
+import { reportTypesFor, useOwnerControl, useReport, type ReportType } from './api';
 import { ControlLine, useControlWords } from './ControlLine';
 import { buildReport, csvHeader, type ReportView } from './definitions';
 import { reportCsv, reportHtml } from './export';
@@ -22,19 +22,23 @@ import { ReportTable } from './ReportTable';
 /** The chart library loads with the first report, not with the website (brief 4.4). */
 const ReportChart = lazy(() => import('./ReportChart').then((m) => ({ default: m.ReportChart })));
 
-/** Reports (owner and accountant): pick a report and a month; summary, chart, table; print, PDF and CSV. */
+/**
+ * Reports: pick a report and a month; summary, chart, table; print, PDF and CSV. Each login type has its own list
+ * (reportTypesFor); owner and manager also reach the Approvals list from here.
+ */
 export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const dates = useDates();
   const { business, branch, role } = useWorkspace();
+  const router = useRouter();
   const params = useLocalSearchParams<{ type?: string }>();
-  const [type, setType] = useState<ReportType>(
-    REPORT_TYPES.includes(params.type as ReportType) ? (params.type as ReportType) : 'monthly',
-  );
+  const types = reportTypesFor(role);
+  const [type, setType] = useState<ReportType>(types.includes(params.type as ReportType) ? (params.type as ReportType) : types[0]!);
   const [month, setMonth] = useState<MonthKey>(businessMonth(new Date(), business.timezone));
   const report = useReport(type, business.id, branch.id, month);
-  const control = useOwnerControl(branch.id);
+  const seesControl = role === 'owner' || role === 'accountant';
+  const control = useOwnerControl(branch.id, seesControl);
   const controlWords = useControlWords();
   const view = useMemo<ReportView | null>(
     () => (report.data && report.data.type === type ? buildReport(report.data, { t, day: dates.day, tax2Name: branch.tax2_name && taxDisplayName(branch.tax2_name) }) : null),
@@ -50,7 +54,7 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
       branchName: branch.name,
       title,
       period,
-      control: control.data ? controlWords(control.data) : [],
+      control: seesControl && control.data ? controlWords(control.data) : [],
       generated: t('reports.generated', { at: dates.at(new Date(), business.timezone, 'd MMM yyyy HH:mm') }),
       rtl: isLanguage(i18n.language) && isRtlLanguage(i18n.language),
       ink: theme.colors.text,
@@ -73,12 +77,14 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
       }}
       header={
         <HeaderBand title={t('reports.title')} subtitle={t('reports.subtitle')} onBack={asTab ? undefined : true}>
-          <PillTabs<ReportType>
-            items={REPORT_TYPES.map((key) => ({ key, label: t(`reports.types.${key}`) }))}
-            value={type}
-            onChange={setType}
-            testID="report-type"
-          />
+          {types.length > 1 ? (
+            <PillTabs<ReportType>
+              items={types.map((key) => ({ key, label: t(`reports.types.${key}`) }))}
+              value={type}
+              onChange={setType}
+              testID="report-type"
+            />
+          ) : null}
           <MonthSwitcher value={month} onChange={setMonth} />
         </HeaderBand>
       }
@@ -111,7 +117,16 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
     >
       <View style={styles.body}>
         <FormError error={pdf.error ?? print.error ?? csv.error} />
-        <ControlLine query={control} />
+        {seesControl ? <ControlLine query={control} /> : null}
+        {can(role, 'viewApprovals') ? (
+          <ListRow
+            title={t('approvalLog.title')}
+            meta={[t('approvalLog.subtitle')]}
+            chevron
+            onPress={() => router.push('/approvals')}
+            testID="reports-approvals"
+          />
+        ) : null}
         <QueryState query={report}>
           {() =>
             view ? (

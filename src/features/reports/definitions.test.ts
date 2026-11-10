@@ -116,6 +116,51 @@ describe('buildReport', () => {
     expect(refund.kpis[2]).toMatchObject({ label: 'reports.kpi.vatRefund:{}', value: 'AED\u00a02.25' });
   });
 
+  it('monthly for a manager: sales and tips, no revenue, costs or result (the server leaves them out)', () => {
+    const view = buildReport(
+      {
+        type: 'monthly',
+        data: {
+          month: '2026-11',
+          days: [{ date: '2026-11-02', sales_minor: 8_000, tips_minor: 500, sales: 2, services: 2, refunds_minor: 0, expenses_minor: 0 }],
+          revenue_minor: null,
+          costs_minor: null,
+          prev_revenue_minor: null,
+          prev_costs_minor: null,
+        },
+      },
+      { t, day },
+    );
+    expect(view.kpis.map((k) => k.key)).toEqual(['sales', 'tips']);
+    expect(view.rows).toHaveLength(1);
+  });
+
+  it('no-shows: counts them, totals the deposits kept, lists each with its deposit', () => {
+    const row = (id: string, date: string, deposit: number, status: 'none' | 'forfeited' | 'refunded') => ({
+      appointment_id: id,
+      business_date: date,
+      scheduled_at: `${date}T10:00:00Z`,
+      customer_name: 'Walk-in',
+      staff_name: 'Sami',
+      services: 'Haircut',
+      deposit_minor: deposit,
+      deposit_status: status,
+    });
+    const view = buildReport(
+      { type: 'no_shows', data: [row('a', '2026-11-02', 0, 'none'), row('b', '2026-11-02', 2_000, 'forfeited'), row('c', '2026-11-05', 1_000, 'refunded')] },
+      { t, day },
+    );
+    expect(view.kpis.map((k) => [k.key, k.value])).toEqual([
+      ['count', '3'],
+      ['kept', 'AED\u00a020.00'],
+    ]);
+    expect(view.chart.bars.map((b) => b.value)).toEqual([2, 1]);
+    expect(view.rows[0]!.cells[4]).toBe('—');
+    expect(view.rows[1]!.cells[4]).toBe('AED\u00a020.00 · reports.depositStatus.forfeited:{}');
+    expect(view.rows[2]!.csv).toEqual(['2026-11-05', 'Walk-in', 'Sami', 'Haircut', '10.00', 'refunded']);
+    expect(csvHeader('no_shows', t)).toHaveLength(6);
+  });
+
   it('vat with a second tax (British Columbia: GST + PST): how much of the output is the PST', () => {
     const view = buildReport(
       {

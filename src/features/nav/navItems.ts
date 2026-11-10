@@ -67,7 +67,7 @@ export function useTabItems(): Record<TabKey, { icon: IconName; label: string }>
 }
 
 /** A row's words, by login type where the brief names the page differently (B8). */
-type RowLabel = `more.rows.${'myClients' | 'services' | 'inventory' | 'stock' | 'sales' | 'mySales' | 'expenses' | 'pettyCash' | 'purchases' | 'suppliersBills' | 'cashClosing' | 'accounts' | 'reports' | 'staff' | 'attendance' | 'payroll' | 'compliance' | 'hygiene' | 'branch' | 'branches' | 'backup' | 'plan' | 'admin'}`;
+type RowLabel = `more.rows.${'myClients' | 'services' | 'inventory' | 'stock' | 'sales' | 'mySales' | 'expenses' | 'pettyCash' | 'purchases' | 'suppliersBills' | 'cashClosing' | 'accounts' | 'reports' | 'myReport' | 'approvals' | 'staff' | 'attendance' | 'payroll' | 'compliance' | 'hygiene' | 'branch' | 'branches' | 'backup' | 'plan' | 'admin'}`;
 
 /** The business pages this person may open, in More's order, with the section the sidebar shows them in. */
 export function useBusinessRows() {
@@ -87,7 +87,9 @@ export function useBusinessRows() {
     { key: 'cashClosing', icon: 'banknote', href: '/cash-closing', show: can(role, 'viewClosing'), section: 'money', label: 'more.rows.cashClosing' },
     { key: 'accounts', icon: 'calculator', href: '/accounts', show: can(role, 'viewAccounting'), section: 'money', label: 'more.rows.accounts' },
     { key: 'payroll', icon: 'wallet', href: '/payroll', show: can(role, 'runPayroll'), section: 'money', label: 'more.rows.payroll' },
-    { key: 'reports', icon: 'chart', href: '/reports', show: can(role, 'viewReports') && role !== 'staff', section: 'business', label: 'more.rows.reports' },
+    // A stylist's Reports is their own line of staff sales and commission.
+    { key: role === 'staff' ? 'myReport' : 'reports', icon: 'chart', href: '/reports', show: can(role, 'viewReports'), section: 'business', label: role === 'staff' ? 'more.rows.myReport' : 'more.rows.reports' },
+    { key: 'approvals', icon: 'lock', href: '/approvals', show: can(role, 'viewApprovals'), section: 'business', label: 'more.rows.approvals' },
     { key: 'staff', icon: 'users', href: '/staff', show: can(role, 'viewStaff'), section: 'business', label: 'more.rows.staff' },
     { key: 'attendance', icon: 'clock', href: '/attendance', show: can(role, 'viewAttendance'), section: 'business', label: 'more.rows.attendance' },
     { key: 'compliance', icon: 'shield', href: '/compliance', show: can(role, 'viewCompliance'), section: 'business', label: 'more.rows.compliance' },

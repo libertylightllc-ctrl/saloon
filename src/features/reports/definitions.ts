@@ -62,8 +62,6 @@ export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): 
   switch (report.type) {
     case 'monthly': {
       const r = report.data;
-      const result = r.revenue_minor - r.costs_minor;
-      const prevResult = r.prev_revenue_minor - r.prev_costs_minor;
       const active = r.days.filter((d) => d.sales || d.refunds_minor || d.expenses_minor);
       const tips = (d: (typeof r.days)[number]) => d.tips_minor ?? 0;
       const vs = (pct: string) => R('vsMonth', { pct, month: day(`${shiftMonth(r.month, -1)}-01`, 'MMM') });
@@ -72,15 +70,8 @@ export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): 
         kpis: [
           { key: 'sales', label: R('kpi.sales'), value: formatMoney(sum(r.days.map((d) => d.sales_minor))) },
           { key: 'tips', label: R('kpi.tips'), value: formatMoney(sum(r.days.map(tips))) },
-          {
-            key: 'revenue',
-            label: R('kpi.revenue'),
-            value: formatMoney(r.revenue_minor),
-            sub: R('kpi.revenueSub'),
-            delta: change(r.revenue_minor, r.prev_revenue_minor, true, vs),
-          },
-          { key: 'costs', label: R('kpi.costs'), value: formatMoney(r.costs_minor), delta: change(r.costs_minor, r.prev_costs_minor, false, vs) },
-          { key: 'result', label: R('kpi.result'), value: formatMoney(result), delta: change(result, prevResult, true, vs) },
+          // The books' revenue, costs and result: not for a manager (the server leaves them out).
+          ...(r.revenue_minor === null ? [] : booksKpis(r.revenue_minor, r.costs_minor ?? 0, r.prev_revenue_minor ?? 0, r.prev_costs_minor ?? 0, R, vs)),
         ],
         chart: { title: R('chart.salesByDay'), money: true, bars: r.days.map((d) => ({ label: day(d.date, 'd'), value: d.sales_minor })) },
         columns: [{ label: R('col.date') }, { label: R('col.sales'), numeric: true }, { label: R('col.tips'), numeric: true }, { label: R('col.services'), numeric: true }, { label: R('col.refunds'), numeric: true }, { label: R('col.expenses'), numeric: true }],
@@ -177,6 +168,31 @@ export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): 
         empty: R('empty.shortages'),
       };
     }
+    case 'no_shows': {
+      const rows = report.data;
+      const kept = rows.filter((r) => r.deposit_status === 'forfeited');
+      return {
+        kpis: [
+          { key: 'count', label: R('kpi.noShows'), value: String(rows.length) },
+          { key: 'kept', label: R('kpi.depositsKept'), value: formatMoney(sum(kept.map((r) => r.deposit_minor))), sub: R('kpi.depositsKeptSub', { count: kept.length }) },
+        ],
+        chart: { title: R('chart.noShowsByDay'), money: false, bars: countByDay(rows.map((r) => r.business_date)).map(([d, n]) => ({ label: day(d, 'd MMM'), value: n })) },
+        columns: [{ label: R('col.date') }, { label: R('col.customer') }, { label: R('col.person') }, { label: R('col.services') }, { label: R('col.deposit'), numeric: true }],
+        rows: rows.map((r) => ({
+          id: r.appointment_id,
+          cells: [
+            day(r.business_date, 'EEE d MMM'),
+            r.customer_name ?? '—',
+            r.staff_name ?? '—',
+            r.services ?? '—',
+            r.deposit_minor ? `${formatMoney(r.deposit_minor)} · ${R(`depositStatus.${r.deposit_status}`)}` : '—',
+          ],
+          csv: [r.business_date, r.customer_name, r.staff_name, r.services, csvMoney(r.deposit_minor), r.deposit_status],
+          tone: 'warning',
+        })),
+        empty: R('empty.noShows'),
+      };
+    }
     case 'customers': {
       const rows = report.data;
       const month = rows.filter((r) => r.month_visits > 0);
@@ -203,6 +219,30 @@ export function buildReport(report: ReportData, { t, day, tax2Name }: Helpers): 
     case 'vat':
       return vatReport(report.data, R, tax2Name);
   }
+}
+
+/** Revenue (after refunds and discounts), costs and the result, each against last month. */
+function booksKpis(
+  revenue: number,
+  costs: number,
+  prevRevenue: number,
+  prevCosts: number,
+  R: (key: string, values?: Record<string, unknown>) => string,
+  vs: (pct: string) => string,
+): ReportKpi[] {
+  const result = revenue - costs;
+  return [
+    { key: 'revenue', label: R('kpi.revenue'), value: formatMoney(revenue), sub: R('kpi.revenueSub'), delta: change(revenue, prevRevenue, true, vs) },
+    { key: 'costs', label: R('kpi.costs'), value: formatMoney(costs), delta: change(costs, prevCosts, false, vs) },
+    { key: 'result', label: R('kpi.result'), value: formatMoney(result), delta: change(result, prevRevenue - prevCosts, true, vs) },
+  ];
+}
+
+/** [day, how many] in date order. */
+function countByDay(days: string[]): [string, number][] {
+  const counts = new Map<string, number>();
+  for (const d of days) counts.set(d, (counts.get(d) ?? 0) + 1);
+  return [...counts.entries()].sort(([a], [b]) => a.localeCompare(b));
 }
 
 /**
@@ -247,6 +287,8 @@ export function csvHeader(type: ReportData['type'], t: TFunction): string[] {
       return [C('item'), C('kind'), C('unit'), C('start'), C('in'), C('out'), C('end'), C('value')];
     case 'shortages':
       return [C('date'), C('status'), C('difference'), C('reason'), C('countedBy'), C('approvedBy')];
+    case 'no_shows':
+      return [C('date'), C('customer'), C('person'), C('services'), C('deposit'), C('depositStatus')];
     case 'customers':
       return [C('customer'), C('phone'), C('visits'), C('lastVisit'), C('spent'), C('visitsThisMonth'), C('thisMonth')];
     case 'vat':

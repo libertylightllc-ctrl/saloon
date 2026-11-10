@@ -1,12 +1,24 @@
-/** Reports (owner and accountant): one query per report for a branch and month, and the owner control line. */
+/** Reports: one query per report for a branch and month, and the control line (owner and accountant). */
 import { useQuery } from '@tanstack/react-query';
 
 import type { Database } from '@/lib/database.types';
 import type { MonthKey } from '@/lib/dates';
+import type { Role } from '@/lib/permissions';
 import { supabase } from '@/lib/supabase';
 
-export const REPORT_TYPES = ['monthly', 'staff', 'closing', 'stock', 'shortages', 'customers', 'vat'] as const;
+export const REPORT_TYPES = ['monthly', 'staff', 'closing', 'stock', 'shortages', 'no_shows', 'customers', 'vat'] as const;
 export type ReportType = (typeof REPORT_TYPES)[number];
+
+/**
+ * The reports each login type opens (brief B2): owner and accountant all; a manager sales (without the books'
+ * figures), staff sales, daily closing, cash differences, stock and no-shows; a stylist their own staff-sales line.
+ */
+export function reportTypesFor(role: Role): readonly ReportType[] {
+  if (role === 'staff') return ['staff'];
+  if (role === 'manager') return ['monthly', 'staff', 'closing', 'stock', 'shortages', 'no_shows'];
+  if (role === 'owner' || role === 'accountant') return REPORT_TYPES;
+  return [];
+}
 
 export interface MonthlyDay {
   date: string;
@@ -22,10 +34,11 @@ export interface MonthlyDay {
 export interface MonthlyReport {
   month: string;
   days: MonthlyDay[];
-  revenue_minor: number;
-  costs_minor: number;
-  prev_revenue_minor: number;
-  prev_costs_minor: number;
+  /** The books' figures; null for a manager (sales, not the books). */
+  revenue_minor: number | null;
+  costs_minor: number | null;
+  prev_revenue_minor: number | null;
+  prev_costs_minor: number | null;
 }
 export interface StaffRow {
   employee_id: string;
@@ -79,6 +92,17 @@ export interface CustomerRow {
   month_spent_minor: number;
 }
 
+export interface NoShowRow {
+  appointment_id: string;
+  business_date: string;
+  scheduled_at: string;
+  customer_name: string | null;
+  staff_name: string | null;
+  services: string | null;
+  deposit_minor: number;
+  deposit_status: 'none' | 'held' | 'applied' | 'forfeited' | 'refunded';
+}
+
 /** One kind of VAT entry for the month: output (sales, refunds) or input (purchases, expenses). */
 export interface VatRow {
   kind: 'sales' | 'refunds' | 'purchases' | 'expenses';
@@ -95,6 +119,7 @@ export type ReportData =
   | { type: 'closing'; data: ClosingRow[] }
   | { type: 'stock'; data: StockRow[] }
   | { type: 'shortages'; data: ShortageRow[] }
+  | { type: 'no_shows'; data: NoShowRow[] }
   | { type: 'customers'; data: CustomerRow[] }
   | { type: 'vat'; data: VatRow[] };
 
@@ -176,6 +201,13 @@ async function fetchReport(type: ReportType, businessId: string, branchId: strin
       const data = await allRows('report_shortages', args);
       return { type, data: (data ?? []).map((r) => ({ ...r, variance_minor: num(r.variance_minor) })) };
     }
+    case 'no_shows': {
+      const data = await allRows('report_no_shows', args);
+      return {
+        type,
+        data: data.map((r) => ({ ...r, deposit_minor: num(r.deposit_minor), deposit_status: r.deposit_status as NoShowRow['deposit_status'] })),
+      };
+    }
     case 'customers': {
       const data = await allRows('report_customers', { p_business: businessId, p_month: month });
       return {
@@ -215,8 +247,9 @@ export interface OwnerControl {
   compliance_issues: number | null;
 }
 
-export function useOwnerControl(branchId: string) {
+export function useOwnerControl(branchId: string, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ['reports', branchId, 'control'],
     queryFn: async (): Promise<OwnerControl> => {
       const { data, error } = await supabase.rpc('owner_control', { p_branch: branchId });

@@ -504,7 +504,9 @@
       "suppliersBills": "Proveedores y facturas",
       "payroll": "Nómina",
       "hygiene": "Registro de higiene",
-      "myClients": "Mis clientes"
+      "myClients": "Mis clientes",
+      "approvals": "Aprobaciones",
+      "myReport": "Mis ventas y comisión"
     },
     "logOut": "Cerrar sesión",
     "title": "Más",
@@ -1561,14 +1563,15 @@
       "reopen": "Reabrir",
       "closeTitle": "¿Cerrar {{month}}?",
       "reopenTitle": "Reabrir {{month}}",
-      "closeBody": "Una vez cerrado, no se puede registrar nada en este mes: ni ventas, ni costos, ni correcciones con fecha de ese mes. Puedes reabrirlo más tarde indicando un motivo.",
+      "closeBody": "Una vez cerrado, no se puede registrar nada en este mes: ni ventas, ni costes, ni correcciones con su fecha. El dueño puede reabrirlo más tarde con un motivo.",
       "reopenBody": "Al reabrirlo se pueden volver a registrar asientos en este mes. El motivo queda guardado en el historial.",
       "reason": "Motivo",
       "confirmClose": "Cerrar el mes",
       "confirmReopen": "Reabrir el mes",
       "closedToast": "{{month}} está cerrado",
       "reopenedToast": "{{month}} está abierto de nuevo",
-      "hint": "Solo se pueden cerrar los meses terminados. Los libros deben cuadrar."
+      "hint": "Solo se pueden cerrar los meses terminados. Los libros deben cuadrar.",
+      "ownerReopens": "Solo el dueño puede reabrir un mes cerrado."
     },
     "tax2Collected": "{{name}} cobrado (a pagar a Hacienda)",
     "stockDiffTitle": "El stock no cuadra",
@@ -2370,7 +2373,8 @@
       "stock": "Movimiento de stock",
       "shortages": "Faltantes de caja",
       "customers": "Lista de clientes",
-      "vat": "{{tax}}"
+      "vat": "{{tax}}",
+      "no_shows": "Ausencias"
     },
     "kpi": {
       "sales": "Ventas",
@@ -2398,7 +2402,11 @@
       "vatRefund": "{{tax}} a recuperar",
       "tax2Output": "De ello, {{name}}",
       "tax2Generic": "segundo impuesto",
-      "revenueSub": "Después de reembolsos y descuentos"
+      "revenueSub": "Después de reembolsos y descuentos",
+      "noShows": "Ausencias",
+      "depositsKept": "Depósitos retenidos",
+      "depositsKeptSub": "{{count}} depósitos retenidos",
+      "depositsKeptSub_one": "1 depósito retenido"
     },
     "chart": {
       "salesByDay": "Ventas por día",
@@ -2406,7 +2414,8 @@
       "differenceByDay": "Diferencia de caja por día",
       "valueByItem": "Valor del stock por artículo",
       "topCustomers": "Mejores clientes del mes",
-      "vatByKind": "{{tax}} por tipo"
+      "vatByKind": "{{tax}} por tipo",
+      "noShowsByDay": "Ausencias por día"
     },
     "col": {
       "date": "Fecha",
@@ -2447,7 +2456,9 @@
       "entries": "Registros",
       "taxable": "Monto sin {{tax}}",
       "vat": "{{tax}}",
-      "revenueNet": "Ingresos tras reembolsos"
+      "revenueNet": "Ingresos tras reembolsos",
+      "deposit": "Depósito",
+      "depositStatus": "Estado del depósito"
     },
     "status": {
       "open": "Sin cerrar",
@@ -2462,7 +2473,8 @@
       "stock": "Aún no hay artículos de stock.",
       "shortages": "No hay diferencias de caja en este mes.",
       "customers": "Aún no hay clientes.",
-      "vat": "No hay {{tax}} este mes. El {{tax}} se registra cuando la sucursal está registrada para ese impuesto (Ajustes de la sucursal)."
+      "vat": "No hay {{tax}} este mes. El {{tax}} se registra cuando la sucursal está registrada para ese impuesto (Ajustes de la sucursal).",
+      "noShows": "No hubo ausencias este mes."
     },
     "daysLate": "{{days}} días · {{late}} con retraso",
     "print": "Imprimir",
@@ -2487,7 +2499,14 @@
       "purchases": "Facturas de proveedores ({{tax}} soportado)",
       "expenses": "Gastos ({{tax}} soportado)"
     },
-    "vsMonth": "{{pct}} vs. {{month}}"
+    "vsMonth": "{{pct}} vs. {{month}}",
+    "depositStatus": {
+      "none": "Sin depósito",
+      "held": "Retenido",
+      "applied": "Usado en la cuenta",
+      "forfeited": "Retenido",
+      "refunded": "Devuelto"
+    }
   },
   "backup": {
     "title": "Copia de seguridad y recuperación",
@@ -3600,5 +3619,23 @@
     "priced": "Entrega con precio: factura {{number}}",
     "afterPricing": "Al guardar se convierte en la factura del proveedor (sin pagar; se paga desde la factura) y entra al stock.",
     "savePrices": "Guardar factura · {{amount}}"
+  },
+  "approvalLog": {
+    "title": "Aprobaciones",
+    "subtitle": "Aprobaciones con PIN y acciones sobre el límite, con nombres y motivos",
+    "empty": "No hay aprobaciones este mes.",
+    "count": "{{count}} aprobaciones",
+    "count_one": "1 aprobación",
+    "discount": "Descuento {{pct}}",
+    "refund": "Reembolso {{amount}}",
+    "depositRefund": "Depósito devuelto {{amount}}",
+    "clockOther": "Fichaje de otra persona",
+    "byPin": "Pedido por {{asked}} · aprobado por {{approved}} con su PIN",
+    "byReason": "Por {{name}}, con motivo",
+    "reason": "Motivo: {{reason}}",
+    "method": {
+      "pin": "PIN",
+      "reason": "Motivo"
+    }
   }
 }

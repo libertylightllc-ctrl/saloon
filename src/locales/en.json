@@ -504,7 +504,9 @@
       "suppliersBills": "Suppliers & bills",
       "payroll": "Payroll",
       "hygiene": "Hygiene log",
-      "myClients": "My clients"
+      "myClients": "My clients",
+      "approvals": "Approvals",
+      "myReport": "My sales & commission"
     },
     "logOut": "Log out",
     "title": "More",
@@ -1561,14 +1563,15 @@
       "reopen": "Reopen",
       "closeTitle": "Close {{month}}?",
       "reopenTitle": "Reopen {{month}}",
-      "closeBody": "Nothing can be posted into this month after it is closed: no sales, costs or corrections dated in it. You can reopen it later with a reason.",
+      "closeBody": "Nothing can be posted into this month after it is closed: no sales, costs or corrections dated in it. The owner can reopen it later with a reason.",
       "reopenBody": "Reopening lets entries be posted into this month again. The reason is kept in the history.",
       "reason": "Reason",
       "confirmClose": "Close the month",
       "confirmReopen": "Reopen the month",
       "closedToast": "{{month}} is closed",
       "reopenedToast": "{{month}} is open again",
-      "hint": "Only finished months can be closed. The books must balance."
+      "hint": "Only finished months can be closed. The books must balance.",
+      "ownerReopens": "Only the owner can reopen a closed month."
     },
     "tax2Collected": "{{name}} collected (owed to the tax office)",
     "stockDiffTitle": "Stock doesn't match",
@@ -2370,7 +2373,8 @@
       "stock": "Stock movement",
       "shortages": "Cash shortage",
       "customers": "Customer list",
-      "vat": "{{tax}}"
+      "vat": "{{tax}}",
+      "no_shows": "No-shows"
     },
     "kpi": {
       "sales": "Sales",
@@ -2398,7 +2402,11 @@
       "vatRefund": "{{tax}} to get back",
       "tax2Output": "Of it, {{name}}",
       "tax2Generic": "second tax",
-      "revenueSub": "After refunds and discounts"
+      "revenueSub": "After refunds and discounts",
+      "noShows": "No-shows",
+      "depositsKept": "Deposits kept",
+      "depositsKeptSub": "{{count}} deposits kept",
+      "depositsKeptSub_one": "1 deposit kept"
     },
     "chart": {
       "salesByDay": "Sales by day",
@@ -2406,7 +2414,8 @@
       "differenceByDay": "Cash difference by day",
       "valueByItem": "Stock value by item",
       "topCustomers": "Top customers this month",
-      "vatByKind": "{{tax}} by kind"
+      "vatByKind": "{{tax}} by kind",
+      "noShowsByDay": "No-shows by day"
     },
     "col": {
       "date": "Date",
@@ -2447,7 +2456,9 @@
       "entries": "Entries",
       "taxable": "Amount without {{tax}}",
       "vat": "{{tax}}",
-      "revenueNet": "Revenue after refunds"
+      "revenueNet": "Revenue after refunds",
+      "deposit": "Deposit",
+      "depositStatus": "Deposit status"
     },
     "status": {
       "open": "Not closed",
@@ -2462,7 +2473,8 @@
       "stock": "No stock items yet.",
       "shortages": "No cash differences in this month.",
       "customers": "No customers yet.",
-      "vat": "No {{tax}} this month. {{tax}} is recorded when the branch is registered for it (Branch settings)."
+      "vat": "No {{tax}} this month. {{tax}} is recorded when the branch is registered for it (Branch settings).",
+      "noShows": "No no-shows this month."
     },
     "daysLate": "{{days}} days · {{late}} late",
     "print": "Print",
@@ -2487,7 +2499,14 @@
       "purchases": "Supplier bills (input {{tax}})",
       "expenses": "Expenses (input {{tax}})"
     },
-    "vsMonth": "{{pct}} vs {{month}}"
+    "vsMonth": "{{pct}} vs {{month}}",
+    "depositStatus": {
+      "none": "No deposit",
+      "held": "Held",
+      "applied": "Used for the bill",
+      "forfeited": "Kept",
+      "refunded": "Given back"
+    }
   },
   "backup": {
     "title": "Backup & recovery",
@@ -3599,5 +3618,23 @@
     "priced": "Delivery priced: bill {{number}}",
     "afterPricing": "Saving makes it the supplier bill (unpaid; pay it from the bill) and puts it in stock.",
     "savePrices": "Save bill · {{amount}}"
+  },
+  "approvalLog": {
+    "title": "Approvals",
+    "subtitle": "PIN approvals and actions over the limit, with names and reasons",
+    "empty": "No approvals this month.",
+    "count": "{{count}} approvals",
+    "count_one": "1 approval",
+    "discount": "Discount {{pct}}",
+    "refund": "Refund {{amount}}",
+    "depositRefund": "Deposit given back {{amount}}",
+    "clockOther": "Clocked in or out for someone else",
+    "byPin": "Asked by {{asked}} · approved by {{approved}} with their PIN",
+    "byReason": "By {{name}}, with a reason",
+    "reason": "Reason: {{reason}}",
+    "method": {
+      "pin": "PIN",
+      "reason": "Reason"
+    }
   }
 }
