@@ -64,11 +64,14 @@ select pg_temp.as_service();
 select is(commission_for(current_setting('t.bemp')::uuid, to_char(current_date, 'YYYY-MM')), 0::bigint,
   'salon B''s payroll has no commission from salon A');
 
--- Inside salon B: staff add walk-ins only; cashiers see no commission.
+-- Inside salon B: a stylist books only while the owner allows it (Part B, control "Stylists can add bookings for
+-- themselves"); walk-ins always; cashiers see no commission.
+select pg_temp.as_service();
+update branches set settings = settings || '{"staff_book_self": false}' where id = current_setting('t.bbr')::uuid;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000026b2');
 select throws_ok(format($$ select create_appointment(jsonb_build_object('branch_id', '%s', 'kind', 'booking',
   'scheduled_at', now() + interval '1 day', 'service_ids', (select jsonb_agg(id) from services where business_id = '%s' limit 1))) $$,
-  current_setting('t.bbr'), current_setting('t.b')), '42501', 'not_allowed', 'a barber cannot make a booking');
+  current_setting('t.bbr'), current_setting('t.b')), '42501', 'not_allowed', 'a barber cannot make a booking when the owner has switched it off');
 select lives_ok(format($$ select create_appointment(jsonb_build_object('branch_id', '%s', 'kind', 'walk_in', 'service_ids', '[]'::jsonb)) $$,
   current_setting('t.bbr')), 'but adds a walk-in');
 select pg_temp.as_user('00000000-0000-0000-0000-0000000026b3');
