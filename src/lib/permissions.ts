@@ -120,16 +120,28 @@ export function can(role: Role | null | undefined, capability: Capability, rules
   return true;
 }
 
-export type TabKey = 'index' | 'queue' | 'sale' | 'customers' | 'pay' | 'reports-tab' | 'accounts-tab' | 'more';
+export type TabKey =
+  | 'index'
+  | 'queue'
+  | 'sale'
+  | 'customers'
+  | 'closing-tab'
+  | 'pay'
+  | 'reports-tab'
+  | 'accounts-tab'
+  | 'more';
 
-/** The bottom tabs per login type (brief B8). */
+/**
+ * The bottom tabs per login type (brief B8). A phone bar holds six at most, so the manager's Reports sits at the top of
+ * More (tablets and computers show it beside Closing).
+ */
 export function tabsFor(role: Role, rules: BranchRules): TabKey[] {
   switch (role) {
     case 'owner':
-    case 'cashier':
       return ['index', 'queue', 'sale', 'customers', 'more'];
     case 'manager':
-      return ['index', 'queue', 'sale', 'customers', 'reports-tab', 'more'];
+    case 'cashier':
+      return ['index', 'queue', 'sale', 'customers', 'closing-tab', 'more'];
     case 'staff':
       return can(role, 'sell', rules) ? ['index', 'queue', 'sale', 'pay', 'more'] : ['index', 'queue', 'pay', 'more'];
     case 'accountant':

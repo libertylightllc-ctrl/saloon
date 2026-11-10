@@ -112,7 +112,8 @@
     "more": "Mais",
     "pay": "Meus ganhos",
     "reportsTab": "Relatórios",
-    "accountsTab": "Contabilidade"
+    "accountsTab": "Contabilidade",
+    "myBookings": "Minhas reservas"
   },
   "language": {
     "title": "Idioma",
@@ -456,7 +457,12 @@
       "plan": "Plano e cobrança",
       "admin": "Console da plataforma",
       "mySales": "Minhas vendas",
-      "branches": "Filiais"
+      "branches": "Filiais",
+      "stock": "Estoque",
+      "pettyCash": "Caixa pequeno",
+      "suppliersBills": "Fornecedores e contas",
+      "payroll": "Folha de pagamento",
+      "hygiene": "Registro de higiene"
     },
     "logOut": "Sair",
     "title": "Mais",
@@ -640,7 +646,7 @@
         },
         "roles": {
           "title": "O acesso certo para cada pessoa",
-          "body": "Proprietário, caixa, barbeiro ou profissional e contador: cada um vê só o que o trabalho exige."
+          "body": "Dono, gerente, recepção, estilista e contador: cada um vê só o que o seu trabalho precisa."
         },
         "booking": {
           "title": "Página de reservas online grátis",
@@ -791,7 +797,7 @@
         },
         "staff": {
           "q": "Minha equipe pode ver meus lucros?",
-          "a": "Não. O proprietário, o caixa, o barbeiro ou cabeleireiro e o contador veem só o que o trabalho de cada um precisa."
+          "a": "Não. O dono, o gerente, a recepção, o estilista e o contador veem só o que o seu trabalho precisa."
         },
         "printer": {
           "q": "Preciso de uma impressora de recibos?",
@@ -3319,5 +3325,10 @@
     "add": "Adicionar filial",
     "added": "{{name}} adicionada",
     "priceNote": "Esta filial soma {{price}} por mês ao seu plano para até {{included}} pessoas que entram nela, e {{extra}} por pessoa extra, a partir do seu próximo pagamento. Nada é cobrado agora."
+  },
+  "noAccess": {
+    "title": "Você não tem acesso a esta página",
+    "body": "Seu tipo de acesso não abre esta página. Peça ao dono do salão se precisar dela.",
+    "home": "Ir para o início"
   }
 }

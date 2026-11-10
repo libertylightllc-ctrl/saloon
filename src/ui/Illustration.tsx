@@ -21,6 +21,7 @@ const PLACEHOLDER_ICON = {
   'promo-setup': 'rocket',
   'sale-done': 'partyPopper',
   'no-results': 'searchX',
+  'no-access': 'lock',
 } as const satisfies Record<string, IconName>;
 
 export type IllustrationName = keyof typeof PLACEHOLDER_ICON;

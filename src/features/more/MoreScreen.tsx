@@ -61,7 +61,7 @@ export function MoreScreen() {
                   key={row.key}
                   icon={row.icon}
                   index={i}
-                  label={t(`more.rows.${row.key}`)}
+                  label={row.label}
                   last={i === shown.length - 1}
                   badge={badges[row.key]}
                   onPress={() => router.push(row.href)}

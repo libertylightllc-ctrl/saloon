@@ -112,7 +112,8 @@
     "more": "Más",
     "pay": "Mi pago",
     "reportsTab": "Informes",
-    "accountsTab": "Contabilidad"
+    "accountsTab": "Contabilidad",
+    "myBookings": "Mis reservas"
   },
   "language": {
     "title": "Idioma",
@@ -456,7 +457,12 @@
       "plan": "Plan y facturación",
       "admin": "Consola de la plataforma",
       "mySales": "Mis ventas",
-      "branches": "Sucursales"
+      "branches": "Sucursales",
+      "stock": "Stock",
+      "pettyCash": "Caja chica",
+      "suppliersBills": "Proveedores y facturas",
+      "payroll": "Nómina",
+      "hygiene": "Registro de higiene"
     },
     "logOut": "Cerrar sesión",
     "title": "Más",
@@ -640,7 +646,7 @@
         },
         "roles": {
           "title": "El acceso justo para cada persona",
-          "body": "Dueño, cajero, barbero o estilista y contador: cada uno ve solo lo que necesita para su trabajo."
+          "body": "Dueño, gerente, recepción, estilista y contable: cada uno ve solo lo que su trabajo necesita."
         },
         "booking": {
           "title": "Página de reservas online gratis",
@@ -791,7 +797,7 @@
         },
         "staff": {
           "q": "¿Mi personal puede ver mis beneficios?",
-          "a": "No. El propietario, el cajero, el barbero o estilista y el contable ven solo lo que necesita su trabajo."
+          "a": "No. El dueño, el gerente, recepción, el estilista y el contable ven solo lo que su trabajo necesita."
         },
         "printer": {
           "q": "¿Necesito una impresora de recibos?",
@@ -3319,5 +3325,10 @@
     "add": "Añadir sucursal",
     "added": "{{name}} añadida",
     "priceNote": "Esta sucursal suma {{price}} al mes a tu plan para hasta {{included}} personas que inician sesión allí, y {{extra}} por cada persona extra, desde tu próximo pago. Ahora no se cobra nada."
+  },
+  "noAccess": {
+    "title": "No tienes acceso a esta página",
+    "body": "Tu tipo de acceso no abre esta página. Pídeselo al dueño del salón si la necesitas.",
+    "home": "Ir al inicio"
   }
 }

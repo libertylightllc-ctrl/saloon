@@ -24,8 +24,11 @@ const HISTORY_STATUS: Record<ClosingStatus, StatusKey | null> = {
   approved: 'approved',
 };
 
-/** Cash closing for today (or `/cash-closing/<date>` for an earlier day), with tips and history. */
-export function ClosingScreen() {
+/**
+ * Cash closing for today (or `/cash-closing/<date>` for an earlier day), with tips and history. `asTab`: the manager's
+ * and the front desk's Closing tab (no back arrow).
+ */
+export function ClosingScreen({ asTab = false }: { asTab?: boolean }) {
   const { t } = useTranslation();
   const router = useRouter();
   const dates = useDates();
@@ -47,7 +50,7 @@ export function ClosingScreen() {
         <HeaderBand
           title={t('closing.title')}
           subtitle={preview.data ? dates.day(preview.data.business_date, 'EEEE d MMMM') : undefined}
-          onBack
+          onBack={asTab ? undefined : true}
         />
       }
     >

@@ -289,6 +289,98 @@ export type Database = {
           },
         ];
       };
+      approvals: {
+        Row: {
+          action: string;
+          amount: number | null;
+          approved_by: string | null;
+          approved_name: string;
+          branch_id: string;
+          business_id: string;
+          created_at: string;
+          details: NonNullable<Json>;
+          expires_at: string | null;
+          id: string;
+          limit_amount: number | null;
+          method: string;
+          reason: string | null;
+          ref_id: string | null;
+          ref_type: string | null;
+          requested_by: string | null;
+          requested_name: string;
+          used_at: string | null;
+        };
+        Insert: {
+          action: string;
+          amount?: number | null;
+          approved_by?: string | null;
+          approved_name: string;
+          branch_id: string;
+          business_id: string;
+          created_at?: string;
+          details?: NonNullable<Json>;
+          expires_at?: string | null;
+          id?: string;
+          limit_amount?: number | null;
+          method: string;
+          reason?: string | null;
+          ref_id?: string | null;
+          ref_type?: string | null;
+          requested_by?: string | null;
+          requested_name: string;
+          used_at?: string | null;
+        };
+        Update: {
+          action?: string;
+          amount?: number | null;
+          approved_by?: string | null;
+          approved_name?: string;
+          branch_id?: string;
+          business_id?: string;
+          created_at?: string;
+          details?: NonNullable<Json>;
+          expires_at?: string | null;
+          id?: string;
+          limit_amount?: number | null;
+          method?: string;
+          reason?: string | null;
+          ref_id?: string | null;
+          ref_type?: string | null;
+          requested_by?: string | null;
+          requested_name?: string;
+          used_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'approvals_approved_by_fkey';
+            columns: ['approved_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'approvals_branch_id_fkey';
+            columns: ['branch_id'];
+            isOneToOne: false;
+            referencedRelation: 'branches';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'approvals_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'approvals_requested_by_fkey';
+            columns: ['requested_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       attendance: {
         Row: {
           branch_id: string;
@@ -502,6 +594,32 @@ export type Database = {
             columns: ['business_id'];
             isOneToOne: false;
             referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      booking_old_links: {
+        Row: {
+          branch_id: string;
+          replaced_at: string;
+          slug: string;
+        };
+        Insert: {
+          branch_id: string;
+          replaced_at?: string;
+          slug: string;
+        };
+        Update: {
+          branch_id?: string;
+          replaced_at?: string;
+          slug?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'booking_old_links_branch_id_fkey';
+            columns: ['branch_id'];
+            isOneToOne: false;
+            referencedRelation: 'branches';
             referencedColumns: ['id'];
           },
         ];
@@ -724,6 +842,9 @@ export type Database = {
         Row: {
           approved_at: string | null;
           approved_by: string | null;
+          bank_ref: string | null;
+          banked_by: string | null;
+          banked_on: string | null;
           branch_id: string;
           business_date: string;
           business_id: string;
@@ -749,6 +870,9 @@ export type Database = {
         Insert: {
           approved_at?: string | null;
           approved_by?: string | null;
+          bank_ref?: string | null;
+          banked_by?: string | null;
+          banked_on?: string | null;
           branch_id: string;
           business_date: string;
           business_id: string;
@@ -774,6 +898,9 @@ export type Database = {
         Update: {
           approved_at?: string | null;
           approved_by?: string | null;
+          bank_ref?: string | null;
+          banked_by?: string | null;
+          banked_on?: string | null;
           branch_id?: string;
           business_date?: string;
           business_id?: string;
@@ -800,6 +927,13 @@ export type Database = {
           {
             foreignKeyName: 'cash_closings_approved_by_fkey';
             columns: ['approved_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'cash_closings_banked_by_fkey';
+            columns: ['banked_by'];
             isOneToOne: false;
             referencedRelation: 'members';
             referencedColumns: ['id'];
@@ -1028,14 +1162,69 @@ export type Database = {
           },
         ];
       };
+      customer_notes: {
+        Row: {
+          author_id: string | null;
+          author_name: string;
+          business_id: string;
+          created_at: string;
+          customer_id: string;
+          id: string;
+          note: string;
+        };
+        Insert: {
+          author_id?: string | null;
+          author_name: string;
+          business_id: string;
+          created_at?: string;
+          customer_id: string;
+          id?: string;
+          note: string;
+        };
+        Update: {
+          author_id?: string | null;
+          author_name?: string;
+          business_id?: string;
+          created_at?: string;
+          customer_id?: string;
+          id?: string;
+          note?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'customer_notes_author_id_fkey';
+            columns: ['author_id'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'customer_notes_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'customer_notes_customer_id_fkey';
+            columns: ['customer_id'];
+            isOneToOne: false;
+            referencedRelation: 'customers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       customers: {
         Row: {
           business_id: string;
           created_at: string;
           created_by: string | null;
+          deleted_at: string | null;
+          deleted_by: string | null;
           id: string;
           last_visit_at: string | null;
           marketing_opt_in: boolean;
+          merged_into: string | null;
           name: string;
           no_show_count: number;
           notes: string | null;
@@ -1049,9 +1238,12 @@ export type Database = {
           business_id: string;
           created_at?: string;
           created_by?: string | null;
+          deleted_at?: string | null;
+          deleted_by?: string | null;
           id?: string;
           last_visit_at?: string | null;
           marketing_opt_in?: boolean;
+          merged_into?: string | null;
           name: string;
           no_show_count?: number;
           notes?: string | null;
@@ -1065,9 +1257,12 @@ export type Database = {
           business_id?: string;
           created_at?: string;
           created_by?: string | null;
+          deleted_at?: string | null;
+          deleted_by?: string | null;
           id?: string;
           last_visit_at?: string | null;
           marketing_opt_in?: boolean;
+          merged_into?: string | null;
           name?: string;
           no_show_count?: number;
           notes?: string | null;
@@ -1093,6 +1288,20 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'customers_deleted_by_fkey';
+            columns: ['deleted_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'customers_merged_into_fkey';
+            columns: ['merged_into'];
+            isOneToOne: false;
+            referencedRelation: 'customers';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'customers_preferred_employee_id_fkey';
             columns: ['preferred_employee_id'];
             isOneToOne: false;
@@ -1101,10 +1310,193 @@ export type Database = {
           },
         ];
       };
+      deliveries: {
+        Row: {
+          bill_id: string | null;
+          branch_id: string;
+          business_date: string;
+          business_id: string;
+          cancel_reason: string | null;
+          cancelled_by: string | null;
+          client_ref: string | null;
+          id: string;
+          note: string | null;
+          note_path: string | null;
+          number: number;
+          priced_at: string | null;
+          priced_by: string | null;
+          received_at: string;
+          received_by: string | null;
+          received_name: string;
+          status: string;
+          supplier_id: string | null;
+          supplier_name: string | null;
+        };
+        Insert: {
+          bill_id?: string | null;
+          branch_id: string;
+          business_date: string;
+          business_id: string;
+          cancel_reason?: string | null;
+          cancelled_by?: string | null;
+          client_ref?: string | null;
+          id?: string;
+          note?: string | null;
+          note_path?: string | null;
+          number: number;
+          priced_at?: string | null;
+          priced_by?: string | null;
+          received_at?: string;
+          received_by?: string | null;
+          received_name: string;
+          status?: string;
+          supplier_id?: string | null;
+          supplier_name?: string | null;
+        };
+        Update: {
+          bill_id?: string | null;
+          branch_id?: string;
+          business_date?: string;
+          business_id?: string;
+          cancel_reason?: string | null;
+          cancelled_by?: string | null;
+          client_ref?: string | null;
+          id?: string;
+          note?: string | null;
+          note_path?: string | null;
+          number?: number;
+          priced_at?: string | null;
+          priced_by?: string | null;
+          received_at?: string;
+          received_by?: string | null;
+          received_name?: string;
+          status?: string;
+          supplier_id?: string | null;
+          supplier_name?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'deliveries_bill_id_fkey';
+            columns: ['bill_id'];
+            isOneToOne: false;
+            referencedRelation: 'purchase_bills';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'deliveries_branch_id_fkey';
+            columns: ['branch_id'];
+            isOneToOne: false;
+            referencedRelation: 'branches';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'deliveries_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'deliveries_cancelled_by_fkey';
+            columns: ['cancelled_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'deliveries_priced_by_fkey';
+            columns: ['priced_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'deliveries_received_by_fkey';
+            columns: ['received_by'];
+            isOneToOne: false;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'deliveries_supplier_id_fkey';
+            columns: ['supplier_id'];
+            isOneToOne: false;
+            referencedRelation: 'suppliers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      delivery_lines: {
+        Row: {
+          business_id: string;
+          delivery_id: string;
+          id: string;
+          item_id: string;
+          pack_size: number | null;
+          packs: number;
+          sort: number;
+        };
+        Insert: {
+          business_id: string;
+          delivery_id: string;
+          id?: string;
+          item_id: string;
+          pack_size?: number | null;
+          packs: number;
+          sort?: number;
+        };
+        Update: {
+          business_id?: string;
+          delivery_id?: string;
+          id?: string;
+          item_id?: string;
+          pack_size?: number | null;
+          packs?: number;
+          sort?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'delivery_lines_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'delivery_lines_delivery_id_fkey';
+            columns: ['delivery_id'];
+            isOneToOne: false;
+            referencedRelation: 'deliveries';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'delivery_lines_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'inventory_items';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       email_confirmations: {
-        Row: { confirmed_at: string; email: string; how: string; user_id: string };
-        Insert: { confirmed_at?: string; email: string; how: string; user_id: string };
-        Update: { confirmed_at?: string; email?: string; how?: string; user_id?: string };
+        Row: {
+          confirmed_at: string;
+          email: string;
+          how: string;
+          user_id: string;
+        };
+        Insert: {
+          confirmed_at?: string;
+          email: string;
+          how: string;
+          user_id: string;
+        };
+        Update: {
+          confirmed_at?: string;
+          email?: string;
+          how?: string;
+          user_id?: string;
+        };
         Relationships: [];
       };
       employees: {
@@ -1690,6 +2082,7 @@ export type Database = {
           dedupe_key: string | null;
           entity_id: string | null;
           entity_type: string | null;
+          expires_at: string | null;
           id: string;
           member_id: string;
           pushed_at: string | null;
@@ -1706,6 +2099,7 @@ export type Database = {
           dedupe_key?: string | null;
           entity_id?: string | null;
           entity_type?: string | null;
+          expires_at?: string | null;
           id?: string;
           member_id: string;
           pushed_at?: string | null;
@@ -1722,6 +2116,7 @@ export type Database = {
           dedupe_key?: string | null;
           entity_id?: string | null;
           entity_type?: string | null;
+          expires_at?: string | null;
           id?: string;
           member_id?: string;
           pushed_at?: string | null;
@@ -2055,6 +2450,21 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      phone_checks: {
+        Row: {
+          created_at: string;
+          source_hash: string;
+        };
+        Insert: {
+          created_at?: string;
+          source_hash: string;
+        };
+        Update: {
+          created_at?: string;
+          source_hash?: string;
+        };
+        Relationships: [];
       };
       pilot_applications: {
         Row: {
@@ -2796,6 +3206,24 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      role_capabilities: {
+        Row: {
+          capability: string;
+          level: string;
+          role: Database['public']['Enums']['member_role'];
+        };
+        Insert: {
+          capability: string;
+          level?: string;
+          role: Database['public']['Enums']['member_role'];
+        };
+        Update: {
+          capability?: string;
+          level?: string;
+          role?: Database['public']['Enums']['member_role'];
+        };
+        Relationships: [];
       };
       rooms: {
         Row: {
@@ -3727,6 +4155,35 @@ export type Database = {
           },
         ];
       };
+      test_salons: {
+        Row: {
+          business_id: string;
+          changed_at: string;
+          changed_by: string | null;
+          test: boolean;
+        };
+        Insert: {
+          business_id: string;
+          changed_at?: string;
+          changed_by?: string | null;
+          test: boolean;
+        };
+        Update: {
+          business_id?: string;
+          changed_at?: string;
+          changed_by?: string | null;
+          test?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'test_salons_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: true;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       tip_payouts: {
         Row: {
           amount_minor: number;
@@ -3811,6 +4268,10 @@ export type Database = {
       };
       acct: { Args: { p_business: string; p_key: string }; Returns: string };
       add_drawer_cash: { Args: { p: Json }; Returns: Json };
+      add_service_note: {
+        Args: { p_branch: string; p_customer: string; p_note: string };
+        Returns: Json;
+      };
       adjust_stock: { Args: { p: Json }; Returns: Json };
       admin_accounts: {
         Args: Record<PropertyKey, never>;
@@ -3938,6 +4399,14 @@ export type Database = {
           subject: string;
         }[];
       };
+      admin_salon_duplicates: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          business_id: string;
+          others: string[];
+          reason: string;
+        }[];
+      };
       admin_salon_stats: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3954,12 +4423,6 @@ export type Database = {
           staff: number;
         }[];
       };
-      admin_salon_duplicates: {
-        Args: Record<PropertyKey, never>;
-        Returns: { business_id: string; others: string[]; reason: string }[];
-      };
-      admin_set_test_salon: { Args: { p_business: string; p_test: boolean }; Returns: boolean };
-      admin_test_salons: { Args: Record<PropertyKey, never>; Returns: { business_id: string }[] };
       admin_salons: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3994,11 +4457,12 @@ export type Database = {
       admin_set_access: { Args: { p: Json; p_business: string }; Returns: Json };
       admin_set_bank_transfer: { Args: { p_on: boolean }; Returns: undefined };
       admin_set_billing: { Args: { p: Json }; Returns: Json };
-      admin_set_contact: { Args: { p_message: string; p_number: string }; Returns: Json };
       admin_set_card_payments: { Args: { p_mode: string }; Returns: undefined };
+      admin_set_contact: { Args: { p_message: string; p_number: string }; Returns: Json };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
       admin_set_platform_owner: { Args: { p_email: string; p_on: boolean }; Returns: undefined };
       admin_set_support_assistant: { Args: { p_on: boolean }; Returns: undefined };
+      admin_set_test_salon: { Args: { p_business: string; p_test: boolean }; Returns: boolean };
       admin_support_close: { Args: { p_thread: string }; Returns: undefined };
       admin_support_reply: { Args: { p_body: string; p_thread: string }; Returns: undefined };
       admin_support_thread: { Args: { p_thread: string }; Returns: Json };
@@ -4019,6 +4483,12 @@ export type Database = {
           status: string;
           unread: number;
           who: string;
+        }[];
+      };
+      admin_test_salons: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          business_id: string;
         }[];
       };
       aed_rate: { Args: { p_currency: string }; Returns: number };
@@ -4063,6 +4533,27 @@ export type Database = {
       };
       approve_cash_closing: { Args: { p_id: string }; Returns: Json };
       approve_payroll: { Args: { p_run: string }; Returns: undefined };
+      approve_with_pin: {
+        Args: {
+          p_action: string;
+          p_amount?: number;
+          p_approver: string;
+          p_branch: string;
+          p_details?: Json;
+          p_pin: string;
+          p_reason?: string;
+        };
+        Returns: Json;
+      };
+      approvers: {
+        Args: { p_branch: string };
+        Returns: {
+          locked: boolean;
+          member_id: string;
+          name: string;
+          role: Database['public']['Enums']['member_role'];
+        }[];
+      };
       attach_document_evidence: {
         Args: { p_document: string; p_path: string };
         Returns: undefined;
@@ -4098,6 +4589,7 @@ export type Database = {
           starts_at: string;
         }[];
       };
+      backfill_booking_old_links: { Args: Record<PropertyKey, never>; Returns: number };
       book_slots: {
         Args: { p_branch: string; p_date: string; p_duration: number; p_employee?: string };
         Returns: {
@@ -4150,12 +4642,29 @@ export type Database = {
         }[];
       };
       branch_business: { Args: { p_branch: string }; Returns: string };
+      branch_control: { Args: { p_branch: string; p_key: string }; Returns: Json };
+      branch_controls: { Args: { p_branch: string }; Returns: Json };
+      branch_day_end: { Args: { p_at?: string; p_branch: string }; Returns: string };
       branch_setting: { Args: { p_branch: string; p_default: Json; p_key: string }; Returns: Json };
       branch_today: { Args: { p_branch: string }; Returns: string };
       branch_tz: { Args: { p_branch: string }; Returns: string };
       business_today: { Args: { p_business: string }; Returns: string };
+      busy_times: {
+        Args: { p_branch: string; p_date?: string };
+        Returns: {
+          appointment_id: string;
+          duration_min: number;
+          employee_id: string;
+          scheduled_at: string;
+          status: Database['public']['Enums']['appointment_status'];
+        }[];
+      };
       can_use_branch: { Args: { p_branch: string }; Returns: boolean };
-      cancel_appointment: { Args: { p_id: string; p_reason: string }; Returns: string };
+      cancel_appointment: {
+        Args: { p_approval?: string; p_id: string; p_reason: string; p_refund_deposit?: boolean };
+        Returns: string;
+      };
+      cancel_delivery: { Args: { p_delivery: string; p_reason: string }; Returns: undefined };
       card_checkout_opened: { Args: { p_checkout_id: string; p_id: string }; Returns: undefined };
       card_checkout_start: { Args: { p_business: string; p_months: number }; Returns: Json };
       card_payment_completed: { Args: { p: Json }; Returns: Json };
@@ -4167,6 +4676,14 @@ export type Database = {
           entries: number;
           kind: string;
         }[];
+      };
+      cash_visible: {
+        Args: {
+          p_branch: string;
+          p_date: string;
+          p_role: Database['public']['Enums']['member_role'];
+        };
+        Returns: boolean;
       };
       change_country: { Args: { p: Json }; Returns: undefined };
       check_in: { Args: { p_id: string }; Returns: undefined };
@@ -4250,6 +4767,7 @@ export type Database = {
           who: string;
         }[];
       };
+      client_card: { Args: { p_branch: string; p_customer: string }; Returns: Json };
       clock: { Args: { p: Json }; Returns: Json };
       close_period: { Args: { p_business: string; p_month: string }; Returns: undefined };
       closing_history: {
@@ -4267,7 +4785,6 @@ export type Database = {
       closing_preview: { Args: { p_branch: string; p_date?: string }; Returns: Json };
       commission_for: { Args: { p_employee: string; p_period: string }; Returns: number };
       compliance_readiness: { Args: { p_business: string }; Returns: number };
-      confirm_my_email: { Args: Record<PropertyKey, never>; Returns: Json };
       compliance_status: {
         Args: { p_business: string };
         Returns: {
@@ -4298,6 +4815,8 @@ export type Database = {
         }[];
       };
       configure_push: { Args: { p_anon_key: string; p_project_url: string }; Returns: undefined };
+      confirm_my_email: { Args: Record<PropertyKey, never>; Returns: Json };
+      control_defaults: { Args: { p_currency: string }; Returns: Json };
       convert_rough: { Args: { p_from: string; p_minor: number; p_to: string }; Returns: number };
       country_change_allowed: { Args: { p_business: string }; Returns: boolean };
       create_appointment: { Args: { p: Json }; Returns: string };
@@ -4308,23 +4827,49 @@ export type Database = {
       current_member_id: { Args: { p_business: string }; Returns: string };
       dashboard_today: { Args: { p_branch: string }; Returns: Json };
       delete_account_data: { Args: { p_user: string }; Returns: Json };
+      delete_customer: {
+        Args: { p_branch: string; p_customer: string; p_reason: string };
+        Returns: undefined;
+      };
       dismiss_refund_request: { Args: { p_id: string; p_note: string }; Returns: undefined };
       dispatch_plan_alerts: { Args: Record<PropertyKey, never>; Returns: number };
       dispatch_push: { Args: Record<PropertyKey, never>; Returns: number };
       dispatch_support_assistant: { Args: Record<PropertyKey, never>; Returns: number };
       doc_label: { Args: { p_type: string }; Returns: string };
       drawer_cash: { Args: { p_branch: string }; Returns: number };
+      drawer_cash_on: { Args: { p_branch: string; p_date: string }; Returns: number };
+      email_confirmed: { Args: { p_user: string }; Returns: boolean };
       employee_has_history: { Args: { p_id: string }; Returns: boolean };
+      end_alerts: {
+        Args: { p_entity_id: string; p_entity_type: string; p_types: string[] };
+        Returns: undefined;
+      };
       expected_cash: { Args: { p_branch: string; p_date?: string }; Returns: number };
+      fix_clock_out: {
+        Args: { p_at: string; p_attendance: string; p_reason?: string };
+        Returns: Json;
+      };
+      fix_stock_difference: { Args: { p_business: string }; Returns: number };
       fmt_money: { Args: { p_currency?: string; p_minor: number }; Returns: string };
       free_room: { Args: { p_at: string; p_branch: string; p_minutes: number }; Returns: string };
       generate_payroll: { Args: { p_business: string; p_period: string }; Returns: string };
+      give_deposit_back: {
+        Args: {
+          a: Database['public']['Tables']['appointments']['Row'];
+          m: Database['public']['Tables']['members']['Row'];
+          p_approval: string;
+          p_reason: string;
+        };
+        Returns: undefined;
+      };
+      had_stock: { Args: { p_branch: string; p_item: string }; Returns: boolean };
       has_pin: { Args: { p_business: string }; Returns: boolean };
       has_role: {
         Args: { p_business: string; p_roles: Database['public']['Enums']['member_role'][] };
         Returns: boolean;
       };
       hygiene_items: { Args: Record<PropertyKey, never>; Returns: string[] };
+      in_my_branches: { Args: { p_branch: string }; Returns: boolean };
       inventory_levels: {
         Args: { p_branch: string };
         Returns: {
@@ -4350,9 +4895,33 @@ export type Database = {
       };
       is_member: { Args: { p_business: string }; Returns: boolean };
       is_platform_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_test_account: { Args: { p_user: string }; Returns: boolean };
+      is_test_salon: { Args: { p_business: string }; Returns: boolean };
       log_access: { Args: { p_device: string; p_event: string }; Returns: undefined };
-      mark_no_show: { Args: { p_id: string }; Returns: undefined };
+      log_approval: {
+        Args: {
+          p_action: string;
+          p_amount: number;
+          p_branch: string;
+          p_details?: Json;
+          p_limit: number;
+          p_member: string;
+          p_reason: string;
+          p_ref_id: string;
+          p_ref_type: string;
+        };
+        Returns: string;
+      };
+      login_admin_for: { Args: { p_target: string; p_user: string }; Returns: string };
+      mark_no_show: {
+        Args: { p_approval?: string; p_id: string; p_reason?: string; p_refund_deposit?: boolean };
+        Returns: undefined;
+      };
       mark_notifications_read: { Args: { p_ids?: string[] }; Returns: number };
+      merge_customers: {
+        Args: { p_branch: string; p_drop: string; p_keep: string };
+        Returns: Json;
+      };
       merge_duplicate_employees: { Args: Record<PropertyKey, never>; Returns: number };
       method_account: {
         Args: { p_method: Database['public']['Enums']['payment_method'] };
@@ -4379,10 +4948,28 @@ export type Database = {
         Returns: Record<string, unknown>;
       };
       my_branch_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      my_branch_member_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_business_ids: {
         Args: { p_roles: Database['public']['Enums']['member_role'][] };
         Returns: string[];
       };
+      my_business_ids_at: { Args: { p_capability: string; p_level: string }; Returns: string[] };
+      my_business_ids_can: { Args: { p_capability: string }; Returns: string[] };
+      my_client_ids: { Args: { p_member: string }; Returns: string[] };
+      my_clients: {
+        Args: { p_branch: string; p_search?: string };
+        Returns: {
+          id: string;
+          last_visit_at: string;
+          name: string;
+          phone: string;
+          preferences: string;
+          risk_flags: string[];
+          visit_count: number;
+        }[];
+      };
+      my_employee_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      note_email_confirmed: { Args: { p_how: string; p_user: string }; Returns: undefined };
       notify: {
         Args: {
           p_body: string;
@@ -4392,14 +4979,35 @@ export type Database = {
           p_dedupe?: string;
           p_entity_id?: string;
           p_entity_type?: string;
+          p_expires?: string;
+          p_or_owner?: boolean;
           p_roles: Database['public']['Enums']['member_role'][];
+          p_skip_actor?: boolean;
           p_title: string;
           p_type: string;
         };
         Returns: number;
       };
+      notify_bills_due: { Args: { p_now?: string }; Returns: number };
       notify_documents_due: { Args: { p_today?: string }; Returns: number };
       notify_long_waits: { Args: { p_now?: string }; Returns: number };
+      notify_member: {
+        Args: {
+          p_body: string;
+          p_branch: string;
+          p_data: Json;
+          p_dedupe: string;
+          p_entity_id: string;
+          p_entity_type: string;
+          p_expires: string;
+          p_member: string;
+          p_title: string;
+          p_type: string;
+        };
+        Returns: number;
+      };
+      notify_missed_clock_outs: { Args: { p_now?: string }; Returns: number };
+      notify_month_ready: { Args: { p_now?: string }; Returns: number };
       notify_trials_ending: { Args: { p_now?: string }; Returns: number };
       owner_control: { Args: { p_branch: string }; Returns: Json };
       paid_from_account: {
@@ -4407,11 +5015,24 @@ export type Database = {
         Returns: string;
       };
       pay_payroll_line: { Args: { p_line: string; p_method: string }; Returns: undefined };
-      payroll_changes: { Args: { p_run: string }; Returns: Json };
-      stock_books_check: { Args: { p_business: string }; Returns: Json };
-      fix_stock_difference: { Args: { p_business: string }; Returns: number };
       pay_supplier: { Args: { p: Json }; Returns: Json };
       pay_tips: { Args: { p: Json }; Returns: Json };
+      payroll_changes: { Args: { p_run: string }; Returns: Json };
+      payroll_figures: {
+        Args: { p_business: string; p_period: string };
+        Returns: {
+          advances_minor: number;
+          base_minor: number;
+          bonus_minor: number;
+          branch_id: string;
+          commission_minor: number;
+          deductions_minor: number;
+          employee_id: string;
+          net_minor: number;
+          wps_status: string;
+        }[];
+      };
+      payroll_stale: { Args: { p_run: string }; Returns: boolean };
       period_list: {
         Args: { p_business: string };
         Returns: {
@@ -4426,6 +5047,7 @@ export type Database = {
       pilot_active_count: { Args: Record<PropertyKey, never>; Returns: number };
       pilot_redeem: { Args: { p_business: string; p_code: string; p_user: string }; Returns: Json };
       pilot_status: { Args: Record<PropertyKey, never>; Returns: Json };
+      pin_attempt: { Args: { p_member: string; p_pin: string }; Returns: string };
       plan_active: { Args: { p_business: string }; Returns: boolean };
       plan_branch_lines: { Args: { p_business: string; p_card?: boolean }; Returns: Json };
       plan_branch_people: {
@@ -4440,6 +5062,18 @@ export type Database = {
       plan_length_tenths: { Args: { p_months: number }; Returns: number };
       plan_price: { Args: { p_business: string }; Returns: Record<string, unknown> };
       plan_quote: { Args: { p_business: string }; Returns: Record<string, unknown> };
+      plan_quotes: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          base_minor: number;
+          business_id: string;
+          currency: string;
+          extra_person_minor: number;
+          included_people: number;
+          monthly_minor: number;
+          people: number;
+        }[];
+      };
       plan_status: { Args: { p_business: string }; Returns: Json };
       platform_audit_write: {
         Args: {
@@ -4478,6 +5112,18 @@ export type Database = {
         };
         Returns: undefined;
       };
+      post_stock_recost: {
+        Args: {
+          p_actor: string;
+          p_amount: number;
+          p_branch: string;
+          p_business: string;
+          p_source: string;
+          p_source_id: string;
+        };
+        Returns: undefined;
+      };
+      price_delivery: { Args: { p: Json }; Returns: Json };
       public_book: { Args: { p: Json }; Returns: Json };
       public_booking: { Args: { p_token: string }; Returns: Json };
       public_booking_cancel: { Args: { p_token: string }; Returns: undefined };
@@ -4494,7 +5140,12 @@ export type Database = {
       public_receipt: { Args: { p_token: string }; Returns: Json };
       public_staff_name: { Args: { p_full: string }; Returns: string };
       purchase_no: { Args: { p_number: number }; Returns: string };
+      receive_delivery: { Args: { p: Json }; Returns: Json };
       record_adjustment: { Args: { p: Json }; Returns: Json };
+      record_bank_deposit: {
+        Args: { p_banked_on: string; p_closing: string; p_ref?: string };
+        Returns: Json;
+      };
       record_expense: { Args: { p: Json }; Returns: Json };
       record_stock_count: { Args: { p: Json }; Returns: Json };
       redeem_pilot_code: { Args: { p_business: string; p_code: string }; Returns: Json };
@@ -4540,6 +5191,19 @@ export type Database = {
         }[];
       };
       report_monthly: { Args: { p_branch: string; p_month: string }; Returns: Json };
+      report_no_shows: {
+        Args: { p_branch: string; p_month: string };
+        Returns: {
+          appointment_id: string;
+          business_date: string;
+          customer_name: string;
+          deposit_minor: number;
+          deposit_status: string;
+          scheduled_at: string;
+          services: string;
+          staff_name: string;
+        }[];
+      };
       report_shortages: {
         Args: { p_branch: string; p_month: string };
         Returns: {
@@ -4594,6 +5258,48 @@ export type Database = {
         Returns: undefined;
       };
       request_refund: { Args: { p: Json }; Returns: string };
+      require_can: {
+        Args: { p_branch: string; p_capability: string };
+        Returns: {
+          active: boolean;
+          business_id: string;
+          created_at: string;
+          default_branch_id: string | null;
+          display_name: string;
+          id: string;
+          phone: string | null;
+          role: Database['public']['Enums']['member_role'];
+          user_id: string;
+          username: string | null;
+        };
+        SetofOptions: {
+          from: '*';
+          to: 'members';
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      require_can_business: {
+        Args: { p_business: string; p_capability: string };
+        Returns: {
+          active: boolean;
+          business_id: string;
+          created_at: string;
+          default_branch_id: string | null;
+          display_name: string;
+          id: string;
+          phone: string | null;
+          role: Database['public']['Enums']['member_role'];
+          user_id: string;
+          username: string | null;
+        };
+        SetofOptions: {
+          from: '*';
+          to: 'members';
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       require_member: {
         Args: { p_branch: string; p_roles: Database['public']['Enums']['member_role'][] };
         Returns: {
@@ -4616,20 +5322,53 @@ export type Database = {
         };
       };
       require_plan: { Args: { p_business: string }; Returns: undefined };
+      require_report: {
+        Args: { p_branch: string };
+        Returns: {
+          active: boolean;
+          business_id: string;
+          created_at: string;
+          default_branch_id: string | null;
+          display_name: string;
+          id: string;
+          phone: string | null;
+          role: Database['public']['Enums']['member_role'];
+          user_id: string;
+          username: string | null;
+        };
+        SetofOptions: {
+          from: '*';
+          to: 'members';
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       restore_document_slot: { Args: { p_removal: string }; Returns: undefined };
       restore_staff: { Args: { p_actor: string; p_employee: string }; Returns: Json };
       return_cash_closing: { Args: { p_id: string; p_reason: string }; Returns: Json };
       reverse_adjustment: { Args: { p_id: string; p_reason: string }; Returns: undefined };
       reverse_expense: { Args: { p_id: string; p_reason: string }; Returns: undefined };
       reverse_purchase_bill: { Args: { p_id: string; p_reason: string }; Returns: undefined };
+      role_alerts: { Args: Record<PropertyKey, never>; Returns: number };
+      role_level: {
+        Args: { p_capability: string; p_role: Database['public']['Enums']['member_role'] };
+        Returns: string;
+      };
       rostered: {
         Args: { p_date: string; p_employee: string; p_from: number; p_to: number };
         Returns: boolean;
       };
       salon_status: {
-        Args: { p_access: string; p_closed: string; p_free: string; p_paid: string; p_today: string };
+        Args: {
+          p_access: string;
+          p_closed: string;
+          p_free: string;
+          p_paid: string;
+          p_today: string;
+        };
         Returns: string;
       };
+      save_controls: { Args: { p: Json; p_branch: string }; Returns: Json };
       save_document: { Args: { p: Json }; Returns: string };
       save_employee: { Args: { p: Json }; Returns: string };
       save_expense_category: { Args: { p: Json }; Returns: string };
@@ -4651,6 +5390,10 @@ export type Database = {
         Returns: undefined;
       };
       seed_system_accounts: { Args: { p_business: string }; Returns: undefined };
+      sees_phones: {
+        Args: { m: Database['public']['Tables']['members']['Row']; p_branch: string };
+        Returns: boolean;
+      };
       send_daily_digests: { Args: { p_now?: string }; Returns: number };
       set_branch_cover: { Args: { p_branch: string; p_path: string }; Returns: undefined };
       set_branch_instagram: { Args: { p_branch: string; p_instagram: string }; Returns: string };
@@ -4658,6 +5401,10 @@ export type Database = {
       set_branch_mode: {
         Args: { p_branch: string; p_mode: Database['public']['Enums']['salon_mode'] };
         Returns: undefined;
+      };
+      set_login_type: {
+        Args: { p_member: string; p_role: Database['public']['Enums']['member_role'] };
+        Returns: Json;
       };
       set_my_branch: { Args: { p_branch: string }; Returns: undefined };
       set_my_pin: { Args: { p_business: string; p_pin: string }; Returns: undefined };
@@ -4702,8 +5449,21 @@ export type Database = {
       staff_has_records: { Args: { p_employee: string }; Returns: boolean };
       start_free_period: { Args: { p_business: string; p_owner: string }; Returns: undefined };
       start_service: { Args: { p_id: string }; Returns: undefined };
-      start_trial: { Args: { p_business: string; p_owner: string }; Returns: boolean };
       starter_price: { Args: { p_aed_fils: number; p_currency: string }; Returns: number };
+      stock_books_check: { Args: { p_business: string }; Returns: Json };
+      stock_in: {
+        Args: { p_branch: string; p_cost: number; p_item: string; p_qty: number };
+        Returns: number;
+      };
+      stock_state: {
+        Args: {
+          p_active: boolean;
+          p_kind: Database['public']['Enums']['item_kind'];
+          p_qty: number;
+          p_reorder: number;
+        };
+        Returns: string;
+      };
       submit_cash_count: { Args: { p: Json }; Returns: Json };
       supplier_balances: {
         Args: { p_business: string };
@@ -4733,6 +5493,7 @@ export type Database = {
       support_thread_json: { Args: { p_thread: string }; Returns: Json };
       support_token_hash: { Args: { p_token: string }; Returns: string };
       support_unread: { Args: Record<PropertyKey, never>; Returns: number };
+      takes_clients: { Args: { p_role_title: string }; Returns: boolean };
       tips_owed: {
         Args: { p_branch: string };
         Returns: {
@@ -4751,6 +5512,44 @@ export type Database = {
       update_branch: { Args: { p: Json; p_branch: string }; Returns: undefined };
       update_document: { Args: { p: Json }; Returns: undefined };
       update_my_profile: { Args: { p: Json }; Returns: undefined };
+      use_approval: {
+        Args: {
+          p_action: string;
+          p_amount: number;
+          p_approval: string;
+          p_branch: string;
+          p_limit: number;
+          p_member: string;
+          p_ref_id: string;
+          p_ref_type: string;
+        };
+        Returns: {
+          action: string;
+          amount: number | null;
+          approved_by: string | null;
+          approved_name: string;
+          branch_id: string;
+          business_id: string;
+          created_at: string;
+          details: NonNullable<Json>;
+          expires_at: string | null;
+          id: string;
+          limit_amount: number | null;
+          method: string;
+          reason: string | null;
+          ref_id: string | null;
+          ref_type: string | null;
+          requested_by: string | null;
+          requested_name: string;
+          used_at: string | null;
+        };
+        SetofOptions: {
+          from: '*';
+          to: 'approvals';
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       wps_status: { Args: { p_business: string }; Returns: Json };
       write_audit: {
         Args: {
@@ -4774,7 +5573,7 @@ export type Database = {
         'booked' | 'waiting' | 'in_progress' | 'completed' | 'cancelled' | 'no_show';
       deposit_status: 'none' | 'held' | 'applied' | 'forfeited' | 'refunded';
       item_kind: 'consumable' | 'retail' | 'tool';
-      member_role: 'owner' | 'cashier' | 'staff' | 'accountant';
+      member_role: 'owner' | 'manager' | 'cashier' | 'staff' | 'accountant';
       payment_method: 'cash' | 'card' | 'wallet' | 'bank';
       sale_line_kind: 'service' | 'retail' | 'custom';
       sale_status: 'completed' | 'partially_refunded' | 'refunded';
@@ -4907,7 +5706,7 @@ export const Constants = {
       appointment_status: ['booked', 'waiting', 'in_progress', 'completed', 'cancelled', 'no_show'],
       deposit_status: ['none', 'held', 'applied', 'forfeited', 'refunded'],
       item_kind: ['consumable', 'retail', 'tool'],
-      member_role: ['owner', 'cashier', 'staff', 'accountant'],
+      member_role: ['owner', 'manager', 'cashier', 'staff', 'accountant'],
       payment_method: ['cash', 'card', 'wallet', 'bank'],
       sale_line_kind: ['service', 'retail', 'custom'],
       sale_status: ['completed', 'partially_refunded', 'refunded'],

@@ -112,7 +112,8 @@
     "more": "More",
     "pay": "My pay",
     "reportsTab": "Reports",
-    "accountsTab": "Accounting"
+    "accountsTab": "Accounting",
+    "myBookings": "My bookings"
   },
   "language": {
     "title": "Language",
@@ -456,7 +457,12 @@
       "plan": "Plan & billing",
       "admin": "Platform console",
       "mySales": "My sales",
-      "branches": "Branches"
+      "branches": "Branches",
+      "stock": "Stock",
+      "pettyCash": "Petty cash",
+      "suppliersBills": "Suppliers & bills",
+      "payroll": "Payroll",
+      "hygiene": "Hygiene log"
     },
     "logOut": "Log out",
     "title": "More",
@@ -640,7 +646,7 @@
         },
         "roles": {
           "title": "The right access for everyone",
-          "body": "Owner, cashier, barber or stylist and accountant each see only what their job needs."
+          "body": "Owner, manager, front desk, stylist and accountant each see only what their job needs."
         },
         "booking": {
           "title": "Free online booking page",
@@ -791,7 +797,7 @@
         },
         "staff": {
           "q": "Can my staff see my profits?",
-          "a": "No. The owner, cashier, barber or stylist and accountant each see only what their job needs."
+          "a": "No. The owner, manager, front desk, stylist and accountant each see only what their job needs."
         },
         "printer": {
           "q": "Do I need a receipt printer?",
@@ -3318,5 +3324,10 @@
     "add": "Add branch",
     "added": "Added {{name}}",
     "priceNote": "This branch adds {{price}} a month to your plan for up to {{included}} people who sign in there, and {{extra}} for each extra person, from your next payment. Nothing is charged now."
+  },
+  "noAccess": {
+    "title": "You don't have access to this page",
+    "body": "Your login type can't open this page. Ask the salon owner if you need it.",
+    "home": "Go to Home"
   }
 }

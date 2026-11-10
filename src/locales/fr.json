@@ -112,7 +112,8 @@
     "more": "Plus",
     "pay": "Ma paie",
     "reportsTab": "Rapports",
-    "accountsTab": "Comptabilité"
+    "accountsTab": "Comptabilité",
+    "myBookings": "Mes RDV"
   },
   "language": {
     "title": "Langue",
@@ -456,7 +457,12 @@
       "plan": "Abonnement et facturation",
       "admin": "Console de la plateforme",
       "mySales": "Mes ventes",
-      "branches": "Établissements"
+      "branches": "Établissements",
+      "stock": "Stock",
+      "pettyCash": "Petite caisse",
+      "suppliersBills": "Fournisseurs et factures",
+      "payroll": "Paie",
+      "hygiene": "Registre d’hygiène"
     },
     "logOut": "Se déconnecter",
     "title": "Plus",
@@ -640,7 +646,7 @@
         },
         "roles": {
           "title": "Le bon accès pour chacun",
-          "body": "Propriétaire, caissier, barbier ou styliste et comptable ne voient que ce dont leur poste a besoin."
+          "body": "Propriétaire, gérant, accueil, styliste et comptable : chacun ne voit que ce dont son travail a besoin."
         },
         "booking": {
           "title": "Page de réservation en ligne gratuite",
@@ -791,7 +797,7 @@
         },
         "staff": {
           "q": "Mon équipe peut-elle voir mes bénéfices ?",
-          "a": "Non. Le propriétaire, le caissier, le barbier ou coiffeur et le comptable ne voient que ce dont leur travail a besoin."
+          "a": "Non. Le propriétaire, le gérant, l’accueil, le styliste et le comptable ne voient que ce dont leur travail a besoin."
         },
         "printer": {
           "q": "Ai-je besoin d’une imprimante de reçus ?",
@@ -3319,5 +3325,10 @@
     "add": "Ajouter",
     "added": "{{name}} ajouté",
     "priceNote": "Cet établissement ajoute {{price}} par mois à votre formule pour {{included}} personnes qui s’y connectent au maximum, et {{extra}} par personne en plus, à partir de votre prochain paiement. Rien n’est facturé maintenant."
+  },
+  "noAccess": {
+    "title": "Vous n’avez pas accès à cette page",
+    "body": "Votre type de compte n’ouvre pas cette page. Demandez au propriétaire du salon si vous en avez besoin.",
+    "home": "Aller à l’accueil"
   }
 }

@@ -20,10 +20,10 @@ describe('the app and the database hold the same list', () => {
 });
 
 describe('tabsFor (brief B8)', () => {
-  it('gives the owner and the front desk the five tabs, the manager Reports too', () => {
+  it('gives the owner the five tabs, the manager and the front desk Closing too', () => {
     expect(tabsFor('owner', off)).toEqual(['index', 'queue', 'sale', 'customers', 'more']);
-    expect(tabsFor('cashier', off)).toEqual(['index', 'queue', 'sale', 'customers', 'more']);
-    expect(tabsFor('manager', off)).toEqual(['index', 'queue', 'sale', 'customers', 'reports-tab', 'more']);
+    expect(tabsFor('cashier', off)).toEqual(['index', 'queue', 'sale', 'customers', 'closing-tab', 'more']);
+    expect(tabsFor('manager', off)).toEqual(['index', 'queue', 'sale', 'customers', 'closing-tab', 'more']);
   });
 
   it('gives a stylist Sale only when the branch allows it', () => {

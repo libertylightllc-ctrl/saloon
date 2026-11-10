@@ -20,14 +20,21 @@ import { WpsMontajiTab } from './WpsMontajiTab';
 
 type Tab = 'register' | 'binder' | 'hygiene' | 'wps';
 
-/** Compliance: expiry register, inspection binder, hygiene log, WPS & Montaji. A cashier sees the hygiene log. */
+/**
+ * Compliance: expiry register, inspection binder, hygiene log, WPS & Montaji. Owner and manager keep the records, the
+ * accountant views them; the front desk and stylists see only the hygiene log, which the accountant does not sign.
+ */
 export function ComplianceScreen() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ tab?: string }>();
   const { business, role } = useWorkspace();
-  const owner = can(role, 'manageCompliance');
-  // WPS salary proof and Montaji product numbers are UAE rules.
-  const tabs: Tab[] = owner ? ['register', 'binder', 'hygiene', ...(isUae(business.country_code) ? (['wps'] as const) : [])] : ['hygiene'];
+  const owner = can(role, 'viewCompliance');
+  // WPS salary proof (for those who pay salaries) and Montaji product numbers are UAE rules.
+  const tabs: Tab[] = [
+    ...(owner ? (['register', 'binder'] as const) : []),
+    ...(can(role, 'signHygiene') ? (['hygiene'] as const) : []),
+    ...(owner && can(role, 'payPayroll') && isUae(business.country_code) ? (['wps'] as const) : []),
+  ];
   const [tab, setTab] = useState<Tab>(tabs.includes(params.tab as Tab) ? (params.tab as Tab) : tabs[0]!);
   const slots = useCompliance(business.id, owner);
 
@@ -56,7 +63,9 @@ function Register() {
   const router = useRouter();
   const dates = useDates();
   const docName = useDocName();
-  const { business } = useWorkspace();
+  const { business, role } = useWorkspace();
+  // The accountant views the records; owner and manager keep them.
+  const manage = can(role, 'manageCompliance');
   const slots = useCompliance(business.id);
   // The item whose "⋯" was tapped (by key, so the sheet always shows its latest details).
   const [menuKey, setMenuKey] = useState<string | null>(null);
@@ -85,16 +94,18 @@ function Register() {
             ]}
             badges={<StatusPill status={DOC_STATUS[s.status]} label={t(`compliance.status.${s.status}`)} />}
             action={
-              <IconButton
-                icon="ellipsis"
-                variant="plain"
-                accessibilityLabel={t('compliance.actionsFor', { name: docName(s.doc_type) })}
-                onPress={() => setMenuKey(s.slot_key)}
-                testID={`doc-menu-${s.doc_type}-${s.holder_name}`}
-              />
+              manage ? (
+                <IconButton
+                  icon="ellipsis"
+                  variant="plain"
+                  accessibilityLabel={t('compliance.actionsFor', { name: docName(s.doc_type) })}
+                  onPress={() => setMenuKey(s.slot_key)}
+                  testID={`doc-menu-${s.doc_type}-${s.holder_name}`}
+                />
+              ) : undefined
             }
-            chevron
-            onPress={() => open(s)}
+            chevron={manage}
+            onPress={manage ? () => open(s) : undefined}
           />
         );
         return (
@@ -102,12 +113,14 @@ function Register() {
             <KpiGrid>
               <KpiCard icon="shield" label={t('compliance.readiness')} value={`${readiness}%`} sub={t('compliance.readinessSub', { ok, total: rows.length })} testID="compliance-readiness" />
             </KpiGrid>
-            <Button label={t('compliance.addOther')} icon="plus" variant="ghost" size="md" onPress={() => router.push({ pathname: '/compliance/doc', params: { new: '1' } })} testID="doc-new" />
+            {manage ? (
+              <Button label={t('compliance.addOther')} icon="plus" variant="ghost" size="md" onPress={() => router.push({ pathname: '/compliance/doc', params: { new: '1' } })} testID="doc-new" />
+            ) : null}
             <SectionHeader title={t('compliance.salon')} />
             {rows.filter((s) => s.holder_type !== 'employee').map(row)}
             <SectionHeader title={t('compliance.staff')} />
             {rows.filter((s) => s.holder_type === 'employee').map(row)}
-            <RemovedList />
+            {manage ? <RemovedList /> : null}
             <DocumentActions slot={rows.find((s) => s.slot_key === menuKey) ?? null} onClose={() => setMenuKey(null)} />
           </View>
         );
