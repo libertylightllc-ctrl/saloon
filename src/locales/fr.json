@@ -171,7 +171,8 @@
       "newSale": "Nouvelle vente",
       "expense": "Dépense",
       "stock": "Stock",
-      "customer": "Client"
+      "customer": "Client",
+      "pettyCash": "Petite caisse"
     },
     "needsAttention": "À traiter",
     "attentionActions": {
@@ -246,7 +247,9 @@
     "attentionClose": "Fermer",
     "viewClosing": "Clôture de caisse",
     "cashBelowZero": "Plus d’espèces sont sorties que rentrées. Comptez le tiroir.",
-    "tipsPart": "Pourboires : {{amount}}"
+    "tipsPart": "Pourboires : {{amount}}",
+    "cashBlind": "Pas encore compté",
+    "cashBlindSub": "Comptage à l’aveugle : l’attendu s’affiche une fois le comptage du jour envoyé."
   },
   "queue": {
     "title": "File d’attente",
@@ -1116,11 +1119,11 @@
     "invalid_role": "Choisissez un rôle.",
     "server_busy": "Le serveur met trop de temps à répondre. Réessayez dans un instant.",
     "unknown": "Un problème est survenu. Réessayez.",
-    "day_closed": "La caisse de cette journée est clôturée. Encaissez par carte ou demandez au propriétaire de renvoyer le comptage.",
+    "day_closed": "La caisse de ce jour est clôturée. Prenez la carte, ou demandez au propriétaire ou à un gérant de renvoyer le comptage.",
     "invalid_date": "Cette journée ne peut pas être clôturée. Les journées se clôturent dans l’ordre, jusqu’à aujourd’hui.",
     "count_required": "Saisissez les espèces comptées.",
     "confirm_required": "Cochez la case pour confirmer que le tiroir était fermé pendant le comptage.",
-    "previous_close_pending": "Une clôture précédente attend le propriétaire. Elle doit d’abord être approuvée.",
+    "previous_close_pending": "Une clôture précédente attend une approbation. Elle doit d’abord être approuvée.",
     "item_exists": "Un article porte déjà ce nom.",
     "price_required": "Les articles destinés à la vente doivent avoir un prix de vente.",
     "item_unavailable": "Ce produit n’est plus en vente. Actualisez et réessayez.",
@@ -1598,7 +1601,9 @@
     },
     "withVat": "La facture inclut la {{tax}} ({{rate}})",
     "withVatHint": "Sur une facture fiscale. Vous pouvez la récupérer dans votre déclaration de {{tax}}.",
-    "vatAmount": "{{tax}} incluse"
+    "vatAmount": "{{tax}} incluse",
+    "pettyTitle": "Payer avec la petite caisse",
+    "pinAbove": "Au-delà de {{amount}} : le code d’un gérant ou du propriétaire est nécessaire."
   },
   "purchases": {
     "title": "Achats et fournisseurs",
@@ -1712,7 +1717,7 @@
       "balanced": "Équilibré"
     },
     "reason": "Motif de l’écart",
-    "reasonHint": "Obligatoire si le comptage ne correspond pas.",
+    "reasonHint": "Obligatoire quand le comptage diffère de {{amount}} ou plus.",
     "reasonWas": "Motif : {{reason}}",
     "countedBy": "Compté par",
     "countedByName": "Compté par {{name}}",
@@ -1733,17 +1738,17 @@
     "approve": "Approuver la clôture",
     "done": {
       "draft": "Brouillon enregistré",
-      "submit": "Envoyé au propriétaire pour approbation",
+      "submit": "Envoyé pour approbation",
       "approve": "Journée clôturée et verrouillée",
       "sentBack": "Renvoyé pour un nouveau comptage"
     },
     "locked": "Verrouillé. Plus aucune opération en espèces ne peut être enregistrée pour cette journée.",
-    "waiting": "En attente du propriétaire. La caisse est clôturée pour cette journée.",
+    "waiting": "En attente de l’accord du propriétaire ou d’un gérant. La caisse de ce jour est clôturée.",
     "sendBack": "Renvoyer",
     "sendBackHint": "Le caissier recompte. La journée est rouverte aux espèces jusqu’au nouvel envoi.",
     "sendBackReason": "Que faut-il vérifier ?",
     "sentBack": "Renvoyé",
-    "sentBackBecause": "Le propriétaire a renvoyé ce comptage : {{reason}}",
+    "sentBackBecause": "Renvoyé pour un nouveau comptage : {{reason}}",
     "notCounted": "Pas encore compté.",
     "tips": "Verser les pourboires",
     "noTips": "Aucun pourboire dû.",
@@ -1775,6 +1780,21 @@
       "note": "Note (facultatif)",
       "save": "Ajouter au tiroir",
       "saved": "{{amount}} ajoutés au tiroir"
+    },
+    "blind": {
+      "title": "Comptage à l’aveugle",
+      "body": "Comptez la caisse sans voir le montant attendu. L’attendu et l’écart s’affichent une fois votre comptage envoyé."
+    },
+    "reasonOptional": "Note sur l’écart (facultatif)",
+    "bank": {
+      "reached": "{{amount}} est arrivé à la banque le {{date}}.",
+      "reachedRef": "{{amount}} est arrivé à la banque le {{date}} · bordereau {{ref}}",
+      "notYet": "{{amount}} sorti pour la banque : dépôt pas encore enregistré.",
+      "record": "Enregistrer le dépôt bancaire",
+      "hint": "Le jour où {{amount}} a été versé à la banque, et le numéro du bordereau. Cela ne fait que l’enregistrer : l’argent est passé sur le compte bancaire à l’approbation de la clôture.",
+      "day": "Jour d’arrivée à la banque",
+      "ref": "Numéro du bordereau (facultatif)",
+      "saved": "Dépôt bancaire enregistré"
     }
   },
   "inventory": {
@@ -1889,7 +1909,8 @@
     "view": "Ouvrir la photo du reçu",
     "none": "Pas encore de photo. Ajoutez-en une pour pouvoir jeter le reçu papier.",
     "added": "Photo du reçu ajoutée",
-    "failedLater": "Enregistré. La photo n’a pas été envoyée — ajoutez-la depuis les détails."
+    "failedLater": "Enregistré. La photo n’a pas été envoyée — ajoutez-la depuis les détails.",
+    "photoNeeded": "Photo du reçu (obligatoire)"
   },
   "staff": {
     "title": "Équipe",
@@ -3362,6 +3383,7 @@
     "discount": "Remise de {{pct}} (limite {{limit}})",
     "priceChange": "Prix modifiés de {{amount}}",
     "refund": "Remboursement de {{amount}} · vente n° {{number}}",
-    "clockOther": "{{action}} pour {{name}}"
+    "clockOther": "{{action}} pour {{name}}",
+    "pettyCash": "Petite caisse {{amount}}"
   }
 }

@@ -171,7 +171,8 @@
       "newSale": "New sale",
       "expense": "Expense",
       "stock": "Stock",
-      "customer": "Customer"
+      "customer": "Customer",
+      "pettyCash": "Petty cash"
     },
     "needsAttention": "Needs attention",
     "attentionActions": {
@@ -246,7 +247,9 @@
     "attentionClose": "Close",
     "viewClosing": "Cash closing",
     "cashBelowZero": "More cash went out than came in. Count the drawer.",
-    "tipsPart": "Tips: {{amount}}"
+    "tipsPart": "Tips: {{amount}}",
+    "cashBlind": "Not counted yet",
+    "cashBlindSub": "Blind count: the expected cash shows once today's count is sent."
   },
   "queue": {
     "title": "Queue",
@@ -1116,11 +1119,11 @@
     "invalid_role": "Pick a role.",
     "server_busy": "The server is taking too long. Try again in a moment.",
     "unknown": "Something went wrong. Try again.",
-    "day_closed": "This day's cash is closed. Take card, or ask the owner to send the count back.",
+    "day_closed": "This day's cash is closed. Take card, or ask the owner or a manager to send the count back.",
     "invalid_date": "That day cannot be closed. Days close in order, up to today.",
     "count_required": "Enter the cash you counted.",
     "confirm_required": "Tick the box to confirm the drawer was closed while counting.",
-    "previous_close_pending": "An earlier close is waiting for the owner. It must be approved first.",
+    "previous_close_pending": "An earlier close is waiting for approval. It must be approved first.",
     "item_exists": "An item with that name already exists.",
     "price_required": "Retail items need a selling price.",
     "item_unavailable": "That product is no longer for sale. Refresh and try again.",
@@ -1598,7 +1601,9 @@
     },
     "withVat": "The bill includes {{tax}} ({{rate}})",
     "withVatHint": "From a tax invoice. You can claim it back in your {{tax}} return.",
-    "vatAmount": "{{tax}} included"
+    "vatAmount": "{{tax}} included",
+    "pettyTitle": "Pay from petty cash",
+    "pinAbove": "Above {{amount}}: a manager's or the owner's PIN is needed."
   },
   "purchases": {
     "title": "Purchases & suppliers",
@@ -1712,7 +1717,7 @@
       "balanced": "Balanced"
     },
     "reason": "Reason for the difference",
-    "reasonHint": "Needed when the count does not match.",
+    "reasonHint": "Needed when the count is {{amount}} or more off.",
     "reasonWas": "Reason: {{reason}}",
     "countedBy": "Counted by",
     "countedByName": "Counted by {{name}}",
@@ -1733,17 +1738,17 @@
     "approve": "Approve closing",
     "done": {
       "draft": "Draft saved",
-      "submit": "Sent to the owner for approval",
+      "submit": "Sent for approval",
       "approve": "Day closed and locked",
       "sentBack": "Sent back for a recount"
     },
     "locked": "Locked. No more cash can be recorded for this day.",
-    "waiting": "Waiting for the owner. Cash is closed for this day.",
+    "waiting": "Waiting for approval by the owner or a manager. Cash is closed for this day.",
     "sendBack": "Send back",
     "sendBackHint": "The cashier counts again. The day opens for cash until it is submitted again.",
     "sendBackReason": "What should be checked?",
     "sentBack": "Sent back",
-    "sentBackBecause": "The owner sent this count back: {{reason}}",
+    "sentBackBecause": "Sent back for a recount: {{reason}}",
     "notCounted": "Not counted yet.",
     "tips": "Pay out tips",
     "noTips": "No tips owed.",
@@ -1775,6 +1780,21 @@
       "note": "Note (optional)",
       "save": "Add to the drawer",
       "saved": "{{amount}} added to the drawer"
+    },
+    "blind": {
+      "title": "Blind count",
+      "body": "Count the drawer without seeing what is expected. The expected cash and the difference show once your count is sent."
+    },
+    "reasonOptional": "Note on the difference (optional)",
+    "bank": {
+      "reached": "{{amount}} reached the bank on {{date}}.",
+      "reachedRef": "{{amount}} reached the bank on {{date}} · slip {{ref}}",
+      "notYet": "{{amount}} taken out for the bank: not recorded as banked yet.",
+      "record": "Record the bank deposit",
+      "hint": "The day {{amount}} was paid in at the bank, and the slip number. This only records it: the money moved to the bank account when the close was approved.",
+      "day": "Day it reached the bank",
+      "ref": "Deposit slip number (optional)",
+      "saved": "Bank deposit recorded"
     }
   },
   "inventory": {
@@ -1889,7 +1909,8 @@
     "view": "Open the receipt photo",
     "none": "No photo yet. Add one so the paper receipt can be thrown away.",
     "added": "Receipt photo added",
-    "failedLater": "Saved. The photo did not upload — add it from the details."
+    "failedLater": "Saved. The photo did not upload — add it from the details.",
+    "photoNeeded": "Photo of the receipt (needed)"
   },
   "staff": {
     "title": "Staff",
@@ -3361,6 +3382,7 @@
     "discount": "Discount {{pct}} (limit {{limit}})",
     "priceChange": "Prices changed by {{amount}}",
     "refund": "Refund {{amount}} · sale #{{number}}",
-    "clockOther": "{{action}} for {{name}}"
+    "clockOther": "{{action}} for {{name}}",
+    "pettyCash": "Petty cash {{amount}}"
   }
 }

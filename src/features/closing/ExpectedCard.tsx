@@ -5,7 +5,7 @@ import { useLedgerLabels } from '@/features/accounts/labels';
 import { formatMoney } from '@/lib/money';
 import { useDates } from '@/lib/useDates';
 import { spacing, useTheme } from '@/theme';
-import { Card, StatusPill, Text } from '@/ui';
+import { Card, Icon, StatusPill, Text } from '@/ui';
 
 import type { ClosingPreview } from './api';
 import { varianceKind } from './count';
@@ -23,16 +23,32 @@ export function MoneyLine({ label, value, strong, testID }: { label: string; val
   );
 }
 
-/** "Expected cash · Tue 22 Sep": opening, each kind of cash in and out that day, and the total. */
+/**
+ * "Expected cash · Tue 22 Sep": opening, each kind of cash in and out that day, and the total. With the blind count on,
+ * the front desk sees only that the figures come after their count.
+ */
 export function ExpectedCard({ preview }: { preview: ClosingPreview }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const dates = useDates();
   const labels = useLedgerLabels();
+  if (preview.blind || preview.expected_cash_minor === null) {
+    return (
+      <Card variant="outlined" style={styles.card} testID="closing-blind">
+        <View style={styles.row}>
+          <Icon name="lock" size={20} color={theme.colors.textSecondary} />
+          <Text variant="h4" style={styles.flex}>
+            {t('closing.blind.title')}
+          </Text>
+        </View>
+        <Text color="textSecondary">{t('closing.blind.body')}</Text>
+      </Card>
+    );
+  }
   return (
     <Card variant="outlined" style={styles.card}>
       <Text variant="h4">{t('closing.expectedOn', { date: dates.day(preview.business_date, 'EEE d MMM') })}</Text>
-      <MoneyLine label={t('closing.opening')} value={preview.opening_cash_minor} testID="closing-opening" />
+      <MoneyLine label={t('closing.opening')} value={preview.opening_cash_minor ?? 0} testID="closing-opening" />
       {preview.lines.map((l) => (
         <MoneyLine
           key={l.kind}

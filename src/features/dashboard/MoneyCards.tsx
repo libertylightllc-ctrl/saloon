@@ -25,6 +25,8 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
   const { role } = useWorkspace();
   const contentWidth = useContentWidth();
   const closed = data.closing?.today_status;
+  // Null: hidden by the blind count until today's count is sent (front desk).
+  const blind = data.expected_cash === null;
   const cash = data.expected_cash ?? 0;
   const yesterday = data.expected_cash_yesterday ?? 0;
   // Whole percent vs yesterday; none when either day is zero (owner's app check A8).
@@ -40,11 +42,13 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
       style={fill}
       icon="banknote"
       label={t('home.expectedCash')}
-      value={formatMoney(cash)}
-      delta={change !== 0 ? { label: t('home.vsYesterday', { pct: `${Math.abs(change)}%` }), trend: change > 0 ? 'up' : 'down' } : undefined}
+      value={blind ? t('home.cashBlind') : formatMoney(cash)}
+      delta={!blind && change !== 0 ? { label: t('home.vsYesterday', { pct: `${Math.abs(change)}%` }), trend: change > 0 ? 'up' : 'down' } : undefined}
       sub={
         // Below zero only from records made before the drawer was checked (owner's fix list #9): say how to fix it.
-        cash < 0
+        blind
+          ? t('home.cashBlindSub')
+          : cash < 0
           ? t('home.cashBelowZero')
           : closed === 'approved'
             ? t('home.dayClosed')

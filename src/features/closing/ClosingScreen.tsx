@@ -100,7 +100,9 @@ export function ClosingScreen({ asTab = false }: { asTab?: boolean }) {
                       title={dates.day(d.business_date, 'EEE d MMM')}
                       meta={[
                         [
-                          t('closing.historyExpected', { amount: formatMoney(d.expected_cash_minor) }),
+                          d.expected_cash_minor !== null
+                            ? t('closing.historyExpected', { amount: formatMoney(d.expected_cash_minor) })
+                            : null,
                           d.counted_cash_minor !== null ? t('closing.historyCounted', { amount: formatMoney(d.counted_cash_minor) }) : null,
                         ]
                           .filter(Boolean)

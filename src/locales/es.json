@@ -171,7 +171,8 @@
       "newSale": "Nueva venta",
       "expense": "Gasto",
       "stock": "Stock",
-      "customer": "Cliente"
+      "customer": "Cliente",
+      "pettyCash": "Caja chica"
     },
     "needsAttention": "Requiere atención",
     "attentionActions": {
@@ -246,7 +247,9 @@
     "attentionClose": "Cerrar",
     "viewClosing": "Cierre de caja",
     "cashBelowZero": "Salió más efectivo del que entró. Cuenta la caja.",
-    "tipsPart": "Propinas: {{amount}}"
+    "tipsPart": "Propinas: {{amount}}",
+    "cashBlind": "Aún sin contar",
+    "cashBlindSub": "Recuento a ciegas: el efectivo esperado aparece cuando se envía el recuento de hoy."
   },
   "queue": {
     "title": "Fila",
@@ -1116,11 +1119,11 @@
     "invalid_role": "Elige un rol.",
     "server_busy": "El servidor está tardando demasiado. Vuelve a intentarlo en un momento.",
     "unknown": "Algo salió mal. Vuelve a intentarlo.",
-    "day_closed": "La caja de este día está cerrada. Cobra con tarjeta o pide al dueño que devuelva el conteo.",
+    "day_closed": "El efectivo de este día está cerrado. Cobra con tarjeta o pide al dueño o a un gerente que devuelva el recuento.",
     "invalid_date": "Ese día no se puede cerrar. Los días se cierran en orden, hasta hoy.",
     "count_required": "Escribe el efectivo que contaste.",
     "confirm_required": "Marca la casilla para confirmar que la caja estuvo cerrada mientras contabas.",
-    "previous_close_pending": "Hay un cierre anterior esperando al dueño. Primero debe aprobarse.",
+    "previous_close_pending": "Un cierre anterior espera aprobación. Primero hay que aprobarlo.",
     "item_exists": "Ya existe un artículo con ese nombre.",
     "price_required": "Los artículos de venta necesitan un precio de venta.",
     "item_unavailable": "Ese producto ya no está a la venta. Actualiza y vuelve a intentarlo.",
@@ -1598,7 +1601,9 @@
     },
     "withVat": "La factura incluye {{tax}} ({{rate}})",
     "withVatHint": "De una factura fiscal. Puedes recuperarlo en tu declaración de {{tax}}.",
-    "vatAmount": "{{tax}} incluido"
+    "vatAmount": "{{tax}} incluido",
+    "pettyTitle": "Pagar con caja chica",
+    "pinAbove": "Más de {{amount}}: se necesita el PIN de un gerente o del dueño."
   },
   "purchases": {
     "title": "Compras y proveedores",
@@ -1712,7 +1717,7 @@
       "balanced": "Cuadra"
     },
     "reason": "Motivo de la diferencia",
-    "reasonHint": "Obligatorio cuando el conteo no coincide.",
+    "reasonHint": "Obligatorio cuando el recuento difiere en {{amount}} o más.",
     "reasonWas": "Motivo: {{reason}}",
     "countedBy": "Contado por",
     "countedByName": "Contado por {{name}}",
@@ -1733,17 +1738,17 @@
     "approve": "Aprobar cierre",
     "done": {
       "draft": "Borrador guardado",
-      "submit": "Enviado al dueño para su aprobación",
+      "submit": "Enviado para aprobación",
       "approve": "Día cerrado y bloqueado",
       "sentBack": "Devuelto para volver a contar"
     },
     "locked": "Bloqueado. Ya no se puede registrar efectivo en este día.",
-    "waiting": "Esperando al dueño. La caja de este día está cerrada.",
+    "waiting": "Esperando la aprobación del dueño o de un gerente. El efectivo de este día está cerrado.",
     "sendBack": "Devolver",
     "sendBackHint": "El cajero vuelve a contar. El día queda abierto para efectivo hasta que se envíe de nuevo.",
     "sendBackReason": "¿Qué hay que revisar?",
     "sentBack": "Devuelto",
-    "sentBackBecause": "El dueño devolvió este conteo: {{reason}}",
+    "sentBackBecause": "Devuelto para volver a contar: {{reason}}",
     "notCounted": "Aún no se ha contado.",
     "tips": "Pagar propinas",
     "noTips": "No hay propinas pendientes.",
@@ -1775,6 +1780,21 @@
       "note": "Nota (opcional)",
       "save": "Añadir a la caja",
       "saved": "{{amount}} añadidos a la caja"
+    },
+    "blind": {
+      "title": "Recuento a ciegas",
+      "body": "Cuenta la caja sin ver lo esperado. El efectivo esperado y la diferencia aparecen cuando envías tu recuento."
+    },
+    "reasonOptional": "Nota sobre la diferencia (opcional)",
+    "bank": {
+      "reached": "{{amount}} llegó al banco el {{date}}.",
+      "reachedRef": "{{amount}} llegó al banco el {{date}} · comprobante {{ref}}",
+      "notYet": "{{amount}} retirado para el banco: aún no consta como depositado.",
+      "record": "Registrar el depósito bancario",
+      "hint": "El día en que se ingresaron {{amount}} en el banco y el número del comprobante. Solo lo registra: el dinero pasó a la cuenta bancaria al aprobarse el cierre.",
+      "day": "Día en que llegó al banco",
+      "ref": "Número de comprobante (opcional)",
+      "saved": "Depósito bancario registrado"
     }
   },
   "inventory": {
@@ -1889,7 +1909,8 @@
     "view": "Abrir la foto del recibo",
     "none": "Aún no hay foto. Agrega una para poder tirar el recibo en papel.",
     "added": "Foto del recibo agregada",
-    "failedLater": "Guardado. La foto no se subió; agrégala desde los detalles."
+    "failedLater": "Guardado. La foto no se subió; agrégala desde los detalles.",
+    "photoNeeded": "Foto del recibo (obligatoria)"
   },
   "staff": {
     "title": "Personal",
@@ -3362,6 +3383,7 @@
     "discount": "Descuento del {{pct}} (límite {{limit}})",
     "priceChange": "Precios cambiados en {{amount}}",
     "refund": "Reembolso de {{amount}} · venta #{{number}}",
-    "clockOther": "{{action}} para {{name}}"
+    "clockOther": "{{action}} para {{name}}",
+    "pettyCash": "Caja chica {{amount}}"
   }
 }

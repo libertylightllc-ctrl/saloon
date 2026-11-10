@@ -107,6 +107,10 @@ export interface ExpenseInput {
   business_date: BusinessDate;
   note: string | null;
   client_ref: string;
+  /** A receipt photo already uploaded (`<business>/expenses/…`); the front desk always gives one. */
+  receipt_path?: string | null;
+  /** Petty cash above the branch's limit, paid by the front desk: a manager's or the owner's PIN approval. */
+  approval_id?: string;
 }
 
 export function useRecordExpense(businessId: string, branchId: string) {

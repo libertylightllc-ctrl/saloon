@@ -72,7 +72,8 @@ export function HomeScreen() {
     { key: 'book', icon: 'calendarPlus', href: { pathname: '/appointment/new', params: { kind: 'booking' } }, show: can(role, 'book', rules) },
     { key: 'newSale', icon: 'receipt', href: '/sale', show: can(role, 'sell', rules) },
     { key: 'customer', icon: 'contact', href: '/customers/form', show: can(role, 'manageCustomers') },
-    { key: 'expense', icon: 'coins', href: '/expenses/new', show: can(role, 'addExpense') },
+    // The front desk pays small things from the drawer: "Petty cash".
+    { key: role === 'cashier' ? 'pettyCash' : 'expense', icon: 'coins', href: '/expenses/new', show: can(role, 'addExpense') || can(role, 'pettyCash') },
     { key: 'stock', icon: 'boxes', href: '/inventory', show: can(role, 'viewInventory') && role !== 'staff' },
   ];
   const shown = quick.filter((q) => q.show);

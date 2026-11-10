@@ -3,7 +3,7 @@ import { ExpenseFormScreen } from '@/features/moneyout/ExpenseFormScreen';
 
 export default function NewExpense() {
   return (
-    <Allowed cap="addExpense">
+    <Allowed cap={['addExpense', 'pettyCash']}>
       <ExpenseFormScreen />
     </Allowed>
   );

@@ -21,20 +21,27 @@ export interface Closing {
   reason: string | null;
   denominations: Record<string, number>;
   counted_by: string | null;
+  submitted_by: string | null;
+  approved_by: string | null;
   drawer_closed_confirmed: boolean;
   taken_out_minor: number;
   taken_out_to: 'bank' | 'owner' | null;
   submitted_at: string | null;
   approved_at: string | null;
   returned_reason: string | null;
+  /** Cash taken out to the bank: the day it reached the bank and the slip number (record_bank_deposit). */
+  banked_on: BusinessDate | null;
+  bank_ref: string | null;
   updated_at: string;
 }
 
 export interface ClosingPreview {
   business_date: BusinessDate;
   is_today: boolean;
-  opening_cash_minor: number;
-  expected_cash_minor: number;
+  /** Blind count: the front desk sees no expected cash, opening cash or cash list until the day's count is sent. */
+  blind: boolean;
+  opening_cash_minor: number | null;
+  expected_cash_minor: number | null;
   /** One line per kind of cash movement that day (sale, expense, tip_payout …), signed. */
   lines: { kind: string; entries: number; amount_minor: number }[];
   tips_owed: TipOwed[];
@@ -51,7 +58,8 @@ export interface HistoryDay {
   business_date: BusinessDate;
   status: ClosingStatus;
   closing_id: string | null;
-  expected_cash_minor: number;
+  /** Null while hidden by the blind count. */
+  expected_cash_minor: number | null;
   counted_cash_minor: number | null;
   variance_minor: number | null;
   reason: string | null;
@@ -77,7 +85,7 @@ export function useClosingHistory(branchId: string) {
       return (data ?? []).map((d) => ({
         ...d,
         status: d.status as ClosingStatus,
-        expected_cash_minor: Number(d.expected_cash_minor),
+        expected_cash_minor: d.expected_cash_minor === null ? null : Number(d.expected_cash_minor),
         counted_cash_minor: d.counted_cash_minor === null ? null : Number(d.counted_cash_minor),
         variance_minor: d.variance_minor === null ? null : Number(d.variance_minor),
       }));
@@ -85,7 +93,7 @@ export function useClosingHistory(branchId: string) {
   });
 }
 
-/** Who can be picked as "counted by": the owner and cashiers of this business. */
+/** Names of the logins who count, send in and approve closes (also those who have left since). */
 export function useCounters(businessId: string) {
   return useQuery({
     queryKey: [...keys.team(businessId), 'counters'],
@@ -94,8 +102,7 @@ export function useCounters(businessId: string) {
         .from('members')
         .select('id, display_name, role')
         .eq('business_id', businessId)
-        .eq('active', true)
-        .in('role', ['owner', 'cashier'])
+        .in('role', ['owner', 'manager', 'cashier'])
         .order('created_at');
       if (error) throw error;
       return data;
@@ -116,7 +123,6 @@ export interface CountInput {
   business_date: BusinessDate;
   counted_cash_minor: number | null;
   denominations: Record<string, number>;
-  counted_by: string;
   drawer_closed_confirmed: boolean;
   reason: string | null;
   taken_out_minor: number;
@@ -176,6 +182,22 @@ export function useAddDrawerCash(branchId: string, businessId: string) {
   return useMutation({
     mutationFn: async (input: { amount_minor: number; from: 'owner' | 'bank'; note: string }) => {
       const { error } = await supabase.rpc('add_drawer_cash', { p: asJson({ ...input, branch_id: branchId }) });
+      if (error) throw error;
+    },
+    onSuccess: done,
+  });
+}
+
+/** Cash taken out to the bank at an approved close: the day it reached the bank and the slip number. No money moves. */
+export function useRecordBankDeposit(branchId: string, businessId: string) {
+  const done = useInvalidateClosing(branchId, businessId);
+  return useMutation({
+    mutationFn: async (input: { closing_id: string; banked_on: BusinessDate; ref: string }) => {
+      const { error } = await supabase.rpc('record_bank_deposit', {
+        p_closing: input.closing_id,
+        p_banked_on: input.banked_on,
+        p_ref: input.ref,
+      });
       if (error) throw error;
     },
     onSuccess: done,

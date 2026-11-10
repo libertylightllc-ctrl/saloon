@@ -7,8 +7,9 @@ import { supabase } from '@/lib/supabase';
 export interface Dashboard {
   business_date: string;
   role: string;
-  expected_cash?: number;
-  expected_cash_yesterday?: number;
+  /** Null while the blind count hides it (front desk, before the day's count). */
+  expected_cash?: number | null;
+  expected_cash_yesterday?: number | null;
   /** total_minor is without the tip; tips_minor is the day's tips (owner's app check A7). */
   sales?: { count: number; total_minor: number; tips_minor?: number; refunded_minor: number; services: number };
   payment_mix?: { cash: number; card: number; wallet: number; deposits: number };

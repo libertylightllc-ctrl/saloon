@@ -38,6 +38,7 @@ export function ExpensesScreen() {
   const dates = useDates();
   const name = useCategoryName();
   const { business, branch, role } = useWorkspace();
+  const adds = can(role, 'addExpense') || can(role, 'pettyCash');
   const today = businessDate(new Date(), business.timezone);
   const [month, setMonth] = useState<MonthKey>(businessMonth(new Date(), business.timezone));
   const [from, to] = monthRange(month);
@@ -54,7 +55,7 @@ export function ExpensesScreen() {
           title={t('expenses.title')}
           onBack
           right={
-            can(role, 'addExpense') ? (
+            adds ? (
               <Button label={t('common.new')} icon="plus" size="sm" variant="secondary" onPress={() => router.push('/expenses/new')} testID="expenses-new" />
             ) : undefined
           }
@@ -69,8 +70,8 @@ export function ExpensesScreen() {
           <EmptyState
             illustration="no-results"
             message={t('expenses.empty')}
-            actionLabel={can(role, 'addExpense') ? t('expenses.add') : undefined}
-            onAction={can(role, 'addExpense') ? () => router.push('/expenses/new') : undefined}
+            actionLabel={adds ? t('expenses.add') : undefined}
+            onAction={adds ? () => router.push('/expenses/new') : undefined}
           />
         }
       >

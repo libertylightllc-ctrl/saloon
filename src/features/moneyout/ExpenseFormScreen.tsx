@@ -4,10 +4,13 @@ import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { ApprovalPanel } from '@/features/approvals/ApprovalSheet';
+import { isApprovalNeeded } from '@/features/approvals/api';
 import { useWorkspace } from '@/features/auth/session';
-import { vatFromInclusive } from '@/lib/money';
+import { useControls } from '@/features/controls/api';
+import { formatMoney, vatFromInclusive } from '@/lib/money';
 import { businessDate, shiftBusinessDate } from '@/lib/dates';
-import { can } from '@/lib/permissions';
+import { can, levelOf } from '@/lib/permissions';
 import { spacing } from '@/theme';
 import {
   BottomSheet,
@@ -27,7 +30,7 @@ import {
 } from '@/ui';
 
 import { PhotoButtons, PickedPreview } from './ReceiptPhoto';
-import { useAttachReceipt, type PickedPhoto } from './receipts';
+import { uploadPhoto, type PickedPhoto } from './receipts';
 import { useExpenseCategories, useRecordExpense, useSaveExpenseCategory, type PayMethod } from './api';
 import { categoryIcon, useCategoryName } from './labels';
 
@@ -40,7 +43,12 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-/** Record money spent that is not stock: tea & food, electricity, water, internet, uniforms, dry cleaning… */
+/**
+ * Record money spent that is not stock: tea & food, electricity, water, internet, uniforms, dry cleaning… Cash comes
+ * from the drawer (petty cash); card and bank do not. The front desk pays only petty cash, today, always with a receipt
+ * photo, and above the branch's limit with a manager's or the owner's PIN (asked after the server has checked the
+ * drawer, so a PIN is not used on cash that is not there). The accountant pays by card or bank only.
+ */
 export function ExpenseFormScreen() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -48,16 +56,24 @@ export function ExpenseFormScreen() {
   const name = useCategoryName();
   const { business, branch, role } = useWorkspace();
   const owner = can(role, 'payOrReverseMoneyOut');
+  const petty = levelOf(role, 'pettyCash') === 'limit';
+  const methods: PayMethod[] = [...(can(role, 'pettyCash') ? ['cash' as const] : []), ...(can(role, 'addExpense') ? (['card', 'bank'] as const) : [])];
   const today = businessDate(new Date(), business.timezone);
   const categories = useExpenseCategories(business.id);
   const record = useRecordExpense(business.id, branch.id);
   const saveCategory = useSaveExpenseCategory(business.id);
-  const attach = useAttachReceipt('expense', business.id);
+  const controls = useControls(branch.id);
+  const limit = controls.data?.petty_cash_limit_minor ?? null;
   const [photo, setPhoto] = useState<PickedPhoto | null>(null);
+  // The photo goes up before the expense is saved; kept so a retry (or the PIN step) does not upload it again.
+  const [receiptPath, setReceiptPath] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<unknown>(null);
+  const [asking, setAsking] = useState(false);
 
   const [amount, setAmount] = useState<number | null>(null);
   const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [method, setMethod] = useState<PayMethod>('cash');
+  const [method, setMethod] = useState<PayMethod>(methods[0] ?? 'cash');
   const [date, setDate] = useState(today);
   const [note, setNote] = useState('');
   const [clientRef] = useState(() => Crypto.randomUUID());
@@ -68,42 +84,91 @@ export function ExpenseFormScreen() {
   const [withVat, setWithVat] = useState(false);
   const [vatEdited, setVatEdited] = useState<number | null>(null);
   const vat = vatRegistered && withVat && amount ? (vatEdited ?? vatFromInclusive(amount, branch.tax_rate_bps)) : 0;
-  const ready = Boolean(amount && amount > 0 && categoryId) && vat < (amount ?? 0);
-  const save = () =>
+  const ready = Boolean(amount && amount > 0 && categoryId) && vat < (amount ?? 0) && (!petty || photo !== null);
+  const pickPhoto = (picked: PickedPhoto | null) => {
+    setPhoto(picked);
+    setReceiptPath(null);
+  };
+  const save = async (approvalId?: string) => {
+    let path = receiptPath;
+    if (photo && !path) {
+      setUploading(true);
+      setUploadError(null);
+      try {
+        path = await uploadPhoto('receipts', `${business.id}/expenses`, clientRef, photo);
+        setReceiptPath(path);
+      } catch (e) {
+        setUploadError(e);
+        return;
+      } finally {
+        setUploading(false);
+      }
+    }
     record.mutate(
-      { category_id: categoryId!, amount_minor: amount!, vat_minor: vat, method, business_date: date, note: note.trim() || null, client_ref: clientRef },
       {
-        // The photo goes up once the expense exists; if it fails the expense stays and the photo can be added later.
-        onSuccess: async (r) => {
-          if (photo) {
-            try {
-              await attach.mutateAsync({ rowId: r.expense_id, photo });
-            } catch {
-              toast(t('receipts.failedLater'));
-              router.back();
-              return;
-            }
-          }
+        category_id: categoryId!,
+        amount_minor: amount!,
+        vat_minor: vat,
+        method,
+        business_date: petty ? today : date,
+        note: note.trim() || null,
+        client_ref: clientRef,
+        receipt_path: path,
+        approval_id: approvalId,
+      },
+      {
+        onSuccess: () => {
           toast(t('expenses.saved'));
           router.back();
         },
+        onError: (e) => {
+          if (isApprovalNeeded(e)) setAsking(true);
+        },
       },
     );
+  };
 
   return (
     <>
       <Screen
-        header={<HeaderBand title={t('expenses.newTitle')} onBack />}
+        header={<HeaderBand title={t(petty ? 'expenses.pettyTitle' : 'expenses.newTitle')} onBack />}
         footer={
-          // The error sits by Save, which stays pinned, so "not enough cash in the drawer" is seen without scrolling.
-          <View style={styles.footer}>
-            <FormError error={record.error} />
-            <Button label={t('expenses.save')} onPress={save} disabled={!ready} loading={record.isPending || attach.isPending} testID="expense-save" />
-          </View>
+          asking ? (
+            <ApprovalPanel
+              request={{
+                action: 'petty_cash',
+                amount: amount ?? 0,
+                summary: t('approval.pettyCash', { amount: formatMoney(amount ?? 0) }),
+              }}
+              onApproved={(a) => {
+                setAsking(false);
+                void save(a.id);
+              }}
+              onBack={() => setAsking(false)}
+            />
+          ) : (
+            // The error sits by Save, which stays pinned, so "not enough cash in the drawer" is seen without scrolling.
+            <View style={styles.footer}>
+              <FormError error={uploadError ?? record.error} />
+              <Button
+                label={t('expenses.save')}
+                onPress={() => void save()}
+                disabled={!ready}
+                loading={record.isPending || uploading}
+                testID="expense-save"
+              />
+            </View>
+          )
         }
       >
         <View style={styles.body}>
-          <MoneyInput label={t('expenses.amount')} value={amount} onChange={setAmount} testID="expense-amount" />
+          <MoneyInput
+            label={t('expenses.amount')}
+            hint={petty && limit !== null ? t('expenses.pinAbove', { amount: formatMoney(limit) }) : undefined}
+            value={amount}
+            onChange={setAmount}
+            testID="expense-amount"
+          />
           {vatRegistered ? (
             <View style={styles.vat}>
               <SwitchRow label={t('expenses.withVat')} hint={t('expenses.withVatHint')} value={withVat} onChange={setWithVat} testID="expense-with-vat" />
@@ -130,9 +195,9 @@ export function ExpenseFormScreen() {
             </QueryState>
           </Section>
           <Section title={t('expenses.paidBy')}>
-            {owner ? (
+            {methods.length > 1 ? (
               <SegmentTabs<PayMethod>
-                items={(['cash', 'card', 'bank'] as const).map((m) => ({ key: m, label: t(`expenses.methods.${m}`) }))}
+                items={methods.map((m) => ({ key: m, label: t(`expenses.methods.${m}`) }))}
                 value={method}
                 onChange={setMethod}
                 testID="expense-method"
@@ -144,14 +209,14 @@ export function ExpenseFormScreen() {
               {t(method === 'cash' ? 'expenses.cashHint' : 'expenses.bankHint')}
             </Text>
           </Section>
-          {owner ? (
+          {!petty ? (
             <Section title={t('expenses.date')}>
               <DateStrip dates={Array.from({ length: 14 }, (_, i) => shiftBusinessDate(today, i - 13))} value={date} onChange={setDate} />
             </Section>
           ) : null}
           <TextField label={t('expenses.note')} hint={t('expenses.noteHint')} value={note} onChangeText={setNote} maxLength={200} testID="expense-note" />
-          <Section title={t('receipts.photo')}>
-            {photo ? <PickedPreview photo={photo} onRemove={() => setPhoto(null)} /> : <PhotoButtons onPicked={setPhoto} />}
+          <Section title={t(petty ? 'receipts.photoNeeded' : 'receipts.photo')}>
+            {photo ? <PickedPreview photo={photo} onRemove={() => pickPhoto(null)} /> : <PhotoButtons onPicked={pickPhoto} />}
           </Section>
         </View>
       </Screen>

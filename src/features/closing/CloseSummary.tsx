@@ -8,18 +8,23 @@ import { spacing } from '@/theme';
 import { BottomSheet, Button, Card, FormError, StatusPill, Text, TextField, useToast } from '@/ui';
 
 import { useApproveClosing, useCounters, useReturnClosing, type Closing } from './api';
+import { BankDeposit } from './BankDeposit';
 import { MoneyLine, VarianceChip } from './ExpectedCard';
 
-/** A submitted or approved close: the figures, and for the owner Approve / Send back. */
+/**
+ * A submitted or approved close: the figures; for the owner and managers Approve / Send back, except that a manager
+ * does not approve a count they made or sent (the owner or another manager does); the bank deposit once approved.
+ */
 export function CloseSummary({ closing }: { closing: Closing }) {
   const { t } = useTranslation();
   const toast = useToast();
-  const { business, branch, role } = useWorkspace();
+  const { business, branch, member, role } = useWorkspace();
   const counters = useCounters(business.id);
   const approve = useApproveClosing(branch.id, business.id);
   const [sendingBack, setSendingBack] = useState(false);
   const counter = counters.data?.find((m) => m.id === closing.counted_by)?.display_name;
   const pending = closing.status === 'pending_approval';
+  const ownCount = role !== 'owner' && (closing.counted_by === member.id || closing.submitted_by === member.id);
 
   return (
     <Card variant="outlined" style={styles.card}>
@@ -37,7 +42,12 @@ export function CloseSummary({ closing }: { closing: Closing }) {
       {closing.taken_out_minor > 0 ? (
         <MoneyLine label={t(`closing.takenOutTo.${closing.taken_out_to ?? 'bank'}`)} value={closing.taken_out_minor} />
       ) : null}
-      {pending && can(role, 'approveClosing') ? (
+      {pending && can(role, 'approveClosing') && ownCount ? (
+        <Text color="textSecondary" testID="closing-own-count">
+          {t('errors.own_count')}
+        </Text>
+      ) : null}
+      {pending && can(role, 'approveClosing') && !ownCount ? (
         <>
           <FormError error={approve.error} />
           <View style={styles.actions}>
@@ -57,6 +67,9 @@ export function CloseSummary({ closing }: { closing: Closing }) {
             />
           </View>
         </>
+      ) : null}
+      {closing.status === 'approved' && closing.taken_out_to === 'bank' && closing.taken_out_minor > 0 ? (
+        <BankDeposit closing={closing} />
       ) : null}
       <BottomSheet open={sendingBack} onClose={() => setSendingBack(false)} title={t('closing.sendBack')}>
         {sendingBack ? <SendBackForm closing={closing} onDone={() => setSendingBack(false)} /> : null}
