@@ -506,7 +506,8 @@
       "hygiene": "Registre d’hygiène",
       "myClients": "Mes clients",
       "approvals": "Validations",
-      "myReport": "Mes ventes et commission"
+      "myReport": "Mes ventes et commission",
+      "controls": "Contrôles"
     },
     "logOut": "Se déconnecter",
     "title": "Plus",
@@ -3637,5 +3638,32 @@
       "pin": "Code",
       "reason": "Motif"
     }
+  },
+  "controls": {
+    "title": "Contrôles",
+    "subtitle": "Limites et règles de {{branch}}",
+    "rowHint": "Limites de remise et de petite caisse, écarts de caisse, comptage à l’aveugle, ce que l’équipe peut faire",
+    "limits": "Limites sans validation d’un gérant",
+    "discountLimit": "Remise maximale sans validation (%)",
+    "discountLimitHint": "Pour l’accueil et l’équipe en salle. Au-delà, un gérant ou le propriétaire valide avec son code.",
+    "percentInvalid": "Indiquez un nombre de 0 à 100.",
+    "pettyCashLimit": "Petite caisse sans validation",
+    "pettyCashLimitHint": "Pour l’accueil. Au-delà, un gérant ou le propriétaire valide avec son code.",
+    "cash": "Clôture de caisse",
+    "cashReason": "Un écart de ce montant demande un motif",
+    "cashReasonHint": "Quand les espèces comptées s’écartent de l’attendu de ce montant ou plus.",
+    "cashNotify": "Un écart de ce montant prévient le propriétaire",
+    "cashNotifyHint": "Le propriétaire reçoit une alerte avec le montant, qui a compté et le motif.",
+    "blindCount": "Comptage à l’aveugle pour l’accueil",
+    "blindCountHint": "L’accueil compte la caisse avant de voir l’attendu.",
+    "staffCanSell": "{{staff}} encaissent",
+    "staffCanSellHint": "Ils encaissent leurs propres clients dans Vente.",
+    "staffSeePhones": "{{staff}} voient les numéros de leurs clients",
+    "staffSeePhonesHint": "Désactivé : ils trouvent leurs clients par le nom seulement.",
+    "staffBookSelf": "{{staff}} ajoutent leurs propres rendez-vous",
+    "staffBookSelfHint": "Ils ajoutent et déplacent leurs rendez-vous ; l’annulation reste à l’accueil.",
+    "audit": "Chaque changement est conservé dans le journal d’activité avec l’ancienne et la nouvelle valeur.",
+    "save": "Enregistrer les contrôles",
+    "saved": "Contrôles enregistrés"
   }
 }

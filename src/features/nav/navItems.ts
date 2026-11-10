@@ -67,7 +67,7 @@ export function useTabItems(): Record<TabKey, { icon: IconName; label: string }>
 }
 
 /** A row's words, by login type where the brief names the page differently (B8). */
-type RowLabel = `more.rows.${'myClients' | 'services' | 'inventory' | 'stock' | 'sales' | 'mySales' | 'expenses' | 'pettyCash' | 'purchases' | 'suppliersBills' | 'cashClosing' | 'accounts' | 'reports' | 'myReport' | 'approvals' | 'staff' | 'attendance' | 'payroll' | 'compliance' | 'hygiene' | 'branch' | 'branches' | 'backup' | 'plan' | 'admin'}`;
+type RowLabel = `more.rows.${'myClients' | 'services' | 'inventory' | 'stock' | 'sales' | 'mySales' | 'expenses' | 'pettyCash' | 'purchases' | 'suppliersBills' | 'cashClosing' | 'accounts' | 'reports' | 'myReport' | 'approvals' | 'staff' | 'attendance' | 'payroll' | 'compliance' | 'hygiene' | 'branch' | 'controls' | 'branches' | 'backup' | 'plan' | 'admin'}`;
 
 /** The business pages this person may open, in More's order, with the section the sidebar shows them in. */
 export function useBusinessRows() {
@@ -96,6 +96,7 @@ export function useBusinessRows() {
     // Those who sign the hygiene log but keep no records open the log on its own.
     { key: 'hygiene', icon: 'sparkles', href: { pathname: '/compliance', params: { tab: 'hygiene' } }, show: can(role, 'signHygiene') && !can(role, 'viewCompliance'), section: 'business', label: 'more.rows.hygiene' },
     { key: 'branch', icon: 'store', href: '/settings/branch', show: can(role, 'manageBranch'), section: 'settings', label: 'more.rows.branch' },
+    { key: 'controls', icon: 'sliders', href: '/settings/controls', show: can(role, 'manageControls'), section: 'settings', label: 'more.rows.controls' },
     { key: 'branches', icon: 'mapPin', href: '/settings/branches', show: can(role, 'manageBranch'), section: 'settings', label: 'more.rows.branches' },
     { key: 'backup', icon: 'archive', href: '/settings/backup', show: can(role, 'backup'), section: 'settings', label: 'more.rows.backup' },
     { key: 'plan', icon: 'creditCard', href: '/plan', show: can(role, 'viewPlan'), section: 'settings', label: 'more.rows.plan' },

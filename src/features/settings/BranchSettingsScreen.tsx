@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +23,7 @@ import {
   FormMoneyField,
   FormTextField,
   HeaderBand,
+  ListRow,
   Screen,
   SectionHeader,
   SwitchRow,
@@ -56,7 +58,6 @@ const schemaFor = (uae: boolean, country: string) =>
       waiting_target_min: whole(1, 240),
       cancel_cutoff_hours: whole(0, 168),
       default_deposit_minor: z.number().int().min(0).nullable(),
-      staff_can_sell: z.boolean(),
       block_insufficient_stock: z.boolean(),
       late_grace_min: whole(0, 120),
       require_hygiene_evidence: z.boolean(),
@@ -81,6 +82,7 @@ function openDays(hours: unknown): number[] {
 export function BranchSettingsScreen() {
   const { t } = useTranslation();
   const toast = useToast();
+  const router = useRouter();
   const { reload } = useSession();
   const { business, branch } = useWorkspace();
   const uae = isUae(business.country_code);
@@ -105,7 +107,6 @@ export function BranchSettingsScreen() {
       waiting_target_min: String(settings.waiting_target_min ?? 10),
       cancel_cutoff_hours: String(settings.cancel_cutoff_hours ?? 12),
       default_deposit_minor: Number(settings.default_deposit_minor ?? 0) || null,
-      staff_can_sell: settings.staff_can_sell === true,
       block_insufficient_stock: settings.block_insufficient_stock === true,
       late_grace_min: String(settings.late_grace_min ?? 10),
       require_hygiene_evidence: settings.require_hygiene_evidence === true,
@@ -136,7 +137,6 @@ export function BranchSettingsScreen() {
           waiting_target_min: Number(v.waiting_target_min),
           cancel_cutoff_hours: Number(v.cancel_cutoff_hours),
           default_deposit_minor: v.default_deposit_minor ?? 0,
-          staff_can_sell: v.staff_can_sell,
           block_insufficient_stock: v.block_insufficient_stock,
           late_grace_min: Number(v.late_grace_min),
           require_hygiene_evidence: v.require_hygiene_evidence,
@@ -251,12 +251,12 @@ export function BranchSettingsScreen() {
 
         <View style={styles.section}>
           <SectionHeader title={t('branch.rules')} />
-          <Controller
-            control={form.control}
-            name="staff_can_sell"
-            render={({ field }) => (
-              <SwitchRow label={t('branch.fields.staffCanSell')} value={field.value} onChange={field.onChange} testID="branch-staff-sell" />
-            )}
+          <ListRow
+            title={t('controls.title')}
+            meta={[t('controls.rowHint')]}
+            chevron
+            onPress={() => router.push('/settings/controls')}
+            testID="branch-controls"
           />
           <Controller
             control={form.control}

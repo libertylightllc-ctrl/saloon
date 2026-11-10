@@ -506,7 +506,8 @@
       "hygiene": "Hygiene log",
       "myClients": "My clients",
       "approvals": "Approvals",
-      "myReport": "My sales & commission"
+      "myReport": "My sales & commission",
+      "controls": "Controls"
     },
     "logOut": "Log out",
     "title": "More",
@@ -3636,5 +3637,32 @@
       "pin": "PIN",
       "reason": "Reason"
     }
+  },
+  "controls": {
+    "title": "Controls",
+    "subtitle": "Limits and rules for {{branch}}",
+    "rowHint": "Discount and petty cash limits, cash differences, blind count, what the team may do",
+    "limits": "Limits without a manager's approval",
+    "discountLimit": "Highest discount without approval (%)",
+    "discountLimitHint": "For the front desk and the team on the floor. Above it, a manager or the owner approves with their PIN.",
+    "percentInvalid": "Use a number from 0 to 100.",
+    "pettyCashLimit": "Petty cash from the drawer without approval",
+    "pettyCashLimitHint": "For the front desk. Above it, a manager or the owner approves with their PIN.",
+    "cash": "Cash closing",
+    "cashReason": "A difference this big needs a reason",
+    "cashReasonHint": "When the counted cash differs from the expected cash by this much or more.",
+    "cashNotify": "A difference this big tells the owner",
+    "cashNotifyHint": "The owner gets an alert with the amount, who counted and the reason.",
+    "blindCount": "Blind count for the front desk",
+    "blindCountHint": "The front desk counts the drawer before seeing the expected cash.",
+    "staffCanSell": "{{staff}} take payments",
+    "staffCanSellHint": "They check out their own clients at Sale.",
+    "staffSeePhones": "{{staff}} see their clients' phone numbers",
+    "staffSeePhonesHint": "Off: they find their clients by name only.",
+    "staffBookSelf": "{{staff}} add bookings for themselves",
+    "staffBookSelfHint": "They add and move their own bookings; cancelling stays with the front desk.",
+    "audit": "Every change is kept in the audit trail with the old and new value.",
+    "save": "Save controls",
+    "saved": "Controls saved"
   }
 }

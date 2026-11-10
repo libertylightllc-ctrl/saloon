@@ -506,7 +506,8 @@
       "hygiene": "Registro de higiene",
       "myClients": "Meus clientes",
       "approvals": "Aprovações",
-      "myReport": "Minhas vendas e comissão"
+      "myReport": "Minhas vendas e comissão",
+      "controls": "Controles"
     },
     "logOut": "Sair",
     "title": "Mais",
@@ -3637,5 +3638,32 @@
       "pin": "PIN",
       "reason": "Motivo"
     }
+  },
+  "controls": {
+    "title": "Controles",
+    "subtitle": "Limites e regras de {{branch}}",
+    "rowHint": "Limites de desconto e caixa pequeno, diferenças de caixa, contagem às cegas, o que a equipe pode fazer",
+    "limits": "Limites sem aprovação do gerente",
+    "discountLimit": "Desconto máximo sem aprovação (%)",
+    "discountLimitHint": "Para a recepção e a equipe no salão. Acima disso, um gerente ou o dono aprova com o PIN.",
+    "percentInvalid": "Use um número de 0 a 100.",
+    "pettyCashLimit": "Caixa pequeno sem aprovação",
+    "pettyCashLimitHint": "Para a recepção. Acima disso, um gerente ou o dono aprova com o PIN.",
+    "cash": "Fechamento de caixa",
+    "cashReason": "Uma diferença assim precisa de motivo",
+    "cashReasonHint": "Quando o dinheiro contado difere do esperado nesse valor ou mais.",
+    "cashNotify": "Uma diferença assim avisa o dono",
+    "cashNotifyHint": "O dono recebe um alerta com o valor, quem contou e o motivo.",
+    "blindCount": "Contagem às cegas para a recepção",
+    "blindCountHint": "A recepção conta o caixa antes de ver o valor esperado.",
+    "staffCanSell": "{{staff}} recebem pagamentos",
+    "staffCanSellHint": "Fecham a conta dos próprios clientes em Venda.",
+    "staffSeePhones": "{{staff}} veem o telefone dos seus clientes",
+    "staffSeePhonesHint": "Desligado: encontram os clientes só pelo nome.",
+    "staffBookSelf": "{{staff}} marcam horários para si",
+    "staffBookSelfHint": "Adicionam e movem os próprios horários; cancelar fica com a recepção.",
+    "audit": "Cada mudança fica no registro de atividade com o valor antigo e o novo.",
+    "save": "Salvar controles",
+    "saved": "Controles salvos"
   }
 }
