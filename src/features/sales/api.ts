@@ -26,6 +26,8 @@ export interface SaleLineInput {
   item_id?: string;
   name?: string;
   unit_price_minor?: number;
+  /** A service's price changed at checkout. */
+  price_minor?: number;
   qty: number;
   employee_id?: string | null;
 }
@@ -39,6 +41,11 @@ export interface SaleInput {
   discount_minor?: number;
   tip_minor?: number;
   payments: { method: PaymentMethod; amount_minor: number }[];
+  /** Manager approvals (PIN) for a discount above the limit or a changed price. */
+  approvals?: { discount?: string; price_change?: string };
+  /** A manager's reasons for the same. */
+  discount_reason?: string;
+  price_reason?: string;
 }
 
 export interface SaleResult {
@@ -112,6 +119,8 @@ export function useRefundSale(branchId: string) {
       restock?: boolean;
       /** Also refund the stylist's tip (only what goes past the services and products comes out of it). */
       refund_tip?: boolean;
+      /** A manager's or the owner's PIN approval (front desk; a manager refunding their own sale). */
+      approval_id?: string;
     }) => {
       const { data, error } = await supabase.rpc('refund_sale', { p: asJson(input) });
       if (error) throw error;

@@ -119,6 +119,8 @@ export function SaleScreen() {
   const checkoutProps: CheckoutProps = {
     lines,
     onQtyChange: (key, qty) => setQty(key, qty),
+    onPriceChange: (key, price) =>
+      setLines((all) => all.map((l) => (l.key === key ? { ...l, unitPriceMinor: price, priceChanged: true } : l))),
     customer,
     onCustomer: setCustomer,
     guestName,

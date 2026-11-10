@@ -384,7 +384,14 @@
     "sendWhatsApp": "Enviar por WhatsApp",
     "tipHint": "Toda la propina es para el {{staff}}. Las propinas no generan comisión.",
     "current": "Venta actual",
-    "clear": "Vaciar"
+    "clear": "Vaciar",
+    "changePriceOf": "Cambiar el precio de {{name}}",
+    "priceFor": "Precio de {{name}}",
+    "listPrice": "precio de lista {{amount}}",
+    "discountNeedsPin": "Supera el límite del {{limit}}: se necesita el PIN de un gerente o del dueño.",
+    "discountReason": "Motivo del descuento (más del {{limit}})",
+    "priceReason": "Motivo del cambio de precio",
+    "reasonKept": "Se guarda con la venta y aparece en Informes → Aprobaciones."
   },
   "customers": {
     "subtitle": "Perfiles, visitas y notas.",
@@ -1133,7 +1140,7 @@
     "invalid_token": "Este teléfono no pudo activar las notificaciones.",
     "not_balanced": "Los libros de ese mes no cuadran. Revisa primero el balance de comprobación.",
     "invalid_pin": "Usa 4 dígitos que no sean todos iguales ni consecutivos.",
-    "pin_locked": "Demasiados PIN incorrectos. Vuelve a intentarlo en 5 minutos o inicia sesión con la contraseña.",
+    "pin_locked": "Demasiados PIN incorrectos. Vuelve a intentarlo en 15 minutos o inicia sesión con la contraseña.",
     "wrong_pin": "Ese PIN no es correcto.",
     "switch_expired": "Esa persona debe volver a iniciar sesión con su contraseña.",
     "plan_required": "El tiempo gratis de tu salón ha terminado, así que esto aún no se puede guardar. El dueño puede elegir un plan en Más → Plan y facturación.",
@@ -1177,7 +1184,21 @@
     "cashInDrawer": "Efectivo en la caja: {{amount}}.",
     "email_unconfirmed": "Primero confirma tu email: abre el enlace que te enviamos.",
     "tip_not_refunded": "Es más que los servicios y productos. Activa \"Devolver también la propina\" para devolver la propina.",
-    "payroll_changed": "Esta nómina cambió desde que se calculó. Vuelve a calcularla y luego apruébala."
+    "payroll_changed": "Esta nómina cambió desde que se calculó. Vuelve a calcularla y luego apruébala.",
+    "approval_needed": "Esto necesita el PIN de un gerente o del dueño.",
+    "not_an_approver": "Solo el dueño o un gerente de esta sucursal puede aprobar.",
+    "no_pin": "Esta persona aún no tiene PIN de cambio rápido.",
+    "own_count": "Un recuento que hiciste lo aprueba otra persona: el dueño u otro gerente.",
+    "receipt_required": "Añade una foto del recibo.",
+    "same_customer": "Elige dos clientes distintos.",
+    "supplier_exists": "Ya hay un proveedor con este nombre.",
+    "supplier_required": "Elige un proveedor.",
+    "already_recorded": "Esto ya estaba registrado.",
+    "invalid_note": "Escribe una nota de hasta 500 caracteres.",
+    "future_date": "La fecha no puede ser futura.",
+    "vat_off": "El impuesto está desactivado en esta sucursal: deja el impuesto en 0.",
+    "triesLeft": "Quedan {{count}} intentos antes de que se bloquee 15 minutos.",
+    "triesLeft_one": "Queda {{count}} intento antes de que se bloquee 15 minutos."
   },
   "sales": {
     "title": "Ventas",
@@ -3330,5 +3351,17 @@
     "title": "No tienes acceso a esta página",
     "body": "Tu tipo de acceso no abre esta página. Pídeselo al dueño del salón si la necesitas.",
     "home": "Ir al inicio"
+  },
+  "approval": {
+    "title": "Se necesita la aprobación de un gerente",
+    "hint": "Un gerente o el dueño elige su nombre y escribe su PIN de cambio rápido en este dispositivo.",
+    "pin": "PIN de {{name}}",
+    "approve": "Aprobar",
+    "nobody": "Aún nadie puede aprobar aquí: el dueño o un gerente de esta sucursal debe crear antes un PIN de cambio rápido (Más → PIN de cambio rápido).",
+    "lockedName": "{{name}} · PIN bloqueado",
+    "discount": "Descuento del {{pct}} (límite {{limit}})",
+    "priceChange": "Precios cambiados en {{amount}}",
+    "refund": "Reembolso de {{amount}} · venta #{{number}}",
+    "clockOther": "{{action}} para {{name}}"
   }
 }

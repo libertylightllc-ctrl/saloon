@@ -25,6 +25,8 @@ export interface BasketLine {
   name: string;
   unitPriceMinor: Minor;
   qty: number;
+  /** A service whose price was changed at checkout (sent to the server; needs a reason or a PIN, brief B2). */
+  priceChanged?: boolean;
 }
 
 export interface Totals {
@@ -75,4 +77,29 @@ export function basketTotals(
     due: total - depositApplied,
     count: lines.reduce((n, l) => n + l.qty, 0),
   };
+}
+
+/** The discount as basis points of the subtotal, rounded up (as create_sale counts it for an approval). */
+export function discountBps(discount: Minor, subtotal: Minor): number {
+  return subtotal > 0 && discount > 0 ? Math.ceil((discount * 10000) / subtotal) : 0;
+}
+
+/** A discount above the branch's limit (brief B3), decided as the server decides it. */
+export function overDiscountLimit(discount: Minor, subtotal: Minor, limitBps: number): boolean {
+  return discount > 0 && discount * 10000 > limitBps * subtotal;
+}
+
+/**
+ * How far service prices were changed at checkout, all lines together, against the price list (as create_sale counts
+ * it): what a manager's reason or PIN must cover. `listPrice` gives a service's price on the list.
+ */
+export function priceChange(lines: readonly BasketLine[], listPrice: (serviceId: string) => Minor | undefined): Minor {
+  return sum(
+    lines
+      .filter((l) => l.kind === 'service' && l.priceChanged && l.serviceId)
+      .map((l) => {
+        const list = listPrice(l.serviceId!) ?? l.unitPriceMinor;
+        return Math.abs(Math.round((l.unitPriceMinor - list) * l.qty));
+      }),
+  );
 }

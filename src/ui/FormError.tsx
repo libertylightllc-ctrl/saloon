@@ -22,7 +22,10 @@ export function FormError({ error, testID }: { error: unknown; testID?: string }
       ? detail
       : code === 'not_enough_cash' && detail && /^\d+$/.test(detail)
         ? t('errors.cashInDrawer', { amount: formatMoney(Number(detail)) })
-        : null;
+        : // A wrong manager-approval PIN: the tries left before it locks.
+          code === 'wrong_pin' && detail && /^\d+$/.test(detail)
+          ? t('errors.triesLeft', { count: Number(detail) })
+          : null;
   return (
     <View
       testID={testID ?? 'form-error'}

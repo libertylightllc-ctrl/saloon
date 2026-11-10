@@ -2,7 +2,11 @@ import * as Crypto from 'expo-crypto';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ApprovalPanel } from '@/features/approvals/ApprovalSheet';
+import { isApprovalNeeded, type ApprovalRequest } from '@/features/approvals/api';
+import { useWorkspace } from '@/features/auth/session';
 import { formatMoney, type Minor } from '@/lib/money';
+import { levelOf } from '@/lib/permissions';
 import { BottomSheet, Button, FormError, MoneyInput, SegmentTabs, SwitchRow, Text, TextField, useToast } from '@/ui';
 
 import { useTerms } from '@/features/mode/useTerms';
@@ -10,8 +14,10 @@ import { useTerms } from '@/features/mode/useTerms';
 import { useRefundSale, type PaymentMethod, type SaleDetail } from './api';
 
 /**
- * Owner only. Money goes back by the chosen method, with a reason; the sale row stays. The tip is the stylist's (owner,
- * 9 Nov 2026): a refund comes out of the services and products, and out of the tip only when "Also refund the tip" is on.
+ * Money goes back by the chosen method, with a reason; the sale row stays. The owner refunds; a manager too, but a sale
+ * they rang up or served needs a second person's PIN; the front desk with a manager's or the owner's PIN (brief B2).
+ * The tip is the stylist's (owner, 9 Nov 2026): a refund comes out of the services and products, and out of the tip
+ * only when "Also refund the tip" is on.
  */
 export function RefundSheet({ sale, open, onClose }: { sale: SaleDetail; open: boolean; onClose: () => void }) {
   const { t } = useTranslation();
@@ -28,6 +34,8 @@ function RefundForm({ sale, onDone }: { sale: SaleDetail; onDone: () => void }) 
   const toast = useToast();
   const refund = useRefundSale(sale.branch_id);
   const terms = useTerms();
+  const { role } = useWorkspace();
+  const [asking, setAsking] = useState<ApprovalRequest | null>(null);
   const left = sale.total_minor - sale.refunded_minor;
   const tipLeft = sale.tip_minor - sale.refunds.reduce((n, r) => n + r.tip_minor, 0);
   const restLeft = left - tipLeft;
@@ -44,6 +52,51 @@ function RefundForm({ sale, onDone }: { sale: SaleDetail; onDone: () => void }) 
   const canRestock = sale.sale_lines.some((l) => l.kind === 'retail') && amount !== null && amount >= restLeft;
 
   const valid = amount !== null && amount > 0 && amount <= most && reason.trim().length >= 3;
+
+  const send = (approvalId?: string) =>
+    refund.mutate(
+      {
+        sale_id: sale.id,
+        amount_minor: amount!,
+        method,
+        reason: reason.trim(),
+        idempotency_key: key,
+        restock: canRestock && restock,
+        refund_tip: refundTip,
+        approval_id: approvalId,
+      },
+      {
+        onSuccess: () => {
+          toast(t('sales.refunded', { amount: formatMoney(amount!) }));
+          onDone();
+        },
+        // A manager refunding their own sale: the server asks for a second person.
+        onError: (error) => {
+          if (isApprovalNeeded(error)) ask();
+        },
+      },
+    );
+  const ask = () =>
+    setAsking({
+      action: 'refund',
+      amount: amount!,
+      reason: reason.trim(),
+      details: { sale: sale.number },
+      summary: t('approval.refund', { amount: formatMoney(amount!), number: sale.number }),
+    });
+
+  if (asking) {
+    return (
+      <ApprovalPanel
+        request={asking}
+        onBack={() => setAsking(null)}
+        onApproved={(approved) => {
+          setAsking(null);
+          send(approved.id);
+        }}
+      />
+    );
+  }
 
   const onRefundTip = (on: boolean) => {
     setRefundTip(on);
@@ -93,25 +146,8 @@ function RefundForm({ sale, onDone }: { sale: SaleDetail; onDone: () => void }) 
         label={t('sales.confirmRefund', { amount: formatMoney(amount ?? 0) })}
         disabled={!valid}
         loading={refund.isPending}
-        onPress={() =>
-          refund.mutate(
-            {
-              sale_id: sale.id,
-              amount_minor: amount!,
-              method,
-              reason: reason.trim(),
-              idempotency_key: key,
-              restock: canRestock && restock,
-              refund_tip: refundTip,
-            },
-            {
-              onSuccess: () => {
-                toast(t('sales.refunded', { amount: formatMoney(amount!) }));
-                onDone();
-              },
-            },
-          )
-        }
+        // The front desk always needs a PIN: ask before sending.
+        onPress={() => (levelOf(role, 'refund') === 'pin' ? ask() : send())}
         testID="refund-confirm"
       />
     </>

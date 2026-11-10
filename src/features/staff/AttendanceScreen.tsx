@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { ApprovalPanel } from '@/features/approvals/ApprovalSheet';
+import type { ApprovalRequest } from '@/features/approvals/api';
 import { useWorkspace } from '@/features/auth/session';
 import { clockText } from '@/lib/clock';
 import { formatDuration } from '@/lib/duration';
 import { businessDate, formatAt, shiftBusinessDate, type BusinessDate } from '@/lib/dates';
-import { can } from '@/lib/permissions';
+import { can, levelOf } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import {
@@ -127,13 +129,18 @@ export function AttendanceScreen() {
   );
 }
 
-/** What happened and when (defaults to now), for someone without the app: clock in or out, a break, back to work. */
+/**
+ * What happened and when (defaults to now), for someone without the app: clock in or out, a break, back to work. The
+ * front desk clocks someone else only with a manager's or the owner's PIN (brief B2).
+ */
 function RecordForm({ row, onDone }: { row: AttendanceRow; onDone: () => void }) {
   const { t } = useTranslation();
   const toast = useToast();
   const dates = useDates();
-  const { business, branch } = useWorkspace();
+  const { business, branch, role, employeeId } = useWorkspace();
   const clock = useClock(business.id, branch.id);
+  const [asking, setAsking] = useState<ApprovalRequest | null>(null);
+  const needsPin = levelOf(role, 'recordAttendance') === 'pin' && row.employee_id !== employeeId;
   const choices = ACTIONS[row.status];
   const [action, setAction] = useState<ClockAction>(choices[0]!);
   const [time, setTime] = useState(() => formatAt(new Date(), business.timezone, 'HH:mm', dates.language));
@@ -145,6 +152,36 @@ function RecordForm({ row, onDone }: { row: AttendanceRow; onDone: () => void })
     const minutes = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
     return new Date(now.getTime() - (minutes(current) - minutes(time)) * 60_000).toISOString();
   };
+  const record = (approvalId?: string) =>
+    clock.mutate(
+      { employee_id: row.employee_id, action, at: at(), approval_id: approvalId },
+      {
+        onSuccess: (r) => {
+          toast(
+            action === 'out'
+              ? t('attendance.clockedOut', { name: row.full_name })
+              : action === 'in'
+                ? r.late
+                  ? t('attendance.clockedInLate', { name: row.full_name, time: formatDuration(t, r.late_minutes) })
+                  : t('attendance.clockedIn', { name: row.full_name })
+                : t(`attendance.recorded.${action}`, { name: row.full_name }),
+          );
+          onDone();
+        },
+      },
+    );
+  if (asking) {
+    return (
+      <ApprovalPanel
+        request={asking}
+        onBack={() => setAsking(null)}
+        onApproved={(approved) => {
+          setAsking(null);
+          record(approved.id);
+        }}
+      />
+    );
+  }
   return (
     <>
       {choices.length > 1 ? (
@@ -162,23 +199,13 @@ function RecordForm({ row, onDone }: { row: AttendanceRow; onDone: () => void })
         disabled={!valid}
         loading={clock.isPending}
         onPress={() =>
-          clock.mutate(
-            { employee_id: row.employee_id, action, at: at() },
-            {
-              onSuccess: (r) => {
-                toast(
-                  action === 'out'
-                    ? t('attendance.clockedOut', { name: row.full_name })
-                    : action === 'in'
-                      ? r.late
-                        ? t('attendance.clockedInLate', { name: row.full_name, time: formatDuration(t, r.late_minutes) })
-                        : t('attendance.clockedIn', { name: row.full_name })
-                      : t(`attendance.recorded.${action}`, { name: row.full_name }),
-                );
-                onDone();
-              },
-            },
-          )
+          needsPin
+            ? setAsking({
+                action: 'clock_other',
+                details: { employee: row.full_name, what: action },
+                summary: t('approval.clockOther', { name: row.full_name, action: t(`attendance.actions.${action}`) }),
+              })
+            : record()
         }
         testID="attendance-confirm"
       />

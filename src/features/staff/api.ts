@@ -168,7 +168,7 @@ export function useSetRoster(businessId: string, branchId: string) {
 export function useClock(businessId: string, branchId: string) {
   const done = useInvalidateStaff(businessId, branchId);
   return useMutation({
-    mutationFn: async (input: { employee_id: string; action: ClockAction; at?: string }) => {
+    mutationFn: async (input: { employee_id: string; action: ClockAction; at?: string; approval_id?: string }) => {
       const { data, error } = await supabase.rpc('clock', { p: asJson(input) });
       if (error) throw error;
       return data as { late: boolean; late_minutes: number; clock_in: string; clock_out: string | null };

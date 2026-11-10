@@ -384,7 +384,14 @@
     "sendWhatsApp": "Envoyer sur WhatsApp",
     "tipHint": "Le {{staff}} garde tout le pourboire. Aucune commission n’est prise sur les pourboires.",
     "current": "Vente en cours",
-    "clear": "Vider"
+    "clear": "Vider",
+    "changePriceOf": "Modifier le prix de {{name}}",
+    "priceFor": "Prix de {{name}}",
+    "listPrice": "prix catalogue {{amount}}",
+    "discountNeedsPin": "Au-delà de la limite de {{limit}} : le code d’un gérant ou du propriétaire est nécessaire.",
+    "discountReason": "Motif de la remise (plus de {{limit}})",
+    "priceReason": "Motif du changement de prix",
+    "reasonKept": "Gardé avec la vente et visible dans Rapports → Approbations."
   },
   "customers": {
     "subtitle": "Profils, visites et notes.",
@@ -1133,7 +1140,7 @@
     "invalid_token": "Ce téléphone n’a pas pu s’inscrire aux notifications.",
     "not_balanced": "Les comptes de ce mois ne sont pas équilibrés. Vérifiez d’abord la balance.",
     "invalid_pin": "Utilisez 4 chiffres ni tous identiques ni consécutifs.",
-    "pin_locked": "Trop de PIN incorrects. Réessayez dans 5 minutes ou connectez-vous avec le mot de passe.",
+    "pin_locked": "Trop de PIN incorrects. Réessayez dans 15 minutes ou connectez-vous avec le mot de passe.",
     "wrong_pin": "Ce PIN est incorrect.",
     "switch_expired": "Cette personne doit se reconnecter avec son mot de passe.",
     "plan_required": "La période gratuite de votre salon est terminée : ceci ne peut pas encore être enregistré. Le propriétaire peut choisir une formule dans Plus → Abonnement et facturation.",
@@ -1177,7 +1184,21 @@
     "cashInDrawer": "Espèces dans le tiroir : {{amount}}.",
     "email_unconfirmed": "Confirmez d'abord votre e-mail : ouvrez le lien que nous vous avons envoyé.",
     "tip_not_refunded": "C'est plus que les prestations et produits. Activez « Rembourser aussi le pourboire » pour rembourser le pourboire.",
-    "payroll_changed": "Cette paie a changé depuis le calcul. Recalculez-la, puis approuvez."
+    "payroll_changed": "Cette paie a changé depuis le calcul. Recalculez-la, puis approuvez.",
+    "approval_needed": "Il faut le code d’un gérant ou du propriétaire.",
+    "not_an_approver": "Seul le propriétaire ou un gérant de cette succursale peut approuver.",
+    "no_pin": "Cette personne n’a pas encore de code de changement rapide.",
+    "own_count": "Un comptage que vous avez fait est approuvé par quelqu’un d’autre : le propriétaire ou un autre gérant.",
+    "receipt_required": "Ajoutez une photo du reçu.",
+    "same_customer": "Choisissez deux clients différents.",
+    "supplier_exists": "Un fournisseur porte déjà ce nom.",
+    "supplier_required": "Choisissez un fournisseur.",
+    "already_recorded": "C’est déjà enregistré.",
+    "invalid_note": "Écrivez une note de 500 caractères au plus.",
+    "future_date": "La date ne peut pas être dans le futur.",
+    "vat_off": "La taxe est désactivée pour cette succursale : laissez la taxe à 0.",
+    "triesLeft": "Encore {{count}} essais avant qu’il se bloque 15 minutes.",
+    "triesLeft_one": "Encore {{count}} essai avant qu’il se bloque 15 minutes."
   },
   "sales": {
     "title": "Ventes",
@@ -3330,5 +3351,17 @@
     "title": "Vous n’avez pas accès à cette page",
     "body": "Votre type de compte n’ouvre pas cette page. Demandez au propriétaire du salon si vous en avez besoin.",
     "home": "Aller à l’accueil"
+  },
+  "approval": {
+    "title": "Accord d’un gérant nécessaire",
+    "hint": "Un gérant ou le propriétaire choisit son nom et tape son code de changement rapide sur cet appareil.",
+    "pin": "Code de {{name}}",
+    "approve": "Approuver",
+    "nobody": "Personne ne peut encore approuver ici : le propriétaire ou un gérant de cette succursale crée d’abord un code de changement rapide (Plus → Code de changement rapide).",
+    "lockedName": "{{name}} · code bloqué",
+    "discount": "Remise de {{pct}} (limite {{limit}})",
+    "priceChange": "Prix modifiés de {{amount}}",
+    "refund": "Remboursement de {{amount}} · vente n° {{number}}",
+    "clockOther": "{{action}} pour {{name}}"
   }
 }

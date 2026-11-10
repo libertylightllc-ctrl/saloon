@@ -384,7 +384,14 @@
     "sendWhatsApp": "Enviar pelo WhatsApp",
     "tipHint": "O {{staff}} fica com a gorjeta inteira. Não há comissão sobre gorjetas.",
     "current": "Venda atual",
-    "clear": "Limpar"
+    "clear": "Limpar",
+    "changePriceOf": "Alterar o preço de {{name}}",
+    "priceFor": "Preço de {{name}}",
+    "listPrice": "preço de tabela {{amount}}",
+    "discountNeedsPin": "Acima do limite de {{limit}}: é preciso o PIN de um gerente ou do dono.",
+    "discountReason": "Motivo do desconto (acima de {{limit}})",
+    "priceReason": "Motivo da alteração de preço",
+    "reasonKept": "Fica guardado com a venda e aparece em Relatórios → Aprovações."
   },
   "customers": {
     "subtitle": "Perfis, visitas e observações.",
@@ -1133,7 +1140,7 @@
     "invalid_token": "Este celular não conseguiu se inscrever para receber notificações.",
     "not_balanced": "Os livros desse mês não fecham. Confira primeiro o balancete.",
     "invalid_pin": "Use 4 dígitos que não sejam todos iguais nem em sequência.",
-    "pin_locked": "PINs errados demais. Tente de novo em 5 minutos ou entre com a senha.",
+    "pin_locked": "PINs errados demais. Tente de novo em 15 minutos ou entre com a senha.",
     "wrong_pin": "Esse PIN não está correto.",
     "switch_expired": "Essa pessoa precisa entrar de novo com a senha.",
     "plan_required": "O tempo grátis do seu salão terminou, então isso ainda não pode ser salvo. O dono pode escolher um plano em Mais → Plano e cobrança.",
@@ -1177,7 +1184,21 @@
     "cashInDrawer": "Dinheiro na gaveta: {{amount}}.",
     "email_unconfirmed": "Primeiro confirme seu e-mail: abra o link que enviamos.",
     "tip_not_refunded": "É mais do que os serviços e produtos. Ligue \"Reembolsar também a gorjeta\" para reembolsar a gorjeta.",
-    "payroll_changed": "Esta folha mudou desde o cálculo. Calcule de novo e depois aprove."
+    "payroll_changed": "Esta folha mudou desde o cálculo. Calcule de novo e depois aprove.",
+    "approval_needed": "Isto precisa do PIN de um gerente ou do dono.",
+    "not_an_approver": "Só o dono ou um gerente desta filial pode aprovar.",
+    "no_pin": "Esta pessoa ainda não tem PIN de troca rápida.",
+    "own_count": "Uma contagem que você fez é aprovada por outra pessoa: o dono ou outro gerente.",
+    "receipt_required": "Adicione uma foto do recibo.",
+    "same_customer": "Escolha dois clientes diferentes.",
+    "supplier_exists": "Já existe um fornecedor com este nome.",
+    "supplier_required": "Escolha um fornecedor.",
+    "already_recorded": "Isto já foi registrado.",
+    "invalid_note": "Escreva uma nota de até 500 caracteres.",
+    "future_date": "A data não pode ser futura.",
+    "vat_off": "O imposto está desligado nesta filial: deixe o imposto em 0.",
+    "triesLeft": "Restam {{count}} tentativas antes de bloquear por 15 minutos.",
+    "triesLeft_one": "Resta {{count}} tentativa antes de bloquear por 15 minutos."
   },
   "sales": {
     "title": "Vendas",
@@ -3330,5 +3351,17 @@
     "title": "Você não tem acesso a esta página",
     "body": "Seu tipo de acesso não abre esta página. Peça ao dono do salão se precisar dela.",
     "home": "Ir para o início"
+  },
+  "approval": {
+    "title": "Aprovação do gerente necessária",
+    "hint": "Um gerente ou o dono escolhe o nome e digita o PIN de troca rápida neste aparelho.",
+    "pin": "PIN de {{name}}",
+    "approve": "Aprovar",
+    "nobody": "Ninguém pode aprovar aqui ainda: o dono ou um gerente desta filial cria antes um PIN de troca rápida (Mais → PIN de troca rápida).",
+    "lockedName": "{{name}} · PIN bloqueado",
+    "discount": "Desconto de {{pct}} (limite {{limit}})",
+    "priceChange": "Preços alterados em {{amount}}",
+    "refund": "Reembolso de {{amount}} · venda nº {{number}}",
+    "clockOther": "{{action}} para {{name}}"
   }
 }

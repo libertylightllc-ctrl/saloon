@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { ApprovalPanel } from '@/features/approvals/ApprovalSheet';
+import { isApprovalNeeded, type ApprovalRequest } from '@/features/approvals/api';
 import { useWorkspace } from '@/features/auth/session';
 import { useCatalog } from '@/features/catalog/api';
 import { recipeText } from '@/features/catalog/recipeText';
@@ -12,10 +14,14 @@ import { useEmployees } from '@/features/queue/api';
 import { useCreateSale, type PaymentMethod, type SaleResult } from '@/features/sales/api';
 import { useTax } from '@/features/tax/useTax';
 import { formatMoney, sum, type Minor } from '@/lib/money';
+import { can } from '@/lib/permissions';
 import { spacing, useTheme } from '@/theme';
-import { BottomSheet, Button, Card, Chip, FormError, Icon, MoneyInput, SegmentTabs, Stepper, Text } from '@/ui';
+import { BottomSheet, Button, Card, Chip, FormError, Icon, MoneyInput, SegmentTabs, Text, TextField } from '@/ui';
 
 import { basketTotals, type BasketLine } from './basket';
+import { CheckoutLines } from './CheckoutLines';
+import { CheckoutTotals } from './CheckoutTotals';
+import { useCheckoutLimits, type CheckoutApprovals } from './useCheckoutLimits';
 
 type Method = PaymentMethod | 'split';
 const METHODS: Method[] = ['cash', 'card', 'wallet', 'split'];
@@ -23,6 +29,8 @@ const METHODS: Method[] = ['cash', 'card', 'wallet', 'split'];
 export interface CheckoutProps {
   lines: BasketLine[];
   onQtyChange: (key: string, qty: number) => void;
+  /** A service's price changed at checkout (logins that may, brief B2). */
+  onPriceChange?: (key: string, price: Minor) => void;
   customer: PickedCustomer | null;
   onCustomer: (c: PickedCustomer | null) => void;
   guestName: string;
@@ -65,6 +73,11 @@ export function CheckoutForm(props: CheckoutProps) {
   // One reference per sale: a double tap or a retry after a timeout returns the same sale.
   // A fresh one is drawn only after a sale is saved.
   const [clientRef, setClientRef] = useState(() => Crypto.randomUUID());
+  // Above the limits (brief B2): a manager gives a reason; the front desk and stylists a manager's or the owner's PIN.
+  const [discountReason, setDiscountReason] = useState('');
+  const [priceReason, setPriceReason] = useState('');
+  const [approvals, setApprovals] = useState<CheckoutApprovals>({});
+  const [asking, setAsking] = useState<ApprovalRequest | null>(null);
 
   const totals = basketTotals(props.lines, {
     tax: tax.rule,
@@ -72,6 +85,8 @@ export function CheckoutForm(props: CheckoutProps) {
     tip,
     deposit: props.deposit,
   });
+  const limits = useCheckoutLimits(props.lines, totals.discount, totals.subtotal);
+  const { needDiscountReason, needPriceReason } = limits;
   const splitPaid = sum(Object.values(split).map((v) => v ?? 0));
   const payments =
     totals.due === 0
@@ -99,16 +114,24 @@ export function CheckoutForm(props: CheckoutProps) {
   }
   const stock = recipeText([...usage.entries()].map(([name, u]) => ({ name, ...u })), t, ', ');
 
-  const save = () =>
+  const save = (have: CheckoutApprovals = approvals) => {
+    const missing = limits.pinsNeeded(have)[0];
+    if (missing) {
+      setAsking(missing);
+      return;
+    }
     create.mutate(
       {
         client_ref: clientRef,
         appointment_id: props.appointmentId,
         customer_id: props.customer?.id ?? null,
         employee_id: props.employeeId,
+        approvals: { discount: have.discount?.id, price_change: have.price_change?.id },
+        discount_reason: needDiscountReason ? discountReason.trim() : undefined,
+        price_reason: needPriceReason ? priceReason.trim() : undefined,
         lines: props.lines.map((l) =>
           l.kind === 'service'
-            ? { kind: 'service', service_id: l.serviceId, qty: l.qty }
+            ? { kind: 'service', service_id: l.serviceId, qty: l.qty, ...(l.priceChanged ? { price_minor: l.unitPriceMinor } : {}) }
             : l.kind === 'retail'
               ? { kind: 'retail', item_id: l.itemId, qty: l.qty }
               : { kind: 'custom', name: l.name, unit_price_minor: l.unitPriceMinor, qty: l.qty },
@@ -123,21 +146,21 @@ export function CheckoutForm(props: CheckoutProps) {
           setDiscount(null);
           setTip(null);
           setSplit({ cash: null, card: null, wallet: null });
+          setDiscountReason('');
+          setPriceReason('');
+          setApprovals({});
           props.onSaved(result, totals.due === 0 ? 'deposit' : method);
+        },
+        // The limits changed meanwhile: read them again; the next Save asks for what is needed now.
+        onError: (error) => {
+          if (isApprovalNeeded(error)) {
+            setApprovals({});
+            void limits.controls.refetch();
+          }
         },
       },
     );
-
-  const row = (label: string, value: string, strong = false, testID?: string) => (
-    <View style={styles.totalRow}>
-      <Text variant={strong ? 'h4' : 'body'} color={strong ? 'text' : 'textSecondary'} style={styles.flex}>
-        {label}
-      </Text>
-      <Text variant={strong ? 'h3' : 'bodyStrong'} weight={strong ? 'bold' : 'medium'} tabular testID={testID}>
-        {value}
-      </Text>
-    </View>
-  );
+  };
 
   return (
     <>
@@ -166,24 +189,25 @@ export function CheckoutForm(props: CheckoutProps) {
           ))}
         </View>
       </View>
-      <Card variant="outlined" style={styles.section}>
-        {props.lines.map((line) => (
-          <View key={line.key} style={styles.line}>
-            <View style={styles.flex}>
-              <Text variant="bodyStrong" numberOfLines={1}>
-                {line.name}
-              </Text>
-              <Text variant="small" color="textSecondary" tabular>
-                {formatMoney(line.unitPriceMinor * line.qty)}
-              </Text>
-            </View>
-            <Stepper value={line.qty} onChange={(n) => props.onQtyChange(line.key, n)} itemLabel={line.name} showAddAtZero={false} />
-          </View>
-        ))}
-      </Card>
+      <CheckoutLines
+        lines={props.lines}
+        onQtyChange={props.onQtyChange}
+        onPriceChange={props.onPriceChange}
+        canChangePrice={can(role, 'changePrice')}
+        listPrice={limits.listPrice}
+      />
+      {needPriceReason ? (
+        <TextField label={t('sale.priceReason')} hint={t('sale.reasonKept')} value={priceReason} onChangeText={setPriceReason} maxLength={200} testID="price-reason" />
+      ) : null}
       <View style={styles.pair}>
         <View style={styles.flex}>
-          <MoneyInput label={t('sale.discount')} value={discount} onChange={setDiscount} testID="discount" />
+          <MoneyInput
+            label={t('sale.discount')}
+            value={discount}
+            onChange={setDiscount}
+            hint={limits.discountNeedsPin ? t('sale.discountNeedsPin', { limit: limits.limit }) : undefined}
+            testID="discount"
+          />
         </View>
         <View style={styles.flex}>
           <MoneyInput
@@ -195,6 +219,16 @@ export function CheckoutForm(props: CheckoutProps) {
           />
         </View>
       </View>
+      {needDiscountReason ? (
+        <TextField
+          label={t('sale.discountReason', { limit: limits.limit })}
+          hint={t('sale.reasonKept')}
+          value={discountReason}
+          onChangeText={setDiscountReason}
+          maxLength={200}
+          testID="discount-reason"
+        />
+      ) : null}
       {totals.due > 0 ? (
         <View style={styles.section}>
           <Text variant="bodyStrong">{t('sale.payment')}</Text>
@@ -222,31 +256,7 @@ export function CheckoutForm(props: CheckoutProps) {
           ) : null}
         </View>
       ) : null}
-      <View style={styles.totals}>
-        {row(t('sale.subtotal'), formatMoney(totals.subtotal))}
-        {totals.discount ? row(t('sale.discount'), formatMoney(-totals.discount)) : null}
-        {row(
-          tax.rule ? tax.label : t('sale.vat'),
-          !tax.rule
-            ? t('sale.vatNotApplied')
-            : totals.taxAdded
-              ? formatMoney(totals.vat - totals.tax2)
-              : t('sale.vatIncluded', { amount: formatMoney(totals.vat - totals.tax2) }),
-          false,
-          'checkout-vat',
-        )}
-        {tax.rule && tax.second
-          ? row(
-              tax.second.label,
-              totals.taxAdded ? formatMoney(totals.tax2) : t('sale.vatIncluded', { amount: formatMoney(totals.tax2) }),
-              false,
-              'checkout-tax2',
-            )
-          : null}
-        {totals.tip ? row(t('sale.tip'), formatMoney(totals.tip)) : null}
-        {totals.depositApplied ? row(t('sale.depositApplied'), formatMoney(-totals.depositApplied)) : null}
-        {row(t('sale.amountDue'), formatMoney(totals.due), true, 'checkout-due')}
-      </View>
+      <CheckoutTotals totals={totals} />
       <Card variant="tinted" style={styles.note}>
         <Icon name="alert" size={18} color={theme.colors.primary500} />
         <Text variant="small" color="textOnTint" style={styles.flex}>
@@ -255,14 +265,29 @@ export function CheckoutForm(props: CheckoutProps) {
             : t('sale.willUpdate', { stock: stock || t('sale.noStock') })}
         </Text>
       </Card>
-      <FormError error={create.error} />
-      <Button
-        label={t('sale.save', { amount: formatMoney(totals.due) })}
-        disabled={!props.lines.length || !paymentOk}
-        loading={create.isPending}
-        onPress={save}
-        testID="save-sale"
-      />
+      {asking ? (
+        <ApprovalPanel
+          request={asking}
+          onBack={() => setAsking(null)}
+          onApproved={(approved) => {
+            const have = { ...approvals, [asking.action]: { ...approved, amount: asking.amount ?? 0 } };
+            setApprovals(have);
+            setAsking(null);
+            save(have);
+          }}
+        />
+      ) : (
+        <>
+          <FormError error={create.error} />
+          <Button
+            label={t('sale.save', { amount: formatMoney(totals.due) })}
+            disabled={!props.lines.length || !paymentOk || !limits.reasonsOk(discountReason, priceReason)}
+            loading={create.isPending}
+            onPress={() => save()}
+            testID="save-sale"
+          />
+        </>
+      )}
     </>
   );
 }
@@ -271,9 +296,6 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   section: { gap: spacing.sm },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  line: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   pair: { flexDirection: 'row', gap: spacing.md },
-  totals: { gap: spacing.xs },
-  totalRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   note: { flexDirection: 'row', gap: spacing.sm, alignItems: 'flex-start' },
 });

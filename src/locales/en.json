@@ -384,7 +384,14 @@
     "sendWhatsApp": "Send on WhatsApp",
     "tipHint": "The {{staff}} keeps the whole tip. No commission is taken on tips.",
     "current": "Current sale",
-    "clear": "Clear"
+    "clear": "Clear",
+    "changePriceOf": "Change the price of {{name}}",
+    "priceFor": "Price for {{name}}",
+    "listPrice": "list price {{amount}}",
+    "discountNeedsPin": "Above the {{limit}} limit: a manager's or the owner's PIN is needed.",
+    "discountReason": "Reason for the discount (above {{limit}})",
+    "priceReason": "Reason for the changed price",
+    "reasonKept": "Kept with the sale and shown in Reports → Approvals."
   },
   "customers": {
     "subtitle": "Profiles, visits and notes.",
@@ -1133,7 +1140,7 @@
     "invalid_token": "This phone could not sign up for notifications.",
     "not_balanced": "The books for that month do not balance. Check the trial balance first.",
     "invalid_pin": "Use 4 digits that are not all the same or in a row.",
-    "pin_locked": "Too many wrong PINs. Try again in 5 minutes, or sign in with the password.",
+    "pin_locked": "Too many wrong PINs. Try again in 15 minutes, or sign in with the password.",
     "wrong_pin": "That PIN is not right.",
     "switch_expired": "That person needs to sign in again with their password.",
     "plan_required": "Your salon’s free time has ended, so this can’t be saved yet. The owner can choose a plan under More → Plan & billing.",
@@ -1177,7 +1184,21 @@
     "cashInDrawer": "Cash in the drawer: {{amount}}.",
     "email_unconfirmed": "Confirm your email first: open the link we sent you.",
     "tip_not_refunded": "That is more than the services and products. Switch on \"Also refund the tip\" to refund the tip too.",
-    "payroll_changed": "This payroll changed since it was worked out. Work it out again, then approve."
+    "payroll_changed": "This payroll changed since it was worked out. Work it out again, then approve.",
+    "approval_needed": "This needs a manager's or the owner's PIN.",
+    "not_an_approver": "Only the owner or a manager of this branch can approve.",
+    "no_pin": "This person has no quick-switch PIN yet.",
+    "own_count": "Someone else approves a count you made: the owner or another manager.",
+    "receipt_required": "Add a photo of the receipt.",
+    "same_customer": "Pick two different customers.",
+    "supplier_exists": "There is already a supplier with this name.",
+    "supplier_required": "Pick a supplier.",
+    "already_recorded": "This was already recorded.",
+    "invalid_note": "Write a note of up to 500 characters.",
+    "future_date": "The date can't be in the future.",
+    "vat_off": "Tax is off for this branch: leave the tax at 0.",
+    "triesLeft": "{{count}} tries left before it locks for 15 minutes.",
+    "triesLeft_one": "{{count}} try left before it locks for 15 minutes."
   },
   "sales": {
     "title": "Sales",
@@ -3329,5 +3350,17 @@
     "title": "You don't have access to this page",
     "body": "Your login type can't open this page. Ask the salon owner if you need it.",
     "home": "Go to Home"
+  },
+  "approval": {
+    "title": "Manager approval needed",
+    "hint": "A manager or the owner picks their name and types their quick-switch PIN on this device.",
+    "pin": "{{name}}'s PIN",
+    "approve": "Approve",
+    "nobody": "Nobody here can approve yet: the owner or a manager of this branch first sets a quick-switch PIN (More → Quick-switch PIN).",
+    "lockedName": "{{name}} · PIN locked",
+    "discount": "Discount {{pct}} (limit {{limit}})",
+    "priceChange": "Prices changed by {{amount}}",
+    "refund": "Refund {{amount}} · sale #{{number}}",
+    "clockOther": "{{action}} for {{name}}"
   }
 }
