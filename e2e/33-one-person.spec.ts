@@ -28,7 +28,7 @@ test('one person, one record: pay and login added together, a login added later,
   await snap(page, 'staff-add-with-login', mode);
   await id(page, 'staff-save').click();
   await expect(id(page, 'staff-login-card')).toContainText(`@${omar}`);
-  await expect(id(page, 'staff-login-card')).toContainText('Cashier');
+  await expect(id(page, 'staff-login-card')).toContainText('Front desk');
   const o = await records(owner.businessId, 'Omar Cashier');
   expect(o).toHaveLength(1);
   expect(o[0]!.member_id).not.toBeNull();
@@ -56,7 +56,7 @@ test('one person, one record: pay and login added together, a login added later,
 
   // An outside accountant: a login only, listed after the staff.
   await page.goto('/staff/form');
-  await id(page, 'staff-who-accountant').click();
+  await id(page, 'staff-title-accountant').click(); // the Accountant job is a login only (brief B7)
   await id(page, 'staff-name').fill('Nadia Accounts');
   const nadia = `nadia${uid().slice(-6)}`;
   await id(page, 'login-username').fill(nadia);

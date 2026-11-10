@@ -84,6 +84,9 @@ test('a pilot application is approved with a code; the owner signs up with it an
   const { data: biz } = await admin.from('businesses').select('id').eq('name', salon).single();
   const { data: sub } = await admin.from('subscriptions').select('access_type, pilot_code').eq('business_id', biz!.id).single();
   expect(sub).toMatchObject({ access_type: 'pilot', pilot_code: code });
+  // A test salon takes no pilot place (20 in all): without this, runs fill the pilot and the website closes it.
+  const marked = await admin.from('test_salons').upsert({ business_id: biz!.id, test: true });
+  if (marked.error) throw marked.error;
 });
 
 test('an owner adds a branch (its price first, nothing charged), opens it, and the bill counts each branch', async ({ page, mode }) => {

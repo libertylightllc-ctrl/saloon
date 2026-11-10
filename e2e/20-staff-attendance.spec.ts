@@ -117,8 +117,10 @@ test('owner sets pay and a roster; the barber clocks in late from Home; the boar
   await snap(phone, 'clock-card-breaks', mode);
 });
 
-test('cashier records attendance but never sees pay; staff see only their own day', async ({ page, mode, device }) => {
+test('the front desk clocks others in with the owner’s PIN and never sees pay; staff see only their own day', async ({ page, mode, device }) => {
   const owner = await createOwner(mode);
+  const pin = await owner.client.rpc('set_my_pin', { p_business: owner.businessId, p_pin: '2468' });
+  if (pin.error) throw pin.error;
   const cashier = await createStaff(owner, 'cashier');
   const barber = await createStaff(owner, 'staff');
 
@@ -127,16 +129,25 @@ test('cashier records attendance but never sees pay; staff see only their own da
   await expect(id(page, 'more-staff')).toHaveCount(0);
   await id(page, 'more-attendance').click();
   await id(page, `attendance-${barber.name}-in`).click();
+  // Clocking someone else in needs the owner's or a manager's PIN on the same phone (brief B2).
   await id(page, 'attendance-confirm').click();
+  await expect(id(page, 'approval-summary')).toHaveText(`Clock in for ${barber.name}`);
+  await id(page, `approver-${owner.name}`).click();
+  await id(page, 'approval-pin').fill('2468');
+  await id(page, 'approval-approve').click();
   await expect(text(page, `${barber.name} clocked in`)).toBeVisible();
   await page.goto('/staff');
-  await expect(id(page, 'tab-index')).toHaveAttribute('aria-selected', 'true');
-  await expect(id(page, 'clock-card')).toBeVisible(); // the cashier clocks too
+  await expect(id(page, 'no-access')).toBeVisible();
+  await page.goto('/');
+  await expect(id(page, 'clock-card')).toBeVisible(); // the front desk clocks too
 
   const phone = await device();
   await staffOn(phone, mode, owner.code, barber.username, barber.password);
   await expect(id(phone, 'clock-out')).toBeVisible(); // already clocked in by the cashier
   await tab(phone, 'more');
-  await expect(id(phone, 'more-attendance')).toHaveCount(0);
   await expect(id(phone, 'more-staff')).toHaveCount(0);
+  // Attendance (brief B2): a stylist sees their own day only, and records nothing for anyone else.
+  await id(phone, 'more-attendance').click();
+  await expect(id(phone, `attendance-${barber.name}`)).toContainText('In');
+  await expect(id(phone, `attendance-${cashier.name}`)).toHaveCount(0);
 });

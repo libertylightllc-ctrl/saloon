@@ -1,9 +1,9 @@
 /** Notifications: a cashier's submitted close reaches the owner's bell and, through the every-minute push job,
- * the owner's phone (local push stand-in); a cashier's refund request reaches the owner, who refunds it. */
+ * the owner's phone (local push stand-in); a front-desk refund on a manager's PIN reaches the owner (brief B6). */
 import { admin, createOwner, createStaff, sellCustom, staffEmail, userClient } from './support/api';
 import { uid } from './support/env';
 import { expect, test } from './support/fixtures';
-import { id, ownerOn, staffOn, tab, text } from './support/ui';
+import { id, ownerOn, staffOn, text } from './support/ui';
 
 test('a submitted close rings the owner\'s bell and is pushed to the owner\'s phone', async ({ page, mode }) => {
   test.setTimeout(180_000);
@@ -44,33 +44,36 @@ test('a submitted close rings the owner\'s bell and is pushed to the owner\'s ph
     .toMatchObject({ status: 'ok', title: 'Cash close waiting for approval' });
 });
 
-test('a cashier asks for a refund; the owner is told, opens the sale and refunds it', async ({ page, mode, device }) => {
+test('the front desk refunds on a manager’s PIN; the owner is told and opens the sale', async ({ page, mode, device }) => {
   const owner = await createOwner(mode);
-  const cashier = await createStaff(owner, 'cashier');
+  const desk = await createStaff(owner, 'cashier');
+  const manager = await createStaff(owner, 'cashier', { name: 'Mona Manager' });
+  const promoted = await owner.client.rpc('set_login_type', { p_member: manager.memberId, p_role: 'manager' });
+  if (promoted.error) throw promoted.error;
+  const managerApi = await userClient(staffEmail(owner.code, manager.username), manager.password);
+  const pin = await managerApi.rpc('set_my_pin', { p_business: owner.businessId, p_pin: '1357' });
+  if (pin.error) throw pin.error;
   const sale = await sellCustom(owner.client, owner, { card: 8_000 });
 
-  await staffOn(page, mode, owner.code, cashier.username, cashier.password);
+  await staffOn(page, mode, owner.code, desk.username, desk.password);
   await page.goto(`/sales/${sale.sale_id}`);
-  await expect(id(page, 'sale-refund')).toHaveCount(0);
-  await id(page, 'refund-request-ask').click();
-  await id(page, 'refund-request-amount').fill('30');
-  await id(page, 'refund-request-reason').fill('Colour not as agreed');
-  await id(page, 'refund-request-send').click();
-  await expect(text(page, 'Request sent to the owner')).toBeVisible();
-  await expect(id(page, 'refund-request')).toContainText('Colour not as agreed');
-  await expect(id(page, 'refund-request-ask')).toHaveCount(0);
+  await id(page, 'sale-refund').click();
+  await id(page, 'refund-amount').fill('30');
+  await id(page, 'refund-reason').fill('Colour not as agreed');
+  await id(page, 'refund-method-card').click();
+  await id(page, 'refund-confirm').click();
+  await id(page, 'approver-Mona Manager').click();
+  await id(page, 'approval-pin').fill('1357');
+  await id(page, 'approval-approve').click();
+  await expect(text(page, 'Refunded AED 30.00')).toBeVisible();
 
   const phone = await device();
   await ownerOn(phone, mode, owner.email, owner.password);
   await id(phone, 'home-bell').click();
-  await expect(id(phone, 'notification-refund_requested')).toContainText(`Sale #${sale.number} · AED 30.00`);
-  await id(phone, 'notification-refund_requested').click();
-  await expect(id(phone, 'refund-request')).toContainText('asked for AED 30.00');
-  await id(phone, 'sale-refund').click();
-  await id(phone, 'refund-amount').fill('30');
-  await id(phone, 'refund-reason').fill('Colour not as agreed');
-  await id(phone, 'refund-confirm').click();
-  await expect(text(phone, 'Refunded AED 30.00')).toBeVisible();
-  await expect(id(phone, 'refund-request')).toHaveCount(0);
-  await expect(id(page, 'refund-request')).toHaveCount(0); // the cashier's screen follows live
+  const row = id(phone, 'notification-refund_made');
+  await expect(row).toContainText('Refund AED 30.00');
+  await expect(row).toContainText(`${desk.name} · approved by Mona Manager · Reason: Colour not as agreed`);
+  await row.click();
+  await expect(id(phone, 'sale-total')).toBeVisible();
+  await expect(text(phone, 'Colour not as agreed')).toBeVisible();
 });

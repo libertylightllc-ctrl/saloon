@@ -1,9 +1,12 @@
 /** Daily expenses: tea & food, electricity, water, internet, uniforms, dry cleaning — and what they do to the books. */
 import type { Page } from '@playwright/test';
+import path from 'path';
 
-import { createOwner, createStaff } from './support/api';
+import { admin, createOwner, createStaff } from './support/api';
 import { expect, test } from './support/fixtures';
 import { back, expectMoney, id, idStarts, ownerOn, snap, staffOn, tab, text } from './support/ui';
+
+const PHOTO = path.join(__dirname, 'fixtures', 'receipt.jpg');
 
 async function addExpense(page: Page, category: string, amount: string, method: 'cash' | 'card' | 'bank' | null, note?: string) {
   await id(page, 'expense-amount').fill(amount);
@@ -83,7 +86,7 @@ test('owner records the salon\'s running costs; cash ones lower expected cash; a
   await expectMoney(page, 'kpi-expected-cash-value', 50_000 - 3500);
 });
 
-test('cashier records cash expenses only and cannot reverse; staff cannot see expenses', async ({ page, mode, device }) => {
+test('the front desk pays petty cash with a receipt photo and cannot reverse; staff cannot see expenses', async ({ page, mode, device }) => {
   const owner = await createOwner(mode, { openingCash: 20_000 });
   const cashier = await createStaff(owner, 'cashier');
   const staff = await createStaff(owner, 'staff');
@@ -92,22 +95,35 @@ test('cashier records cash expenses only and cannot reverse; staff cannot see ex
   await tab(page, 'more');
   await id(page, 'more-expenses').click();
   await id(page, 'expenses-new').click();
+  // Petty cash (brief B4): cash from the drawer, today, always with the receipt photo.
+  await expect(text(page, 'Pay from petty cash')).toBeVisible();
   await expect(text(page, 'Cash from the drawer')).toBeVisible();
   await expect(idStarts(page, 'expense-method-')).toHaveCount(0);
   await expect(id(page, 'expense-category-new')).toHaveCount(0);
-  await addExpense(page, 'tea_food', '12', null);
+  await id(page, 'expense-amount').fill('12');
+  await id(page, 'expense-category-tea_food').click();
+  await expect(id(page, 'expense-save')).toBeDisabled(); // no photo yet
+  const chooser = page.waitForEvent('filechooser');
+  await id(page, 'receipt-choose').click();
+  await (await chooser).setFiles(PHOTO);
+  await id(page, 'expense-save').click();
+  await expect(text(page, 'Expense saved')).toBeVisible();
   await idStarts(page, 'expense-tea_food').first().click();
   await expect(id(page, 'expense-detail-amount')).toContainText('12.00');
   await expect(id(page, 'expense-reverse')).toHaveCount(0);
   await back(page);
   await back(page);
-  await tab(page, 'index');
-  await expectMoney(page, 'kpi-expected-cash-value', 20_000 - 1200);
+  const { data: row } = await admin.from('expenses').select('amount_minor, method, receipt_path').eq('business_id', owner.businessId).single();
+  expect(row).toMatchObject({ amount_minor: 1200, method: 'cash' });
+  expect(row!.receipt_path).toMatch(new RegExp(`^${owner.businessId}/expenses/`));
+  // The drawer is AED 12 lighter; the front desk sees it only after counting (blind count), the owner sees it now.
+  const { data: home } = await owner.client.rpc('dashboard_today', { p_branch: owner.branchId });
+  expect((home as { expected_cash: number }).expected_cash).toBe(20_000 - 1200);
 
   const phone = await device();
   await staffOn(phone, mode, owner.code, staff.username, staff.password);
   await tab(phone, 'more');
   await expect(id(phone, 'more-expenses')).toHaveCount(0);
   await phone.goto('/expenses/new');
-  await expect(id(phone, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(phone, 'no-access')).toBeVisible();
 });

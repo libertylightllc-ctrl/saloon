@@ -5,7 +5,7 @@ import type { Page } from '@playwright/test';
 
 import { admin, createOwner, createStaff, dubaiDate, employeeOf, journalTotals, staffEmail, userClient, type Owner } from './support/api';
 import { expect, test } from './support/fixtures';
-import { id, idStarts, ownerOn, printedText, snap, staffOn, tab, text, visibleTabs } from './support/ui';
+import { id, ownerOn, printedText, snap, staffOn, tab, text, visibleTabs } from './support/ui';
 
 async function download(page: Page, testId: string): Promise<string> {
   const [file] = await Promise.all([page.waitForEvent('download'), id(page, testId).click()]);
@@ -58,7 +58,8 @@ test('owner reads every report, exports PDF and CSV, closes last month and expor
   await sale(owner, { price: 8_000, method: 'card', employeeId: barberId });
   // The cashier closes today AED 5.00 short, with a reason.
   const till = await userClient(staffEmail(owner.code, cashier.username), cashier.password);
-  const { data: preview, error: previewError } = await till.rpc('closing_preview', { p_branch: owner.branchId });
+  // The front desk counts blind (brief B4): the expected cash comes from the owner's view.
+  const { data: preview, error: previewError } = await owner.client.rpc('closing_preview', { p_branch: owner.branchId });
   if (previewError) throw previewError;
   const { error: countError } = await till.rpc('submit_cash_count', {
     p: {
@@ -150,11 +151,21 @@ test('owner reads every report, exports PDF and CSV, closes last month and expor
   expect(debit).toBe(books.debit);
 });
 
-test('the accountant has Reports and Accounting tabs, reads and exports, but cannot close a month; a cashier sees neither', async ({ page, mode, device }) => {
+test('the accountant has Reports and Accounting tabs, reads and exports, closes a month but cannot reopen it; the front desk sees neither', async ({ page, mode, device }) => {
   const owner = await createOwner(mode, { openingCash: 20_000 });
   const accountant = await createStaff(owner, 'accountant');
   const cashier = await createStaff(owner, 'cashier');
   await sale(owner, { price: 9_000 });
+  // Last month: one sale moved back, so there is a finished month to close.
+  const old = await sale(owner, { price: 5_000, method: 'card' });
+  const last = lastMonth();
+  for (const q of [
+    admin.from('sales').update({ business_date: last.date }).eq('id', old.sale_id),
+    admin.from('journal_entries').update({ business_date: last.date }).eq('source_id', old.sale_id),
+  ]) {
+    const { error: moveError } = await q;
+    if (moveError) throw moveError;
+  }
 
   await staffOn(page, mode, owner.code, accountant.username, accountant.password);
   // The accountant can look at cash closings but not close a day, and Home says so.
@@ -166,9 +177,13 @@ test('the accountant has Reports and Accounting tabs, reads and exports, but can
   expect(await download(page, 'report-csv')).toContain('90.00');
   await id(page, 'tab-accounts-tab').click();
   await expect(text(page, 'Balanced: Yes')).toBeVisible();
+  // Close a month (brief B2): the accountant closes it; only the owner reopens one.
   await id(page, 'accounts-months').click();
-  await expect(idStarts(page, 'period-')).not.toHaveCount(0);
-  await expect(page.locator('[data-testid$="-close"]')).toHaveCount(0);
+  await id(page, `period-${last.month}-close`).click();
+  await id(page, 'period-confirm').click();
+  await expect(id(page, `period-${last.month}`)).toContainText('Closed');
+  await expect(id(page, `period-${last.month}-reopen`)).toHaveCount(0);
+  await expect(id(page, 'period-owner-reopens')).toBeVisible();
   await expect(id(page, 'ledger-csv')).toBeVisible();
 
   const phone = await device();
@@ -176,5 +191,5 @@ test('the accountant has Reports and Accounting tabs, reads and exports, but can
   await tab(phone, 'more');
   await expect(id(phone, 'more-reports')).toHaveCount(0);
   await phone.goto('/reports');
-  await expect(id(phone, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(phone, 'no-access')).toBeVisible();
 });

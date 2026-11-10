@@ -1,7 +1,7 @@
 /** Suppliers and their bills: stock goes up, payments settle what is owed, unpaid bills can be reversed. */
 import type { Page } from '@playwright/test';
 
-import { createOwner, createStaff, stockQty } from './support/api';
+import { admin, createOwner, createStaff, stockQty } from './support/api';
 import { SERVICE } from './support/catalog';
 import { uid } from './support/env';
 import { expect, test } from './support/fixtures';
@@ -101,18 +101,22 @@ test('owner adds a supplier and a bill; stock goes up; part-pays it in cash; rev
   await expect(id(page, 'tb-supplier_payable')).toContainText('22.00');
 });
 
-test('cashier adds a bill but cannot pay or reverse it, and sees no supplier balances', async ({ page, mode }) => {
+test('a manager adds a bill but cannot pay or reverse it; the accountant pays it by card, never from the drawer', async ({ page, mode, device }) => {
   const owner = await createOwner(mode);
-  const cashier = await createStaff(owner, 'cashier');
+  const manager = await createStaff(owner, 'cashier', { name: 'Mona Manager' });
+  const promoted = await owner.client.rpc('set_login_type', { p_member: manager.memberId, p_role: 'manager' });
+  if (promoted.error) throw promoted.error;
+  const accountant = await createStaff(owner, 'accountant');
   const product = SERVICE[mode].product;
   await owner.client.rpc('save_supplier', { p: { business_id: owner.businessId, name: 'Beauty Line Trading', terms_days: 15 } });
 
-  await staffOn(page, mode, owner.code, cashier.username, cashier.password);
+  // Supplier bills (brief B2): the manager records them; the owner and the accountant pay them.
+  await staffOn(page, mode, owner.code, manager.username, manager.password);
   await tab(page, 'more');
   await id(page, 'more-purchases').click();
   await expect(id(page, 'purchases-owed')).toHaveCount(0);
   await id(page, 'bills-new').click();
-  await expect(text(page, 'The owner records payments to suppliers.')).toBeVisible();
+  await expect(text(page, 'The owner or the accountant records payments to suppliers.')).toBeVisible();
   await expect(id(page, 'bill-payment')).toHaveCount(0);
   await back(page);
   await newBill(page, 'Beauty Line Trading', product, { packs: '5', pack: '1', price: '1' });
@@ -120,4 +124,17 @@ test('cashier adds a bill but cannot pay or reverse it, and sees no supplier bal
   await expect(id(page, 'bill-pay')).toHaveCount(0);
   await expect(id(page, 'bill-reverse')).toHaveCount(0);
   expect(await stockQty(owner.branchId, owner.businessId, product)).toBe(5);
+
+  const { data: bill } = await admin.from('purchase_bills').select('id').eq('business_id', owner.businessId).single();
+  const phone = await device();
+  await staffOn(phone, mode, owner.code, accountant.username, accountant.password);
+  await phone.goto(`/purchases/${bill!.id}`);
+  await expect(id(phone, 'bill-reverse')).toHaveCount(0); // reversing is the owner's
+  await id(phone, 'bill-pay').click();
+  await expect(id(phone, 'pay-method-cash')).toHaveCount(0); // the accountant never pays from the drawer
+  await expect(id(phone, 'pay-method-card')).toHaveAttribute('aria-selected', 'true');
+  await id(phone, 'pay-confirm').click();
+  await expect(text(phone, 'Paid AED 5.25')).toBeVisible();
+  const { data: paid } = await admin.from('supplier_payments').select('method, amount_minor').eq('business_id', owner.businessId).single();
+  expect(paid).toMatchObject({ method: 'card', amount_minor: 525 });
 });

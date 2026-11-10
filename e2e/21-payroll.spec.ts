@@ -81,5 +81,5 @@ test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; t
   const till = await device();
   await staffOn(till, mode, owner.code, cashier.username, cashier.password);
   await till.goto('/payroll');
-  await expect(id(till, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(till, 'no-access')).toBeVisible();
 });

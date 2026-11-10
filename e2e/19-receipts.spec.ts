@@ -1,4 +1,4 @@
-/** Receipt photos: the owner snaps one while recording an expense; a cashier adds one to a bill later.
+/** Receipt photos: the owner snaps one while recording an expense; a manager adds one to a bill later.
  * The photo lands in the private bucket, shows on the record, and opens full size. */
 import type { Page } from '@playwright/test';
 import path from 'path';
@@ -37,8 +37,9 @@ test('owner adds a receipt photo while recording an expense; it shows on the exp
   await id(page, 'expense-save').click();
   await expect(text(page, 'Expense saved')).toBeVisible();
 
+  // The photo goes up first and is named in the same call that saves the expense, so it never misses its expense.
   const { data: row } = await admin.from('expenses').select('id, receipt_path').eq('business_id', owner.businessId).single();
-  expect(row!.receipt_path).toMatch(new RegExp(`^${owner.businessId}/expenses/${row!.id}-`));
+  expect(row!.receipt_path).toMatch(new RegExp(`^${owner.businessId}/expenses/[0-9a-f-]{36}-[0-9a-f]+\\.jpg$`));
   const { data: file } = await admin.storage.from('receipts').download(row!.receipt_path!);
   expect(file!.size).toBeGreaterThan(1000);
 
@@ -50,25 +51,27 @@ test('owner adds a receipt photo while recording an expense; it shows on the exp
   await expect(id(page, 'receipt-choose')).toHaveCount(0); // one photo per record, never replaced
 });
 
-test('a cashier adds a photo to their bill afterwards; staff never reach receipts', async ({ page, mode, device }) => {
+test('a manager adds a photo to a bill afterwards; staff never reach receipts', async ({ page, mode, device }) => {
   const owner = await createOwner(mode);
-  const cashier = await createStaff(owner, 'cashier');
+  const manager = await createStaff(owner, 'cashier', { name: 'Mona Manager' });
+  const promoted = await owner.client.rpc('set_login_type', { p_member: manager.memberId, p_role: 'manager' });
+  if (promoted.error) throw promoted.error;
   const staff = await createStaff(owner, 'staff');
-  const till = await userClient(staffEmail(owner.code, cashier.username), cashier.password);
+  const till = await userClient(staffEmail(owner.code, manager.username), manager.password);
   const { data: supplierId } = await till.rpc('save_supplier', { p: { business_id: owner.businessId, name: 'Receipt Supplies', terms_days: 15 } });
   const { data: bill, error } = await till.rpc('post_purchase_bill', {
     p: { branch_id: owner.branchId, supplier_id: supplierId, lines: [{ description: 'Towels', qty: 10, unit_cost_minor: 800 }] },
   });
   expect(error).toBeNull();
 
-  await staffOn(page, mode, owner.code, cashier.username, cashier.password);
+  await staffOn(page, mode, owner.code, manager.username, manager.password);
   await page.goto(`/purchases/${(bill as { bill_id: string }).bill_id}`);
   await expect(text(page, 'No photo yet.', false)).toBeVisible();
   await choosePhoto(page);
   await expect(text(page, 'Receipt photo added')).toBeVisible();
   await expectPhotoShown(page);
 
-  // The cashier cannot delete it through the storage API either: it is still there afterwards.
+  // The manager cannot delete it through the storage API either: it is still there afterwards.
   const { data: billRow } = await admin.from('purchase_bills').select('receipt_path').eq('id', (bill as { bill_id: string }).bill_id).single();
   await till.storage.from('receipts').remove([billRow!.receipt_path!]);
   const { data: still } = await admin.storage.from('receipts').download(billRow!.receipt_path!);
@@ -80,5 +83,5 @@ test('a cashier adds a photo to their bill afterwards; staff never reach receipt
   const { data: files } = await staffApi.storage.from('receipts').list(`${owner.businessId}/bills`);
   expect(files ?? []).toHaveLength(0);
   await phone.goto(`/purchases/${(bill as { bill_id: string }).bill_id}`);
-  await expect(id(phone, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(phone, 'no-access')).toBeVisible();
 });

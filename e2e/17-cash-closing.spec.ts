@@ -1,10 +1,10 @@
-/** Daily cash closing: tips paid from the drawer, short by AED 5 → cashier submits → owner sends back,
- * then approves → the day is locked, the difference is posted to Cash over/short, the books balance. */
+/** Daily cash closing: tips paid from the drawer, a blind count short by AED 5 → the front desk sends it → owner sends
+ * back, then approves → the day is locked, the difference is posted to Cash over/short, the books balance. */
 import { createOwner, createStaff, dubaiDate, employeeOf, sellCustom, staffEmail, userClient } from './support/api';
 import { expect, test } from './support/fixtures';
 import { back, expectMoney, id, ownerOn, snap, staffOn, tab, text } from './support/ui';
 
-test('cashier pays tips and submits a count AED 5 short; owner sends it back, then approves; the day locks', async ({ page, mode, device }) => {
+test('the front desk pays tips and sends a blind count AED 5 short; owner sends it back, then approves; the day locks', async ({ page, mode, device }) => {
   const owner = await createOwner(mode, { openingCash: 20_000 });
   const cashier = await createStaff(owner, 'cashier');
   const barber = await createStaff(owner, 'staff');
@@ -15,12 +15,12 @@ test('cashier pays tips and submits a count AED 5 short; owner sends it back, th
   await sellCustom(till, owner, { card: 3500, tip: 500, employeeId: employee });
   const today = dubaiDate();
 
-  // Cashier: Home → Close day. Expected = 200 opening + 50 + 25 cash sales (card is not in the drawer).
+  // Front desk: Home → Close day. Blind count (brief B4): nothing that adds up to the expected cash shows yet.
   await staffOn(page, mode, owner.code, cashier.username, cashier.password);
   await id(page, 'home-close-day').click();
-  await expectMoney(page, 'closing-expected', 27_500);
-  await expectMoney(page, 'closing-line-opening_cash', 20_000);
-  await expectMoney(page, 'closing-line-sale', 7_500);
+  await expect(id(page, 'closing-blind')).toContainText('Blind count');
+  await expect(id(page, 'closing-expected')).toHaveCount(0);
+  await expect(id(page, 'closing-line-sale')).toHaveCount(0);
 
   // Tips: 10.00 cash + 5.00 card tip are owed; pay 10.00 out of the drawer.
   await expect(id(page, `tips-${barber.name}`)).toContainText('AED 15.00');
@@ -28,8 +28,6 @@ test('cashier pays tips and submits a count AED 5 short; owner sends it back, th
   await id(page, 'tips-amount').fill('10');
   await id(page, 'tips-confirm').click();
   await expect(text(page, `Paid AED 10.00 tips to ${barber.name}`)).toBeVisible();
-  await expectMoney(page, 'closing-expected', 26_500);
-  await expectMoney(page, 'closing-line-tip_payout', -1_000);
   await expect(id(page, `tips-${barber.name}`)).toContainText('AED 5.00');
 
   // Count with the notes helper: 2 × 100 + 1 × 50 + 1 × 10 = 260.00, i.e. short by 5.00.
@@ -39,14 +37,16 @@ test('cashier pays tips and submits a count AED 5 short; owner sends it back, th
   await id(page, 'denom-1000').fill('1');
   await expect(id(page, 'denom-total')).toContainText('AED 260.00');
   await id(page, 'denom-done').click();
-  await expect(id(page, 'closing-variance')).toContainText('Short by AED 5.00');
-  await expect(id(page, 'closing-submit')).toBeDisabled();
+  // No difference before sending; the reason box is always there and the server says when a reason is needed.
+  await expect(id(page, 'closing-variance')).toHaveCount(0);
   await id(page, 'closing-reason').fill('Change given twice');
   await id(page, 'closing-confirm').click();
   await snap(page, 'closing-count', mode);
   await id(page, 'closing-submit').click();
-  await expect(text(page, 'Sent to the owner for approval')).toBeVisible();
+  await expect(text(page, 'Sent for approval')).toBeVisible();
   await expect(text(page, 'Pending approval').first()).toBeVisible();
+  // Once sent, the difference shows: expected 200 opening + 50 + 25 cash sales − 10 tips = 265.00, counted 260.00.
+  await expect(id(page, 'closing-variance')).toContainText('Short by AED 5.00');
 
   // The drawer is closed to cash; card still works.
   await expect(sellCustom(till, owner, { cash: 1000 })).rejects.toMatchObject({ message: 'day_closed' });
@@ -68,7 +68,7 @@ test('cashier pays tips and submits a count AED 5 short; owner sends it back, th
   await expect(id(page, 'closing-reason')).toHaveValue('Change given twice');
   await id(page, 'closing-confirm').click();
   await id(page, 'closing-submit').click();
-  await expect(text(page, 'Sent to the owner for approval')).toBeVisible();
+  await expect(text(page, 'Sent for approval')).toBeVisible();
 
   // Owner approves: locked, 5.00 posted to Cash over/short, the drawer now holds what was counted.
   await expect(id(phone, 'closing-approve')).toBeVisible();
@@ -130,5 +130,5 @@ test('owner counts and approves in one step, banks part of it; staff cannot open
   await tab(phone, 'more');
   await expect(id(phone, 'more-cashClosing')).toHaveCount(0);
   await phone.goto('/cash-closing');
-  await expect(id(phone, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(phone, 'no-access')).toBeVisible();
 });

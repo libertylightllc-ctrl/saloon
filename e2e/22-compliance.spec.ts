@@ -87,7 +87,7 @@ test('owner keeps the register: licence, a renewed health card, Montaji, binder;
   expect(pdf).toContain('MNT-2026-0042');
 });
 
-test('the cashier signs the hygiene log; staff never reach compliance', async ({ page, mode, device }) => {
+test('the front desk signs the hygiene log; stylists open only the log, never the register', async ({ page, mode, device }) => {
   const owner = await createOwner(mode);
   const cashier = await createStaff(owner, 'cashier');
   const barber = await createStaff(owner, 'staff');
@@ -95,7 +95,8 @@ test('the cashier signs the hygiene log; staff never reach compliance', async ({
   await staffOn(page, mode, owner.code, cashier.username, cashier.password);
   await expect(id(page, 'attention-hygiene')).toBeVisible();
   await tab(page, 'more');
-  await id(page, 'more-compliance').click();
+  await expect(id(page, 'more-compliance')).toHaveCount(0);
+  await id(page, 'more-hygiene').click();
   await expect(id(page, 'compliance-tab-register')).toHaveCount(0); // only the hygiene log
   for (const item of ['tools_sterilised', 'towels_changed', 'surfaces_cleaned', 'waste_disposed']) await id(page, `hygiene-${item}`).click();
   await id(page, 'hygiene-note').fill('Mop head broken');
@@ -104,7 +105,8 @@ test('the cashier signs the hygiene log; staff never reach compliance', async ({
   await expect(id(page, 'hygiene-today')).toContainText('4 of 5 done today');
   await expect(id(page, `hygiene-${dubaiDate()}`)).toContainText('4/5');
   await page.goto('/compliance/doc?type=trade_licence');
-  await expect(id(page, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(page, 'no-access')).toBeVisible();
+  await page.goto('/');
   await expect(id(page, 'attention-hygiene')).toHaveCount(0);
 
   // The owner makes a photo compulsory from Branch settings; tomorrow's log would need one.
@@ -120,8 +122,12 @@ test('the cashier signs the hygiene log; staff never reach compliance', async ({
 
   const phone = await device();
   await staffOn(phone, mode, owner.code, barber.username, barber.password);
+  // The daily hygiene log is for everyone on the floor (brief B2); the register is not.
   await tab(phone, 'more');
   await expect(id(phone, 'more-compliance')).toHaveCount(0);
-  await phone.goto('/compliance');
-  await expect(id(phone, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await id(phone, 'more-hygiene').click();
+  await expect(id(phone, 'hygiene-today')).toContainText('4 of 5 done today');
+  await expect(id(phone, 'compliance-tab-register')).toHaveCount(0);
+  await phone.goto('/compliance/doc?type=trade_licence');
+  await expect(id(phone, 'no-access')).toBeVisible();
 });

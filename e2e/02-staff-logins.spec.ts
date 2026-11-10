@@ -45,7 +45,8 @@ test('owner creates a cashier login; the cashier sees cashier tabs in the branch
   const phone = await device();
   await staffOn(phone, other, owner.code, username, 'Cash1234!');
   await expectTheme(phone, mode);
-  expect(await visibleTabs(phone)).toEqual(['index', 'queue', 'sale', 'customers', 'more']);
+  // The front desk closes the day from its own tab (brief B8).
+  expect(await visibleTabs(phone)).toEqual(['index', 'queue', 'sale', 'customers', 'closing-tab', 'more']);
   await tab(phone, 'more');
   await expect(id(phone, 'more-sales')).toBeVisible();
   await expect(id(phone, 'more-team')).toHaveCount(0);
@@ -76,11 +77,16 @@ test('a staff login sees only its own tabs and no money', async ({ page, mode })
   await idStarts(page, 'queue-more-').click();
   await expect(page.getByRole('button', { name: 'Complete', exact: true })).toHaveCount(0);
   await page.keyboard.press('Escape');
-  // Hidden tabs cannot be opened by address either.
-  for (const path of ['/sale', '/customers', '/sales', '/settings/team']) {
+  // Hidden tabs cannot be opened by address either: the page says so (brief B8).
+  for (const path of ['/sale', '/sales', '/settings/team']) {
     await page.goto(path);
-    await expect(id(page, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+    await expect(id(page, 'no-access')).toBeVisible();
   }
+  // Customers by address is the stylist's own clients, without phone numbers (brief B2).
+  await page.goto('/customers');
+  await expect(text(page, 'My clients')).toBeVisible();
+  await expect(id(page, 'customers-new')).toHaveCount(0);
+  await page.goto('/');
   await tab(page, 'more');
   await expect(id(page, 'more-sales')).toHaveCount(0);
   await expect(id(page, 'more-services')).toBeVisible();

@@ -60,18 +60,19 @@ test('cashier and staff never see the books or the history', async ({ page, mode
   await sellService(owner.client, owner, SERVICE[mode].name, 'cash');
 
   await staffOn(page, mode, owner.code, cashier.username, cashier.password);
-  await expectMoney(page, 'kpi-expected-cash-value', 20_000 + SERVICE[mode].price);
+  // Blind count is on by default: the front desk sees the expected cash only after sending a count (brief B4).
+  await expect(id(page, 'kpi-expected-cash')).toContainText('Not counted yet');
   await expect(text(page, 'Recent activity')).toHaveCount(0);
   await expect(text(page, 'View audit trail')).toHaveCount(0);
   await tab(page, 'more');
   await expect(id(page, 'more-accounts')).toHaveCount(0);
   await page.goto('/accounts');
-  await expect(id(page, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(page, 'no-access')).toBeVisible();
 
   const phone = await device();
   await staffOn(phone, mode, owner.code, staff.username, staff.password);
   await tab(phone, 'more');
   await expect(id(phone, 'more-accounts')).toHaveCount(0);
   await phone.goto('/accounts?tab=history');
-  await expect(id(phone, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(phone, 'no-access')).toBeVisible();
 });

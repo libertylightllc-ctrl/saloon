@@ -1,6 +1,7 @@
 /** The drawer cannot go below zero (owner's fix list #9: Demo Shop's Home showed -AED 396.92 with no sales). A cash
- * expense bigger than the drawer is refused and says what the drawer holds; the cashier adds the cash the owner put in,
- * on Cash closing; the expense then goes through and Home shows what the drawer should hold. */
+ * expense bigger than the drawer is refused and says what the drawer holds; the manager adds the cash the owner put in,
+ * on Cash closing; the expense then goes through and Home shows what the drawer should hold. (A manager, because the
+ * front desk counts blind and does not see what the drawer holds: brief B4, database test 71.) */
 import { createOwner, createStaff } from './support/api';
 import { expect, test } from './support/fixtures';
 import { back, expectMoney, id, snap, staffOn, tab, text } from './support/ui';
@@ -8,8 +9,10 @@ import { back, expectMoney, id, snap, staffOn, tab, text } from './support/ui';
 test('a cash expense bigger than the drawer is refused; the cash the owner put in is added; then it goes through', async ({ page, mode }) => {
   // No opening cash: the drawer starts empty.
   const owner = await createOwner(mode);
-  const cashier = await createStaff(owner, 'cashier');
-  await staffOn(page, mode, owner.code, cashier.username, cashier.password);
+  const manager = await createStaff(owner, 'cashier', { name: 'Mona Manager' });
+  const promoted = await owner.client.rpc('set_login_type', { p_member: manager.memberId, p_role: 'manager' });
+  if (promoted.error) throw promoted.error;
+  await staffOn(page, mode, owner.code, manager.username, manager.password);
   await expectMoney(page, 'kpi-expected-cash-value', 0);
   await expect(id(page, 'kpi-expected-cash')).toContainText('What the drawer should hold now');
 

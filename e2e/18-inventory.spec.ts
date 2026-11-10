@@ -119,7 +119,7 @@ test('owner adds a product, sells it, refunds it to stock, adjusts and counts; H
   await expect(id(page, 'tb-inventory')).toContainText('75.00');
 });
 
-test('a tool that needs a service shows on Home; staff see levels without costs; cashier cannot adjust', async ({ page, mode, device }) => {
+test('a tool that needs a service shows on Home; staff see levels without costs; the front desk receives but cannot adjust', async ({ page, mode, device }) => {
   const owner = await createOwner(mode);
   const staff = await createStaff(owner, 'staff');
   const cashier = await createStaff(owner, 'cashier');
@@ -153,14 +153,16 @@ test('a tool that needs a service shows on Home; staff see levels without costs;
   await expect(id(phone, 'item-adjust')).toHaveCount(0);
   await expect(id(phone, 'item-value')).toHaveCount(0);
   await phone.goto('/inventory/count');
-  await expect(id(phone, 'tab-index')).toHaveAttribute('aria-selected', 'true');
+  await expect(id(phone, 'no-access')).toBeVisible();
 
   const till = await device('cashier');
   await staffOn(till, mode, owner.code, cashier.username, cashier.password);
   await tab(till, 'more');
   await id(till, 'more-inventory').click();
   await expect(id(till, 'inventory-value-value')).toBeVisible();
-  await expect(id(till, 'inventory-order')).toBeVisible();
+  // Stock (brief B2): the front desk receives a delivery; ordering and counts are for the owner and managers.
+  await expect(id(till, 'inventory-receive')).toBeVisible();
+  await expect(id(till, 'inventory-order')).toHaveCount(0);
   await expect(id(till, 'inventory-count')).toHaveCount(0);
   await id(till, 'item-Cordless Clipper').click();
   await expect(id(till, 'item-adjust')).toHaveCount(0);
