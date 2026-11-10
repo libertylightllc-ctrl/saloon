@@ -4,7 +4,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 -- Paid plans are tested in 14_plans; here every salon may work.
 select set_config('salon.plan_check', 'off', false);
-select plan(45);
+select plan(46);
 -- The checks below work out dates and codes with internal helpers that the app's sign-in roles cannot call (migration
 -- 33); they are allowed here, inside this test's transaction only (rolled back at the end).
 grant execute on function public.branch_today(uuid), public.branch_tz(uuid), public.business_today(uuid),
@@ -184,16 +184,20 @@ select throws_ok(format('select reverse_purchase_bill(%L, %L)', current_setting(
   'a bill with payments cannot be reversed');
 select is(expected_cash(current_setting('t.br')::uuid), 10000 - 3500 - 700 - 1000::bigint,
   'a cash supplier payment lowers expected cash');
--- Cashier adds a bill (no payment); owner reverses it: stock goes back out, nothing is owed for it.
+-- The front desk no longer records bills (Part B: they record deliveries, priced into bills by others).
+-- The owner adds a bill (no payment) and reverses it: stock goes back out, nothing is owed for it.
 select pg_temp.as_user('00000000-0000-0000-0000-00000000010c');
 select throws_ok(format($$ select post_purchase_bill('{"branch_id":"%s","supplier_id":"%s","lines":[{"description":"Towels",
   "qty":2,"unit_cost_minor":500}],"paid_now":{"method":"cash","amount_minor":1000}}') $$,
   current_setting('t.br'), current_setting('t.sup')), '42501', null, 'cashier cannot pay while adding a bill');
+select throws_ok(format($$ select post_purchase_bill('{"branch_id":"%s","supplier_id":"%s","lines":[{"description":"Towels",
+  "qty":2,"unit_cost_minor":500}]}') $$, current_setting('t.br'), current_setting('t.sup')), '42501', null,
+  'nor add a bill at all');
+select pg_temp.as_user('00000000-0000-0000-0000-00000000010a');
 select set_config('t.bill2', (post_purchase_bill(jsonb_build_object('branch_id', current_setting('t.br'),
   'supplier_id', current_setting('t.sup'),
   'lines', jsonb_build_array(jsonb_build_object('item_id', current_setting('t.item'), 'qty', 20, 'unit_cost_minor', 40))))
   ->> 'bill_id'), false);
-select pg_temp.as_user('00000000-0000-0000-0000-00000000010a');
 select lives_ok(format('select reverse_purchase_bill(%L, %L)', current_setting('t.bill2'), 'Goods returned'),
   'owner reverses an unpaid bill with a reason');
 select is((select qty from stock_levels where item_id = current_setting('t.item')::uuid), 50::numeric,
