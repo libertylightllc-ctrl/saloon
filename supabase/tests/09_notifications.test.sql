@@ -54,15 +54,15 @@ select set_config('t.emp', (register_staff_member(jsonb_build_object('business_i
   'branch_id', current_setting('t.br'), 'user_id', '00000000-0000-0000-0000-00000000080d', 'username', 'ntstaff',
   'display_name', 'Rafiq', 'role', 'staff')) ->> 'employee_id'), false);
 
--- ── Booking → owner and cashier (the cashier books it; staff add walk-ins only) ─────────────────────
+-- ── Booking → the stylist it is with (Part B: each login gets its own alerts; nobody hears about what they did) ──
 select pg_temp.as_user('00000000-0000-0000-0000-00000000080c');
 select create_appointment(jsonb_build_object('branch_id', current_setting('t.br'), 'kind', 'booking', 'guest_name', 'Omar',
-  'scheduled_at', now() + interval '2 days', 'service_ids', jsonb_build_array((select id from services
+  'employee_id', current_setting('t.emp'), 'scheduled_at', now() + interval '2 days', 'service_ids', jsonb_build_array((select id from services
   where business_id = current_setting('t.b')::uuid and status = 'active' limit 1))));
 select pg_temp.as_admin();
-select is(pg_temp.got('00000000-0000-0000-0000-00000000080a', 'new_booking'), 1, 'the owner hears about a new booking');
-select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'new_booking'), 1, 'so does the cashier');
-select is(pg_temp.got('00000000-0000-0000-0000-00000000080d', 'new_booking'), 0, 'staff do not');
+select is(pg_temp.got('00000000-0000-0000-0000-00000000080d', 'new_booking'), 1, 'the stylist hears about their new booking');
+select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'new_booking'), 0, 'not the front desk who made it');
+select is(pg_temp.got('00000000-0000-0000-0000-00000000080a', 'new_booking'), 0, 'nor the owner (only online bookings reach the desk)');
 select is((select body from notifications where type = 'new_booking' and business_id = current_setting('t.b')::uuid limit 1)
   like 'Omar · %', true, 'the push text names the customer');
 
@@ -77,7 +77,8 @@ select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'long_wait'), 0, '
 select notify_long_waits(now() + interval '15 minutes');
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'long_wait'), 1, 'at 15 minutes the desk is told');
 select notify_long_waits(now() + interval '40 minutes');
-select is(pg_temp.got('00000000-0000-0000-0000-00000000080a', 'long_wait'), 1, 'the owner too, only once');
+select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'long_wait') + pg_temp.got('00000000-0000-0000-0000-00000000080a', 'long_wait'),
+  1, 'only once, and only the desk (the owner hears only when there is no front desk login)');
 
 -- ── Close submitted → owner ──────────────────────────────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000080c');
@@ -87,7 +88,7 @@ select pg_temp.as_admin();
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080a', 'close_submitted'), 1, 'the owner is asked to approve the close');
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'close_submitted'), 0, 'the cashier who sent it is not');
 
--- ── Low stock → owner and cashier, when an item crosses its reorder level ────────────────
+-- ── Low stock → managers (here the owner, as there is no manager), when an item crosses its reorder level ─
 select pg_temp.as_user('00000000-0000-0000-0000-00000000080a');
 select set_config('t.item', save_item(jsonb_build_object('business_id', current_setting('t.b'), 'name', 'Hair Wax',
   'kind', 'retail', 'sell_price_minor', 4500, 'reorder_level', 3))::text, false);
@@ -102,7 +103,7 @@ select adjust_stock(jsonb_build_object('branch_id', current_setting('t.br'), 'it
   'reason', 'Damaged'));
 select pg_temp.as_admin();
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080a', 'low_stock'), 1, 'crossing to 2 tells the owner');
-select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'low_stock'), 1, 'and the cashier');
+select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'low_stock'), 0, 'not the front desk (managers, or the owner without one)');
 
 -- ── Payroll worked out → owner ───────────────────────────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000080a');
@@ -110,7 +111,8 @@ select save_employee(jsonb_build_object('business_id', current_setting('t.b'), '
   'base_salary_minor', 300000));
 select generate_payroll(current_setting('t.b')::uuid, to_char(branch_today(current_setting('t.br')::uuid), 'YYYY-MM'));
 select pg_temp.as_admin();
-select is(pg_temp.got('00000000-0000-0000-0000-00000000080a', 'payroll_generated'), 1, 'payroll worked out tells the owner');
+select is(pg_temp.got('00000000-0000-0000-0000-00000000080a', 'payroll_generated'), 0,
+  'the owner who worked it out is not told (the accountant or owner is, when the other one does it)');
 select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'payroll_generated'), 0, 'never the cashier');
 
 -- ── Refund request ──────────────────────────────────────────────────────────────────────
@@ -152,8 +154,8 @@ select is(pg_temp.got('00000000-0000-0000-0000-00000000080c', 'daily_digest'), 0
 
 -- ── Reading ─────────────────────────────────────────────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000080c');
-select is((select count(*)::int from notifications), 3, 'a cashier reads only their own: booking, long wait, low stock');
-select is(mark_notifications_read(), 3, 'mark all as read');
+select is((select count(*)::int from notifications), 1, 'a cashier reads only their own: the walk-in waiting');
+select is(mark_notifications_read(), 1, 'mark all as read');
 select is((select count(*)::int from notifications where read_at is null), 0, 'none left unread');
 select throws_ok(format($$ select register_push_token('%s', 'not-a-token', 'ios') $$, current_setting('t.b')), '22023',
   'invalid_token', 'only Expo push tokens are accepted');
