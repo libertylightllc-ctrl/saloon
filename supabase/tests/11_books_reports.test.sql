@@ -147,10 +147,12 @@ select throws_ok(format($$ select close_period('%s', '%s') $$, current_setting('
 select pg_temp.as_admin();
 update journal_entries set business_date = business_date - interval '1 month' where source_type = 'sale' and source_id = current_setting('t.s1')::uuid;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000010ee');
-select throws_ok(format($$ select close_period('%s', '%s') $$, current_setting('t.b'), current_setting('t.last')), '42501', null,
-  'the accountant cannot close a month');
+-- Part B: the owner and the accountant close a month; only the owner reopens one.
+select lives_ok(format($$ select close_period('%s', '%s') $$, current_setting('t.b'), current_setting('t.last')),
+  'the accountant closes last month');
+select throws_ok(format($$ select reopen_period('%s', '%s', 'Supplier bill came late') $$, current_setting('t.b'),
+  current_setting('t.last')), '42501', null, 'but does not reopen it');
 select pg_temp.as_user('00000000-0000-0000-0000-0000000010aa');
-select lives_ok(format($$ select close_period('%s', '%s') $$, current_setting('t.b'), current_setting('t.last')), 'the owner closes last month');
 select is((select status from period_list(current_setting('t.b')::uuid) where month = current_setting('t.last')), 'closed',
   'it shows as closed');
 select pg_temp.as_admin();

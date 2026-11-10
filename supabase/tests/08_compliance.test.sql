@@ -1,5 +1,5 @@
 -- Compliance: the template of required records, statuses, renewals as versions, evidence, readiness,
--- the hygiene log (cashier signs; evidence can be required), WPS status, and who may see it.
+-- the hygiene log (front desk and stylists sign; evidence can be required), WPS status, and who may see it.
 begin;
 create extension if not exists pgtap with schema extensions;
 -- Paid plans are tested in 14_plans; here every salon may work.
@@ -132,8 +132,8 @@ select throws_ok(format($$ select sign_hygiene_log('{"branch_id":"%s","checklist
   'already_signed', 'one log per day');
 select is((dashboard_today(current_setting('t.br')::uuid) ->> 'hygiene_signed')::boolean, true, 'Home: signed');
 select pg_temp.as_user('00000000-0000-0000-0000-00000000070d');
-select throws_ok(format($$ select sign_hygiene_log('{"branch_id":"%s","checklist":{}}') $$, current_setting('t.br')), '42501', null,
-  'staff cannot sign the hygiene log');
+select throws_ok(format($$ select sign_hygiene_log('{"branch_id":"%s","checklist":{}}') $$, current_setting('t.br')), '22023',
+  'already_signed', 'stylists may sign the hygiene log too (Part B), once a day for the branch');
 
 -- Evidence required: the owner turns it on; tomorrow's log would need a photo.
 select pg_temp.as_admin();
