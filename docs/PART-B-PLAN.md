@@ -1,6 +1,6 @@
 # Part B plan — login types and permissions
 
-The owner's brief, Part B (9 Nov 2026), asks to see the database plan before any code. Nothing here is built yet.
+The owner's brief, Part B (9 Nov 2026), asked to see the database plan before any code. The owner answered the four decisions on 10 Nov 2026 (all as recommended, delivery option A); building has started.
 
 ## In short
 
@@ -11,11 +11,11 @@ The owner's brief, Part B (9 Nov 2026), asks to see the database plan before any
 - **Existing logins keep working:** Cashier logins become Front desk and Staff logins become Stylist / therapist. Only the name changes; nothing is lost. Nobody becomes Manager on their own.
 - **Built in 10 steps**, one database change and its tests per step, then the app screens, then a test for every row of the B2 table signed in as each login. Part B goes live as one piece, after the full test run and your OK.
 
-## Decisions for you
+## Decisions (the owner's answers, 10 Nov 2026: "1 yes, 2 A, 3 yes, 4 yes")
 
 1. **Internal names stay; only the words change.** Inside the database the logins stay `cashier` and `staff`, shown as "Front desk" and "Stylist / therapist". Renaming them inside would touch every one of the 110 functions that check a login type, for no difference you can see. *Recommended.*
 2. **"Receive a delivery" for the front desk** (there is no delivery step today; stock comes in only with a supplier bill):
-   - **A (recommended):** the front desk records what arrived (items and quantities, a photo of the delivery note). It waits as "Delivery to price". The manager, accountant or owner adds the prices and it becomes the supplier bill, and only then does stock go up. The books stay simple.
+   - **A (chosen):** the front desk records what arrived (items and quantities, a photo of the delivery note). It waits as "Delivery to price". The manager, accountant or owner adds the prices and it becomes the supplier bill, and only then does stock go up. The books stay simple.
    - **B:** stock goes up as soon as the front desk records it, at each item's last cost, and the bill is matched to it later. Stock is right sooner, but the books need a "delivered, not yet billed" account.
 3. **A stylist's "own clients"** are customers they have served or are booked with, at any time. *Recommended.*
 4. **PIN lock:** five wrong PINs lock that PIN for 15 minutes (the brief), for quick-switch as well as approvals. They are the same PIN, and today the lock is 5 minutes.
