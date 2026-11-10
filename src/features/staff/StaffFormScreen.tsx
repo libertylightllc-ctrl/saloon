@@ -8,17 +8,16 @@ import { useCreateStaffLogin } from '@/features/team/api';
 import { isUae } from '@/lib/countries';
 import { formatBps, parsePercent } from '@/lib/money';
 import { spacing } from '@/theme';
-import { Button, Chip, FormError, HeaderBand, MoneyInput, QueryState, Screen, SegmentTabs, SwitchRow, Text, TextField, useToast } from '@/ui';
+import { Button, Chip, FormError, HeaderBand, MoneyInput, QueryState, Screen, SwitchRow, Text, TextField, useToast } from '@/ui';
 
 import { ROLE_TITLES, useSaveEmployee, useStaffDirectory, type RoleTitle, type StaffMember } from './api';
 import { useRoleTitle } from './labels';
 import { accessFor, cleanUsername, LoginFields, loginValid, type LoginDraft } from './LoginFields';
 
-type Who = 'staff' | 'accountant';
-
 /**
  * Add a person — with their pay and, if they will use the app, their login, in one go — or edit pay terms (owner).
- * An outside accountant is added with a login only (no pay record).
+ * The job picks the login type to start with (B7). The Accountant job is the one way to make an accountant: a login
+ * only, with no pay record (in-house or outside bookkeeper).
  */
 export function StaffFormScreen() {
   const { t } = useTranslation();
@@ -45,7 +44,6 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
   const { business, branch } = useWorkspace();
   const save = useSaveEmployee(business.id, branch.id);
   const createLogin = useCreateStaffLogin(business.id, branch.id);
-  const [who, setWho] = useState<Who>('staff');
   const [name, setName] = useState(person?.full_name ?? '');
   const [code, setCode] = useState(person?.employee_code ?? '');
   const [title, setTitle] = useState<RoleTitle>(person?.role_title ?? 'staff');
@@ -56,12 +54,13 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
   // Archiving and bringing back are on the person's page (Remove from staff / Bring back).
   const active = person?.active ?? true;
   const [canLogin, setCanLogin] = useState(false);
+  const [loginTouched, setLoginTouched] = useState(false);
   const [login, setLogin] = useState<LoginDraft>({ access: 'staff', username: '', password: '' });
   const [accessTouched, setAccessTouched] = useState(false);
   /** Saved already while the login still failed (a taken username): Save again only retries the login. */
   const [savedId, setSavedId] = useState<string | null>(null);
 
-  const accountant = !person && who === 'accountant';
+  const accountant = !person && title === 'accountant';
   const withLogin = accountant || (!person && canLogin);
   const bps = commission.trim() === '' ? 0 : parsePercent(commission);
   const phoneOk = phone.trim() === '' || /^\+?[0-9 ]{7,20}$/.test(phone.trim());
@@ -72,7 +71,10 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
 
   const chooseTitle = (r: RoleTitle) => {
     setTitle(r);
-    if (!accessTouched) setLogin((l) => ({ ...l, access: accessFor(r) }));
+    const access = accessFor(r);
+    // An assistant has no login to start with; still changeable.
+    if (!loginTouched && !person) setCanLogin(access !== null && canLogin);
+    if (!accessTouched && access) setLogin((l) => ({ ...l, access }));
   };
 
   const makeLogin = (employeeId: string | undefined) =>
@@ -133,30 +135,19 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
   return (
     <Screen header={header} footer={saveButton}>
       <View style={styles.body}>
-        {!person ? (
-          <SegmentTabs<Who>
-            items={[
-              { key: 'staff', label: t('staff.who.staff') },
-              { key: 'accountant', label: t('staff.who.accountant') },
-            ]}
-            value={who}
-            onChange={setWho}
-            testID="staff-who"
-          />
-        ) : null}
         <TextField label={t('staff.fields.name')} value={name} onChangeText={setName} maxLength={60} testID="staff-name" />
+        <Text variant="bodyStrong">{t('staff.fields.title')}</Text>
+        <View style={styles.chips}>
+          {ROLE_TITLES.map((r) => (
+            <Chip key={r} label={roleTitle(r)} selected={title === r} onPress={() => chooseTitle(r)} testID={`staff-title-${r}`} />
+          ))}
+        </View>
         {accountant ? (
           <Text variant="small" color="textSecondary">
             {t('staff.accountantHint')}
           </Text>
         ) : (
           <>
-            <Text variant="bodyStrong">{t('staff.fields.title')}</Text>
-            <View style={styles.chips}>
-              {ROLE_TITLES.map((r) => (
-                <Chip key={r} label={roleTitle(r)} selected={title === r} onPress={() => chooseTitle(r)} testID={`staff-title-${r}`} />
-              ))}
-            </View>
             <TextField label={t('staff.fields.code')} value={code} onChangeText={setCode} maxLength={20} testID="staff-code" />
             <MoneyInput label={t('staff.fields.salary')} hint={t('staff.fields.salaryHint')} value={salary} onChange={setSalary} testID="staff-salary" />
             <TextField
@@ -184,7 +175,10 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
                 label={t('staff.canLogin')}
                 hint={t('staff.canLoginHint')}
                 value={canLogin}
-                onChange={setCanLogin}
+                onChange={(on) => {
+                  setLoginTouched(true);
+                  setCanLogin(on);
+                }}
                 testID="staff-can-login"
               />
             ) : null}
@@ -192,7 +186,7 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
         )}
         {withLogin ? (
           <LoginFields
-            value={login}
+            value={accountant ? { ...login, access: 'accountant' } : login}
             onChange={(next) => {
               if (next.access !== login.access) setAccessTouched(true);
               setLogin(next);

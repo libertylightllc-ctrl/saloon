@@ -9,8 +9,28 @@ import type { BusinessDate } from '@/lib/dates';
 import { functionError } from '@/lib/errors';
 import { asJson, supabase } from '@/lib/supabase';
 
-export type RoleTitle = 'staff' | 'therapist' | 'cashier' | 'manager';
-export const ROLE_TITLES: RoleTitle[] = ['staff', 'therapist', 'cashier', 'manager'];
+/** Jobs (B7). `staff` is the Barber / Stylist job, named by the salon's mode. */
+export type RoleTitle =
+  | 'staff'
+  | 'therapist'
+  | 'nail_technician'
+  | 'makeup_artist'
+  | 'receptionist'
+  | 'cashier'
+  | 'manager'
+  | 'assistant'
+  | 'accountant';
+export const ROLE_TITLES: RoleTitle[] = [
+  'staff',
+  'therapist',
+  'nail_technician',
+  'makeup_artist',
+  'receptionist',
+  'cashier',
+  'manager',
+  'assistant',
+  'accountant',
+];
 
 export interface Shift {
   weekday: number;
@@ -174,5 +194,64 @@ export function useClock(businessId: string, branchId: string) {
       return data as { late: boolean; late_minutes: number; clock_in: string; clock_out: string | null };
     },
     onSuccess: done,
+  });
+}
+
+/** The owner changes a login's type; the person's staff record, sales, pay and history stay. */
+export function useSetLoginType(businessId: string, branchId: string) {
+  const done = useInvalidateStaff(businessId, branchId);
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { member_id: string; role: 'manager' | 'cashier' | 'staff' | 'accountant' }) => {
+      const { error } = await supabase.rpc('set_login_type', { p_member: input.member_id, p_role: input.role });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      done();
+      void client.invalidateQueries({ queryKey: keys.team(businessId) });
+    },
+  });
+}
+
+export interface MissedClockOut {
+  id: string;
+  business_date: BusinessDate;
+  clock_in: string;
+  employees: { full_name: string } | null;
+}
+
+/** Clock-ins on earlier days with no clock-out, in this branch (owner and managers fix them). */
+export function useMissedClockOuts(branchId: string, today: BusinessDate, enabled: boolean) {
+  return useQuery({
+    enabled,
+    queryKey: ['attendance', branchId, 'missed', today],
+    queryFn: async (): Promise<MissedClockOut[]> => {
+      const { data, error } = await supabase
+        .from('attendance')
+        .select('id, business_date, clock_in, employees(full_name)')
+        .eq('branch_id', branchId)
+        .is('clock_out', null)
+        .lt('business_date', today)
+        .order('business_date', { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return data as unknown as MissedClockOut[];
+    },
+  });
+}
+
+/** A missed clock-out on an earlier day: the time it should have been, and (a manager) why. */
+export function useFixClockOut(businessId: string, branchId: string) {
+  const done = useInvalidateStaff(businessId, branchId);
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { id: string; at: string; reason: string }) => {
+      const { error } = await supabase.rpc('fix_clock_out', { p_attendance: input.id, p_at: input.at, p_reason: input.reason || undefined });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      done();
+      void client.invalidateQueries({ queryKey: ['attendance', branchId] });
+    },
   });
 }

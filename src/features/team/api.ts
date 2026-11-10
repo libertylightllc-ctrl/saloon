@@ -28,7 +28,7 @@ export interface NewStaffLogin {
   display_name: string;
   username: string;
   password: string;
-  role: 'cashier' | 'staff' | 'accountant';
+  role: 'manager' | 'cashier' | 'staff' | 'accountant';
   commission_bps: number;
   colour: string | null;
   /** The person's record in Staff & payroll, when they are already on the staff list. */

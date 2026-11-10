@@ -4,21 +4,30 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { useTeam } from '@/features/team/api';
-import { can } from '@/lib/permissions';
+import { can, levelOf } from '@/lib/permissions';
 import { spacing } from '@/theme';
-import { Button, Card, StatusPill, Text } from '@/ui';
+import { Button, Card, FormError, StatusPill, Text, useToast } from '@/ui';
 
-import type { StaffMember } from './api';
+import { useSetLoginType, type StaffMember } from './api';
 import { CreateLoginSheet } from './CreateLoginSheet';
 import { ManageLoginSheet } from './ManageLoginSheet';
 
-/** A person's app login on their page: who they sign in as, and (owner) create, reset or switch it off. */
+/**
+ * A person's app login on their page: who they sign in as; the owner creates, resets, switches off or changes its type;
+ * a manager resets or switches off front-desk and stylist logins in a branch they share (the server checks the branch).
+ * A Manager job on another login type asks the owner to change it (B7: nobody becomes Manager by themselves).
+ */
 export function LoginCard({ person }: { person: StaffMember }) {
   const { t } = useTranslation();
-  const { business, role } = useWorkspace();
+  const toast = useToast();
+  const { business, branch, role } = useWorkspace();
   const owner = can(role, 'manageUsers');
-  const team = useTeam(business.id, owner && Boolean(person.member_id));
+  const branchAdmin = levelOf(role, 'resetLogin') === 'branch';
+  const team = useTeam(business.id, (owner || branchAdmin) && Boolean(person.member_id));
   const member = team.data?.find((m) => m.id === person.member_id) ?? null;
+  const manages = member !== null && (owner || (branchAdmin && (member.role === 'cashier' || member.role === 'staff')));
+  const setType = useSetLoginType(business.id, branch.id);
+  const mismatch = owner && member !== null && person.role_title === 'manager' && member.role !== 'manager' && member.role !== 'owner';
   const [creating, setCreating] = useState(false);
   const [managing, setManaging] = useState(false);
 
@@ -40,7 +49,28 @@ export function LoginCard({ person }: { person: StaffMember }) {
         ) : (
           <Text color="textSecondary">{t('staff.noLoginBody')}</Text>
         )}
-        {owner && member ? (
+        {mismatch ? (
+          <View style={styles.mismatch} testID="staff-job-mismatch">
+            <Text>{t('staff.jobMismatch', { login: t(`roles.${member.role}`) })}</Text>
+            <FormError error={setType.error} />
+            <View style={styles.row}>
+              <Button
+                label={t('staff.makeManager')}
+                variant="secondary"
+                size="md"
+                loading={setType.isPending}
+                onPress={() =>
+                  setType.mutate(
+                    { member_id: member.id, role: 'manager' },
+                    { onSuccess: () => toast(t('staff.loginTypeChanged', { name: person.full_name, type: t('roles.manager') })) },
+                  )
+                }
+                testID="staff-make-manager"
+              />
+            </View>
+          </View>
+        ) : null}
+        {manages ? (
           <Button label={t('staff.manageLogin')} icon="keyRound" variant="outline" size="md" onPress={() => setManaging(true)} testID="staff-manage-login" />
         ) : null}
         {owner && !person.username ? (
@@ -54,7 +84,7 @@ export function LoginCard({ person }: { person: StaffMember }) {
           person={{ employee_id: person.employee_id, full_name: person.full_name, role_title: person.role_title }}
         />
       ) : null}
-      <ManageLoginSheet member={managing ? member : null} onClose={() => setManaging(false)} />
+      <ManageLoginSheet member={managing ? member : null} canChangeType={owner} onClose={() => setManaging(false)} />
     </>
   );
 }
@@ -63,4 +93,5 @@ const styles = StyleSheet.create({
   card: { gap: spacing.sm },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   flex: { flex: 1 },
+  mismatch: { gap: spacing.sm },
 });

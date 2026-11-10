@@ -92,8 +92,8 @@ export function StaffDetailScreen() {
 
                 <SectionHeader
                   title={t('staff.roster')}
-                  actionLabel={owner ? t('staff.editRoster') : undefined}
-                  onAction={owner ? () => setEditingRoster(true) : undefined}
+                  actionLabel={can(role, 'manageRoster') ? t('staff.editRoster') : undefined}
+                  onAction={can(role, 'manageRoster') ? () => setEditingRoster(true) : undefined}
                   testID="staff-roster-edit"
                 />
                 <Card variant="outlined" style={styles.card} testID="staff-roster">

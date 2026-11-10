@@ -79,11 +79,17 @@ export function StaffScreen() {
                   <KpiGrid>
                     <KpiCard icon="users" label={t('staff.people')} value={String(active.length)} testID="staff-count" />
                     <KpiCard icon="userCheck" label={t('staff.inToday')} value={String(onShift)} testID="staff-in" />
-                    <KpiCard icon="wallet" label={t('staff.salaries')} value={formatMoney(sum(active.map((s) => s.base_salary_minor)))} testID="staff-salaries" />
+                    {/* Salaries: owner and accountant (a manager's list comes without them). */}
+                    {can(role, 'viewPayroll') ? (
+                      <KpiCard icon="wallet" label={t('staff.salaries')} value={formatMoney(sum(active.map((s) => s.base_salary_minor)))} testID="staff-salaries" />
+                    ) : null}
                   </KpiGrid>
                   <View style={styles.actions}>
                     <Button label={t('attendance.title')} icon="clock" variant="outline" size="md" onPress={() => router.push('/attendance')} testID="staff-attendance" />
-                    <Button label={t('payroll.title')} icon="wallet" variant="outline" size="md" onPress={() => router.push('/payroll')} testID="staff-payroll" />
+                    {can(role, 'viewPayroll') ? (
+                      <Button label={t('payroll.title')} icon="wallet" variant="outline" size="md" onPress={() => router.push('/payroll')} testID="staff-payroll" />
+                    ) : null}
+                    <Button label={t('logins.title')} icon="clipboard" variant="outline" size="md" onPress={() => router.push('/staff/logins')} testID="staff-logins" />
                   </View>
                   {[...rows.filter((s) => s.active), ...rows.filter((s) => !s.active)].map((s, i, all) => (
                     <Fragment key={s.employee_id}>

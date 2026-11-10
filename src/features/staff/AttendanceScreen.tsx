@@ -31,6 +31,7 @@ import {
 
 import { useAttendanceDay, useClock, type AttendanceRow, type AttendanceStatus, type ClockAction } from './api';
 import { TIME } from './labels';
+import { MissedClockOuts } from './MissedClockOuts';
 
 const STATUS: Record<AttendanceStatus, StatusKey> = {
   on_shift: 'in_progress',
@@ -53,7 +54,10 @@ const ACTIONS: Record<AttendanceStatus, ClockAction[]> = {
   done: ['resume'],
 };
 
-/** The day's attendance board: who is in, who is late, who is off. The owner and cashier record for others. */
+/**
+ * The day's attendance board: who is in, who is late, who is off. Owner and managers record for others (the front desk
+ * with a PIN), and fix missed clock-outs from earlier days.
+ */
 export function AttendanceScreen() {
   const { t } = useTranslation();
   const dates = useDates();
@@ -72,6 +76,7 @@ export function AttendanceScreen() {
         header={<HeaderBand title={t('attendance.title')} subtitle={dates.day(date, 'EEEE d MMMM')} onBack />}
       >
         <View style={styles.body}>
+          <MissedClockOuts />
           <DateStrip dates={Array.from({ length: 14 }, (_, i) => shiftBusinessDate(today, i - 13))} value={date} onChange={setDate} />
           <QueryState query={board} isEmpty={(rows) => rows.length === 0} empty={<EmptyState illustration="no-results" message={t('attendance.empty')} />}>
             {(rows) => (

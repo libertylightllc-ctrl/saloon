@@ -1104,7 +1104,8 @@
     "timezone": "Use a time zone name like Europe/London",
     "licence": "Letters, numbers and . / - only",
     "province": "Pick your province",
-    "mobile": "Enter the number: 6 to 14 digits."
+    "mobile": "Enter the number: 6 to 14 digits.",
+    "time": "Use 24-hour time, like 18:30."
   },
   "errors": {
     "not_signed_in": "Your session ended. Please sign in again.",
@@ -1339,9 +1340,10 @@
     },
     "usernameHint": "They sign in with salon code {{code}} and this username.",
     "roleHint": {
-      "cashier": "Queue, sales and customers. No refunds or settings.",
-      "staff": "Their own queue and commission. No money screens.",
-      "accountant": "Reads money and reports. Cannot sell."
+      "cashier": "Bookings, check-in, checkout, customers, petty cash, blind cash count. Limits need manager approval. No refunds, reports or settings.",
+      "staff": "Their own appointments, their clients' service notes, their own sales, commission, tips and payslips.",
+      "accountant": "Books, reports, supplier bills and payments, expenses, payroll preparation, month close. Can't sell, refund or touch the cash drawer.",
+      "manager": "Runs the day: bookings, sales, refunds with a reason, cash approval, team on the floor, stock, branch reports. No salaries, payroll, prices, logins or plan."
     },
     "commission": "Commission {{rate}}",
     "disabled": "Disabled",
@@ -1979,7 +1981,12 @@
     "roles": {
       "therapist": "Therapist",
       "cashier": "Cashier",
-      "manager": "Manager"
+      "manager": "Manager",
+      "nail_technician": "Nail technician",
+      "makeup_artist": "Makeup artist",
+      "receptionist": "Receptionist",
+      "assistant": "Assistant (no login)",
+      "accountant": "Accountant"
     },
     "fields": {
       "name": "Full name",
@@ -1997,7 +2004,7 @@
       "staff": "Staff member",
       "accountant": "Accountant (login only)"
     },
-    "accountantHint": "For an accountant who is not on your payroll: they can read money and reports, and cannot sell.",
+    "accountantHint": "An accountant gets a login to the books, reports, bills, expenses and payroll, with no pay record here. They can't sell, refund or touch the cash drawer.",
     "canLogin": "Can sign in to the app",
     "canLoginHint": "Leave it off for people who never use the app; they can still be on the roster and be paid.",
     "appAccess": "What they can do in the app",
@@ -2020,7 +2027,11 @@
       "restore": "Bring back",
       "restored": "{{name}} is back on the staff"
     },
-    "archivedSection": "Archived"
+    "archivedSection": "Archived",
+    "jobMismatch": "Job is Manager but the login is {{login}}. Change to a Manager login?",
+    "makeManager": "Change to a Manager login",
+    "changeLoginType": "Change to {{type}}",
+    "loginTypeChanged": "{{name}} now has a {{type}} login"
   },
   "attendance": {
     "title": "Attendance",
@@ -2074,6 +2085,19 @@
       "break_start": "{{name}} is on a break",
       "break_end": "{{name}} is back from a break",
       "resume": "{{name}} is back at work"
+    },
+    "missed": {
+      "title": "Missed clock-outs: {{count}}",
+      "line": "{{day}} · clocked in {{time}}",
+      "fix": "Fix",
+      "sheetTitle": "Missed clock-out · {{name}}",
+      "hint": "Clocked in on {{day}} at {{time}} and never clocked out. When did they leave?",
+      "left": "Left at",
+      "leftHint": "24-hour time, like 18:30, up to 24 hours after the clock-in.",
+      "reason": "Reason (needed)",
+      "reasonOptional": "Reason (optional)",
+      "save": "Save clock-out",
+      "saved": "Clock-out saved for {{name}}"
     }
   },
   "payroll": {
@@ -3416,5 +3440,112 @@
     "refund": "Refund {{amount}} · sale #{{number}}",
     "clockOther": "{{action}} for {{name}}",
     "pettyCash": "Petty cash {{amount}}"
+  },
+  "logins": {
+    "title": "What each login can do",
+    "subtitle": "The five login types",
+    "seeAll": "See everything this login can do",
+    "ownerHint": "Everything, all branches.",
+    "mark": {
+      "yes": "Yes",
+      "no": "—",
+      "view": "View",
+      "own": "Own only",
+      "pin": "PIN"
+    },
+    "area": {
+      "bookings": "Bookings and queue",
+      "sales": "Sales",
+      "cash": "Cash drawer",
+      "customers": "Customers",
+      "team": "Team",
+      "stock": "Stock and suppliers",
+      "reports": "Reports and books",
+      "setup": "Setup"
+    },
+    "row": {
+      "calendar": "See the day's calendar and queue",
+      "addBookings": "Add, move and cancel bookings and walk-ins",
+      "noShowDeposit": "Mark no-shows, take a deposit",
+      "checkout": "Checkout and take payment",
+      "discount": "Discount",
+      "changePrice": "Change a service price at checkout",
+      "refund": "Refund or void a saved sale",
+      "refundDeposit": "Refund a deposit",
+      "receipts": "Receipts (print, WhatsApp)",
+      "countDrawer": "Count the drawer and close the day",
+      "seeExpected": "See expected cash before counting",
+      "approveClose": "Approve a cash close",
+      "pettyCash": "Petty cash paid from the drawer",
+      "cashOut": "Cash taken out, bank deposit",
+      "customerList": "Customer list, visits, notes",
+      "contacts": "Phone numbers and contact details",
+      "editCustomers": "Add and edit customers",
+      "merge": "Merge duplicates",
+      "exportDelete": "Export or delete customers",
+      "clock": "Clock in and out",
+      "rosters": "Rosters, days off, leave",
+      "staffSetup": "Add staff, create logins, change login type, salary, commission %",
+      "resetLogin": "Reset a password or switch a login off",
+      "staffSales": "Staff sales and commission report",
+      "salaries": "Salaries, bonuses, advances, deductions",
+      "payroll": "Work out payroll / approve / mark paid",
+      "seeStock": "See stock",
+      "countStock": "Stock count and adjustments (reason required)",
+      "receive": "Order stock, receive a delivery",
+      "bills": "Supplier bills: record / mark paid",
+      "expenses": "Expenses (not from the drawer)",
+      "home": "Home",
+      "reportsRow": "Reports",
+      "accounts": "Accounts & history (journal, trial balance, VAT)",
+      "closeMonth": "Close a month / reopen it",
+      "ledgerExport": "Ledger export",
+      "audit": "Audit trail and sign-ins",
+      "services": "Services and prices",
+      "branchSettings": "Branch settings, booking page, rooms, open days",
+      "compliance": "Compliance records (licences, papers)",
+      "hygiene": "Daily hygiene log",
+      "plan": "Plan & billing, add a branch, backup, delete account",
+      "support": "Help & support chat"
+    },
+    "cell": {
+      "ownBusy": "Own (others shown as busy)",
+      "ownAddMove": "Own: add and move; cancelling needs the front desk",
+      "ifStylistsPay": "Only if \"Stylists take payments\" is on",
+      "any": "Any",
+      "anyReason": "Any (reason above the limit)",
+      "upToLimitPin": "Up to the limit; above = PIN",
+      "withReason": "Yes, with a reason",
+      "refundManager": "Yes, with a reason; not their own sale",
+      "blindCount": "Yes, blind count",
+      "afterCount": "After sending the count",
+      "viewAfterClose": "View after the count",
+      "notOwnCount": "Yes, not a count they made",
+      "pettyLimit": "Up to the limit with a receipt photo; above = PIN",
+      "recordDeposit": "View, record the bank deposit",
+      "ownClients": "Own clients' visits and service notes",
+      "hiddenPhones": "Hidden (the owner can switch on)",
+      "ownNotes": "Service notes for own clients",
+      "anyone": "Anyone",
+      "anyoneFix": "Anyone; fixes missed clock-outs with a reason",
+      "selfOthersPin": "Self; others with a PIN",
+      "self": "Self",
+      "branchFloor": "Front desk and stylists in their branch",
+      "noSalaries": "Yes (no salaries)",
+      "ownPayslips": "Own payslips",
+      "recordOwnerApproves": "Record; the owner approves",
+      "yesYesYes": "Yes / yes / yes",
+      "yesNoYes": "Yes / — / yes",
+      "receiveDelivery": "Receive a delivery",
+      "yesYes": "Yes / yes",
+      "yesNo": "Yes / —",
+      "wholeSalon": "Whole salon",
+      "theirBranch": "Their branch",
+      "today": "Today: queue, bookings, takings (no profit)",
+      "ownDay": "Own day",
+      "moneySummary": "Money summary",
+      "all": "All",
+      "managerReports": "Sales, staff sales, daily closing, cash differences, stock, no-shows"
+    }
   }
 }

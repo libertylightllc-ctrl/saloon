@@ -1104,7 +1104,8 @@
     "timezone": "Usa un nombre de zona horaria como Europe/Madrid",
     "licence": "Solo letras, números y . / -",
     "province": "Elige tu provincia",
-    "mobile": "Escribe el número: de 6 a 14 dígitos."
+    "mobile": "Escribe el número: de 6 a 14 dígitos.",
+    "time": "Usa la hora de 24 horas, como 18:30."
   },
   "errors": {
     "not_signed_in": "Tu sesión terminó. Vuelve a iniciar sesión.",
@@ -1339,9 +1340,10 @@
     },
     "usernameHint": "Inicia sesión con el código de salón {{code}} y este usuario.",
     "roleHint": {
-      "cashier": "Fila, ventas y clientes. Sin reembolsos ni ajustes.",
-      "staff": "Su propia fila y su comisión. Sin pantallas de dinero.",
-      "accountant": "Consulta dinero e informes. No puede vender."
+      "cashier": "Citas, llegada, cobro, clientes, caja chica, recuento a ciegas. Los límites necesitan aprobación de un gerente. Sin reembolsos, informes ni ajustes.",
+      "staff": "Sus propias citas, las notas de servicio de sus clientes, sus ventas, comisión, propinas y nóminas.",
+      "accountant": "Cuentas, informes, facturas y pagos a proveedores, gastos, preparación de nóminas, cierre de mes. No vende, no reembolsa ni toca la caja.",
+      "manager": "Lleva el día: citas, ventas, reembolsos con motivo, aprobación de caja, equipo en sala, stock, informes de la sucursal. Sin sueldos, nóminas, precios, accesos ni plan."
     },
     "commission": "Comisión {{rate}}",
     "disabled": "Desactivado",
@@ -1979,7 +1981,12 @@
     "roles": {
       "therapist": "Terapeuta",
       "cashier": "Cajero",
-      "manager": "Gerente"
+      "manager": "Gerente",
+      "nail_technician": "Técnica de uñas",
+      "makeup_artist": "Maquillador/a",
+      "receptionist": "Recepcionista",
+      "assistant": "Asistente (sin acceso)",
+      "accountant": "Contable"
     },
     "fields": {
       "name": "Nombre completo",
@@ -1997,7 +2004,7 @@
       "staff": "Miembro del personal",
       "accountant": "Contador (solo acceso)"
     },
-    "accountantHint": "Para un contador que no está en tu nómina: puede consultar dinero e informes, pero no puede vender.",
+    "accountantHint": "El contable recibe acceso a las cuentas, informes, facturas, gastos y nóminas, sin ficha de pago aquí. No vende, no reembolsa ni toca la caja.",
     "canLogin": "Puede iniciar sesión en la app",
     "canLoginHint": "Déjalo desactivado para quien nunca usa la app; aun así puede tener horario y cobrar.",
     "appAccess": "Qué puede hacer en la app",
@@ -2020,7 +2027,11 @@
       "restore": "Recuperar",
       "restored": "{{name}} vuelve a estar en el personal"
     },
-    "archivedSection": "Archivados"
+    "archivedSection": "Archivados",
+    "jobMismatch": "El puesto es Gerente, pero el acceso es {{login}}. ¿Cambiar a un acceso de Gerente?",
+    "makeManager": "Cambiar a acceso de Gerente",
+    "changeLoginType": "Cambiar a {{type}}",
+    "loginTypeChanged": "{{name}} ahora tiene acceso de {{type}}"
   },
   "attendance": {
     "title": "Asistencia",
@@ -2074,6 +2085,19 @@
       "break_start": "{{name}} está en descanso",
       "break_end": "{{name}} volvió del descanso",
       "resume": "{{name}} volvió al trabajo"
+    },
+    "missed": {
+      "title": "Salidas sin fichar: {{count}}",
+      "line": "{{day}} · entrada {{time}}",
+      "fix": "Corregir",
+      "sheetTitle": "Salida sin fichar · {{name}}",
+      "hint": "Fichó la entrada el {{day}} a las {{time}} y no fichó la salida. ¿Cuándo se fue?",
+      "left": "Salió a las",
+      "leftHint": "Hora de 24 horas, como 18:30, hasta 24 horas después de la entrada.",
+      "reason": "Motivo (obligatorio)",
+      "reasonOptional": "Motivo (opcional)",
+      "save": "Guardar salida",
+      "saved": "Salida guardada para {{name}}"
     }
   },
   "payroll": {
@@ -3417,5 +3441,112 @@
     "refund": "Reembolso de {{amount}} · venta #{{number}}",
     "clockOther": "{{action}} para {{name}}",
     "pettyCash": "Caja chica {{amount}}"
+  },
+  "logins": {
+    "title": "Qué puede hacer cada acceso",
+    "subtitle": "Los cinco tipos de acceso",
+    "seeAll": "Ver todo lo que puede hacer este acceso",
+    "ownerHint": "Todo, todas las sucursales.",
+    "mark": {
+      "yes": "Sí",
+      "no": "—",
+      "view": "Solo ver",
+      "own": "Solo lo suyo",
+      "pin": "PIN"
+    },
+    "area": {
+      "bookings": "Citas y cola",
+      "sales": "Ventas",
+      "cash": "Caja",
+      "customers": "Clientes",
+      "team": "Equipo",
+      "stock": "Stock y proveedores",
+      "reports": "Informes y cuentas",
+      "setup": "Configuración"
+    },
+    "row": {
+      "calendar": "Ver la agenda y la cola del día",
+      "addBookings": "Añadir, mover y cancelar citas y clientes sin cita",
+      "noShowDeposit": "Marcar ausencias, cobrar un depósito",
+      "checkout": "Cobrar",
+      "discount": "Descuento",
+      "changePrice": "Cambiar el precio de un servicio al cobrar",
+      "refund": "Reembolsar o anular una venta guardada",
+      "refundDeposit": "Devolver un depósito",
+      "receipts": "Recibos (imprimir, WhatsApp)",
+      "countDrawer": "Contar la caja y cerrar el día",
+      "seeExpected": "Ver el efectivo esperado antes de contar",
+      "approveClose": "Aprobar un cierre de caja",
+      "pettyCash": "Caja chica pagada de la caja",
+      "cashOut": "Efectivo retirado, depósito bancario",
+      "customerList": "Lista de clientes, visitas, notas",
+      "contacts": "Teléfonos y datos de contacto",
+      "editCustomers": "Añadir y editar clientes",
+      "merge": "Fusionar duplicados",
+      "exportDelete": "Exportar o eliminar clientes",
+      "clock": "Fichar entrada y salida",
+      "rosters": "Turnos, días libres, permisos",
+      "staffSetup": "Añadir personal, crear accesos, cambiar el tipo de acceso, sueldo, % de comisión",
+      "resetLogin": "Restablecer una contraseña o desactivar un acceso",
+      "staffSales": "Informe de ventas y comisiones del personal",
+      "salaries": "Sueldos, bonos, anticipos, descuentos",
+      "payroll": "Calcular nóminas / aprobar / marcar pagadas",
+      "seeStock": "Ver el stock",
+      "countStock": "Recuento y ajustes de stock (con motivo)",
+      "receive": "Pedir stock, recibir una entrega",
+      "bills": "Facturas de proveedores: registrar / marcar pagadas",
+      "expenses": "Gastos (no de la caja)",
+      "home": "Inicio",
+      "reportsRow": "Informes",
+      "accounts": "Cuentas e historial (diario, balance, IVA)",
+      "closeMonth": "Cerrar un mes / reabrirlo",
+      "ledgerExport": "Exportar el libro mayor",
+      "audit": "Registro de actividad e inicios de sesión",
+      "services": "Servicios y precios",
+      "branchSettings": "Ajustes de la sucursal, página de reservas, salas, días de apertura",
+      "compliance": "Registros de cumplimiento (licencias, papeles)",
+      "hygiene": "Registro diario de higiene",
+      "plan": "Plan y facturación, añadir sucursal, copia de seguridad, eliminar la cuenta",
+      "support": "Ayuda y chat de soporte"
+    },
+    "cell": {
+      "ownBusy": "Lo suyo (lo demás como ocupado)",
+      "ownAddMove": "Lo suyo: añadir y mover; cancelar lo hace recepción",
+      "ifStylistsPay": "Solo si \"Los estilistas cobran\" está activado",
+      "any": "Cualquiera",
+      "anyReason": "Cualquiera (con motivo sobre el límite)",
+      "upToLimitPin": "Hasta el límite; por encima = PIN",
+      "withReason": "Sí, con motivo",
+      "refundManager": "Sí, con motivo; no su propia venta",
+      "blindCount": "Sí, a ciegas",
+      "afterCount": "Tras enviar el recuento",
+      "viewAfterClose": "Ver tras el recuento",
+      "notOwnCount": "Sí, no un recuento propio",
+      "pettyLimit": "Hasta el límite con foto del recibo; por encima = PIN",
+      "recordDeposit": "Ver, registrar el depósito bancario",
+      "ownClients": "Visitas y notas de servicio de sus clientes",
+      "hiddenPhones": "Ocultos (el dueño puede activarlos)",
+      "ownNotes": "Notas de servicio de sus clientes",
+      "anyone": "Cualquiera",
+      "anyoneFix": "Cualquiera; corrige salidas olvidadas con motivo",
+      "selfOthersPin": "Uno mismo; otros con PIN",
+      "self": "Uno mismo",
+      "branchFloor": "Recepción y estilistas de su sucursal",
+      "noSalaries": "Sí (sin sueldos)",
+      "ownPayslips": "Sus nóminas",
+      "recordOwnerApproves": "Registra; el dueño aprueba",
+      "yesYesYes": "Sí / sí / sí",
+      "yesNoYes": "Sí / — / sí",
+      "receiveDelivery": "Recibir una entrega",
+      "yesYes": "Sí / sí",
+      "yesNo": "Sí / —",
+      "wholeSalon": "Todo el salón",
+      "theirBranch": "Su sucursal",
+      "today": "Hoy: cola, citas, cobros (sin beneficio)",
+      "ownDay": "Su día",
+      "moneySummary": "Resumen de dinero",
+      "all": "Todos",
+      "managerReports": "Ventas, ventas del personal, cierre diario, diferencias de caja, stock, ausencias"
+    }
   }
 }

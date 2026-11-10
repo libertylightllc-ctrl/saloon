@@ -31,12 +31,17 @@ function CreateLoginForm({ person, onDone }: { person: LoginFor; onDone: () => v
   const toast = useToast();
   const { business, branch } = useWorkspace();
   const create = useCreateStaffLogin(business.id, branch.id);
-  const [draft, setDraft] = useState<LoginDraft>({ access: accessFor(person.role_title), username: '', password: '' });
+  const [draft, setDraft] = useState<LoginDraft>({ access: accessFor(person.role_title) ?? 'staff', username: '', password: '' });
 
   return (
     <>
       <Text color="textSecondary">{t('team.fromStaff', { name: person.full_name })}</Text>
-      <LoginFields value={draft} onChange={setDraft} />
+      <LoginFields
+        value={draft}
+        onChange={setDraft}
+        choices={person.role_title === 'accountant' ? ['accountant'] : undefined}
+        seeAll={false}
+      />
       <FormError error={create.error} />
       <Button
         label={t('team.create')}
