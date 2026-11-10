@@ -517,9 +517,10 @@
   },
   "roles": {
     "owner": "मालिक",
-    "cashier": "कैशियर",
-    "staff": "स्टाफ",
-    "accountant": "अकाउंटेंट"
+    "cashier": "फ्रंट डेस्क",
+    "staff": "स्टाइलिस्ट / थेरेपिस्ट",
+    "accountant": "अकाउंटेंट",
+    "manager": "मैनेजर"
   },
   "units": {
     "ml": "ml",

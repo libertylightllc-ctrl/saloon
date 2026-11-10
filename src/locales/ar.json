@@ -545,9 +545,10 @@
   },
   "roles": {
     "owner": "المالك",
-    "cashier": "أمين الصندوق",
-    "staff": "موظف",
-    "accountant": "محاسب"
+    "cashier": "الاستقبال",
+    "staff": "مصفف / معالج",
+    "accountant": "محاسب",
+    "manager": "مدير"
   },
   "units": {
     "ml": "مل",

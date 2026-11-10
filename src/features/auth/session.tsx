@@ -272,7 +272,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       session,
       ...loaded,
       role: (loaded.member?.role as Role | undefined) ?? null,
-      rules: { staffCanSell: settings.staff_can_sell === true },
+      rules: {
+        staffCanSell: settings.staff_can_sell === true,
+        staffBookSelf: settings.staff_book_self !== false,
+        staffSeePhones: settings.staff_see_phones === true,
+      },
       notice,
       platformOnly,
       clearNotice: () => setNotice(null),

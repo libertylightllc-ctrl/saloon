@@ -517,9 +517,10 @@
   },
   "roles": {
     "owner": "مالک",
-    "cashier": "کیشیئر",
-    "staff": "عملہ",
-    "accountant": "اکاؤنٹنٹ"
+    "cashier": "فرنٹ ڈیسک",
+    "staff": "اسٹائلسٹ / تھراپسٹ",
+    "accountant": "اکاؤنٹنٹ",
+    "manager": "مینیجر"
   },
   "units": {
     "ml": "ملی لیٹر",

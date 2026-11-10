@@ -517,9 +517,10 @@
   },
   "roles": {
     "owner": "Propriétaire",
-    "cashier": "Caissier",
-    "staff": "Employé",
-    "accountant": "Comptable"
+    "cashier": "Accueil",
+    "staff": "Styliste / thérapeute",
+    "accountant": "Comptable",
+    "manager": "Gérant"
   },
   "units": {
     "ml": "ml",
