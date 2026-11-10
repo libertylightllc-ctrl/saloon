@@ -41,6 +41,12 @@ create function pg_temp.balanced() returns boolean language sql as $$
   select coalesce(bool_and(d = c), true) from (
     select sum(debit_minor) d, sum(credit_minor) c from journal_lines group by entry_id) x
 $$;
+create function pg_temp.upload() returns text language sql as $$
+  insert into storage.objects (bucket_id, name, owner, metadata)
+  values ('receipts', current_setting('t.b') || '/expenses/' || gen_random_uuid() || '.jpg', auth.uid(),
+          '{"mimetype":"image/jpeg","size":1200}')
+  returning name
+$$;
 create function pg_temp.cat(p_key text) returns text language sql as $$
   select id::text from expense_categories where business_id = current_setting('t.b')::uuid and key = p_key
 $$;
@@ -106,8 +112,9 @@ select throws_ok(format($$ select record_expense('{"branch_id":"%s","category_id
 
 -- ── Cashier: cash expenses today only; no reversals ───────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000010c');
-select lives_ok(format($$ select record_expense('{"branch_id":"%s","category_id":"%s","amount_minor":700,"method":"cash"}') $$,
-  current_setting('t.br'), pg_temp.cat('tea_food')), 'cashier records a cash expense');
+select lives_ok(format($$ select record_expense('{"branch_id":"%s","category_id":"%s","amount_minor":700,"method":"cash",
+  "receipt_path":"%s"}') $$, current_setting('t.br'), pg_temp.cat('tea_food'), pg_temp.upload()),
+  'cashier records a cash expense, with the receipt photo');
 select throws_ok(format($$ select record_expense('{"branch_id":"%s","category_id":"%s","amount_minor":700,"method":"card"}') $$,
   current_setting('t.br'), pg_temp.cat('tea_food')), '42501', null, 'cashier cannot record a card expense');
 select throws_ok(format($$ select record_expense('{"branch_id":"%s","category_id":"%s","amount_minor":700,"method":"cash",

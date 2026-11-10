@@ -4,7 +4,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 -- Paid plans are tested in 14_plans; here every salon may work.
 select set_config('salon.plan_check', 'off', false);
-select plan(53);
+select plan(54);
 -- The checks below work out dates and codes with internal helpers that the app's sign-in roles cannot call (migration
 -- 33); they are allowed here, inside this test's transaction only (rolled back at the end).
 grant execute on function public.branch_today(uuid), public.branch_tz(uuid), public.business_today(uuid),
@@ -55,6 +55,12 @@ create function pg_temp.sale(p_cash bigint, p_card bigint, p_tip bigint) returns
         select jsonb_build_object('method', 'cash', 'amount_minor', p_cash) x where p_cash > 0
         union all select jsonb_build_object('method', 'card', 'amount_minor', p_card) where p_card > 0) y)))
 $$;
+create function pg_temp.upload() returns text language sql as $$
+  insert into storage.objects (bucket_id, name, owner, metadata)
+  values ('receipts', current_setting('t.b') || '/expenses/' || gen_random_uuid() || '.jpg', auth.uid(),
+          '{"mimetype":"image/jpeg","size":1200}')
+  returning name
+$$;
 create function pg_temp.preview() returns jsonb language sql as $$
   select closing_preview(current_setting('t.br')::uuid)
 $$;
@@ -77,14 +83,19 @@ select pg_temp.as_admin();
 update journal_entries set business_date = business_date - 1 where source_type = 'opening_cash'
   and business_id = current_setting('t.b')::uuid;
 
+-- This file checks the sums, so the front desk sees them here: blind count off (it is checked in 71_cash_drawer).
+update branches set settings = settings || '{"blind_count": false}' where id = current_setting('t.br')::uuid;
+
 -- ── Today's cash: sales, a card sale with a tip, a cash expense ────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000020c');
 select lives_ok($$ select pg_temp.sale(5000, 0, 0) $$, 'cashier sells AED 50.00 cash');
 select lives_ok($$ select pg_temp.sale(0, 3500, 500) $$, 'cashier sells AED 35.00 on card including a AED 5.00 tip');
 select lives_ok($$ select pg_temp.sale(2500, 0, 1000) $$, 'cashier sells AED 25.00 cash including a AED 10.00 tip');
-select lives_ok(format($$ select record_expense('{"branch_id":"%s","category_id":"%s","amount_minor":1500,"method":"cash"}') $$,
-  current_setting('t.br'), (select id from expense_categories where business_id = current_setting('t.b')::uuid and key = 'tea_food')),
-  'cashier pays AED 15.00 for tea from the drawer');
+select lives_ok(format($$ select record_expense('{"branch_id":"%s","category_id":"%s","amount_minor":1500,"method":"cash",
+  "receipt_path":"%s"}') $$,
+  current_setting('t.br'), (select id from expense_categories where business_id = current_setting('t.b')::uuid and key = 'tea_food'),
+  pg_temp.upload()),
+  'cashier pays AED 15.00 for tea from the drawer, with the receipt photo');
 
 select is((pg_temp.preview() ->> 'opening_cash_minor')::bigint, 20000::bigint, 'opening cash is yesterday''s balance');
 select is((pg_temp.preview() ->> 'expected_cash_minor')::bigint, 26000::bigint,
@@ -158,10 +169,12 @@ select throws_ok(format($$ select submit_cash_count('{"branch_id":"%s","submit":
 select throws_ok(format($$ select submit_cash_count('{"branch_id":"%s","counted_cash_minor":25500,"submit":true,
   "approve":true,"drawer_closed_confirmed":true,"reason":"Change given twice"}') $$, current_setting('t.br')),
   '42501', null, 'a cashier cannot approve');
+select throws_ok(format($$ select submit_cash_count('{"branch_id":"%s","counted_cash_minor":25500,"submit":true,
+  "drawer_closed_confirmed":true,"reason":"Change given twice","taken_out_minor":20000,"taken_out_to":"bank"}') $$,
+  current_setting('t.br')), '42501', 'not_allowed', 'the front desk does not take cash out of the drawer (brief B2)');
 select lives_ok(format($$ select submit_cash_count('{"branch_id":"%s","counted_cash_minor":25500,"submit":true,
-  "drawer_closed_confirmed":true,"reason":"Change given twice","counted_by":"%s",
-  "taken_out_minor":20000,"taken_out_to":"bank"}') $$, current_setting('t.br'), current_setting('t.cashier')),
-  'cashier submits AED 255.00 counted (expected 260.00) and AED 200.00 to go to the bank');
+  "drawer_closed_confirmed":true,"reason":"Change given twice","counted_by":"%s"}') $$, current_setting('t.br'),
+  current_setting('t.cashier')), 'cashier submits AED 255.00 counted (expected 260.00)');
 select results_eq(format($$ select status, opening_cash_minor, expected_cash_minor, counted_cash_minor, variance_minor
   from cash_closings where branch_id = %L and business_date = branch_today(%L::uuid) $$, current_setting('t.br'), current_setting('t.br')),
   $$ values ('pending_approval'::text, 20000::bigint, 26000::bigint, 25500::bigint, -500::bigint) $$,
@@ -175,7 +188,7 @@ select throws_ok(format($$ select pay_tips('{"branch_id":"%s","employee_id":"%s"
 select throws_ok(format($$ select submit_cash_count('{"branch_id":"%s","counted_cash_minor":26000}') $$,
   current_setting('t.br')), '22023', 'day_closed', 'a submitted count cannot be edited');
 
--- ── Owner sends it back, cashier resubmits, owner approves ─────────────────────────────────
+-- ── Owner sends it back, counts again, owner approves ─────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000020a');
 select throws_ok(format($$ select return_cash_closing('%s', 'x') $$,
   (select id from cash_closings where branch_id = current_setting('t.br')::uuid and business_date = branch_today(current_setting('t.br')::uuid))), '22023', 'reason_required',
@@ -183,10 +196,10 @@ select throws_ok(format($$ select return_cash_closing('%s', 'x') $$,
 select lives_ok(format($$ select return_cash_closing('%s', 'Count the coins again') $$,
   (select id from cash_closings where branch_id = current_setting('t.br')::uuid and business_date = branch_today(current_setting('t.br')::uuid))), 'owner sends the count back');
 select is((pg_temp.preview() -> 'closing' ->> 'returned_reason'), 'Count the coins again', 'the reason is kept');
-select pg_temp.as_user('00000000-0000-0000-0000-00000000020c');
 select lives_ok(format($$ select submit_cash_count('{"branch_id":"%s","counted_cash_minor":25500,"submit":true,
   "drawer_closed_confirmed":true,"reason":"Change given twice","taken_out_minor":20000,"taken_out_to":"bank"}') $$,
-  current_setting('t.br')), 'cashier submits again, still short by AED 5.00');
+  current_setting('t.br')), 'the owner counts again, still short by AED 5.00, and takes AED 200.00 to the bank');
+select pg_temp.as_user('00000000-0000-0000-0000-00000000020c');
 select throws_ok(format($$ select approve_cash_closing('%s') $$,
   (select id from cash_closings where branch_id = current_setting('t.br')::uuid and business_date = branch_today(current_setting('t.br')::uuid))), '42501', null, 'the cashier cannot approve');
 

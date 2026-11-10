@@ -92,8 +92,8 @@ select is((select commission_minor from report_staff(current_setting('t.br')::uu
   where employee_id = current_setting('t.emp')::uuid), 1300::bigint, 'staff: 10% commission, less the refunded 20% of sale 1');
 
 -- ── Daily closing and shortages ──────────────────────────────────────────────────────────
-select pg_temp.as_user('00000000-0000-0000-0000-0000000010cc');
 select set_config('t.expected', (closing_preview(current_setting('t.br')::uuid) ->> 'expected_cash_minor'), false);
+select pg_temp.as_user('00000000-0000-0000-0000-0000000010cc');
 select submit_cash_count(jsonb_build_object('branch_id', current_setting('t.br'),
   'counted_cash_minor', current_setting('t.expected')::bigint - 400, 'submit', true,
   'drawer_closed_confirmed', true, 'reason', 'Coins miscounted'));

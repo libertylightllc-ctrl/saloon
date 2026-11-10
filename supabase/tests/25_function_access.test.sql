@@ -87,6 +87,7 @@ insert into reviewed values
     ('public_booking_status'),
     ('public_receipt'),
     ('record_adjustment'),
+    ('record_bank_deposit'),
     ('record_expense'),
     ('record_stock_count'),
     ('refund_sale'),

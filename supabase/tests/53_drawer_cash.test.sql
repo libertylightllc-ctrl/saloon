@@ -26,10 +26,17 @@ begin
   perform set_config('request.jwt.claims', '{"role":"service_role"}', true);
   perform set_config('role', 'service_role', true);
 end $$;
+create function pg_temp.upload() returns text language sql as $$
+  insert into storage.objects (bucket_id, name, owner, metadata)
+  values ('receipts', current_setting('t.b') || '/expenses/' || gen_random_uuid() || '.jpg', auth.uid(),
+          '{"mimetype":"image/jpeg","size":1200}')
+  returning name
+$$;
 create function pg_temp.expense(p_amount bigint, p_method text) returns jsonb language sql as $$
   select record_expense(jsonb_build_object('branch_id', current_setting('t.br'), 'amount_minor', p_amount,
     'method', p_method, 'category_id', (select id from expense_categories
-                                        where business_id = current_setting('t.b')::uuid and key = 'tea_food')))
+                                        where business_id = current_setting('t.b')::uuid and key = 'tea_food'),
+    'receipt_path', case when p_method = 'cash' then pg_temp.upload() end))
 $$;
 create function pg_temp.drawer() returns bigint language sql as $$
   select expected_cash(current_setting('t.br')::uuid)
@@ -46,6 +53,12 @@ select register_staff_member(jsonb_build_object('business_id', current_setting('
 select set_config('t.emp', (register_staff_member(jsonb_build_object('business_id', current_setting('t.b'),
   'branch_id', current_setting('t.br'), 'user_id', '00000000-0000-0000-0000-00000000530d', 'username', 'dcstaff',
   'display_name', 'Rafiq', 'role', 'staff')) ->> 'employee_id'), false);
+
+-- This file checks the drawer's sums, so the front desk sees them and pays any amount: blind count off and a high
+-- petty-cash limit (both checked in 71_cash_drawer).
+select pg_temp.as_service();
+update branches set settings = settings || '{"blind_count": false, "petty_cash_limit_minor": 100000}'
+where id = current_setting('t.br')::uuid;
 
 -- ── An empty drawer pays nothing in cash ──────────────────────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000530c');

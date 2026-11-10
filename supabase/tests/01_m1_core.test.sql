@@ -126,7 +126,10 @@ select is((select qty from stock_levels sl join inventory_items i on i.id = sl.i
   'Beard Color stock down 20 ml');
 select is((select commission_minor from sale_lines where sale_id = current_setting('t.sale1')::uuid and name_snapshot = 'Haircut'),
   300::bigint, '12% commission on AED 25.00 = AED 3.00');
+-- The front desk counts blind (Part B); the owner sees the expected cash.
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
 select is(expected_cash(current_setting('t.a_branch')::uuid), 17000::bigint, 'cash sale raises expected cash');
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');
 select is((create_sale(jsonb_build_object('branch_id', current_setting('t.a_branch'), 'client_ref', 'ref-1',
   'lines', '[]', 'payments', '[]'::jsonb)) ->> 'sale_id'), current_setting('t.sale1'), 'same client_ref returns the same sale');
 select pg_temp.as_admin();
