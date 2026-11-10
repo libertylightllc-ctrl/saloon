@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useWorkspace } from '@/features/auth/session';
 import { useNewPilotApplications } from '@/features/console/api';
 import { useIsPlatformAdmin } from '@/features/plan/api';
-import { can, tabsFor, type TabKey } from '@/lib/permissions';
+import { can, levelOf, tabsFor, type TabKey } from '@/lib/permissions';
 import type { IconName } from '@/ui';
 
 export interface NavItem {
@@ -67,7 +67,7 @@ export function useTabItems(): Record<TabKey, { icon: IconName; label: string }>
 }
 
 /** A row's words, by login type where the brief names the page differently (B8). */
-type RowLabel = `more.rows.${'services' | 'inventory' | 'stock' | 'sales' | 'mySales' | 'expenses' | 'pettyCash' | 'purchases' | 'suppliersBills' | 'cashClosing' | 'accounts' | 'reports' | 'staff' | 'attendance' | 'payroll' | 'compliance' | 'hygiene' | 'branch' | 'branches' | 'backup' | 'plan' | 'admin'}`;
+type RowLabel = `more.rows.${'myClients' | 'services' | 'inventory' | 'stock' | 'sales' | 'mySales' | 'expenses' | 'pettyCash' | 'purchases' | 'suppliersBills' | 'cashClosing' | 'accounts' | 'reports' | 'staff' | 'attendance' | 'payroll' | 'compliance' | 'hygiene' | 'branch' | 'branches' | 'backup' | 'plan' | 'admin'}`;
 
 /** The business pages this person may open, in More's order, with the section the sidebar shows them in. */
 export function useBusinessRows() {
@@ -76,6 +76,8 @@ export function useBusinessRows() {
   const platformAdmin = useIsPlatformAdmin();
   const floor = role === 'cashier' || role === 'staff';
   const rows: { key: string; icon: IconName; href: Href; show: boolean; section: NavSectionKey; label: RowLabel }[] = [
+    // A stylist has no Customers tab: their own clients are here.
+    { key: 'myClients', icon: 'contact', href: '/customers/mine', show: levelOf(role, 'viewCustomers') === 'own', section: 'business', label: 'more.rows.myClients' },
     { key: 'services', icon: 'scissors', href: '/services', show: can(role, 'viewServices'), section: 'business', label: 'more.rows.services' },
     { key: 'inventory', icon: 'boxes', href: '/inventory', show: can(role, 'viewInventory'), section: 'business', label: floor ? 'more.rows.stock' : 'more.rows.inventory' },
     { key: role === 'staff' ? 'mySales' : 'sales', icon: 'receipt', href: '/sales', show: can(role, 'viewSales', rules), section: 'money', label: role === 'staff' ? 'more.rows.mySales' : 'more.rows.sales' },

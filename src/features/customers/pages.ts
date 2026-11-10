@@ -8,9 +8,10 @@ import type { Customer } from './api';
 
 export const CUSTOMER_PAGE = 50;
 
-export function useCustomerPages(businessId: string, search: string) {
+export function useCustomerPages(businessId: string, search: string, enabled = true) {
   const term = search.trim();
   return useInfiniteQuery({
+    enabled,
     queryKey: [...keys.customers(businessId), 'pages', term],
     initialPageParam: 0,
     queryFn: async ({ pageParam }): Promise<Customer[]> => {

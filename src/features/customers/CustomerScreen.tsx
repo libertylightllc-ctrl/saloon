@@ -4,11 +4,10 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
-import { can } from '@/lib/permissions';
+import { can, levelOf } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import {
-  Avatar,
   Button,
   Card,
   EmptyState,
@@ -21,33 +20,25 @@ import {
   SectionHeader,
   StatusPill,
   Text,
-  useOnBand,
 } from '@/ui';
 
 import { useCustomer } from './api';
+import { ClientCardScreen } from './ClientCardScreen';
+import { Profile } from './Profile';
+import { CustomerActions } from './CustomerActions';
+import { ServiceNotes } from './ServiceNotes';
 
-function Profile({ name, phone }: { name: string; phone: string | null }) {
-  const onBand = useOnBand();
-  return (
-    <View style={styles.profile}>
-      <Avatar name={name} size={72} ring={onBand} />
-      <Text variant="h3" align="center" color={onBand ? 'onPrimary' : 'text'}>
-        {name}
-      </Text>
-      {phone ? (
-        <Text variant="small" align="center" color={onBand ? 'onPrimary' : 'textOnTint'} tabular>
-          {phone}
-        </Text>
-      ) : null}
-    </View>
-  );
+/** A customer's page: the book's view (owner, manager, front desk), or a stylist's card for their own client. */
+export function CustomerScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { role } = useWorkspace();
+  return levelOf(role, 'viewCustomers') === 'own' ? <ClientCardScreen id={id} /> : <BookCustomerScreen id={id} />;
 }
 
-export function CustomerScreen() {
+function BookCustomerScreen({ id }: { id: string }) {
   const { t } = useTranslation();
   const dates = useDates();
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
   const { business, role, rules } = useWorkspace();
   const query = useCustomer(business.id, id);
   const c = query.data?.customer;
@@ -81,7 +72,7 @@ export function CustomerScreen() {
         isEmpty={(d) => !d.customer}
         empty={<EmptyState illustration="no-results" message={t('errors.not_found')} />}
       >
-        {({ customer: found, sales, upcoming }) => {
+        {({ customer: found, sales, upcoming, serviceNotes }) => {
           const customer = found!;
           return (
             <View style={styles.body}>
@@ -177,6 +168,8 @@ export function CustomerScreen() {
                   />
                 ))
               )}
+              <ServiceNotes customerId={customer.id} notes={serviceNotes} canAdd={can(role, 'serviceNotes')} />
+              <CustomerActions customer={customer} />
             </View>
           );
         }}
@@ -186,7 +179,6 @@ export function CustomerScreen() {
 }
 
 const styles = StyleSheet.create({
-  profile: { alignItems: 'center', gap: spacing.xs },
   body: { gap: spacing.lg },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   card: { gap: spacing.xs },

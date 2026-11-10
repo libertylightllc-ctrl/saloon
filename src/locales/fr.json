@@ -433,6 +433,37 @@
       "allergy": "Allergie",
       "patch_test": "Test cutané requis",
       "no_show": "Absence passée"
+    },
+    "mine": "Mes clients",
+    "mineSubtitle": "Les clients que vous avez servis ou qui ont rendez-vous avec vous",
+    "mineEmpty": "Les clients que vous servez ou qui ont rendez-vous avec vous s’affichent ici.",
+    "searchName": "Rechercher par nom",
+    "upcomingWithYou": "Rendez-vous avec vous",
+    "visitsWithYou": "Vos visites avec ce client",
+    "serviceNotes": {
+      "title": "Notes de prestation",
+      "none": "Pas encore de notes de prestation.",
+      "by": "{{name}} · {{date}}",
+      "add": "Ajouter une note de prestation",
+      "hint": "Ce qui a été fait : formule de couleur, produits, longueur. Visible par tous ceux qui servent ce client.",
+      "save": "Enregistrer la note",
+      "saved": "Note enregistrée"
+    },
+    "merge": {
+      "button": "Fusionner un doublon",
+      "title": "Fusionner dans {{name}}",
+      "hint": "Trouvez l’autre fiche de {{name}}. Ses visites, ventes et notes sont transférées ici, et elle quitte la liste des clients.",
+      "confirm": "Transférer les visites, ventes et notes de {{drop}} vers {{keep}} ? {{drop}} quitte ensuite la liste des clients.",
+      "do": "Fusionner",
+      "done": "{{name}} fusionné"
+    },
+    "remove": {
+      "button": "Supprimer le client",
+      "title": "Supprimer {{name}}",
+      "hint": "Supprime le nom, le numéro, les notes et les préférences de {{name}}. Ses ventes restent dans les comptes sous « Client supprimé ». Impossible d’annuler.",
+      "reason": "Motif (gardé dans le journal d’activité)",
+      "do": "Supprimer les données du client",
+      "done": "Client supprimé"
     }
   },
   "more": {
@@ -472,7 +503,8 @@
       "pettyCash": "Petite caisse",
       "suppliersBills": "Fournisseurs et factures",
       "payroll": "Paie",
-      "hygiene": "Registre d’hygiène"
+      "hygiene": "Registre d’hygiène",
+      "myClients": "Mes clients"
     },
     "logOut": "Se déconnecter",
     "title": "Plus",

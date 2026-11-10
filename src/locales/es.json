@@ -433,6 +433,37 @@
       "allergy": "Alergia",
       "patch_test": "Necesita prueba de alergia",
       "no_show": "Inasistencia previa"
+    },
+    "mine": "Mis clientes",
+    "mineSubtitle": "Clientes que atendiste o que tienen cita contigo",
+    "mineEmpty": "Aquí aparecen los clientes que atiendes o que tienen cita contigo.",
+    "searchName": "Buscar por nombre",
+    "upcomingWithYou": "Citas contigo",
+    "visitsWithYou": "Tus visitas con este cliente",
+    "serviceNotes": {
+      "title": "Notas de servicio",
+      "none": "Aún no hay notas de servicio.",
+      "by": "{{name}} · {{date}}",
+      "add": "Añadir una nota de servicio",
+      "hint": "Qué se hizo: fórmula de color, productos, largo. Lo ve todo el que atiende a este cliente.",
+      "save": "Guardar nota",
+      "saved": "Nota guardada"
+    },
+    "merge": {
+      "button": "Fusionar un duplicado",
+      "title": "Fusionar en {{name}}",
+      "hint": "Busca el otro registro de {{name}}. Sus visitas, ventas y notas pasan aquí y sale de la lista de clientes.",
+      "confirm": "¿Pasar las visitas, ventas y notas de {{drop}} a {{keep}}? Después {{drop}} sale de la lista de clientes.",
+      "do": "Fusionar",
+      "done": "{{name}} fusionado"
+    },
+    "remove": {
+      "button": "Eliminar cliente",
+      "title": "Eliminar a {{name}}",
+      "hint": "Borra el nombre, el teléfono, las notas y las preferencias de {{name}}. Sus ventas quedan en las cuentas como \"Cliente eliminado\". No se puede deshacer.",
+      "reason": "Motivo (queda en el registro de actividad)",
+      "do": "Eliminar los datos del cliente",
+      "done": "Cliente eliminado"
     }
   },
   "more": {
@@ -472,7 +503,8 @@
       "pettyCash": "Caja chica",
       "suppliersBills": "Proveedores y facturas",
       "payroll": "Nómina",
-      "hygiene": "Registro de higiene"
+      "hygiene": "Registro de higiene",
+      "myClients": "Mis clientes"
     },
     "logOut": "Cerrar sesión",
     "title": "Más",

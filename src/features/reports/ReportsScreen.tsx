@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { can } from '@/lib/permissions';
 import { businessMonth, type MonthKey } from '@/lib/dates';
 import { fileSlug, printHtml, shareCsv, sharePdf } from '@/lib/exportFile';
 import { isLanguage, isRtlLanguage, taxDisplayName } from '@/lib/i18n';
@@ -26,7 +27,7 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const dates = useDates();
-  const { business, branch } = useWorkspace();
+  const { business, branch, role } = useWorkspace();
   const params = useLocalSearchParams<{ type?: string }>();
   const [type, setType] = useState<ReportType>(
     REPORT_TYPES.includes(params.type as ReportType) ? (params.type as ReportType) : 'monthly',
@@ -82,6 +83,8 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
         </HeaderBand>
       }
       footer={
+        // A list of customers leaves the app only with the owner (B2: only the owner exports customers).
+        type === 'customers' && !can(role, 'exportCustomers') ? undefined : (
         <View style={styles.footer}>
           {!web ? (
             <View style={styles.flex}>
@@ -103,6 +106,7 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
             <Button label={t('reports.csv')} icon="download" disabled={!view} loading={csv.isPending} onPress={() => csv.mutate()} testID="report-csv" />
           </View>
         </View>
+        )
       }
     >
       <View style={styles.body}>

@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(40);
+select plan(46);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -155,8 +155,28 @@ select is((select visit_count from customers where id = current_setting('t.omar'
   'and his visits add up on the one kept');
 select throws_ok(format($$ select merge_customers('%s', '%s', '%s') $$, current_setting('t.br'), current_setting('t.omar'),
   current_setting('t.omar2')), 'P0002', 'not_found', 'a merged customer cannot be merged again');
+-- A screen opened before the merge still names Omar K: the sale and the booking go to Omar.
+select pg_temp.as_user('b2');
+select set_config('t.s_stale', pg_temp.sale('t.omar2', 't.b3')::text, false);
+select set_config('t.a_stale', pg_temp.book('t.omar2', 't.b3', 9)::text, false);
+select is((select customer_id::text from sales where id = current_setting('t.s_stale')::uuid), current_setting('t.omar'),
+  'a sale for the merged duplicate goes to the customer kept');
+select is((select customer_id::text from appointments where id = current_setting('t.a_stale')::uuid),
+  current_setting('t.omar'), 'so does a booking');
+-- The online booking page finds Omar by his number, not the duplicate that shared it.
+select pg_temp.as_user('a0');
+select set_config('t.slug', set_online_booking(current_setting('t.br')::uuid, true), false);
+select set_config('role', 'anon', true), set_config('request.jwt.claims', '{"role":"anon"}', true);
+select set_config('t.online', (public_book(jsonb_build_object('slug', current_setting('t.slug'),
+  'service_ids', jsonb_build_array(current_setting('t.svc')),
+  'starts_at', (current_setting('t.today')::date + 3 + time '12:00') at time zone 'Asia/Dubai',
+  'name', 'Omar', 'phone', '+971 50 111 0001')) ->> 'token'), false);
+select pg_temp.as_admin();
+select is((select customer_id::text from appointments where booking_token = current_setting('t.online')),
+  current_setting('t.omar'), 'an online booking from the shared number books the customer kept');
 
 -- 5. Deleting a customer.
+select pg_temp.as_user('b1');
 select throws_ok(format($$ select delete_customer('%s', '%s', 'Asked to be removed') $$, current_setting('t.br'),
   current_setting('t.huda')), '42501', 'not_allowed', 'a manager does not delete customers');
 select pg_temp.as_user('a0');
@@ -170,16 +190,29 @@ select is((select name || ' ' || coalesce(phone, '-') || ' ' || (select count(*)
   'her name, number and notes are gone');
 select is((select customer_name from appointments where id = current_setting('t.a_huda')::uuid), 'Deleted customer',
   'her booking keeps no name');
+select pg_temp.as_user('b2');
+select throws_ok($$ select pg_temp.sale('t.huda', 't.b5') $$, 'P0002', 'not_found',
+  'a deleted customer cannot be picked for a new sale');
+
+-- 5b. Reports → Customers: only customers in the book; phone numbers for the owner, not the accountant.
+select pg_temp.as_user('b4');
+select is((select array_agg(name || ':' || coalesce(phone, '-') order by name)
+           from report_customers(current_setting('t.b')::uuid, to_char(current_setting('t.today')::date, 'YYYY-MM'))),
+  array['Lina:-', 'Omar:-', 'Walk-in Sara:-'], 'the accountant''s customers report: no merged or deleted customers, no phone numbers');
+select pg_temp.as_user('a0');
+select is((select phone from report_customers(current_setting('t.b')::uuid, to_char(current_setting('t.today')::date, 'YYYY-MM'))
+           where name = 'Omar'), '+971 50 111 0001', 'the owner''s shows the number');
 
 -- 6. The queue.
 select pg_temp.as_user('b3');
-select is((select count(*)::int from appointments), 1, 'Sami reads only his own booking');
+-- (His booking with Lina and the one made for Omar K above; the online booking has no stylist yet.)
+select is((select count(*)::int from appointments), 3, 'Sami reads only his own bookings and unassigned ones');
 select is((select count(*)::int from busy_times(current_setting('t.br')::uuid, current_setting('t.today')::date + 7)), 2,
   'and sees that day''s other booking as busy time, without the client');
 select pg_temp.as_user('b4');
 select is((select count(*)::int from appointments), 0, 'the accountant reads no bookings');
 select pg_temp.as_user('b1');
-select is(array[(select count(*)::int from appointments), (select count(*)::int from sales)], array[3, 2],
+select is(array[(select count(*)::int from appointments), (select count(*)::int from sales)], array[5, 3],
   'a manager reads the branch''s bookings and sales');
 
 select * from finish();

@@ -5,27 +5,34 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
-import { can } from '@/lib/permissions';
+import { can, levelOf } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing, useTheme } from '@/theme';
 import { Avatar, Button, EmptyState, FormError, HeaderBand, ListRow, Screen, SearchBar, Skeleton, StatusPill } from '@/ui';
 
-import type { Customer } from './api';
+import { useMyClients, type ListCustomer } from './api';
 import { useCustomerPages } from './pages';
 
-/** Customers, most recent visit first. Only the rows on screen are drawn; more load as you scroll. */
+/**
+ * Customers, most recent visit first. Only the rows on screen are drawn; more load as you scroll. A stylist sees "My
+ * clients" (More → My clients): customers they served or are booked with, phone numbers only when the owner allows.
+ */
 export function CustomersScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const dates = useDates();
   const router = useRouter();
-  const { business, role } = useWorkspace();
+  const { business, branch, role, rules } = useWorkspace();
   const [search, setSearch] = useState('');
-  const query = useCustomerPages(business.id, search);
+  const own = levelOf(role, 'viewCustomers') === 'own';
+  const pages = useCustomerPages(business.id, search, !own);
+  const mine = useMyClients(business.id, branch.id, search, own);
+  const query = own ? mine : pages;
   const canAdd = can(role, 'manageCustomers');
-  const rows = useMemo(() => query.data?.pages.flat() ?? [], [query.data]);
+  const rows = useMemo<ListCustomer[]>(() => (own ? (mine.data ?? []) : (pages.data?.pages.flat() ?? [])), [own, mine.data, pages.data]);
+  const fetchingMore = !own && pages.isFetchingNextPage;
 
-  const renderItem = ({ item: c }: { item: Customer }) => (
+  const renderItem = ({ item: c }: { item: ListCustomer }) => (
     <ListRow
       title={c.name}
       leading={<Avatar name={c.name} size={44} />}
@@ -60,8 +67,9 @@ export function CustomersScreen() {
       insetBottom={false}
       header={
         <HeaderBand
-          title={t('tabs.customers')}
-          subtitle={t('customers.subtitle')}
+          title={t(own ? 'customers.mine' : 'tabs.customers')}
+          subtitle={t(own ? 'customers.mineSubtitle' : 'customers.subtitle')}
+          onBack={own ? true : undefined}
           right={
             canAdd ? (
               <Button
@@ -75,7 +83,12 @@ export function CustomersScreen() {
             ) : undefined
           }
         >
-          <SearchBar value={search} onChangeText={setSearch} placeholder={t('customers.search')} testID="customers-search" />
+          <SearchBar
+            value={search}
+            onChangeText={setSearch}
+            placeholder={t(own && !can(role, 'customerContacts', rules) ? 'customers.searchName' : 'customers.search')}
+            testID="customers-search"
+          />
         </HeaderBand>
       }
     >
@@ -97,28 +110,28 @@ export function CustomersScreen() {
           renderItem={renderItem}
           ItemSeparatorComponent={Gap}
           contentContainerStyle={styles.list}
-          refreshing={query.isRefetching && !query.isFetchingNextPage}
+          refreshing={query.isRefetching && !fetchingMore}
           onRefresh={() => void query.refetch()}
           onEndReached={() => {
-            if (query.hasNextPage && !query.isFetchingNextPage && !query.isFetchNextPageError) void query.fetchNextPage();
+            if (!own && pages.hasNextPage && !pages.isFetchingNextPage && !pages.isFetchNextPageError) void pages.fetchNextPage();
           }}
           onEndReachedThreshold={0.5}
           ListEmptyComponent={
             <EmptyState
               illustration={search ? 'no-results' : 'customers-empty'}
-              message={search ? t('customers.noMatch') : t('customers.empty')}
+              message={search ? t('customers.noMatch') : t(own ? 'customers.mineEmpty' : 'customers.empty')}
               actionLabel={canAdd ? t('customers.add') : undefined}
               onAction={() => router.push('/customers/form')}
             />
           }
           ListFooterComponent={
-            query.isFetchingNextPage ? (
+            fetchingMore ? (
               <ActivityIndicator color={theme.colors.primary500} style={styles.more} />
-            ) : query.isFetchNextPageError ? (
+            ) : !own && pages.isFetchNextPageError ? (
               // A page that failed to load keeps what is shown; this retries just that page.
               <View style={styles.loading}>
-                <FormError error={query.error} />
-                <Button label={t('common.retry')} variant="outline" onPress={() => void query.fetchNextPage()} testID="customers-more-retry" />
+                <FormError error={pages.error} />
+                <Button label={t('common.retry')} variant="outline" onPress={() => void pages.fetchNextPage()} testID="customers-more-retry" />
               </View>
             ) : null
           }

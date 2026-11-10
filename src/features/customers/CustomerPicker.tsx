@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
-import { can } from '@/lib/permissions';
+import { can, levelOf } from '@/lib/permissions';
 import { spacing } from '@/theme';
 import { Button, Chip, FormError, ListRow, SearchBar, Text, TextField } from '@/ui';
 
-import { useCustomers, useSaveCustomer } from './api';
+import { useCustomers, useMyClients, useSaveCustomer } from './api';
 
 export interface PickedCustomer {
   id: string;
@@ -15,8 +15,8 @@ export interface PickedCustomer {
 }
 
 /**
- * Search the customer book, quick-add a new customer (name + phone), or leave as a guest.
- * Staff (no access to the customer book) can only type a guest name.
+ * Search the customer book, quick-add a new customer (name + phone), or leave as a guest. A stylist searches only
+ * their own clients and adds no customers (a new client is a guest name); the accountant only types a guest name.
  */
 export function CustomerPicker({
   value,
@@ -30,13 +30,16 @@ export function CustomerPicker({
   onGuestName: (name: string) => void;
 }) {
   const { t } = useTranslation();
-  const { business, role } = useWorkspace();
+  const { business, branch, role } = useWorkspace();
   const [search, setSearch] = useState('');
   const [adding, setAdding] = useState(false);
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const canBook = can(role, 'viewCustomers');
-  const results = useCustomers(business.id, search);
+  const own = levelOf(role, 'viewCustomers') === 'own';
+  const book = useCustomers(business.id, search, canBook && !own);
+  const mine = useMyClients(business.id, branch.id, search, own && search.trim().length > 0);
+  const results = own ? mine : book;
   const save = useSaveCustomer(business.id);
 
   if (value) {
@@ -108,7 +111,7 @@ export function CustomerPicker({
           <ListRow
             key={c.id}
             title={c.name}
-            meta={[c.phone ?? t('customers.noPhone')]}
+            meta={own && !c.phone ? undefined : [c.phone ?? t('customers.noPhone')]}
             onPress={() => onChange({ id: c.id, name: c.name })}
             chevron
             testID={`customer-result-${c.name}`}
@@ -117,17 +120,19 @@ export function CustomerPicker({
       ) : (
         <TextField label={t('queue.guestName')} value={guestName} onChangeText={onGuestName} testID="guest-name" />
       )}
-      <Button
-        label={t('customers.new')}
-        icon="userPlus"
-        variant="ghost"
-        size="md"
-        onPress={() => {
-          setNewName(search.trim());
-          setAdding(true);
-        }}
-        testID="add-customer-inline"
-      />
+      {can(role, 'manageCustomers') ? (
+        <Button
+          label={t('customers.new')}
+          icon="userPlus"
+          variant="ghost"
+          size="md"
+          onPress={() => {
+            setNewName(search.trim());
+            setAdding(true);
+          }}
+          testID="add-customer-inline"
+        />
+      ) : null}
     </View>
   );
 }

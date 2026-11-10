@@ -433,6 +433,37 @@
       "allergy": "Allergy",
       "patch_test": "Needs patch test",
       "no_show": "Past no-show"
+    },
+    "mine": "My clients",
+    "mineSubtitle": "Clients you have served or are booked with",
+    "mineEmpty": "Clients you serve or are booked with show here.",
+    "searchName": "Search by name",
+    "upcomingWithYou": "Booked with you",
+    "visitsWithYou": "Your visits with this client",
+    "serviceNotes": {
+      "title": "Service notes",
+      "none": "No service notes yet.",
+      "by": "{{name}} · {{date}}",
+      "add": "Add a service note",
+      "hint": "What was done: colour formula, products, length. Everyone who serves this client sees it.",
+      "save": "Save note",
+      "saved": "Note saved"
+    },
+    "merge": {
+      "button": "Merge a duplicate",
+      "title": "Merge into {{name}}",
+      "hint": "Find the other record of {{name}}. Its visits, sales and notes move here, and it leaves the customer list.",
+      "confirm": "Move the visits, sales and notes of {{drop}} to {{keep}}? {{drop}} then leaves the customer list.",
+      "do": "Merge",
+      "done": "{{name}} merged"
+    },
+    "remove": {
+      "button": "Delete customer",
+      "title": "Delete {{name}}",
+      "hint": "Removes the name, phone number, notes and preferences of {{name}}. Their sales stay in the books as \"Deleted customer\". This can't be undone.",
+      "reason": "Reason (kept in the activity log)",
+      "do": "Delete customer's details",
+      "done": "Customer deleted"
     }
   },
   "more": {
@@ -472,7 +503,8 @@
       "pettyCash": "Petty cash",
       "suppliersBills": "Suppliers & bills",
       "payroll": "Payroll",
-      "hygiene": "Hygiene log"
+      "hygiene": "Hygiene log",
+      "myClients": "My clients"
     },
     "logOut": "Log out",
     "title": "More",

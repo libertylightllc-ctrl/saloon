@@ -433,6 +433,37 @@
       "allergy": "Alergia",
       "patch_test": "Precisa de teste de alergia",
       "no_show": "Já faltou"
+    },
+    "mine": "Meus clientes",
+    "mineSubtitle": "Clientes que você atendeu ou que têm horário com você",
+    "mineEmpty": "Aqui aparecem os clientes que você atende ou que têm horário com você.",
+    "searchName": "Buscar pelo nome",
+    "upcomingWithYou": "Horários com você",
+    "visitsWithYou": "Suas visitas com este cliente",
+    "serviceNotes": {
+      "title": "Notas de serviço",
+      "none": "Ainda não há notas de serviço.",
+      "by": "{{name}} · {{date}}",
+      "add": "Adicionar uma nota de serviço",
+      "hint": "O que foi feito: fórmula da cor, produtos, comprimento. Todos que atendem este cliente veem.",
+      "save": "Salvar nota",
+      "saved": "Nota salva"
+    },
+    "merge": {
+      "button": "Mesclar um duplicado",
+      "title": "Mesclar em {{name}}",
+      "hint": "Encontre o outro cadastro de {{name}}. As visitas, vendas e notas passam para cá, e ele sai da lista de clientes.",
+      "confirm": "Passar as visitas, vendas e notas de {{drop}} para {{keep}}? Depois {{drop}} sai da lista de clientes.",
+      "do": "Mesclar",
+      "done": "{{name}} mesclado"
+    },
+    "remove": {
+      "button": "Excluir cliente",
+      "title": "Excluir {{name}}",
+      "hint": "Apaga o nome, o telefone, as notas e as preferências de {{name}}. As vendas ficam nas contas como \"Cliente excluído\". Não dá para desfazer.",
+      "reason": "Motivo (fica no registro de atividade)",
+      "do": "Excluir os dados do cliente",
+      "done": "Cliente excluído"
     }
   },
   "more": {
@@ -472,7 +503,8 @@
       "pettyCash": "Caixa pequeno",
       "suppliersBills": "Fornecedores e contas",
       "payroll": "Folha de pagamento",
-      "hygiene": "Registro de higiene"
+      "hygiene": "Registro de higiene",
+      "myClients": "Meus clientes"
     },
     "logOut": "Sair",
     "title": "Mais",
