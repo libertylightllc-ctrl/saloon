@@ -3491,7 +3491,8 @@
   "noAccess": {
     "title": "Vous n’avez pas accès à cette page",
     "body": "Votre type de compte n’ouvre pas cette page. Demandez au propriétaire du salon si vous en avez besoin.",
-    "home": "Aller à l’accueil"
+    "home": "Aller à l’accueil",
+    "header": "Accès refusé"
   },
   "approval": {
     "title": "Accord d’un gérant nécessaire",

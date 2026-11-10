@@ -10,7 +10,7 @@ export function NoAccess() {
   const { t } = useTranslation();
   const router = useRouter();
   return (
-    <Screen header={<HeaderBand title={t('noAccess.title')} onBack />}>
+    <Screen header={<HeaderBand title={t('noAccess.header')} onBack />}>
       <View style={styles.body} testID="no-access">
         <Illustration name="no-access" size={140} />
         <Text variant="h3" align="center">

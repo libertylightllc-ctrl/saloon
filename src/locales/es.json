@@ -3491,7 +3491,8 @@
   "noAccess": {
     "title": "No tienes acceso a esta página",
     "body": "Tu tipo de acceso no abre esta página. Pídeselo al dueño del salón si la necesitas.",
-    "home": "Ir al inicio"
+    "home": "Ir al inicio",
+    "header": "Sin acceso"
   },
   "approval": {
     "title": "Se necesita la aprobación de un gerente",
