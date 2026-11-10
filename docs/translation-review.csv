@@ -1046,7 +1046,7 @@ purchases.lines,What was bought,ما تم شراؤه,क्या ख़री�
 purchases.paidNow,Paid now,مدفوعة الآن,अभी भुगतान किया,ابھی ادا کیا,Pagado ahora,Payé maintenant,Pago agora,
 purchases.paidNowHint,Record the payment together with the bill.,سجّل الدفع مع الفاتورة.,बिल के साथ भुगतान दर्ज करें।,بل کے ساتھ ادائیگی درج کریں۔,Registra el pago junto con la factura.,Enregistrez le paiement en même temps que la facture.,Registre o pagamento junto com a conta.,
 purchases.amountPaid,Amount paid,المبلغ المدفوع,भुगतान की रकम,ادا شدہ رقم,Monto pagado,Montant payé,Valor pago,
-purchases.ownerPays,The owner records payments to suppliers.,يسجّل المالك مدفوعات الموردين.,सप्लायरों को भुगतान मालिक दर्ज करते हैं।,سپلائرز کو ادائیگی مالک درج کرتے ہیں۔,El dueño registra los pagos a proveedores.,Le propriétaire enregistre les paiements aux fournisseurs.,O proprietário registra os pagamentos aos fornecedores.,
+purchases.ownerPays,The owner or the accountant records payments to suppliers.,يسجّل المالك أو المحاسب الدفعات للموردين.,सप्लायर को भुगतान मालिक या अकाउंटेंट दर्ज करते हैं।,سپلائرز کو ادائیگیاں مالک یا اکاؤنٹنٹ درج کرتے ہیں۔,El dueño o el contable registra los pagos a proveedores.,Le propriétaire ou le comptable enregistre les paiements aux fournisseurs.,O proprietário ou o contador registra os pagamentos aos fornecedores.,
 purchases.saveBill,Save bill · {{amount}},حفظ الفاتورة · {{amount}},बिल सेव करें · {{amount}},بل محفوظ کریں · {{amount}},Guardar factura · {{amount}},Enregistrer la facture · {{amount}},Salvar conta · {{amount}},
 purchases.billSaved,{{number}} saved,تم حفظ {{number}},{{number}} सेव हो गया,{{number}} محفوظ ہو گیا,{{number}} guardada,{{number}} enregistrée,{{number}} salva,
 purchases.lineDescription,What,الصنف,क्या,کیا,Qué,Désignation,O quê,

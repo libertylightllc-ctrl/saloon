@@ -1672,7 +1672,7 @@
     "paidNow": "Payé maintenant",
     "paidNowHint": "Enregistrez le paiement en même temps que la facture.",
     "amountPaid": "Montant payé",
-    "ownerPays": "Le propriétaire enregistre les paiements aux fournisseurs.",
+    "ownerPays": "Le propriétaire ou le comptable enregistre les paiements aux fournisseurs.",
     "saveBill": "Enregistrer la facture · {{amount}}",
     "billSaved": "{{number}} enregistrée",
     "lineDescription": "Désignation",

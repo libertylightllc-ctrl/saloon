@@ -1672,7 +1672,7 @@
     "paidNow": "Pagado ahora",
     "paidNowHint": "Registra el pago junto con la factura.",
     "amountPaid": "Monto pagado",
-    "ownerPays": "El dueño registra los pagos a proveedores.",
+    "ownerPays": "El dueño o el contable registra los pagos a proveedores.",
     "saveBill": "Guardar factura · {{amount}}",
     "billSaved": "{{number}} guardada",
     "lineDescription": "Qué",

@@ -97,7 +97,7 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
     });
   }
   const bills = data.bills;
-  if (bills && can(role, 'payOrReverseMoneyOut')) {
+  if (bills && can(role, 'payBill')) {
     if (bills.overdue_count > 0) {
       items.push({
         key: 'bills-overdue',

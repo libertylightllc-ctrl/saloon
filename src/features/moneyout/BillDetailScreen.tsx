@@ -37,7 +37,7 @@ import { BILL_STATUS } from './PurchasesScreen';
 import { SummaryRow as Row } from './SummaryRow';
 import { ReceiptPhoto } from './ReceiptPhoto';
 
-/** A bill with its lines and payments; the owner pays it (any part) or reverses it while unpaid. */
+/** A bill with its lines and payments; the owner or the accountant pays it (any part); the owner reverses it while unpaid. */
 export function BillDetailScreen() {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -46,6 +46,7 @@ export function BillDetailScreen() {
   const { business, branch, role } = useWorkspace();
   const bill = useBill(business.id, id);
   const owner = can(role, 'payOrReverseMoneyOut');
+  const pays = can(role, 'payBill');
   const [sheet, setSheet] = useState<'pay' | 'reverse' | null>(null);
 
   /** "10 × 1000 ml", "100 ml", "2": the quantity as on the invoice. */
@@ -168,7 +169,7 @@ export function BillDetailScreen() {
                 {b.reverse_reason ? <Text color="textSecondary">{t('purchases.reversedBecause', { reason: b.reverse_reason })}</Text> : null}
                 <FormError error={print.error} />
                 <Button label={t('purchases.print')} icon="printer" variant="secondary" loading={print.isPending} onPress={() => print.mutate(b)} testID="bill-print" />
-                {owner && b.status !== 'reversed' && left > 0 ? (
+                {pays && b.status !== 'reversed' && left > 0 ? (
                   <Button label={t('purchases.pay')} icon="wallet" onPress={() => setSheet('pay')} testID="bill-pay" />
                 ) : null}
                 {owner && b.status !== 'reversed' && b.paid_minor === 0 ? (
@@ -196,11 +197,13 @@ export function BillDetailScreen() {
 function PayForm({ bill, onDone }: { bill: BillDetail; onDone: () => void }) {
   const { t } = useTranslation();
   const toast = useToast();
-  const { business, branch } = useWorkspace();
+  const { business, branch, role } = useWorkspace();
   const pay = usePaySupplier(business.id, branch.id);
   const left = bill.total_minor - bill.paid_minor;
+  // Cash comes from the drawer: only people who work it (the accountant pays by card or bank).
+  const methods: PayMethod[] = [...(can(role, 'countCash') ? (['cash'] as const) : []), 'card', 'bank'];
   const [amount, setAmount] = useState<number | null>(left);
-  const [method, setMethod] = useState<PayMethod>('cash');
+  const [method, setMethod] = useState<PayMethod>(methods[0]!);
   const [clientRef] = useState(() => Crypto.randomUUID());
   const ok = amount !== null && amount > 0 && amount <= left;
   return (
@@ -214,7 +217,7 @@ function PayForm({ bill, onDone }: { bill: BillDetail; onDone: () => void }) {
         testID="pay-amount"
       />
       <SegmentTabs<PayMethod>
-        items={(['cash', 'card', 'bank'] as const).map((m) => ({ key: m, label: t(`expenses.methods.${m}`) }))}
+        items={methods.map((m) => ({ key: m, label: t(`expenses.methods.${m}`) }))}
         value={method}
         onChange={setMethod}
         testID="pay-method"

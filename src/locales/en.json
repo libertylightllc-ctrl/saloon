@@ -1672,7 +1672,7 @@
     "paidNow": "Paid now",
     "paidNowHint": "Record the payment together with the bill.",
     "amountPaid": "Amount paid",
-    "ownerPays": "The owner records payments to suppliers.",
+    "ownerPays": "The owner or the accountant records payments to suppliers.",
     "saveBill": "Save bill · {{amount}}",
     "billSaved": "{{number}} saved",
     "lineDescription": "What",

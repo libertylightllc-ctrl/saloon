@@ -1672,7 +1672,7 @@
     "paidNow": "Pago agora",
     "paidNowHint": "Registre o pagamento junto com a conta.",
     "amountPaid": "Valor pago",
-    "ownerPays": "O proprietário registra os pagamentos aos fornecedores.",
+    "ownerPays": "O proprietário ou o contador registra os pagamentos aos fornecedores.",
     "saveBill": "Salvar conta · {{amount}}",
     "billSaved": "{{number}} salva",
     "lineDescription": "O quê",

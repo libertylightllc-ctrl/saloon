@@ -64,7 +64,9 @@ export function BillFormScreen() {
   const router = useRouter();
   const toast = useToast();
   const { business, branch, role } = useWorkspace();
-  const owner = can(role, 'payOrReverseMoneyOut');
+  // Paying a supplier: the owner and the accountant (brief B2); cash only for people who work the drawer.
+  const pays = can(role, 'payBill');
+  const payments: Payment[] = ['credit', ...(can(role, 'countCash') ? (['cash'] as const) : []), 'card', 'bank'];
   const today = businessDate(new Date(), business.timezone);
   const suppliers = useSuppliers(business.id, false);
   const catalog = useCatalog(business.id);
@@ -75,7 +77,7 @@ export function BillFormScreen() {
   const [date, setDate] = useState(today);
   const [lines, setLines] = useState<LineDraft[]>([]);
   const [payment, setPayment] = useState<Payment>('credit');
-  /** Typed over by the owner; until then a paid bill is paid in full (and follows the total). */
+  /** Typed over by whoever pays; until then a paid bill is paid in full (and follows the total). */
   const [paidAmount, setPaidAmount] = useState<number | null | undefined>(undefined);
   const [clientRef] = useState(() => Crypto.randomUUID());
   const [addingSupplier, setAddingSupplier] = useState(false);
@@ -90,7 +92,7 @@ export function BillFormScreen() {
   const vat = sum(lines.map((l) => lineVat(l, withVat, rate)));
   const total = subtotal + vat;
   const paying =
-    owner && payment !== 'credit' ? (paidAmount === undefined ? total : (paidAmount ?? 0)) : 0;
+    pays && payment !== 'credit' ? (paidAmount === undefined ? total : (paidAmount ?? 0)) : 0;
   const ready =
     Boolean(supplierId) &&
     lines.length > 0 &&
@@ -182,19 +184,18 @@ export function BillFormScreen() {
             maxLength={40}
             testID="bill-invoice"
           />
-          {owner ? (
-            <Section title={t('purchases.billDate')}>
-              <DateStrip
-                dates={Array.from({ length: 14 }, (_, i) => shiftBusinessDate(today, i - 13))}
-                value={date}
-                onChange={setDate}
-              />
-            </Section>
-          ) : null}
+          {/* The invoice's own date; everyone who records bills (owner, manager, accountant) may pick an earlier day. */}
+          <Section title={t('purchases.billDate')}>
+            <DateStrip
+              dates={Array.from({ length: 14 }, (_, i) => shiftBusinessDate(today, i - 13))}
+              value={date}
+              onChange={setDate}
+            />
+          </Section>
           <Section title={t('purchases.payment.title')}>
-            {owner ? (
+            {pays ? (
               <SegmentTabs<Payment>
-                items={(['credit', 'cash', 'card', 'bank'] as const).map((m) => ({
+                items={payments.map((m) => ({
                   key: m,
                   label:
                     m === 'credit' ? t('purchases.payment.credit') : t(`expenses.methods.${m}`),
@@ -205,7 +206,7 @@ export function BillFormScreen() {
               />
             ) : null}
             <Text variant="small" color="textSecondary">
-              {owner
+              {pays
                 ? t(
                     payment === 'credit'
                       ? 'purchases.payment.creditHint'
@@ -262,7 +263,7 @@ export function BillFormScreen() {
               strong
               testID="bill-total"
             />
-            {owner && payment !== 'credit' ? (
+            {pays && payment !== 'credit' ? (
               <MoneyInput
                 label={t('purchases.amountPaid')}
                 value={paidAmount === undefined ? total : paidAmount}

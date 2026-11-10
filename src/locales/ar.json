@@ -1717,7 +1717,7 @@
     "paidNow": "مدفوعة الآن",
     "paidNowHint": "سجّل الدفع مع الفاتورة.",
     "amountPaid": "المبلغ المدفوع",
-    "ownerPays": "يسجّل المالك مدفوعات الموردين.",
+    "ownerPays": "يسجّل المالك أو المحاسب الدفعات للموردين.",
     "saveBill": "حفظ الفاتورة · {{amount}}",
     "billSaved": "تم حفظ {{number}}",
     "lineDescription": "الصنف",
