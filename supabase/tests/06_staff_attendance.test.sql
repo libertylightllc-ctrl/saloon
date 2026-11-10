@@ -119,10 +119,14 @@ select set_config('t.start', to_char(date_trunc('minute', now() at time zone 'As
 select pg_temp.as_user('00000000-0000-0000-0000-00000000050a');
 select set_roster(current_setting('t.emp')::uuid, jsonb_build_array(jsonb_build_object('weekday', pg_temp.dow(),
   'start', current_setting('t.start'), 'end', '23:59')));
+select set_my_pin(current_setting('t.b')::uuid, '2580');
+-- Front desk records someone else's clock only with a manager's or owner's PIN (Part B).
 select pg_temp.as_user('00000000-0000-0000-0000-00000000050c');
+select set_config('t.ap', approve_with_pin(current_setting('t.br')::uuid,
+  (select id from members where user_id = '00000000-0000-0000-0000-00000000050a'), '2580', 'clock_other') ->> 'approval_id', false);
 select case when current_setting('t.ok')::boolean
   then is((clock(jsonb_build_object('employee_id', current_setting('t.emp'), 'action', 'in',
-            'at', date_trunc('minute', now()) - interval '15 minutes')) ->> 'late')::boolean, true,
+            'at', date_trunc('minute', now()) - interval '15 minutes', 'approval_id', current_setting('t.ap'))) ->> 'late')::boolean, true,
           'clocking in 25 minutes after the shift start is late (grace 10)')
   else skip('near local midnight', 1) end;
 select case when current_setting('t.ok')::boolean

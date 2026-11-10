@@ -1,5 +1,7 @@
-// Owner resets a staff password or disables / re-enables a login.
-import { cors, fail, json, MIN_PASSWORD, requireOwner } from '../_shared/staff.ts';
+// Resets a staff password or disables / re-enables a login. The owner may do this for anyone but themselves; a
+// manager only for front-desk and stylist logins in a branch they share (Part B). The database function
+// login_admin_for decides, so the rule lives in one place and is covered by the database tests.
+import { callerOf, cors, fail, json, MIN_PASSWORD } from '../_shared/staff.ts';
 
 interface Body {
   action: 'reset_password' | 'set_active';
@@ -19,12 +21,15 @@ Deno.serve(async (req) => {
     return fail('invalid_body');
   }
 
-  // Look up the target with the service role, then check the caller owns that business.
+  // Look up the target with the service role, then ask the database whether the caller may manage that login.
   const { createClient } = await import('npm:@supabase/supabase-js@2.109.0');
-  const lookup = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
+  const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
-  const { data: target } = await lookup
+  const caller = await callerOf(admin, req);
+  if (caller instanceof Response) return caller;
+  if (typeof body.member_id !== 'string' || !body.member_id) return fail('not_found', 404);
+  const { data: target } = await admin
     .from('members')
     .select('id, user_id, business_id, role, display_name, default_branch_id')
     .eq('id', body.member_id)
@@ -32,9 +37,11 @@ Deno.serve(async (req) => {
   if (!target) return fail('not_found', 404);
   if (target.role === 'owner') return fail('not_allowed', 403);
 
-  const ctx = await requireOwner(req, target.business_id);
-  if (ctx instanceof Response) return ctx;
-  const { admin, ownerMemberId } = ctx;
+  const { data: actorMemberId, error: denied } = await admin.rpc('login_admin_for', {
+    p_user: caller.id,
+    p_target: target.id,
+  });
+  if (denied || !actorMemberId) return fail('not_allowed', 403);
 
   if (body.action === 'reset_password') {
     if ((body.password ?? '').length < MIN_PASSWORD) return fail('weak_password');
@@ -54,7 +61,7 @@ Deno.serve(async (req) => {
   await admin.from('audit_log').insert({
     business_id: target.business_id,
     branch_id: target.default_branch_id,
-    actor_member_id: ownerMemberId,
+    actor_member_id: actorMemberId,
     action: 'update',
     entity_type: 'member',
     entity_id: target.id,

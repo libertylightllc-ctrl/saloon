@@ -62,6 +62,7 @@ insert into reviewed values
     ('delete_customer'),
     ('dismiss_refund_request'),
     ('expected_cash'),
+    ('fix_clock_out'),
     ('fmt_money'),
     ('generate_payroll'),
     ('has_pin'),
@@ -138,6 +139,7 @@ insert into reviewed values
     -- honeypot and rate limits inside; no personal data returned).
     ('redeem_pilot_code'),
     ('create_branch'),
+    ('set_login_type'),
     ('set_my_branch'),
     ('admin_set_billing'),
     ('admin_set_access'),

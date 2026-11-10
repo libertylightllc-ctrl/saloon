@@ -1,4 +1,4 @@
-// Shared helpers for the staff-login Edge Functions (service role, owner-only).
+// Shared helpers for the staff-login Edge Functions (service role; who may act is checked per function).
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 export const cors = {

@@ -3,7 +3,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(14);
+select plan(15);
 -- The checks below work out dates and codes with internal helpers that the app's sign-in roles cannot call (migration
 -- 33); they are allowed here, inside this test's transaction only (rolled back at the end).
 grant execute on function public.branch_today(uuid), public.branch_tz(uuid), public.business_today(uuid),
@@ -40,6 +40,7 @@ select pg_temp.as_user('00000000-0000-0000-0000-0000000019a0');
 select set_config('t.b', (create_business('{"business_name":"Break Salon","owner_name":"Owner","mode":"gents"}')
   ->> 'business_id'), false);
 select set_config('t.br', (select id::text from branches where business_id = current_setting('t.b')::uuid), false);
+select set_my_pin(current_setting('t.b')::uuid, '2580');
 select pg_temp.as_service();
 select set_config('t.emp', (register_staff_member(jsonb_build_object('business_id', current_setting('t.b'),
   'branch_id', current_setting('t.br'), 'user_id', '00000000-0000-0000-0000-0000000019b1', 'username', 'breakbarber',
@@ -73,8 +74,14 @@ select is((select count(*)::int from attendance_breaks where attendance_id =
 select throws_ok($$ select pg_temp.clock('resume', 0.85) $$, '22023', 'not_clocked_in', 'only after clocking out');
 
 -- The cashier records a break for the barber.
+-- The cashier records a break for the barber: someone else's clock needs the owner's or a manager's PIN (Part B).
 select pg_temp.as_user('00000000-0000-0000-0000-0000000019c2');
-select lives_ok($$ select pg_temp.clock('break_start', 0.90) $$, 'the cashier records a break for the barber');
+select throws_ok($$ select pg_temp.clock('break_start', 0.90) $$, '42501', 'approval_needed',
+  'the cashier needs a PIN to record a break for the barber');
+select set_config('t.ap', approve_with_pin(current_setting('t.br')::uuid,
+  (select id from members where user_id = '00000000-0000-0000-0000-0000000019a0'), '2580', 'clock_other') ->> 'approval_id', false);
+select lives_ok($$ select clock(jsonb_build_object('employee_id', current_setting('t.emp'), 'action', 'break_start',
+  'at', pg_temp.at(0.90), 'approval_id', current_setting('t.ap'))) $$, 'with the owner''s PIN they record it');
 
 select * from finish();
 rollback;

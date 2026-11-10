@@ -1,4 +1,4 @@
-// Owner creates a username + password login for a cashier, staff member or accountant.
+// Owner creates a username + password login for a manager, front desk (cashier), stylist (staff) or accountant.
 // Staff sign in with salon code + username; the internal email is username@code.staff.internal.
 // A person already on the staff list (employee_id) gets the login on their own record, never a second one.
 import { cors, fail, json, MIN_PASSWORD, requireOwner, staffEmail, USERNAME } from '../_shared/staff.ts';
@@ -9,7 +9,7 @@ interface Body {
   username: string;
   password: string;
   display_name: string;
-  role: 'cashier' | 'staff' | 'accountant';
+  role: 'manager' | 'cashier' | 'staff' | 'accountant';
   commission_bps?: number;
   colour?: string;
   employee_id?: string;
@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
   if (!USERNAME.test(username)) return fail('invalid_username');
   if ((body.password ?? '').length < MIN_PASSWORD) return fail('weak_password');
   if (!displayName) return fail('name_required');
-  if (!['cashier', 'staff', 'accountant'].includes(body.role)) return fail('invalid_role');
+  if (!['manager', 'cashier', 'staff', 'accountant'].includes(body.role)) return fail('invalid_role');
   const commission = Number(body.commission_bps ?? 0);
   if (!Number.isInteger(commission) || commission < 0 || commission > 10000) return fail('invalid_commission');
 
