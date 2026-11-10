@@ -2350,9 +2350,52 @@
       "online_cancelled": {
         "title": "Online booking cancelled",
         "body": "{{customer}} · {{at}}"
+      },
+      "booking_moved": {
+        "title": "Booking moved",
+        "body": "{{customer}} · now {{at}}",
+        "bodyReassigned": "{{customer}} · now with someone else"
+      },
+      "booking_cancelled": {
+        "title": "Booking cancelled",
+        "body": "{{customer}} · {{at}}"
+      },
+      "client_arrived": {
+        "title": "Client arrived",
+        "body": "{{customer}} is here"
+      },
+      "no_show": {
+        "title": "No-show",
+        "body": "{{customer}} · {{at}}"
+      },
+      "missed_clock_out": {
+        "title": "Missed clock-out",
+        "body": "{{name}} · {{date}} · no clock-out"
+      },
+      "bill_due": {
+        "title": "Bill due {{due}}",
+        "body": "{{supplier}} · {{unpaid}} left to pay"
+      },
+      "month_ready": {
+        "title": "Month ready to close",
+        "body": "{{month}} is over: check it and close it."
+      },
+      "delivery_waiting": {
+        "title": "Delivery to price",
+        "body": "Delivery {{number}} is waiting for prices"
+      },
+      "cash_difference": {
+        "short": "Cash short {{amount}} on {{date}}",
+        "over": "Cash over {{amount}} on {{date}}",
+        "body": "Counted by {{name}}"
+      },
+      "discount_over_limit": {
+        "title": "Discount {{pct}}",
+        "titleLimit": "Discount {{pct}} (limit {{limit}})"
       }
     },
-    "markedRead": "{{count}} marked as read"
+    "markedRead": "{{count}} marked as read",
+    "approvedBy": "approved by {{name}}"
   },
   "refundRequest": {
     "open": "Refund requested",

@@ -5,12 +5,20 @@ export function notificationHref(n: { type: string; entity_type: string | null; 
   switch (n.entity_type) {
     case 'appointment':
       return '/queue';
+    case 'approval':
+      return '/approvals';
+    case 'attendance':
+      return '/attendance';
     case 'cash_closing':
       return typeof n.data.date === 'string' ? { pathname: '/cash-closing/[date]', params: { date: n.data.date } } : '/cash-closing';
     case 'delivery':
       return n.entity_id ? { pathname: '/deliveries/[id]', params: { id: n.entity_id } } : '/deliveries';
     case 'inventory_item':
       return n.entity_id ? { pathname: '/inventory/[id]', params: { id: n.entity_id } } : '/inventory';
+    case 'period':
+      return '/accounts/close-period';
+    case 'purchase_bill':
+      return n.entity_id ? { pathname: '/purchases/[id]', params: { id: n.entity_id } } : '/purchases';
     case 'payroll_run':
       return '/payroll';
     case 'sale':

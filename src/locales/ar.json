@@ -2404,9 +2404,52 @@
       "online_cancelled": {
         "title": "أُلغي حجز عبر الإنترنت",
         "body": "{{customer}} · {{at}}"
+      },
+      "booking_moved": {
+        "title": "تم نقل الحجز",
+        "body": "{{customer}} · الآن {{at}}",
+        "bodyReassigned": "{{customer}} · الآن مع شخص آخر"
+      },
+      "booking_cancelled": {
+        "title": "أُلغي الحجز",
+        "body": "{{customer}} · {{at}}"
+      },
+      "client_arrived": {
+        "title": "وصل العميل",
+        "body": "{{customer}} هنا"
+      },
+      "no_show": {
+        "title": "عدم حضور",
+        "body": "{{customer}} · {{at}}"
+      },
+      "missed_clock_out": {
+        "title": "لم يُسجَّل الانصراف",
+        "body": "{{name}} · {{date}} · دون تسجيل انصراف"
+      },
+      "bill_due": {
+        "title": "فاتورة مستحقة {{due}}",
+        "body": "{{supplier}} · المتبقي {{unpaid}}"
+      },
+      "month_ready": {
+        "title": "الشهر جاهز للإغلاق",
+        "body": "انتهى {{month}}: راجعه وأغلقه."
+      },
+      "delivery_waiting": {
+        "title": "توريد بانتظار الأسعار",
+        "body": "التوريد {{number}} بانتظار الأسعار"
+      },
+      "cash_difference": {
+        "short": "نقص في النقد {{amount}} يوم {{date}}",
+        "over": "زيادة في النقد {{amount}} يوم {{date}}",
+        "body": "عدّه {{name}}"
+      },
+      "discount_over_limit": {
+        "title": "خصم {{pct}}",
+        "titleLimit": "خصم {{pct}} (الحد {{limit}})"
       }
     },
-    "markedRead": "تم تعليم {{count}} كمقروء"
+    "markedRead": "تم تعليم {{count}} كمقروء",
+    "approvedBy": "وافق {{name}}"
   },
   "refundRequest": {
     "open": "طلب استرداد",

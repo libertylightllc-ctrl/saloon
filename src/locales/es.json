@@ -2350,9 +2350,52 @@
       "online_cancelled": {
         "title": "Reserva online cancelada",
         "body": "{{customer}} · {{at}}"
+      },
+      "booking_moved": {
+        "title": "Cita cambiada",
+        "body": "{{customer}} · ahora {{at}}",
+        "bodyReassigned": "{{customer}} · ahora con otra persona"
+      },
+      "booking_cancelled": {
+        "title": "Cita cancelada",
+        "body": "{{customer}} · {{at}}"
+      },
+      "client_arrived": {
+        "title": "Ha llegado el cliente",
+        "body": "{{customer}} ya está aquí"
+      },
+      "no_show": {
+        "title": "No se presentó",
+        "body": "{{customer}} · {{at}}"
+      },
+      "missed_clock_out": {
+        "title": "Falta la salida",
+        "body": "{{name}} · {{date}} · sin salida"
+      },
+      "bill_due": {
+        "title": "Factura vence el {{due}}",
+        "body": "{{supplier}} · quedan {{unpaid}}"
+      },
+      "month_ready": {
+        "title": "Mes listo para cerrar",
+        "body": "{{month}} terminó: revísalo y ciérralo."
+      },
+      "delivery_waiting": {
+        "title": "Entrega por valorar",
+        "body": "La entrega {{number}} espera los precios"
+      },
+      "cash_difference": {
+        "short": "Faltan {{amount}} en caja el {{date}}",
+        "over": "Sobran {{amount}} en caja el {{date}}",
+        "body": "Contado por {{name}}"
+      },
+      "discount_over_limit": {
+        "title": "Descuento {{pct}}",
+        "titleLimit": "Descuento {{pct}} (límite {{limit}})"
       }
     },
-    "markedRead": "{{count}} marcadas como leídas"
+    "markedRead": "{{count}} marcadas como leídas",
+    "approvedBy": "aprobado por {{name}}"
   },
   "refundRequest": {
     "open": "Reembolso solicitado",

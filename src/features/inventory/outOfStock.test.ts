@@ -2,7 +2,7 @@
  * Out-of-stock items are counted (owner's app check A6, 9 Nov 2026): below zero asks for a stock count, 0 is out of
  * stock, and the morning summary says out of stock and low apart, each only when there is something to say.
  */
-import { digestParts } from '@/features/notifications/NotificationsScreen';
+import { digestParts } from '@/features/notifications/text';
 import { i18n, initI18n } from '@/lib/i18n';
 
 import { stockPill } from './labels';

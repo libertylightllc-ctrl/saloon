@@ -2350,9 +2350,52 @@
       "online_cancelled": {
         "title": "ऑनलाइन बुकिंग रद्द हुई",
         "body": "{{customer}} · {{at}}"
+      },
+      "booking_moved": {
+        "title": "बुकिंग बदली गई",
+        "body": "{{customer}} · अब {{at}}",
+        "bodyReassigned": "{{customer}} · अब किसी और के साथ"
+      },
+      "booking_cancelled": {
+        "title": "बुकिंग रद्द",
+        "body": "{{customer}} · {{at}}"
+      },
+      "client_arrived": {
+        "title": "क्लाइंट आ गए",
+        "body": "{{customer}} आ गए हैं"
+      },
+      "no_show": {
+        "title": "नो-शो",
+        "body": "{{customer}} · {{at}}"
+      },
+      "missed_clock_out": {
+        "title": "क्लॉक आउट छूट गया",
+        "body": "{{name}} · {{date}} · क्लॉक आउट नहीं"
+      },
+      "bill_due": {
+        "title": "बिल देय {{due}}",
+        "body": "{{supplier}} · {{unpaid}} बाकी"
+      },
+      "month_ready": {
+        "title": "महीना बंद करने के लिए तैयार",
+        "body": "{{month}} ख़त्म हो गया: जाँचें और बंद करें।"
+      },
+      "delivery_waiting": {
+        "title": "डिलीवरी की कीमत डालनी है",
+        "body": "डिलीवरी {{number}} कीमतों का इंतज़ार कर रही है"
+      },
+      "cash_difference": {
+        "short": "{{date}} को कैश {{amount}} कम",
+        "over": "{{date}} को कैश {{amount}} ज़्यादा",
+        "body": "{{name}} ने गिना"
+      },
+      "discount_over_limit": {
+        "title": "छूट {{pct}}",
+        "titleLimit": "छूट {{pct}} (सीमा {{limit}})"
       }
     },
-    "markedRead": "{{count}} पढ़ा हुआ किया"
+    "markedRead": "{{count}} पढ़ा हुआ किया",
+    "approvedBy": "{{name}} ने मंज़ूर किया"
   },
   "refundRequest": {
     "open": "रिफ़ंड का अनुरोध",

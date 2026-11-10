@@ -2350,9 +2350,52 @@
       "online_cancelled": {
         "title": "Réservation en ligne annulée",
         "body": "{{customer}} · {{at}}"
+      },
+      "booking_moved": {
+        "title": "Rendez-vous déplacé",
+        "body": "{{customer}} · maintenant {{at}}",
+        "bodyReassigned": "{{customer}} · maintenant avec quelqu’un d’autre"
+      },
+      "booking_cancelled": {
+        "title": "Rendez-vous annulé",
+        "body": "{{customer}} · {{at}}"
+      },
+      "client_arrived": {
+        "title": "Client arrivé",
+        "body": "{{customer}} est arrivé"
+      },
+      "no_show": {
+        "title": "Absence",
+        "body": "{{customer}} · {{at}}"
+      },
+      "missed_clock_out": {
+        "title": "Départ non pointé",
+        "body": "{{name}} · {{date}} · sans départ"
+      },
+      "bill_due": {
+        "title": "Facture à payer le {{due}}",
+        "body": "{{supplier}} · reste {{unpaid}}"
+      },
+      "month_ready": {
+        "title": "Mois prêt à clôturer",
+        "body": "{{month}} est terminé : vérifiez-le et clôturez-le."
+      },
+      "delivery_waiting": {
+        "title": "Livraison à chiffrer",
+        "body": "La livraison {{number}} attend les prix"
+      },
+      "cash_difference": {
+        "short": "Caisse à court de {{amount}} le {{date}}",
+        "over": "Excédent de caisse de {{amount}} le {{date}}",
+        "body": "Compté par {{name}}"
+      },
+      "discount_over_limit": {
+        "title": "Remise {{pct}}",
+        "titleLimit": "Remise {{pct}} (limite {{limit}})"
       }
     },
-    "markedRead": "{{count}} marquées comme lues"
+    "markedRead": "{{count}} marquées comme lues",
+    "approvedBy": "validé par {{name}}"
   },
   "refundRequest": {
     "open": "Remboursement demandé",

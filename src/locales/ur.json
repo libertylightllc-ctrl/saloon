@@ -2350,9 +2350,52 @@
       "online_cancelled": {
         "title": "آن لائن بکنگ منسوخ ہوئی",
         "body": "{{customer}} · {{at}}"
+      },
+      "booking_moved": {
+        "title": "بکنگ بدل گئی",
+        "body": "{{customer}} · اب {{at}}",
+        "bodyReassigned": "{{customer}} · اب کسی اور کے ساتھ"
+      },
+      "booking_cancelled": {
+        "title": "بکنگ منسوخ",
+        "body": "{{customer}} · {{at}}"
+      },
+      "client_arrived": {
+        "title": "کلائنٹ آ گئے",
+        "body": "{{customer}} آ گئے ہیں"
+      },
+      "no_show": {
+        "title": "نو شو",
+        "body": "{{customer}} · {{at}}"
+      },
+      "missed_clock_out": {
+        "title": "کلاک آؤٹ رہ گیا",
+        "body": "{{name}} · {{date}} · کلاک آؤٹ نہیں"
+      },
+      "bill_due": {
+        "title": "بل واجب الادا {{due}}",
+        "body": "{{supplier}} · {{unpaid}} باقی"
+      },
+      "month_ready": {
+        "title": "مہینہ بند کرنے کے لیے تیار",
+        "body": "{{month}} ختم ہو گیا: جانچیں اور بند کریں۔"
+      },
+      "delivery_waiting": {
+        "title": "ڈیلیوری کی قیمت ڈالنی ہے",
+        "body": "ڈیلیوری {{number}} قیمتوں کا انتظار کر رہی ہے"
+      },
+      "cash_difference": {
+        "short": "{{date}} کو کیش {{amount}} کم",
+        "over": "{{date}} کو کیش {{amount}} زیادہ",
+        "body": "{{name}} نے گنا"
+      },
+      "discount_over_limit": {
+        "title": "رعایت {{pct}}",
+        "titleLimit": "رعایت {{pct}} (حد {{limit}})"
       }
     },
-    "markedRead": "{{count}} پڑھا ہوا کیا"
+    "markedRead": "{{count}} پڑھا ہوا کیا",
+    "approvedBy": "{{name}} نے منظور کیا"
   },
   "refundRequest": {
     "open": "ریفنڈ کی درخواست",
