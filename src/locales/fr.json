@@ -208,7 +208,8 @@
     "me": {
       "services": "Mes services du jour",
       "sales": "Mes ventes du jour",
-      "commission": "Commission du mois"
+      "commission": "Commission du mois",
+      "tips": "Mes pourboires du jour"
     },
     "dayPending": "Compté · en attente d’approbation",
     "dayClosed": "Journée clôturée",

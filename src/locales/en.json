@@ -208,7 +208,8 @@
     "me": {
       "services": "My services today",
       "sales": "My sales today",
-      "commission": "Commission this month"
+      "commission": "Commission this month",
+      "tips": "My tips today"
     },
     "dayPending": "Counted · waiting for approval",
     "dayClosed": "Day closed",

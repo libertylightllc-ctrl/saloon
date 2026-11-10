@@ -208,7 +208,8 @@
     "me": {
       "services": "Mis servicios de hoy",
       "sales": "Mis ventas de hoy",
-      "commission": "Comisión de este mes"
+      "commission": "Comisión de este mes",
+      "tips": "Mis propinas de hoy"
     },
     "dayPending": "Contado · pendiente de aprobación",
     "dayClosed": "Día cerrado",

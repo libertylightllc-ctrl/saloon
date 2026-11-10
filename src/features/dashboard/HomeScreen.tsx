@@ -136,6 +136,7 @@ export function HomeScreen() {
                 <KpiCard icon="scissors" label={t('home.me.services')} value={String(Number(data.me.services_today))} />
                 <KpiCard icon="receipt" label={t('home.me.sales')} value={formatMoney(data.me.sales_today_minor)} />
                 <KpiCard icon="coins" label={t('home.me.commission')} value={formatMoney(data.me.commission_month_minor)} />
+                <KpiCard icon="handCoins" label={t('home.me.tips')} value={formatMoney(Number(data.me.tips_today_minor ?? 0))} testID="kpi-my-tips" />
               </KpiGrid>
             ) : null;
             const clock = role === 'staff' || role === 'cashier' ? <ClockCard /> : null;

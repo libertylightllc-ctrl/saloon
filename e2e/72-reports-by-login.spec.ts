@@ -1,6 +1,6 @@
 /** Reports by login type (brief B2 "Reports and books", B5 Approvals): a manager's reports have no books' figures,
  * customer list or VAT, and include no-shows; owner and manager read the Approvals list; a stylist sees only their
- * own line of staff sales. */
+ * own line of staff sales, and their tips today on Home (brief B8). */
 import { createOwner, createStaff, refundSale, sellService } from './support/api';
 import { SERVICE } from './support/catalog';
 import { expect, test } from './support/fixtures';
@@ -36,12 +36,28 @@ test('a manager reads sales without the books, the no-shows report and the Appro
   await snap(page, 'approvals-list', mode);
 });
 
-test('a stylist sees only their own line of staff sales', async ({ page, mode }) => {
+test('a stylist sees their tips on Home and only their own line of staff sales', async ({ page, mode }) => {
   const owner = await createOwner(mode);
   const me = await createStaff(owner, 'staff', { name: 'Sara Stylist' });
   await createStaff(owner, 'staff', { name: 'Omar Other' });
+  // The owner rings up a custom service for Sara with a 15.00 tip for her.
+  const emp = await owner.client.from('employees').select('id').eq('member_id', me.memberId).single();
+  if (emp.error) throw emp.error;
+  const sale = await owner.client.rpc('create_sale', {
+    p: {
+      branch_id: owner.branchId,
+      client_ref: crypto.randomUUID(),
+      employee_id: emp.data.id,
+      tip_minor: 1500,
+      tip_employee_id: emp.data.id,
+      lines: [{ kind: 'custom', name: 'Blow dry', unit_price_minor: 8000, employee_id: emp.data.id }],
+      payments: [{ method: 'cash', amount_minor: 9500 }],
+    },
+  });
+  if (sale.error) throw sale.error;
 
   await staffOn(page, mode, owner.code, me.username, me.password);
+  await expect(id(page, 'kpi-my-tips')).toContainText('15.00');
   await tab(page, 'more');
   await id(page, 'more-myReport').click();
   await expect(id(page, 'report-table')).toContainText('Sara Stylist');

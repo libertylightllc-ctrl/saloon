@@ -921,7 +921,12 @@ begin
       'sales_today_minor', coalesce((select sum(sl.net_minor) from sale_lines sl join sales s on s.id = sl.sale_id
          where sl.employee_id = v_me and s.business_id = m.business_id and s.business_date = v_today), 0),
       -- The same figure payroll uses (after refunds, never on the tip).
-      'commission_month_minor', public.commission_for(v_me, to_char(v_today, 'YYYY-MM'))));
+      'commission_month_minor', public.commission_for(v_me, to_char(v_today, 'YYYY-MM')),
+      -- Their tips today (brief B8), less any tip refunded today, as the staff report counts them.
+      'tips_today_minor', coalesce((select sum(s.tip_minor) from sales s
+         where s.tip_employee_id = v_me and s.branch_id = p_branch and s.business_date = v_today), 0)
+        - coalesce((select sum(r.tip_minor) from refunds r join sales s on s.id = r.sale_id
+         where s.tip_employee_id = v_me and r.branch_id = p_branch and r.business_date = v_today), 0)));
   end if;
 
   return out;

@@ -5,7 +5,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(15);
+select plan(16);
 -- Internal helpers the sign-in roles cannot call, allowed inside this rolled-back test only.
 grant execute on function public.branch_today(uuid), public.commission_for(uuid, text) to authenticated;
 
@@ -85,10 +85,12 @@ select is(commission_for(current_setting('t.emp')::uuid, current_setting('t.last
 select is(commission_for(current_setting('t.emp')::uuid, current_setting('t.month')), 700::bigint,
   'it comes off this month: QAR 10.50 less QAR 3.50');
 
--- 10. Home's "Commission this month" for the stylist is the same figure.
+-- 10–11. Home's "Commission this month" for the stylist is the same figure; their tips today are there too.
 select pg_temp.as_user('b1');
 select is((dashboard_today(current_setting('t.br')::uuid) -> 'me' ->> 'commission_month_minor')::bigint, 700::bigint,
   'the stylist''s Home shows the same commission');
+select is((dashboard_today(current_setting('t.br')::uuid) -> 'me' ->> 'tips_today_minor')::bigint, 500::bigint,
+  'and their tips today: the whole QAR 5 kept after the part refund');
 
 select pg_temp.as_user('a0');
 

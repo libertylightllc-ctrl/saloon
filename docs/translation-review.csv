@@ -161,6 +161,7 @@ home.noSalesYet,No sales yet today.,لا مبيعات اليوم بعد.,आज 
 home.me.services,My services today,خدماتي اليوم,आज मेरी सर्विस,آج میری سروسز,Mis servicios de hoy,Mes services du jour,Meus serviços hoje,
 home.me.sales,My sales today,مبيعاتي اليوم,आज मेरी बिक्री,آج میری فروخت,Mis ventas de hoy,Mes ventes du jour,Minhas vendas hoje,
 home.me.commission,Commission this month,العمولة هذا الشهر,इस महीने कमीशन,اس ماہ کمیشن,Comisión de este mes,Commission du mois,Comissão deste mês,
+home.me.tips,My tips today,إكرامياتي اليوم,आज की मेरी टिप,آج کی میری ٹپ,Mis propinas de hoy,Mes pourboires du jour,Minhas gorjetas de hoje,
 home.dayPending,Counted · waiting for approval,معدود · بانتظار الموافقة,गिना गया · मंज़ूरी बाकी,گنا گیا · منظوری باقی,Contado · pendiente de aprobación,Compté · en attente d’approbation,Contado · aguardando aprovação,
 home.dayClosed,Day closed,اليوم مغلق,दिन बंद,دن بند,Día cerrado,Journée clôturée,Dia fechado,
 home.attention.closePending,Cash close {{date}} waiting for approval,إغلاق {{date}} بانتظار الموافقة,{{date}} की क्लोज़िंग मंज़ूरी के लिए बाकी,{{date}} کی کلوزنگ منظوری کے لیے باقی,Cierre de caja del {{date}} pendiente de aprobación,Clôture de caisse du {{date}} en attente d’approbation,Fechamento de caixa de {{date}} aguardando aprovação,

@@ -57,7 +57,8 @@ export interface Dashboard {
   };
   appointments?: { completed: number; waiting: number; in_progress: number; booked: number; no_show: number };
   setup?: { services: boolean; staff: boolean; tax: boolean; opening_cash: boolean; opening_stock: boolean; suppliers: boolean };
-  me?: { services_today: number; sales_today_minor: number; commission_month_minor: number };
+  /** The stylist's own day (brief B8); tips_today_minor less any tip refunded today. */
+  me?: { services_today: number; sales_today_minor: number; commission_month_minor: number; tips_today_minor?: number };
 }
 
 export function useDashboard(branchId: string) {
