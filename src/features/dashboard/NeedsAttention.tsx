@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { DOC_STATUS } from '@/features/compliance/labels';
+import { useDeliveries } from '@/features/deliveries/api';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
@@ -25,12 +26,13 @@ interface Item {
 }
 
 /** Home "Needs attention": closes waiting for the owner, days never closed, low stock, tools due a
- * service and supplier bills overdue or due this week. */
+ * service, deliveries waiting for prices and supplier bills overdue or due this week. */
 export function NeedsAttention({ data }: { data: Dashboard }) {
   const { t } = useTranslation();
   const router = useRouter();
   const dates = useDates();
-  const { role } = useWorkspace();
+  const { branch, role } = useWorkspace();
+  const waiting = useDeliveries(branch.id, can(role, 'priceDelivery'));
   const closing = data.closing;
   const items: Item[] = [];
 
@@ -80,6 +82,18 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
       status: 'due_soon',
       action: t('home.attentionActions.review'),
       href: { pathname: '/inventory', params: { filter: 'tool' } },
+    });
+  }
+  const deliveries = waiting.data?.filter((d) => d.status === 'waiting') ?? [];
+  if (deliveries.length > 0) {
+    items.push({
+      key: 'deliveries-waiting',
+      title: t('deliveries.waitingPrices', { count: deliveries.length }),
+      sub: t('deliveries.waitingPricesSub'),
+      status: 'waiting',
+      label: t('deliveries.status.waiting'),
+      action: t('home.attentionActions.review'),
+      href: deliveries.length === 1 ? { pathname: '/deliveries/[id]', params: { id: deliveries[0]!.id } } : '/deliveries',
     });
   }
   const bills = data.bills;

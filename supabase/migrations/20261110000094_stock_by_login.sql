@@ -174,12 +174,16 @@ language plpgsql security definer set search_path = public as $$
 declare
   d deliveries;
   m members;
+  v_role members.role%type;
 begin
   select * into d from deliveries where id = p_delivery for update;
   if d.id is null then
     raise exception 'not_found' using errcode = 'P0002';
   end if;
-  m := public.require_can(d.branch_id, 'receiveDelivery');
+  -- Someone who prices (owner, manager, accountant) cancels any; someone who only receives, their own.
+  select mem.role into v_role from members mem where mem.business_id = d.business_id and mem.user_id = auth.uid() and mem.active;
+  m := public.require_can(d.branch_id,
+         case when public.role_level(v_role, 'priceDelivery') is not null then 'priceDelivery' else 'receiveDelivery' end);
   if public.role_level(m.role, 'priceDelivery') is null and d.received_by is distinct from m.id then
     raise exception 'not_allowed' using errcode = '42501';
   end if;

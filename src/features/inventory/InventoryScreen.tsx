@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { WaitingDeliveries } from '@/features/deliveries/WaitingDeliveries';
 import { formatMoney, sum } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
@@ -118,7 +119,18 @@ export function InventoryScreen() {
                     <Button label={t('inventory.order')} icon="truck" variant="outline" size="md" onPress={() => router.push('/purchases/new')} testID="inventory-order" />
                   </View>
                 ) : null}
+                {can(role, 'receiveDelivery') ? (
+                  <View style={cell}>
+                    <Button label={t('deliveries.receive')} icon="package" variant="outline" size="md" onPress={() => router.push('/deliveries/new')} testID="inventory-receive" />
+                  </View>
+                ) : null}
+                {can(role, 'receiveDelivery') || can(role, 'priceDelivery') ? (
+                  <View style={cell}>
+                    <Button label={t('deliveries.title')} icon="clipboard" variant="outline" size="md" onPress={() => router.push('/deliveries')} testID="inventory-deliveries" />
+                  </View>
+                ) : null}
               </View>
+              <WaitingDeliveries />
               <SearchBar value={search} onChangeText={setSearch} placeholder={t('inventory.search')} testID="inventory-search" />
               {shown.length === 0 ? (
                 <EmptyState illustration="no-results" message={t(filter === 'low' ? 'inventory.noLow' : 'inventory.empty')} />

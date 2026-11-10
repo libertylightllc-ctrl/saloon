@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
+import { WaitingDeliveries } from '@/features/deliveries/WaitingDeliveries';
 import { businessDate, businessMonth } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
 import { can } from '@/lib/permissions';
@@ -118,6 +119,7 @@ export function PurchasesScreen() {
             />
           </KpiGrid>
         ) : null}
+        <WaitingDeliveries />
         {tab === 'bills' ? (
           <QueryState
             query={bills}

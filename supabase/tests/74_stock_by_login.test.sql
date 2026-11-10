@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(55);
+select plan(56);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -159,6 +159,12 @@ select throws_ok(format($$ select cancel_delivery('%s', 'Not mine') $$, current_
 select pg_temp.as_user('b1');
 select lives_ok(format($$ select cancel_delivery('%s', 'Entered twice') $$, current_setting('t.d3')),
   'a manager can');
+select pg_temp.as_user('a0');
+select set_config('t.d4', (pg_temp.receive() ->> 'delivery_id'), false);
+select pg_temp.as_user('b4');
+select lives_ok(format($$ select cancel_delivery('%s', 'Supplier sent it back') $$, current_setting('t.d4')),
+  'so can the accountant, who prices deliveries');
+select pg_temp.as_user('b1');
 select throws_ok(format($$ select cancel_delivery('%s', 'Too late') $$, current_setting('t.d1')), '22023', 'invalid_status',
   'a priced delivery is not cancelled (its bill is reversed instead)');
 

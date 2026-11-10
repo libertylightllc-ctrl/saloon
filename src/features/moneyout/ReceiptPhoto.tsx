@@ -43,8 +43,8 @@ export function PickedPreview({ photo, onRemove }: { photo: PickedPhoto; onRemov
   );
 }
 
-/** On a saved expense or bill: the photo (tap for full size), or a way to add one. */
-export function ReceiptPhoto({ kind, rowId, path, canAttach }: { kind: ReceiptKind; rowId: string; path: string | null; canAttach: boolean }) {
+/** On a saved expense or bill: the photo (tap for full size), or a way to add one. `title` names it (a delivery note). */
+export function ReceiptPhoto({ kind, rowId, path, canAttach, title }: { kind: ReceiptKind; rowId: string; path: string | null; canAttach: boolean; title?: string }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const toast = useToast();
@@ -56,7 +56,7 @@ export function ReceiptPhoto({ kind, rowId, path, canAttach }: { kind: ReceiptKi
   if (path) {
     return (
       <View style={styles.block}>
-        <Text variant="bodyStrong">{t('receipts.photo')}</Text>
+        <Text variant="bodyStrong">{title ?? t('receipts.photo')}</Text>
         {url.data ? (
           <Pressable role="button" aria-label={t('receipts.view')} onPress={() => setFull(true)} testID="receipt-photo">
             <Image source={{ uri: url.data }} style={[styles.thumb, { borderRadius: theme.radius.md }]} resizeMode="cover" />
@@ -64,7 +64,7 @@ export function ReceiptPhoto({ kind, rowId, path, canAttach }: { kind: ReceiptKi
         ) : (
           <Skeleton width={120} height={120} />
         )}
-        <BottomSheet open={full} onClose={() => setFull(false)} title={t('receipts.photo')}>
+        <BottomSheet open={full} onClose={() => setFull(false)} title={title ?? t('receipts.photo')}>
           {full && url.data ? <Image source={{ uri: url.data }} style={styles.full} resizeMode="contain" testID="receipt-full" /> : null}
         </BottomSheet>
       </View>
