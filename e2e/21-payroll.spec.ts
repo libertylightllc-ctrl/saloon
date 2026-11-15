@@ -39,6 +39,8 @@ test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; t
   await id(page, 'payroll-generate').click();
   await expect(text(page, 'Payroll worked out')).toBeVisible();
   await expect(id(page, `slip-${barber.name}`)).toContainText('3,210.00');
+  // The line adds up (C3): base, commission, bonus and the advance paid back.
+  await expect(id(page, `slip-${barber.name}`)).toContainText(/Base AED.3,500\.00 · Commission AED.10\.00 · Bonus AED.200\.00 · Advances −AED.500\.00/);
   await id(page, 'payroll-approve').click();
   await expect(text(page, 'Payroll approved and posted to the books')).toBeVisible();
 

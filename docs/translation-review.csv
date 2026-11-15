@@ -3259,3 +3259,6 @@ staff.fields.startedOn,Start date,تاريخ البدء,शुरू होन�
 staff.fields.startedOnHint,Base pay in the first month counts from this day.,يُحسب الراتب الأساسي في الشهر الأول من هذا اليوم.,पहले महीने का मूल वेतन इसी दिन से गिना जाता है।,پہلے مہینے کی بنیادی تنخواہ اسی دن سے گنی جاتی ہے۔,El sueldo base del primer mes se cuenta desde este día.,Le salaire de base du premier mois compte à partir de ce jour.,O salário-base do primeiro mês conta a partir deste dia.,
 staff.fields.leftOn,Leaving date,تاريخ المغادرة,छोड़ने की तारीख,چھوڑنے کی تاریخ,Fecha de salida,Date de départ,Data de saída,
 payroll.days,Days: {{days}} of {{total}},الأيام: {{days}} من {{total}},दिन: {{total}} में से {{days}},دن: {{total}} میں سے {{days}},Días: {{days}} de {{total}},Jours : {{days}} sur {{total}},Dias: {{days}} de {{total}},
+payroll.metaBonus,Bonus {{amount}},المكافأة {{amount}},बोनस {{amount}},بونس {{amount}},Bono {{amount}},Prime {{amount}},Bônus {{amount}},
+payroll.metaDeductions,Deductions −{{amount}},الخصومات −{{amount}},कटौती −{{amount}},کٹوتی −{{amount}},Deducciones −{{amount}},Retenues −{{amount}},Descontos −{{amount}},
+payroll.metaAdvances,Advances −{{amount}},السلف −{{amount}},एडवांस −{{amount}},ایڈوانس −{{amount}},Adelantos −{{amount}},Avances −{{amount}},Adiantamentos −{{amount}},

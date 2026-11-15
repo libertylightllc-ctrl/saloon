@@ -2168,7 +2168,10 @@
     "changedSince": "Les données de paie ont changé depuis le calcul. Recalculez avant d'approuver.",
     "missedNote": "La commission des ventes après le {{date}} n'est pas incluse ({{amount}}). Vous pouvez la verser en prime.",
     "missedLine": "{{name}} : {{amount}}",
-    "days": "Jours : {{days}} sur {{total}}"
+    "days": "Jours : {{days}} sur {{total}}",
+    "metaBonus": "Prime {{amount}}",
+    "metaDeductions": "Retenues −{{amount}}",
+    "metaAdvances": "Avances −{{amount}}"
   },
   "myPay": {
     "title": "Ma paie",

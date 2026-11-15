@@ -2168,7 +2168,10 @@
     "changedSince": "हिसाब के बाद वेतन की जानकारी बदली है। मंज़ूरी से पहले फिर से हिसाब करें।",
     "missedNote": "{{date}} के बाद की बिक्री का कमीशन शामिल नहीं है ({{amount}})। आप इसे बोनस के रूप में दे सकते हैं।",
     "missedLine": "{{name}}: {{amount}}",
-    "days": "दिन: {{total}} में से {{days}}"
+    "days": "दिन: {{total}} में से {{days}}",
+    "metaBonus": "बोनस {{amount}}",
+    "metaDeductions": "कटौती −{{amount}}",
+    "metaAdvances": "एडवांस −{{amount}}"
   },
   "myPay": {
     "title": "मेरा वेतन",

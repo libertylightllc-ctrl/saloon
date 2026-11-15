@@ -2216,7 +2216,10 @@
     "changedSince": "تغيّرت بيانات الرواتب منذ الحساب. أعد الحساب قبل الاعتماد.",
     "missedNote": "عمولة المبيعات بعد {{date}} غير مشمولة ({{amount}}). يمكنك دفعها كمكافأة.",
     "missedLine": "{{name}}: {{amount}}",
-    "days": "الأيام: {{days}} من {{total}}"
+    "days": "الأيام: {{days}} من {{total}}",
+    "metaBonus": "المكافأة {{amount}}",
+    "metaDeductions": "الخصومات −{{amount}}",
+    "metaAdvances": "السلف −{{amount}}"
   },
   "myPay": {
     "title": "راتبي",

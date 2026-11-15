@@ -2168,7 +2168,10 @@
     "changedSince": "Pay details changed since this was worked out. Work it out again before approving.",
     "missedNote": "Commission from sales after {{date}} isn't included ({{amount}}). You can pay it as a bonus.",
     "missedLine": "{{name}}: {{amount}}",
-    "days": "Days: {{days}} of {{total}}"
+    "days": "Days: {{days}} of {{total}}",
+    "metaBonus": "Bonus {{amount}}",
+    "metaDeductions": "Deductions −{{amount}}",
+    "metaAdvances": "Advances −{{amount}}"
   },
   "myPay": {
     "title": "My pay",

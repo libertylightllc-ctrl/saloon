@@ -2168,7 +2168,10 @@
     "changedSince": "حساب کے بعد تنخواہ کی تفصیل بدلی ہے۔ منظوری سے پہلے دوبارہ حساب کریں۔",
     "missedNote": "{{date}} کے بعد کی فروخت کا کمیشن شامل نہیں ({{amount}})۔ آپ اسے بونس کے طور پر دے سکتے ہیں۔",
     "missedLine": "{{name}}: {{amount}}",
-    "days": "دن: {{total}} میں سے {{days}}"
+    "days": "دن: {{total}} میں سے {{days}}",
+    "metaBonus": "بونس {{amount}}",
+    "metaDeductions": "کٹوتی −{{amount}}",
+    "metaAdvances": "ایڈوانس −{{amount}}"
   },
   "myPay": {
     "title": "میری تنخواہ",

@@ -2168,7 +2168,10 @@
     "changedSince": "Los datos de pago cambiaron desde que se calculó. Vuelve a calcularlo antes de aprobar.",
     "missedNote": "La comisión de las ventas posteriores al {{date}} no está incluida ({{amount}}). Puedes pagarla como bonificación.",
     "missedLine": "{{name}}: {{amount}}",
-    "days": "Días: {{days}} de {{total}}"
+    "days": "Días: {{days}} de {{total}}",
+    "metaBonus": "Bono {{amount}}",
+    "metaDeductions": "Deducciones −{{amount}}",
+    "metaAdvances": "Adelantos −{{amount}}"
   },
   "myPay": {
     "title": "Mi pago",
