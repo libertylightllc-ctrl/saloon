@@ -13,10 +13,11 @@ export type ReportType = (typeof REPORT_TYPES)[number];
  * The reports each login type opens (brief B2): owner and accountant all; a manager sales (without the books'
  * figures), staff sales, daily closing, cash differences, stock and no-shows; a stylist their own staff-sales line.
  */
-export function reportTypesFor(role: Role): readonly ReportType[] {
+/** The reports a login reads here; the VAT report only while the branch is registered for VAT (owner's app check F2). */
+export function reportTypesFor(role: Role, branch: { vat_mode: string }): readonly ReportType[] {
   if (role === 'staff') return ['staff'];
   if (role === 'manager') return ['monthly', 'staff', 'closing', 'stock', 'shortages', 'no_shows'];
-  if (role === 'owner' || role === 'accountant') return REPORT_TYPES;
+  if (role === 'owner' || role === 'accountant') return REPORT_TYPES.filter((r) => r !== 'vat' || branch.vat_mode === 'on');
   return [];
 }
 

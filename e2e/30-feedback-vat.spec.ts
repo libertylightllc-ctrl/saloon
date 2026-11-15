@@ -85,6 +85,7 @@ test('a VAT-registered salon buys a 100 ml bottle for AED 45 + VAT, pays a phone
 
   // The VAT report: 10.00 collected on the 210.00 sale, 7.25 paid, 2.75 to pay.
   await page.goto('/reports?type=vat');
+  await expect(id(page, 'report-type-vat')).toBeVisible();
   await expect(id(page, 'report-kpi-output-value')).toContainText('AED 10.00');
   await expect(id(page, 'report-kpi-input-value')).toContainText('AED 7.25');
   await expect(id(page, 'report-kpi-due-value')).toContainText('AED 2.75');

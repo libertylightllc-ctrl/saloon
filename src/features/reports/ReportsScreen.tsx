@@ -33,8 +33,10 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
   const { business, branch, role } = useWorkspace();
   const router = useRouter();
   const params = useLocalSearchParams<{ type?: string }>();
-  const types = reportTypesFor(role);
-  const [type, setType] = useState<ReportType>(types.includes(params.type as ReportType) ? (params.type as ReportType) : types[0]!);
+  const types = useMemo(() => reportTypesFor(role, { vat_mode: branch.vat_mode }), [role, branch.vat_mode]);
+  const [picked, setType] = useState<ReportType>(types.includes(params.type as ReportType) ? (params.type as ReportType) : types[0]!);
+  // VAT switched off while its report was open: back to the first report.
+  const type = types.includes(picked) ? picked : types[0]!;
   const [month, setMonth] = useState<MonthKey>(businessMonth(new Date(), business.timezone));
   const report = useReport(type, business.id, branch.id, month);
   // The control summary: owner, accountant, and managers for their branch (E8).

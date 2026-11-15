@@ -105,6 +105,8 @@ test('owner reads every report, exports PDF and CSV, closes last month and expor
   await expect(id(page, 'report-kpi-sales-value')).toContainText('AED 50.00');
   await page.getByRole('button', { name: 'Next month' }).filter({ visible: true }).first().click();
 
+  // Not registered for VAT: no VAT report (F2).
+  await expect(id(page, 'report-type-vat')).toHaveCount(0);
   // Staff sales: the barber's sales and 10% commission.
   await id(page, 'report-type-staff').click();
   await expect(id(page, `report-row-${barberId}`)).toContainText('AED 200.00');
