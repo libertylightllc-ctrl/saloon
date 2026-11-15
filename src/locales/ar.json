@@ -1988,7 +1988,11 @@
       "qty": "الكمية ({{unit}})",
       "cost": "تكلفة الواحدة",
       "save": "حفظ المخزون الافتتاحي · {{value}}",
-      "saved": "حُفظ المخزون الافتتاحي لـ {{n}} صنف"
+      "saved": "حُفظ المخزون الافتتاحي لـ {{count}} صنف",
+      "saved_one": "حُفظ المخزون الافتتاحي لصنف واحد",
+      "saved_two": "حُفظ المخزون الافتتاحي لصنفين",
+      "saved_few": "حُفظ المخزون الافتتاحي لـ {{count}} أصناف",
+      "saved_many": "حُفظ المخزون الافتتاحي لـ {{count}} صنفًا"
     },
     "outCount": "نفد من المخزون: {{n}}",
     "lowShort": "مخزون منخفض: {{n}}",
@@ -2301,7 +2305,7 @@
     "salon": "الصالون",
     "staff": "الموظفون",
     "noNumber": "لا رقم بعد",
-    "expiresOn": "ينتهي {{date}} · {{n}} يوم",
+    "expiresOn": "ينتهي {{date}} · {{count}} يوم",
     "expiredOn": "انتهى {{date}}",
     "noDocument": "لا شيء مسجل بعد. أضف الرقم والتواريخ ونسخة.",
     "addDetails": "إضافة التفاصيل",
@@ -2378,7 +2382,11 @@
     "removedLine": "حُذف {{date}}",
     "restore": "إعادة",
     "restored": "عاد إلى السجل",
-    "actionsFor": "إجراءات {{name}}"
+    "actionsFor": "إجراءات {{name}}",
+    "expiresOn_one": "ينتهي {{date}} · يوم واحد",
+    "expiresOn_two": "ينتهي {{date}} · يومان",
+    "expiresOn_few": "ينتهي {{date}} · {{count}} أيام",
+    "expiresOn_many": "ينتهي {{date}} · {{count}} يومًا"
   },
   "notifications": {
     "title": "الإشعارات",
@@ -2614,7 +2622,7 @@
       "vat": "لا {{tax}} هذا الشهر. تُسجّل {{tax}} عندما يكون الفرع مسجلًا فيها (إعدادات الفرع).",
       "noShows": "لا حالات عدم حضور هذا الشهر."
     },
-    "daysLate": "{{days}} يوم · {{late}} تأخير",
+    "daysLate": "{{count}} يوم · {{late}} تأخير",
     "print": "طباعة",
     "printPdf": "طباعة / PDF",
     "pdf": "مشاركة PDF",
@@ -2644,7 +2652,11 @@
       "applied": "استُخدم في الفاتورة",
       "forfeited": "محتفظ به",
       "refunded": "أُعيد"
-    }
+    },
+    "daysLate_one": "يوم واحد · {{late}} تأخير",
+    "daysLate_two": "يومان · {{late}} تأخير",
+    "daysLate_few": "{{count}} أيام · {{late}} تأخير",
+    "daysLate_many": "{{count}} يومًا · {{late}} تأخير"
   },
   "backup": {
     "title": "النسخ الاحتياطي والاستعادة",

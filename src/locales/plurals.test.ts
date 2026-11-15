@@ -42,3 +42,19 @@ it('Arabic counts use the form each number takes (owner’s fix list #10)', asyn
   );
   expect(await sayAr('plan.requested', { count: 12, date: '1 Nov' })).toMatch(/^طلبت 12 شهرًا/);
 });
+
+it('staff sales, opening stock and document expiry count one as one (owner’s app check E4)', async () => {
+  expect(await say('en', 'reports.daysLate', { count: 1, late: 1 })).toBe('1 day · 1 late');
+  expect(await say('en', 'reports.daysLate', { count: 22, late: 0 })).toBe('22 days · 0 late');
+  expect(await say('en', 'inventory.opening.saved', { count: 1 })).toBe('Opening stock saved for 1 item');
+  expect(await say('en', 'inventory.opening.saved', { count: 4 })).toBe('Opening stock saved for 4 items');
+  expect(await say('en', 'compliance.expiresOn', { count: 1, date: '5 Oct 2026' })).toBe('Expires 5 Oct 2026 · 1 day');
+  expect(await say('fr', 'reports.daysLate', { count: 1, late: 0 })).toBe('1 jour · 0 en retard');
+  const sayAr = async (key: string, values: Record<string, unknown>) =>
+    (await say('ar', key, values)).replace(/[⁦-⁩]/g, '');
+  expect(await sayAr('reports.daysLate', { count: 1, late: 0 })).toBe('يوم واحد · 0 تأخير');
+  expect(await sayAr('reports.daysLate', { count: 2, late: 0 })).toBe('يومان · 0 تأخير');
+  expect(await sayAr('reports.daysLate', { count: 5, late: 1 })).toBe('5 أيام · 1 تأخير');
+  expect(await sayAr('reports.daysLate', { count: 22, late: 1 })).toBe('22 يومًا · 1 تأخير');
+  expect(await sayAr('inventory.opening.saved', { count: 2 })).toBe('حُفظ المخزون الافتتاحي لصنفين');
+});

@@ -1940,7 +1940,8 @@
       "qty": "Quantity ({{unit}})",
       "cost": "Cost each",
       "save": "Save opening stock · {{value}}",
-      "saved": "Opening stock saved for {{n}} item(s)"
+      "saved": "Opening stock saved for {{count}} items",
+      "saved_one": "Opening stock saved for {{count}} item"
     },
     "outCount": "Out of stock: {{n}}",
     "lowShort": "Low stock: {{n}}",
@@ -2250,7 +2251,7 @@
     "salon": "Salon",
     "staff": "Staff",
     "noNumber": "No number yet",
-    "expiresOn": "Expires {{date}} · {{n}} days",
+    "expiresOn": "Expires {{date}} · {{count}} days",
     "expiredOn": "Expired {{date}}",
     "noDocument": "Nothing recorded yet. Add the number, dates and a scan.",
     "addDetails": "Add details",
@@ -2327,7 +2328,8 @@
     "removedLine": "Deleted {{date}}",
     "restore": "Put back",
     "restored": "Back on the register",
-    "actionsFor": "Actions for {{name}}"
+    "actionsFor": "Actions for {{name}}",
+    "expiresOn_one": "Expires {{date}} · {{count}} day"
   },
   "notifications": {
     "title": "Notifications",
@@ -2557,7 +2559,7 @@
       "vat": "No {{tax}} this month. {{tax}} is recorded when the branch is registered for it (Branch settings).",
       "noShows": "No no-shows this month."
     },
-    "daysLate": "{{days}} days · {{late}} late",
+    "daysLate": "{{count}} days · {{late}} late",
     "print": "Print",
     "printPdf": "Print / PDF",
     "pdf": "Share PDF",
@@ -2587,7 +2589,8 @@
       "applied": "Used for the bill",
       "forfeited": "Kept",
       "refunded": "Given back"
-    }
+    },
+    "daysLate_one": "{{count}} day · {{late}} late"
   },
   "backup": {
     "title": "Backup & recovery",

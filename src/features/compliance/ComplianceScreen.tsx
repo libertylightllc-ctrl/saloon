@@ -89,7 +89,7 @@ function Register() {
               ...(s.expires_on
                 ? [s.days_left !== null && s.days_left < 0
                     ? t('compliance.expiredOn', { date: dates.day(s.expires_on, 'd MMM yyyy') })
-                    : t('compliance.expiresOn', { date: dates.day(s.expires_on, 'd MMM yyyy'), n: s.days_left })]
+                    : t('compliance.expiresOn', { date: dates.day(s.expires_on, 'd MMM yyyy'), count: s.days_left ?? 0 })]
                 : []),
             ]}
             badges={<StatusPill status={DOC_STATUS[s.status]} label={t(`compliance.status.${s.status}`)} />}

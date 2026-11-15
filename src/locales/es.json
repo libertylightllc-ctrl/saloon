@@ -1940,7 +1940,8 @@
       "qty": "Cantidad ({{unit}})",
       "cost": "Costo unitario",
       "save": "Guardar stock inicial · {{value}}",
-      "saved": "Stock inicial guardado para {{n}} artículo(s)"
+      "saved": "Stock inicial guardado para {{count}} artículos",
+      "saved_one": "Stock inicial guardado para {{count}} artículo"
     },
     "outCount": "Sin stock: {{n}}",
     "lowShort": "Poco stock: {{n}}",
@@ -2250,7 +2251,7 @@
     "salon": "Salón",
     "staff": "Personal",
     "noNumber": "Aún sin número",
-    "expiresOn": "Vence el {{date}} · {{n}} días",
+    "expiresOn": "Vence el {{date}} · {{count}} días",
     "expiredOn": "Venció el {{date}}",
     "noDocument": "Aún no hay nada registrado. Agrega el número, las fechas y un escaneo.",
     "addDetails": "Agregar datos",
@@ -2327,7 +2328,8 @@
     "removedLine": "Eliminado el {{date}}",
     "restore": "Recuperar",
     "restored": "De vuelta en el registro",
-    "actionsFor": "Acciones para {{name}}"
+    "actionsFor": "Acciones para {{name}}",
+    "expiresOn_one": "Vence el {{date}} · {{count}} día"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -2557,7 +2559,7 @@
       "vat": "No hay {{tax}} este mes. El {{tax}} se registra cuando la sucursal está registrada para ese impuesto (Ajustes de la sucursal).",
       "noShows": "No hubo ausencias este mes."
     },
-    "daysLate": "{{days}} días · {{late}} con retraso",
+    "daysLate": "{{count}} días · {{late}} con retraso",
     "print": "Imprimir",
     "printPdf": "Imprimir / PDF",
     "pdf": "Compartir PDF",
@@ -2587,7 +2589,8 @@
       "applied": "Usado en la cuenta",
       "forfeited": "Retenido",
       "refunded": "Devuelto"
-    }
+    },
+    "daysLate_one": "{{count}} día · {{late}} con retraso"
   },
   "backup": {
     "title": "Copia de seguridad y recuperación",

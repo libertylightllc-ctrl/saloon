@@ -1940,7 +1940,8 @@
       "qty": "Quantidade ({{unit}})",
       "cost": "Custo unitário",
       "save": "Salvar estoque inicial · {{value}}",
-      "saved": "Estoque inicial salvo para {{n}} item(ns)"
+      "saved": "Estoque inicial salvo para {{count}} itens",
+      "saved_one": "Estoque inicial salvo para {{count}} item"
     },
     "outCount": "Sem estoque: {{n}}",
     "lowShort": "Estoque baixo: {{n}}",
@@ -2250,7 +2251,7 @@
     "salon": "Salão",
     "staff": "Equipe",
     "noNumber": "Sem número ainda",
-    "expiresOn": "Vence em {{date}} · {{n}} dias",
+    "expiresOn": "Vence em {{date}} · {{count}} dias",
     "expiredOn": "Venceu em {{date}}",
     "noDocument": "Nada registrado ainda. Adicione o número, as datas e uma cópia digitalizada.",
     "addDetails": "Adicionar detalhes",
@@ -2327,7 +2328,8 @@
     "removedLine": "Excluído em {{date}}",
     "restore": "Restaurar",
     "restored": "De volta à lista",
-    "actionsFor": "Ações para {{name}}"
+    "actionsFor": "Ações para {{name}}",
+    "expiresOn_one": "Vence em {{date}} · {{count}} dia"
   },
   "notifications": {
     "title": "Notificações",
@@ -2557,7 +2559,7 @@
       "vat": "Nenhum {{tax}} neste mês. O {{tax}} é registrado quando a filial é contribuinte (Configurações da filial).",
       "noShows": "Nenhuma falta neste mês."
     },
-    "daysLate": "{{days}} dias · {{late}} com atraso",
+    "daysLate": "{{count}} dias · {{late}} com atraso",
     "print": "Imprimir",
     "printPdf": "Imprimir / PDF",
     "pdf": "Compartilhar PDF",
@@ -2587,7 +2589,8 @@
       "applied": "Usado na conta",
       "forfeited": "Retido",
       "refunded": "Devolvido"
-    }
+    },
+    "daysLate_one": "{{count}} dia · {{late}} com atraso"
   },
   "backup": {
     "title": "Backup e recuperação",

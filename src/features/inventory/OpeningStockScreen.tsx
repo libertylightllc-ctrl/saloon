@@ -49,7 +49,7 @@ export function OpeningStockScreen() {
                 { items: lines.map((l) => ({ item_id: l.item_id, qty: l.qty, unit_cost_minor: l.unit_cost_minor! })) },
                 {
                   onSuccess: () => {
-                    toast(t('inventory.opening.saved', { n: lines.length }));
+                    toast(t('inventory.opening.saved', { count: lines.length }));
                     router.back();
                   },
                 },
