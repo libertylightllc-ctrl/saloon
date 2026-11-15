@@ -3290,3 +3290,5 @@ home.attention.missedClockOuts_few,,{{count}} تسجيلات خروج فائتة
 home.attention.missedClockOuts_many,,{{count}} تسجيل خروج فائتًا,,,,,,
 home.attention.missedClockOutsSub,Set the time each person left,حدّد وقت مغادرة كل شخص,हर व्यक्ति के जाने का समय डालें,ہر شخص کے جانے کا وقت درج کریں,Indica a qué hora se fue cada persona,Indiquez l'heure de départ de chacun,Informe a hora em que cada pessoa saiu,
 home.attentionActions.fix,Fix,تصحيح,ठीक करें,درست کریں,Corregir,Corriger,Corrigir,
+common.todayAt,Today · {{time}},اليوم · {{time}},आज · {{time}},آج · {{time}},Hoy · {{time}},Aujourd'hui · {{time}},Hoje · {{time}},
+common.yesterdayAt,Yesterday · {{time}},أمس · {{time}},कल · {{time}},کل · {{time}},Ayer · {{time}},Hier · {{time}},Ontem · {{time}},

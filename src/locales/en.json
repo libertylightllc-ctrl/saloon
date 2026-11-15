@@ -38,7 +38,9 @@
     "durationH_one": "{{count}} h",
     "durationM": "{{count}} min",
     "durationM_one": "{{count}} min",
-    "durationHm": "{{hours}} {{minutes}}"
+    "durationHm": "{{hours}} {{minutes}}",
+    "todayAt": "Today · {{time}}",
+    "yesterdayAt": "Yesterday · {{time}}"
   },
   "status": {
     "booked": "Booked",

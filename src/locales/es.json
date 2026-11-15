@@ -38,7 +38,9 @@
     "durationH_one": "{{count}} h",
     "durationM": "{{count}} min",
     "durationM_one": "{{count}} min",
-    "durationHm": "{{hours}} {{minutes}}"
+    "durationHm": "{{hours}} {{minutes}}",
+    "todayAt": "Hoy · {{time}}",
+    "yesterdayAt": "Ayer · {{time}}"
   },
   "status": {
     "booked": "Reservado",

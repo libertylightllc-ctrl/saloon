@@ -38,7 +38,9 @@
     "durationH_one": "{{count}} घंटा",
     "durationM": "{{count}} मिनट",
     "durationM_one": "{{count}} मिनट",
-    "durationHm": "{{hours}} {{minutes}}"
+    "durationHm": "{{hours}} {{minutes}}",
+    "todayAt": "आज · {{time}}",
+    "yesterdayAt": "कल · {{time}}"
   },
   "status": {
     "booked": "बुक",

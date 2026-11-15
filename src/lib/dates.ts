@@ -49,6 +49,18 @@ export function businessDate(at: Date = new Date(), timeZone = DEFAULT_TIMEZONE)
   return formatInTimeZone(at, timeZone, 'yyyy-MM-dd');
 }
 
+/**
+ * Which day a moment falls on, seen from `now` in the branch's time zone (owner's app check E2): today, yesterday, an
+ * earlier day this year, or another year.
+ */
+export function dayOf(at: Date | string | number, timeZone: string, now: Date = new Date()): 'today' | 'yesterday' | 'thisYear' | 'older' {
+  const day = businessDate(new Date(at), timeZone);
+  const today = businessDate(now, timeZone);
+  if (day === today) return 'today';
+  if (day === shiftBusinessDate(today, -1)) return 'yesterday';
+  return day.slice(0, 4) === today.slice(0, 4) ? 'thisYear' : 'older';
+}
+
 /** Calendar arithmetic on business dates (no timezone involved). */
 export function shiftBusinessDate(date: BusinessDate, days: number): BusinessDate {
   const [y, m, d] = parts(date);

@@ -15,6 +15,8 @@ test('owner sees how the numbers are made up, the journal, a balanced trial bala
   await ownerOn(page, mode, owner.email, owner.password);
   await expectMoney(page, 'kpi-expected-cash-value', expectedCash);
   await expect(text(page, 'View audit trail')).toBeVisible();
+  // Recent activity says which day (E2): everything here happened today.
+  await expect(idStarts(page, 'activity-row').first()).toContainText('Today · ');
   await tab(page, 'more');
   await id(page, 'more-accounts').click();
 
@@ -48,6 +50,8 @@ test('owner sees how the numbers are made up, the journal, a balanced trial bala
   // History: who did what, and who signed in.
   await id(page, 'accounts-tab-history').click();
   await expect(idStarts(page, 'history-row').filter({ hasText: `Saved sale #${cashSale.number}` })).toBeVisible();
+  // When (owner's app check E2): "Today · <time>", "Yesterday · <time>" or the date.
+  await expect(idStarts(page, 'history-row').filter({ hasText: `Saved sale #${cashSale.number}` })).toContainText('Today · ');
   await id(page, 'history-kind-signins').click();
   await expect(idStarts(page, 'signin-row').filter({ hasText: owner.name }).first()).toBeVisible();
   await snap(page, 'accounts-history', mode);

@@ -207,13 +207,13 @@ export function RecentActivity({ data }: { data: Dashboard }) {
         onAction={can(role, 'viewAccounting') ? () => router.push({ pathname: '/accounts', params: { tab: 'history' } }) : undefined}
       />
       {items.map((item, i) => (
-        <View key={`${item.at}-${i}`} style={styles.activity}>
+        <View key={`${item.at}-${i}`} style={styles.activity} testID="activity-row">
           <Avatar name={item.actor ?? '—'} size={32} />
           <Text variant="small" style={styles.flex}>
             {item.actor ? `${item.actor}: ${item.summary}` : item.summary}
           </Text>
           <Text variant="small" color="textSecondary" tabular>
-            {dates.at(new Date(item.at), business.timezone, 'HH:mm')}
+            {dates.when(item.at, business.timezone)}
           </Text>
         </View>
       ))}

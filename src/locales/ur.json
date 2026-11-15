@@ -38,7 +38,9 @@
     "durationH_one": "{{count}} گھنٹہ",
     "durationM": "{{count}} منٹ",
     "durationM_one": "{{count}} منٹ",
-    "durationHm": "{{hours}} {{minutes}}"
+    "durationHm": "{{hours}} {{minutes}}",
+    "todayAt": "آج · {{time}}",
+    "yesterdayAt": "کل · {{time}}"
   },
   "status": {
     "booked": "بک شدہ",

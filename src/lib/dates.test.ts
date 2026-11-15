@@ -3,6 +3,7 @@ import {
   businessDate,
   businessDayBounds,
   businessMonth,
+  dayOf,
   formatDayLabel,
   isBusinessDate,
   minutesBetween,
@@ -52,6 +53,20 @@ describe('atBusinessTime', () => {
   it('rejects bad input', () => {
     expect(() => atBusinessTime('2026-09-22', '25:00')).toThrow(RangeError);
     expect(() => atBusinessTime('2026-02-30', '10:00')).toThrow(RangeError);
+  });
+});
+
+describe('dayOf (owner\'s app check E2)', () => {
+  // 15 Nov 2026, 00:30 in Dubai (20:30 UTC the day before).
+  const now = new Date('2026-11-14T20:30:00Z');
+  it('counts days in the branch time zone, not UTC', () => {
+    expect(dayOf('2026-11-14T20:05:00Z', 'Asia/Dubai', now)).toBe('today'); // 00:05 on 15 Nov in Dubai
+    expect(dayOf('2026-11-14T19:55:00Z', 'Asia/Dubai', now)).toBe('yesterday'); // 23:55 on 14 Nov
+    expect(dayOf('2026-10-31T11:56:00Z', 'Asia/Dubai', now)).toBe('thisYear');
+    expect(dayOf('2025-12-31T11:56:00Z', 'Asia/Dubai', now)).toBe('older');
+  });
+  it('yesterday across a new year', () => {
+    expect(dayOf('2026-12-31T12:00:00Z', 'Asia/Dubai', new Date('2027-01-01T08:00:00Z'))).toBe('yesterday');
   });
 });
 

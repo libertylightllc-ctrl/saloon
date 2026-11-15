@@ -19,7 +19,7 @@ export function HistoryTab() {
   const [kind, setKind] = useState<Kind>('activity');
   const activity = useActivityHistory(business.id);
   const signIns = useSignIns(business.id);
-  const when = (iso: string) => dates.at(iso, business.timezone, 'd MMM · HH:mm');
+  const when = (iso: string) => dates.when(iso, business.timezone);
 
   return (
     <View style={styles.body}>

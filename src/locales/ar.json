@@ -38,7 +38,9 @@
     "durationH_one": "{{count}} س",
     "durationM": "{{count}} د",
     "durationM_one": "{{count}} د",
-    "durationHm": "{{hours}} {{minutes}}"
+    "durationHm": "{{hours}} {{minutes}}",
+    "todayAt": "اليوم · {{time}}",
+    "yesterdayAt": "أمس · {{time}}"
   },
   "status": {
     "booked": "محجوز",
