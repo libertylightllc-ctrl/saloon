@@ -12,7 +12,8 @@ import { Button, Card, EmptyState, FormError, HeaderBand, ListRow, MonthSwitcher
 
 import { useApprovePayroll, useGeneratePayroll, usePayrollChanges, usePayrollRun, type Payslip, type RunStatus } from './api';
 import { PayrollChangesNote } from './PayrollChanges';
-import { PayslipSheet, SlipRow } from './PayslipSheet';
+import { PayslipSheet } from './PayslipSheet';
+import { SlipRow } from './SlipBreakdown';
 
 const RUN_STATUS: Record<RunStatus, StatusKey> = { generated: 'pending_approval', approved: 'due_soon', paid: 'paid' };
 
@@ -160,6 +161,7 @@ export function PayrollScreen() {
       </Screen>
       <PayslipSheet
         slip={open ? (run.data?.payroll_lines.find((l) => l.id === open.id) ?? open) : null}
+        period={month}
         status={run.data?.status ?? 'generated'}
         onClose={() => setOpen(null)}
       />

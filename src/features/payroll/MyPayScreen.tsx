@@ -10,10 +10,10 @@ import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { BottomSheet, EmptyState, HeaderBand, KpiCard, KpiGrid, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
-import { useMyPay, type Payslip } from './api';
-import { SlipBreakdown } from './PayslipSheet';
+import { useMyPay, usePayExtras, type Payslip } from './api';
+import { PayslipFull } from './PayslipFull';
 
-/** Staff: my commission this month, my advances, bonuses and deductions, and my payslips. */
+/** Staff: my commission and tips this month, my advances, bonuses and deductions, and my payslips. */
 export function MyPayScreen() {
   const { t } = useTranslation();
   const dates = useDates();
@@ -22,6 +22,7 @@ export function MyPayScreen() {
   const dashboard = useDashboard(branch.id);
   const [open, setOpen] = useState<Payslip | null>(null);
   const month = businessMonth(new Date(), business.timezone);
+  const extras = usePayExtras(employeeId, month);
 
   return (
     <>
@@ -31,6 +32,7 @@ export function MyPayScreen() {
         onRefresh={() => {
           void pay.refetch();
           void dashboard.refetch();
+          void extras.refetch();
         }}
         header={<HeaderBand title={t('myPay.title')} subtitle={t('myPay.subtitle')} />}
       >
@@ -43,6 +45,7 @@ export function MyPayScreen() {
                 <KpiGrid>
                   <KpiCard icon="coins" label={t('myPay.commission')} value={formatMoney(dashboard.data?.me?.commission_month_minor ?? 0)} testID="mypay-commission" />
                   <KpiCard icon="wallet" label={t('myPay.advances')} value={formatMoney(total('advance'))} testID="mypay-advances" />
+                  <KpiCard icon="handCoins" label={t('myPay.tips')} value={formatMoney(extras.data?.tips_minor ?? 0)} testID="mypay-tips" />
                 </KpiGrid>
                 {thisMonth.length ? (
                   <View style={styles.block}>
@@ -84,7 +87,7 @@ export function MyPayScreen() {
         </QueryState>
       </Screen>
       <BottomSheet open={open !== null} onClose={() => setOpen(null)} title={open?.payroll_runs ? dates.day(`${open.payroll_runs.period}-01`, 'MMMM yyyy') : ''}>
-        {open ? <SlipBreakdown slip={open} /> : null}
+        {open ? <PayslipFull slip={open} /> : null}
       </BottomSheet>
     </>
   );

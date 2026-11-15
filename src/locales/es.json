@@ -2135,7 +2135,6 @@
     "slipMeta": "Base {{base}} · Comisión {{commission}}",
     "paid": "Pagado",
     "unpaid": "Por pagar",
-    "paidBy": "Pagado con {{method}}",
     "nothingToPay": "Nada que pagar",
     "payBy": {
       "cash": "Pagar {{amount}} en efectivo",
@@ -2171,16 +2170,37 @@
     "days": "Días: {{days}} de {{total}}",
     "metaBonus": "Bono {{amount}}",
     "metaDeductions": "Deducciones −{{amount}}",
-    "metaAdvances": "Adelantos −{{amount}}"
+    "metaAdvances": "Adelantos −{{amount}}",
+    "slip": {
+      "title": "Recibo de sueldo",
+      "name": "Nombre",
+      "staffId": "N.º de empleado",
+      "job": "Puesto",
+      "month": "Mes",
+      "daysEmployed": "Días contratado",
+      "daysOf": "{{days}} de {{total}}",
+      "attendance": "Asistencia",
+      "attendanceValue": "Días trabajados: {{worked}} · Tarde: {{late}}",
+      "status": "Estado",
+      "toPay": "Por pagar",
+      "notApproved": "Aún sin aprobar",
+      "paidOn": "Pagado el {{date}} · {{method}}",
+      "tips": "Propinas de este mes",
+      "tipsNote": "Las propinas se pagan aparte, no con el sueldo.",
+      "download": "Descargar PDF",
+      "paidOnPick": "Día del pago",
+      "cashToday": "Para una transferencia, elige el día en que salió. El efectivo se paga hoy, de la caja."
+    }
   },
   "myPay": {
     "title": "Mi pago",
-    "subtitle": "Comisiones, adelantos y recibos de sueldo",
+    "subtitle": "Comisiones, propinas, adelantos y recibos de sueldo",
     "commission": "Comisión de este mes",
     "advances": "Adelantos de este mes",
     "thisMonth": "Este mes",
     "payslips": "Recibos de sueldo",
-    "noPayslips": "Tus recibos de sueldo aparecen aquí cuando el dueño aprueba un mes."
+    "noPayslips": "Tus recibos de sueldo aparecen aquí cuando el dueño aprueba un mes.",
+    "tips": "Propinas de este mes"
   },
   "compliance": {
     "title": "Cumplimiento",

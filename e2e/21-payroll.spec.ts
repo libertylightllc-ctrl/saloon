@@ -1,10 +1,10 @@
-/** Payroll: an advance and a bonus → work out the month → approve → the barber sees the payslip → pay by bank
- * → WPS proof; the books balance; a cashier never reaches payroll. */
+/** Payroll: an advance and a bonus → work out the month → approve → the barber sees the whole payslip (C2) and its
+ * PDF → pay by bank on the day it went out → WPS proof; the books balance; a cashier never reaches payroll. */
 import path from 'path';
 
 import { createOwner, createStaff, dubaiDate, employeeOf, sellCustom } from './support/api';
 import { expect, test } from './support/fixtures';
-import { back, expectMoney, id, ownerOn, staffOn, tab, text } from './support/ui';
+import { back, expectMoney, id, ownerOn, printedText, staffOn, tab, text } from './support/ui';
 
 test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; the barber sees the payslip', async ({ page, mode, device }) => {
   const owner = await createOwner(mode, { openingCash: 100_000 });
@@ -16,7 +16,8 @@ test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; t
       // On the staff since the month began, so the whole salary is due (C1 pays by days employed).
       started_on: `${dubaiDate().slice(0, 7)}-01` },
   });
-  await sellCustom(owner.client, owner, { card: 10_000, employeeId: employee }); // AED 10.00 commission
+  // AED 10.00 commission on the service; the AED 5.00 tip is the barber's, outside the salary.
+  await sellCustom(owner.client, owner, { card: 10_500, tip: 500, employeeId: employee });
 
   await ownerOn(page, mode, owner.email, owner.password);
   await tab(page, 'more');
@@ -53,13 +54,32 @@ test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; t
   const slip = phone.locator('[data-testid^="mypay-slip-"]').filter({ visible: true }).first();
   await expect(slip).toContainText('3,210.00');
   await expect(slip).toContainText('To pay');
+  await expectMoney(phone, 'mypay-tips-value', 500);
+  // The whole payslip (C2): who, which month, the days, the tips kept, and a PDF.
+  await slip.click();
+  await expect(id(phone, 'slip-name')).toHaveText(barber.name);
+  await expect(id(phone, 'slip-days')).toHaveText(/^(\d+) of \1$/); // there all month
+  await expect(id(phone, 'slip-status')).toHaveText('To pay');
+  await expectMoney(phone, 'slip-tips', 500);
+  await expectMoney(phone, 'slip-advances', -50_000);
+  await id(phone, 'slip-pdf').click();
+  await expect.poll(() => printedText(phone)).toContain('Payslip');
+  const pdf = await printedText(phone);
+  expect(pdf).toContain(barber.name);
+  expect(pdf).toContain('3,210.00');
 
-  // Pay by bank, then the WPS proof.
+  // Pay by bank on the day it went out (yesterday, when that is still this month), then the WPS proof.
   await id(page, `slip-${barber.name}`).click();
   await expectMoney(page, 'slip-net', 321_000);
+  await expect(id(page, 'slip-status')).toHaveText('To pay');
+  const paidOn = dubaiDate(-1).slice(0, 7) === dubaiDate().slice(0, 7) ? dubaiDate(-1) : dubaiDate();
+  if (paidOn !== dubaiDate()) await id(page, `date-${paidOn}`).click();
   await id(page, 'slip-pay-bank').click();
   await expect(text(page, `${barber.name} paid`)).toBeVisible();
   await id(page, `slip-${barber.name}`).click();
+  await expect(id(page, 'slip-status')).toHaveText(
+    new RegExp(`^Paid on ${Number(paidOn.slice(8))} \\S+ ${paidOn.slice(0, 4)} · Bank transfer$`),
+  );
   const chooser = page.waitForEvent('filechooser');
   await id(page, 'receipt-choose').click();
   await (await chooser).setFiles(path.join(__dirname, 'fixtures', 'receipt.jpg'));

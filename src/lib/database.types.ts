@@ -2284,6 +2284,7 @@ export type Database = {
           paid_at: string | null;
           paid_by: string | null;
           paid_method: Database['public']['Enums']['payment_method'] | null;
+          paid_on: string | null;
           run_id: string;
           wps_evidence_path: string | null;
           wps_status: string;
@@ -2304,6 +2305,7 @@ export type Database = {
           paid_at?: string | null;
           paid_by?: string | null;
           paid_method?: Database['public']['Enums']['payment_method'] | null;
+          paid_on?: string | null;
           run_id: string;
           wps_evidence_path?: string | null;
           wps_status?: string;
@@ -2324,6 +2326,7 @@ export type Database = {
           paid_at?: string | null;
           paid_by?: string | null;
           paid_method?: Database['public']['Enums']['payment_method'] | null;
+          paid_on?: string | null;
           run_id?: string;
           wps_evidence_path?: string | null;
           wps_status?: string;
@@ -4671,6 +4674,7 @@ export type Database = {
           status: Database['public']['Enums']['appointment_status'];
         }[];
       };
+      can_see_pay: { Args: { p_employee: string }; Returns: boolean };
       can_use_branch: { Args: { p_branch: string }; Returns: boolean };
       cancel_appointment: {
         Args: { p_approval?: string; p_id: string; p_reason: string; p_refund_deposit?: boolean };
@@ -5031,7 +5035,11 @@ export type Database = {
         Args: { p_method: Database['public']['Enums']['payment_method'] };
         Returns: string;
       };
-      pay_payroll_line: { Args: { p_line: string; p_method: string }; Returns: undefined };
+      pay_extras: { Args: { p_employee: string; p_period: string }; Returns: Json };
+      pay_payroll_line: {
+        Args: { p_line: string; p_method: string; p_paid_on?: string };
+        Returns: undefined;
+      };
       pay_supplier: { Args: { p: Json }; Returns: Json };
       pay_tips: { Args: { p: Json }; Returns: Json };
       payroll_changes: { Args: { p_run: string }; Returns: Json };
@@ -5052,6 +5060,7 @@ export type Database = {
         }[];
       };
       payroll_stale: { Args: { p_run: string }; Returns: boolean };
+      payslip_details: { Args: { p_line: string }; Returns: Json };
       period_list: {
         Args: { p_business: string };
         Returns: {

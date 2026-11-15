@@ -2135,7 +2135,6 @@
     "slipMeta": "بنیادی {{base}} · کمیشن {{commission}}",
     "paid": "ادا",
     "unpaid": "ادائیگی باقی",
-    "paidBy": "{{method}} سے ادا",
     "nothingToPay": "ادائیگی کچھ نہیں",
     "payBy": {
       "cash": "{{amount}} نقد دیں",
@@ -2171,16 +2170,37 @@
     "days": "دن: {{total}} میں سے {{days}}",
     "metaBonus": "بونس {{amount}}",
     "metaDeductions": "کٹوتی −{{amount}}",
-    "metaAdvances": "ایڈوانس −{{amount}}"
+    "metaAdvances": "ایڈوانس −{{amount}}",
+    "slip": {
+      "title": "پے سلپ",
+      "name": "نام",
+      "staffId": "اسٹاف آئی ڈی",
+      "job": "عہدہ",
+      "month": "مہینہ",
+      "daysEmployed": "ملازمت کے دن",
+      "daysOf": "{{total}} میں سے {{days}}",
+      "attendance": "حاضری",
+      "attendanceValue": "کام کے دن: {{worked}} · تاخیر: {{late}}",
+      "status": "حالت",
+      "toPay": "ادائیگی باقی",
+      "notApproved": "ابھی منظور نہیں",
+      "paidOn": "{{date}} کو ادا · {{method}}",
+      "tips": "اس مہینے کی ٹپ",
+      "tipsNote": "ٹپ الگ سے دی جاتی ہے، تنخواہ کے ساتھ نہیں۔",
+      "download": "PDF ڈاؤن لوڈ کریں",
+      "paidOnPick": "ادائیگی کا دن",
+      "cashToday": "بینک ٹرانسفر کے لیے وہ دن چنیں جب رقم بھیجی گئی۔ نقد آج دراز سے دیا جاتا ہے۔"
+    }
   },
   "myPay": {
     "title": "میری تنخواہ",
-    "subtitle": "کمیشن، ایڈوانس اور پے سلپ",
+    "subtitle": "کمیشن، ٹپ، ایڈوانس اور پے سلپ",
     "commission": "اس مہینے کا کمیشن",
     "advances": "اس مہینے کے ایڈوانس",
     "thisMonth": "یہ مہینہ",
     "payslips": "پے سلپ",
-    "noPayslips": "مالک کے مہینہ منظور کرنے پر پے سلپ یہاں دکھیں گی۔"
+    "noPayslips": "مالک کے مہینہ منظور کرنے پر پے سلپ یہاں دکھیں گی۔",
+    "tips": "اس مہینے کی ٹپ"
   },
   "compliance": {
     "title": "تعمیل",

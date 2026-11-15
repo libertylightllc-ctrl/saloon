@@ -2135,7 +2135,6 @@
     "slipMeta": "Base {{base}} · Commission {{commission}}",
     "paid": "Paid",
     "unpaid": "To pay",
-    "paidBy": "Paid by {{method}}",
     "nothingToPay": "Nothing to pay",
     "payBy": {
       "cash": "Pay {{amount}} in cash",
@@ -2171,16 +2170,37 @@
     "days": "Days: {{days}} of {{total}}",
     "metaBonus": "Bonus {{amount}}",
     "metaDeductions": "Deductions −{{amount}}",
-    "metaAdvances": "Advances −{{amount}}"
+    "metaAdvances": "Advances −{{amount}}",
+    "slip": {
+      "title": "Payslip",
+      "name": "Name",
+      "staffId": "Staff ID",
+      "job": "Job",
+      "month": "Month",
+      "daysEmployed": "Days employed",
+      "daysOf": "{{days}} of {{total}}",
+      "attendance": "Attendance",
+      "attendanceValue": "Days worked: {{worked}} · Late: {{late}}",
+      "status": "Status",
+      "toPay": "To pay",
+      "notApproved": "Not approved yet",
+      "paidOn": "Paid on {{date}} · {{method}}",
+      "tips": "Tips this month",
+      "tipsNote": "Tips are paid out separately, not with the salary.",
+      "download": "Download PDF",
+      "paidOnPick": "Day it was paid",
+      "cashToday": "For a bank transfer, pick the day it went out. Cash is paid today, from the drawer."
+    }
   },
   "myPay": {
     "title": "My pay",
-    "subtitle": "Commission, advances and payslips",
+    "subtitle": "Commission, tips, advances and payslips",
     "commission": "Commission this month",
     "advances": "Advances this month",
     "thisMonth": "This month",
     "payslips": "Payslips",
-    "noPayslips": "Your payslips appear here once the owner approves a month."
+    "noPayslips": "Your payslips appear here once the owner approves a month.",
+    "tips": "Tips this month"
   },
   "compliance": {
     "title": "Compliance",

@@ -2135,7 +2135,6 @@
     "slipMeta": "मूल {{base}} · कमीशन {{commission}}",
     "paid": "भुगतान हुआ",
     "unpaid": "भुगतान बाकी",
-    "paidBy": "{{method}} से भुगतान",
     "nothingToPay": "भुगतान कुछ नहीं",
     "payBy": {
       "cash": "{{amount}} नकद दें",
@@ -2171,16 +2170,37 @@
     "days": "दिन: {{total}} में से {{days}}",
     "metaBonus": "बोनस {{amount}}",
     "metaDeductions": "कटौती −{{amount}}",
-    "metaAdvances": "एडवांस −{{amount}}"
+    "metaAdvances": "एडवांस −{{amount}}",
+    "slip": {
+      "title": "पे-स्लिप",
+      "name": "नाम",
+      "staffId": "स्टाफ़ आईडी",
+      "job": "पद",
+      "month": "महीना",
+      "daysEmployed": "नौकरी के दिन",
+      "daysOf": "{{total}} में से {{days}}",
+      "attendance": "हाज़िरी",
+      "attendanceValue": "काम के दिन: {{worked}} · देर: {{late}}",
+      "status": "स्थिति",
+      "toPay": "भुगतान बाकी",
+      "notApproved": "अभी मंज़ूर नहीं",
+      "paidOn": "{{date}} को भुगतान · {{method}}",
+      "tips": "इस महीने की टिप",
+      "tipsNote": "टिप अलग से दी जाती है, तनख़्वाह के साथ नहीं।",
+      "download": "PDF डाउनलोड करें",
+      "paidOnPick": "भुगतान का दिन",
+      "cashToday": "बैंक ट्रांसफ़र के लिए वह दिन चुनें जब पैसा भेजा गया। कैश आज ड्रॉअर से दिया जाता है।"
+    }
   },
   "myPay": {
     "title": "मेरा वेतन",
-    "subtitle": "कमीशन, एडवांस और पे-स्लिप",
+    "subtitle": "कमीशन, टिप, एडवांस और पे-स्लिप",
     "commission": "इस महीने का कमीशन",
     "advances": "इस महीने के एडवांस",
     "thisMonth": "यह महीना",
     "payslips": "पे-स्लिप",
-    "noPayslips": "मालिक के महीना मंज़ूर करने पर पे-स्लिप यहाँ दिखेंगी।"
+    "noPayslips": "मालिक के महीना मंज़ूर करने पर पे-स्लिप यहाँ दिखेंगी।",
+    "tips": "इस महीने की टिप"
   },
   "compliance": {
     "title": "अनुपालन",

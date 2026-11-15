@@ -2135,7 +2135,6 @@
     "slipMeta": "Base {{base}} · Comissão {{commission}}",
     "paid": "Pago",
     "unpaid": "A pagar",
-    "paidBy": "Pago com {{method}}",
     "nothingToPay": "Nada a pagar",
     "payBy": {
       "cash": "Pagar {{amount}} em dinheiro",
@@ -2171,16 +2170,37 @@
     "days": "Dias: {{days}} de {{total}}",
     "metaBonus": "Bônus {{amount}}",
     "metaDeductions": "Descontos −{{amount}}",
-    "metaAdvances": "Adiantamentos −{{amount}}"
+    "metaAdvances": "Adiantamentos −{{amount}}",
+    "slip": {
+      "title": "Holerite",
+      "name": "Nome",
+      "staffId": "Matrícula",
+      "job": "Cargo",
+      "month": "Mês",
+      "daysEmployed": "Dias de vínculo",
+      "daysOf": "{{days}} de {{total}}",
+      "attendance": "Frequência",
+      "attendanceValue": "Dias trabalhados: {{worked}} · Atrasos: {{late}}",
+      "status": "Situação",
+      "toPay": "A pagar",
+      "notApproved": "Ainda não aprovado",
+      "paidOn": "Pago em {{date}} · {{method}}",
+      "tips": "Gorjetas do mês",
+      "tipsNote": "As gorjetas são pagas à parte, não com o salário.",
+      "download": "Baixar PDF",
+      "paidOnPick": "Dia do pagamento",
+      "cashToday": "Para transferência, escolha o dia em que saiu. Dinheiro é pago hoje, do caixa."
+    }
   },
   "myPay": {
     "title": "Meus ganhos",
-    "subtitle": "Comissão, adiantamentos e holerites",
+    "subtitle": "Comissão, gorjetas, adiantamentos e holerites",
     "commission": "Comissão deste mês",
     "advances": "Adiantamentos deste mês",
     "thisMonth": "Este mês",
     "payslips": "Holerites",
-    "noPayslips": "Seus holerites aparecem aqui assim que o proprietário aprovar um mês."
+    "noPayslips": "Seus holerites aparecem aqui assim que o proprietário aprovar um mês.",
+    "tips": "Gorjetas do mês"
   },
   "compliance": {
     "title": "Conformidade",

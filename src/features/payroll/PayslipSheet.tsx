@@ -1,68 +1,61 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { PhotoButtons } from '@/features/moneyout/ReceiptPhoto';
+import { businessDate, shiftBusinessDate, type BusinessDate, type MonthKey } from '@/lib/dates';
 import { formatMoney } from '@/lib/money';
 import { can } from '@/lib/permissions';
-import { spacing, useTheme } from '@/theme';
-import { BottomSheet, Button, FormError, StatusPill, Text, useToast } from '@/ui';
+import { spacing } from '@/theme';
+import { BottomSheet, Button, DateStrip, FormError, StatusPill, Text, useToast } from '@/ui';
 
 import { useAttachWps, usePayLine, type Payslip, type RunStatus } from './api';
+import { PayslipFull } from './PayslipFull';
 
-export function SlipRow({ label, value, strong, testID }: { label: string; value: number; strong?: boolean; testID?: string }) {
-  return (
-    <View style={styles.row}>
-      <Text variant={strong ? 'bodyStrong' : 'body'} color={strong ? 'text' : 'textSecondary'} style={styles.flex}>
-        {label}
-      </Text>
-      <Text variant={strong ? 'h4' : 'bodyStrong'} tabular testID={testID}>
-        {formatMoney(value)}
-      </Text>
-    </View>
-  );
-}
-
-/** base + commission + bonus − deductions − advances = net. */
-export function SlipBreakdown({ slip }: { slip: Payslip }) {
-  const { t } = useTranslation();
-  const theme = useTheme();
-  return (
-    <View style={styles.block}>
-      {slip.days_employed !== null && slip.days_in_month !== null ? (
-        <Text variant="small" color="textSecondary" testID="slip-days">
-          {t('payroll.days', { days: slip.days_employed, total: slip.days_in_month })}
-        </Text>
-      ) : null}
-      <SlipRow label={t('payroll.base')} value={slip.base_minor} />
-      <SlipRow label={t('payroll.commission')} value={slip.commission_minor} testID="slip-commission" />
-      {slip.bonus_minor ? <SlipRow label={t('payroll.bonus')} value={slip.bonus_minor} /> : null}
-      {slip.deductions_minor ? <SlipRow label={t('payroll.deductions')} value={-slip.deductions_minor} /> : null}
-      {slip.advances_minor ? <SlipRow label={t('payroll.advances')} value={-slip.advances_minor} testID="slip-advances" /> : null}
-      <View style={[styles.rule, { backgroundColor: theme.colors.divider }]} />
-      <SlipRow label={t('payroll.net')} value={slip.net_minor} strong testID="slip-net" />
-    </View>
-  );
-}
-
-/** One payslip: the breakdown, and for the owner Pay (cash / bank) and the WPS transfer proof. */
-export function PayslipSheet({ slip, status, onClose }: { slip: Payslip | null; status: RunStatus; onClose: () => void }) {
+/**
+ * One payslip: the whole slip (PayslipFull), and for the owner Pay (cash today, or bank on the day it was paid) and the
+ * WPS transfer proof.
+ */
+export function PayslipSheet({
+  slip,
+  period,
+  status,
+  onClose,
+}: {
+  slip: Payslip | null;
+  period: MonthKey;
+  status: RunStatus;
+  onClose: () => void;
+}) {
   const { t } = useTranslation();
   const toast = useToast();
   const { business, branch, role } = useWorkspace();
   const pay = usePayLine(business.id, branch.id);
   const wps = useAttachWps(business.id, branch.id);
   const owner = can(role, 'runPayroll');
+  const today = businessDate(new Date(), business.timezone);
+  const [paidOn, setPaidOn] = useState<BusinessDate>(today);
+  // Bank transfers may have gone out on an earlier day: from the month's first day (at most 30 days back) to today.
+  const first = `${period}-01` > shiftBusinessDate(today, -30) ? `${period}-01` : shiftBusinessDate(today, -30);
+  const days: BusinessDate[] = [];
+  for (let d = first; d <= today; d = shiftBusinessDate(d, 1)) days.push(d);
   return (
     <BottomSheet open={slip !== null} onClose={onClose} title={slip?.employees?.full_name ?? ''}>
       {slip ? (
         <>
-          <SlipBreakdown slip={slip} />
-          {slip.paid_at ? (
-            <StatusPill status="paid" label={slip.paid_method ? t('payroll.paidBy', { method: t(`expenses.methods.${slip.paid_method}`) }) : t('payroll.nothingToPay')} />
-          ) : null}
+          <PayslipFull slip={slip} />
           {owner && status === 'approved' && !slip.paid_at ? (
             <>
+              {days.length > 1 ? (
+                <View style={styles.block}>
+                  <Text variant="bodyStrong">{t('payroll.slip.paidOnPick')}</Text>
+                  <DateStrip dates={days} value={days.includes(paidOn) ? paidOn : today} onChange={setPaidOn} />
+                  <Text variant="small" color="textSecondary">
+                    {t('payroll.slip.cashToday')}
+                  </Text>
+                </View>
+              ) : null}
               <FormError error={pay.error} />
               <View style={styles.actions}>
                 {(['cash', 'bank'] as const).map((method) => (
@@ -74,7 +67,7 @@ export function PayslipSheet({ slip, status, onClose }: { slip: Payslip | null; 
                     loading={pay.isPending}
                     onPress={() =>
                       pay.mutate(
-                        { line_id: slip.id, method },
+                        { line_id: slip.id, method, ...(method === 'bank' && paidOn !== today ? { paid_on: paidOn } : {}) },
                         {
                           onSuccess: () => {
                             toast(t('payroll.paidToast', { name: slip.employees?.full_name ?? '' }));
@@ -114,8 +107,5 @@ export function PayslipSheet({ slip, status, onClose }: { slip: Payslip | null; 
 
 const styles = StyleSheet.create({
   block: { gap: spacing.sm },
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  flex: { flex: 1 },
-  rule: { height: StyleSheet.hairlineWidth, marginVertical: spacing.xs },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
 });

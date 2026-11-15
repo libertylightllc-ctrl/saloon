@@ -2135,7 +2135,6 @@
     "slipMeta": "Base {{base}} · Commission {{commission}}",
     "paid": "Payé",
     "unpaid": "À payer",
-    "paidBy": "Paiement : {{method}}",
     "nothingToPay": "Rien à payer",
     "payBy": {
       "cash": "Payer {{amount}} en espèces",
@@ -2171,16 +2170,37 @@
     "days": "Jours : {{days}} sur {{total}}",
     "metaBonus": "Prime {{amount}}",
     "metaDeductions": "Retenues −{{amount}}",
-    "metaAdvances": "Avances −{{amount}}"
+    "metaAdvances": "Avances −{{amount}}",
+    "slip": {
+      "title": "Fiche de paie",
+      "name": "Nom",
+      "staffId": "Matricule",
+      "job": "Poste",
+      "month": "Mois",
+      "daysEmployed": "Jours d'emploi",
+      "daysOf": "{{days}} sur {{total}}",
+      "attendance": "Présence",
+      "attendanceValue": "Jours travaillés : {{worked}} · Retards : {{late}}",
+      "status": "Statut",
+      "toPay": "À payer",
+      "notApproved": "Pas encore approuvé",
+      "paidOn": "Payé le {{date}} · {{method}}",
+      "tips": "Pourboires du mois",
+      "tipsNote": "Les pourboires sont versés à part, pas avec le salaire.",
+      "download": "Télécharger le PDF",
+      "paidOnPick": "Jour du paiement",
+      "cashToday": "Pour un virement, choisissez le jour où il est parti. Les espèces sont payées aujourd'hui, depuis la caisse."
+    }
   },
   "myPay": {
     "title": "Ma paie",
-    "subtitle": "Commission, avances et fiches de paie",
+    "subtitle": "Commission, pourboires, avances et fiches de paie",
     "commission": "Commission du mois",
     "advances": "Avances du mois",
     "thisMonth": "Ce mois-ci",
     "payslips": "Fiches de paie",
-    "noPayslips": "Vos fiches de paie apparaîtront ici dès que le propriétaire aura approuvé un mois."
+    "noPayslips": "Vos fiches de paie apparaîtront ici dès que le propriétaire aura approuvé un mois.",
+    "tips": "Pourboires du mois"
   },
   "compliance": {
     "title": "Conformité",

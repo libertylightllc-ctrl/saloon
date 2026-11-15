@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { keys } from '@/features/live/useLiveSync';
 import { uploadPhoto, type PickedPhoto } from '@/features/moneyout/receipts';
-import type { MonthKey } from '@/lib/dates';
+import type { BusinessDate, MonthKey } from '@/lib/dates';
 import { asJson, supabase } from '@/lib/supabase';
 
 export type AdjustmentKind = 'bonus' | 'deduction' | 'advance';
@@ -26,6 +26,8 @@ export interface Payslip {
   days_in_month: number | null;
   paid_method: 'cash' | 'bank' | null;
   paid_at: string | null;
+  /** The day it was paid (C2), in the salon's own time. */
+  paid_on: BusinessDate | null;
   wps_status: 'na' | 'required' | 'proven';
   wps_evidence_path: string | null;
   employees: { full_name: string } | null;
@@ -55,7 +57,7 @@ export interface Adjustment {
 }
 
 const LINE_FIELDS =
-  'id, employee_id, base_minor, commission_minor, bonus_minor, deductions_minor, advances_minor, net_minor, days_employed, days_in_month, paid_method, paid_at, wps_status, wps_evidence_path, employees(full_name)';
+  'id, employee_id, base_minor, commission_minor, bonus_minor, deductions_minor, advances_minor, net_minor, days_employed, days_in_month, paid_method, paid_at, paid_on, wps_status, wps_evidence_path, employees(full_name)';
 
 export function usePayrollRun(businessId: string, period: MonthKey) {
   return useQuery({
@@ -148,7 +150,7 @@ export function useMyPay(businessId: string, employeeId: string | null) {
 function useInvalidatePayroll(businessId: string, branchId: string) {
   const client = useQueryClient();
   return () => {
-    for (const queryKey of [keys.payroll(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId]]) {
+    for (const queryKey of [keys.payroll(businessId), keys.dashboard(branchId), keys.closing(branchId), ['accounts', businessId], ['payslip']]) {
       void client.invalidateQueries({ queryKey });
     }
   };
@@ -201,8 +203,12 @@ export function useApprovePayroll(businessId: string, branchId: string) {
 export function usePayLine(businessId: string, branchId: string) {
   const done = useInvalidatePayroll(businessId, branchId);
   return useMutation({
-    mutationFn: async (input: { line_id: string; method: 'cash' | 'bank' }) => {
-      const { error } = await supabase.rpc('pay_payroll_line', { p_line: input.line_id, p_method: input.method });
+    mutationFn: async (input: { line_id: string; method: 'cash' | 'bank'; paid_on?: BusinessDate }) => {
+      const { error } = await supabase.rpc('pay_payroll_line', {
+        p_line: input.line_id,
+        p_method: input.method,
+        ...(input.paid_on ? { p_paid_on: input.paid_on } : {}),
+      });
       if (error) throw error;
     },
     onSuccess: done,
@@ -218,5 +224,51 @@ export function useAttachWps(businessId: string, branchId: string) {
       if (error) throw error;
     },
     onSuccess: done,
+  });
+}
+
+/** Tips kept, days worked and late days for one person and month (owner, accountant, or the person). */
+export interface PayExtras {
+  tips_minor: number;
+  days_worked: number;
+  late_days: number;
+}
+
+/** Everything a payslip shows besides its money lines (C2). */
+export interface PayslipDetails extends PayExtras {
+  business_name: string;
+  branch_name: string;
+  full_name: string;
+  employee_code: string | null;
+  role_title: string;
+  period: MonthKey;
+  status: RunStatus;
+  paid_on: BusinessDate | null;
+  paid_method: 'cash' | 'bank' | null;
+  days_employed: number | null;
+  days_in_month: number | null;
+}
+
+export function usePayslipDetails(lineId: string | null) {
+  return useQuery({
+    enabled: Boolean(lineId),
+    queryKey: ['payslip', lineId],
+    queryFn: async (): Promise<PayslipDetails> => {
+      const { data, error } = await supabase.rpc('payslip_details', { p_line: lineId! });
+      if (error) throw error;
+      return data as unknown as PayslipDetails;
+    },
+  });
+}
+
+export function usePayExtras(employeeId: string | null, period: MonthKey) {
+  return useQuery({
+    enabled: Boolean(employeeId),
+    queryKey: ['payExtras', employeeId, period],
+    queryFn: async (): Promise<PayExtras> => {
+      const { data, error } = await supabase.rpc('pay_extras', { p_employee: employeeId!, p_period: period });
+      if (error) throw error;
+      return data as unknown as PayExtras;
+    },
   });
 }

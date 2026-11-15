@@ -2180,7 +2180,6 @@
     "slipMeta": "الأساسي {{base}} · العمولة {{commission}}",
     "paid": "مدفوع",
     "unpaid": "للدفع",
-    "paidBy": "دُفع {{method}}",
     "nothingToPay": "لا شيء للدفع",
     "payBy": {
       "cash": "ادفع {{amount}} نقدًا",
@@ -2219,16 +2218,37 @@
     "days": "الأيام: {{days}} من {{total}}",
     "metaBonus": "المكافأة {{amount}}",
     "metaDeductions": "الخصومات −{{amount}}",
-    "metaAdvances": "السلف −{{amount}}"
+    "metaAdvances": "السلف −{{amount}}",
+    "slip": {
+      "title": "قسيمة الراتب",
+      "name": "الاسم",
+      "staffId": "رقم الموظف",
+      "job": "الوظيفة",
+      "month": "الشهر",
+      "daysEmployed": "أيام التوظيف",
+      "daysOf": "{{days}} من {{total}}",
+      "attendance": "الحضور",
+      "attendanceValue": "أيام العمل: {{worked}} · التأخير: {{late}}",
+      "status": "الحالة",
+      "toPay": "للدفع",
+      "notApproved": "لم يُعتمد بعد",
+      "paidOn": "دُفع في {{date}} · {{method}}",
+      "tips": "إكراميات هذا الشهر",
+      "tipsNote": "تُدفع الإكراميات بشكل منفصل، وليست مع الراتب.",
+      "download": "تنزيل PDF",
+      "paidOnPick": "يوم الدفع",
+      "cashToday": "للتحويل البنكي، اختر يوم إرساله. النقد يُدفع اليوم من الدرج."
+    }
   },
   "myPay": {
     "title": "راتبي",
-    "subtitle": "العمولة والسلف وقسائم الراتب",
+    "subtitle": "العمولة والإكراميات والسلف وقسائم الراتب",
     "commission": "عمولة هذا الشهر",
     "advances": "سلف هذا الشهر",
     "thisMonth": "هذا الشهر",
     "payslips": "قسائم الراتب",
-    "noPayslips": "تظهر قسائمك هنا بعد أن يعتمد المالك الشهر."
+    "noPayslips": "تظهر قسائمك هنا بعد أن يعتمد المالك الشهر.",
+    "tips": "إكراميات هذا الشهر"
   },
   "compliance": {
     "title": "الامتثال",
