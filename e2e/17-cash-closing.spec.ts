@@ -83,6 +83,9 @@ test('the front desk pays tips and sends a blind count AED 5 short; owner sends 
   await id(phone, 'more-accounts').click();
   await id(phone, 'accounts-tab-journal').click();
   await expect(id(phone, 'journal-cash_close')).toHaveCount(1);
+  // The title names the day the way people write it (E8): "Cash close · 15 Nov 2026".
+  const closeDay = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${today}T00:00:00Z`));
+  await expect(id(phone, 'journal-cash_close')).toContainText(`Cash close · ${closeDay}`);
   await expect(id(phone, 'journal-tip_payout')).toHaveCount(1);
   await id(phone, 'accounts-tab-balance').click();
   await expect(text(phone, 'Balanced: Yes')).toBeVisible();

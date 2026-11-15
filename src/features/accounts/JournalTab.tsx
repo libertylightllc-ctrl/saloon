@@ -9,6 +9,7 @@ import { spacing } from '@/theme';
 import { EmptyState, ListRow, QueryState, Text } from '@/ui';
 
 import { useJournal } from './api';
+import { journalTitle } from './journalTitle';
 import { useLedgerLabels } from './labels';
 
 /** Latest journal entries; tap one to see its debit and credit lines. */
@@ -35,7 +36,7 @@ export function JournalTab() {
               <ListRow
                 key={e.id}
                 testID={`journal-${e.source_type}`}
-                title={e.memo ?? labels.source(e.source_type)}
+                title={e.memo ? journalTitle(e.memo, t, dates.day) : labels.source(e.source_type)}
                 meta={[`${labels.source(e.source_type)} · ${dates.day(e.business_date, 'd MMM yyyy')}`]}
                 trailing={
                   <Text variant="bodyStrong" tabular>
