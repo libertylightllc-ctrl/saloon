@@ -500,7 +500,7 @@
       "notifications": "Notifications",
       "sales": "Sales",
       "branch": "Branch settings",
-      "accounts": "Accounts & history",
+      "accounts": "Accounting",
       "backup": "Backup & recovery",
       "pin": "Quick-switch PIN",
       "switch": "Switch user",
@@ -1465,7 +1465,7 @@
     }
   },
   "accounts": {
-    "title": "Accounts & history",
+    "title": "Accounting",
     "subtitle": "How the numbers are calculated",
     "tabs": {
       "overview": "Overview",
@@ -3651,7 +3651,7 @@
       "expenses": "Expenses (not from the drawer)",
       "home": "Home",
       "reportsRow": "Reports",
-      "accounts": "Accounts & history (journal, trial balance, VAT)",
+      "accounts": "Accounting (journal, trial balance, VAT)",
       "closeMonth": "Close a month / reopen it",
       "ledgerExport": "Ledger export",
       "audit": "Audit trail and sign-ins",

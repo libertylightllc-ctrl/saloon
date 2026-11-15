@@ -68,7 +68,7 @@ Português — More → Language in the app, or the language button at the top o
   open from Payroll, and a stylist sees their own in My pay.
 - Compliance: More → Compliance: licences and certificates with expiry dates and scans, staff papers, the hygiene log,
   the inspection binder (PDF) and, in the UAE, WPS and Montaji numbers. Home lists what is missing or expiring.
-- Reports (owner and accountant; managers some; stylists their own) and Accounts & history (owner and accountant):
+- Reports (owner and accountant; managers some; stylists their own) and Accounting (owner and accountant):
   exports to CSV and PDF. Backup & recovery (owner): a ZIP of all data.
 - Branch settings (owner): name, address, phone, open days, country (only until money is first recorded — after that
   the currency is fixed), VAT or sales tax and the tax number, receipts, deposits, whether staff may sell.
@@ -81,9 +81,9 @@ Bottom tabs on a phone (a side menu on a computer), by login type:
 - Owner: Home, Queue, Sale, Customers, More.
 - Manager and Front desk: Home, Queue, Sale, Customers, Closing, More.
 - Stylist / therapist: Home, My bookings, Sale (only when the owner lets stylists take payments), My pay, More.
-- Accountant: Home, Reports, Accounting (the Accounts & history page), More.
+- Accountant: Home, Reports, Accounting, More.
 The More page lists only what that login can open. For the owner: Services, Inventory & tools, Sales, Expenses,
-Purchases & suppliers, Cash closing, Accounts & history, Payroll, Reports, Approvals, Staff, Attendance, Compliance,
+Purchases & suppliers, Cash closing, Accounting, Payroll, Reports, Approvals, Staff, Attendance, Compliance,
 then Branch settings, Controls, Branches, Backup & recovery, Plan & billing; and Language, refresh, Quick-switch PIN,
 Switch user, Help & support, Privacy, Terms, Delete my account. Other logins see fewer rows, sometimes with their own
 names: a stylist sees My clients, Stock, My sales, My sales & commission and Hygiene log; the front desk sees Stock,
@@ -130,7 +130,7 @@ Managers, front desk and stylists work in the branches they are given; the accou
   day; accountant a money summary.
 - Reports: owner and accountant all; manager sales, staff sales, daily closing, cash differences, stock and no-shows
   (no profit, books or salaries); stylist their own; front desk none.
-- Accounts & history (journal, trial balance, VAT, ledger export): owner and accountant. Close a month: owner and
+- Accounting (journal, trial balance, VAT, ledger export, the activity history): owner and accountant. Close a month: owner and
   accountant; reopen it: owner. Audit trail and sign-ins: owner, accountant; manager for their branch.
 - Services and prices: the owner edits; everyone else views. Branch settings, booking page, rooms, open days,
   Controls, Branches, Backup and Delete my account: owner only; Plan & billing: owner (the accountant can look). Compliance records: owner, manager

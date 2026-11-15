@@ -500,7 +500,7 @@
       "notifications": "Notificaciones",
       "sales": "Ventas",
       "branch": "Ajustes de la sucursal",
-      "accounts": "Cuentas e historial",
+      "accounts": "Contabilidad",
       "backup": "Copia de seguridad y recuperación",
       "pin": "PIN de cambio rápido",
       "switch": "Cambiar de usuario",
@@ -1465,7 +1465,7 @@
     }
   },
   "accounts": {
-    "title": "Cuentas e historial",
+    "title": "Contabilidad",
     "subtitle": "Cómo se calculan los números",
     "tabs": {
       "overview": "Resumen",
@@ -3652,7 +3652,7 @@
       "expenses": "Gastos (no de la caja)",
       "home": "Inicio",
       "reportsRow": "Informes",
-      "accounts": "Cuentas e historial (diario, balance, IVA)",
+      "accounts": "Contabilidad (diario, balance, IVA)",
       "closeMonth": "Cerrar un mes / reabrirlo",
       "ledgerExport": "Exportar el libro mayor",
       "audit": "Registro de actividad e inicios de sesión",

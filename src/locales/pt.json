@@ -500,7 +500,7 @@
       "notifications": "Notificações",
       "sales": "Vendas",
       "branch": "Configurações da filial",
-      "accounts": "Contas e histórico",
+      "accounts": "Contabilidade",
       "backup": "Backup e recuperação",
       "pin": "PIN de troca rápida",
       "switch": "Trocar de usuário",
@@ -1465,7 +1465,7 @@
     }
   },
   "accounts": {
-    "title": "Contas e histórico",
+    "title": "Contabilidade",
     "subtitle": "Como os números são calculados",
     "tabs": {
       "overview": "Visão geral",
@@ -3652,7 +3652,7 @@
       "expenses": "Despesas (fora do caixa)",
       "home": "Início",
       "reportsRow": "Relatórios",
-      "accounts": "Contas e histórico (diário, balancete, imposto)",
+      "accounts": "Contabilidade (diário, balancete, imposto)",
       "closeMonth": "Fechar um mês / reabrir",
       "ledgerExport": "Exportar o razão",
       "audit": "Registro de atividade e acessos",

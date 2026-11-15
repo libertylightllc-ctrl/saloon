@@ -306,7 +306,7 @@ async function ownerSweep(page: Page, mode: Mode, part: (typeof OWNER_PARTS)[num
       ['Opening stock', '/inventory/opening'],
     ],
     'back office': [
-      ['Accounts & history', '/accounts'],
+      ['Accounting', '/accounts'],
       ['Staff', '/staff'],
       ['Staff profile', `/staff/${s.employeeId}`],
       ['Staff form', `/staff/form?id=${s.employeeId}`],

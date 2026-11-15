@@ -180,6 +180,9 @@ test('the accountant has Reports and Accounting tabs, reads and exports, closes 
   expect(await download(page, 'report-csv')).toContain('90.00');
   await id(page, 'tab-accounts-tab').click();
   await expect(text(page, 'Balanced: Yes')).toBeVisible();
+  // One name for the page (E8): the tab, the More row and the page title all say "Accounting".
+  await expect(id(page, 'tab-accounts-tab')).toContainText('Accounting');
+  await expect(page.getByRole('heading', { name: 'Accounting', exact: true })).toBeVisible();
   // Close a month (brief B2): the accountant closes it; only the owner reopens one.
   await id(page, 'accounts-months').click();
   await id(page, `period-${last.month}-close`).click();

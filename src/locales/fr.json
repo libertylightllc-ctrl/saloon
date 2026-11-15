@@ -500,7 +500,7 @@
       "notifications": "Notifications",
       "sales": "Ventes",
       "branch": "Paramètres de la succursale",
-      "accounts": "Comptes et historique",
+      "accounts": "Comptabilité",
       "backup": "Sauvegarde et restauration",
       "pin": "PIN de changement rapide",
       "switch": "Changer d’utilisateur",
@@ -1465,7 +1465,7 @@
     }
   },
   "accounts": {
-    "title": "Comptes et historique",
+    "title": "Comptabilité",
     "subtitle": "Comment les chiffres sont calculés",
     "tabs": {
       "overview": "Vue d’ensemble",
@@ -3652,7 +3652,7 @@
       "expenses": "Dépenses (hors caisse)",
       "home": "Accueil",
       "reportsRow": "Rapports",
-      "accounts": "Comptes et historique (journal, balance, TVA)",
+      "accounts": "Comptabilité (journal, balance, TVA)",
       "closeMonth": "Clôturer un mois / le rouvrir",
       "ledgerExport": "Export du grand livre",
       "audit": "Journal d’activité et connexions",
