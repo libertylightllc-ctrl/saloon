@@ -72,6 +72,7 @@ insert into reviewed values
     ('is_member'),
     ('is_platform_admin'),
     ('log_access'),
+    ('login_last_sign_in'),
     ('mark_no_show'),
     ('mark_notifications_read'),
     ('merge_customers'),

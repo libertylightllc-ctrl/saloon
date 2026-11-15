@@ -5,10 +5,11 @@ import { StyleSheet, View } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { useTeam } from '@/features/team/api';
 import { can, levelOf } from '@/lib/permissions';
+import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Button, Card, FormError, StatusPill, Text, useToast } from '@/ui';
 
-import { useSetLoginType, type StaffMember } from './api';
+import { useLastSignIn, useSetLoginType, type StaffMember } from './api';
 import { CreateLoginSheet } from './CreateLoginSheet';
 import { ManageLoginSheet } from './ManageLoginSheet';
 
@@ -26,6 +27,9 @@ export function LoginCard({ person }: { person: StaffMember }) {
   const team = useTeam(business.id, (owner || branchAdmin) && Boolean(person.member_id));
   const member = team.data?.find((m) => m.id === person.member_id) ?? null;
   const manages = member !== null && (owner || (branchAdmin && (member.role === 'cashier' || member.role === 'staff')));
+  // Who uses their login (F4): for the people who look after it.
+  const lastSignIn = useLastSignIn(member?.id ?? null, manages);
+  const dates = useDates();
   const setType = useSetLoginType(business.id, branch.id);
   const mismatch = owner && member !== null && person.role_title === 'manager' && member.role !== 'manager' && member.role !== 'owner';
   const [creating, setCreating] = useState(false);
@@ -49,6 +53,11 @@ export function LoginCard({ person }: { person: StaffMember }) {
         ) : (
           <Text color="textSecondary">{t('staff.noLoginBody')}</Text>
         )}
+        {manages && lastSignIn.isSuccess ? (
+          <Text color="textSecondary" testID="staff-last-sign-in">
+            {lastSignIn.data ? t('staff.lastSignIn', { when: dates.when(lastSignIn.data, business.timezone) }) : t('staff.neverSignedIn')}
+          </Text>
+        ) : null}
         {mismatch ? (
           <View style={styles.mismatch} testID="staff-job-mismatch">
             <Text>{t('staff.jobMismatch', { login: t(`roles.${member.role}`) })}</Text>

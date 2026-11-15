@@ -2083,7 +2083,9 @@
     "jobMismatch": "काम मैनेजर है पर लॉगिन {{login}} है। मैनेजर लॉगिन में बदलें?",
     "makeManager": "मैनेजर लॉगिन में बदलें",
     "changeLoginType": "{{type}} में बदलें",
-    "loginTypeChanged": "{{name}} का लॉगिन अब {{type}} है"
+    "loginTypeChanged": "{{name}} का लॉगिन अब {{type}} है",
+    "lastSignIn": "आख़िरी बार साइन इन: {{when}}",
+    "neverSignedIn": "कभी साइन इन नहीं किया"
   },
   "attendance": {
     "title": "हाज़िरी",

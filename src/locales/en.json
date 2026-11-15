@@ -2083,7 +2083,9 @@
     "jobMismatch": "Job is Manager but the login is {{login}}. Change to a Manager login?",
     "makeManager": "Change to a Manager login",
     "changeLoginType": "Change to {{type}}",
-    "loginTypeChanged": "{{name}} now has a {{type}} login"
+    "loginTypeChanged": "{{name}} now has a {{type}} login",
+    "lastSignIn": "Last signed in: {{when}}",
+    "neverSignedIn": "Never signed in"
   },
   "attendance": {
     "title": "Attendance",

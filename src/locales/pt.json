@@ -2083,7 +2083,9 @@
     "jobMismatch": "O cargo é Gerente, mas o acesso é {{login}}. Mudar para um acesso de Gerente?",
     "makeManager": "Mudar para acesso de Gerente",
     "changeLoginType": "Mudar para {{type}}",
-    "loginTypeChanged": "{{name}} agora tem acesso de {{type}}"
+    "loginTypeChanged": "{{name}} agora tem acesso de {{type}}",
+    "lastSignIn": "Último acesso: {{when}}",
+    "neverSignedIn": "Nunca entrou"
   },
   "attendance": {
     "title": "Frequência",

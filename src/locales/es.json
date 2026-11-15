@@ -2083,7 +2083,9 @@
     "jobMismatch": "El puesto es Gerente, pero el acceso es {{login}}. ¿Cambiar a un acceso de Gerente?",
     "makeManager": "Cambiar a acceso de Gerente",
     "changeLoginType": "Cambiar a {{type}}",
-    "loginTypeChanged": "{{name}} ahora tiene acceso de {{type}}"
+    "loginTypeChanged": "{{name}} ahora tiene acceso de {{type}}",
+    "lastSignIn": "Último inicio de sesión: {{when}}",
+    "neverSignedIn": "Nunca ha iniciado sesión"
   },
   "attendance": {
     "title": "Asistencia",

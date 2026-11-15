@@ -2083,7 +2083,9 @@
     "jobMismatch": "Le poste est Gérant, mais l’accès est {{login}}. Passer à un accès Gérant ?",
     "makeManager": "Passer à un accès Gérant",
     "changeLoginType": "Passer à {{type}}",
-    "loginTypeChanged": "{{name}} a maintenant un accès {{type}}"
+    "loginTypeChanged": "{{name}} a maintenant un accès {{type}}",
+    "lastSignIn": "Dernière connexion : {{when}}",
+    "neverSignedIn": "Jamais connecté"
   },
   "attendance": {
     "title": "Présences",

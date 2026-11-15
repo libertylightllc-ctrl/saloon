@@ -263,3 +263,16 @@ export function useFixClockOut(businessId: string, branchId: string) {
     },
   });
 }
+
+/** When a login last signed in (null: never), for the owner and a manager in a shared branch (F4, migration 104). */
+export function useLastSignIn(memberId: string | null, enabled: boolean) {
+  return useQuery({
+    enabled: enabled && Boolean(memberId),
+    queryKey: ['member', memberId, 'last-sign-in'],
+    queryFn: async (): Promise<string | null> => {
+      const { data, error } = await supabase.rpc('login_last_sign_in', { p_member: memberId! });
+      if (error) throw error;
+      return (data as string | null) ?? null;
+    },
+  });
+}

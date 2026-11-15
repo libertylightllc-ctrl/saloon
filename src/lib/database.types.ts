@@ -4938,6 +4938,7 @@ export type Database = {
         Returns: string;
       };
       login_admin_for: { Args: { p_target: string; p_user: string }; Returns: string };
+      login_last_sign_in: { Args: { p_member: string }; Returns: string };
       mark_no_show: {
         Args: { p_approval?: string; p_id: string; p_reason?: string; p_refund_deposit?: boolean };
         Returns: undefined;

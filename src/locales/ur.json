@@ -2083,7 +2083,9 @@
     "jobMismatch": "کام مینیجر ہے لیکن لاگ ان {{login}} ہے۔ مینیجر لاگ ان میں بدلیں؟",
     "makeManager": "مینیجر لاگ ان میں بدلیں",
     "changeLoginType": "{{type}} میں بدلیں",
-    "loginTypeChanged": "{{name}} کا لاگ ان اب {{type}} ہے"
+    "loginTypeChanged": "{{name}} کا لاگ ان اب {{type}} ہے",
+    "lastSignIn": "آخری بار سائن اِن: {{when}}",
+    "neverSignedIn": "کبھی سائن اِن نہیں کیا"
   },
   "attendance": {
     "title": "حاضری",

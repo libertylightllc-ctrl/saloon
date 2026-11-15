@@ -2134,7 +2134,9 @@
     "jobMismatch": "الوظيفة مدير لكن الدخول {{login}}. التغيير إلى دخول مدير؟",
     "makeManager": "التغيير إلى دخول مدير",
     "changeLoginType": "التغيير إلى {{type}}",
-    "loginTypeChanged": "أصبح لدى {{name}} دخول {{type}}"
+    "loginTypeChanged": "أصبح لدى {{name}} دخول {{type}}",
+    "lastSignIn": "آخر تسجيل دخول: {{when}}",
+    "neverSignedIn": "لم يسجّل الدخول بعد"
   },
   "attendance": {
     "title": "الحضور",

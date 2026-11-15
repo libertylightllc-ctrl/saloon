@@ -38,6 +38,8 @@ test('owner creates a cashier login; the cashier sees cashier tabs in the branch
   await id(page, 'login-username').fill(`${username}x`);
   await id(page, 'staff-save').click();
   await expect(id(page, 'staff-login-card')).toContainText(`@${username}x`);
+  // The owner sees who uses their login (F4).
+  await expect(id(page, 'staff-last-sign-in')).toHaveText('Never signed in');
   const { count } = await admin.from('employees').select('id', { count: 'exact', head: true }).eq('business_id', owner.businessId).eq('full_name', 'Someone Else');
   expect(count).toBe(1);
 
@@ -45,6 +47,9 @@ test('owner creates a cashier login; the cashier sees cashier tabs in the branch
   const phone = await device();
   await staffOn(phone, other, owner.code, username, 'Cash1234!');
   await expectTheme(phone, mode);
+  await page.goto('/staff');
+  await id(page, 'staff-Faisal Cashier').click();
+  await expect(id(page, 'staff-last-sign-in')).toContainText('Last signed in: Today ·');
   // The front desk closes the day from its own tab (brief B8).
   expect(await visibleTabs(phone)).toEqual(['index', 'queue', 'sale', 'customers', 'closing-tab', 'more']);
   await tab(phone, 'more');
