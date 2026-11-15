@@ -116,7 +116,8 @@ export function StaffDetailScreen() {
                           {/* The late pill before the times, so every day's times end in the same column. */}
                           {a.late ? <StatusPill tone="warning" label={t('attendance.lateBy', { time: formatDuration(t, a.late_minutes) })} /> : null}
                           <Text tabular>
-                            {dates.at(a.clock_in, business.timezone, 'HH:mm')}–{a.clock_out ? dates.at(a.clock_out, business.timezone, 'HH:mm') : '…'}
+                            {dates.at(a.clock_in, business.timezone, 'HH:mm')}–
+                            {a.no_clock_out ? t('attendance.status.no_clock_out') : a.clock_out ? dates.at(a.clock_out, business.timezone, 'HH:mm') : '…'}
                           </Text>
                         </View>
                       ))}

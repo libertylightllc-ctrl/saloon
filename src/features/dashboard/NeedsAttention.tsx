@@ -156,6 +156,17 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
       href: '/compliance',
     });
   }
+  // Shifts closed with no clock-out (D1): the owner or a manager sets the time each person left.
+  if (data.missed_clock_outs) {
+    items.push({
+      key: 'missed-clock-outs',
+      title: t('home.attention.missedClockOuts', { count: data.missed_clock_outs }),
+      sub: t('home.attention.missedClockOutsSub'),
+      status: 'overdue',
+      action: t('home.attentionActions.fix'),
+      href: '/attendance',
+    });
+  }
   if (data.hygiene_signed === false && can(role, 'signHygiene')) {
     items.push({
       key: 'hygiene',

@@ -49,6 +49,8 @@ export interface Dashboard {
     soonest_days: number | null;
   } | null;
   hygiene_signed?: boolean | null;
+  /** Shifts on earlier days with no clock-out (D1): owner and managers. */
+  missed_clock_outs?: number | null;
   closing?: {
     today_status: 'open' | 'draft' | 'pending_approval' | 'approved';
     pending_approval: number;

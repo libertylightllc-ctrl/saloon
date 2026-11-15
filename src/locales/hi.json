@@ -179,7 +179,8 @@
       "review": "देखें",
       "renew": "नवीनीकरण",
       "order": "ऑर्डर",
-      "pay": "भुगतान"
+      "pay": "भुगतान",
+      "fix": "ठीक करें"
     },
     "todaysQueue": "आज की कतार",
     "openQueue": "कतार खोलें",
@@ -243,7 +244,10 @@
       "expiresIn_one": "1 दिन में समाप्त",
       "expiresIn": "{{count}} दिन में समाप्त",
       "outOfStock": "{{count}} आइटम का स्टॉक ख़त्म",
-      "outOfStock_one": "{{count}} आइटम का स्टॉक ख़त्म"
+      "outOfStock_one": "{{count}} आइटम का स्टॉक ख़त्म",
+      "missedClockOuts": "{{count}} क्लॉक-आउट छूटे",
+      "missedClockOuts_one": "{{count}} क्लॉक-आउट छूटा",
+      "missedClockOutsSub": "हर व्यक्ति के जाने का समय डालें"
     },
     "attentionClose": "बंद करें",
     "viewClosing": "कैश क्लोज़िंग",
@@ -2054,7 +2058,8 @@
       "off": "छुट्टी",
       "on_break": "ब्रेक पर",
       "late_not_in": "देर · अभी नहीं आए",
-      "absent": "अनुपस्थित"
+      "absent": "अनुपस्थित",
+      "no_clock_out": "क्लॉक-आउट नहीं"
     },
     "lateBy": "{{time}} देर",
     "clockIn": "हाज़िरी लगाएँ",
@@ -2105,7 +2110,8 @@
       "reason": "वजह (ज़रूरी)",
       "reasonOptional": "वजह (वैकल्पिक)",
       "save": "क्लॉक-आउट सेव करें",
-      "saved": "{{name}} का क्लॉक-आउट सेव हुआ"
+      "saved": "{{name}} का क्लॉक-आउट सेव हुआ",
+      "closedAt": "{{time}} पर बंद, क्लॉक-आउट नहीं"
     }
   },
   "payroll": {

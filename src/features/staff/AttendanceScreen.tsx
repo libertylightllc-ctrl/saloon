@@ -37,6 +37,7 @@ const STATUS: Record<AttendanceStatus, StatusKey> = {
   on_shift: 'in_progress',
   on_break: 'pending_approval',
   done: 'completed',
+  no_clock_out: 'overdue',
   not_in: 'waiting',
   late_not_in: 'overdue',
   absent: 'expired',
@@ -52,6 +53,8 @@ const ACTIONS: Record<AttendanceStatus, ClockAction[]> = {
   on_shift: ['out', 'break_start'],
   on_break: ['break_end', 'out'],
   done: ['resume'],
+  // Only on earlier days, where nothing is recorded from the board (it is fixed under Missed clock-outs).
+  no_clock_out: ['resume'],
 };
 
 /**
@@ -94,7 +97,12 @@ export function AttendanceScreen() {
                         ? [
                             t('attendance.inOut', {
                               in: dates.at(r.clock_in, business.timezone, 'HH:mm'),
-                              out: r.clock_out ? dates.at(r.clock_out, business.timezone, 'HH:mm') : '…',
+                              out:
+                                r.status === 'no_clock_out'
+                                  ? t('attendance.status.no_clock_out')
+                                  : r.clock_out
+                                    ? dates.at(r.clock_out, business.timezone, 'HH:mm')
+                                    : '…',
                             }),
                           ]
                         : []),

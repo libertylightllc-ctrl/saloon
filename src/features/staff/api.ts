@@ -59,7 +59,7 @@ export interface StaffMember {
 }
 
 /** late_not_in: past the grace minutes with no clock-in; absent: the shift ended with no clock-in. */
-export type AttendanceStatus = 'on_shift' | 'on_break' | 'done' | 'not_in' | 'late_not_in' | 'absent' | 'off';
+export type AttendanceStatus = 'on_shift' | 'on_break' | 'done' | 'no_clock_out' | 'not_in' | 'late_not_in' | 'absent' | 'off';
 /** Clock in / out, a break, or back to work after clocking out (the time away counts as a break). */
 export type ClockAction = 'in' | 'out' | 'break_start' | 'break_end' | 'resume';
 
@@ -116,7 +116,7 @@ export function useAttendanceHistory(employeeId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('attendance')
-        .select('id, business_date, clock_in, clock_out, late, late_minutes')
+        .select('id, business_date, clock_in, clock_out, no_clock_out, late, late_minutes')
         .eq('employee_id', employeeId!)
         .order('business_date', { ascending: false })
         .limit(14);
@@ -222,10 +222,13 @@ export interface MissedClockOut {
   id: string;
   business_date: BusinessDate;
   clock_in: string;
+  /** Set when the shift was closed with no clock-out (D1): the roster's end, or the clock-in time. */
+  clock_out: string | null;
+  no_clock_out: boolean;
   employees: { full_name: string } | null;
 }
 
-/** Clock-ins on earlier days with no clock-out, in this branch (owner and managers fix them). */
+/** Clock-ins on earlier days with no clock-out, open or closed as "No clock-out", in this branch (owner and managers fix them). */
 export function useMissedClockOuts(branchId: string, today: BusinessDate, enabled: boolean) {
   return useQuery({
     enabled,
@@ -233,9 +236,9 @@ export function useMissedClockOuts(branchId: string, today: BusinessDate, enable
     queryFn: async (): Promise<MissedClockOut[]> => {
       const { data, error } = await supabase
         .from('attendance')
-        .select('id, business_date, clock_in, employees(full_name)')
+        .select('id, business_date, clock_in, clock_out, no_clock_out, employees(full_name)')
         .eq('branch_id', branchId)
-        .is('clock_out', null)
+        .or('clock_out.is.null,no_clock_out.is.true')
         .lt('business_date', today)
         .order('business_date', { ascending: false })
         .limit(50);

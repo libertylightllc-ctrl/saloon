@@ -179,7 +179,8 @@
       "review": "Revisar",
       "renew": "Renovar",
       "order": "Pedir",
-      "pay": "Pagar"
+      "pay": "Pagar",
+      "fix": "Corrigir"
     },
     "todaysQueue": "Fila de hoje",
     "openQueue": "Abrir fila",
@@ -243,7 +244,10 @@
       "expiresIn_one": "Expira em 1 dia",
       "expiresIn": "Expira em {{count}} dias",
       "outOfStock": "{{count}} itens sem estoque",
-      "outOfStock_one": "{{count}} item sem estoque"
+      "outOfStock_one": "{{count}} item sem estoque",
+      "missedClockOuts": "{{count}} saídas não registradas",
+      "missedClockOuts_one": "{{count}} saída não registrada",
+      "missedClockOutsSub": "Informe a hora em que cada pessoa saiu"
     },
     "attentionClose": "Fechar",
     "viewClosing": "Fechamento de caixa",
@@ -2054,7 +2058,8 @@
       "off": "Folga",
       "on_break": "Em intervalo",
       "late_not_in": "Atraso · ainda não chegou",
-      "absent": "Ausente"
+      "absent": "Ausente",
+      "no_clock_out": "Sem saída"
     },
     "lateBy": "Atraso de {{time}}",
     "clockIn": "Registrar entrada",
@@ -2105,7 +2110,8 @@
       "reason": "Motivo (obrigatório)",
       "reasonOptional": "Motivo (opcional)",
       "save": "Salvar saída",
-      "saved": "Saída salva para {{name}}"
+      "saved": "Saída salva para {{name}}",
+      "closedAt": "Fechado às {{time}}, sem saída"
     }
   },
   "payroll": {

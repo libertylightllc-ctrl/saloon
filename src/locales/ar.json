@@ -183,7 +183,8 @@
       "review": "مراجعة",
       "renew": "تجديد",
       "order": "طلب",
-      "pay": "دفع"
+      "pay": "دفع",
+      "fix": "تصحيح"
     },
     "todaysQueue": "طابور اليوم",
     "openQueue": "فتح الطابور",
@@ -267,7 +268,13 @@
       "outOfStock_one": "{{count}} صنف نفد مخزونه",
       "outOfStock_two": "صنفان نفد مخزونهما",
       "outOfStock_few": "{{count}} أصناف نفد مخزونها",
-      "outOfStock_many": "{{count}} صنفًا نفد مخزونها"
+      "outOfStock_many": "{{count}} صنفًا نفد مخزونها",
+      "missedClockOuts": "{{count}} تسجيل خروج فائت",
+      "missedClockOuts_one": "تسجيل خروج فائت واحد",
+      "missedClockOuts_two": "تسجيلا خروج فائتان",
+      "missedClockOuts_few": "{{count}} تسجيلات خروج فائتة",
+      "missedClockOuts_many": "{{count}} تسجيل خروج فائتًا",
+      "missedClockOutsSub": "حدّد وقت مغادرة كل شخص"
     },
     "attentionClose": "إغلاق",
     "viewClosing": "إغلاق النقدية",
@@ -2099,7 +2106,8 @@
       "off": "يوم إجازة",
       "on_break": "في استراحة",
       "late_not_in": "متأخر · لم يحضر",
-      "absent": "غائب"
+      "absent": "غائب",
+      "no_clock_out": "بلا تسجيل خروج"
     },
     "lateBy": "متأخر {{time}}",
     "clockIn": "تسجيل حضور",
@@ -2150,7 +2158,8 @@
       "reason": "السبب (مطلوب)",
       "reasonOptional": "السبب (اختياري)",
       "save": "حفظ الانصراف",
-      "saved": "حُفظ انصراف {{name}}"
+      "saved": "حُفظ انصراف {{name}}",
+      "closedAt": "أُغلقت عند {{time}} بلا تسجيل خروج"
     }
   },
   "payroll": {

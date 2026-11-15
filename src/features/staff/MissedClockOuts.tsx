@@ -38,6 +38,9 @@ export function MissedClockOuts() {
               day: dates.day(m.business_date, 'EEE d MMM'),
               time: dates.at(m.clock_in, business.timezone, 'HH:mm'),
             }),
+            ...(m.no_clock_out && m.clock_out
+              ? [t('attendance.missed.closedAt', { time: dates.at(m.clock_out, business.timezone, 'HH:mm') })]
+              : []),
           ]}
           trailing={
             <Button

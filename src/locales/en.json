@@ -179,7 +179,8 @@
       "review": "Review",
       "renew": "Renew",
       "order": "Order",
-      "pay": "Pay"
+      "pay": "Pay",
+      "fix": "Fix"
     },
     "todaysQueue": "Today's queue",
     "openQueue": "Open queue",
@@ -243,7 +244,10 @@
       "expiresIn_one": "Expires in 1 day",
       "expiresIn": "Expires in {{count}} days",
       "outOfStock": "{{count}} items out of stock",
-      "outOfStock_one": "{{count}} item out of stock"
+      "outOfStock_one": "{{count}} item out of stock",
+      "missedClockOuts": "{{count}} missed clock-outs",
+      "missedClockOuts_one": "{{count}} missed clock-out",
+      "missedClockOutsSub": "Set the time each person left"
     },
     "attentionClose": "Close",
     "viewClosing": "Cash closing",
@@ -2054,7 +2058,8 @@
       "off": "Day off",
       "on_break": "On break",
       "late_not_in": "Late · not in",
-      "absent": "Absent"
+      "absent": "Absent",
+      "no_clock_out": "No clock-out"
     },
     "lateBy": "Late {{time}}",
     "clockIn": "Clock in",
@@ -2105,7 +2110,8 @@
       "reason": "Reason (needed)",
       "reasonOptional": "Reason (optional)",
       "save": "Save clock-out",
-      "saved": "Clock-out saved for {{name}}"
+      "saved": "Clock-out saved for {{name}}",
+      "closedAt": "Closed at {{time}}, no clock-out"
     }
   },
   "payroll": {

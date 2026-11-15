@@ -179,7 +179,8 @@
       "review": "دیکھیں",
       "renew": "تجدید",
       "order": "آرڈر",
-      "pay": "ادائیگی"
+      "pay": "ادائیگی",
+      "fix": "درست کریں"
     },
     "todaysQueue": "آج کی قطار",
     "openQueue": "قطار کھولیں",
@@ -243,7 +244,10 @@
       "expiresIn_one": "1 دن میں ختم",
       "expiresIn": "{{count}} دن میں ختم",
       "outOfStock": "{{count}} آئٹم کا اسٹاک ختم",
-      "outOfStock_one": "{{count}} آئٹم کا اسٹاک ختم"
+      "outOfStock_one": "{{count}} آئٹم کا اسٹاک ختم",
+      "missedClockOuts": "{{count}} کلاک آؤٹ رہ گئے",
+      "missedClockOuts_one": "{{count}} کلاک آؤٹ رہ گیا",
+      "missedClockOutsSub": "ہر شخص کے جانے کا وقت درج کریں"
     },
     "attentionClose": "بند کریں",
     "viewClosing": "کیش کلوزنگ",
@@ -2054,7 +2058,8 @@
       "off": "چھٹی",
       "on_break": "وقفے پر",
       "late_not_in": "دیر · ابھی نہیں آئے",
-      "absent": "غیر حاضر"
+      "absent": "غیر حاضر",
+      "no_clock_out": "کلاک آؤٹ نہیں"
     },
     "lateBy": "{{time}} دیر",
     "clockIn": "حاضری لگائیں",
@@ -2105,7 +2110,8 @@
       "reason": "وجہ (ضروری)",
       "reasonOptional": "وجہ (اختیاری)",
       "save": "کلاک آؤٹ محفوظ کریں",
-      "saved": "{{name}} کا کلاک آؤٹ محفوظ ہو گیا"
+      "saved": "{{name}} کا کلاک آؤٹ محفوظ ہو گیا",
+      "closedAt": "{{time}} پر بند، کلاک آؤٹ نہیں"
     }
   },
   "payroll": {

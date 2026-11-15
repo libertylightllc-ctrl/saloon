@@ -179,7 +179,8 @@
       "review": "Vérifier",
       "renew": "Renouveler",
       "order": "Commander",
-      "pay": "Payer"
+      "pay": "Payer",
+      "fix": "Corriger"
     },
     "todaysQueue": "File du jour",
     "openQueue": "Ouvrir la file",
@@ -243,7 +244,10 @@
       "expiresIn_one": "Expire dans 1 jour",
       "expiresIn": "Expire dans {{count}} jours",
       "outOfStock": "{{count}} articles en rupture de stock",
-      "outOfStock_one": "{{count}} article en rupture de stock"
+      "outOfStock_one": "{{count}} article en rupture de stock",
+      "missedClockOuts": "{{count}} départs non pointés",
+      "missedClockOuts_one": "{{count}} départ non pointé",
+      "missedClockOutsSub": "Indiquez l'heure de départ de chacun"
     },
     "attentionClose": "Fermer",
     "viewClosing": "Clôture de caisse",
@@ -2054,7 +2058,8 @@
       "off": "Jour de repos",
       "on_break": "En pause",
       "late_not_in": "Retard · pas encore là",
-      "absent": "Absent"
+      "absent": "Absent",
+      "no_clock_out": "Pas de départ pointé"
     },
     "lateBy": "Retard {{time}}",
     "clockIn": "Pointer l’arrivée",
@@ -2105,7 +2110,8 @@
       "reason": "Motif (obligatoire)",
       "reasonOptional": "Motif (facultatif)",
       "save": "Enregistrer le départ",
-      "saved": "Départ enregistré pour {{name}}"
+      "saved": "Départ enregistré pour {{name}}",
+      "closedAt": "Clôturé à {{time}}, départ non pointé"
     }
   },
   "payroll": {

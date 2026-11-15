@@ -395,6 +395,7 @@ export type Database = {
           id: string;
           late: boolean;
           late_minutes: number;
+          no_clock_out: boolean;
         };
         Insert: {
           branch_id: string;
@@ -409,6 +410,7 @@ export type Database = {
           id?: string;
           late?: boolean;
           late_minutes?: number;
+          no_clock_out?: boolean;
         };
         Update: {
           branch_id?: string;
@@ -423,6 +425,7 @@ export type Database = {
           id?: string;
           late?: boolean;
           late_minutes?: number;
+          no_clock_out?: boolean;
         };
         Relationships: [
           {
@@ -4785,6 +4788,7 @@ export type Database = {
       };
       client_card: { Args: { p_branch: string; p_customer: string }; Returns: Json };
       clock: { Args: { p: Json }; Returns: Json };
+      close_open_shifts: { Args: { p_now?: string }; Returns: number };
       close_period: { Args: { p_business: string; p_month: string }; Returns: undefined };
       closing_history: {
         Args: { p_branch: string; p_days?: number };
