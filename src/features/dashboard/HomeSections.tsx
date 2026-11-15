@@ -3,6 +3,7 @@ import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { useActivityText } from '@/features/activity/activityText';
 import { useWorkspace } from '@/features/auth/session';
 import { formatDuration } from '@/lib/duration';
 import { formatMoney } from '@/lib/money';
@@ -195,6 +196,7 @@ export function TopServices({ data }: { data: Dashboard }) {
 export function RecentActivity({ data }: { data: Dashboard }) {
   const { t } = useTranslation();
   const dates = useDates();
+  const activityText = useActivityText();
   const { business, role } = useWorkspace();
   const router = useRouter();
   const items = data.activity ?? [];
@@ -210,7 +212,7 @@ export function RecentActivity({ data }: { data: Dashboard }) {
         <View key={`${item.at}-${i}`} style={styles.activity} testID="activity-row">
           <Avatar name={item.actor ?? '—'} size={32} />
           <Text variant="small" style={styles.flex}>
-            {item.actor ? `${item.actor}: ${item.summary}` : item.summary}
+            {item.actor ? `${item.actor}: ${activityText(item.summary)}` : activityText(item.summary)}
           </Text>
           <Text variant="small" color="textSecondary" tabular>
             {dates.when(item.at, business.timezone)}

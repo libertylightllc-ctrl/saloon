@@ -3746,5 +3746,353 @@
     "audit": "हर बदलाव पुरानी और नई वैल्यू के साथ ऑडिट ट्रेल में रहता है।",
     "save": "नियंत्रण सेव करें",
     "saved": "नियंत्रण सेव हुए"
+  },
+  "activity": {
+    "saleSaved": {
+      "text": "बिक्री #{{number}} सेव की · {{amount}}"
+    },
+    "saleRefunded": {
+      "text": "बिक्री #{{number}} पर {{amount}} वापस किए: {{reason}}"
+    },
+    "refundRequested": {
+      "text": "बिक्री #{{number}} पर {{amount}} वापसी का अनुरोध: {{reason}}"
+    },
+    "refundDeclined": {
+      "text": "वापसी का अनुरोध ठुकराया{{note}}",
+      "note": ": {{note}}"
+    },
+    "customerDeleted": {
+      "text": "एक ग्राहक की निजी जानकारी हटाई: {{reason}}"
+    },
+    "customersMerged": {
+      "text": "ग्राहक {{from}}{{phone}} को {{into}} में मिलाया",
+      "phone": " ({{phone}})"
+    },
+    "walkInAdded": {
+      "text": "वॉक-इन जोड़ा: {{name}}"
+    },
+    "bookedOnline": {
+      "text": "ऑनलाइन बुकिंग: {{name}}"
+    },
+    "booked": {
+      "text": "{{name}} की बुकिंग की"
+    },
+    "checkedIn": {
+      "text": "{{name}} का चेक-इन"
+    },
+    "serviceStarted": {
+      "text": "{{name}} की सेवा शुरू"
+    },
+    "noShow": {
+      "text": "{{name}} को नहीं आए चिह्नित किया"
+    },
+    "noShowUndone": {
+      "text": "{{name}} का नहीं आए हटाया"
+    },
+    "cancelledOnline": {
+      "text": "{{name}} ने ऑनलाइन रद्द किया"
+    },
+    "appointmentCancelled": {
+      "text": "{{name}} रद्द किया: {{reason}}"
+    },
+    "drawerFromBank": {
+      "text": "बैंक से ड्रॉअर में {{amount}} कैश डाला"
+    },
+    "drawerFromOwner": {
+      "text": "मालिक से ड्रॉअर में {{amount}} कैश डाला"
+    },
+    "openingCash": {
+      "text": "शुरुआती कैश डाला"
+    },
+    "closeSubmitted": {
+      "text": "कैश क्लोज़ {{day}} भेजा: गिना {{counted}}, अपेक्षित {{expected}}, अंतर {{difference}}"
+    },
+    "closeApproved": {
+      "text": "कैश क्लोज़ {{day}} मंज़ूर · अंतर {{amount}}"
+    },
+    "closeReturned": {
+      "text": "कैश क्लोज़ {{day}} वापस भेजा: {{reason}}"
+    },
+    "depositBanked": {
+      "text": "{{day}} के क्लोज़ का {{amount}} बैंक जमा {{banked}} को बैंक पहुँचा{{ref}}",
+      "ref": " · {{ref}}"
+    },
+    "expenseRecorded": {
+      "text": "ख़र्च {{category}} · {{amount}}"
+    },
+    "expenseReversed": {
+      "text": "ख़र्च {{category}} · {{amount}} उलटा — {{reason}}"
+    },
+    "expenseCategory": {
+      "text": "ख़र्च श्रेणी {{name}}"
+    },
+    "purchasePosted": {
+      "text": "ख़रीद {{number}}, {{supplier}} से · {{amount}}"
+    },
+    "purchaseReversed": {
+      "text": "ख़रीद {{number}} उलटी — {{reason}}"
+    },
+    "billPosted": {
+      "text": "बिल #{{number}}, {{supplier}} से · {{amount}}"
+    },
+    "billReversed": {
+      "text": "बिल #{{number}} उलटा — {{reason}}"
+    },
+    "supplierSaved": {
+      "text": "सप्लायर {{name}}"
+    },
+    "receiptAdded": {
+      "text": "रसीद की फ़ोटो जोड़ी"
+    },
+    "booksClosed": {
+      "text": "{{month}} के खाते बंद किए"
+    },
+    "booksReopened": {
+      "text": "{{month}} के खाते फिर खोले: {{reason}}"
+    },
+    "stockAdjusted": {
+      "text": "{{item}} में {{qty}} {{unit}} का बदलाव: {{reason}}"
+    },
+    "openingStock": {
+      "text": "शुरुआती स्टॉक गिना"
+    },
+    "stockDifferenceFixed": {
+      "text": "स्टॉक का अंतर ठीक किया: {{amount}}"
+    },
+    "itemAdded": {
+      "text": "आइटम जोड़ा: {{name}}"
+    },
+    "itemUpdated": {
+      "text": "आइटम बदला: {{name}}"
+    },
+    "deliveryPriced": {
+      "text": "डिलीवरी {{number}} की क़ीमत लगी: {{bill}} · {{amount}}"
+    },
+    "deliveryCancelled": {
+      "text": "डिलीवरी {{number}} रद्द: {{reason}}"
+    },
+    "payrollGenerated": {
+      "text": "{{month}} का पेरोल बनाया: कुल {{amount}}"
+    },
+    "payrollApproved": {
+      "text": "{{month}} का पेरोल मंज़ूर: कुल {{amount}}"
+    },
+    "salaryPaid": {
+      "text": "{{name}} को {{month}} की तनख़्वाह {{amount}} {{method}} से दी{{on}}",
+      "on": " ({{date}} को)"
+    },
+    "tipsPaid": {
+      "text": "{{name}} को {{amount}} टिप दी"
+    },
+    "supplierPaid": {
+      "text": "{{name}} को {{amount}} दिए"
+    },
+    "adjustmentRecorded": {
+      "text": "{{name}} के लिए {{kind}} {{amount}}{{note}}",
+      "note": ": {{note}}"
+    },
+    "adjustmentReversed": {
+      "text": "{{kind}} {{amount}} उलटा: {{reason}}"
+    },
+    "wpsAdded": {
+      "text": "WPS ट्रांसफ़र का सबूत जोड़ा"
+    },
+    "clockIn": {
+      "text": "{{name}} ने {{time}} पर क्लॉक इन किया{{late}}{{by}}",
+      "late": " ({{minutes}} मिनट देर)",
+      "by": " — {{by}} ने दर्ज किया"
+    },
+    "clockOut": {
+      "text": "{{name}} ने {{time}} पर क्लॉक आउट किया{{by}}",
+      "by": " — {{by}} ने दर्ज किया"
+    },
+    "breakStart": {
+      "text": "{{name}} ने {{time}} पर ब्रेक लिया{{by}}",
+      "by": " — {{by}} ने दर्ज किया"
+    },
+    "breakEnd": {
+      "text": "{{name}} {{time}} पर ब्रेक से लौटे ({{minutes}} मिनट){{by}}",
+      "by": " — {{by}} ने दर्ज किया"
+    },
+    "resumed": {
+      "text": "{{name}} {{time}} पर काम पर लौटे ({{out}} पर क्लॉक आउट किया था){{by}}",
+      "by": " — {{by}} ने दर्ज किया"
+    },
+    "shiftClosed": {
+      "text": "{{name}} ने {{day}} को क्लॉक आउट नहीं किया: शिफ़्ट {{time}} पर बंद"
+    },
+    "missedClockOutFixed": {
+      "text": "{{by}} ने {{name}} का {{day}} का छूटा क्लॉक आउट {{time}} किया{{reason}}",
+      "reason": ": {{reason}}"
+    },
+    "rosterUpdated": {
+      "text": "{{name}} का साप्ताहिक रोस्टर बदला"
+    },
+    "staffAdded": {
+      "text": "स्टाफ़ जोड़ा: {{name}}"
+    },
+    "staffUpdated": {
+      "text": "स्टाफ़ बदला: {{name}}{{salary}}",
+      "salary": " (वेतन {{from}} → {{to}})"
+    },
+    "staffRemoved": {
+      "text": "{{name}} को स्टाफ़ से हटाया (कोई रिकॉर्ड नहीं)"
+    },
+    "staffArchived": {
+      "text": "{{name}} को आर्काइव किया (रिकॉर्ड रखे; लॉगिन बंद)"
+    },
+    "staffRestored": {
+      "text": "{{name}} को स्टाफ़ में वापस लाया"
+    },
+    "staffRecordsMerged": {
+      "text": "{{name}} के दो रिकॉर्ड (स्टाफ़ और पेरोल, टीम और लॉगिन) एक में मिलाए"
+    },
+    "loginCreated": {
+      "text": "लॉगिन {{username}} ({{role}}) बनाया{{for}}",
+      "for": " — {{name}} के लिए"
+    },
+    "loginTypeChanged": {
+      "text": "{{name}} का लॉगिन {{role}} में बदला"
+    },
+    "passwordReset": {
+      "text": "{{name}} का पासवर्ड बदला"
+    },
+    "loginEnabled": {
+      "text": "{{name}} का लॉगिन चालू किया"
+    },
+    "loginDisabled": {
+      "text": "{{name}} का लॉगिन बंद किया"
+    },
+    "pinSet": {
+      "text": "क्विक-स्विच PIN सेट किया"
+    },
+    "pinLocked": {
+      "text": "मैनेजर की मंज़ूरी: {{name}} का PIN लॉक है ({{by}} ने माँगा)"
+    },
+    "profileUpdated": {
+      "text": "अपनी प्रोफ़ाइल बदली{{name}}",
+      "name": ": नाम {{from}} → {{to}}"
+    },
+    "loginDeleted": {
+      "text": "अपना लॉगिन हटाया"
+    },
+    "accountDeleted": {
+      "text": "मालिक ने अपना खाता हटाया; सैलून बंद है"
+    },
+    "salonSetUp": {
+      "text": "{{name}} सेट अप किया"
+    },
+    "salonRenamed": {
+      "text": "सैलून का नाम बदला: {{from}} → {{to}}"
+    },
+    "salonClosedByPlatform": {
+      "text": "प्लैटफ़ॉर्म मालिक ने सैलून बंद किया: {{note}}"
+    },
+    "branchAdded": {
+      "text": "शाखा जोड़ी: {{name}}"
+    },
+    "branchUpdated": {
+      "text": "शाखा की सेटिंग बदली"
+    },
+    "modeSwitched": {
+      "text": "सैलून का प्रकार {{mode}} किया"
+    },
+    "countryChanged": {
+      "text": "देश {{from}} ({{fromCurrency}}, {{fromZone}}) से {{to}} ({{toCurrency}}, {{toZone}}) किया"
+    },
+    "bookingOn": {
+      "text": "ऑनलाइन बुकिंग चालू: {{slug}}{{was}}",
+      "was": " (पहले {{old}})"
+    },
+    "bookingOff": {
+      "text": "ऑनलाइन बुकिंग बंद{{was}}",
+      "was": " (पहले {{old}})"
+    },
+    "coverOff": {
+      "text": "बुकिंग पेज से कवर फ़ोटो हटाई"
+    },
+    "coverOn": {
+      "text": "बुकिंग पेज पर कवर फ़ोटो लगाई"
+    },
+    "instagramOff": {
+      "text": "बुकिंग पेज से Instagram हटाया"
+    },
+    "instagramOn": {
+      "text": "बुकिंग पेज पर Instagram: @{{handle}}"
+    },
+    "logoOff": {
+      "text": "रसीदों से लोगो हटाया"
+    },
+    "logoOn": {
+      "text": "रसीदों पर लोगो लगाया"
+    },
+    "roomAdded": {
+      "text": "कमरा जोड़ा: {{name}}"
+    },
+    "roomStopped": {
+      "text": "कमरा {{name}} इस्तेमाल करना बंद किया"
+    },
+    "roomSaved": {
+      "text": "कमरा {{name}}"
+    },
+    "serviceSaved": {
+      "text": "सेवा सेव की: {{name}}"
+    },
+    "controlChanged": {
+      "text": "नियंत्रण: {{control}} {{from}} → {{to}}"
+    },
+    "pilotJoined": {
+      "text": "कोड {{code}} से पायलट में शामिल, {{date}} तक मुफ़्त"
+    },
+    "hygieneSigned": {
+      "text": "स्वच्छता लॉग पर साइन किया: {{total}} में से {{done}} पूरे"
+    },
+    "evidenceAdded": {
+      "text": "{{doc}} का सबूत जोड़ा"
+    },
+    "documentDeleted": {
+      "text": "{{doc}}{{for}} रजिस्टर से हटाया{{reason}}",
+      "for": " ({{person}})",
+      "reason": ": {{reason}}"
+    },
+    "documentRestored": {
+      "text": "{{doc}}{{for}} वापस रखा",
+      "for": " ({{person}})"
+    },
+    "documentEdited": {
+      "text": "{{doc}}{{for}} बदला{{expiry}}",
+      "for": " ({{person}})",
+      "expiry": ": समाप्ति {{from}} → {{to}}"
+    },
+    "documentRenewed": {
+      "text": "{{doc}}{{for}} नवीनीकृत{{expires}}",
+      "for": " ({{person}})",
+      "expires": ", {{date}} तक"
+    },
+    "documentAdded": {
+      "text": "{{doc}}{{for}} जोड़ा{{expires}}",
+      "for": " ({{person}})",
+      "expires": ", {{date}} तक"
+    },
+    "stockCounted": {
+      "text": "{{count}} आइटम गिने, {{changed}} बदले, मूल्य {{amount}}",
+      "text_one": "{{count}} आइटम गिना, {{changed}} बदले, मूल्य {{amount}}"
+    },
+    "deliveryReceived": {
+      "text": "डिलीवरी {{number}} मिली{{from}}: {{count}} आइटम, क़ीमतों का इंतज़ार",
+      "text_one": "डिलीवरी {{number}} मिली{{from}}: {{count}} आइटम, क़ीमतों का इंतज़ार",
+      "from": " ({{supplier}} से)"
+    },
+    "planRequested": {
+      "text": "प्लान माँगा: {{count}} महीने",
+      "text_one": "प्लान माँगा: {{count}} महीना"
+    },
+    "values": {
+      "guest": "मेहमान",
+      "theCustomer": "ग्राहक",
+      "cash": "कैश",
+      "bank": "बैंक ट्रांसफ़र",
+      "card": "कार्ड"
+    }
   }
 }

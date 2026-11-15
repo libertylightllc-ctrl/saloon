@@ -3850,5 +3850,362 @@
     "audit": "كل تغيير يُحفظ في سجل التدقيق بالقيمة القديمة والجديدة.",
     "save": "حفظ الضوابط",
     "saved": "حُفظت الضوابط"
+  },
+  "activity": {
+    "saleSaved": {
+      "text": "حُفظ البيع رقم {{number}} · {{amount}}"
+    },
+    "saleRefunded": {
+      "text": "استرداد {{amount}} من البيع رقم {{number}}: {{reason}}"
+    },
+    "refundRequested": {
+      "text": "طلب استرداد {{amount}} من البيع رقم {{number}}: {{reason}}"
+    },
+    "refundDeclined": {
+      "text": "رُفض طلب استرداد{{note}}",
+      "note": ": {{note}}"
+    },
+    "customerDeleted": {
+      "text": "حُذفت البيانات الشخصية لعميل: {{reason}}"
+    },
+    "customersMerged": {
+      "text": "دُمج العميل {{from}}{{phone}} في {{into}}",
+      "phone": " ({{phone}})"
+    },
+    "walkInAdded": {
+      "text": "أُضيف زائر بدون موعد: {{name}}"
+    },
+    "bookedOnline": {
+      "text": "حجز عبر الإنترنت: {{name}}"
+    },
+    "booked": {
+      "text": "حجز لـ {{name}}"
+    },
+    "checkedIn": {
+      "text": "تسجيل وصول {{name}}"
+    },
+    "serviceStarted": {
+      "text": "بدأت خدمة {{name}}"
+    },
+    "noShow": {
+      "text": "سُجّل عدم حضور {{name}}"
+    },
+    "noShowUndone": {
+      "text": "أُلغي عدم حضور {{name}}"
+    },
+    "cancelledOnline": {
+      "text": "ألغاه {{name}} عبر الإنترنت"
+    },
+    "appointmentCancelled": {
+      "text": "أُلغي موعد {{name}}: {{reason}}"
+    },
+    "drawerFromBank": {
+      "text": "أُضيف {{amount}} نقدًا إلى الدرج من البنك"
+    },
+    "drawerFromOwner": {
+      "text": "أُضيف {{amount}} نقدًا إلى الدرج من المالك"
+    },
+    "openingCash": {
+      "text": "حُدّد النقد الافتتاحي"
+    },
+    "closeSubmitted": {
+      "text": "أُرسل إغلاق الصندوق {{day}}: المعدود {{counted}}، المتوقع {{expected}}، الفرق {{difference}}"
+    },
+    "closeApproved": {
+      "text": "اعتُمد إغلاق الصندوق {{day}} · الفرق {{amount}}"
+    },
+    "closeReturned": {
+      "text": "أُعيد إغلاق الصندوق {{day}}: {{reason}}"
+    },
+    "depositBanked": {
+      "text": "وصل إيداع {{amount}} من إغلاق {{day}} إلى البنك في {{banked}}{{ref}}",
+      "ref": " · {{ref}}"
+    },
+    "expenseRecorded": {
+      "text": "مصروف {{category}} · {{amount}}"
+    },
+    "expenseReversed": {
+      "text": "عُكس مصروف {{category}} · {{amount}} — {{reason}}"
+    },
+    "expenseCategory": {
+      "text": "فئة مصروف {{name}}"
+    },
+    "purchasePosted": {
+      "text": "مشتريات {{number}} من {{supplier}} · {{amount}}"
+    },
+    "purchaseReversed": {
+      "text": "عُكست المشتريات {{number}} — {{reason}}"
+    },
+    "billPosted": {
+      "text": "فاتورة رقم {{number}} من {{supplier}} · {{amount}}"
+    },
+    "billReversed": {
+      "text": "عُكست الفاتورة رقم {{number}} — {{reason}}"
+    },
+    "supplierSaved": {
+      "text": "المورّد {{name}}"
+    },
+    "receiptAdded": {
+      "text": "أُضيفت صورة إيصال"
+    },
+    "booksClosed": {
+      "text": "أُقفلت الدفاتر لشهر {{month}}"
+    },
+    "booksReopened": {
+      "text": "أُعيد فتح الدفاتر لشهر {{month}}: {{reason}}"
+    },
+    "stockAdjusted": {
+      "text": "عُدّل {{item}} بمقدار {{qty}} {{unit}}: {{reason}}"
+    },
+    "openingStock": {
+      "text": "عُدّ المخزون الافتتاحي"
+    },
+    "stockDifferenceFixed": {
+      "text": "صُحّح فرق المخزون: {{amount}}"
+    },
+    "itemAdded": {
+      "text": "أُضيف الصنف {{name}}"
+    },
+    "itemUpdated": {
+      "text": "حُدّث الصنف {{name}}"
+    },
+    "deliveryPriced": {
+      "text": "سُعّرت الشحنة {{number}}: {{bill}} · {{amount}}"
+    },
+    "deliveryCancelled": {
+      "text": "أُلغيت الشحنة {{number}}: {{reason}}"
+    },
+    "payrollGenerated": {
+      "text": "حُسبت رواتب {{month}}: الصافي {{amount}}"
+    },
+    "payrollApproved": {
+      "text": "اعتُمدت رواتب {{month}}: الصافي {{amount}}"
+    },
+    "salaryPaid": {
+      "text": "دُفع راتب {{month}} ({{amount}}) إلى {{name}} {{method}}{{on}}",
+      "on": " في {{date}}"
+    },
+    "tipsPaid": {
+      "text": "دُفعت إكراميات {{amount}} إلى {{name}}"
+    },
+    "supplierPaid": {
+      "text": "دُفع {{amount}} إلى {{name}}"
+    },
+    "adjustmentRecorded": {
+      "text": "{{kind}} {{amount}} لـ {{name}}{{note}}",
+      "note": ": {{note}}"
+    },
+    "adjustmentReversed": {
+      "text": "عُكس {{kind}} {{amount}}: {{reason}}"
+    },
+    "wpsAdded": {
+      "text": "أُضيف إثبات تحويل WPS"
+    },
+    "clockIn": {
+      "text": "{{name}} سجّل الحضور الساعة {{time}}{{late}}{{by}}",
+      "late": " (متأخر {{minutes}} د)",
+      "by": " — سجّله {{by}}"
+    },
+    "clockOut": {
+      "text": "{{name}} سجّل الانصراف الساعة {{time}}{{by}}",
+      "by": " — سجّله {{by}}"
+    },
+    "breakStart": {
+      "text": "{{name}} بدأ استراحة الساعة {{time}}{{by}}",
+      "by": " — سجّله {{by}}"
+    },
+    "breakEnd": {
+      "text": "{{name}} عاد من الاستراحة الساعة {{time}} ({{minutes}} د){{by}}",
+      "by": " — سجّله {{by}}"
+    },
+    "resumed": {
+      "text": "{{name}} عاد إلى العمل الساعة {{time}} (كان قد سجّل الانصراف {{out}}){{by}}",
+      "by": " — سجّله {{by}}"
+    },
+    "shiftClosed": {
+      "text": "{{name}} لم يسجّل الانصراف يوم {{day}}: أُغلقت الوردية الساعة {{time}}"
+    },
+    "missedClockOutFixed": {
+      "text": "حدّد {{by}} انصراف {{name}} الفائت يوم {{day}} على {{time}}{{reason}}",
+      "reason": ": {{reason}}"
+    },
+    "rosterUpdated": {
+      "text": "حُدّث الجدول الأسبوعي لـ {{name}}"
+    },
+    "staffAdded": {
+      "text": "أُضيف الموظف {{name}}"
+    },
+    "staffUpdated": {
+      "text": "حُدّث الموظف {{name}}{{salary}}",
+      "salary": " (الراتب {{from}} ← {{to}})"
+    },
+    "staffRemoved": {
+      "text": "أُزيل {{name}} من الموظفين (بلا سجلات)"
+    },
+    "staffArchived": {
+      "text": "أُرشف {{name}} (السجلات محفوظة؛ الدخول متوقف)"
+    },
+    "staffRestored": {
+      "text": "أُعيد {{name}} إلى الموظفين"
+    },
+    "staffRecordsMerged": {
+      "text": "دُمج سجلّا {{name}} (الموظفون والرواتب، والفريق وتسجيلات الدخول) في سجل واحد"
+    },
+    "loginCreated": {
+      "text": "أُنشئ دخول {{username}} ({{role}}){{for}}",
+      "for": " لـ {{name}}"
+    },
+    "loginTypeChanged": {
+      "text": "غُيّر نوع دخول {{name}} إلى {{role}}"
+    },
+    "passwordReset": {
+      "text": "أُعيد تعيين كلمة مرور {{name}}"
+    },
+    "loginEnabled": {
+      "text": "فُعّل دخول {{name}}"
+    },
+    "loginDisabled": {
+      "text": "أُوقف دخول {{name}}"
+    },
+    "pinSet": {
+      "text": "عُيّن رمز PIN للتبديل السريع"
+    },
+    "pinLocked": {
+      "text": "موافقة المدير: رمز PIN الخاص بـ {{name}} مقفل (طلبها {{by}})"
+    },
+    "profileUpdated": {
+      "text": "حدّث ملفه الشخصي{{name}}",
+      "name": ": الاسم {{from}} ← {{to}}"
+    },
+    "loginDeleted": {
+      "text": "حذف دخوله الخاص"
+    },
+    "accountDeleted": {
+      "text": "حذف المالك حسابه؛ الصالون مغلق"
+    },
+    "salonSetUp": {
+      "text": "أُنشئ {{name}}"
+    },
+    "salonRenamed": {
+      "text": "غُيّر اسم الصالون: {{from}} ← {{to}}"
+    },
+    "salonClosedByPlatform": {
+      "text": "أغلق مالك المنصة الصالون: {{note}}"
+    },
+    "branchAdded": {
+      "text": "أُضيف الفرع {{name}}"
+    },
+    "branchUpdated": {
+      "text": "حُدّثت إعدادات الفرع"
+    },
+    "modeSwitched": {
+      "text": "غُيّر نوع الصالون إلى {{mode}}"
+    },
+    "countryChanged": {
+      "text": "غُيّرت الدولة من {{from}} ({{fromCurrency}}، {{fromZone}}) إلى {{to}} ({{toCurrency}}، {{toZone}})"
+    },
+    "bookingOn": {
+      "text": "الحجز عبر الإنترنت مفعّل: {{slug}}{{was}}",
+      "was": " (كان {{old}})"
+    },
+    "bookingOff": {
+      "text": "الحجز عبر الإنترنت متوقف{{was}}",
+      "was": " (كان {{old}})"
+    },
+    "coverOff": {
+      "text": "أُزيلت صورة الغلاف من صفحة الحجز"
+    },
+    "coverOn": {
+      "text": "أُضيفت صورة غلاف إلى صفحة الحجز"
+    },
+    "instagramOff": {
+      "text": "أُزيل إنستغرام من صفحة الحجز"
+    },
+    "instagramOn": {
+      "text": "إنستغرام في صفحة الحجز: @{{handle}}"
+    },
+    "logoOff": {
+      "text": "أُزيل الشعار من الإيصالات"
+    },
+    "logoOn": {
+      "text": "أُضيف شعار إلى الإيصالات"
+    },
+    "roomAdded": {
+      "text": "أُضيفت الغرفة {{name}}"
+    },
+    "roomStopped": {
+      "text": "توقف استخدام الغرفة {{name}}"
+    },
+    "roomSaved": {
+      "text": "الغرفة {{name}}"
+    },
+    "serviceSaved": {
+      "text": "حُفظت الخدمة {{name}}"
+    },
+    "controlChanged": {
+      "text": "الضوابط: {{control}} {{from}} ← {{to}}"
+    },
+    "pilotJoined": {
+      "text": "انضم إلى البرنامج التجريبي بالرمز {{code}}، مجانًا حتى {{date}}"
+    },
+    "hygieneSigned": {
+      "text": "وُقّع سجل النظافة: {{done}} من {{total}} منجزة"
+    },
+    "evidenceAdded": {
+      "text": "أُضيف إثبات لـ {{doc}}"
+    },
+    "documentDeleted": {
+      "text": "حُذف {{doc}}{{for}} من السجل{{reason}}",
+      "for": " لـ {{person}}",
+      "reason": ": {{reason}}"
+    },
+    "documentRestored": {
+      "text": "أُعيد {{doc}}{{for}}",
+      "for": " لـ {{person}}"
+    },
+    "documentEdited": {
+      "text": "عُدّل {{doc}}{{for}}{{expiry}}",
+      "for": " لـ {{person}}",
+      "expiry": ": الانتهاء {{from}} ← {{to}}"
+    },
+    "documentRenewed": {
+      "text": "جُدّد {{doc}}{{for}}{{expires}}",
+      "for": " لـ {{person}}",
+      "expires": "، ينتهي {{date}}"
+    },
+    "documentAdded": {
+      "text": "أُضيف {{doc}}{{for}}{{expires}}",
+      "for": " لـ {{person}}",
+      "expires": "، ينتهي {{date}}"
+    },
+    "stockCounted": {
+      "text": "عُدّ {{count}} صنف، تغيّر {{changed}}، القيمة {{amount}}",
+      "text_one": "عُدّ صنف واحد، تغيّر {{changed}}، القيمة {{amount}}",
+      "text_two": "عُدّ صنفان، تغيّر {{changed}}، القيمة {{amount}}",
+      "text_few": "عُدّت {{count}} أصناف، تغيّر {{changed}}، القيمة {{amount}}",
+      "text_many": "عُدّ {{count}} صنفًا، تغيّر {{changed}}، القيمة {{amount}}"
+    },
+    "deliveryReceived": {
+      "text": "استُلمت الشحنة {{number}}{{from}}: {{count}} صنف، بانتظار الأسعار",
+      "text_one": "استُلمت الشحنة {{number}}{{from}}: صنف واحد، بانتظار الأسعار",
+      "text_two": "استُلمت الشحنة {{number}}{{from}}: صنفان، بانتظار الأسعار",
+      "text_few": "استُلمت الشحنة {{number}}{{from}}: {{count}} أصناف، بانتظار الأسعار",
+      "text_many": "استُلمت الشحنة {{number}}{{from}}: {{count}} صنفًا، بانتظار الأسعار",
+      "from": " من {{supplier}}"
+    },
+    "planRequested": {
+      "text": "طلب الاشتراك: {{count}} شهر",
+      "text_one": "طلب الاشتراك: شهر واحد",
+      "text_two": "طلب الاشتراك: شهران",
+      "text_few": "طلب الاشتراك: {{count}} أشهر",
+      "text_many": "طلب الاشتراك: {{count}} شهرًا"
+    },
+    "values": {
+      "guest": "ضيف",
+      "theCustomer": "العميل",
+      "cash": "نقدًا",
+      "bank": "بتحويل بنكي",
+      "card": "بالبطاقة"
+    }
   }
 }

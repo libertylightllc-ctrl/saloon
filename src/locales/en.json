@@ -3745,5 +3745,353 @@
     "audit": "Every change is kept in the audit trail with the old and new value.",
     "save": "Save controls",
     "saved": "Controls saved"
+  },
+  "activity": {
+    "saleSaved": {
+      "text": "Saved sale #{{number}} · {{amount}}"
+    },
+    "saleRefunded": {
+      "text": "Refunded {{amount}} on sale #{{number}}: {{reason}}"
+    },
+    "refundRequested": {
+      "text": "Asked for a refund of {{amount}} on sale #{{number}}: {{reason}}"
+    },
+    "refundDeclined": {
+      "text": "Declined a refund request{{note}}",
+      "note": ": {{note}}"
+    },
+    "customerDeleted": {
+      "text": "Deleted a customer's personal details: {{reason}}"
+    },
+    "customersMerged": {
+      "text": "Merged customer {{from}}{{phone}} into {{into}}",
+      "phone": " ({{phone}})"
+    },
+    "walkInAdded": {
+      "text": "Added walk-in {{name}}"
+    },
+    "bookedOnline": {
+      "text": "Booked online: {{name}}"
+    },
+    "booked": {
+      "text": "Booked {{name}}"
+    },
+    "checkedIn": {
+      "text": "Checked in {{name}}"
+    },
+    "serviceStarted": {
+      "text": "Started {{name}}"
+    },
+    "noShow": {
+      "text": "Marked no-show {{name}}"
+    },
+    "noShowUndone": {
+      "text": "Undid no-show for {{name}}"
+    },
+    "cancelledOnline": {
+      "text": "Cancelled online by {{name}}"
+    },
+    "appointmentCancelled": {
+      "text": "Cancelled {{name}}: {{reason}}"
+    },
+    "drawerFromBank": {
+      "text": "Added {{amount}} cash to the drawer from the bank"
+    },
+    "drawerFromOwner": {
+      "text": "Added {{amount}} cash to the drawer from the owner"
+    },
+    "openingCash": {
+      "text": "Set opening cash"
+    },
+    "closeSubmitted": {
+      "text": "Submitted cash close {{day}}: counted {{counted}}, expected {{expected}}, difference {{difference}}"
+    },
+    "closeApproved": {
+      "text": "Approved cash close {{day}} · difference {{amount}}"
+    },
+    "closeReturned": {
+      "text": "Sent cash close {{day}} back: {{reason}}"
+    },
+    "depositBanked": {
+      "text": "Bank deposit {{amount}} from the {{day}} close reached the bank on {{banked}}{{ref}}",
+      "ref": " · {{ref}}"
+    },
+    "expenseRecorded": {
+      "text": "Expense {{category}} · {{amount}}"
+    },
+    "expenseReversed": {
+      "text": "Reversed expense {{category}} · {{amount}} — {{reason}}"
+    },
+    "expenseCategory": {
+      "text": "Expense category {{name}}"
+    },
+    "purchasePosted": {
+      "text": "Purchase {{number}} from {{supplier}} · {{amount}}"
+    },
+    "purchaseReversed": {
+      "text": "Reversed purchase {{number}} — {{reason}}"
+    },
+    "billPosted": {
+      "text": "Bill #{{number}} from {{supplier}} · {{amount}}"
+    },
+    "billReversed": {
+      "text": "Reversed bill #{{number}} — {{reason}}"
+    },
+    "supplierSaved": {
+      "text": "Supplier {{name}}"
+    },
+    "receiptAdded": {
+      "text": "Added a receipt photo"
+    },
+    "booksClosed": {
+      "text": "Closed the books for {{month}}"
+    },
+    "booksReopened": {
+      "text": "Reopened the books for {{month}}: {{reason}}"
+    },
+    "stockAdjusted": {
+      "text": "Adjusted {{item}} by {{qty}} {{unit}}: {{reason}}"
+    },
+    "openingStock": {
+      "text": "Counted opening stock"
+    },
+    "stockDifferenceFixed": {
+      "text": "Fixed the stock difference: {{amount}}"
+    },
+    "itemAdded": {
+      "text": "Added item {{name}}"
+    },
+    "itemUpdated": {
+      "text": "Updated item {{name}}"
+    },
+    "deliveryPriced": {
+      "text": "Delivery {{number}} priced: {{bill}} · {{amount}}"
+    },
+    "deliveryCancelled": {
+      "text": "Delivery {{number}} cancelled: {{reason}}"
+    },
+    "payrollGenerated": {
+      "text": "Worked out payroll for {{month}}: net {{amount}}"
+    },
+    "payrollApproved": {
+      "text": "Approved payroll for {{month}}: net {{amount}}"
+    },
+    "salaryPaid": {
+      "text": "Paid {{month}} salary {{amount}} to {{name}} by {{method}}{{on}}",
+      "on": " on {{date}}"
+    },
+    "tipsPaid": {
+      "text": "Paid tips {{amount}} to {{name}}"
+    },
+    "supplierPaid": {
+      "text": "Paid {{name}} {{amount}}"
+    },
+    "adjustmentRecorded": {
+      "text": "{{kind}} {{amount}} for {{name}}{{note}}",
+      "note": ": {{note}}"
+    },
+    "adjustmentReversed": {
+      "text": "Reversed {{kind}} {{amount}}: {{reason}}"
+    },
+    "wpsAdded": {
+      "text": "Added WPS transfer proof"
+    },
+    "clockIn": {
+      "text": "{{name}} clocked in at {{time}}{{late}}{{by}}",
+      "late": " (late {{minutes}} min)",
+      "by": " — recorded by {{by}}"
+    },
+    "clockOut": {
+      "text": "{{name}} clocked out at {{time}}{{by}}",
+      "by": " — recorded by {{by}}"
+    },
+    "breakStart": {
+      "text": "{{name}} started a break at {{time}}{{by}}",
+      "by": " — recorded by {{by}}"
+    },
+    "breakEnd": {
+      "text": "{{name}} back from a break at {{time}} ({{minutes}} min){{by}}",
+      "by": " — recorded by {{by}}"
+    },
+    "resumed": {
+      "text": "{{name}} back at work at {{time}} (had clocked out at {{out}}){{by}}",
+      "by": " — recorded by {{by}}"
+    },
+    "shiftClosed": {
+      "text": "{{name}} did not clock out on {{day}}: shift closed at {{time}}"
+    },
+    "missedClockOutFixed": {
+      "text": "{{name}}'s missed clock-out on {{day}} set to {{time}} by {{by}}{{reason}}",
+      "reason": ": {{reason}}"
+    },
+    "rosterUpdated": {
+      "text": "Updated the weekly roster of {{name}}"
+    },
+    "staffAdded": {
+      "text": "Added staff {{name}}"
+    },
+    "staffUpdated": {
+      "text": "Updated staff {{name}}{{salary}}",
+      "salary": " (salary {{from}} → {{to}})"
+    },
+    "staffRemoved": {
+      "text": "Removed {{name}} from the staff (no records)"
+    },
+    "staffArchived": {
+      "text": "Archived {{name}} (records kept; login off)"
+    },
+    "staffRestored": {
+      "text": "Brought {{name}} back to the staff"
+    },
+    "staffRecordsMerged": {
+      "text": "Merged the two records of {{name}} (Staff & payroll and Team & logins) into one"
+    },
+    "loginCreated": {
+      "text": "Created login {{username}} ({{role}}){{for}}",
+      "for": " for {{name}}"
+    },
+    "loginTypeChanged": {
+      "text": "Changed {{name}}'s login to {{role}}"
+    },
+    "passwordReset": {
+      "text": "Reset password for {{name}}"
+    },
+    "loginEnabled": {
+      "text": "Enabled login for {{name}}"
+    },
+    "loginDisabled": {
+      "text": "Disabled login for {{name}}"
+    },
+    "pinSet": {
+      "text": "Set a quick-switch PIN"
+    },
+    "pinLocked": {
+      "text": "Manager approval: {{name}}'s PIN is locked (asked by {{by}})"
+    },
+    "profileUpdated": {
+      "text": "Updated their profile{{name}}",
+      "name": ": name {{from}} → {{to}}"
+    },
+    "loginDeleted": {
+      "text": "Deleted their own login"
+    },
+    "accountDeleted": {
+      "text": "The owner deleted their account; the salon is closed"
+    },
+    "salonSetUp": {
+      "text": "Set up {{name}}"
+    },
+    "salonRenamed": {
+      "text": "Renamed the salon: {{from}} → {{to}}"
+    },
+    "salonClosedByPlatform": {
+      "text": "Salon closed by the platform owner: {{note}}"
+    },
+    "branchAdded": {
+      "text": "Added the branch {{name}}"
+    },
+    "branchUpdated": {
+      "text": "Updated branch settings"
+    },
+    "modeSwitched": {
+      "text": "Switched salon type to {{mode}}"
+    },
+    "countryChanged": {
+      "text": "Changed the country from {{from}} ({{fromCurrency}}, {{fromZone}}) to {{to}} ({{toCurrency}}, {{toZone}})"
+    },
+    "bookingOn": {
+      "text": "Online booking on: {{slug}}{{was}}",
+      "was": " (was {{old}})"
+    },
+    "bookingOff": {
+      "text": "Online booking off{{was}}",
+      "was": " (was {{old}})"
+    },
+    "coverOff": {
+      "text": "Took the cover photo off the booking page"
+    },
+    "coverOn": {
+      "text": "Put a cover photo on the booking page"
+    },
+    "instagramOff": {
+      "text": "Took Instagram off the booking page"
+    },
+    "instagramOn": {
+      "text": "Instagram on the booking page: @{{handle}}"
+    },
+    "logoOff": {
+      "text": "Took the logo off receipts"
+    },
+    "logoOn": {
+      "text": "Put a logo on receipts"
+    },
+    "roomAdded": {
+      "text": "Added the room {{name}}"
+    },
+    "roomStopped": {
+      "text": "Stopped using the room {{name}}"
+    },
+    "roomSaved": {
+      "text": "Room {{name}}"
+    },
+    "serviceSaved": {
+      "text": "Saved service {{name}}"
+    },
+    "controlChanged": {
+      "text": "Controls: {{control}} {{from}} → {{to}}"
+    },
+    "pilotJoined": {
+      "text": "Joined the pilot with code {{code}}, free until {{date}}"
+    },
+    "hygieneSigned": {
+      "text": "Signed the hygiene log: {{done}} of {{total}} done"
+    },
+    "evidenceAdded": {
+      "text": "Added evidence for {{doc}}"
+    },
+    "documentDeleted": {
+      "text": "Deleted {{doc}}{{for}} from the register{{reason}}",
+      "for": " for {{person}}",
+      "reason": ": {{reason}}"
+    },
+    "documentRestored": {
+      "text": "Put back {{doc}}{{for}}",
+      "for": " for {{person}}"
+    },
+    "documentEdited": {
+      "text": "Edited {{doc}}{{for}}{{expiry}}",
+      "for": " for {{person}}",
+      "expiry": ": expires {{from}} → {{to}}"
+    },
+    "documentRenewed": {
+      "text": "Renewed {{doc}}{{for}}{{expires}}",
+      "for": " for {{person}}",
+      "expires": ", expires {{date}}"
+    },
+    "documentAdded": {
+      "text": "Added {{doc}}{{for}}{{expires}}",
+      "for": " for {{person}}",
+      "expires": ", expires {{date}}"
+    },
+    "stockCounted": {
+      "text": "Counted {{count}} items, {{changed}} changed, value {{amount}}",
+      "text_one": "Counted {{count}} item, {{changed}} changed, value {{amount}}"
+    },
+    "deliveryReceived": {
+      "text": "Delivery {{number}} received{{from}}: {{count}} items, waiting for prices",
+      "text_one": "Delivery {{number}} received{{from}}: {{count}} item, waiting for prices",
+      "from": " from {{supplier}}"
+    },
+    "planRequested": {
+      "text": "Asked for the plan: {{count}} months",
+      "text_one": "Asked for the plan: {{count}} month"
+    },
+    "values": {
+      "guest": "guest",
+      "theCustomer": "the customer",
+      "cash": "cash",
+      "bank": "bank transfer",
+      "card": "card"
+    }
   }
 }

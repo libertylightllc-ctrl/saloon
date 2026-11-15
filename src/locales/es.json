@@ -3746,5 +3746,353 @@
     "audit": "Cada cambio queda en el registro de actividad con el valor anterior y el nuevo.",
     "save": "Guardar controles",
     "saved": "Controles guardados"
+  },
+  "activity": {
+    "saleSaved": {
+      "text": "Venta n.º {{number}} guardada · {{amount}}"
+    },
+    "saleRefunded": {
+      "text": "Reembolsó {{amount}} de la venta n.º {{number}}: {{reason}}"
+    },
+    "refundRequested": {
+      "text": "Pidió un reembolso de {{amount}} en la venta n.º {{number}}: {{reason}}"
+    },
+    "refundDeclined": {
+      "text": "Rechazó una solicitud de reembolso{{note}}",
+      "note": ": {{note}}"
+    },
+    "customerDeleted": {
+      "text": "Borró los datos personales de un cliente: {{reason}}"
+    },
+    "customersMerged": {
+      "text": "Unió al cliente {{from}}{{phone}} con {{into}}",
+      "phone": " ({{phone}})"
+    },
+    "walkInAdded": {
+      "text": "Añadió sin cita: {{name}}"
+    },
+    "bookedOnline": {
+      "text": "Reserva en línea: {{name}}"
+    },
+    "booked": {
+      "text": "Reservó a {{name}}"
+    },
+    "checkedIn": {
+      "text": "Registró la llegada de {{name}}"
+    },
+    "serviceStarted": {
+      "text": "Empezó con {{name}}"
+    },
+    "noShow": {
+      "text": "Marcó como no presentado a {{name}}"
+    },
+    "noShowUndone": {
+      "text": "Deshizo el no presentado de {{name}}"
+    },
+    "cancelledOnline": {
+      "text": "Cancelado en línea por {{name}}"
+    },
+    "appointmentCancelled": {
+      "text": "Canceló a {{name}}: {{reason}}"
+    },
+    "drawerFromBank": {
+      "text": "Añadió {{amount}} en efectivo a la caja desde el banco"
+    },
+    "drawerFromOwner": {
+      "text": "Añadió {{amount}} en efectivo a la caja, del dueño"
+    },
+    "openingCash": {
+      "text": "Fijó el efectivo inicial"
+    },
+    "closeSubmitted": {
+      "text": "Envió el cierre de caja del {{day}}: contado {{counted}}, esperado {{expected}}, diferencia {{difference}}"
+    },
+    "closeApproved": {
+      "text": "Aprobó el cierre de caja del {{day}} · diferencia {{amount}}"
+    },
+    "closeReturned": {
+      "text": "Devolvió el cierre de caja del {{day}}: {{reason}}"
+    },
+    "depositBanked": {
+      "text": "El depósito de {{amount}} del cierre del {{day}} llegó al banco el {{banked}}{{ref}}",
+      "ref": " · {{ref}}"
+    },
+    "expenseRecorded": {
+      "text": "Gasto {{category}} · {{amount}}"
+    },
+    "expenseReversed": {
+      "text": "Anuló el gasto {{category}} · {{amount}} — {{reason}}"
+    },
+    "expenseCategory": {
+      "text": "Categoría de gasto {{name}}"
+    },
+    "purchasePosted": {
+      "text": "Compra {{number}} a {{supplier}} · {{amount}}"
+    },
+    "purchaseReversed": {
+      "text": "Anuló la compra {{number}} — {{reason}}"
+    },
+    "billPosted": {
+      "text": "Factura n.º {{number}} de {{supplier}} · {{amount}}"
+    },
+    "billReversed": {
+      "text": "Anuló la factura n.º {{number}} — {{reason}}"
+    },
+    "supplierSaved": {
+      "text": "Proveedor {{name}}"
+    },
+    "receiptAdded": {
+      "text": "Añadió una foto del recibo"
+    },
+    "booksClosed": {
+      "text": "Cerró los libros de {{month}}"
+    },
+    "booksReopened": {
+      "text": "Reabrió los libros de {{month}}: {{reason}}"
+    },
+    "stockAdjusted": {
+      "text": "Ajustó {{item}} en {{qty}} {{unit}}: {{reason}}"
+    },
+    "openingStock": {
+      "text": "Contó el stock inicial"
+    },
+    "stockDifferenceFixed": {
+      "text": "Corrigió la diferencia de stock: {{amount}}"
+    },
+    "itemAdded": {
+      "text": "Añadió el artículo {{name}}"
+    },
+    "itemUpdated": {
+      "text": "Actualizó el artículo {{name}}"
+    },
+    "deliveryPriced": {
+      "text": "Entrega {{number}} con precios: {{bill}} · {{amount}}"
+    },
+    "deliveryCancelled": {
+      "text": "Entrega {{number}} cancelada: {{reason}}"
+    },
+    "payrollGenerated": {
+      "text": "Calculó la nómina de {{month}}: neto {{amount}}"
+    },
+    "payrollApproved": {
+      "text": "Aprobó la nómina de {{month}}: neto {{amount}}"
+    },
+    "salaryPaid": {
+      "text": "Pagó el sueldo de {{month}} ({{amount}}) a {{name}} {{method}}{{on}}",
+      "on": " el {{date}}"
+    },
+    "tipsPaid": {
+      "text": "Pagó propinas de {{amount}} a {{name}}"
+    },
+    "supplierPaid": {
+      "text": "Pagó {{amount}} a {{name}}"
+    },
+    "adjustmentRecorded": {
+      "text": "{{kind}} de {{amount}} para {{name}}{{note}}",
+      "note": ": {{note}}"
+    },
+    "adjustmentReversed": {
+      "text": "Anuló {{kind}} de {{amount}}: {{reason}}"
+    },
+    "wpsAdded": {
+      "text": "Añadió el comprobante de transferencia WPS"
+    },
+    "clockIn": {
+      "text": "{{name}} entró a las {{time}}{{late}}{{by}}",
+      "late": " ({{minutes}} min tarde)",
+      "by": " — registrado por {{by}}"
+    },
+    "clockOut": {
+      "text": "{{name}} salió a las {{time}}{{by}}",
+      "by": " — registrado por {{by}}"
+    },
+    "breakStart": {
+      "text": "{{name}} empezó un descanso a las {{time}}{{by}}",
+      "by": " — registrado por {{by}}"
+    },
+    "breakEnd": {
+      "text": "{{name}} volvió del descanso a las {{time}} ({{minutes}} min){{by}}",
+      "by": " — registrado por {{by}}"
+    },
+    "resumed": {
+      "text": "{{name}} volvió al trabajo a las {{time}} (había salido a las {{out}}){{by}}",
+      "by": " — registrado por {{by}}"
+    },
+    "shiftClosed": {
+      "text": "{{name}} no marcó la salida el {{day}}: turno cerrado a las {{time}}"
+    },
+    "missedClockOutFixed": {
+      "text": "{{by}} fijó la salida olvidada de {{name}} del {{day}} a las {{time}}{{reason}}",
+      "reason": ": {{reason}}"
+    },
+    "rosterUpdated": {
+      "text": "Actualizó el horario semanal de {{name}}"
+    },
+    "staffAdded": {
+      "text": "Añadió al empleado {{name}}"
+    },
+    "staffUpdated": {
+      "text": "Actualizó al empleado {{name}}{{salary}}",
+      "salary": " (sueldo {{from}} → {{to}})"
+    },
+    "staffRemoved": {
+      "text": "Quitó a {{name}} del personal (sin registros)"
+    },
+    "staffArchived": {
+      "text": "Archivó a {{name}} (registros guardados; acceso desactivado)"
+    },
+    "staffRestored": {
+      "text": "Devolvió a {{name}} al personal"
+    },
+    "staffRecordsMerged": {
+      "text": "Unió los dos registros de {{name}} (Personal y nómina, y Equipo y accesos) en uno"
+    },
+    "loginCreated": {
+      "text": "Creó el acceso {{username}} ({{role}}){{for}}",
+      "for": " para {{name}}"
+    },
+    "loginTypeChanged": {
+      "text": "Cambió el acceso de {{name}} a {{role}}"
+    },
+    "passwordReset": {
+      "text": "Restableció la contraseña de {{name}}"
+    },
+    "loginEnabled": {
+      "text": "Activó el acceso de {{name}}"
+    },
+    "loginDisabled": {
+      "text": "Desactivó el acceso de {{name}}"
+    },
+    "pinSet": {
+      "text": "Configuró un PIN de cambio rápido"
+    },
+    "pinLocked": {
+      "text": "Aprobación del gerente: el PIN de {{name}} está bloqueado (lo pidió {{by}})"
+    },
+    "profileUpdated": {
+      "text": "Actualizó su perfil{{name}}",
+      "name": ": nombre {{from}} → {{to}}"
+    },
+    "loginDeleted": {
+      "text": "Borró su propio acceso"
+    },
+    "accountDeleted": {
+      "text": "El dueño borró su cuenta; el salón está cerrado"
+    },
+    "salonSetUp": {
+      "text": "Configuró {{name}}"
+    },
+    "salonRenamed": {
+      "text": "Cambió el nombre del salón: {{from}} → {{to}}"
+    },
+    "salonClosedByPlatform": {
+      "text": "El dueño de la plataforma cerró el salón: {{note}}"
+    },
+    "branchAdded": {
+      "text": "Añadió la sucursal {{name}}"
+    },
+    "branchUpdated": {
+      "text": "Actualizó los ajustes de la sucursal"
+    },
+    "modeSwitched": {
+      "text": "Cambió el tipo de salón a {{mode}}"
+    },
+    "countryChanged": {
+      "text": "Cambió el país de {{from}} ({{fromCurrency}}, {{fromZone}}) a {{to}} ({{toCurrency}}, {{toZone}})"
+    },
+    "bookingOn": {
+      "text": "Reservas en línea activadas: {{slug}}{{was}}",
+      "was": " (antes {{old}})"
+    },
+    "bookingOff": {
+      "text": "Reservas en línea desactivadas{{was}}",
+      "was": " (antes {{old}})"
+    },
+    "coverOff": {
+      "text": "Quitó la foto de portada de la página de reservas"
+    },
+    "coverOn": {
+      "text": "Puso una foto de portada en la página de reservas"
+    },
+    "instagramOff": {
+      "text": "Quitó Instagram de la página de reservas"
+    },
+    "instagramOn": {
+      "text": "Instagram en la página de reservas: @{{handle}}"
+    },
+    "logoOff": {
+      "text": "Quitó el logotipo de los recibos"
+    },
+    "logoOn": {
+      "text": "Puso un logotipo en los recibos"
+    },
+    "roomAdded": {
+      "text": "Añadió la sala {{name}}"
+    },
+    "roomStopped": {
+      "text": "Dejó de usar la sala {{name}}"
+    },
+    "roomSaved": {
+      "text": "Sala {{name}}"
+    },
+    "serviceSaved": {
+      "text": "Guardó el servicio {{name}}"
+    },
+    "controlChanged": {
+      "text": "Controles: {{control}} {{from}} → {{to}}"
+    },
+    "pilotJoined": {
+      "text": "Se unió al piloto con el código {{code}}, gratis hasta el {{date}}"
+    },
+    "hygieneSigned": {
+      "text": "Firmó el registro de higiene: {{done}} de {{total}} hechos"
+    },
+    "evidenceAdded": {
+      "text": "Añadió el comprobante de {{doc}}"
+    },
+    "documentDeleted": {
+      "text": "Borró {{doc}}{{for}} del registro{{reason}}",
+      "for": " de {{person}}",
+      "reason": ": {{reason}}"
+    },
+    "documentRestored": {
+      "text": "Restauró {{doc}}{{for}}",
+      "for": " de {{person}}"
+    },
+    "documentEdited": {
+      "text": "Editó {{doc}}{{for}}{{expiry}}",
+      "for": " de {{person}}",
+      "expiry": ": vence {{from}} → {{to}}"
+    },
+    "documentRenewed": {
+      "text": "Renovó {{doc}}{{for}}{{expires}}",
+      "for": " de {{person}}",
+      "expires": ", vence el {{date}}"
+    },
+    "documentAdded": {
+      "text": "Añadió {{doc}}{{for}}{{expires}}",
+      "for": " de {{person}}",
+      "expires": ", vence el {{date}}"
+    },
+    "stockCounted": {
+      "text": "Contó {{count}} artículos, {{changed}} cambiaron, valor {{amount}}",
+      "text_one": "Contó {{count}} artículo, {{changed}} cambiaron, valor {{amount}}"
+    },
+    "deliveryReceived": {
+      "text": "Entrega {{number}} recibida{{from}}: {{count}} artículos, esperando precios",
+      "text_one": "Entrega {{number}} recibida{{from}}: {{count}} artículo, esperando precios",
+      "from": " de {{supplier}}"
+    },
+    "planRequested": {
+      "text": "Pidió el plan: {{count}} meses",
+      "text_one": "Pidió el plan: {{count}} mes"
+    },
+    "values": {
+      "guest": "invitado",
+      "theCustomer": "el cliente",
+      "cash": "en efectivo",
+      "bank": "por transferencia",
+      "card": "con tarjeta"
+    }
   }
 }

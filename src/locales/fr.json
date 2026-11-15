@@ -3746,5 +3746,353 @@
     "audit": "Chaque changement est conservé dans le journal d’activité avec l’ancienne et la nouvelle valeur.",
     "save": "Enregistrer les contrôles",
     "saved": "Contrôles enregistrés"
+  },
+  "activity": {
+    "saleSaved": {
+      "text": "Vente n° {{number}} enregistrée · {{amount}}"
+    },
+    "saleRefunded": {
+      "text": "Remboursement de {{amount}} sur la vente n° {{number}} : {{reason}}"
+    },
+    "refundRequested": {
+      "text": "Demande de remboursement de {{amount}} sur la vente n° {{number}} : {{reason}}"
+    },
+    "refundDeclined": {
+      "text": "Demande de remboursement refusée{{note}}",
+      "note": " : {{note}}"
+    },
+    "customerDeleted": {
+      "text": "Données personnelles d'un client supprimées : {{reason}}"
+    },
+    "customersMerged": {
+      "text": "Client {{from}}{{phone}} fusionné avec {{into}}",
+      "phone": " ({{phone}})"
+    },
+    "walkInAdded": {
+      "text": "Client sans rendez-vous ajouté : {{name}}"
+    },
+    "bookedOnline": {
+      "text": "Réservation en ligne : {{name}}"
+    },
+    "booked": {
+      "text": "Rendez-vous pris pour {{name}}"
+    },
+    "checkedIn": {
+      "text": "Arrivée de {{name}} enregistrée"
+    },
+    "serviceStarted": {
+      "text": "Prestation commencée pour {{name}}"
+    },
+    "noShow": {
+      "text": "{{name}} marqué absent"
+    },
+    "noShowUndone": {
+      "text": "Absence de {{name}} annulée"
+    },
+    "cancelledOnline": {
+      "text": "Annulé en ligne par {{name}}"
+    },
+    "appointmentCancelled": {
+      "text": "Rendez-vous de {{name}} annulé : {{reason}}"
+    },
+    "drawerFromBank": {
+      "text": "{{amount}} en espèces ajoutés à la caisse depuis la banque"
+    },
+    "drawerFromOwner": {
+      "text": "{{amount}} en espèces ajoutés à la caisse par le propriétaire"
+    },
+    "openingCash": {
+      "text": "Fonds de caisse initial saisi"
+    },
+    "closeSubmitted": {
+      "text": "Clôture de caisse du {{day}} envoyée : compté {{counted}}, attendu {{expected}}, écart {{difference}}"
+    },
+    "closeApproved": {
+      "text": "Clôture de caisse du {{day}} approuvée · écart {{amount}}"
+    },
+    "closeReturned": {
+      "text": "Clôture de caisse du {{day}} renvoyée : {{reason}}"
+    },
+    "depositBanked": {
+      "text": "Le dépôt de {{amount}} de la clôture du {{day}} est arrivé à la banque le {{banked}}{{ref}}",
+      "ref": " · {{ref}}"
+    },
+    "expenseRecorded": {
+      "text": "Dépense {{category}} · {{amount}}"
+    },
+    "expenseReversed": {
+      "text": "Dépense {{category}} · {{amount}} annulée — {{reason}}"
+    },
+    "expenseCategory": {
+      "text": "Catégorie de dépense {{name}}"
+    },
+    "purchasePosted": {
+      "text": "Achat {{number}} auprès de {{supplier}} · {{amount}}"
+    },
+    "purchaseReversed": {
+      "text": "Achat {{number}} annulé — {{reason}}"
+    },
+    "billPosted": {
+      "text": "Facture n° {{number}} de {{supplier}} · {{amount}}"
+    },
+    "billReversed": {
+      "text": "Facture n° {{number}} annulée — {{reason}}"
+    },
+    "supplierSaved": {
+      "text": "Fournisseur {{name}}"
+    },
+    "receiptAdded": {
+      "text": "Photo du reçu ajoutée"
+    },
+    "booksClosed": {
+      "text": "Comptes de {{month}} clôturés"
+    },
+    "booksReopened": {
+      "text": "Comptes de {{month}} rouverts : {{reason}}"
+    },
+    "stockAdjusted": {
+      "text": "{{item}} ajusté de {{qty}} {{unit}} : {{reason}}"
+    },
+    "openingStock": {
+      "text": "Stock initial compté"
+    },
+    "stockDifferenceFixed": {
+      "text": "Écart de stock corrigé : {{amount}}"
+    },
+    "itemAdded": {
+      "text": "Article ajouté : {{name}}"
+    },
+    "itemUpdated": {
+      "text": "Article modifié : {{name}}"
+    },
+    "deliveryPriced": {
+      "text": "Livraison {{number}} chiffrée : {{bill}} · {{amount}}"
+    },
+    "deliveryCancelled": {
+      "text": "Livraison {{number}} annulée : {{reason}}"
+    },
+    "payrollGenerated": {
+      "text": "Paie de {{month}} calculée : net {{amount}}"
+    },
+    "payrollApproved": {
+      "text": "Paie de {{month}} approuvée : net {{amount}}"
+    },
+    "salaryPaid": {
+      "text": "Salaire de {{month}} ({{amount}}) payé à {{name}} {{method}}{{on}}",
+      "on": " le {{date}}"
+    },
+    "tipsPaid": {
+      "text": "Pourboires de {{amount}} payés à {{name}}"
+    },
+    "supplierPaid": {
+      "text": "{{amount}} payés à {{name}}"
+    },
+    "adjustmentRecorded": {
+      "text": "{{kind}} de {{amount}} pour {{name}}{{note}}",
+      "note": " : {{note}}"
+    },
+    "adjustmentReversed": {
+      "text": "{{kind}} de {{amount}} annulé : {{reason}}"
+    },
+    "wpsAdded": {
+      "text": "Preuve de virement WPS ajoutée"
+    },
+    "clockIn": {
+      "text": "{{name}} est arrivé à {{time}}{{late}}{{by}}",
+      "late": " ({{minutes}} min de retard)",
+      "by": " — saisi par {{by}}"
+    },
+    "clockOut": {
+      "text": "{{name}} est parti à {{time}}{{by}}",
+      "by": " — saisi par {{by}}"
+    },
+    "breakStart": {
+      "text": "{{name}} a commencé une pause à {{time}}{{by}}",
+      "by": " — saisi par {{by}}"
+    },
+    "breakEnd": {
+      "text": "{{name}} est revenu de pause à {{time}} ({{minutes}} min){{by}}",
+      "by": " — saisi par {{by}}"
+    },
+    "resumed": {
+      "text": "{{name}} a repris à {{time}} (était parti à {{out}}){{by}}",
+      "by": " — saisi par {{by}}"
+    },
+    "shiftClosed": {
+      "text": "{{name}} n'a pas pointé son départ le {{day}} : service clôturé à {{time}}"
+    },
+    "missedClockOutFixed": {
+      "text": "Départ oublié de {{name}} le {{day}} fixé à {{time}} par {{by}}{{reason}}",
+      "reason": " : {{reason}}"
+    },
+    "rosterUpdated": {
+      "text": "Planning hebdomadaire de {{name}} modifié"
+    },
+    "staffAdded": {
+      "text": "Membre du personnel ajouté : {{name}}"
+    },
+    "staffUpdated": {
+      "text": "Membre du personnel modifié : {{name}}{{salary}}",
+      "salary": " (salaire {{from}} → {{to}})"
+    },
+    "staffRemoved": {
+      "text": "{{name}} retiré du personnel (aucun historique)"
+    },
+    "staffArchived": {
+      "text": "{{name}} archivé (historique conservé ; connexion désactivée)"
+    },
+    "staffRestored": {
+      "text": "{{name}} réintégré au personnel"
+    },
+    "staffRecordsMerged": {
+      "text": "Les deux fiches de {{name}} (Personnel et paie, Équipe et connexions) fusionnées en une"
+    },
+    "loginCreated": {
+      "text": "Identifiant {{username}} ({{role}}) créé{{for}}",
+      "for": " pour {{name}}"
+    },
+    "loginTypeChanged": {
+      "text": "Connexion de {{name}} changée en {{role}}"
+    },
+    "passwordReset": {
+      "text": "Mot de passe de {{name}} réinitialisé"
+    },
+    "loginEnabled": {
+      "text": "Connexion de {{name}} activée"
+    },
+    "loginDisabled": {
+      "text": "Connexion de {{name}} désactivée"
+    },
+    "pinSet": {
+      "text": "Code PIN de changement rapide défini"
+    },
+    "pinLocked": {
+      "text": "Validation du responsable : le PIN de {{name}} est bloqué (demandé par {{by}})"
+    },
+    "profileUpdated": {
+      "text": "Profil modifié{{name}}",
+      "name": " : nom {{from}} → {{to}}"
+    },
+    "loginDeleted": {
+      "text": "A supprimé sa propre connexion"
+    },
+    "accountDeleted": {
+      "text": "Le propriétaire a supprimé son compte ; le salon est fermé"
+    },
+    "salonSetUp": {
+      "text": "{{name}} créé"
+    },
+    "salonRenamed": {
+      "text": "Salon renommé : {{from}} → {{to}}"
+    },
+    "salonClosedByPlatform": {
+      "text": "Salon fermé par le propriétaire de la plateforme : {{note}}"
+    },
+    "branchAdded": {
+      "text": "Succursale ajoutée : {{name}}"
+    },
+    "branchUpdated": {
+      "text": "Paramètres de la succursale modifiés"
+    },
+    "modeSwitched": {
+      "text": "Type de salon changé en {{mode}}"
+    },
+    "countryChanged": {
+      "text": "Pays changé de {{from}} ({{fromCurrency}}, {{fromZone}}) à {{to}} ({{toCurrency}}, {{toZone}})"
+    },
+    "bookingOn": {
+      "text": "Réservation en ligne activée : {{slug}}{{was}}",
+      "was": " (avant : {{old}})"
+    },
+    "bookingOff": {
+      "text": "Réservation en ligne désactivée{{was}}",
+      "was": " (avant : {{old}})"
+    },
+    "coverOff": {
+      "text": "Photo de couverture retirée de la page de réservation"
+    },
+    "coverOn": {
+      "text": "Photo de couverture ajoutée à la page de réservation"
+    },
+    "instagramOff": {
+      "text": "Instagram retiré de la page de réservation"
+    },
+    "instagramOn": {
+      "text": "Instagram sur la page de réservation : @{{handle}}"
+    },
+    "logoOff": {
+      "text": "Logo retiré des reçus"
+    },
+    "logoOn": {
+      "text": "Logo ajouté aux reçus"
+    },
+    "roomAdded": {
+      "text": "Salle ajoutée : {{name}}"
+    },
+    "roomStopped": {
+      "text": "Salle {{name}} plus utilisée"
+    },
+    "roomSaved": {
+      "text": "Salle {{name}}"
+    },
+    "serviceSaved": {
+      "text": "Prestation enregistrée : {{name}}"
+    },
+    "controlChanged": {
+      "text": "Contrôles : {{control}} {{from}} → {{to}}"
+    },
+    "pilotJoined": {
+      "text": "A rejoint le pilote avec le code {{code}}, gratuit jusqu'au {{date}}"
+    },
+    "hygieneSigned": {
+      "text": "Registre d'hygiène signé : {{done}} sur {{total}} faits"
+    },
+    "evidenceAdded": {
+      "text": "Justificatif ajouté pour {{doc}}"
+    },
+    "documentDeleted": {
+      "text": "{{doc}}{{for}} supprimé du registre{{reason}}",
+      "for": " de {{person}}",
+      "reason": " : {{reason}}"
+    },
+    "documentRestored": {
+      "text": "{{doc}}{{for}} remis",
+      "for": " de {{person}}"
+    },
+    "documentEdited": {
+      "text": "{{doc}}{{for}} modifié{{expiry}}",
+      "for": " de {{person}}",
+      "expiry": " : expire {{from}} → {{to}}"
+    },
+    "documentRenewed": {
+      "text": "{{doc}}{{for}} renouvelé{{expires}}",
+      "for": " de {{person}}",
+      "expires": ", expire le {{date}}"
+    },
+    "documentAdded": {
+      "text": "{{doc}}{{for}} ajouté{{expires}}",
+      "for": " de {{person}}",
+      "expires": ", expire le {{date}}"
+    },
+    "stockCounted": {
+      "text": "{{count}} articles comptés, {{changed}} modifiés, valeur {{amount}}",
+      "text_one": "{{count}} article compté, {{changed}} modifiés, valeur {{amount}}"
+    },
+    "deliveryReceived": {
+      "text": "Livraison {{number}} reçue{{from}} : {{count}} articles, en attente des prix",
+      "text_one": "Livraison {{number}} reçue{{from}} : {{count}} article, en attente des prix",
+      "from": " de {{supplier}}"
+    },
+    "planRequested": {
+      "text": "Abonnement demandé : {{count}} mois",
+      "text_one": "Abonnement demandé : {{count}} mois"
+    },
+    "values": {
+      "guest": "client",
+      "theCustomer": "le client",
+      "cash": "en espèces",
+      "bank": "par virement",
+      "card": "par carte"
+    }
   }
 }

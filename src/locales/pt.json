@@ -3746,5 +3746,353 @@
     "audit": "Cada mudança fica no registro de atividade com o valor antigo e o novo.",
     "save": "Salvar controles",
     "saved": "Controles salvos"
+  },
+  "activity": {
+    "saleSaved": {
+      "text": "Venda nº {{number}} salva · {{amount}}"
+    },
+    "saleRefunded": {
+      "text": "Reembolsou {{amount}} na venda nº {{number}}: {{reason}}"
+    },
+    "refundRequested": {
+      "text": "Pediu reembolso de {{amount}} na venda nº {{number}}: {{reason}}"
+    },
+    "refundDeclined": {
+      "text": "Recusou um pedido de reembolso{{note}}",
+      "note": ": {{note}}"
+    },
+    "customerDeleted": {
+      "text": "Apagou os dados pessoais de um cliente: {{reason}}"
+    },
+    "customersMerged": {
+      "text": "Uniu o cliente {{from}}{{phone}} a {{into}}",
+      "phone": " ({{phone}})"
+    },
+    "walkInAdded": {
+      "text": "Adicionou sem horário: {{name}}"
+    },
+    "bookedOnline": {
+      "text": "Reserva on-line: {{name}}"
+    },
+    "booked": {
+      "text": "Agendou {{name}}"
+    },
+    "checkedIn": {
+      "text": "Registrou a chegada de {{name}}"
+    },
+    "serviceStarted": {
+      "text": "Começou o atendimento de {{name}}"
+    },
+    "noShow": {
+      "text": "Marcou {{name}} como não compareceu"
+    },
+    "noShowUndone": {
+      "text": "Desfez o não comparecimento de {{name}}"
+    },
+    "cancelledOnline": {
+      "text": "Cancelado on-line por {{name}}"
+    },
+    "appointmentCancelled": {
+      "text": "Cancelou {{name}}: {{reason}}"
+    },
+    "drawerFromBank": {
+      "text": "Adicionou {{amount}} em dinheiro ao caixa, vindo do banco"
+    },
+    "drawerFromOwner": {
+      "text": "Adicionou {{amount}} em dinheiro ao caixa, do dono"
+    },
+    "openingCash": {
+      "text": "Definiu o dinheiro inicial"
+    },
+    "closeSubmitted": {
+      "text": "Enviou o fechamento de caixa de {{day}}: contado {{counted}}, esperado {{expected}}, diferença {{difference}}"
+    },
+    "closeApproved": {
+      "text": "Aprovou o fechamento de caixa de {{day}} · diferença {{amount}}"
+    },
+    "closeReturned": {
+      "text": "Devolveu o fechamento de caixa de {{day}}: {{reason}}"
+    },
+    "depositBanked": {
+      "text": "O depósito de {{amount}} do fechamento de {{day}} chegou ao banco em {{banked}}{{ref}}",
+      "ref": " · {{ref}}"
+    },
+    "expenseRecorded": {
+      "text": "Despesa {{category}} · {{amount}}"
+    },
+    "expenseReversed": {
+      "text": "Estornou a despesa {{category}} · {{amount}} — {{reason}}"
+    },
+    "expenseCategory": {
+      "text": "Categoria de despesa {{name}}"
+    },
+    "purchasePosted": {
+      "text": "Compra {{number}} de {{supplier}} · {{amount}}"
+    },
+    "purchaseReversed": {
+      "text": "Estornou a compra {{number}} — {{reason}}"
+    },
+    "billPosted": {
+      "text": "Conta nº {{number}} de {{supplier}} · {{amount}}"
+    },
+    "billReversed": {
+      "text": "Estornou a conta nº {{number}} — {{reason}}"
+    },
+    "supplierSaved": {
+      "text": "Fornecedor {{name}}"
+    },
+    "receiptAdded": {
+      "text": "Adicionou a foto do recibo"
+    },
+    "booksClosed": {
+      "text": "Fechou os livros de {{month}}"
+    },
+    "booksReopened": {
+      "text": "Reabriu os livros de {{month}}: {{reason}}"
+    },
+    "stockAdjusted": {
+      "text": "Ajustou {{item}} em {{qty}} {{unit}}: {{reason}}"
+    },
+    "openingStock": {
+      "text": "Contou o estoque inicial"
+    },
+    "stockDifferenceFixed": {
+      "text": "Corrigiu a diferença de estoque: {{amount}}"
+    },
+    "itemAdded": {
+      "text": "Adicionou o item {{name}}"
+    },
+    "itemUpdated": {
+      "text": "Atualizou o item {{name}}"
+    },
+    "deliveryPriced": {
+      "text": "Entrega {{number}} com preços: {{bill}} · {{amount}}"
+    },
+    "deliveryCancelled": {
+      "text": "Entrega {{number}} cancelada: {{reason}}"
+    },
+    "payrollGenerated": {
+      "text": "Calculou a folha de {{month}}: líquido {{amount}}"
+    },
+    "payrollApproved": {
+      "text": "Aprovou a folha de {{month}}: líquido {{amount}}"
+    },
+    "salaryPaid": {
+      "text": "Pagou o salário de {{month}} ({{amount}}) a {{name}} {{method}}{{on}}",
+      "on": " em {{date}}"
+    },
+    "tipsPaid": {
+      "text": "Pagou gorjetas de {{amount}} a {{name}}"
+    },
+    "supplierPaid": {
+      "text": "Pagou {{amount}} a {{name}}"
+    },
+    "adjustmentRecorded": {
+      "text": "{{kind}} de {{amount}} para {{name}}{{note}}",
+      "note": ": {{note}}"
+    },
+    "adjustmentReversed": {
+      "text": "Estornou {{kind}} de {{amount}}: {{reason}}"
+    },
+    "wpsAdded": {
+      "text": "Adicionou o comprovante de transferência WPS"
+    },
+    "clockIn": {
+      "text": "{{name}} entrou às {{time}}{{late}}{{by}}",
+      "late": " ({{minutes}} min de atraso)",
+      "by": " — registrado por {{by}}"
+    },
+    "clockOut": {
+      "text": "{{name}} saiu às {{time}}{{by}}",
+      "by": " — registrado por {{by}}"
+    },
+    "breakStart": {
+      "text": "{{name}} começou um intervalo às {{time}}{{by}}",
+      "by": " — registrado por {{by}}"
+    },
+    "breakEnd": {
+      "text": "{{name}} voltou do intervalo às {{time}} ({{minutes}} min){{by}}",
+      "by": " — registrado por {{by}}"
+    },
+    "resumed": {
+      "text": "{{name}} voltou ao trabalho às {{time}} (tinha saído às {{out}}){{by}}",
+      "by": " — registrado por {{by}}"
+    },
+    "shiftClosed": {
+      "text": "{{name}} não registrou a saída em {{day}}: turno fechado às {{time}}"
+    },
+    "missedClockOutFixed": {
+      "text": "{{by}} definiu a saída esquecida de {{name}} em {{day}} às {{time}}{{reason}}",
+      "reason": ": {{reason}}"
+    },
+    "rosterUpdated": {
+      "text": "Atualizou a escala semanal de {{name}}"
+    },
+    "staffAdded": {
+      "text": "Adicionou o funcionário {{name}}"
+    },
+    "staffUpdated": {
+      "text": "Atualizou o funcionário {{name}}{{salary}}",
+      "salary": " (salário {{from}} → {{to}})"
+    },
+    "staffRemoved": {
+      "text": "Removeu {{name}} da equipe (sem registros)"
+    },
+    "staffArchived": {
+      "text": "Arquivou {{name}} (registros mantidos; acesso desligado)"
+    },
+    "staffRestored": {
+      "text": "Trouxe {{name}} de volta à equipe"
+    },
+    "staffRecordsMerged": {
+      "text": "Uniu os dois registros de {{name}} (Equipe e folha, e Equipe e acessos) em um"
+    },
+    "loginCreated": {
+      "text": "Criou o acesso {{username}} ({{role}}){{for}}",
+      "for": " para {{name}}"
+    },
+    "loginTypeChanged": {
+      "text": "Mudou o acesso de {{name}} para {{role}}"
+    },
+    "passwordReset": {
+      "text": "Redefiniu a senha de {{name}}"
+    },
+    "loginEnabled": {
+      "text": "Ativou o acesso de {{name}}"
+    },
+    "loginDisabled": {
+      "text": "Desativou o acesso de {{name}}"
+    },
+    "pinSet": {
+      "text": "Definiu um PIN de troca rápida"
+    },
+    "pinLocked": {
+      "text": "Aprovação do gerente: o PIN de {{name}} está bloqueado (pedido por {{by}})"
+    },
+    "profileUpdated": {
+      "text": "Atualizou o perfil{{name}}",
+      "name": ": nome {{from}} → {{to}}"
+    },
+    "loginDeleted": {
+      "text": "Apagou o próprio acesso"
+    },
+    "accountDeleted": {
+      "text": "O dono apagou a conta; o salão está fechado"
+    },
+    "salonSetUp": {
+      "text": "Configurou {{name}}"
+    },
+    "salonRenamed": {
+      "text": "Renomeou o salão: {{from}} → {{to}}"
+    },
+    "salonClosedByPlatform": {
+      "text": "O dono da plataforma fechou o salão: {{note}}"
+    },
+    "branchAdded": {
+      "text": "Adicionou a filial {{name}}"
+    },
+    "branchUpdated": {
+      "text": "Atualizou as configurações da filial"
+    },
+    "modeSwitched": {
+      "text": "Mudou o tipo de salão para {{mode}}"
+    },
+    "countryChanged": {
+      "text": "Mudou o país de {{from}} ({{fromCurrency}}, {{fromZone}}) para {{to}} ({{toCurrency}}, {{toZone}})"
+    },
+    "bookingOn": {
+      "text": "Reservas on-line ligadas: {{slug}}{{was}}",
+      "was": " (antes {{old}})"
+    },
+    "bookingOff": {
+      "text": "Reservas on-line desligadas{{was}}",
+      "was": " (antes {{old}})"
+    },
+    "coverOff": {
+      "text": "Tirou a foto de capa da página de reservas"
+    },
+    "coverOn": {
+      "text": "Colocou uma foto de capa na página de reservas"
+    },
+    "instagramOff": {
+      "text": "Tirou o Instagram da página de reservas"
+    },
+    "instagramOn": {
+      "text": "Instagram na página de reservas: @{{handle}}"
+    },
+    "logoOff": {
+      "text": "Tirou o logotipo dos recibos"
+    },
+    "logoOn": {
+      "text": "Colocou um logotipo nos recibos"
+    },
+    "roomAdded": {
+      "text": "Adicionou a sala {{name}}"
+    },
+    "roomStopped": {
+      "text": "Parou de usar a sala {{name}}"
+    },
+    "roomSaved": {
+      "text": "Sala {{name}}"
+    },
+    "serviceSaved": {
+      "text": "Salvou o serviço {{name}}"
+    },
+    "controlChanged": {
+      "text": "Controles: {{control}} {{from}} → {{to}}"
+    },
+    "pilotJoined": {
+      "text": "Entrou no piloto com o código {{code}}, grátis até {{date}}"
+    },
+    "hygieneSigned": {
+      "text": "Assinou o registro de higiene: {{done}} de {{total}} feitos"
+    },
+    "evidenceAdded": {
+      "text": "Adicionou o comprovante de {{doc}}"
+    },
+    "documentDeleted": {
+      "text": "Apagou {{doc}}{{for}} do registro{{reason}}",
+      "for": " de {{person}}",
+      "reason": ": {{reason}}"
+    },
+    "documentRestored": {
+      "text": "Restaurou {{doc}}{{for}}",
+      "for": " de {{person}}"
+    },
+    "documentEdited": {
+      "text": "Editou {{doc}}{{for}}{{expiry}}",
+      "for": " de {{person}}",
+      "expiry": ": vence {{from}} → {{to}}"
+    },
+    "documentRenewed": {
+      "text": "Renovou {{doc}}{{for}}{{expires}}",
+      "for": " de {{person}}",
+      "expires": ", vence em {{date}}"
+    },
+    "documentAdded": {
+      "text": "Adicionou {{doc}}{{for}}{{expires}}",
+      "for": " de {{person}}",
+      "expires": ", vence em {{date}}"
+    },
+    "stockCounted": {
+      "text": "Contou {{count}} itens, {{changed}} mudaram, valor {{amount}}",
+      "text_one": "Contou {{count}} item, {{changed}} mudaram, valor {{amount}}"
+    },
+    "deliveryReceived": {
+      "text": "Entrega {{number}} recebida{{from}}: {{count}} itens, aguardando preços",
+      "text_one": "Entrega {{number}} recebida{{from}}: {{count}} item, aguardando preços",
+      "from": " de {{supplier}}"
+    },
+    "planRequested": {
+      "text": "Pediu o plano: {{count}} meses",
+      "text_one": "Pediu o plano: {{count}} mês"
+    },
+    "values": {
+      "guest": "cliente",
+      "theCustomer": "o cliente",
+      "cash": "em dinheiro",
+      "bank": "por transferência",
+      "card": "no cartão"
+    }
   }
 }

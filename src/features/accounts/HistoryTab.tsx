@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { useActivityText } from '@/features/activity/activityText';
 import { useWorkspace } from '@/features/auth/session';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
@@ -20,6 +21,7 @@ export function HistoryTab() {
   const activity = useActivityHistory(business.id);
   const signIns = useSignIns(business.id);
   const when = (iso: string) => dates.when(iso, business.timezone);
+  const activityText = useActivityText();
 
   return (
     <View style={styles.body}>
@@ -45,7 +47,7 @@ export function HistoryTab() {
                   key={h.id}
                   testID="history-row"
                   leading={<Avatar name={h.members?.display_name ?? '—'} size={36} />}
-                  title={h.summary}
+                  title={activityText(h.summary)}
                   meta={[`${h.members?.display_name ?? t('accounts.system')} · ${when(h.created_at)}`]}
                 />
               ))}

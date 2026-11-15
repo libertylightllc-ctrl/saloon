@@ -3746,5 +3746,353 @@
     "audit": "ہر تبدیلی پرانی اور نئی قدر کے ساتھ آڈٹ ٹریل میں رہتی ہے۔",
     "save": "کنٹرولز محفوظ کریں",
     "saved": "کنٹرولز محفوظ ہو گئے"
+  },
+  "activity": {
+    "saleSaved": {
+      "text": "فروخت #{{number}} محفوظ کی · {{amount}}"
+    },
+    "saleRefunded": {
+      "text": "فروخت #{{number}} پر {{amount}} واپس کیے: {{reason}}"
+    },
+    "refundRequested": {
+      "text": "فروخت #{{number}} پر {{amount}} واپسی کی درخواست: {{reason}}"
+    },
+    "refundDeclined": {
+      "text": "واپسی کی درخواست رد کی{{note}}",
+      "note": ": {{note}}"
+    },
+    "customerDeleted": {
+      "text": "ایک گاہک کی ذاتی معلومات حذف کیں: {{reason}}"
+    },
+    "customersMerged": {
+      "text": "گاہک {{from}}{{phone}} کو {{into}} میں ملایا",
+      "phone": " ({{phone}})"
+    },
+    "walkInAdded": {
+      "text": "واک اِن شامل کیا: {{name}}"
+    },
+    "bookedOnline": {
+      "text": "آن لائن بکنگ: {{name}}"
+    },
+    "booked": {
+      "text": "{{name}} کی بکنگ کی"
+    },
+    "checkedIn": {
+      "text": "{{name}} کا چیک اِن"
+    },
+    "serviceStarted": {
+      "text": "{{name}} کی سروس شروع"
+    },
+    "noShow": {
+      "text": "{{name}} کو نہیں آئے درج کیا"
+    },
+    "noShowUndone": {
+      "text": "{{name}} کا نہیں آئے ہٹایا"
+    },
+    "cancelledOnline": {
+      "text": "{{name}} نے آن لائن منسوخ کیا"
+    },
+    "appointmentCancelled": {
+      "text": "{{name}} منسوخ کیا: {{reason}}"
+    },
+    "drawerFromBank": {
+      "text": "بینک سے دراز میں {{amount}} نقد ڈالا"
+    },
+    "drawerFromOwner": {
+      "text": "مالک سے دراز میں {{amount}} نقد ڈالا"
+    },
+    "openingCash": {
+      "text": "ابتدائی نقد درج کیا"
+    },
+    "closeSubmitted": {
+      "text": "کیش کلوز {{day}} بھیجا: گنا {{counted}}، متوقع {{expected}}، فرق {{difference}}"
+    },
+    "closeApproved": {
+      "text": "کیش کلوز {{day}} منظور · فرق {{amount}}"
+    },
+    "closeReturned": {
+      "text": "کیش کلوز {{day}} واپس بھیجا: {{reason}}"
+    },
+    "depositBanked": {
+      "text": "{{day}} کے کلوز کا {{amount}} بینک ڈپازٹ {{banked}} کو بینک پہنچا{{ref}}",
+      "ref": " · {{ref}}"
+    },
+    "expenseRecorded": {
+      "text": "خرچ {{category}} · {{amount}}"
+    },
+    "expenseReversed": {
+      "text": "خرچ {{category}} · {{amount}} واپس لیا — {{reason}}"
+    },
+    "expenseCategory": {
+      "text": "خرچ کی قسم {{name}}"
+    },
+    "purchasePosted": {
+      "text": "خریداری {{number}}، {{supplier}} سے · {{amount}}"
+    },
+    "purchaseReversed": {
+      "text": "خریداری {{number}} واپس لی — {{reason}}"
+    },
+    "billPosted": {
+      "text": "بل #{{number}}، {{supplier}} سے · {{amount}}"
+    },
+    "billReversed": {
+      "text": "بل #{{number}} واپس لیا — {{reason}}"
+    },
+    "supplierSaved": {
+      "text": "سپلائر {{name}}"
+    },
+    "receiptAdded": {
+      "text": "رسید کی تصویر شامل کی"
+    },
+    "booksClosed": {
+      "text": "{{month}} کے کھاتے بند کیے"
+    },
+    "booksReopened": {
+      "text": "{{month}} کے کھاتے دوبارہ کھولے: {{reason}}"
+    },
+    "stockAdjusted": {
+      "text": "{{item}} میں {{qty}} {{unit}} کی تبدیلی: {{reason}}"
+    },
+    "openingStock": {
+      "text": "ابتدائی اسٹاک گنا"
+    },
+    "stockDifferenceFixed": {
+      "text": "اسٹاک کا فرق درست کیا: {{amount}}"
+    },
+    "itemAdded": {
+      "text": "آئٹم شامل کیا: {{name}}"
+    },
+    "itemUpdated": {
+      "text": "آئٹم بدلا: {{name}}"
+    },
+    "deliveryPriced": {
+      "text": "ڈیلیوری {{number}} کی قیمت لگی: {{bill}} · {{amount}}"
+    },
+    "deliveryCancelled": {
+      "text": "ڈیلیوری {{number}} منسوخ: {{reason}}"
+    },
+    "payrollGenerated": {
+      "text": "{{month}} کا پے رول بنایا: خالص {{amount}}"
+    },
+    "payrollApproved": {
+      "text": "{{month}} کا پے رول منظور: خالص {{amount}}"
+    },
+    "salaryPaid": {
+      "text": "{{name}} کو {{month}} کی تنخواہ {{amount}} {{method}} سے دی{{on}}",
+      "on": " ({{date}} کو)"
+    },
+    "tipsPaid": {
+      "text": "{{name}} کو {{amount}} ٹپ دی"
+    },
+    "supplierPaid": {
+      "text": "{{name}} کو {{amount}} دیے"
+    },
+    "adjustmentRecorded": {
+      "text": "{{name}} کے لیے {{kind}} {{amount}}{{note}}",
+      "note": ": {{note}}"
+    },
+    "adjustmentReversed": {
+      "text": "{{kind}} {{amount}} واپس لیا: {{reason}}"
+    },
+    "wpsAdded": {
+      "text": "WPS ٹرانسفر کا ثبوت شامل کیا"
+    },
+    "clockIn": {
+      "text": "{{name}} نے {{time}} پر کلاک اِن کیا{{late}}{{by}}",
+      "late": " ({{minutes}} منٹ تاخیر)",
+      "by": " — {{by}} نے درج کیا"
+    },
+    "clockOut": {
+      "text": "{{name}} نے {{time}} پر کلاک آؤٹ کیا{{by}}",
+      "by": " — {{by}} نے درج کیا"
+    },
+    "breakStart": {
+      "text": "{{name}} نے {{time}} پر وقفہ لیا{{by}}",
+      "by": " — {{by}} نے درج کیا"
+    },
+    "breakEnd": {
+      "text": "{{name}} {{time}} پر وقفے سے واپس ({{minutes}} منٹ){{by}}",
+      "by": " — {{by}} نے درج کیا"
+    },
+    "resumed": {
+      "text": "{{name}} {{time}} پر کام پر واپس ({{out}} پر کلاک آؤٹ کیا تھا){{by}}",
+      "by": " — {{by}} نے درج کیا"
+    },
+    "shiftClosed": {
+      "text": "{{name}} نے {{day}} کو کلاک آؤٹ نہیں کیا: شفٹ {{time}} پر بند"
+    },
+    "missedClockOutFixed": {
+      "text": "{{by}} نے {{name}} کا {{day}} کا رہ جانے والا کلاک آؤٹ {{time}} کیا{{reason}}",
+      "reason": ": {{reason}}"
+    },
+    "rosterUpdated": {
+      "text": "{{name}} کا ہفتہ وار روسٹر بدلا"
+    },
+    "staffAdded": {
+      "text": "اسٹاف شامل کیا: {{name}}"
+    },
+    "staffUpdated": {
+      "text": "اسٹاف بدلا: {{name}}{{salary}}",
+      "salary": " (تنخواہ {{from}} ← {{to}})"
+    },
+    "staffRemoved": {
+      "text": "{{name}} کو اسٹاف سے ہٹایا (کوئی ریکارڈ نہیں)"
+    },
+    "staffArchived": {
+      "text": "{{name}} کو آرکائیو کیا (ریکارڈ محفوظ؛ لاگ اِن بند)"
+    },
+    "staffRestored": {
+      "text": "{{name}} کو اسٹاف میں واپس لایا"
+    },
+    "staffRecordsMerged": {
+      "text": "{{name}} کے دو ریکارڈ (اسٹاف اور پے رول، ٹیم اور لاگ اِن) ایک میں ملائے"
+    },
+    "loginCreated": {
+      "text": "لاگ اِن {{username}} ({{role}}) بنایا{{for}}",
+      "for": " — {{name}} کے لیے"
+    },
+    "loginTypeChanged": {
+      "text": "{{name}} کا لاگ اِن {{role}} میں بدلا"
+    },
+    "passwordReset": {
+      "text": "{{name}} کا پاس ورڈ بدلا"
+    },
+    "loginEnabled": {
+      "text": "{{name}} کا لاگ اِن چالو کیا"
+    },
+    "loginDisabled": {
+      "text": "{{name}} کا لاگ اِن بند کیا"
+    },
+    "pinSet": {
+      "text": "کوئک سوئچ PIN سیٹ کیا"
+    },
+    "pinLocked": {
+      "text": "مینیجر کی منظوری: {{name}} کا PIN لاک ہے ({{by}} نے مانگا)"
+    },
+    "profileUpdated": {
+      "text": "اپنی پروفائل بدلی{{name}}",
+      "name": ": نام {{from}} ← {{to}}"
+    },
+    "loginDeleted": {
+      "text": "اپنا لاگ اِن حذف کیا"
+    },
+    "accountDeleted": {
+      "text": "مالک نے اپنا اکاؤنٹ حذف کیا؛ سیلون بند ہے"
+    },
+    "salonSetUp": {
+      "text": "{{name}} سیٹ اپ کیا"
+    },
+    "salonRenamed": {
+      "text": "سیلون کا نام بدلا: {{from}} ← {{to}}"
+    },
+    "salonClosedByPlatform": {
+      "text": "پلیٹ فارم مالک نے سیلون بند کیا: {{note}}"
+    },
+    "branchAdded": {
+      "text": "برانچ شامل کی: {{name}}"
+    },
+    "branchUpdated": {
+      "text": "برانچ کی سیٹنگز بدلیں"
+    },
+    "modeSwitched": {
+      "text": "سیلون کی قسم {{mode}} کی"
+    },
+    "countryChanged": {
+      "text": "ملک {{from}} ({{fromCurrency}}، {{fromZone}}) سے {{to}} ({{toCurrency}}، {{toZone}}) کیا"
+    },
+    "bookingOn": {
+      "text": "آن لائن بکنگ چالو: {{slug}}{{was}}",
+      "was": " (پہلے {{old}})"
+    },
+    "bookingOff": {
+      "text": "آن لائن بکنگ بند{{was}}",
+      "was": " (پہلے {{old}})"
+    },
+    "coverOff": {
+      "text": "بکنگ پیج سے کور فوٹو ہٹائی"
+    },
+    "coverOn": {
+      "text": "بکنگ پیج پر کور فوٹو لگائی"
+    },
+    "instagramOff": {
+      "text": "بکنگ پیج سے Instagram ہٹایا"
+    },
+    "instagramOn": {
+      "text": "بکنگ پیج پر Instagram: @{{handle}}"
+    },
+    "logoOff": {
+      "text": "رسیدوں سے لوگو ہٹایا"
+    },
+    "logoOn": {
+      "text": "رسیدوں پر لوگو لگایا"
+    },
+    "roomAdded": {
+      "text": "کمرہ شامل کیا: {{name}}"
+    },
+    "roomStopped": {
+      "text": "کمرہ {{name}} استعمال کرنا بند کیا"
+    },
+    "roomSaved": {
+      "text": "کمرہ {{name}}"
+    },
+    "serviceSaved": {
+      "text": "سروس محفوظ کی: {{name}}"
+    },
+    "controlChanged": {
+      "text": "کنٹرولز: {{control}} {{from}} ← {{to}}"
+    },
+    "pilotJoined": {
+      "text": "کوڈ {{code}} سے پائلٹ میں شامل، {{date}} تک مفت"
+    },
+    "hygieneSigned": {
+      "text": "صفائی لاگ پر دستخط کیے: {{total}} میں سے {{done}} مکمل"
+    },
+    "evidenceAdded": {
+      "text": "{{doc}} کا ثبوت شامل کیا"
+    },
+    "documentDeleted": {
+      "text": "{{doc}}{{for}} رجسٹر سے حذف کیا{{reason}}",
+      "for": " ({{person}})",
+      "reason": ": {{reason}}"
+    },
+    "documentRestored": {
+      "text": "{{doc}}{{for}} واپس رکھا",
+      "for": " ({{person}})"
+    },
+    "documentEdited": {
+      "text": "{{doc}}{{for}} بدلا{{expiry}}",
+      "for": " ({{person}})",
+      "expiry": ": میعاد {{from}} ← {{to}}"
+    },
+    "documentRenewed": {
+      "text": "{{doc}}{{for}} کی تجدید{{expires}}",
+      "for": " ({{person}})",
+      "expires": "، {{date}} تک"
+    },
+    "documentAdded": {
+      "text": "{{doc}}{{for}} شامل کیا{{expires}}",
+      "for": " ({{person}})",
+      "expires": "، {{date}} تک"
+    },
+    "stockCounted": {
+      "text": "{{count}} آئٹم گنے، {{changed}} بدلے، قیمت {{amount}}",
+      "text_one": "{{count}} آئٹم گنا، {{changed}} بدلے، قیمت {{amount}}"
+    },
+    "deliveryReceived": {
+      "text": "ڈیلیوری {{number}} ملی{{from}}: {{count}} آئٹم، قیمتوں کا انتظار",
+      "text_one": "ڈیلیوری {{number}} ملی{{from}}: {{count}} آئٹم، قیمتوں کا انتظار",
+      "from": " ({{supplier}} سے)"
+    },
+    "planRequested": {
+      "text": "پلان مانگا: {{count}} مہینے",
+      "text_one": "پلان مانگا: {{count}} مہینہ"
+    },
+    "values": {
+      "guest": "مہمان",
+      "theCustomer": "گاہک",
+      "cash": "نقد",
+      "bank": "بینک ٹرانسفر",
+      "card": "کارڈ"
+    }
   }
 }

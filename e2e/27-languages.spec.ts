@@ -7,7 +7,7 @@ import type { Page } from '@playwright/test';
 import { createOwner, sellService } from './support/api';
 import { SERVICE } from './support/catalog';
 import { expect, test } from './support/fixtures';
-import { id, ownerOn, tab } from './support/ui';
+import { id, idStarts, ownerOn, tab } from './support/ui';
 
 const LANGUAGES = [
   { name: 'العربية', dir: 'rtl', more: 'المزيد' },
@@ -22,7 +22,7 @@ const SCREENS = [
 ];
 
 /** Text that looks like an i18n key (e.g. "reports.kpi.sales") means a missing translation. */
-const KEY = /\b(?:common|reports|accounts|backup|quickSwitch|branch|more|sale|sales|customers|queue|inventory|staff|payroll|compliance|errors|closing|expenses|purchases|notifications|tabs|home|services)\.[a-zA-Z_.]+\b/;
+const KEY = /\b(?:activity|common|reports|accounts|backup|quickSwitch|branch|more|sale|sales|customers|queue|inventory|staff|payroll|compliance|errors|closing|expenses|purchases|notifications|tabs|home|services)\.[a-zA-Z_.]+\b/;
 
 async function check(page: Page, dir: string, screen: string) {
   await page.goto(screen);
@@ -53,3 +53,21 @@ for (const lang of LANGUAGES) {
     for (const screen of SCREENS) await check(page, lang.dir, screen);
   });
 }
+
+// Activity in the reader's language (owner's app check E3): Home → Recent activity and the audit trail.
+// Values sit inside direction marks in right-to-left text, so the sentence and the number are found apart.
+test('the activity reads in Arabic', async ({ page, mode }) => {
+  const owner = await createOwner(mode, { openingCash: 10_000 });
+  const sale = await sellService(owner.client, owner, SERVICE[mode].name, 'cash');
+  await ownerOn(page, mode, owner.email, owner.password);
+  await tab(page, 'more');
+  await id(page, 'more-language').click();
+  await page.getByRole('button', { name: 'العربية' }).click();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await page.goto('/');
+  await expect(idStarts(page, 'activity-row').filter({ hasText: 'حُفظ البيع رقم' }).filter({ hasText: String(sale.number) })).toBeVisible();
+  await expect(idStarts(page, 'activity-row').filter({ hasText: 'اليوم · ' }).first()).toBeVisible();
+  await page.goto('/accounts?tab=history');
+  await expect(idStarts(page, 'history-row').filter({ hasText: 'حُفظ البيع رقم' }).filter({ hasText: String(sale.number) })).toBeVisible();
+  await expect(idStarts(page, 'history-row').filter({ hasText: 'Saved sale' })).toHaveCount(0);
+});
