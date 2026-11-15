@@ -1,4 +1,4 @@
-import { admin, createOwner, createStaff, journalTotals, sellService, staffEmail, userClient } from './support/api';
+import { admin, createOwner, createStaff, employeeOf, journalTotals, sellService, staffEmail, userClient } from './support/api';
 import { SERVICE } from './support/catalog';
 import { expect, test } from './support/fixtures';
 import { back, expectMoney, id, ownerOn, staffOn, tab, text } from './support/ui';
@@ -64,4 +64,44 @@ test('owner refunds part of a sale with a reason; the front desk refunds only wi
     p: { sale_id: sale.sale_id, amount_minor: 100, method: 'cash', reason: 'Trying', idempotency_key: crypto.randomUUID() },
   });
   expect(error?.message).toMatch(/approval_needed/);
+});
+
+// A stylist opening their own part-refunded sale sees the refund, its reason and what it took from them, read only
+// (owner's app check E7).
+test('a stylist sees the refund on their own sale and what it changed for them', async ({ page, mode }) => {
+  const owner = await createOwner(mode, { openingCash: 10_000 });
+  const stylist = await createStaff(owner, 'staff', { commissionBps: 3500 });
+  const emp = await employeeOf(stylist.memberId);
+  const { data: sale, error } = await owner.client.rpc('create_sale', {
+    p: {
+      branch_id: owner.branchId,
+      client_ref: crypto.randomUUID(),
+      employee_id: emp,
+      tip_minor: 500,
+      tip_employee_id: emp,
+      lines: [{ kind: 'custom', name: 'Blow dry', unit_price_minor: 4000, employee_id: emp }],
+      payments: [{ method: 'cash', amount_minor: 4500 }],
+    },
+  });
+  if (error) throw error;
+  const { sale_id, number } = sale as { sale_id: string; number: number };
+  const refund = await owner.client.rpc('refund_sale', {
+    p: { sale_id, amount_minor: 1000, method: 'cash', reason: 'TEST partial refund', idempotency_key: crypto.randomUUID() },
+  });
+  if (refund.error) throw refund.error;
+  // Stylists see their own sales when the owner lets them take payments (Controls).
+  const rules = await owner.client.rpc('update_branch', { p_branch: owner.branchId, p: { settings: { staff_can_sell: true } } });
+  if (rules.error) throw rules.error;
+
+  await staffOn(page, mode, owner.code, stylist.username, stylist.password);
+  await tab(page, 'more');
+  await id(page, 'more-mySales').click();
+  await id(page, `sale-row-${number}`).click();
+  await expect(text(page, 'Part refunded')).toBeVisible();
+  await expect(text(page, 'TEST partial refund')).toBeVisible();
+  // QAR/AED 10 of a 40 sale (the tip apart): a quarter of the 35% commission on 40 comes back; the tip is kept.
+  await expect(id(page, 'refund-my-commission')).toHaveText(/^Your commission: -AED\s3\.50$/);
+  await expect(id(page, 'refund-my-tip')).toHaveText('Your tip is kept');
+  // Read only: no refund button for a stylist.
+  await expect(id(page, 'sale-refund')).toHaveCount(0);
 });

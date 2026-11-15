@@ -6,13 +6,14 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { taxDisplayName } from '@/lib/i18n';
 import { formatBps, formatMoney } from '@/lib/money';
-import { can } from '@/lib/permissions';
+import { can, levelOf } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Button, Card, FormError, HeaderBand, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
 import { staffNames, useSale } from './api';
 import { RefundRequest } from './RefundRequest';
+import { refundEffect } from './refundEffect';
 import { RefundSheet } from './RefundSheet';
 import { useShareReceipt } from './useReceipt';
 import { useWhatsAppReceipt } from './whatsappReceipt';
@@ -32,11 +33,32 @@ function Row({ label, value, strong, testID }: { label: string; value: string; s
   );
 }
 
+/** What a refund took from the stylist reading their own sale: commission, and the tip if it was theirs. */
+function RefundForMe({ effect }: { effect: ReturnType<typeof refundEffect> }) {
+  const { t } = useTranslation();
+  return (
+    <>
+      {effect.commission_minor > 0 ? (
+        <Text variant="small" color="textOnTint" testID="refund-my-commission">
+          {t('sales.refundMyCommission', { amount: formatMoney(-effect.commission_minor) })}
+        </Text>
+      ) : null}
+      {effect.tip_minor !== null ? (
+        <Text variant="small" color="textOnTint" testID="refund-my-tip">
+          {effect.tip_minor > 0 ? t('sales.refundMyTip', { amount: formatMoney(-effect.tip_minor) }) : t('sales.refundTipKept')}
+        </Text>
+      ) : null}
+    </>
+  );
+}
+
 export function SaleDetailScreen() {
   const { t } = useTranslation();
   const dates = useDates();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { business, role } = useWorkspace();
+  const { business, role, employeeId } = useWorkspace();
+  // A stylist sees what each refund on their own sale took from them (E7).
+  const forMe = levelOf(role, 'viewSales') === 'own' && employeeId ? employeeId : null;
   const query = useSale(id);
   const share = useShareReceipt();
   const whatsapp = useWhatsAppReceipt();
@@ -124,6 +146,7 @@ export function SaleDetailScreen() {
                         <Text variant="small" color="textOnTint">
                           {r.reason}
                         </Text>
+                        {forMe ? <RefundForMe effect={refundEffect(sale, r, forMe)} /> : null}
                       </Card>
                     ))}
                   </View>

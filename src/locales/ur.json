@@ -1271,7 +1271,10 @@
     "restockHint": "صرف جب پوری فروخت واپس ہو اور چیزیں دوبارہ بک سکیں۔",
     "by": "{{name}} نے کیا",
     "refundTip": "ٹپ بھی واپس کریں",
-    "refundTipHint": "{{amount}} کی ٹپ {{staff}} کی ہے۔ اسے بند رکھیں تو رقم کی واپسی صرف سروسز اور مصنوعات سے ہوگی۔"
+    "refundTipHint": "{{amount}} کی ٹپ {{staff}} کی ہے۔ اسے بند رکھیں تو رقم کی واپسی صرف سروسز اور مصنوعات سے ہوگی۔",
+    "refundMyCommission": "آپ کا کمیشن: {{amount}}",
+    "refundMyTip": "آپ کی ٹپ: {{amount}}",
+    "refundTipKept": "آپ کی ٹپ برقرار رہتی ہے"
   },
   "receipt": {
     "receipt": "رسید",

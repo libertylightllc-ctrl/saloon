@@ -1271,7 +1271,10 @@
     "restockHint": "Uniquement si toute la vente est remboursée et que les produits peuvent être revendus.",
     "by": "par {{name}}",
     "refundTip": "Rembourser aussi le pourboire",
-    "refundTipHint": "Le pourboire de {{amount}} revient au {{staff}}. Laissez désactivé et le remboursement ne porte que sur les prestations et produits."
+    "refundTipHint": "Le pourboire de {{amount}} revient au {{staff}}. Laissez désactivé et le remboursement ne porte que sur les prestations et produits.",
+    "refundMyCommission": "Votre commission : {{amount}}",
+    "refundMyTip": "Votre pourboire : {{amount}}",
+    "refundTipKept": "Votre pourboire est conservé"
   },
   "receipt": {
     "receipt": "Reçu",

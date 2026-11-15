@@ -1271,7 +1271,10 @@
     "restockHint": "Só quando a venda inteira é reembolsada e os produtos podem ser vendidos de novo.",
     "by": "por {{name}}",
     "refundTip": "Reembolsar também a gorjeta",
-    "refundTipHint": "A gorjeta de {{amount}} é do {{staff}}. Deixe desligado e o reembolso sai só dos serviços e produtos."
+    "refundTipHint": "A gorjeta de {{amount}} é do {{staff}}. Deixe desligado e o reembolso sai só dos serviços e produtos.",
+    "refundMyCommission": "Sua comissão: {{amount}}",
+    "refundMyTip": "Sua gorjeta: {{amount}}",
+    "refundTipKept": "Sua gorjeta é mantida"
   },
   "receipt": {
     "receipt": "Recibo",

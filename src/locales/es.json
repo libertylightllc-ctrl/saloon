@@ -1271,7 +1271,10 @@
     "restockHint": "Solo si se reembolsa la venta completa y los productos se pueden volver a vender.",
     "by": "por {{name}}",
     "refundTip": "Devolver también la propina",
-    "refundTipHint": "La propina de {{amount}} es del {{staff}}. Si lo dejas apagado, el reembolso sale solo de los servicios y productos."
+    "refundTipHint": "La propina de {{amount}} es del {{staff}}. Si lo dejas apagado, el reembolso sale solo de los servicios y productos.",
+    "refundMyCommission": "Tu comisión: {{amount}}",
+    "refundMyTip": "Tu propina: {{amount}}",
+    "refundTipKept": "Tu propina se mantiene"
   },
   "receipt": {
     "receipt": "Recibo",

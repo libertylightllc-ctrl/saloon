@@ -1271,7 +1271,10 @@
     "restockHint": "Only when the whole sale is refunded and the products can be sold again.",
     "by": "by {{name}}",
     "refundTip": "Also refund the tip",
-    "refundTipHint": "The {{amount}} tip is the {{staff}}'s. Leave this off and the refund comes out of the services and products only."
+    "refundTipHint": "The {{amount}} tip is the {{staff}}'s. Leave this off and the refund comes out of the services and products only.",
+    "refundMyCommission": "Your commission: {{amount}}",
+    "refundMyTip": "Your tip: {{amount}}",
+    "refundTipKept": "Your tip is kept"
   },
   "receipt": {
     "receipt": "Receipt",
