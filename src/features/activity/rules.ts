@@ -151,6 +151,7 @@ export const ACTIVITY_RULES: readonly ActivityRule[] = [
   // The salon and its settings
   { key: 'salonSetUp', en: 'Set up {name}' },
   { key: 'salonRenamed', en: 'Renamed the salon: {from} → {to}' },
+  { key: 'salonCodeChanged', en: 'Changed the salon code: {from} → {to}' },
   { key: 'salonClosedByPlatform', en: 'Salon closed by the platform owner: {note}' },
   { key: 'branchAdded', en: 'Added the branch {name}' },
   { key: 'branchUpdated', en: 'Updated branch settings' },

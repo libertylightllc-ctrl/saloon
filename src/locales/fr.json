@@ -1246,7 +1246,10 @@
     "future_date": "La date ne peut pas être dans le futur.",
     "vat_off": "La taxe est désactivée pour cette succursale : laissez la taxe à 0.",
     "triesLeft": "Encore {{count}} essais avant qu’il se bloque 15 minutes.",
-    "triesLeft_one": "Encore {{count}} essai avant qu’il se bloque 15 minutes."
+    "triesLeft_one": "Encore {{count}} essai avant qu’il se bloque 15 minutes.",
+    "code_changed": "Le code salon a déjà été changé une fois. Il ne peut plus être changé.",
+    "invalid_salon_code": "Un code salon fait 4 à 12 lettres ou chiffres, sans espace.",
+    "code_unchanged": "C’est déjà le code salon actuel. Saisissez-en un nouveau."
   },
   "sales": {
     "title": "Ventes",
@@ -2085,7 +2088,17 @@
     "changeLoginType": "Passer à {{type}}",
     "loginTypeChanged": "{{name}} a maintenant un accès {{type}}",
     "lastSignIn": "Dernière connexion : {{when}}",
-    "neverSignedIn": "Jamais connecté"
+    "neverSignedIn": "Jamais connecté",
+    "changeCode": {
+      "button": "Changer le code salon",
+      "warning": "Tous les employés devront se connecter avec le nouveau code. Leurs noms d’utilisateur et mots de passe ne changent pas. Le code ne peut être changé qu’une seule fois.",
+      "current": "Actuel : {{code}}",
+      "label": "Nouveau code salon",
+      "hint": "4 à 12 lettres ou chiffres",
+      "confirm": "Changer le code",
+      "done": "Le code salon est maintenant {{code}}. Prévenez votre équipe.",
+      "changedOn": "Changé le {{date}}. Il ne peut plus être changé."
+    }
   },
   "attendance": {
     "title": "Présences",
@@ -4149,6 +4162,9 @@
       "cash": "en espèces",
       "bank": "par virement",
       "card": "par carte"
+    },
+    "salonCodeChanged": {
+      "text": "Code salon changé : {{from}} → {{to}}"
     }
   }
 }

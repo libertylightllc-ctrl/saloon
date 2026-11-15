@@ -17,7 +17,8 @@ export const ERROR_CODES = [
   'plan_required', 'billing_off', 'plan_requested', 'branch_name_taken', 'too_many_branches', 'code_taken', 'invalid_setting', 'employee_has_login', 'account_deleted', 'on_break', 'not_on_break', 'not_balanced', 'invalid_pin', 'pin_locked', 'wrong_pin', 'switch_expired', 'server_busy',
   'invalid_country', 'invalid_tax_rate', 'invalid_iban', 'invalid_swift', 'invalid_link', 'document_exists', 'country_locked', 'invalid_phone', 'wrong_current_password', 'days_required', 'message_required', 'invalid_email', 'email_unconfirmed',
   'approval_needed', 'not_an_approver', 'no_pin', 'own_count', 'receipt_required', 'same_customer', 'supplier_exists',
-  'supplier_required', 'already_recorded', 'invalid_note', 'future_date', 'vat_off', 'tip_not_refunded', 'unknown',
+  'supplier_required', 'already_recorded', 'invalid_note', 'future_date', 'vat_off', 'tip_not_refunded', 'code_changed',
+  'invalid_salon_code', 'code_unchanged', 'unknown',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

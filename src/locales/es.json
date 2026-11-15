@@ -1246,7 +1246,10 @@
     "future_date": "La fecha no puede ser futura.",
     "vat_off": "El impuesto está desactivado en esta sucursal: deja el impuesto en 0.",
     "triesLeft": "Quedan {{count}} intentos antes de que se bloquee 15 minutos.",
-    "triesLeft_one": "Queda {{count}} intento antes de que se bloquee 15 minutos."
+    "triesLeft_one": "Queda {{count}} intento antes de que se bloquee 15 minutos.",
+    "code_changed": "El código del salón ya se cambió una vez. No se puede volver a cambiar.",
+    "invalid_salon_code": "El código del salón tiene de 4 a 12 letras o números, sin espacios.",
+    "code_unchanged": "Ese es el código actual del salón. Escribe uno nuevo."
   },
   "sales": {
     "title": "Ventas",
@@ -2085,7 +2088,17 @@
     "changeLoginType": "Cambiar a {{type}}",
     "loginTypeChanged": "{{name}} ahora tiene acceso de {{type}}",
     "lastSignIn": "Último inicio de sesión: {{when}}",
-    "neverSignedIn": "Nunca ha iniciado sesión"
+    "neverSignedIn": "Nunca ha iniciado sesión",
+    "changeCode": {
+      "button": "Cambiar código del salón",
+      "warning": "Todo el personal deberá iniciar sesión con el nuevo código. Sus usuarios y contraseñas no cambian. Solo puedes cambiar el código una vez.",
+      "current": "Ahora: {{code}}",
+      "label": "Nuevo código del salón",
+      "hint": "De 4 a 12 letras o números",
+      "confirm": "Cambiar código",
+      "done": "El código del salón ahora es {{code}}. Avisa a tu personal.",
+      "changedOn": "Cambiado el {{date}}. No se puede volver a cambiar."
+    }
   },
   "attendance": {
     "title": "Asistencia",
@@ -4149,6 +4162,9 @@
       "cash": "en efectivo",
       "bank": "por transferencia",
       "card": "con tarjeta"
+    },
+    "salonCodeChanged": {
+      "text": "Cambió el código del salón: {{from}} → {{to}}"
     }
   }
 }

@@ -9,11 +9,12 @@ import { businessDate } from '@/lib/dates';
 import { formatBps, formatMoney, sum } from '@/lib/money';
 import { can } from '@/lib/permissions';
 import { spacing } from '@/theme';
-import { Avatar, Button, Card, EmptyState, HeaderBand, KpiCard, KpiGrid, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
+import { Avatar, Button, EmptyState, HeaderBand, KpiCard, KpiGrid, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
 
 import { useAttendanceDay, useStaffDirectory, type StaffMember } from './api';
 import { useRoleTitle } from './labels';
 import { ManageLoginSheet } from './ManageLoginSheet';
+import { SalonCodeCard } from './SalonCodeCard';
 
 /**
  * Staff: everyone who works here with their pay, shifts and app login, in one place (owner and accountant). Logins
@@ -55,16 +56,7 @@ export function StaffScreen() {
         }
       >
         <View style={styles.body}>
-          {logins ? (
-            <Card variant="tinted" style={styles.code}>
-              <Text variant="small" color="textOnTint">
-                {t('team.codeExplain')}
-              </Text>
-              <Text variant="h3" color="primaryText" testID="team-salon-code">
-                {business.code}
-              </Text>
-            </Card>
-          ) : null}
+          {logins ? <SalonCodeCard canChange={role === 'owner'} /> : null}
           <QueryState
             query={staff}
             isEmpty={(rows) => rows.length === 0 && loginOnlyOf(rows).length === 0}
@@ -152,7 +144,6 @@ export function StaffScreen() {
 
 const styles = StyleSheet.create({
   body: { gap: spacing.md },
-  code: { gap: spacing.xs },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   badges: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
   trailing: { alignItems: 'flex-end', gap: 2 },

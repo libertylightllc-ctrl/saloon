@@ -1246,7 +1246,10 @@
     "future_date": "The date can't be in the future.",
     "vat_off": "Tax is off for this branch: leave the tax at 0.",
     "triesLeft": "{{count}} tries left before it locks for 15 minutes.",
-    "triesLeft_one": "{{count}} try left before it locks for 15 minutes."
+    "triesLeft_one": "{{count}} try left before it locks for 15 minutes.",
+    "code_changed": "The salon code was already changed once. It can't be changed again.",
+    "invalid_salon_code": "A salon code is 4 to 12 letters or numbers, with no spaces.",
+    "code_unchanged": "That is the salon code now. Type a new one."
   },
   "sales": {
     "title": "Sales",
@@ -2085,7 +2088,17 @@
     "changeLoginType": "Change to {{type}}",
     "loginTypeChanged": "{{name}} now has a {{type}} login",
     "lastSignIn": "Last signed in: {{when}}",
-    "neverSignedIn": "Never signed in"
+    "neverSignedIn": "Never signed in",
+    "changeCode": {
+      "button": "Change salon code",
+      "warning": "Every staff member must sign in with the new code. Their usernames and passwords stay the same. You can change the code only once.",
+      "current": "Now: {{code}}",
+      "label": "New salon code",
+      "hint": "4 to 12 letters or numbers",
+      "confirm": "Change code",
+      "done": "Salon code changed to {{code}}. Tell your staff.",
+      "changedOn": "Changed on {{date}}. It can't be changed again."
+    }
   },
   "attendance": {
     "title": "Attendance",
@@ -4148,6 +4161,9 @@
       "cash": "cash",
       "bank": "bank transfer",
       "card": "card"
+    },
+    "salonCodeChanged": {
+      "text": "Changed the salon code: {{from}} → {{to}}"
     }
   }
 }

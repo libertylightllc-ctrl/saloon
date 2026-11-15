@@ -19,6 +19,11 @@ Português — More → Language in the app, or the language button at the top o
 - Staff sign in on the "Staff" side of the sign-in page with the salon code, their username and password, which the
   owner gives them. The salon code is on the owner's More page (under the name: "Salon code: …") and at the top of
   More → Staff. It is not in Branch settings.
+- The owner can change the salon code once (for example after a typo in the salon's name): More → Staff → "Change
+  salon code" under the code. Every staff member then signs in with the new code; usernames and passwords stay the
+  same. It cannot be changed a second time.
+- Each person's page in More → Staff shows when their login last signed in, or "Never signed in" (owner, and a
+  manager for front desk and stylist logins in their branch).
 - An owner who forgot the password: sign-in page → Forgot password? → a code arrives by email.
 - A staff member who forgot the password: the owner (or a manager, for front desk and stylist logins in their
   branch) sets a new one: More → Staff → the person → Password & sign-in.

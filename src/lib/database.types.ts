@@ -725,6 +725,7 @@ export type Database = {
           closed_at: string | null;
           closed_by: string | null;
           code: string;
+          code_changed_at: string | null;
           country_code: string;
           created_at: string;
           created_by: string | null;
@@ -739,6 +740,7 @@ export type Database = {
           closed_at?: string | null;
           closed_by?: string | null;
           code: string;
+          code_changed_at?: string | null;
           country_code?: string;
           created_at?: string;
           created_by?: string | null;
@@ -753,6 +755,7 @@ export type Database = {
           closed_at?: string | null;
           closed_by?: string | null;
           code?: string;
+          code_changed_at?: string | null;
           country_code?: string;
           created_at?: string;
           created_by?: string | null;
@@ -4705,6 +4708,7 @@ export type Database = {
         Returns: boolean;
       };
       change_country: { Args: { p: Json }; Returns: undefined };
+      change_salon_code: { Args: { p_business: string; p_code: string }; Returns: string };
       check_in: { Args: { p_id: string }; Returns: undefined };
       check_pin: { Args: { p_member: string; p_pin: string }; Returns: boolean };
       claim_pending_push: {

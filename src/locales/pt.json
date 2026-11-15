@@ -1246,7 +1246,10 @@
     "future_date": "A data não pode ser futura.",
     "vat_off": "O imposto está desligado nesta filial: deixe o imposto em 0.",
     "triesLeft": "Restam {{count}} tentativas antes de bloquear por 15 minutos.",
-    "triesLeft_one": "Resta {{count}} tentativa antes de bloquear por 15 minutos."
+    "triesLeft_one": "Resta {{count}} tentativa antes de bloquear por 15 minutos.",
+    "code_changed": "O código do salão já foi alterado uma vez. Não pode ser alterado de novo.",
+    "invalid_salon_code": "O código do salão tem de 4 a 12 letras ou números, sem espaços.",
+    "code_unchanged": "Esse já é o código atual do salão. Digite um novo."
   },
   "sales": {
     "title": "Vendas",
@@ -2085,7 +2088,17 @@
     "changeLoginType": "Mudar para {{type}}",
     "loginTypeChanged": "{{name}} agora tem acesso de {{type}}",
     "lastSignIn": "Último acesso: {{when}}",
-    "neverSignedIn": "Nunca entrou"
+    "neverSignedIn": "Nunca entrou",
+    "changeCode": {
+      "button": "Alterar código do salão",
+      "warning": "Toda a equipe precisará entrar com o novo código. Os nomes de usuário e senhas continuam os mesmos. O código só pode ser alterado uma vez.",
+      "current": "Atual: {{code}}",
+      "label": "Novo código do salão",
+      "hint": "De 4 a 12 letras ou números",
+      "confirm": "Alterar código",
+      "done": "O código do salão agora é {{code}}. Avise sua equipe.",
+      "changedOn": "Alterado em {{date}}. Não pode ser alterado de novo."
+    }
   },
   "attendance": {
     "title": "Frequência",
@@ -4149,6 +4162,9 @@
       "cash": "em dinheiro",
       "bank": "por transferência",
       "card": "no cartão"
+    },
+    "salonCodeChanged": {
+      "text": "Alterou o código do salão: {{from}} → {{to}}"
     }
   }
 }
