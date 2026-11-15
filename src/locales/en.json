@@ -2190,7 +2190,8 @@
       "download": "Download PDF",
       "paidOnPick": "Day it was paid",
       "cashToday": "For a bank transfer, pick the day it went out. Cash is paid today, from the drawer."
-    }
+    },
+    "draftHintOwnerApproves": "Nothing is in the books until the owner approves it. Add a bonus or deduction and work it out again if needed."
   },
   "myPay": {
     "title": "My pay",

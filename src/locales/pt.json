@@ -2190,7 +2190,8 @@
       "download": "Baixar PDF",
       "paidOnPick": "Dia do pagamento",
       "cashToday": "Para transferência, escolha o dia em que saiu. Dinheiro é pago hoje, do caixa."
-    }
+    },
+    "draftHintOwnerApproves": "Nada é lançado nos livros até o dono aprovar. Adicione um bônus ou desconto e calcule de novo se precisar."
   },
   "myPay": {
     "title": "Meus ganhos",

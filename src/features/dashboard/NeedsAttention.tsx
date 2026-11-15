@@ -121,7 +121,8 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
   }
   const payroll = data.payroll;
   if (payroll && can(role, 'runPayroll')) {
-    if (payroll.pending_period) {
+    // Waiting for approval: only for the owner, who approves (C4).
+    if (payroll.pending_period && can(role, 'approvePayroll')) {
       items.push({
         key: 'payroll-approval',
         title: t('home.attention.payrollPending', { month: dates.day(`${payroll.pending_period}-01`, 'MMMM yyyy') }),

@@ -2190,7 +2190,8 @@
       "download": "Descargar PDF",
       "paidOnPick": "Día del pago",
       "cashToday": "Para una transferencia, elige el día en que salió. El efectivo se paga hoy, de la caja."
-    }
+    },
+    "draftHintOwnerApproves": "No se registra nada en los libros hasta que el dueño lo apruebe. Añade un bono o una deducción y vuelve a calcularlo si hace falta."
   },
   "myPay": {
     "title": "Mi pago",

@@ -32,6 +32,8 @@ export function PayrollScreen() {
   const approve = useApprovePayroll(business.id, branch.id);
   const [open, setOpen] = useState<Payslip | null>(null);
   const owner = can(role, 'runPayroll');
+  // Only the owner approves (C4): the accountant works the month out and the owner is asked to approve it.
+  const approver = can(role, 'approvePayroll');
 
   return (
     <>
@@ -99,7 +101,7 @@ export function PayrollScreen() {
                         onPress={() => generate.mutate(month, { onSuccess: () => toast(t('payroll.generated')) })}
                         testID="payroll-generate"
                       />
-                      {r ? (
+                      {r && approver ? (
                         <Button
                           label={t('payroll.approve')}
                           size="md"
@@ -111,7 +113,11 @@ export function PayrollScreen() {
                       ) : null}
                     </View>
                   ) : null}
-                  {r?.status === 'generated' ? <Text variant="small" color="textSecondary">{t('payroll.draftHint')}</Text> : null}
+                  {r?.status === 'generated' ? (
+                    <Text variant="small" color="textSecondary" testID="payroll-draft-hint">
+                      {t(approver ? 'payroll.draftHint' : 'payroll.draftHintOwnerApproves')}
+                    </Text>
+                  ) : null}
                 </Card>
                 {r && lines.length === 0 ? <EmptyState illustration="no-results" message={t('payroll.noLines')} /> : null}
                 {lines

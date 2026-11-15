@@ -2190,7 +2190,8 @@
       "download": "Télécharger le PDF",
       "paidOnPick": "Jour du paiement",
       "cashToday": "Pour un virement, choisissez le jour où il est parti. Les espèces sont payées aujourd'hui, depuis la caisse."
-    }
+    },
+    "draftHintOwnerApproves": "Rien n'est passé en comptabilité tant que le propriétaire ne l'a pas approuvé. Ajoutez une prime ou une retenue et recalculez si besoin."
   },
   "myPay": {
     "title": "Ma paie",

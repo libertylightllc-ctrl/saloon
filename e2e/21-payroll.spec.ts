@@ -10,6 +10,7 @@ test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; t
   const owner = await createOwner(mode, { openingCash: 100_000 });
   const barber = await createStaff(owner, 'staff'); // 10% commission
   const cashier = await createStaff(owner, 'cashier');
+  const accountant = await createStaff(owner, 'accountant');
   const employee = await employeeOf(barber.memberId);
   await owner.client.rpc('save_employee', {
     p: { business_id: owner.businessId, id: employee, full_name: barber.name, base_salary_minor: 350_000, commission_bps: 1000, wps_required: true,
@@ -42,6 +43,13 @@ test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; t
   await expect(id(page, `slip-${barber.name}`)).toContainText('3,210.00');
   // The line adds up (C3): base, commission, bonus and the advance paid back.
   await expect(id(page, `slip-${barber.name}`)).toContainText(/Base AED.3,500\.00 · Commission AED.10\.00 · Bonus AED.200\.00 · Advances −AED.500\.00/);
+  // Only the owner approves (C4): the accountant sees the draft, no Approve button, and is told the owner approves.
+  const books = await device();
+  await staffOn(books, mode, owner.code, accountant.username, accountant.password);
+  await books.goto('/payroll');
+  await expect(id(books, 'payroll-draft-hint')).toContainText('until the owner approves');
+  await expect(id(books, 'payroll-generate')).toBeVisible();
+  await expect(id(books, 'payroll-approve')).toHaveCount(0);
   await id(page, 'payroll-approve').click();
   await expect(text(page, 'Payroll approved and posted to the books')).toBeVisible();
 
