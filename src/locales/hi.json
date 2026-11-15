@@ -140,7 +140,7 @@
     "subline": "{{queue}} कतार में · {{booked}} बुक",
     "searchPlaceholder": "ग्राहक, सेवाएँ, बिक्री खोजें",
     "expectedCash": "आज अपेक्षित नकद",
-    "vsYesterday": "कल की तुलना में {{pct}}",
+    "vsYesterday": "कल ({{amount}}) की तुलना में {{pct}}",
     "closeDay": "दिन बंद करें",
     "salesToday": "आज की बिक्री",
     "salesSub": "{{services}} · {{sales}}",
@@ -339,7 +339,9 @@
     "guestName": "मेहमान का नाम (वैकल्पिक)",
     "pickVisit": "यहाँ देखने के लिए सूची में से कोई विज़िट चुनें।",
     "customerRecord": "ग्राहक का रिकॉर्ड",
-    "moreActionsShort": "और विकल्प"
+    "moreActionsShort": "और विकल्प",
+    "emptyWeek": "इस हफ़्ते कोई बुकिंग नहीं।",
+    "emptyTomorrow": "कल के लिए कोई बुकिंग नहीं।"
   },
   "sale": {
     "title": "त्वरित बिक्री",
@@ -1843,7 +1845,8 @@
       "day": "बैंक पहुँचने का दिन",
       "ref": "जमा पर्ची नंबर (वैकल्पिक)",
       "saved": "बैंक जमा दर्ज हुआ"
-    }
+    },
+    "historyDifference": "अंतर"
   },
   "inventory": {
     "title": "स्टॉक और औज़ार",

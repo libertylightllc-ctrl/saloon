@@ -140,7 +140,7 @@
     "subline": "{{queue}} في الانتظار · {{booked}} محجوز",
     "searchPlaceholder": "ابحث عن العملاء والخدمات والمبيعات",
     "expectedCash": "النقد المتوقع اليوم",
-    "vsYesterday": "{{pct}} مقارنة بالأمس",
+    "vsYesterday": "{{pct}} مقارنة بالأمس ({{amount}})",
     "closeDay": "إغلاق اليوم",
     "salesToday": "مبيعات اليوم",
     "salesSub": "{{services}} · {{sales}}",
@@ -366,7 +366,9 @@
     "guestName": "اسم الضيف (اختياري)",
     "pickVisit": "اختر زيارة من القائمة لتظهر هنا.",
     "customerRecord": "سجل العميل",
-    "moreActionsShort": "إجراءات أخرى"
+    "moreActionsShort": "إجراءات أخرى",
+    "emptyWeek": "لا حجوزات هذا الأسبوع.",
+    "emptyTomorrow": "لا حجوزات غدًا."
   },
   "sale": {
     "title": "بيع سريع",
@@ -1891,7 +1893,8 @@
       "day": "يوم وصوله إلى البنك",
       "ref": "رقم إيصال الإيداع (اختياري)",
       "saved": "سُجّل الإيداع في البنك"
-    }
+    },
+    "historyDifference": "الفرق"
   },
   "inventory": {
     "title": "المخزون والأدوات",

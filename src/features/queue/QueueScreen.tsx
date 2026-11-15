@@ -79,12 +79,22 @@ export function QueueScreen() {
         query={query}
         isEmpty={(data) => data.filter(shows).length === 0}
         empty={
-          <EmptyState
-            illustration="queue-empty"
-            message={t('queue.empty')}
-            actionLabel={t('queue.addWalkIn')}
-            onAction={() => router.push({ pathname: '/appointment/new', params: { kind: 'walk_in' } })}
-          />
+          // Today: nobody waiting, add a walk-in; tomorrow or this week: nothing booked, add a booking (E8).
+          day === 'today' ? (
+            <EmptyState
+              illustration="queue-empty"
+              message={t('queue.empty')}
+              actionLabel={t('queue.addWalkIn')}
+              onAction={() => router.push({ pathname: '/appointment/new', params: { kind: 'walk_in' } })}
+            />
+          ) : (
+            <EmptyState
+              illustration="queue-empty"
+              message={t(day === 'week' ? 'queue.emptyWeek' : 'queue.emptyTomorrow')}
+              actionLabel={can(role, 'book', rules) ? t('queue.newBooking') : undefined}
+              onAction={can(role, 'book', rules) ? () => router.push({ pathname: '/appointment/new', params: { kind: 'booking' } }) : undefined}
+            />
+          )
         }
       >
         {(data) => (

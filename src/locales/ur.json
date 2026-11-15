@@ -140,7 +140,7 @@
     "subline": "{{queue}} قطار میں · {{booked}} بک",
     "searchPlaceholder": "گاہک، خدمات، فروخت تلاش کریں",
     "expectedCash": "آج متوقع نقد",
-    "vsYesterday": "کل کے مقابلے میں {{pct}}",
+    "vsYesterday": "کل ({{amount}}) کے مقابلے میں {{pct}}",
     "closeDay": "دن بند کریں",
     "salesToday": "آج کی فروخت",
     "salesSub": "{{services}} · {{sales}}",
@@ -339,7 +339,9 @@
     "guestName": "مہمان کا نام (اختیاری)",
     "pickVisit": "یہاں دیکھنے کے لیے فہرست میں سے کوئی وزٹ منتخب کریں۔",
     "customerRecord": "گاہک کا ریکارڈ",
-    "moreActionsShort": "مزید اقدامات"
+    "moreActionsShort": "مزید اقدامات",
+    "emptyWeek": "اس ہفتے کوئی بکنگ نہیں۔",
+    "emptyTomorrow": "کل کے لیے کوئی بکنگ نہیں۔"
   },
   "sale": {
     "title": "فوری فروخت",
@@ -1843,7 +1845,8 @@
       "day": "بینک پہنچنے کا دن",
       "ref": "جمع پرچی نمبر (اختیاری)",
       "saved": "بینک جمع درج ہو گیا"
-    }
+    },
+    "historyDifference": "فرق"
   },
   "inventory": {
     "title": "اسٹاک اور اوزار",

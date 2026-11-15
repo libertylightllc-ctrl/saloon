@@ -43,7 +43,7 @@ export function MoneyCards({ data, row }: { data: Dashboard; row?: boolean }) {
       icon="banknote"
       label={t('home.expectedCash')}
       value={blind ? t('home.cashBlind') : formatMoney(cash)}
-      delta={!blind && change !== 0 ? { label: t('home.vsYesterday', { pct: `${Math.abs(change)}%` }), trend: change > 0 ? 'up' : 'down' } : undefined}
+      delta={!blind && change !== 0 ? { label: t('home.vsYesterday', { pct: `${Math.abs(change)}%`, amount: formatMoney(yesterday) }), trend: change > 0 ? 'up' : 'down' } : undefined}
       sub={
         // Below zero only from records made before the drawer was checked (owner's fix list #9): say how to fix it.
         blind

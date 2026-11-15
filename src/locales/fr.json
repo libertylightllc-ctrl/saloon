@@ -140,7 +140,7 @@
     "subline": "File : {{queue}} · Réservés : {{booked}}",
     "searchPlaceholder": "Rechercher clients, services, ventes",
     "expectedCash": "Espèces attendues aujourd’hui",
-    "vsYesterday": "{{pct}} vs hier",
+    "vsYesterday": "{{pct}} vs hier ({{amount}})",
     "closeDay": "Clôturer la journée",
     "salesToday": "Ventes du jour",
     "salesSub": "{{services}} · {{sales}}",
@@ -339,7 +339,9 @@
     "guestName": "Nom du client (facultatif)",
     "pickVisit": "Choisissez une visite dans la liste pour l’afficher ici.",
     "customerRecord": "Fiche client",
-    "moreActionsShort": "Plus d’actions"
+    "moreActionsShort": "Plus d’actions",
+    "emptyWeek": "Aucune réservation cette semaine.",
+    "emptyTomorrow": "Aucune réservation demain."
   },
   "sale": {
     "title": "Vente rapide",
@@ -1843,7 +1845,8 @@
       "day": "Jour d’arrivée à la banque",
       "ref": "Numéro du bordereau (facultatif)",
       "saved": "Dépôt bancaire enregistré"
-    }
+    },
+    "historyDifference": "Écart"
   },
   "inventory": {
     "title": "Stock et outils",

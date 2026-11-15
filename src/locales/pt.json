@@ -140,7 +140,7 @@
     "subline": "{{queue}} na fila · {{booked}} agendados",
     "searchPlaceholder": "Pesquisar clientes, serviços, vendas",
     "expectedCash": "Dinheiro esperado hoje",
-    "vsYesterday": "{{pct}} vs. ontem",
+    "vsYesterday": "{{pct}} vs. ontem ({{amount}})",
     "closeDay": "Fechar o dia",
     "salesToday": "Vendas hoje",
     "salesSub": "{{services}} · {{sales}}",
@@ -339,7 +339,9 @@
     "guestName": "Nome do cliente (opcional)",
     "pickVisit": "Escolha um atendimento na lista para vê-lo aqui.",
     "customerRecord": "Ficha do cliente",
-    "moreActionsShort": "Mais ações"
+    "moreActionsShort": "Mais ações",
+    "emptyWeek": "Nada marcado esta semana.",
+    "emptyTomorrow": "Nada marcado para amanhã."
   },
   "sale": {
     "title": "Venda rápida",
@@ -1843,7 +1845,8 @@
       "day": "Dia em que chegou ao banco",
       "ref": "Número do comprovante (opcional)",
       "saved": "Depósito bancário registrado"
-    }
+    },
+    "historyDifference": "Diferença"
   },
   "inventory": {
     "title": "Estoque e ferramentas",

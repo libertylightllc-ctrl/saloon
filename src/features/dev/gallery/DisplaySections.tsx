@@ -50,7 +50,7 @@ export function CardSection() {
         icon="banknote"
         label={t('home.expectedCash')}
         value={formatMoney(124000)}
-        delta={{ label: t('home.vsYesterday', { pct: '12%' }), trend: 'up' }}
+        delta={{ label: t('home.vsYesterday', { pct: '12%', amount: 'AED 120.00' }), trend: 'up' }}
         sub={t('home.cashSub')}
         action={<Button label={t('home.closeDay')} size="sm" />}
       />

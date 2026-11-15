@@ -1,6 +1,6 @@
 import { uid } from './support/env';
 import { expect, test, THEME } from './support/fixtures';
-import { chooseType, expectMoney, expectTheme, field, id, text } from './support/ui';
+import { chooseType, expectMoney, expectTheme, field, id, tab, text } from './support/ui';
 
 test('fresh device → type → themed sign-in → owner sign-up → setup → empty Home', async ({ page, mode }) => {
   const email = `new-${uid()}@e2e.test`;
@@ -54,4 +54,11 @@ test('fresh device → type → themed sign-in → owner sign-up → setup → e
   await expect(text(page, 'No one is waiting. Add a walk-in.')).toBeVisible();
   await expect(text(page, 'No sales yet today.')).toBeVisible();
   await expect(text(page, 'Finish setting up')).toBeVisible();
+  // The queue's empty text fits the day picked (E8).
+  await tab(page, 'queue');
+  await expect(text(page, 'No one is waiting. Add a walk-in.')).toBeVisible();
+  await id(page, 'queue-day-week').click();
+  await expect(text(page, 'Nothing booked this week.')).toBeVisible();
+  await id(page, 'queue-day-tomorrow').click();
+  await expect(text(page, 'Nothing booked tomorrow.')).toBeVisible();
 });

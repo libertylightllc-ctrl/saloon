@@ -126,17 +126,25 @@ export function ClosingScreen({ asTab = false }: { asTab?: boolean }) {
   );
 }
 
+/** The day's cash difference, labelled (owner's app check E8: the amount on its own said nothing). */
 function Variance({ amount }: { amount: number }) {
+  const { t } = useTranslation();
   return (
-    <Text
-      variant="bodyStrong"
-      tabular
-      color={amount === 0 ? 'textSecondary' : undefined}
-      style={amount !== 0 ? { color: amount < 0 ? semantic.error.pressed : semantic.warning.pressed } : undefined}
-    >
-      {amount > 0 ? '+' : ''}
-      {formatMoney(amount)}
-    </Text>
+    <View style={styles.variance}>
+      <Text variant="small" color="textSecondary">
+        {t('closing.historyDifference')}
+      </Text>
+      <Text
+        variant="bodyStrong"
+        tabular
+        color={amount === 0 ? 'textSecondary' : undefined}
+        style={amount !== 0 ? { color: amount < 0 ? semantic.error.pressed : semantic.warning.pressed } : undefined}
+        testID="closing-day-difference"
+      >
+        {amount > 0 ? '+' : ''}
+        {formatMoney(amount)}
+      </Text>
+    </View>
   );
 }
 
@@ -146,4 +154,5 @@ const styles = StyleSheet.create({
   card: { gap: spacing.sm },
   history: { marginTop: spacing['2xl'] },
   list: { gap: spacing.sm },
+  variance: { alignItems: 'flex-end' },
 });

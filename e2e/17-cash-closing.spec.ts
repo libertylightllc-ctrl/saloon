@@ -94,6 +94,8 @@ test('the front desk pays tips and sends a blind count AED 5 short; owner sends 
   await id(page, 'more-cashClosing').click();
   await expect(id(page, `closing-day-${today}`)).toContainText('Approved');
   await expect(id(page, `closing-day-${today}`)).toContainText('-AED 5.00');
+  // The amount says what it is (E8).
+  await expect(id(page, `closing-day-${today}`)).toContainText(/Difference\s*-AED\s5\.00/);
 });
 
 test('owner counts and approves in one step, banks part of it; staff cannot open cash closing', async ({ page, mode, device }) => {

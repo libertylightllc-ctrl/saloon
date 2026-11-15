@@ -140,7 +140,7 @@
     "subline": "{{queue}} in the queue · {{booked}} booked",
     "searchPlaceholder": "Search customers, services, sales",
     "expectedCash": "Expected cash today",
-    "vsYesterday": "{{pct}} vs yesterday",
+    "vsYesterday": "{{pct}} vs yesterday ({{amount}})",
     "closeDay": "Close day",
     "salesToday": "Sales today",
     "salesSub": "{{services}} · {{sales}}",
@@ -339,7 +339,9 @@
     "guestName": "Guest name (optional)",
     "pickVisit": "Pick a visit in the list to see it here.",
     "customerRecord": "Customer record",
-    "moreActionsShort": "More actions"
+    "moreActionsShort": "More actions",
+    "emptyWeek": "Nothing booked this week.",
+    "emptyTomorrow": "Nothing booked tomorrow."
   },
   "sale": {
     "title": "Quick sale",
@@ -1843,7 +1845,8 @@
       "day": "Day it reached the bank",
       "ref": "Deposit slip number (optional)",
       "saved": "Bank deposit recorded"
-    }
+    },
+    "historyDifference": "Difference"
   },
   "inventory": {
     "title": "Inventory & tools",
