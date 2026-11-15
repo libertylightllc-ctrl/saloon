@@ -1276,7 +1276,8 @@
     "refundTipHint": "Le pourboire de {{amount}} revient au {{staff}}. Laissez désactivé et le remboursement ne porte que sur les prestations et produits.",
     "refundMyCommission": "Votre commission : {{amount}}",
     "refundMyTip": "Votre pourboire : {{amount}}",
-    "refundTipKept": "Votre pourboire est conservé"
+    "refundTipKept": "Votre pourboire est conservé",
+    "subtitleMine": "Vos ventes récentes"
   },
   "receipt": {
     "receipt": "Reçu",

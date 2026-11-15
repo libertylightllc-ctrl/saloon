@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { formatMoney } from '@/lib/money';
+import { levelOf } from '@/lib/permissions';
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { EmptyState, HeaderBand, ListRow, QueryState, Screen, SectionHeader, StatusPill, Text } from '@/ui';
@@ -14,7 +15,9 @@ export function SalesScreen() {
   const { t } = useTranslation();
   const dates = useDates();
   const router = useRouter();
-  const { business, branch } = useWorkspace();
+  const { business, branch, role } = useWorkspace();
+  // A stylist sees only their own sales: "My sales" (E8).
+  const own = levelOf(role, 'viewSales') === 'own';
   const query = useRecentSales(branch.id);
 
   const byDay = (sales: Sale[]) => {
@@ -27,7 +30,7 @@ export function SalesScreen() {
     <Screen
       refreshing={query.isRefetching}
       onRefresh={() => void query.refetch()}
-      header={<HeaderBand title={t('sales.title')} subtitle={t('sales.subtitle')} onBack />}
+      header={<HeaderBand title={t(own ? 'more.rows.mySales' : 'sales.title')} subtitle={t(own ? 'sales.subtitleMine' : 'sales.subtitle')} onBack />}
     >
       <QueryState
         query={query}

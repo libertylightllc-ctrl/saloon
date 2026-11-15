@@ -61,7 +61,8 @@ test('owner creates a cashier login; the cashier sees cashier tabs in the branch
 
 test('a staff login sees only its own tabs and no money', async ({ page, mode }) => {
   const owner = await createOwner(mode, { openingCash: 30_000 });
-  const staff = await createStaff(owner, 'staff');
+  // On 0% commission: Home leaves out "Commission this month" (E8).
+  const staff = await createStaff(owner, 'staff', { commissionBps: 0 });
   // A visit in progress: staff may start visits, but Complete (checkout) is for people who take payment.
   const { data: visit } = await owner.client.rpc('create_appointment', {
     p: { branch_id: owner.branchId, kind: 'walk_in', guest_name: 'Walk-in guest', service_ids: [] },
@@ -71,6 +72,8 @@ test('a staff login sees only its own tabs and no money', async ({ page, mode })
   await expectTheme(page, mode);
   expect(await visibleTabs(page)).toEqual(['index', 'queue', 'pay', 'more']);
   await expect(id(page, 'kpi-expected-cash')).toHaveCount(0);
+  await expect(id(page, 'kpi-my-tips')).toBeVisible();
+  await expect(id(page, 'kpi-my-commission')).toHaveCount(0);
   await tab(page, 'queue');
   await expect(idStarts(page, 'queue-row-')).toContainText('Walk-in guest');
   await expect(idStarts(page, 'queue-complete-')).toHaveCount(0);

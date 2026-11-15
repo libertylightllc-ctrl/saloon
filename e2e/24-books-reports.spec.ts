@@ -171,6 +171,9 @@ test('the accountant has Reports and Accounting tabs, reads and exports, closes 
   await staffOn(page, mode, owner.code, accountant.username, accountant.password);
   // The accountant can look at cash closings but not close a day, and Home says so.
   await expect(id(page, 'home-close-day')).toHaveText('Cash closing');
+  // Home's quick actions are only what the accountant can do (E8): an expense, not a read-only stock page.
+  await expect(id(page, 'home-quick-expense')).toBeVisible();
+  for (const no of ['stock', 'walkIn', 'book', 'newSale', 'customer']) await expect(id(page, `home-quick-${no}`)).toHaveCount(0);
   expect(await visibleTabs(page)).toEqual(['index', 'reports-tab', 'accounts-tab', 'more']);
   await id(page, 'tab-reports-tab').click();
   await expect(id(page, 'report-kpi-sales-value')).toContainText('AED 90.00');

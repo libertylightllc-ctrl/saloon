@@ -3496,3 +3496,4 @@ accounts.memo.depositKeptUndone,Deposit kept — no-show undone,عربون مح�
 accounts.memo.stockCount,Stock count,جرد المخزون,स्टॉक गिनती,اسٹاک گنتی,Conteo de stock,Comptage de stock,Contagem de estoque,
 accounts.memo.stockDifference,Stock difference,فرق المخزون,स्टॉक अंतर,اسٹاک کا فرق,Diferencia de stock,Écart de stock,Diferença de estoque,
 accounts.memo.stockRecost,"Stock used below zero, costed again",مخزون استُخدم دون الصفر وأُعيد احتساب تكلفته,"शून्य से नीचे इस्तेमाल हुआ स्टॉक, लागत दोबारा",صفر سے نیچے استعمال ہونے والا اسٹاک، لاگت دوبارہ,"Stock usado por debajo de cero, recosteado","Stock utilisé sous zéro, recalculé","Estoque usado abaixo de zero, custo recalculado",
+sales.subtitleMine,Your recent sales,مبيعاتك الأخيرة,आपकी हाल की बिक्री,آپ کی حالیہ فروخت,Tus ventas recientes,Vos ventes récentes,Suas vendas recentes,

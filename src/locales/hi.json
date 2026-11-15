@@ -1276,7 +1276,8 @@
     "refundTipHint": "{{amount}} की टिप {{staff}} की है। इसे बंद रखें तो रिफ़ंड सिर्फ़ सेवाओं और उत्पादों से होगा।",
     "refundMyCommission": "आपका कमीशन: {{amount}}",
     "refundMyTip": "आपकी टिप: {{amount}}",
-    "refundTipKept": "आपकी टिप बनी रहती है"
+    "refundTipKept": "आपकी टिप बनी रहती है",
+    "subtitleMine": "आपकी हाल की बिक्री"
   },
   "receipt": {
     "receipt": "रसीद",

@@ -1276,7 +1276,8 @@
     "refundTipHint": "A gorjeta de {{amount}} é do {{staff}}. Deixe desligado e o reembolso sai só dos serviços e produtos.",
     "refundMyCommission": "Sua comissão: {{amount}}",
     "refundMyTip": "Sua gorjeta: {{amount}}",
-    "refundTipKept": "Sua gorjeta é mantida"
+    "refundTipKept": "Sua gorjeta é mantida",
+    "subtitleMine": "Suas vendas recentes"
   },
   "receipt": {
     "receipt": "Recibo",

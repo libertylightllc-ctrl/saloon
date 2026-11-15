@@ -94,8 +94,12 @@ test('a stylist sees the refund on their own sale and what it changed for them',
   if (rules.error) throw rules.error;
 
   await staffOn(page, mode, owner.code, stylist.username, stylist.password);
+  await expect(id(page, 'kpi-my-commission')).toBeVisible();
   await tab(page, 'more');
   await id(page, 'more-mySales').click();
+  // Their own sales only, and the page says so (E8).
+  await expect(page.getByRole('heading', { name: 'My sales', exact: true })).toBeVisible();
+  await expect(text(page, 'Your recent sales')).toBeVisible();
   await id(page, `sale-row-${number}`).click();
   await expect(text(page, 'Part refunded')).toBeVisible();
   await expect(text(page, 'TEST partial refund')).toBeVisible();

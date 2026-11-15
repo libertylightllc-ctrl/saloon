@@ -73,3 +73,25 @@ export function useDashboard(branchId: string) {
     },
   });
 }
+
+/** The stylist's own commission rate (basis points); Home leaves out "Commission this month" at 0% (E8). */
+export function useMyCommissionRate(employeeId: string | null) {
+  return useQuery({
+    enabled: Boolean(employeeId),
+    queryKey: ['employee', employeeId, 'commission-rate'],
+    queryFn: async (): Promise<number> => {
+      const { data, error } = await supabase.from('employees').select('commission_bps').eq('id', employeeId!).single();
+      if (error) throw error;
+      return Number(data.commission_bps ?? 0);
+    },
+  });
+}
+
+/**
+ * Show the commission tile: a rate above 0%, or commission already earned this month (the rate changed since).
+ * `rateBps`: undefined while loading (shown only if earned, so a 0% stylist never sees it flash), null if it could not
+ * be read (shown, as before).
+ */
+export function showsCommission(rateBps: number | null | undefined, monthMinor: number): boolean {
+  return rateBps === null || (rateBps ?? 0) > 0 || monthMinor !== 0;
+}

@@ -1276,7 +1276,8 @@
     "refundTipHint": "La propina de {{amount}} es del {{staff}}. Si lo dejas apagado, el reembolso sale solo de los servicios y productos.",
     "refundMyCommission": "Tu comisión: {{amount}}",
     "refundMyTip": "Tu propina: {{amount}}",
-    "refundTipKept": "Tu propina se mantiene"
+    "refundTipKept": "Tu propina se mantiene",
+    "subtitleMine": "Tus ventas recientes"
   },
   "receipt": {
     "receipt": "Recibo",

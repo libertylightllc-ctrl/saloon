@@ -1276,7 +1276,8 @@
     "refundTipHint": "{{amount}} کی ٹپ {{staff}} کی ہے۔ اسے بند رکھیں تو رقم کی واپسی صرف سروسز اور مصنوعات سے ہوگی۔",
     "refundMyCommission": "آپ کا کمیشن: {{amount}}",
     "refundMyTip": "آپ کی ٹپ: {{amount}}",
-    "refundTipKept": "آپ کی ٹپ برقرار رہتی ہے"
+    "refundTipKept": "آپ کی ٹپ برقرار رہتی ہے",
+    "subtitleMine": "آپ کی حالیہ فروخت"
   },
   "receipt": {
     "receipt": "رسید",

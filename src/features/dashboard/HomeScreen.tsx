@@ -26,7 +26,7 @@ import {
   type IconName,
 } from '@/ui';
 
-import { useDashboard, type Dashboard } from './api';
+import { showsCommission, useDashboard, useMyCommissionRate, type Dashboard } from './api';
 import { HomeTop } from './HomeHeader';
 import { RecentActivity, RevenueCards, StaffToday, TopServices } from './HomeSections';
 import { PlanBanner } from '@/features/plan/PlanBanner';
@@ -52,6 +52,7 @@ export function HomeScreen() {
   const now = useNow();
   const { business, branch, role, rules, employeeId } = useWorkspace();
   const dashboard = useDashboard(branch.id);
+  const rate = useMyCommissionRate(role === 'staff' ? employeeId : null);
   const today = useAppointments(branch.id, business.timezone, 'today');
   const handlers = useQueueHandlers();
   const money = can(role, 'viewMoney');
@@ -74,7 +75,13 @@ export function HomeScreen() {
     { key: 'customer', icon: 'contact', href: '/customers/form', show: can(role, 'manageCustomers') },
     // The front desk pays small things from the drawer: "Petty cash".
     { key: role === 'cashier' ? 'pettyCash' : 'expense', icon: 'coins', href: '/expenses/new', show: can(role, 'addExpense') || can(role, 'pettyCash') },
-    { key: 'stock', icon: 'boxes', href: '/inventory', show: can(role, 'viewInventory') && role !== 'staff' },
+    // Stock only for those who do something there (count, order, receive, edit), not a read-only look (E8).
+    {
+      key: 'stock',
+      icon: 'boxes',
+      href: '/inventory',
+      show: (['countStock', 'orderStock', 'receiveDelivery', 'manageInventory'] as const).some((c) => can(role, c)),
+    },
   ];
   const shown = quick.filter((q) => q.show);
   // A grid, never a sliding or cut-off row: up to four across a phone, otherwise three to a row (always three in the
@@ -89,6 +96,7 @@ export function HomeScreen() {
             index={i}
             label={t(`home.quick.${q.key}` as 'home.quick.walkIn')}
             onPress={() => router.push(q.href)}
+            testID={`home-quick-${q.key}`}
           />
         </View>
       ))}
@@ -135,7 +143,9 @@ export function HomeScreen() {
               <KpiGrid>
                 <KpiCard icon="scissors" label={t('home.me.services')} value={String(Number(data.me.services_today))} />
                 <KpiCard icon="receipt" label={t('home.me.sales')} value={formatMoney(data.me.sales_today_minor)} />
-                <KpiCard icon="coins" label={t('home.me.commission')} value={formatMoney(data.me.commission_month_minor)} />
+                {showsCommission(rate.isError ? null : rate.data, Number(data.me.commission_month_minor)) ? (
+                  <KpiCard icon="coins" label={t('home.me.commission')} value={formatMoney(data.me.commission_month_minor)} testID="kpi-my-commission" />
+                ) : null}
                 <KpiCard icon="handCoins" label={t('home.me.tips')} value={formatMoney(Number(data.me.tips_today_minor ?? 0))} testID="kpi-my-tips" />
               </KpiGrid>
             ) : null;

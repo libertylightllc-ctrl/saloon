@@ -12,9 +12,10 @@ export interface CategoryCircleProps {
   index?: number;
   selected?: boolean;
   onPress?: () => void;
+  testID?: string;
 }
 
-export function CategoryCircle({ icon, label, index = 0, selected, onPress }: CategoryCircleProps) {
+export function CategoryCircle({ icon, label, index = 0, selected, onPress, testID }: CategoryCircleProps) {
   const theme = useTheme();
   const { categoryFills, categoryIcons } = theme.colors;
   const size = theme.sizes.category;
@@ -25,6 +26,7 @@ export function CategoryCircle({ icon, label, index = 0, selected, onPress }: Ca
       accessibilityRole="button"
       accessibilityLabel={label}
       aria-selected={selected}
+      testID={testID}
       style={({ pressed }) => [styles.wrap, pressed && styles.pressed]}
     >
       <View

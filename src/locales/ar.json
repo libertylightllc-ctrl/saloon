@@ -1319,7 +1319,8 @@
     "refundTipHint": "الإكرامية {{amount}} من حق {{staff}}. اترك هذا مغلقًا ليُخصم الاسترداد من الخدمات والمنتجات فقط.",
     "refundMyCommission": "عمولتك: {{amount}}",
     "refundMyTip": "إكراميتك: {{amount}}",
-    "refundTipKept": "تبقى إكراميتك كما هي"
+    "refundTipKept": "تبقى إكراميتك كما هي",
+    "subtitleMine": "مبيعاتك الأخيرة"
   },
   "receipt": {
     "receipt": "إيصال",
