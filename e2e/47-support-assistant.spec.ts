@@ -3,7 +3,7 @@
  * question gets steps, a refund is handed to a person. The platform owner sees "Needs you" and answers; their answer
  * takes the conversation over.
  */
-import { createOwner, makePlatformAdmin } from './support/api';
+import { admin, createOwner, makePlatformAdmin } from './support/api';
 import { expect, test } from './support/fixtures';
 import { id, ownerOn, tab, text } from './support/ui';
 
@@ -48,4 +48,31 @@ test('the AI assistant answers first; a refund goes to a person, who answers in 
   await expect(id(page, 'support-message-support')).toContainText(
     'I am checking your payment now.',
   );
+});
+
+// A model may still answer in Markdown (owner's app check E5): bold shows as bold, with no asterisks on screen.
+test('an answer with Markdown shows bold, not asterisks', async ({ page, mode }) => {
+  const owner = await createOwner(mode);
+  await ownerOn(page, mode, owner.email, owner.password);
+  await tab(page, 'more');
+  await id(page, 'more-support').click();
+  await id(page, 'support-input').fill('Where is the salon code?');
+  await id(page, 'support-send').click();
+  await expect(id(page, 'support-message-assistant').first()).toBeVisible();
+  const { data: thread } = await admin
+    .from('support_threads')
+    .select('id')
+    .eq('business_id', owner.businessId)
+    .single()
+    .throwOnError();
+  await admin
+    .from('support_messages')
+    .insert({ thread_id: thread!.id, author: 'assistant', body: 'Open **More → Staff**:\n* the salon code is at the top' })
+    .throwOnError();
+  await page.reload();
+  const answer = id(page, 'support-message-assistant').filter({ hasText: 'the salon code is at the top' });
+  await expect(answer).toContainText('Open More → Staff:');
+  await expect(answer).toContainText('• the salon code is at the top');
+  await expect(answer).not.toContainText('**');
+  await expect(answer.getByText('More → Staff', { exact: true })).toHaveCSS('font-family', /SemiBold/);
 });

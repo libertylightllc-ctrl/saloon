@@ -8,6 +8,7 @@ import { spacing, useTheme } from '@/theme';
 import { Button, FormError, Text, TextField } from '@/ui';
 
 import type { SupportMessage } from './api';
+import { answerParts } from './answerText';
 
 /**
  * A support conversation: the messages (the writer's on one side, the other side's on the other) and a box to write
@@ -66,7 +67,19 @@ export function ChatView({
                 {m.author === 'assistant' ? t('support.assistant') : own ? t('support.you') : other}{' '}
                 · {dates.at(m.created_at, zone, 'd MMM · HH:mm')}
               </Text>
-              <Text selectable>{m.body}</Text>
+              <Text selectable>
+                {m.author === 'assistant'
+                  ? answerParts(m.body).map((p, i) =>
+                      p.bold ? (
+                        <Text key={i} weight="semibold">
+                          {p.text}
+                        </Text>
+                      ) : (
+                        p.text
+                      ),
+                    )
+                  : m.body}
+              </Text>
             </View>
           </View>
         );
