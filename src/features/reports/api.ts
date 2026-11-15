@@ -241,9 +241,11 @@ export function useReport(type: ReportType, businessId: string, branchId: string
 export interface OwnerControl {
   last_close_date: string | null;
   last_close_variance_minor: number | null;
+  /** Days before today, newest first, whose cash close was not sent or approved (last 30 days). */
+  unclosed_days: string[];
   supplier_owed_minor: number;
   low_items: number;
-  /** Owner only; null for the accountant. */
+  /** Owner and manager; null for the accountant. */
   compliance_issues: number | null;
 }
 
@@ -258,6 +260,7 @@ export function useOwnerControl(branchId: string, enabled = true) {
       return {
         last_close_date: (r.last_close_date as string | null) ?? null,
         last_close_variance_minor: numOrNull(r.last_close_variance_minor),
+        unclosed_days: Array.isArray(r.unclosed_days) ? (r.unclosed_days as string[]) : [],
         supplier_owed_minor: num(r.supplier_owed_minor),
         low_items: num(r.low_items),
         compliance_issues: numOrNull(r.compliance_issues),

@@ -2579,7 +2579,10 @@
       "closeBalanced": "Last close {{date}}: balanced",
       "suppliers": "Owed to suppliers: {{amount}}",
       "lowItems": "Low or out of stock: {{count}}",
-      "compliance": "Compliance issues: {{count}}"
+      "compliance": "Compliance issues: {{count}}",
+      "titleTeam": "Control summary",
+      "notClosed": "{{count}} days not closed: {{dates}}",
+      "notClosed_one": "{{dates}} not closed"
     },
     "moreRows": "Showing the first {{shown}} of {{total}} rows. The PDF and CSV have them all.",
     "vatKinds": {

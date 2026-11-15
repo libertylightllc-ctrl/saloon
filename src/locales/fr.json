@@ -2579,7 +2579,10 @@
       "closeBalanced": "Dernière clôture {{date}} : équilibrée",
       "suppliers": "Dû aux fournisseurs : {{amount}}",
       "lowItems": "Stock bas ou en rupture : {{count}}",
-      "compliance": "Problèmes de conformité : {{count}}"
+      "compliance": "Problèmes de conformité : {{count}}",
+      "titleTeam": "Synthèse de contrôle",
+      "notClosed": "{{count}} jours non clôturés : {{dates}}",
+      "notClosed_one": "{{dates}} non clôturé"
     },
     "moreRows": "Affichage des {{shown}} premières lignes sur {{total}}. Le PDF et le CSV les contiennent toutes.",
     "vatKinds": {

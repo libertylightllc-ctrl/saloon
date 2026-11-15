@@ -2642,7 +2642,13 @@
       "closeBalanced": "آخر إغلاق {{date}}: متوازن",
       "suppliers": "مستحق للموردين: {{amount}}",
       "lowItems": "أصناف منخفضة أو نفدت: {{count}}",
-      "compliance": "مشاكل الامتثال: {{count}}"
+      "compliance": "مشاكل الامتثال: {{count}}",
+      "titleTeam": "ملخص الرقابة",
+      "notClosed": "{{count}} يوم لم يُغلق: {{dates}}",
+      "notClosed_one": "{{dates}} لم يُغلق",
+      "notClosed_two": "يومان لم يُغلقا: {{dates}}",
+      "notClosed_few": "{{count}} أيام لم تُغلق: {{dates}}",
+      "notClosed_many": "{{count}} يومًا لم يُغلق: {{dates}}"
     },
     "moreRows": "عرض أول {{shown}} من {{total}} صفًا. ملف PDF وCSV يحتويان الكل.",
     "vatKinds": {

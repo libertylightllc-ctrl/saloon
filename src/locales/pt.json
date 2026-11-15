@@ -2579,7 +2579,10 @@
       "closeBalanced": "Último fechamento em {{date}}: conferido",
       "suppliers": "Devido a fornecedores: {{amount}}",
       "lowItems": "Com estoque baixo ou zerado: {{count}}",
-      "compliance": "Pendências de conformidade: {{count}}"
+      "compliance": "Pendências de conformidade: {{count}}",
+      "titleTeam": "Resumo de controle",
+      "notClosed": "{{count}} dias não fechados: {{dates}}",
+      "notClosed_one": "{{dates}} não fechado"
     },
     "moreRows": "Mostrando as primeiras {{shown}} de {{total}} linhas. O PDF e o CSV têm todas.",
     "vatKinds": {

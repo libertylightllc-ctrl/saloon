@@ -90,6 +90,7 @@ test('owner reads every report, exports PDF and CSV, closes last month and expor
   await expect(id(page, 'report-kpi-sales-value')).toContainText('AED 200.00');
   await expect(id(page, 'report-control')).toContainText('short by AED 5.00');
   await expect(id(page, 'report-control')).toContainText('Compliance issues');
+  await expect(id(page, 'report-control')).toContainText('Owner control summary');
   await expect(id(page, 'report-chart')).toBeVisible();
   await snap(page, 'report-monthly', mode);
   const monthly = await download(page, 'report-csv');
@@ -174,6 +175,8 @@ test('the accountant has Reports and Accounting tabs, reads and exports, closes 
   await id(page, 'tab-reports-tab').click();
   await expect(id(page, 'report-kpi-sales-value')).toContainText('AED 90.00');
   await expect(id(page, 'report-control')).not.toContainText('Compliance issues');
+  await expect(id(page, 'report-control')).toContainText('Control summary');
+  await expect(id(page, 'report-control')).not.toContainText('Owner control summary');
   expect(await download(page, 'report-csv')).toContain('90.00');
   await id(page, 'tab-accounts-tab').click();
   await expect(text(page, 'Balanced: Yes')).toBeVisible();
@@ -192,4 +195,29 @@ test('the accountant has Reports and Accounting tabs, reads and exports, closes 
   await expect(id(phone, 'more-reports')).toHaveCount(0);
   await phone.goto('/reports');
   await expect(id(phone, 'no-access')).toBeVisible();
+});
+
+// The control summary names a day that was never closed, and a manager reads it for their branch (E8).
+test('a manager sees the control summary with the day not closed', async ({ page, mode }) => {
+  const owner = await createOwner(mode, { openingCash: 10_000 });
+  const login = await createStaff(owner, 'cashier', { name: 'Mona Manager' });
+  const promoted = await owner.client.rpc('set_login_type', { p_member: login.memberId, p_role: 'manager' });
+  if (promoted.error) throw promoted.error;
+  // Cash taken yesterday, and nobody counted the drawer.
+  const yesterday = dubaiDate(-1);
+  const cash = await sale(owner, { price: 2_000 });
+  for (const q of [
+    admin.from('sales').update({ business_date: yesterday }).eq('id', cash.sale_id),
+    admin.from('journal_entries').update({ business_date: yesterday }).eq('source_id', cash.sale_id),
+  ]) {
+    const { error } = await q;
+    if (error) throw error;
+  }
+  const label = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${yesterday}T00:00:00Z`));
+
+  await staffOn(page, mode, owner.code, login.username, login.password);
+  await tab(page, 'more');
+  await id(page, 'more-reports').click();
+  await expect(id(page, 'report-control')).toContainText('Control summary');
+  await expect(id(page, 'report-control')).toContainText(`${label} not closed`);
 });

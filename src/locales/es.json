@@ -2579,7 +2579,10 @@
       "closeBalanced": "Último cierre {{date}}: cuadra",
       "suppliers": "Deuda con proveedores: {{amount}}",
       "lowItems": "Con poco stock o agotados: {{count}}",
-      "compliance": "Problemas de cumplimiento: {{count}}"
+      "compliance": "Problemas de cumplimiento: {{count}}",
+      "titleTeam": "Resumen de control",
+      "notClosed": "{{count}} días sin cerrar: {{dates}}",
+      "notClosed_one": "{{dates}} sin cerrar"
     },
     "moreRows": "Se muestran las primeras {{shown}} de {{total}} filas. El PDF y el CSV las incluyen todas.",
     "vatKinds": {

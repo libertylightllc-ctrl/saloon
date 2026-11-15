@@ -37,7 +37,8 @@ export function ReportsScreen({ asTab = false }: { asTab?: boolean }) {
   const [type, setType] = useState<ReportType>(types.includes(params.type as ReportType) ? (params.type as ReportType) : types[0]!);
   const [month, setMonth] = useState<MonthKey>(businessMonth(new Date(), business.timezone));
   const report = useReport(type, business.id, branch.id, month);
-  const seesControl = role === 'owner' || role === 'accountant';
+  // The control summary: owner, accountant, and managers for their branch (E8).
+  const seesControl = role === 'owner' || role === 'accountant' || role === 'manager';
   const control = useOwnerControl(branch.id, seesControl);
   const controlWords = useControlWords();
   const view = useMemo<ReportView | null>(

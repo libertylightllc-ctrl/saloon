@@ -2579,7 +2579,10 @@
       "closeBalanced": "آخری کلوزنگ {{date}}: برابر",
       "suppliers": "سپلائرز کا بقایا: {{amount}}",
       "lowItems": "کم یا ختم اسٹاک والے آئٹمز: {{count}}",
-      "compliance": "تعمیل کے مسائل: {{count}}"
+      "compliance": "تعمیل کے مسائل: {{count}}",
+      "titleTeam": "کنٹرول خلاصہ",
+      "notClosed": "{{count}} دن بند نہیں ہوئے: {{dates}}",
+      "notClosed_one": "{{dates}} بند نہیں ہوا"
     },
     "moreRows": "{{total}} میں سے پہلی {{shown}} سطریں دکھائی جا رہی ہیں۔ PDF اور CSV میں سب ہیں۔",
     "vatKinds": {

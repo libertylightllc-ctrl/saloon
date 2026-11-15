@@ -2579,7 +2579,10 @@
       "closeBalanced": "आख़िरी क्लोज़िंग {{date}}: बराबर",
       "suppliers": "सप्लायरों का बकाया: {{amount}}",
       "lowItems": "कम या ख़त्म स्टॉक वाले आइटम: {{count}}",
-      "compliance": "अनुपालन समस्याएँ: {{count}}"
+      "compliance": "अनुपालन समस्याएँ: {{count}}",
+      "titleTeam": "नियंत्रण सारांश",
+      "notClosed": "{{count}} दिन बंद नहीं हुए: {{dates}}",
+      "notClosed_one": "{{dates}} बंद नहीं हुआ"
     },
     "moreRows": "{{total}} में से पहली {{shown}} पंक्तियाँ दिख रही हैं। PDF और CSV में सब हैं।",
     "vatKinds": {
