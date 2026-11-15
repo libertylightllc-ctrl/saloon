@@ -6,12 +6,16 @@ import hi from '@/locales/hi.json';
 import pt from '@/locales/pt.json';
 import ur from '@/locales/ur.json';
 
-import { FAQ_IDS, matchFaq, words, type FaqItem } from './questions';
+import { FAQ_IDS, faqFor, matchFaq, words, type Asker, type FaqId, type FaqItem } from './questions';
 
+type Locale = typeof en;
+/** The price answer is the website's, with the live price (CommonQuestions). */
+const answer = (locale: Locale, id: FaqId) =>
+  id === 'price' ? locale.auth.landing.faq.price.a : (locale.support.faq[id] as { a: string }).a;
 const items: FaqItem[] = FAQ_IDS.map((id) => ({
   id,
   q: en.support.faq[id].q,
-  a: en.support.faq[id].a,
+  a: answer(en, id),
 }));
 const top = (query: string) => matchFaq(query, items)[0]?.id;
 
@@ -48,9 +52,39 @@ describe('common questions', () => {
       const local: FaqItem[] = FAQ_IDS.map((id) => ({
         id,
         q: locale.support.faq[id].q,
-        a: locale.support.faq[id].a,
+        a: answer(locale as Locale, id),
       }));
       for (const it of local) expect(matchFaq(it.q, local)[0]?.id).toBe(it.id);
     },
   );
+
+  it('shows each login only the questions that fit it (E6)', () => {
+    const all = { plans: true, billing: true };
+    const sees = (asker: Asker) => faqFor(asker, all);
+    // The brief's examples: an accountant does not set staff passwords; a stylist does not pay for the plan,
+    // add staff, refund or delete the account.
+    expect(sees('accountant')).not.toContain('staffPassword');
+    for (const id of ['price', 'payPlan', 'addStaff', 'refund', 'deleteAccount'] as const) expect(sees('staff')).not.toContain(id);
+    expect(sees('staff').slice(0, 2)).toEqual(['clockIn', 'myPay']);
+    expect(sees('accountant')[0]).toBe('books');
+    expect(sees('cashier')).toContain('cashClosing');
+    expect(sees('manager')).toContain('staffPassword');
+    for (const id of ['addService', 'addStaff', 'openDays', 'payPlan', 'deleteAccount'] as const) {
+      expect(sees('owner')).toContain(id);
+      expect(sees('manager')).not.toContain(id);
+    }
+    // Everyone gets every question somewhere, and no one a question twice.
+    const asked = new Set((['owner', 'manager', 'cashier', 'staff', 'accountant', 'guest'] as const).flatMap(sees));
+    expect([...asked].sort()).toEqual([...FAQ_IDS].sort());
+    for (const a of ['owner', 'manager', 'cashier', 'staff', 'accountant', 'guest'] as const) expect(new Set(sees(a)).size).toBe(sees(a).length);
+  });
+
+  it('hides prices and paying unless the plan screen shows them, and a stopped plan while billing is off', () => {
+    expect(faqFor('owner', { plans: false, billing: false })).not.toContain('price');
+    expect(faqFor('owner', { plans: false, billing: false })).not.toContain('payPlan');
+    expect(faqFor('owner', { plans: false, billing: false })).not.toContain('planInactive');
+    expect(faqFor('staff', { plans: false, billing: true })).toContain('planInactive');
+    expect(faqFor('guest', { plans: true, billing: false })).toContain('price');
+  });
 });
+

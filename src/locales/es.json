@@ -3323,11 +3323,11 @@
     "faq": {
       "forgotPassword": {
         "q": "Olvidé mi contraseña",
-        "a": "Dueños: en la pantalla de inicio de sesión toca “¿Olvidaste tu contraseña?” e ingresa el código que te enviamos por correo. Personal: pídele al dueño del salón que te ponga una nueva en Más → Personal → tu nombre → Contraseña e inicio de sesión."
+        "a": "Dueños: en la pantalla de inicio de sesión toca “¿Olvidaste tu contraseña?” e ingresa el código que te enviamos por correo. Personal: pídele al dueño o a tu gerente que te ponga una nueva en Más → Personal → tu nombre → Contraseña e inicio de sesión."
       },
       "staffPassword": {
         "q": "¿Cómo le doy una contraseña nueva a alguien del personal?",
-        "a": "Más → Personal → la persona → Contraseña e inicio de sesión → pon una contraseña nueva y luego avísale."
+        "a": "Más → Personal → la persona → Contraseña e inicio de sesión → pon una contraseña nueva y luego avísale. Un gerente puede hacerlo para la recepción y el equipo de su sucursal."
       },
       "staffSignIn": {
         "q": "¿Cómo inicia sesión el personal?",
@@ -3338,12 +3338,11 @@
         "a": "El dueño del salón desactivó ese acceso o quitó a la persona, o el salón se cerró. Pregúntale al dueño: puede volver a activar a la persona en Más → Personal."
       },
       "price": {
-        "q": "¿Cuánto cuesta Saloqo?",
-        "a": "Un solo precio por salón, sin importar cuántas sucursales tengas. En los EAU, AED 50 al mes para hasta 4 personas que inician sesión, y luego AED 10 por cada persona adicional. En otros países, USD 13.99 al mes para hasta 4 personas, y luego USD 2.99 por cada persona adicional. La configuración es gratis."
+        "q": "¿Cuánto cuesta Saloqo?"
       },
       "payPlan": {
         "q": "¿Cómo pago o activo mi plan?",
-        "a": "Más → Plan y facturación → elige 1, 3, 6 o 12 meses. Paga con tarjeta y el plan se activa al momento. O paga por transferencia bancaria con el código de tu salón como referencia y toca “Pedir la activación”: el plan se activa cuando llega el pago."
+        "a": "Más → Plan y facturación → elige 1, 6 o 12 meses. Paga con tarjeta donde aparezca y el plan se activa al momento. O paga por transferencia bancaria con el código de tu salón como referencia y toca “Pedir la activación”: el plan se activa cuando llega el pago."
       },
       "planInactive": {
         "q": "No se guarda nada, o mi plan no está activo",
@@ -3367,7 +3366,7 @@
       },
       "refund": {
         "q": "¿Cómo reembolso una venta?",
-        "a": "Abre la venta (Más → Ventas) → Reembolsar, con un motivo. Solo el dueño hace reembolsos; un cajero puede pedírselo al dueño, que recibe un aviso. Las ventas nunca se eliminan."
+        "a": "Abre la venta (Más → Ventas) → Reembolsar, con un motivo. Reembolsa el dueño, y también un gerente con un motivo (no en sus propias ventas). La recepción necesita que un gerente o el dueño lo apruebe en el momento con su PIN. Las ventas nunca se eliminan."
       },
       "sync": {
         "q": "Los cambios no aparecen en otro teléfono",
@@ -3379,11 +3378,23 @@
       },
       "cashClosing": {
         "q": "¿Cómo cierro el día?",
-        "a": "Más → Cierre de caja → cuenta el efectivo y toca “Enviar para aprobación”. El dueño lo aprueba y el día queda bloqueado."
+        "a": "La pestaña Cierre (o Más → Cierre de caja) → cuenta el efectivo y toca “Enviar para aprobación”. El dueño o un gerente lo aprueba y el día queda bloqueado."
       },
       "deleteAccount": {
         "q": "¿Cómo elimino mi cuenta?",
         "a": "Solo el dueño puede hacerlo: Más → Eliminar mi cuenta. Se conservan los registros financieros que exige la ley."
+      },
+      "clockIn": {
+        "q": "¿Cómo registro la entrada y la salida?",
+        "a": "En Inicio toca “Registrar entrada” al empezar y “Registrar salida” al irte; “Empezar descanso” para un descanso. ¿Olvidaste registrar la salida? El dueño o un gerente pone la hora real en Más → Asistencia."
+      },
+      "myPay": {
+        "q": "¿Dónde veo mi pago y mis recibos de nómina?",
+        "a": "La pestaña Mi pago: la comisión y las propinas de este mes, y el recibo de cada mes aprobado, que puedes descargar en PDF. Las dudas sobre los importes, con el dueño."
+      },
+      "books": {
+        "q": "¿Dónde están la contabilidad, el IVA y las exportaciones?",
+        "a": "Contabilidad: el diario, el balance de comprobación y el IVA, el cierre de mes y la exportación del libro mayor. En Informes están todos los informes, en CSV y PDF."
       }
     },
     "faqTitle": "Preguntas frecuentes",

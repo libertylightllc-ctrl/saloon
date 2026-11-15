@@ -3322,11 +3322,11 @@
     "faq": {
       "forgotPassword": {
         "q": "I forgot my password",
-        "a": "Owners: on the sign-in page tap “Forgot password?” and enter the code we email you. Staff: ask the salon owner to set a new one in More → Staff → you → Password & sign-in."
+        "a": "Owners: on the sign-in page tap “Forgot password?” and enter the code we email you. Staff: ask the owner or your manager to set a new one in More → Staff → your name → Password & sign-in."
       },
       "staffPassword": {
         "q": "How do I give a staff member a new password?",
-        "a": "More → Staff → the person → Password & sign-in → set a new password, then tell them."
+        "a": "More → Staff → the person → Password & sign-in → set a new password, then tell them. A manager can do this for the front desk and the team in their branch."
       },
       "staffSignIn": {
         "q": "How do staff sign in?",
@@ -3337,12 +3337,11 @@
         "a": "The salon owner switched that login off or removed the person, or the salon was closed. Ask the owner: they can bring the person back in More → Staff."
       },
       "price": {
-        "q": "How much does Saloqo cost?",
-        "a": "One price per salon, whatever the number of branches. In the UAE AED 50 a month for up to 4 people who sign in, then AED 10 for each extra person. Elsewhere USD 13.99 a month for up to 4 people, then USD 2.99 for each extra person. Setting up is free."
+        "q": "How much does Saloqo cost?"
       },
       "payPlan": {
         "q": "How do I pay or switch on my plan?",
-        "a": "More → Plan & billing → choose 1, 3, 6 or 12 months. Pay by card and the plan switches on at once. Or pay by bank transfer with your salon code as the reference and tap “Ask to switch on”: the plan switches on when the payment arrives."
+        "a": "More → Plan & billing → choose 1, 6 or 12 months. Pay by card where it shows and the plan switches on at once. Or pay by bank transfer with your salon code as the reference and tap “Ask to switch on”: the plan switches on when the payment arrives."
       },
       "planInactive": {
         "q": "Nothing saves, or my plan isn’t active",
@@ -3366,7 +3365,7 @@
       },
       "refund": {
         "q": "How do I refund a sale?",
-        "a": "Open the sale (More → Sales) → Refund, with a reason. Only the owner refunds; a cashier can ask the owner, who is notified. Sales are never deleted."
+        "a": "Open the sale (More → Sales) → Refund, with a reason. The owner refunds, and so can a manager, with a reason (not their own sale). The front desk needs a manager or the owner to approve on the spot with their PIN. Sales are never deleted."
       },
       "sync": {
         "q": "Changes don’t show on another phone",
@@ -3378,11 +3377,23 @@
       },
       "cashClosing": {
         "q": "How do I close the day?",
-        "a": "More → Cash closing → count the cash and submit it for approval. The owner approves it and the day locks."
+        "a": "The Closing tab (or More → Cash closing) → count the cash and submit it for approval. The owner or a manager approves it and the day locks."
       },
       "deleteAccount": {
         "q": "How do I delete my account?",
         "a": "Only the owner can: More → Delete my account. Financial records the law requires are kept."
+      },
+      "clockIn": {
+        "q": "How do I clock in and out?",
+        "a": "On Home tap “Clock in” when you start and “Clock out” when you leave; “Start break” for a break. Forgot to clock out? The owner or a manager sets the real time in More → Attendance."
+      },
+      "myPay": {
+        "q": "Where do I see my pay and payslips?",
+        "a": "The My pay tab: this month’s commission and tips, and the payslip of each approved month, which you can download as a PDF. Questions about the amounts go to the owner."
+      },
+      "books": {
+        "q": "Where are the books, VAT and exports?",
+        "a": "Accounting: the journal, trial balance and VAT, closing a month and the ledger export. Reports has every report, with CSV and PDF."
       }
     },
     "faqTitle": "Common questions",

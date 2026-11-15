@@ -10,6 +10,7 @@ import { HeaderBand, Screen, Text, TextField } from '@/ui';
 import { guestToken, useGuestSend, useGuestThread } from './api';
 import { ChatView } from './ChatView';
 import { CommonQuestions } from './CommonQuestions';
+import { useGuestFaq } from './faqAudience';
 
 /**
  * Contact us without signing in (the website, and the sign-in screen for anyone who cannot get in). The conversation
@@ -27,6 +28,7 @@ export function ContactScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [draft, setDraft] = useState('');
+  const audience = useGuestFaq();
   const messages = thread.data?.messages ?? [];
   const started = messages.length > 0;
   return (
@@ -63,7 +65,7 @@ export function ContactScreen() {
           }
           sending={send.isPending || token === null}
           error={send.error}
-          beforeComposer={<CommonQuestions query={draft} browse={!started} />}
+          beforeComposer={<CommonQuestions query={draft} browse={!started} audience={audience} />}
           onDraftChange={setDraft}
           testID="contact"
         />

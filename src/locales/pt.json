@@ -3323,11 +3323,11 @@
     "faq": {
       "forgotPassword": {
         "q": "Esqueci minha senha",
-        "a": "Proprietários: na tela de login, toque em “Esqueceu a senha?” e digite o código que enviamos por e-mail. Equipe: peça ao proprietário do salão para definir uma nova em Mais → Equipe → seu nome → Senha e acesso."
+        "a": "Proprietários: na tela de login, toque em “Esqueceu a senha?” e digite o código que enviamos por e-mail. Equipe: peça ao proprietário ou ao seu gerente para definir uma nova em Mais → Equipe → seu nome → Senha e acesso."
       },
       "staffPassword": {
         "q": "Como dou uma nova senha para alguém da equipe?",
-        "a": "Mais → Equipe → a pessoa → Senha e acesso → defina uma nova senha e depois avise a pessoa."
+        "a": "Mais → Equipe → a pessoa → Senha e acesso → defina uma nova senha e depois avise a pessoa. Um gerente pode fazer isso para a recepção e a equipe da filial dele."
       },
       "staffSignIn": {
         "q": "Como a equipe entra no app?",
@@ -3338,12 +3338,11 @@
         "a": "O proprietário do salão desativou esse login ou removeu a pessoa, ou o salão foi encerrado. Fale com o proprietário: ele pode trazer a pessoa de volta em Mais → Equipe."
       },
       "price": {
-        "q": "Quanto custa o Saloqo?",
-        "a": "Um único preço por salão, não importa quantas filiais. Nos Emirados Árabes Unidos, AED 50 por mês para até 4 pessoas que entram no app e depois AED 10 por pessoa a mais. Nos outros países, USD 13.99 por mês para até 4 pessoas e depois USD 2.99 por pessoa a mais. A configuração é grátis."
+        "q": "Quanto custa o Saloqo?"
       },
       "payPlan": {
         "q": "Como pago ou ativo meu plano?",
-        "a": "Mais → Plano e cobrança → escolha 1, 3, 6 ou 12 meses. Pague com cartão e o plano é ativado na hora. Ou pague por transferência bancária com o código do salão como referência e toque em “Pedir ativação”: o plano é ativado quando o pagamento chega."
+        "a": "Mais → Plano e cobrança → escolha 1, 6 ou 12 meses. Pague com cartão onde aparecer e o plano é ativado na hora. Ou pague por transferência bancária com o código do salão como referência e toque em “Pedir ativação”: o plano é ativado quando o pagamento chega."
       },
       "planInactive": {
         "q": "Nada é salvo, ou meu plano não está ativo",
@@ -3367,7 +3366,7 @@
       },
       "refund": {
         "q": "Como reembolso uma venda?",
-        "a": "Abra a venda (Mais → Vendas) → Reembolsar, com um motivo. Só o proprietário faz reembolsos; um caixa pode pedir ao proprietário, que recebe uma notificação. As vendas nunca são excluídas."
+        "a": "Abra a venda (Mais → Vendas) → Reembolsar, com um motivo. O proprietário reembolsa, e um gerente também, com um motivo (não nas próprias vendas). A recepção precisa que um gerente ou o proprietário aprove na hora com o PIN. As vendas nunca são excluídas."
       },
       "sync": {
         "q": "As alterações não aparecem em outro celular",
@@ -3379,11 +3378,23 @@
       },
       "cashClosing": {
         "q": "Como fecho o dia?",
-        "a": "Mais → Fechamento de caixa → conte o dinheiro e toque em “Enviar para aprovação”. O proprietário aprova e o dia fica bloqueado."
+        "a": "A aba Fechamento (ou Mais → Fechamento de caixa) → conte o dinheiro e toque em “Enviar para aprovação”. O proprietário ou um gerente aprova e o dia fica bloqueado."
       },
       "deleteAccount": {
         "q": "Como excluo minha conta?",
         "a": "Só o proprietário pode: Mais → Excluir minha conta. Os registros financeiros exigidos por lei são mantidos."
+      },
+      "clockIn": {
+        "q": "Como registro a entrada e a saída?",
+        "a": "Em Início, toque em “Registrar entrada” ao começar e em “Registrar saída” ao sair; “Iniciar intervalo” para um intervalo. Esqueceu de registrar a saída? O proprietário ou um gerente coloca o horário real em Mais → Frequência."
+      },
+      "myPay": {
+        "q": "Onde vejo meus ganhos e holerites?",
+        "a": "A aba Meus ganhos: a comissão e as gorjetas do mês e o holerite de cada mês aprovado, que você pode baixar em PDF. Dúvidas sobre os valores, fale com o proprietário."
+      },
+      "books": {
+        "q": "Onde ficam a contabilidade, o imposto e as exportações?",
+        "a": "Contabilidade: o diário, o balancete e o imposto, o fechamento do mês e a exportação do razão. Em Relatórios estão todos os relatórios, em CSV e PDF."
       }
     },
     "faqTitle": "Perguntas frequentes",

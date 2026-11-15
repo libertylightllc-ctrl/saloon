@@ -5,23 +5,32 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { spacing, useTheme } from '@/theme';
 import { Button, Icon, Text } from '@/ui';
 
-import { FAQ_IDS, matchFaq, type FaqId, type FaqItem } from './questions';
+import type { FaqAudience } from './faqAudience';
+import { faqFor, matchFaq, type FaqId, type FaqItem } from './questions';
 
 const FIRST = 6;
 
 /**
- * Common questions with their answers. `browse`: list them when nothing is typed yet (a new conversation); otherwise
- * only the ones that match what is being typed show up, just above the message box.
+ * Common questions with their answers, the ones that fit who is reading (`audience`). `browse`: list them when nothing
+ * is typed yet (a new conversation); otherwise only the ones that match what is being typed show up, just above the
+ * message box.
  */
-export function CommonQuestions({ query, browse }: { query: string; browse: boolean }) {
+export function CommonQuestions({ query, browse, audience }: { query: string; browse: boolean; audience: FaqAudience }) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const [open, setOpen] = useState<FaqId | null>(null);
   const [all, setAll] = useState(false);
+  const { asker, plans, billing, price } = audience;
   const items = useMemo<FaqItem[]>(
-    () => FAQ_IDS.map((id) => ({ id, q: t(`support.faq.${id}.q`), a: t(`support.faq.${id}.a`) })),
+    () =>
+      faqFor(asker, { plans: plans && price !== null, billing }).map((id) => ({
+        id,
+        q: t(`support.faq.${id}.q`),
+        // The price is the live one, worded as on the website.
+        a: id === 'price' && price ? t('auth.landing.faq.price.a', price) : t(`support.faq.${id}.a` as 'support.faq.forgotPassword.a'),
+      })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [t, i18n.language],
+    [t, i18n.language, asker, plans, billing, price?.price, price?.extra, price?.people],
   );
   const typed = query.trim().length >= 3;
   const matches = typed ? matchFaq(query, items) : [];

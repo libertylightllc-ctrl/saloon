@@ -3323,11 +3323,11 @@
     "faq": {
       "forgotPassword": {
         "q": "J’ai oublié mon mot de passe",
-        "a": "Propriétaires : sur la page de connexion, touchez « Mot de passe oublié ? » et saisissez le code reçu par e-mail. Employés : demandez au propriétaire du salon d’en définir un nouveau dans Plus → Équipe → votre nom → Mot de passe et connexion."
+        "a": "Propriétaires : sur la page de connexion, touchez « Mot de passe oublié ? » et saisissez le code reçu par e-mail. Employés : demandez au propriétaire ou à votre gérant d’en définir un nouveau dans Plus → Équipe → votre nom → Mot de passe et connexion."
       },
       "staffPassword": {
         "q": "Comment donner un nouveau mot de passe à un employé ?",
-        "a": "Plus → Équipe → la personne → Mot de passe et connexion → définissez un nouveau mot de passe, puis communiquez-le-lui."
+        "a": "Plus → Équipe → la personne → Mot de passe et connexion → définissez un nouveau mot de passe, puis communiquez-le-lui. Un gérant peut le faire pour l’accueil et l’équipe de sa succursale."
       },
       "staffSignIn": {
         "q": "Comment l’équipe se connecte-t-elle ?",
@@ -3338,12 +3338,11 @@
         "a": "Le propriétaire du salon a désactivé cet accès ou retiré la personne, ou le salon a été fermé. Demandez au propriétaire : il peut réintégrer la personne dans Plus → Équipe."
       },
       "price": {
-        "q": "Combien coûte Saloqo ?",
-        "a": "Un seul prix par salon, quel que soit le nombre de succursales. Aux Émirats arabes unis, AED 50 par mois jusqu’à 4 personnes qui se connectent, puis AED 10 par personne supplémentaire. Ailleurs, USD 13.99 par mois jusqu’à 4 personnes, puis USD 2.99 par personne supplémentaire. La mise en place est gratuite."
+        "q": "Combien coûte Saloqo ?"
       },
       "payPlan": {
         "q": "Comment payer ou activer mon abonnement ?",
-        "a": "Plus → Abonnement et facturation → choisissez 1, 3, 6 ou 12 mois. Payez par carte et l’abonnement s’active aussitôt. Ou payez par virement bancaire avec le code de votre salon en référence et touchez « Demander l’activation » : l’abonnement s’active dès réception du paiement."
+        "a": "Plus → Abonnement et facturation → choisissez 1, 6 ou 12 mois. Payez par carte là où elle apparaît et l’abonnement s’active aussitôt. Ou payez par virement bancaire avec le code de votre salon en référence et touchez « Demander l’activation » : l’abonnement s’active dès réception du paiement."
       },
       "planInactive": {
         "q": "Rien ne s’enregistre, ou mon abonnement n’est pas actif",
@@ -3367,7 +3366,7 @@
       },
       "refund": {
         "q": "Comment rembourser une vente ?",
-        "a": "Ouvrez la vente (Plus → Ventes) → Rembourser, avec un motif. Seul le propriétaire rembourse ; un caissier peut le lui demander, et le propriétaire reçoit une notification. Les ventes ne sont jamais supprimées."
+        "a": "Ouvrez la vente (Plus → Ventes) → Rembourser, avec un motif. Le propriétaire rembourse, et un gérant aussi avec un motif (pas ses propres ventes). L’accueil a besoin qu’un gérant ou le propriétaire approuve sur place avec son code PIN. Les ventes ne sont jamais supprimées."
       },
       "sync": {
         "q": "Les modifications n’apparaissent pas sur un autre téléphone",
@@ -3379,11 +3378,23 @@
       },
       "cashClosing": {
         "q": "Comment clôturer la journée ?",
-        "a": "Plus → Clôture de caisse → comptez les espèces et touchez « Envoyer pour approbation ». Le propriétaire l’approuve et la journée est verrouillée."
+        "a": "L’onglet Clôture (ou Plus → Clôture de caisse) → comptez les espèces et touchez « Envoyer pour approbation ». Le propriétaire ou un gérant l’approuve et la journée est verrouillée."
       },
       "deleteAccount": {
         "q": "Comment supprimer mon compte ?",
         "a": "Seul le propriétaire peut le faire : Plus → Supprimer mon compte. Les documents financiers exigés par la loi sont conservés."
+      },
+      "clockIn": {
+        "q": "Comment pointer l’arrivée et le départ ?",
+        "a": "Sur Accueil, touchez « Pointer l’arrivée » en commençant et « Pointer le départ » en partant ; « Commencer la pause » pour une pause. Oublié de pointer le départ ? Le propriétaire ou un gérant saisit l’heure réelle dans Plus → Présences."
+      },
+      "myPay": {
+        "q": "Où voir ma paie et mes bulletins ?",
+        "a": "L’onglet Ma paie : la commission et les pourboires du mois, et le bulletin de chaque mois approuvé, à télécharger en PDF. Pour une question sur les montants, voyez le propriétaire."
+      },
+      "books": {
+        "q": "Où sont la comptabilité, la TVA et les exports ?",
+        "a": "Comptabilité : le journal, la balance et la TVA, la clôture du mois et l’export du grand livre. Rapports contient tous les rapports, en CSV et PDF."
       }
     },
     "faqTitle": "Questions fréquentes",

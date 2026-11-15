@@ -1,7 +1,10 @@
 /**
  * Common questions, answered without anyone (owner, 2026-10-12: a free way). The words are in the app's languages
- * (support.faq.<id>); while someone types, the questions that share their rarer words come up first.
+ * (support.faq.<id>); while someone types, the questions that share their rarer words come up first. Each login sees
+ * the questions that fit it (owner's app check E6), most useful first.
  */
+import type { Role } from '@/lib/permissions';
+
 export const FAQ_IDS = [
   'forgotPassword',
   'staffPassword',
@@ -19,9 +22,37 @@ export const FAQ_IDS = [
   'language',
   'cashClosing',
   'deleteAccount',
+  'clockIn',
+  'myPay',
+  'books',
 ] as const;
 
 export type FaqId = (typeof FAQ_IDS)[number];
+
+/** Who is asking: a login type, or a visitor on Contact us (not signed in). */
+export type Asker = Role | 'guest';
+
+/** The questions each one sees, in order. Only what that login can do (the brief's B2 table); a visitor gets the
+ *  questions of someone who cannot sign in or is choosing Saloqo. */
+const FOR: Record<Asker, readonly FaqId[]> = {
+  owner: [
+    'forgotPassword', 'staffPassword', 'staffSignIn', 'loginDisabled', 'price', 'payPlan', 'planInactive', 'addService',
+    'addStaff', 'openDays', 'receipts', 'refund', 'sync', 'language', 'cashClosing', 'books', 'clockIn', 'deleteAccount',
+  ],
+  manager: ['staffPassword', 'cashClosing', 'refund', 'clockIn', 'receipts', 'staffSignIn', 'forgotPassword', 'sync', 'planInactive', 'language'],
+  cashier: ['cashClosing', 'refund', 'receipts', 'clockIn', 'forgotPassword', 'sync', 'planInactive', 'language'],
+  staff: ['clockIn', 'myPay', 'receipts', 'forgotPassword', 'sync', 'planInactive', 'language'],
+  accountant: ['books', 'forgotPassword', 'sync', 'planInactive', 'language'],
+  guest: ['forgotPassword', 'staffSignIn', 'loginDisabled', 'price', 'language', 'deleteAccount'],
+};
+
+/**
+ * The questions for this asker. `plans`: prices and paying may be shown (billing on, the salon not free, and not in
+ * a phone app — the plan screen's own rule); `billing`: billing is on, so a plan can stop new work.
+ */
+export function faqFor(asker: Asker, { plans, billing }: { plans: boolean; billing: boolean }): FaqId[] {
+  return FOR[asker].filter((id) => (id === 'price' || id === 'payPlan' ? plans : id === 'planInactive' ? billing : true));
+}
 export interface FaqItem {
   id: FaqId;
   q: string;
