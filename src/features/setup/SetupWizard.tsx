@@ -11,11 +11,12 @@ import { useSalonType } from '@/features/auth/salonType';
 import { useSession } from '@/features/auth/session';
 import { useIsPlatformAdmin } from '@/features/plan/api';
 import { TaxFields } from '@/features/tax/TaxFields';
-import { composePhone, phoneNumberValid } from '@/features/auth/PhoneField';
+import { composePhone, phoneValueValid } from '@/features/auth/PhoneField';
 import { checkProvince, checkSecondTax, secondTaxPayload, taxShape, trnValid, useTaxWords } from '@/features/tax/taxForm';
 import { isUae } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
 import { parseTaxRate, setActiveCurrency } from '@/lib/money';
+import { phoneOk, phoneToSave } from '@/lib/phone';
 import { asJson, supabase } from '@/lib/supabase';
 import { MODES, semantic, spacing } from '@/theme';
 import {
@@ -38,33 +39,35 @@ import { ModeCard } from './ModeCard';
 /** "Asia/Dubai", "America/Argentina/Buenos_Aires", "UTC"; the server checks it is a real one. */
 const ZONE = /^(UTC|[A-Za-z_]+(\/[A-Za-z0-9_+-]+)+)$/;
 
-const schema = z
-  .object({
-    businessName: z.string().trim().min(2, 'validation.name'),
-    ownerName: z.string().trim().min(2, 'validation.name'),
-    country: z.string().regex(/^[A-Z]{2}$/),
-    currency: z.string().regex(/^[A-Z]{3}$/, 'validation.required'),
-    timezone: z.string().trim().regex(ZONE, 'validation.timezone'),
-    mode: z.enum(MODES, { message: 'setup.chooseType' }),
-    branchName: z.string().trim().max(80),
-    address: z.string().trim().max(160),
-    phone: z.string().trim().regex(/^$|^\+?[0-9 ]{7,20}$/, 'validation.phone'),
-    days: z.array(z.number()).min(1, 'validation.days'),
-    vat: z.enum(['off', 'on']),
-    ...taxShape,
-    openingCash: z.number().int().min(0).nullable(),
-    ownerPhone: z.object({ dial: z.string(), number: z.string() }).refine((v) => phoneNumberValid(v.number), 'validation.mobile'),
-    whatsappOk: z.boolean(),
-  })
-  .refine((v) => v.vat === 'off' || !isUae(v.country) || trnValid(v.trn, true), { message: 'validation.trn', path: ['trn'] })
-  .refine((v) => v.vat === 'off' || isUae(v.country) || trnValid(v.trn, false), { message: 'validation.taxNumber', path: ['trn'] })
-  .superRefine((v, ctx) => {
-    if (v.vat === 'off') return;
-    checkSecondTax(v, ctx);
-    checkProvince(v, v.country, ctx);
-  });
+/** The branch number is checked for the country picked (F1), so the schema follows it. */
+const schemaFor = (country: string) =>
+  z
+    .object({
+      businessName: z.string().trim().min(2, 'validation.name'),
+      ownerName: z.string().trim().min(2, 'validation.name'),
+      country: z.string().regex(/^[A-Z]{2}$/),
+      currency: z.string().regex(/^[A-Z]{3}$/, 'validation.required'),
+      timezone: z.string().trim().regex(ZONE, 'validation.timezone'),
+      mode: z.enum(MODES, { message: 'setup.chooseType' }),
+      branchName: z.string().trim().max(80),
+      address: z.string().trim().max(160),
+      phone: z.string().trim().refine((v) => phoneOk(v, country), 'validation.phone'),
+      days: z.array(z.number()).min(1, 'validation.days'),
+      vat: z.enum(['off', 'on']),
+      ...taxShape,
+      openingCash: z.number().int().min(0).nullable(),
+      ownerPhone: z.object({ dial: z.string(), number: z.string() }).refine(phoneValueValid, 'validation.mobile'),
+      whatsappOk: z.boolean(),
+    })
+    .refine((v) => v.vat === 'off' || !isUae(v.country) || trnValid(v.trn, true), { message: 'validation.trn', path: ['trn'] })
+    .refine((v) => v.vat === 'off' || isUae(v.country) || trnValid(v.trn, false), { message: 'validation.taxNumber', path: ['trn'] })
+    .superRefine((v, ctx) => {
+      if (v.vat === 'off') return;
+      checkSecondTax(v, ctx);
+      checkProvince(v, v.country, ctx);
+    });
 
-type Values = z.infer<typeof schema>;
+type Values = z.infer<ReturnType<typeof schemaFor>>;
 
 // The salon type comes first (owner's fix list C3): it sets the look of everything after it.
 const STEPS: { key: 'business' | 'country' | 'mode' | 'branch' | 'tax'; fields: FieldPath<Values>[] }[] = [
@@ -93,7 +96,7 @@ export function SetupWizard() {
   const [where] = useState(() => countryDefaults(guessCountry()));
 
   const form = useForm<Values>({
-    resolver: zodResolver(schema),
+    resolver: (values, context, options) => zodResolver(schemaFor(values.country))(values, context, options),
     defaultValues: {
       businessName: '',
       ownerName: suggestedName,
@@ -127,7 +130,7 @@ export function SetupWizard() {
           mode: v.mode,
           branch_name: v.branchName || v.businessName,
           address: v.address,
-          phone: v.phone,
+          phone: phoneToSave(v.phone, v.country),
           // Open days only: no opening and closing times (owner, 2026-10-07).
           opening_hours: { days: v.days },
           country_code: v.country,

@@ -8,6 +8,7 @@ import { useCreateStaffLogin } from '@/features/team/api';
 import { isUae } from '@/lib/countries';
 import { businessDate, type BusinessDate } from '@/lib/dates';
 import { formatBps, parsePercent } from '@/lib/money';
+import { phoneOk, phoneToSave } from '@/lib/phone';
 import { spacing } from '@/theme';
 import { Button, Chip, DateField, FormError, HeaderBand, MoneyInput, QueryState, Screen, SwitchRow, Text, TextField, useToast } from '@/ui';
 
@@ -67,10 +68,10 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
   const accountant = !person && title === 'accountant';
   const withLogin = accountant || (!person && canLogin);
   const bps = commission.trim() === '' ? 0 : parsePercent(commission);
-  const phoneOk = phone.trim() === '' || /^\+?[0-9 ]{7,20}$/.test(phone.trim());
+  const phoneValid = phoneOk(phone, business.country_code);
   const ok =
     name.trim().length > 0 &&
-    (accountant || (bps !== null && phoneOk && (salary === null || salary >= 0))) &&
+    (accountant || (bps !== null && phoneValid && (salary === null || salary >= 0))) &&
     (!withLogin || loginValid(login));
 
   const chooseTitle = (r: RoleTitle) => {
@@ -108,7 +109,7 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
         base_salary_minor: salary ?? 0,
         commission_bps: bps ?? 0,
         wps_required: wps && isUae(business.country_code),
-        phone: phone.trim() || null,
+        phone: phoneToSave(phone, business.country_code),
         active,
         ...(startedOn ? { started_on: startedOn } : {}),
         ...(!active ? { left_on: leftOn || null } : {}),
@@ -173,7 +174,7 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
               value={phone}
               onChangeText={setPhone}
               keyboardType="phone-pad"
-              error={phoneOk ? undefined : t('validation.phone')}
+              error={phoneValid ? undefined : t('validation.phone')}
               testID="staff-phone"
             />
             <DateField

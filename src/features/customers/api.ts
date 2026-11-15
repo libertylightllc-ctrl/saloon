@@ -6,6 +6,17 @@ import { supabase } from '@/lib/supabase';
 
 export type Customer = Tables<'customers'>;
 
+/**
+ * What a search looks for: a name, or a number whatever its spacing or leading 0 ("050 123 4567" and "501234567" find
+ * "+971 50 123 4567"; F1).
+ */
+export function customerSearch(term: string): { digits: string } | { or: string } {
+  const digits = term.replace(/\D/g, '').replace(/^0+/, '');
+  if (/^[\d\s+()-]+$/.test(term) && digits.length >= 3) return { digits: `%${digits}%` };
+  const like = `%${term.replace(/[%_,()]/g, ' ')}%`;
+  return { or: `name.ilike.${like},phone.ilike.${like}` };
+}
+
 export function useCustomers(businessId: string, search: string, enabled = true) {
   const term = search.trim();
   return useQuery({
@@ -14,8 +25,8 @@ export function useCustomers(businessId: string, search: string, enabled = true)
     queryFn: async (): Promise<Customer[]> => {
       let query = supabase.from('customers').select('*').eq('business_id', businessId);
       if (term) {
-        const like = `%${term.replace(/[%_,()]/g, ' ')}%`;
-        query = query.or(`name.ilike.${like},phone.ilike.${like}`);
+        const find = customerSearch(term);
+        query = 'digits' in find ? query.ilike('phone_digits', find.digits) : query.or(find.or);
       }
       const { data, error } = await query.order('last_visit_at', { ascending: false, nullsFirst: false }).limit(100);
       if (error) throw error;

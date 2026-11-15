@@ -1102,7 +1102,7 @@
     "salonCode": "4 to 12 letters or numbers",
     "username": "3 to 20 letters, numbers, dots or dashes",
     "name": "Enter a name",
-    "phone": "Enter a phone number: digits and spaces, with + and the country code if you like",
+    "phone": "That isn't a full phone number. Check the digits, or start with + and the country code.",
     "trn": "The TRN has 15 digits",
     "days": "Pick at least one day",
     "number": "Whole numbers only",
@@ -1116,7 +1116,7 @@
     "timezone": "Use a time zone name like Europe/London",
     "licence": "Letters, numbers and . / - only",
     "province": "Pick your province",
-    "mobile": "Enter the number: 6 to 14 digits.",
+    "mobile": "That isn't a full mobile number for the country code picked.",
     "time": "Use 24-hour time, like 18:30."
   },
   "errors": {
@@ -1203,7 +1203,7 @@
     "invalid_link": "The payment link must start with https://",
     "document_exists": "There is already a record with that name for them.",
     "country_locked": "The country can no longer change: money has been recorded in this salon.",
-    "invalid_phone": "That phone number does not look right. Use digits, spaces and an optional + at the start.",
+    "invalid_phone": "That isn't a full phone number. Check the digits, or start with + and the country code.",
     "wrong_current_password": "That is not your current password.",
     "days_required": "Pick at least one day",
     "message_required": "Write a message first.",
@@ -4164,6 +4164,10 @@
     },
     "salonCodeChanged": {
       "text": "Changed the salon code: {{from}} → {{to}}"
+    },
+    "customerPhonesCountryCode": {
+      "text": "Added the country code to {{count}} customer phone numbers",
+      "text_one": "Added the country code to {{count}} customer phone number"
     }
   }
 }

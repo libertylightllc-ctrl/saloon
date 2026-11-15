@@ -32,7 +32,7 @@ text in all 7 languages with plurals and right-to-left; who may do what checked 
 | E5 AI support answers | Bold shows as bold (no asterisks). The assistant gets the real menu paths (salon code: More and More → Staff), the five login types and who can do what. | Support server function updated |
 | E6 Help questions by login | Each login sees only questions that fit it (a stylist no longer sees plan, staff and delete-account questions). | — |
 | E7 Stylists see refunds on their sales | Read-only: amount, reason, and what it changed for them (commission, tip). | Migration: stylists may read refunds of their own sales |
-| E8 Small wording | Close history "Difference AED 0.00"; Home "vs yesterday AED 120.00"; Queue this week empty "Nothing booked this week."; Control summary adds "26 Oct not closed", is called "Control summary" for accountant and manager, and managers see it for their branches; journal titles "October 2026 payroll", "Cash close · 25 Oct 2026"; one name "Accounting" (tab, More row and page title); accountant payroll text fixed; Home quick actions only those the login can use; stylists' sales page "My sales"; commission hidden on Home when the rate is 0%. | Migration for the control summary (managers) and the commission rate on Home |
+| E8 Small wording | Close history "Difference AED 0.00"; Home "vs yesterday AED 120.00"; Queue this week empty "Nothing booked this week."; Control summary adds "26 Oct not closed", is called "Control summary" for accountant and manager, and managers see it for their branches; journal titles "October 2026 payroll", "Cash close · 25 Oct 2026"; one name "Accounting" (tab, More row and page title); accountant payroll text fixed; Home quick actions only those the login can use; stylists' sales page "My sales"; commission hidden on Home when the rate is 0%. | Migration for the control summary (managers); the commission rate on Home needed none (a stylist can already read their own rate) |
 
 ## Part F — settings checks
 
@@ -40,8 +40,8 @@ text in all 7 languages with plurals and right-to-left; who may do what checked 
 |---|---|---|
 | F1 Phone numbers | One check everywhere (branch, setup, staff, customers, profile, booking page): the country's number length, not all one digit; saved with the country code (+974 5551 2345). The same check on the server for new and changed numbers. **Existing customer numbers** that are valid local numbers for the salon's country get the country code added (so returning clients are found again); anything that isn't a valid number is left as it is. | Migration |
 | F2 VAT tab | Reports shows the VAT tab only while "Registered for VAT" is on. | — |
-| F3 Change the salon code once | Owner, More → Staff: "Change salon code" with the warning "Every staff member must sign in with the new code." All staff logins move to the new code in one step (if one fails, none change). Allowed once. | Migration + a new server function |
-| F4 Last sign-in | Each staff page: "Last signed in: 12 Nov · 9:14 AM" or "Never signed in". | — |
+| F3 Change the salon code once | Owner, More → Staff: "Change salon code" with the warning "Every staff member must sign in with the new code." All staff logins move to the new code in one step (if one fails, none change). Allowed once. | Migration (one database step moves the salon and every staff login together, so no separate server function was needed) |
+| F4 Last sign-in | Each staff page: "Last signed in: 12 Nov · 9:14 AM" or "Never signed in". | Migration (the sign-in time is kept where the app cannot read it; a small read-only function gives it to the owner and branch managers) |
 
 ## How it goes out
 

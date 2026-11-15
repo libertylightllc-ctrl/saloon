@@ -88,8 +88,8 @@ select set_config('t.token', pg_temp.book('Omar Visitor', '050 123 4567') ->> 't
 select pg_temp.as_admin();
 select is((select row(source, status, customer_name)::text from appointments where booking_token = current_setting('t.token')),
   '(app,booked,"Omar Visitor")', 'booked by the customer, in the queue');
-select is((select count(*)::int from customers where business_id = current_setting('t.b')::uuid and phone = '050 123 4567'), 1,
-  'the customer is added with the phone number');
+select is((select count(*)::int from customers where business_id = current_setting('t.b')::uuid and phone = '+971 50 123 4567'), 1,
+  'the customer is added with the phone number, with the country code (F1)');
 select ok(exists (select 1 from notifications where business_id = current_setting('t.b')::uuid and type = 'online_booking'),
   'the owner is told: new online booking');
 

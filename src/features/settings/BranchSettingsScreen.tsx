@@ -15,6 +15,7 @@ import { checkProvince, checkSecondTax, secondTaxPayload, taxShape, taxValuesOf,
 import { licenceLabelFor , isUae } from '@/lib/countries';
 import { useSetBranchMode, useUpdateBranch } from '@/features/team/api';
 import { activeCurrency, parseTaxRate } from '@/lib/money';
+import { phoneOk, phoneToSave } from '@/lib/phone';
 import { MODES, spacing, type Mode } from '@/theme';
 import {
   Button,
@@ -50,7 +51,7 @@ const schemaFor = (uae: boolean, country: string) =>
     .object({
       name: z.string().trim().min(2, 'validation.required').max(80, 'validation.tooLong'),
       address: z.string().trim().max(200),
-      phone: z.string().trim().regex(/^$|^\+?[0-9 ]{7,20}$/, 'validation.phone'),
+      phone: z.string().trim().refine((v) => phoneOk(v, country), 'validation.phone'),
       open_days: z.array(z.number()).min(1, 'validation.days'),
       vat_on: z.boolean(),
       ...taxShape,
@@ -121,7 +122,7 @@ export function BranchSettingsScreen() {
       {
         name: v.name,
         address: v.address,
-        phone: v.phone,
+        phone: phoneToSave(v.phone, business.country_code),
         open_days: v.open_days,
         vat_mode: v.vat_on ? 'on' : 'off',
         trn: v.trn,

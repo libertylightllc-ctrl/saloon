@@ -3,6 +3,7 @@ import { Image, Linking, StyleSheet, View } from 'react-native';
 
 import { instagramUrl } from '@/features/settings/bookingProfile';
 import { logoUrl } from '@/features/settings/logo';
+import { phoneOk } from '@/lib/phone';
 import { spacing, useTheme } from '@/theme';
 import { Button, Card, Icon, Text } from '@/ui';
 
@@ -94,7 +95,8 @@ export function SalonCard({ salon }: { salon: BookingSalon & { open_days?: numbe
           onPress={() => void Linking.openURL(mapsUrl(salon))}
           testID="booking-directions"
         />
-        {salon.phone ? (
+        {/* No Call button for a number that is not one, such as "000000000" saved before the check (F1). */}
+        {salon.phone && phoneOk(salon.phone, salon.country_code) ? (
           <Button
             label={t('booking.call')}
             icon="phone"

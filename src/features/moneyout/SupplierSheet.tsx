@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useWorkspace } from '@/features/auth/session';
+import { phoneOk, phoneToSave } from '@/lib/phone';
 import { BottomSheet, Button, FormError, TextField, useToast } from '@/ui';
 
 import { useSaveSupplier, type Supplier } from './api';
@@ -35,7 +36,7 @@ function SupplierForm({ supplier, onDone }: { supplier: Supplier | null; onDone:
   const [phone, setPhone] = useState(supplier?.phone ?? '');
   const [terms, setTerms] = useState(String(supplier?.terms_days ?? 0));
   const termsOk = /^\d{1,3}$/.test(terms) && Number(terms) <= 365;
-  const phoneOk = phone.trim() === '' || /^\+?[0-9 ]{7,20}$/.test(phone.trim());
+  const phoneValid = phoneOk(phone, business.country_code);
 
   return (
     <>
@@ -45,7 +46,7 @@ function SupplierForm({ supplier, onDone }: { supplier: Supplier | null; onDone:
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
-        error={phoneOk ? undefined : t('validation.phone')}
+        error={phoneValid ? undefined : t('validation.phone')}
         testID="supplier-phone"
       />
       <TextField
@@ -60,11 +61,11 @@ function SupplierForm({ supplier, onDone }: { supplier: Supplier | null; onDone:
       <FormError error={save.error} />
       <Button
         label={t('common.save')}
-        disabled={!name.trim() || !termsOk || !phoneOk}
+        disabled={!name.trim() || !termsOk || !phoneValid}
         loading={save.isPending}
         onPress={() =>
           save.mutate(
-            { id: supplier?.id, name: name.trim(), phone: phone.trim() || null, terms_days: Number(terms) },
+            { id: supplier?.id, name: name.trim(), phone: phoneToSave(phone, business.country_code), terms_days: Number(terms) },
             {
               onSuccess: (id) => {
                 toast(t('purchases.supplierSaved'));

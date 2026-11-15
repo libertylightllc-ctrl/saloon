@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
 import { can, levelOf } from '@/lib/permissions';
+import { phoneOk, phoneToSave } from '@/lib/phone';
 import { spacing } from '@/theme';
 import { Button, Chip, FormError, ListRow, SearchBar, Text, TextField } from '@/ui';
 
@@ -68,6 +69,7 @@ export function CustomerPicker({
           value={newPhone}
           onChangeText={setNewPhone}
           keyboardType="phone-pad"
+          error={phoneOk(newPhone, business.country_code) ? undefined : t('validation.phone')}
           testID="new-customer-phone"
         />
         <FormError error={save.error} />
@@ -77,12 +79,12 @@ export function CustomerPicker({
             label={t('customers.add')}
             size="md"
             loading={save.isPending}
-            disabled={newName.trim().length < 1}
+            disabled={newName.trim().length < 1 || !phoneOk(newPhone, business.country_code)}
             onPress={() =>
               save.mutate(
                 {
                   name: newName.trim(),
-                  phone: newPhone.trim() || null,
+                  phone: phoneToSave(newPhone, business.country_code),
                   preferences: null,
                   notes: null,
                   risk_flags: [],

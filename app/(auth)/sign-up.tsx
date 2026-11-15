@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { phoneHasSalon, signUpOwner } from '@/features/auth/api';
 import { AuthShell } from '@/features/auth/AuthShell';
 import { GoogleButton } from '@/features/auth/GoogleButton';
-import { composePhone, PhoneField, phoneNumberValid } from '@/features/auth/PhoneField';
+import { composePhone, PhoneField, phoneValueValid } from '@/features/auth/PhoneField';
 import { PhoneTaken } from '@/features/auth/PhoneTaken';
 import { SignUpDone } from '@/features/auth/SignUpDone';
 import { track } from '@/lib/analytics';
@@ -23,7 +23,7 @@ const schema = z.object({
   email: z.string().trim().min(1, 'validation.required').email('validation.email'),
   // One password field with its show/hide eye (no "confirm"; website brief 3.2).
   password: z.string().min(8, 'validation.passwordMin'),
-  phone: z.object({ dial: z.string(), number: z.string() }).refine((v) => phoneNumberValid(v.number), 'validation.mobile'),
+  phone: z.object({ dial: z.string(), number: z.string() }).refine(phoneValueValid, 'validation.mobile'),
   whatsappOk: z.boolean(),
   pilotCode: z.string().trim().max(40),
 });

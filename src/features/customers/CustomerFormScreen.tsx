@@ -7,20 +7,23 @@ import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
 import { useWorkspace } from '@/features/auth/session';
+import { phoneOk, phoneToSave } from '@/lib/phone';
 import { spacing } from '@/theme';
 import { Button, Chip, FormError, FormTextField, HeaderBand, QueryState, Screen, SwitchRow, Text, useToast } from '@/ui';
 
 import { useCustomer, useSaveCustomer } from './api';
 
-const schema = z.object({
-  name: z.string().trim().min(1, 'validation.required').max(80),
-  phone: z.string().trim().regex(/^$|^\+?[0-9 ]{7,20}$/, 'validation.phone'),
-  preferences: z.string().trim().max(200),
-  notes: z.string().trim().max(500),
-  risk_flags: z.array(z.string()),
-  marketing_opt_in: z.boolean(),
-});
-type Values = z.infer<typeof schema>;
+/** The number is checked for the salon's country (F1). */
+const schemaFor = (country: string) =>
+  z.object({
+    name: z.string().trim().min(1, 'validation.required').max(80),
+    phone: z.string().trim().refine((v) => phoneOk(v, country), 'validation.phone'),
+    preferences: z.string().trim().max(200),
+    notes: z.string().trim().max(500),
+    risk_flags: z.array(z.string()),
+    marketing_opt_in: z.boolean(),
+  });
+type Values = z.infer<ReturnType<typeof schemaFor>>;
 const RISKS = ['allergy', 'patch_test'] as const;
 
 export function CustomerFormScreen() {
@@ -32,7 +35,7 @@ export function CustomerFormScreen() {
   const existing = useCustomer(business.id, id);
   const save = useSaveCustomer(business.id);
   const form = useForm<Values>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schemaFor(business.country_code)),
     defaultValues: { name: '', phone: '', preferences: '', notes: '', risk_flags: [], marketing_opt_in: false },
   });
 
@@ -55,7 +58,7 @@ export function CustomerFormScreen() {
       {
         id,
         name: v.name,
-        phone: v.phone || null,
+        phone: phoneToSave(v.phone, business.country_code),
         preferences: v.preferences || null,
         notes: v.notes || null,
         risk_flags: v.risk_flags,

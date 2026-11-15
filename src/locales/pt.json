@@ -1102,7 +1102,7 @@
     "salonCode": "De 4 a 12 letras ou números",
     "username": "De 3 a 20 letras, números, pontos ou hifens",
     "name": "Digite um nome",
-    "phone": "Digite um telefone: dígitos e espaços, com + e o código do país, se quiser",
+    "phone": "Não é um número de telefone completo. Confira os dígitos ou comece com + e o código do país.",
     "trn": "O TRN tem 15 dígitos",
     "days": "Escolha pelo menos um dia",
     "number": "Apenas números inteiros",
@@ -1116,7 +1116,7 @@
     "timezone": "Use o nome de um fuso horário, como Europe/Lisbon",
     "licence": "Só letras, números e . / -",
     "province": "Escolha sua província",
-    "mobile": "Digite o número: de 6 a 14 dígitos.",
+    "mobile": "Não é um número de celular completo para o código do país escolhido.",
     "time": "Use a hora de 24 horas, como 18:30."
   },
   "errors": {
@@ -1203,7 +1203,7 @@
     "invalid_link": "O link de pagamento deve começar com https://",
     "document_exists": "Já existe um registro com esse nome para essa pessoa.",
     "country_locked": "O país não pode mais mudar: já há dinheiro registrado neste salão.",
-    "invalid_phone": "Esse número de telefone não parece certo. Use dígitos, espaços e, se quiser, um + no início.",
+    "invalid_phone": "Não é um número de telefone completo. Confira os dígitos ou comece com + e o código do país.",
     "wrong_current_password": "Essa não é sua senha atual.",
     "days_required": "Escolha pelo menos um dia",
     "message_required": "Escreva uma mensagem primeiro.",
@@ -4165,6 +4165,10 @@
     },
     "salonCodeChanged": {
       "text": "Alterou o código do salão: {{from}} → {{to}}"
+    },
+    "customerPhonesCountryCode": {
+      "text": "Código do país adicionado a {{count}} telefones de clientes",
+      "text_one": "Código do país adicionado a {{count}} telefone de cliente"
     }
   }
 }

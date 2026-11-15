@@ -1102,7 +1102,7 @@
     "salonCode": "4 à 12 lettres ou chiffres",
     "username": "3 à 20 lettres, chiffres, points ou tirets",
     "name": "Saisissez un nom",
-    "phone": "Saisissez un numéro de téléphone : chiffres et espaces, avec + et l’indicatif du pays si vous le souhaitez",
+    "phone": "Ce n’est pas un numéro de téléphone complet. Vérifiez les chiffres ou commencez par + et l’indicatif du pays.",
     "trn": "Le TRN comporte 15 chiffres",
     "days": "Choisissez au moins un jour",
     "number": "Nombres entiers uniquement",
@@ -1116,7 +1116,7 @@
     "timezone": "Utilisez un nom de fuseau horaire comme Europe/Paris",
     "licence": "Lettres, chiffres et . / - uniquement",
     "province": "Choisissez votre province",
-    "mobile": "Saisissez le numéro : 6 à 14 chiffres.",
+    "mobile": "Ce n’est pas un numéro de mobile complet pour l’indicatif choisi.",
     "time": "Utilisez l’heure sur 24 h, comme 18:30."
   },
   "errors": {
@@ -1203,7 +1203,7 @@
     "invalid_link": "Le lien de paiement doit commencer par https://",
     "document_exists": "Un document porte déjà ce nom pour cette personne.",
     "country_locked": "Le pays ne peut plus changer : de l’argent a été enregistré dans ce salon.",
-    "invalid_phone": "Ce numéro de téléphone ne semble pas correct. Utilisez des chiffres, des espaces et, si besoin, un + au début.",
+    "invalid_phone": "Ce n’est pas un numéro de téléphone complet. Vérifiez les chiffres ou commencez par + et l’indicatif du pays.",
     "wrong_current_password": "Ce n’est pas votre mot de passe actuel.",
     "days_required": "Choisissez au moins un jour",
     "message_required": "Écrivez d’abord un message.",
@@ -4165,6 +4165,10 @@
     },
     "salonCodeChanged": {
       "text": "Code salon changé : {{from}} → {{to}}"
+    },
+    "customerPhonesCountryCode": {
+      "text": "Indicatif du pays ajouté à {{count}} numéros de clients",
+      "text_one": "Indicatif du pays ajouté à {{count}} numéro de client"
     }
   }
 }

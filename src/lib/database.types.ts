@@ -1235,6 +1235,7 @@ export type Database = {
           no_show_count: number;
           notes: string | null;
           phone: string | null;
+          phone_digits: string | null;
           preferences: string | null;
           preferred_employee_id: string | null;
           risk_flags: string[];
@@ -1254,6 +1255,7 @@ export type Database = {
           no_show_count?: number;
           notes?: string | null;
           phone?: string | null;
+          phone_digits?: never;
           preferences?: string | null;
           preferred_employee_id?: string | null;
           risk_flags?: string[];
@@ -1273,6 +1275,7 @@ export type Database = {
           no_show_count?: number;
           notes?: string | null;
           phone?: string | null;
+          phone_digits?: never;
           preferences?: string | null;
           preferred_employee_id?: string | null;
           risk_flags?: string[];
@@ -2484,6 +2487,30 @@ export type Database = {
         Update: {
           created_at?: string;
           source_hash?: string;
+        };
+        Relationships: [];
+      };
+      phone_rules: {
+        Row: {
+          country_code: string;
+          dial: string;
+          max_len: number;
+          min_len: number;
+          trunk: string;
+        };
+        Insert: {
+          country_code: string;
+          dial: string;
+          max_len: number;
+          min_len: number;
+          trunk: string;
+        };
+        Update: {
+          country_code?: string;
+          dial?: string;
+          max_len?: number;
+          min_len?: number;
+          trunk?: string;
         };
         Relationships: [];
       };
@@ -4850,6 +4877,7 @@ export type Database = {
       currency_decimals: { Args: { p_currency: string }; Returns: number };
       current_member_id: { Args: { p_business: string }; Returns: string };
       customer_now: { Args: { p_business: string; p_customer: string }; Returns: string };
+      customer_phones_add_country_code: { Args: Record<PropertyKey, never>; Returns: number };
       dashboard_today: { Args: { p_branch: string }; Returns: Json };
       days_employed: {
         Args: { e: Database['public']['Tables']['employees']['Row']; p_period: string };
@@ -4999,6 +5027,7 @@ export type Database = {
         }[];
       };
       my_employee_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      normalize_phone: { Args: { p_country: string; p_phone: string }; Returns: string };
       note_email_confirmed: { Args: { p_how: string; p_user: string }; Returns: undefined };
       notify: {
         Args: {
@@ -5080,7 +5109,9 @@ export type Database = {
           status: string;
         }[];
       };
+      phone_group: { Args: { p: string }; Returns: string };
       phone_has_salon: { Args: { p_phone: string }; Returns: boolean };
+      phone_or_null: { Args: { p_country: string; p_phone: string }; Returns: string };
       pilot_active_count: { Args: Record<PropertyKey, never>; Returns: number };
       pilot_redeem: { Args: { p_business: string; p_code: string; p_user: string }; Returns: Json };
       pilot_status: { Args: Record<PropertyKey, never>; Returns: Json };

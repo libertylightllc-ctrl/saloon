@@ -4,7 +4,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { keys } from '@/features/live/useLiveSync';
 import { supabase } from '@/lib/supabase';
 
-import type { Customer } from './api';
+import { customerSearch, type Customer } from './api';
 
 export const CUSTOMER_PAGE = 50;
 
@@ -17,8 +17,8 @@ export function useCustomerPages(businessId: string, search: string, enabled = t
     queryFn: async ({ pageParam }): Promise<Customer[]> => {
       let query = supabase.from('customers').select('*').eq('business_id', businessId);
       if (term) {
-        const like = `%${term.replace(/[%_,()]/g, ' ')}%`;
-        query = query.or(`name.ilike.${like},phone.ilike.${like}`);
+        const find = customerSearch(term);
+        query = 'digits' in find ? query.ilike('phone_digits', find.digits) : query.or(find.or);
       }
       const { data, error } = await query
         .order('last_visit_at', { ascending: false, nullsFirst: false })

@@ -10,6 +10,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { guessCountry } from '@/features/setup/CountryStep';
 import { COUNTRIES, countryName, countryOf } from '@/lib/countries';
 import { visitorCountry } from '@/lib/geo';
+import { phoneOk } from '@/lib/phone';
 import { spacing, useTheme } from '@/theme';
 import { BottomSheet, Icon, SearchBar, Text, TextField } from '@/ui';
 
@@ -25,10 +26,9 @@ export function composePhone(v: PhoneValue): string {
   return digits ? `+${v.dial}${digits}` : '';
 }
 
-/** A number is 6–14 digits, or nothing. */
-export function phoneNumberValid(number: string): boolean {
-  const digits = number.replace(/\D/g, '');
-  return digits.length === 0 || (digits.length >= 6 && digits.length <= 14 && /^[0-9 ()-]+$/.test(number.trim()));
+/** Nothing, or a full number for the country code picked (the same check as everywhere, F1). */
+export function phoneValueValid(v: PhoneValue): boolean {
+  return !v.number.trim() || phoneOk(`+${v.dial} ${v.number}`, null);
 }
 
 /** The visitor's country code: by IP, else the device's time zone. */

@@ -58,7 +58,7 @@ test('an owner who gave no number is asked once, in setup', async ({ page, mode 
   await field(page, 'phone').fill('123');
   await signUp(page, email);
   await id(page, 'sign-up-submit').click();
-  await expect(page.getByText('Enter the number: 6 to 14 digits.')).toBeVisible();
+  await expect(page.getByText("That isn't a full mobile number for the country code picked.")).toBeVisible();
   await field(page, 'phone').fill('');
   await id(page, 'sign-up-submit').click();
 

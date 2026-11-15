@@ -15,7 +15,7 @@ test('an owner edits their name, phone, the salon name and their password', asyn
   // Name and phone; a phone with letters is refused before it is sent.
   await id(page, 'profile-name').fill('Layla Haddad');
   await id(page, 'profile-phone').fill('050 12ab');
-  await expect(text(page, 'That phone number does not look right')).toBeVisible();
+  await expect(text(page, /That isn't a full phone number/)).toBeVisible();
   await expect(id(page, 'profile-save')).toBeDisabled();
   await id(page, 'profile-phone').fill('+971 50 123 4567');
   await id(page, 'profile-save').click();

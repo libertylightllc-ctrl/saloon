@@ -17,6 +17,7 @@ import { usePageMeta } from '@/lib/pageMeta';
 import { isCurrency } from '@/lib/currencies';
 import type { BusinessDate } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
+import { phoneOk, phoneToSave } from '@/lib/phone';
 import { spacing, ThemeProvider } from '@/theme';
 import { Button, EmptyState, FormError, FormTextField, HeaderBand, QueryState, Screen, SectionHeader, Text } from '@/ui';
 
@@ -25,12 +26,14 @@ import { DayChips, ServiceList, StaffChips, TimeGrid } from './BookingPickers';
 import { bookingMeta } from './meta';
 import { SalonCard } from './SalonCard';
 
-const schema = z.object({
-  name: z.string().trim().min(2, 'validation.name').max(80, 'validation.tooLong'),
-  phone: z.string().trim().regex(/^\+?[0-9 ()-]{7,24}$/, 'validation.phone'),
-  notes: z.string().trim().max(300, 'validation.tooLong'),
-});
-type Details = z.infer<typeof schema>;
+/** The number is needed, and checked for the salon's country as everywhere (F1). */
+const schemaFor = (country: string) =>
+  z.object({
+    name: z.string().trim().min(2, 'validation.name').max(80, 'validation.tooLong'),
+    phone: z.string().trim().refine((v) => v !== '' && phoneOk(v, country), 'validation.phone'),
+    notes: z.string().trim().max(300, 'validation.tooLong'),
+  });
+type Details = z.infer<ReturnType<typeof schemaFor>>;
 
 export function BookingScreen({ slug }: { slug: string }) {
   const { t } = useTranslation();
@@ -73,7 +76,7 @@ function BookingForm({ slug, page }: { slug: string; page: BookingPage }) {
   const slots = useBookingSlots(slug, day, services, staff);
   const book = useBook(slug);
   const form = useForm<Details>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schemaFor(page.salon.country_code)),
     defaultValues: { name: '', phone: `+${dialCodeOf(page.salon.country_code)} `, notes: '' },
   });
 
@@ -98,7 +101,7 @@ function BookingForm({ slug, page }: { slug: string; page: BookingPage }) {
   const submit = form.handleSubmit((v) =>
     time &&
     book.mutate(
-      { service_ids: services, employee_id: staff, starts_at: time, name: v.name, phone: v.phone, notes: v.notes },
+      { service_ids: services, employee_id: staff, starts_at: time, name: v.name, phone: phoneToSave(v.phone, page.salon.country_code) ?? v.phone, notes: v.notes },
       { onSuccess: (r) => router.replace({ pathname: '/booking/[token]', params: { token: r.token } }) },
     ),
   );

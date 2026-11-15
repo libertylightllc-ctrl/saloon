@@ -8,6 +8,7 @@ import { showsBilling, usePlanStatus } from '@/features/plan/api';
 import { canOfferPlans } from '@/features/plan/storePolicy';
 import { ModeCard } from '@/features/setup/ModeCard';
 import { formatMoney } from '@/lib/money';
+import { phoneOk, phoneToSave } from '@/lib/phone';
 import { MODES, spacing, type Mode } from '@/theme';
 import { Button, Card, FormError, HeaderBand, QueryState, Screen, StatusPill, Text, TextField, useToast } from '@/ui';
 
@@ -36,7 +37,7 @@ export function BranchesScreen() {
 
   const add = () =>
     create.mutate(
-      { name: name.trim(), mode, address: address.trim(), phone: phone.trim() },
+      { name: name.trim(), mode, address: address.trim(), phone: phoneToSave(phone, business.country_code) ?? '' },
       {
         onSuccess: () => {
           toast(t('branches.added', { name: name.trim() }));
@@ -81,7 +82,15 @@ export function BranchesScreen() {
                 <Text variant="h4">{t('branches.new')}</Text>
                 <TextField label={t('branches.name')} value={name} onChangeText={setName} maxLength={60} testID="branch-new-name" />
                 <TextField label={t('branch.fields.address')} value={address} onChangeText={setAddress} maxLength={200} testID="branch-new-address" />
-                <TextField label={t('branch.fields.phone')} value={phone} onChangeText={setPhone} keyboardType="phone-pad" maxLength={30} />
+                <TextField
+                  label={t('branch.fields.phone')}
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                  maxLength={30}
+                  error={phoneOk(phone, business.country_code) ? undefined : t('validation.phone')}
+                  testID="branch-new-phone"
+                />
                 <Text variant="bodyStrong">{t('branch.mode')}</Text>
                 {MODES.map((m) => (
                   <ModeCard key={m} mode={m} selected={mode === m} onPress={() => setMode(m)} testID={`branch-new-mode-${m}`} />
@@ -99,7 +108,7 @@ export function BranchesScreen() {
                 <Button
                   label={t('branches.add')}
                   loading={create.isPending}
-                  disabled={name.trim().length < 2}
+                  disabled={name.trim().length < 2 || !phoneOk(phone, business.country_code)}
                   onPress={add}
                   testID="branch-new-save"
                 />

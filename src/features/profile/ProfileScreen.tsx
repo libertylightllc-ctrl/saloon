@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useSession, useWorkspace } from '@/features/auth/session';
+import { phoneOk, phoneToSave } from '@/lib/phone';
 import { spacing } from '@/theme';
 import { Avatar, Button, Card, FormError, HeaderBand, Screen, SectionHeader, Text, TextField, useToast } from '@/ui';
 
 import { useChangeEmail, useChangePassword, useRenameBusiness, useUpdateProfile } from './api';
 
-const PHONE = /^\+?[0-9 ]{7,20}$/;
 
 /**
  * The signed-in person's own profile (owner, 2026-10-06): name and phone (a staff member's also show in the salon's
@@ -26,7 +26,7 @@ export function ProfileScreen() {
   const [name, setName] = useState(member.display_name);
   const [phone, setPhone] = useState(member.phone ?? '');
   const nameOk = name.trim().length >= 2 && name.trim().length <= 60;
-  const phoneOk = phone.trim() === '' || PHONE.test(phone.trim());
+  const phoneValid = phoneOk(phone, business.country_code);
   const changed = name.trim() !== member.display_name || phone.trim() !== (member.phone ?? '');
 
   const rename = useRenameBusiness(business.id);
@@ -56,7 +56,7 @@ export function ProfileScreen() {
             onChangeText={setPhone}
             keyboardType="phone-pad"
             maxLength={20}
-            error={phoneOk ? undefined : t('errors.invalid_phone')}
+            error={phoneValid ? undefined : t('validation.phone')}
             testID="profile-phone"
           />
           {!owner ? (
@@ -67,9 +67,9 @@ export function ProfileScreen() {
           <FormError error={update.error} />
           <Button
             label={t('profile.save')}
-            disabled={!nameOk || !phoneOk || !changed}
+            disabled={!nameOk || !phoneValid || !changed}
             loading={update.isPending}
-            onPress={() => update.mutate({ display_name: name.trim(), phone: phone.trim() }, { onSuccess: () => toast(t('profile.saved')) })}
+            onPress={() => update.mutate({ display_name: name.trim(), phone: phoneToSave(phone, business.country_code) ?? '' }, { onSuccess: () => toast(t('profile.saved')) })}
             testID="profile-save"
           />
         </Card>
