@@ -29,6 +29,11 @@ export function SlipBreakdown({ slip }: { slip: Payslip }) {
   const theme = useTheme();
   return (
     <View style={styles.block}>
+      {slip.days_employed !== null && slip.days_in_month !== null ? (
+        <Text variant="small" color="textSecondary" testID="slip-days">
+          {t('payroll.days', { days: slip.days_employed, total: slip.days_in_month })}
+        </Text>
+      ) : null}
       <SlipRow label={t('payroll.base')} value={slip.base_minor} />
       <SlipRow label={t('payroll.commission')} value={slip.commission_minor} testID="slip-commission" />
       {slip.bonus_minor ? <SlipRow label={t('payroll.bonus')} value={slip.bonus_minor} /> : null}

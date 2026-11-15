@@ -1511,9 +1511,11 @@ export type Database = {
           employee_code: string | null;
           full_name: string;
           id: string;
+          left_on: string | null;
           member_id: string | null;
           phone: string | null;
           role_title: string;
+          started_on: string;
           wps_required: boolean;
         };
         Insert: {
@@ -1527,9 +1529,11 @@ export type Database = {
           employee_code?: string | null;
           full_name: string;
           id?: string;
+          left_on?: string | null;
           member_id?: string | null;
           phone?: string | null;
           role_title?: string;
+          started_on: string;
           wps_required?: boolean;
         };
         Update: {
@@ -1543,9 +1547,11 @@ export type Database = {
           employee_code?: string | null;
           full_name?: string;
           id?: string;
+          left_on?: string | null;
           member_id?: string | null;
           phone?: string | null;
           role_title?: string;
+          started_on?: string;
           wps_required?: boolean;
         };
         Relationships: [
@@ -2269,6 +2275,8 @@ export type Database = {
           branch_id: string;
           business_id: string;
           commission_minor: number;
+          days_employed: number | null;
+          days_in_month: number | null;
           deductions_minor: number;
           employee_id: string;
           id: string;
@@ -2287,6 +2295,8 @@ export type Database = {
           branch_id: string;
           business_id: string;
           commission_minor?: number;
+          days_employed?: number | null;
+          days_in_month?: number | null;
           deductions_minor?: number;
           employee_id: string;
           id?: string;
@@ -2305,6 +2315,8 @@ export type Database = {
           branch_id?: string;
           business_id?: string;
           commission_minor?: number;
+          days_employed?: number | null;
+          days_in_month?: number | null;
           deductions_minor?: number;
           employee_id?: string;
           id?: string;
@@ -4825,7 +4837,12 @@ export type Database = {
       create_sale: { Args: { p: Json }; Returns: Json };
       currency_decimals: { Args: { p_currency: string }; Returns: number };
       current_member_id: { Args: { p_business: string }; Returns: string };
+      customer_now: { Args: { p_business: string; p_customer: string }; Returns: string };
       dashboard_today: { Args: { p_branch: string }; Returns: Json };
+      days_employed: {
+        Args: { e: Database['public']['Tables']['employees']['Row']; p_period: string };
+        Returns: number;
+      };
       delete_account_data: { Args: { p_user: string }; Returns: Json };
       delete_customer: {
         Args: { p_branch: string; p_customer: string; p_reason: string };
@@ -5026,6 +5043,8 @@ export type Database = {
           bonus_minor: number;
           branch_id: string;
           commission_minor: number;
+          days_employed: number;
+          days_in_month: number;
           deductions_minor: number;
           employee_id: string;
           net_minor: number;
@@ -5438,10 +5457,12 @@ export type Database = {
           employee_code: string;
           employee_id: string;
           full_name: string;
+          left_on: string;
           member_id: string;
           phone: string;
           role_title: string;
           roster: Json;
+          started_on: string;
           username: string;
           wps_required: boolean;
         }[];

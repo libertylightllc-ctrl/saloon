@@ -6,9 +6,10 @@ import { StyleSheet, View } from 'react-native';
 import { useWorkspace } from '@/features/auth/session';
 import { useCreateStaffLogin } from '@/features/team/api';
 import { isUae } from '@/lib/countries';
+import { businessDate, type BusinessDate } from '@/lib/dates';
 import { formatBps, parsePercent } from '@/lib/money';
 import { spacing } from '@/theme';
-import { Button, Chip, FormError, HeaderBand, MoneyInput, QueryState, Screen, SwitchRow, Text, TextField, useToast } from '@/ui';
+import { Button, Chip, DateField, FormError, HeaderBand, MoneyInput, QueryState, Screen, SwitchRow, Text, TextField, useToast } from '@/ui';
 
 import { ROLE_TITLES, useSaveEmployee, useStaffDirectory, type RoleTitle, type StaffMember } from './api';
 import { useRoleTitle } from './labels';
@@ -53,6 +54,9 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
   const [phone, setPhone] = useState(person?.phone ?? '');
   // Archiving and bringing back are on the person's page (Remove from staff / Bring back).
   const active = person?.active ?? true;
+  // Base pay follows the days employed (C1): the day they started, and the day they left once switched off.
+  const [startedOn, setStartedOn] = useState<BusinessDate | ''>(person?.started_on ?? businessDate(new Date(), business.timezone));
+  const [leftOn, setLeftOn] = useState<BusinessDate | ''>(person?.left_on ?? '');
   const [canLogin, setCanLogin] = useState(false);
   const [loginTouched, setLoginTouched] = useState(false);
   const [login, setLogin] = useState<LoginDraft>({ access: 'staff', username: '', password: '' });
@@ -106,6 +110,8 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
         wps_required: wps && isUae(business.country_code),
         phone: phone.trim() || null,
         active,
+        ...(startedOn ? { started_on: startedOn } : {}),
+        ...(!active ? { left_on: leftOn || null } : {}),
       });
       setSavedId(id);
       if (withLogin) {
@@ -170,6 +176,22 @@ function StaffForm({ header, person }: { header: ReactNode; person: StaffMember 
               error={phoneOk ? undefined : t('validation.phone')}
               testID="staff-phone"
             />
+            <DateField
+              label={t('staff.fields.startedOn')}
+              hint={t('staff.fields.startedOnHint')}
+              value={startedOn}
+              onChange={setStartedOn}
+              testID="staff-started-on"
+            />
+            {person && !active ? (
+              <DateField
+                label={t('staff.fields.leftOn')}
+                value={leftOn}
+                onChange={setLeftOn}
+                {...(startedOn ? { min: startedOn } : {})}
+                testID="staff-left-on"
+              />
+            ) : null}
             {!person ? (
               <SwitchRow
                 label={t('staff.canLogin')}

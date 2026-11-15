@@ -21,6 +21,9 @@ export interface Payslip {
   deductions_minor: number;
   advances_minor: number;
   net_minor: number;
+  /** Days employed in the month and its length (C1); none on lines saved before 15 Nov 2026. */
+  days_employed: number | null;
+  days_in_month: number | null;
   paid_method: 'cash' | 'bank' | null;
   paid_at: string | null;
   wps_status: 'na' | 'required' | 'proven';
@@ -52,7 +55,7 @@ export interface Adjustment {
 }
 
 const LINE_FIELDS =
-  'id, employee_id, base_minor, commission_minor, bonus_minor, deductions_minor, advances_minor, net_minor, paid_method, paid_at, wps_status, wps_evidence_path, employees(full_name)';
+  'id, employee_id, base_minor, commission_minor, bonus_minor, deductions_minor, advances_minor, net_minor, days_employed, days_in_month, paid_method, paid_at, wps_status, wps_evidence_path, employees(full_name)';
 
 export function usePayrollRun(businessId: string, period: MonthKey) {
   return useQuery({

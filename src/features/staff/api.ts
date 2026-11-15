@@ -53,6 +53,9 @@ export interface StaffMember {
   colour: string | null;
   active: boolean;
   roster: Shift[];
+  /** First day employed, and the last once they left (C1: base pay by days employed). */
+  started_on: BusinessDate;
+  left_on: BusinessDate | null;
 }
 
 /** late_not_in: past the grace minutes with no clock-in; absent: the shift ended with no clock-in. */
@@ -158,6 +161,8 @@ export interface EmployeeInput {
   wps_required: boolean;
   phone: string | null;
   active?: boolean;
+  started_on?: BusinessDate;
+  left_on?: BusinessDate | null;
 }
 
 export function useSaveEmployee(businessId: string, branchId: string) {

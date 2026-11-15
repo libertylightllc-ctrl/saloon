@@ -2002,7 +2002,10 @@
       "commission": "Commission %",
       "commissionHint": "On services, after discount and without {{tax}}. Never on tips: the whole tip goes to them.",
       "wpsHint": "Salary goes through the bank; payroll asks for the transfer proof.",
-      "phone": "Phone"
+      "phone": "Phone",
+      "startedOn": "Start date",
+      "startedOnHint": "Base pay in the first month counts from this day.",
+      "leftOn": "Leaving date"
     },
     "createLogin": "Create login",
     "who": {
@@ -2164,7 +2167,8 @@
     "changesSince": "{{count}} changes since this was worked out. Work it out again before approving.",
     "changedSince": "Pay details changed since this was worked out. Work it out again before approving.",
     "missedNote": "Commission from sales after {{date}} isn't included ({{amount}}). You can pay it as a bonus.",
-    "missedLine": "{{name}}: {{amount}}"
+    "missedLine": "{{name}}: {{amount}}",
+    "days": "Days: {{days}} of {{total}}"
   },
   "myPay": {
     "title": "My pay",

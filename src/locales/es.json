@@ -2002,7 +2002,10 @@
       "commission": "% de comisión",
       "commissionHint": "Sobre servicios, después del descuento y sin {{tax}}. Nunca sobre propinas: la propina es toda para la persona.",
       "wpsHint": "El sueldo se paga por el banco; la nómina pide el comprobante de la transferencia.",
-      "phone": "Teléfono"
+      "phone": "Teléfono",
+      "startedOn": "Fecha de inicio",
+      "startedOnHint": "El sueldo base del primer mes se cuenta desde este día.",
+      "leftOn": "Fecha de salida"
     },
     "createLogin": "Crear acceso",
     "who": {
@@ -2164,7 +2167,8 @@
     "changesSince": "{{count}} cambios desde que se calculó. Vuelve a calcularlo antes de aprobar.",
     "changedSince": "Los datos de pago cambiaron desde que se calculó. Vuelve a calcularlo antes de aprobar.",
     "missedNote": "La comisión de las ventas posteriores al {{date}} no está incluida ({{amount}}). Puedes pagarla como bonificación.",
-    "missedLine": "{{name}}: {{amount}}"
+    "missedLine": "{{name}}: {{amount}}",
+    "days": "Días: {{days}} de {{total}}"
   },
   "myPay": {
     "title": "Mi pago",

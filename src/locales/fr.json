@@ -2002,7 +2002,10 @@
       "commission": "Commission %",
       "commissionHint": "Sur les services, après remise et hors {{tax}}. Jamais sur les pourboires : le pourboire revient entièrement à l’employé.",
       "wpsHint": "Le salaire passe par la banque ; la paie demande la preuve de virement.",
-      "phone": "Téléphone"
+      "phone": "Téléphone",
+      "startedOn": "Date d'arrivée",
+      "startedOnHint": "Le salaire de base du premier mois compte à partir de ce jour.",
+      "leftOn": "Date de départ"
     },
     "createLogin": "Créer un accès",
     "who": {
@@ -2164,7 +2167,8 @@
     "changesSince": "{{count}} changements depuis le calcul. Recalculez avant d'approuver.",
     "changedSince": "Les données de paie ont changé depuis le calcul. Recalculez avant d'approuver.",
     "missedNote": "La commission des ventes après le {{date}} n'est pas incluse ({{amount}}). Vous pouvez la verser en prime.",
-    "missedLine": "{{name}} : {{amount}}"
+    "missedLine": "{{name}} : {{amount}}",
+    "days": "Jours : {{days}} sur {{total}}"
   },
   "myPay": {
     "title": "Ma paie",

@@ -56,9 +56,10 @@ begin
   perform set_config('t.m' || p_user, v::text, false);
   if p_role <> 'accountant' then
     insert into member_branches (member_id, branch_id) values (v, current_setting(p_branch)::uuid);
-    insert into employees (business_id, branch_id, member_id, full_name, role_title, base_salary_minor)
+    insert into employees (business_id, branch_id, member_id, full_name, role_title, base_salary_minor, started_on)
     values (current_setting('t.b')::uuid, current_setting(p_branch)::uuid, v, p_name,
-            case p_role when 'cashier' then 'cashier' when 'manager' then 'manager' else 'staff' end, 300000)
+            case p_role when 'cashier' then 'cashier' when 'manager' then 'manager' else 'staff' end, 300000,
+            (current_setting('t.period') || '-01')::date)
     returning id into v;
     perform set_config('t.e' || p_user, v::text, false);
   end if;

@@ -121,7 +121,13 @@ export function PayrollScreen() {
                       key={l.id}
                       testID={`slip-${l.employees?.full_name}`}
                       title={l.employees?.full_name ?? ''}
-                      meta={[t('payroll.slipMeta', { base: formatMoney(l.base_minor), commission: formatMoney(l.commission_minor) })]}
+                      meta={[
+                        t('payroll.slipMeta', { base: formatMoney(l.base_minor), commission: formatMoney(l.commission_minor) }),
+                        // Part of the month only (joined or left): the days the base pay was worked out on (C1).
+                        ...(l.days_employed !== null && l.days_in_month !== null && l.days_employed < l.days_in_month
+                          ? [t('payroll.days', { days: l.days_employed, total: l.days_in_month })]
+                          : []),
+                      ]}
                       badges={
                         <View style={styles.badges}>
                           {r?.status !== 'generated' ? (

@@ -72,9 +72,10 @@ select register_staff_member(jsonb_build_object('business_id', current_setting('
   'user_id', '00000000-0000-0000-0000-00000000060e', 'username', 'pracct', 'display_name', 'Accountant', 'role', 'accountant'));
 select pg_temp.as_user('00000000-0000-0000-0000-00000000060a');
 select save_employee(jsonb_build_object('business_id', current_setting('t.b'), 'id', current_setting('t.rafiq'),
-  'full_name', 'Rafiq', 'base_salary_minor', 350000, 'wps_required', true));
+  'full_name', 'Rafiq', 'base_salary_minor', 350000, 'wps_required', true,
+  'started_on', current_setting('t.period') || '-01')); -- on the staff since the month began (C1)
 select save_employee(jsonb_build_object('business_id', current_setting('t.b'), 'id', current_setting('t.imran'),
-  'full_name', 'Imran', 'base_salary_minor', 200000));
+  'full_name', 'Imran', 'base_salary_minor', 200000, 'started_on', current_setting('t.period') || '-01'));
 -- Commission: two AED 100 sales by Rafiq (10% = 10.00 each); the second is refunded in full.
 select set_config('t.s1', (create_sale(jsonb_build_object('branch_id', current_setting('t.br'), 'employee_id', current_setting('t.rafiq'),
   'lines', '[{"kind":"custom","name":"Fade","unit_price_minor":10000}]'::jsonb,

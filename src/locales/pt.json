@@ -2002,7 +2002,10 @@
       "commission": "Comissão %",
       "commissionHint": "Sobre serviços, após o desconto e sem {{tax}}. Nunca sobre gorjetas: a gorjeta inteira fica com a pessoa.",
       "wpsHint": "O salário passa pelo banco; a folha de pagamento pede o comprovante da transferência.",
-      "phone": "Telefone"
+      "phone": "Telefone",
+      "startedOn": "Data de início",
+      "startedOnHint": "O salário-base do primeiro mês conta a partir deste dia.",
+      "leftOn": "Data de saída"
     },
     "createLogin": "Criar login",
     "who": {
@@ -2164,7 +2167,8 @@
     "changesSince": "{{count}} alterações desde o cálculo. Calcule de novo antes de aprovar.",
     "changedSince": "Os dados de pagamento mudaram desde o cálculo. Calcule de novo antes de aprovar.",
     "missedNote": "A comissão das vendas após {{date}} não está incluída ({{amount}}). Pode pagá-la como bónus.",
-    "missedLine": "{{name}}: {{amount}}"
+    "missedLine": "{{name}}: {{amount}}",
+    "days": "Dias: {{days}} de {{total}}"
   },
   "myPay": {
     "title": "Meus ganhos",

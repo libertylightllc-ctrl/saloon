@@ -2,7 +2,7 @@
  * → WPS proof; the books balance; a cashier never reaches payroll. */
 import path from 'path';
 
-import { createOwner, createStaff, employeeOf, sellCustom } from './support/api';
+import { createOwner, createStaff, dubaiDate, employeeOf, sellCustom } from './support/api';
 import { expect, test } from './support/fixtures';
 import { back, expectMoney, id, ownerOn, staffOn, tab, text } from './support/ui';
 
@@ -12,7 +12,9 @@ test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; t
   const cashier = await createStaff(owner, 'cashier');
   const employee = await employeeOf(barber.memberId);
   await owner.client.rpc('save_employee', {
-    p: { business_id: owner.businessId, id: employee, full_name: barber.name, base_salary_minor: 350_000, commission_bps: 1000, wps_required: true },
+    p: { business_id: owner.businessId, id: employee, full_name: barber.name, base_salary_minor: 350_000, commission_bps: 1000, wps_required: true,
+      // On the staff since the month began, so the whole salary is due (C1 pays by days employed).
+      started_on: `${dubaiDate().slice(0, 7)}-01` },
   });
   await sellCustom(owner.client, owner, { card: 10_000, employeeId: employee }); // AED 10.00 commission
 
