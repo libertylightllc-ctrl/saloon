@@ -85,6 +85,18 @@ Parts C, D and E are #21 to #30 above; the final brief adds D3 and changes E3 (b
 
 All items from this check are done; see Done (15 Nov).
 
+## Owner's fix list, 16 Nov 2026 (ten small items, all 7 languages, nothing else changed)
+53. Out-of-stock count: Control summary uses Inventory's count; Home → Needs attention "11 items out of stock · 1 needs a stock count" (owner, manager); morning summary "Out of stock: 11" when above 0.
+54. "Document due in 0 days" → "Document due today"; "in 1 day" → "tomorrow"; stored notifications too.
+55. A test proving a refund leaves the tip alone unless "Also refund the tip" is ticked.
+56. Front desk: the page from "Petty cash" is titled "Petty cash"; a neutral note example (not "DEWA bill"); no "Revenue · last 7 days" on Home.
+57. Stylist "My bookings": that title, only their own bookings, other stylists as busy/free without client names.
+58. Manager Staff page: no salary amount ("QAR 0.00") for logins that can't see salaries.
+59. Manager Home: the compliance line, as the owner sees it.
+60. Accountant Home: the expected cash (blind count is for the front desk only).
+61. Accountant: Plan & billing off the menu and blocked (owner only).
+62. "Purchases & suppliers" page renamed "Suppliers & bills", as the menu.
+
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.
