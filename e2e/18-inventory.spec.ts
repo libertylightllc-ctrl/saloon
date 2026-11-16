@@ -106,9 +106,12 @@ test('owner adds a product, sells it, refunds it to stock, adjusts and counts; H
   await snap(page, 'inventory-list', mode);
   await back(page);
 
-  // Home asks for an order; the books balance.
+  // Home asks for an order; the books balance. Out of stock is counted as Inventory counts it (owner's fix list,
+  // 16 Nov), so the starter items at 0 lead the line and the product is the one low item.
   await tab(page, 'index');
-  await expect(id(page, 'attention-low-stock')).toContainText(product);
+  await expect(id(page, 'attention-low-stock')).toContainText('Low stock: 1');
+  const { data: home } = await owner.client.rpc('dashboard_today', { p_branch: owner.branchId });
+  expect((home as { stock: { low_items: string[] } }).stock.low_items).toEqual([product]);
   await tab(page, 'more');
   await id(page, 'more-accounts').click();
   await id(page, 'accounts-tab-journal').click();
