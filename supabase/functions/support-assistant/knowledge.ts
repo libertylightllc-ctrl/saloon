@@ -1,6 +1,6 @@
 // What the support assistant knows about Saloqo (2026-10-12; salon types 2026-10-23; free period, pilot and
 // per-branch prices 2026-10-25, with the days and prices given live from the settings; the menus and the five login
-// types 2026-11-15, owner's app check E5). Facts only: keep it in step
+// types 2026-11-15, owner's app check E5; the owner's fix list 2026-11-16). Facts only: keep it in step
 // with the app and the prices (platform_settings). It is the cached part of every request, so it changes only when
 // the app does.
 export const KNOWLEDGE = `# Saloqo
@@ -64,7 +64,7 @@ Português — More → Language in the app, or the language button at the top o
   front desk needs a manager or the owner to approve with their PIN.
 - Nothing about money is ever deleted: a sale is refunded, an expense or a bill is reversed, always with a reason.
 - Customers tab: profiles, visits and notes. Services: More → Services. Stock: More → Inventory & tools (products,
-  counts, adjustments; Home shows low stock). Purchases & suppliers: bills, part payments; stock goes up.
+  counts, adjustments; Home shows low stock). Suppliers & bills: bills, part payments; stock goes up.
 - Expenses: More → Expenses (cash expenses lower the expected cash in the drawer).
 - Cash closing: the Closing tab (front desk, manager) or More → Cash closing: count the cash and submit; the owner or
   a manager approves and the day locks.
@@ -88,11 +88,11 @@ Bottom tabs on a phone (a side menu on a computer), by login type:
 - Stylist / therapist: Home, My bookings, Sale (only when the owner lets stylists take payments), My pay, More.
 - Accountant: Home, Reports, Accounting, More.
 The More page lists only what that login can open. For the owner: Services, Inventory & tools, Sales, Expenses,
-Purchases & suppliers, Cash closing, Accounting, Payroll, Reports, Approvals, Staff, Attendance, Compliance,
+Suppliers & bills, Cash closing, Accounting, Payroll, Reports, Approvals, Staff, Attendance, Compliance,
 then Branch settings, Controls, Branches, Backup & recovery, Plan & billing; and Language, refresh, Quick-switch PIN,
 Switch user, Help & support, Privacy, Terms, Delete my account. Other logins see fewer rows, sometimes with their own
 names: a stylist sees My clients, Stock, My sales, My sales & commission and Hygiene log; the front desk sees Stock,
-Petty cash and Hygiene log; the manager and accountant see Suppliers & bills.
+Petty cash and Hygiene log.
 - More → Controls (owner, for each branch): the highest discount and the petty cash without approval, the cash
   differences that need a reason or tell the owner, blind count for the front desk, and whether stylists take
   payments, see their clients' phone numbers and add bookings for themselves.
@@ -107,7 +107,8 @@ More → Staff → Add; the job chosen picks the login type (Manager; Receptioni
 Assistant = no login; every other job = Stylist / therapist). The owner can change a login type on the person's page.
 Managers, front desk and stylists work in the branches they are given; the accountant in every branch.
 "Own" = only their own; "PIN" = a manager or the owner approves on the spot with their PIN; "View" = can see, not change.
-- Bookings and queue: owner, manager, front desk all; stylist own (add and move; cancelling is for the front desk);
+- Bookings and queue: owner, manager, front desk all; stylist own (add and move; cancelling is for the front desk;
+  My bookings shows the rest of the team only as busy or free, without client names);
   accountant no. No-shows and deposits: owner, manager, front desk.
 - Checkout: owner, manager, front desk; a stylist only when the owner lets stylists take payments; accountant no.
 - Discounts: owner any; manager any (a reason above the limit); front desk and stylist up to the limit, above = PIN.
@@ -115,7 +116,8 @@ Managers, front desk and stylists work in the branches they are given; the accou
 - Refund a sale: owner; manager with a reason (not their own sale); front desk PIN; stylists and accountant no.
   Refund a deposit: owner, manager; front desk PIN.
 - Cash closing: owner, manager and front desk count the drawer (the front desk counts without seeing the expected
-  cash, and sees it after submitting); owner and manager approve (a manager not their own count); accountant views.
+  cash, and sees it after submitting; blind count is for the front desk only); owner and manager approve (a manager
+  not their own count); accountant views, the expected cash included.
   Petty cash from the drawer: owner, manager; front desk up to the limit with a receipt photo, above = PIN.
   Cash taken out / bank deposit: owner, manager; the accountant views and records the bank deposit.
 - Customers: owner, manager, front desk see and edit them; a stylist sees their own clients' visits and notes, with
@@ -138,7 +140,7 @@ Managers, front desk and stylists work in the branches they are given; the accou
 - Accounting (journal, trial balance, VAT, ledger export, the activity history): owner and accountant. Close a month: owner and
   accountant; reopen it: owner. Audit trail and sign-ins: owner, accountant; manager for their branch.
 - Services and prices: the owner edits; everyone else views. Branch settings, booking page, rooms, open days,
-  Controls, Branches, Backup and Delete my account: owner only; Plan & billing: owner (the accountant can look). Compliance records: owner, manager
+  Controls, Branches, Backup and Delete my account: owner only; Plan & billing: owner only. Compliance records: owner, manager
   (accountant views). Hygiene log: everyone but the accountant. Help & support: everyone.
 
 ## When something goes wrong
