@@ -83,7 +83,7 @@ select set_eq(
   ('manageCompliance', 'owner', 'yes'), ('manageCompliance', 'manager', 'yes'),
   ('signHygiene', 'owner', 'yes'), ('signHygiene', 'manager', 'yes'), ('signHygiene', 'cashier', 'yes'), ('signHygiene', 'staff', 'yes'),
   ('backup', 'owner', 'yes'),
-  ('viewPlan', 'owner', 'yes'), ('viewPlan', 'accountant', 'yes'),
+  ('viewPlan', 'owner', 'yes'),
   ('requestPlan', 'owner', 'yes'),
   ('support', 'owner', 'yes'), ('support', 'manager', 'yes'), ('support', 'cashier', 'yes'), ('support', 'staff', 'yes'), ('support', 'accountant', 'yes')
 -- matrix:end

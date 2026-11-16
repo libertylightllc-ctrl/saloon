@@ -1,5 +1,5 @@
 -- Part B, step 3 (owner's app check, 10 Nov 2026; brief B2 "Cash drawer", B3, B4): each of the five login types tried on
--- every cash row. Blind count, "Counted by" is the person signed in, the reason and alert limits, managers approving
+-- every cash row. Blind count (the front desk only), "Counted by" is the person signed in, the reason and alert limits, managers approving
 -- closes (not their own count), petty cash with a receipt photo and a PIN above the limit, cash taken out, the bank
 -- deposit, tips and cash added.
 begin;
@@ -108,7 +108,9 @@ select is(array[(pg_temp.preview() ->> 'blind'), coalesce(pg_temp.preview() ->> 
 select is(expected_cash(current_setting('t.br')::uuid), null, 'nor through expected_cash');
 select is(dashboard_today(current_setting('t.br')::uuid) -> 'expected_cash', 'null'::jsonb, 'nor on Home');
 select pg_temp.as_user('b4');
-select is(pg_temp.preview() ->> 'expected_cash_minor', null, 'the accountant sees it only after the close');
+-- Blind count is for the front desk only (owner's fix list, 16 Nov): the accountant sees the expected cash.
+select is(array[pg_temp.preview() ->> 'expected_cash_minor', dashboard_today(current_setting('t.br')::uuid) ->> 'expected_cash'],
+  array['35000', '35000'], 'the accountant sees the expected cash before the count, when closing and on Home');
 select pg_temp.as_user('b3');
 select throws_ok($$ select pg_temp.preview() $$, '42501', 'not_allowed', 'a stylist does not open the closing');
 select pg_temp.as_user('b1');

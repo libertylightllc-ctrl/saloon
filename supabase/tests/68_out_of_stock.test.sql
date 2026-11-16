@@ -1,10 +1,11 @@
 -- Out-of-stock items are counted (owner's app check A6, 9 Nov 2026): "Low stock 0" showed while 10 of 12 items were at
--- 0. Inventory flags every item at 0 or below; Home, the morning summary and the Reports check count an out-of-stock
--- item only once it had stock at the branch; reaching 0 sends "Out of stock"; tools are never stock.
+-- 0. Inventory flags every item at 0 or below, and Home, the morning summary and the Reports check count the same items
+-- (owner's fix list, 16 Nov: the Control summary said 0 while Inventory said 11); below zero needs a stock count;
+-- reaching 0 sends "Out of stock"; tools are never stock.
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(16);
+select plan(18);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -53,18 +54,23 @@ create function pg_temp.alerts(p_out boolean) returns int language sql as $$
     and coalesce((n.data ->> 'out')::boolean, false) = p_out
 $$;
 
--- 1–2. Never stocked: Inventory flags them all, Home counts none.
+create function pg_temp.inventory_count() returns int language sql as $$
+  select count(*)::int from inventory_levels(current_setting('t.br')::uuid) where active and low
+$$;
+
+-- 1–2. Never stocked: Inventory flags them all, and Home counts the same items.
 select ok((select count(*) > 0 and bool_and(low) from inventory_levels(current_setting('t.br')::uuid)
            where active and kind <> 'tool' and qty <= 0), 'Inventory flags every item at 0, reorder level or not');
-select is((pg_temp.home('out'))::int, 0, 'Home does not count items that were never stocked');
+select set_config('t.start', pg_temp.inventory_count()::text, false);
+select is((pg_temp.home('out'))::int, current_setting('t.start')::int, 'Home counts every item at 0, as Inventory does');
 
 -- 3–6. An item with no reorder level runs out: Home counts it, and the owner hears once.
 select set_config('t.thread', pg_temp.item('Test thread', 'retail', 0)::text, false);
 select pg_temp.stock(current_setting('t.thread')::uuid, 2);
 select is(pg_temp.flagged('Test thread'), false, 'with 2 in stock it is fine');
 select pg_temp.sell(current_setting('t.thread')::uuid, 2);
-select is((pg_temp.home('out'))::int, 1, 'at 0 after having stock: out of stock on Home');
-select is(pg_temp.home('out_items') ->> 0, 'Test thread', 'Home names it');
+select is((pg_temp.home('out'))::int, current_setting('t.start')::int + 1, 'at 0 after having stock: one more out of stock on Home');
+select ok(pg_temp.home('out_items') ? 'Test thread', 'Home names it');
 select pg_temp.as_service();
 select is(pg_temp.alerts(true), 1, 'reaching 0 sends "Out of stock"');
 select pg_temp.as_owner();
@@ -73,6 +79,7 @@ select pg_temp.as_owner();
 select pg_temp.sell(current_setting('t.thread')::uuid, 1);
 select ok(pg_temp.flagged('Test thread') and (select qty from inventory_levels(current_setting('t.br')::uuid)
           where name = 'Test thread') = -1, 'below zero is still flagged (a stock count is needed)');
+select is((pg_temp.home('count_needed'))::int, 1, 'Home: 1 needs a stock count');
 select pg_temp.as_service();
 select is(pg_temp.alerts(true), 1, 'going from 0 to -1 sends nothing new');
 select pg_temp.as_owner();
@@ -82,7 +89,7 @@ select set_config('t.oil', pg_temp.item('Test oil', 'retail', 3)::text, false);
 select pg_temp.stock(current_setting('t.oil')::uuid, 5);
 select pg_temp.sell(current_setting('t.oil')::uuid, 3);
 select is((pg_temp.home('low'))::int, 1, 'at 2 of reorder 3: low');
-select is((pg_temp.home('out'))::int, 1, 'and out of stock stays 1');
+select is((pg_temp.home('out'))::int, current_setting('t.start')::int + 1, 'and out of stock stays the same');
 select pg_temp.as_service();
 select is(pg_temp.alerts(false), 1, 'crossing the reorder level sends "Low on stock"');
 select pg_temp.as_owner();
@@ -91,19 +98,23 @@ select pg_temp.as_owner();
 select set_config('t.dryer', pg_temp.item('Test dryer', 'tool', 0)::text, false);
 select is(pg_temp.flagged('Test dryer'), false, 'a tool at 0 is not out of stock');
 
--- 13. The Reports check counts what Home counts.
-select is((owner_control(current_setting('t.br')::uuid) ->> 'low_items')::int, 2, 'Reports: one low, one out of stock');
+-- 13–14. The Reports check (Control summary) counts what Inventory counts.
+select is((owner_control(current_setting('t.br')::uuid) ->> 'low_items')::int, pg_temp.inventory_count(),
+  'Control summary: low or out of stock, as Inventory');
+select is(pg_temp.inventory_count(), current_setting('t.start')::int + 2, 'which is every starter item, one low and one out');
 
--- 14–16. The morning summary says both.
+-- 15–17. The morning summary says both.
 select pg_temp.as_service();
 select send_daily_digests(((branch_today(current_setting('t.br')::uuid) + 1) + time '08:05')
                           at time zone (select timezone from businesses where id = current_setting('t.b')::uuid));
 select is((select (data ->> 'out_of_stock')::int from notifications where type = 'daily_digest'
-             and business_id = current_setting('t.b')::uuid), 1, 'the morning summary counts 1 out of stock');
+             and business_id = current_setting('t.b')::uuid), current_setting('t.start')::int + 1,
+  'the morning summary counts the items out of stock');
 select is((select (data ->> 'low_stock')::int from notifications where type = 'daily_digest'
              and business_id = current_setting('t.b')::uuid), 1, 'and 1 low');
-select ok((select body like '%Out of stock: 1 · Low stock: 1' from notifications where type = 'daily_digest'
-             and business_id = current_setting('t.b')::uuid), 'the push text says so');
+select ok((select body like '%Out of stock: ' || (current_setting('t.start')::int + 1) || ' · Low stock: 1'
+           from notifications where type = 'daily_digest' and business_id = current_setting('t.b')::uuid),
+  'the push text says so');
 
 select * from finish();
 rollback;
