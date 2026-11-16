@@ -33,37 +33,40 @@ export function RevenueCards({ data }: { data: Dashboard }) {
 
   return (
     <View style={styles.block}>
-      <Card variant="outlined" style={styles.cardGap}>
-        <Text variant="small" color="textSecondary">
-          {t('home.revenue7d')}
-        </Text>
-        <Text variant="h3" weight="bold" tabular>
-          {formatMoney(total)}
-        </Text>
-        {/* Charts stay left-to-right in RTL (02-DESIGN-SYSTEM §5). */}
-        <DirectionView direction="ltr" style={styles.bars}>
-          {days.map((d, i) => {
-            const weekday = DAY_KEYS[new Date(`${d.date}T12:00:00Z`).getUTCDay()]!;
-            return (
-              <View key={d.date} style={styles.barCol} accessibilityLabel={`${t(`common.days.${weekday}`)} ${formatMoney(d.total_minor)}`}>
-                <View
-                  style={[
-                    styles.bar,
-                    {
-                      height: Math.max(4, Math.round((d.total_minor / max) * 96)),
-                      borderRadius: theme.radius.sm,
-                      backgroundColor: i === days.length - 1 ? theme.colors.primary500 : theme.colors.primary100,
-                    },
-                  ]}
-                />
-                <Text variant="micro" color="textSecondary" align="center">
-                  {t(`common.days.${weekday}`)}
-                </Text>
-              </View>
-            );
-          })}
-        </DirectionView>
-      </Card>
+      {/* No week for the front desk, whose Home is today only (owner's fix list, 16 Nov). */}
+      {data.revenue_7d ? (
+        <Card variant="outlined" style={styles.cardGap} testID="home-revenue-7d">
+          <Text variant="small" color="textSecondary">
+            {t('home.revenue7d')}
+          </Text>
+          <Text variant="h3" weight="bold" tabular>
+            {formatMoney(total)}
+          </Text>
+          {/* Charts stay left-to-right in RTL (02-DESIGN-SYSTEM §5). */}
+          <DirectionView direction="ltr" style={styles.bars}>
+            {days.map((d, i) => {
+              const weekday = DAY_KEYS[new Date(`${d.date}T12:00:00Z`).getUTCDay()]!;
+              return (
+                <View key={d.date} style={styles.barCol} accessibilityLabel={`${t(`common.days.${weekday}`)} ${formatMoney(d.total_minor)}`}>
+                  <View
+                    style={[
+                      styles.bar,
+                      {
+                        height: Math.max(4, Math.round((d.total_minor / max) * 96)),
+                        borderRadius: theme.radius.sm,
+                        backgroundColor: i === days.length - 1 ? theme.colors.primary500 : theme.colors.primary100,
+                      },
+                    ]}
+                  />
+                  <Text variant="micro" color="textSecondary" align="center">
+                    {t(`common.days.${weekday}`)}
+                  </Text>
+                </View>
+              );
+            })}
+          </DirectionView>
+        </Card>
+      ) : null}
       <Card variant="outlined" style={styles.cardGap}>
         <Text variant="small" color="textSecondary">
           {t('home.paymentMix')}

@@ -91,6 +91,9 @@ export function notificationText(n: Pick<AppNotification, 'type' | 'title' | 'bo
       return d.out ? { title: words('outTitle'), body: words('outBody') } : { title: words('title'), body: words('body') };
     case 'daily_digest':
       return { title: words('title'), body: [words('body'), ...digestParts(d, t)].join(' · ') };
+    case 'document_due':
+      // "Due today" and "due tomorrow", never "in 0 days" (owner's fix list, 16 Nov).
+      return { title: words(values.count === 0 ? 'titleToday' : values.count === 1 ? 'titleTomorrow' : 'title'), body: words('body') };
     case 'booking_moved':
       return { title: words('title'), body: d.reassigned ? words('bodyReassigned') : words('body') };
     case 'cash_difference': {

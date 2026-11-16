@@ -95,7 +95,8 @@ export const MATRIX = {
   manageCompliance: { owner: 'yes', manager: 'yes' },
   signHygiene: { owner: 'yes', manager: 'yes', cashier: 'yes', staff: 'yes' },
   backup: { owner: 'yes' },
-  viewPlan: { owner: 'yes', accountant: 'yes' },
+  // Plan & billing is the owner's (owner's fix list, 16 Nov: not the accountant's).
+  viewPlan: { owner: 'yes' },
   requestPlan: { owner: 'yes' },
   support: { owner: 'yes', manager: 'yes', cashier: 'yes', staff: 'yes', accountant: 'yes' },
 } as const satisfies Record<string, Partial<Record<Role, Level>>>;

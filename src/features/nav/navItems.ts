@@ -67,7 +67,7 @@ export function useTabItems(): Record<TabKey, { icon: IconName; label: string }>
 }
 
 /** A row's words, by login type where the brief names the page differently (B8). */
-type RowLabel = `more.rows.${'myClients' | 'services' | 'inventory' | 'stock' | 'sales' | 'mySales' | 'expenses' | 'pettyCash' | 'purchases' | 'suppliersBills' | 'cashClosing' | 'accounts' | 'reports' | 'myReport' | 'approvals' | 'staff' | 'attendance' | 'payroll' | 'compliance' | 'hygiene' | 'branch' | 'controls' | 'branches' | 'backup' | 'plan' | 'admin'}`;
+type RowLabel = `more.rows.${'myClients' | 'services' | 'inventory' | 'stock' | 'sales' | 'mySales' | 'expenses' | 'pettyCash' | 'suppliersBills' | 'cashClosing' | 'accounts' | 'reports' | 'myReport' | 'approvals' | 'staff' | 'attendance' | 'payroll' | 'compliance' | 'hygiene' | 'branch' | 'controls' | 'branches' | 'backup' | 'plan' | 'admin'}`;
 
 /** The business pages this person may open, in More's order, with the section the sidebar shows them in. */
 export function useBusinessRows() {
@@ -83,7 +83,7 @@ export function useBusinessRows() {
     { key: role === 'staff' ? 'mySales' : 'sales', icon: 'receipt', href: '/sales', show: can(role, 'viewSales', rules), section: 'money', label: role === 'staff' ? 'more.rows.mySales' : 'more.rows.sales' },
     // The front desk sees only the petty cash they paid from the drawer.
     { key: 'expenses', icon: 'coins', href: '/expenses', show: can(role, 'viewExpenses'), section: 'money', label: role === 'cashier' ? 'more.rows.pettyCash' : 'more.rows.expenses' },
-    { key: 'purchases', icon: 'truck', href: '/purchases', show: can(role, 'viewPurchases'), section: 'money', label: role === 'owner' ? 'more.rows.purchases' : 'more.rows.suppliersBills' },
+    { key: 'purchases', icon: 'truck', href: '/purchases', show: can(role, 'viewPurchases'), section: 'money', label: 'more.rows.suppliersBills' },
     { key: 'cashClosing', icon: 'banknote', href: '/cash-closing', show: can(role, 'viewClosing'), section: 'money', label: 'more.rows.cashClosing' },
     { key: 'accounts', icon: 'calculator', href: '/accounts', show: can(role, 'viewAccounting'), section: 'money', label: 'more.rows.accounts' },
     { key: 'payroll', icon: 'wallet', href: '/payroll', show: can(role, 'runPayroll'), section: 'money', label: 'more.rows.payroll' },

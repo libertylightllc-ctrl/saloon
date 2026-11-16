@@ -44,6 +44,19 @@ export function useAppointments(branchId: string, timeZone: string, day: QueueDa
   });
 }
 
+/** Everyone's booked times on one day, with no client names (busy_times): a stylist's "The rest of the team". */
+export function useBusyTimes(branchId: string, date: BusinessDate, enabled: boolean) {
+  return useQuery({
+    enabled,
+    queryKey: [...keys.appointments(branchId), 'busy', date],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('busy_times', { p_branch: branchId, p_date: date });
+      if (error) throw error;
+      return data;
+    },
+  });
+}
+
 export function useAppointment(branchId: string, id: string | undefined) {
   return useQuery({
     enabled: Boolean(id),

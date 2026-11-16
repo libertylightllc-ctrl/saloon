@@ -249,7 +249,9 @@
       "outOfStock_one": "{{count}} article en rupture de stock",
       "missedClockOuts": "{{count}} départs non pointés",
       "missedClockOuts_one": "{{count}} départ non pointé",
-      "missedClockOutsSub": "Indiquez l'heure de départ de chacun"
+      "missedClockOutsSub": "Indiquez l'heure de départ de chacun",
+      "countNeeded": "{{count}} à inventorier",
+      "countNeeded_one": "{{count}} à inventorier"
     },
     "attentionClose": "Fermer",
     "viewClosing": "Clôture de caisse",
@@ -341,7 +343,12 @@
     "customerRecord": "Fiche client",
     "moreActionsShort": "Plus d’actions",
     "emptyWeek": "Aucune réservation cette semaine.",
-    "emptyTomorrow": "Aucune réservation demain."
+    "emptyTomorrow": "Aucune réservation demain.",
+    "team": {
+      "title": "Le reste de l'équipe",
+      "busy": "Créneaux pris : {{times}}",
+      "free": "Libre toute la journée"
+    }
   },
   "sale": {
     "title": "Vente rapide",
@@ -487,7 +494,6 @@
     "rows": {
       "services": "Services",
       "inventory": "Stock et outils",
-      "purchases": "Achats et fournisseurs",
       "expenses": "Dépenses",
       "staff": "Équipe",
       "attendance": "Présences",
@@ -1646,7 +1652,7 @@
     "paidBy": "Payé par",
     "date": "Date",
     "note": "Note",
-    "noteHint": "Par exemple : facture DEWA, thé et sucre, 3 uniformes",
+    "noteHint": "Par exemple : facture d'électricité, thé et sucre, 3 uniformes",
     "save": "Enregistrer la dépense",
     "saved": "Dépense enregistrée",
     "cashOnly": "Espèces du tiroir",
@@ -1690,7 +1696,7 @@
     "pinAbove": "Au-delà de {{amount}} : le code d’un gérant ou du propriétaire est nécessaire."
   },
   "purchases": {
-    "title": "Achats et fournisseurs",
+    "title": "Fournisseurs et factures",
     "bills": "Factures",
     "suppliers": "Fournisseurs",
     "newBill": "Nouvelle facture",
@@ -2410,7 +2416,9 @@
       "document_due": {
         "title": "Document à échéance dans {{count}} jours",
         "title_one": "Document à échéance dans {{count}} jour",
-        "body": "{{doc}} · {{holder}} · {{expires}}"
+        "body": "{{doc}} · {{holder}} · {{expires}}",
+        "titleToday": "Document à échéance aujourd'hui",
+        "titleTomorrow": "Document à échéance demain"
       },
       "payroll_generated": {
         "title": "Paie calculée",
@@ -3690,7 +3698,6 @@
       "refundManager": "Oui, avec un motif ; pas sa propre vente",
       "blindCount": "Oui, à l’aveugle",
       "afterCount": "Après l’envoi du comptage",
-      "viewAfterClose": "Lecture après le comptage",
       "notOwnCount": "Oui, pas un comptage fait par lui",
       "pettyLimit": "Jusqu’à la limite avec photo du reçu ; au-delà = code",
       "recordDeposit": "Lecture, enregistrer le dépôt bancaire",

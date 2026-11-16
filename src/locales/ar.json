@@ -276,7 +276,12 @@
       "missedClockOuts_two": "تسجيلا خروج فائتان",
       "missedClockOuts_few": "{{count}} تسجيلات خروج فائتة",
       "missedClockOuts_many": "{{count}} تسجيل خروج فائتًا",
-      "missedClockOutsSub": "حدّد وقت مغادرة كل شخص"
+      "missedClockOutsSub": "حدّد وقت مغادرة كل شخص",
+      "countNeeded": "{{count}} صنف يحتاج إلى جرد",
+      "countNeeded_one": "{{count}} صنف يحتاج إلى جرد",
+      "countNeeded_two": "صنفان يحتاجان إلى جرد",
+      "countNeeded_few": "{{count}} أصناف تحتاج إلى جرد",
+      "countNeeded_many": "{{count}} صنفًا تحتاج إلى جرد"
     },
     "attentionClose": "إغلاق",
     "viewClosing": "إغلاق النقدية",
@@ -368,7 +373,12 @@
     "customerRecord": "سجل العميل",
     "moreActionsShort": "إجراءات أخرى",
     "emptyWeek": "لا حجوزات هذا الأسبوع.",
-    "emptyTomorrow": "لا حجوزات غدًا."
+    "emptyTomorrow": "لا حجوزات غدًا.",
+    "team": {
+      "title": "بقية الفريق",
+      "busy": "مشغول: {{times}}",
+      "free": "متاح طوال اليوم"
+    }
   },
   "sale": {
     "title": "بيع سريع",
@@ -518,7 +528,6 @@
     "rows": {
       "services": "الخدمات",
       "inventory": "المخزون والأدوات",
-      "purchases": "المشتريات والموردون",
       "expenses": "المصاريف",
       "staff": "الموظفون",
       "attendance": "الحضور",
@@ -1691,7 +1700,7 @@
     "paidBy": "طريقة الدفع",
     "date": "التاريخ",
     "note": "ملاحظة",
-    "noteHint": "مثال: فاتورة ديوا، شاي وسكر، 3 زي موحد",
+    "noteHint": "مثال: فاتورة الكهرباء، شاي وسكر، 3 زي موحد",
     "save": "حفظ المصروف",
     "saved": "تم حفظ المصروف",
     "cashOnly": "نقد من الدرج",
@@ -1735,7 +1744,7 @@
     "pinAbove": "فوق {{amount}}: يلزم رمز المدير أو المالك."
   },
   "purchases": {
-    "title": "المشتريات والموردون",
+    "title": "الموردون والفواتير",
     "bills": "الفواتير",
     "suppliers": "الموردون",
     "newBill": "فاتورة جديدة",
@@ -2470,7 +2479,9 @@
         "title_two": "مستند يستحق خلال يومين",
         "title_few": "مستند يستحق خلال {{count}} أيام",
         "title_many": "مستند يستحق خلال {{count}} يومًا",
-        "body": "{{doc}} · {{holder}} · {{expires}}"
+        "body": "{{doc}} · {{holder}} · {{expires}}",
+        "titleToday": "مستند يستحق اليوم",
+        "titleTomorrow": "مستند يستحق غدًا"
       },
       "payroll_generated": {
         "title": "تم حساب الرواتب",
@@ -3806,7 +3817,6 @@
       "refundManager": "نعم، بسبب؛ ليس بيعه هو",
       "blindCount": "نعم، دون رؤية المتوقع",
       "afterCount": "بعد إرسال العدّ",
-      "viewAfterClose": "عرض بعد العدّ",
       "notOwnCount": "نعم، ليس عدًّا قام به",
       "pettyLimit": "حتى الحد مع صورة الإيصال؛ فوقه = رمز",
       "recordDeposit": "عرض، تسجيل الإيداع في البنك",

@@ -70,7 +70,10 @@ export function StaffDetailScreen() {
                     </View>
                   </View>
                   {person.employee_code ? <Row label={t('staff.fields.code')} value={person.employee_code} /> : null}
-                  <Row label={t('staff.fields.salary')} value={formatMoney(person.base_salary_minor)} testID="staff-detail-salary" />
+                  {/* No amount for logins that cannot see salaries (owner's fix list, 16 Nov). */}
+                  {can(role, 'viewPayroll') ? (
+                    <Row label={t('staff.fields.salary')} value={formatMoney(person.base_salary_minor)} testID="staff-detail-salary" />
+                  ) : null}
                   <Row label={t('staff.fields.commission')} value={`${formatBps(person.commission_bps)}`} testID="staff-detail-commission" />
                   {isUae(business.country_code) ? (
                     <Row label={t('staff.wps')} value={person.wps_required ? t('staff.wpsYes') : t('staff.wpsNo')} />

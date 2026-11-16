@@ -7,14 +7,15 @@ import { useWorkspace } from '@/features/auth/session';
 import { useTerms } from '@/features/mode/useTerms';
 import { minutesBetween } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
-import { can } from '@/lib/permissions';
+import { can, levelOf } from '@/lib/permissions';
 import { useNow } from '@/lib/useNow';
 import { spacing } from '@/theme';
 import { Button, Chip, EmptyState, HeaderBand, QueryState, Screen, SegmentTabs, useTwoPane } from '@/ui';
 
-import { useAppointments, useEmployees, type Appointment, type QueueDay } from './api';
+import { dayRange, useAppointments, useEmployees, type Appointment, type QueueDay } from './api';
 import { AppointmentActions } from './AppointmentActions';
 import { QueueRow } from './QueueRow';
+import { TeamTimes } from './TeamTimes';
 import { useQueueHandlers } from './useQueueHandlers';
 import { VisitPanel } from './VisitPanel';
 
@@ -33,6 +34,9 @@ export function QueueScreen() {
   const query = useAppointments(branch.id, business.timezone, day);
   const employees = useEmployees(branch.id);
   const handlers = useQueueHandlers();
+  // A stylist's own bookings (owner's fix list, 16 Nov): "My bookings", no list of every stylist; the rest of the team
+  // only as busy or free, without client names.
+  const own = levelOf(role, 'viewQueue') === 'own';
   // Tablets and computers: the list on one side, the picked visit on the other (Option B).
   const twoPane = useTwoPane();
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -62,7 +66,7 @@ export function QueueScreen() {
         onChange={setFilter}
         testID="queue-filter"
       />
-      {employees.data && employees.data.length > 0 ? (
+      {!own && employees.data && employees.data.length > 0 ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
           <Chip label={terms.anyStaff} selected={staff === null} onPress={() => setStaff(null)} />
           {employees.data.map((person) => (
@@ -118,6 +122,7 @@ export function QueueScreen() {
           </View>
         )}
       </QueryState>
+      {own && day !== 'week' ? <TeamTimes date={dayRange(day, business.timezone)[0]} people={employees.data ?? []} /> : null}
     </View>
   );
 
@@ -131,7 +136,7 @@ export function QueueScreen() {
         onRefresh={() => void query.refetch()}
         header={
           <HeaderBand
-            title={t('queue.title')}
+            title={own ? t('tabs.myBookings') : t('queue.title')}
             right={
               <Button
                 label={t('queue.new')}

@@ -249,7 +249,9 @@
       "outOfStock_one": "{{count}} producto sin stock",
       "missedClockOuts": "{{count}} salidas sin marcar",
       "missedClockOuts_one": "{{count}} salida sin marcar",
-      "missedClockOutsSub": "Indica a qué hora se fue cada persona"
+      "missedClockOutsSub": "Indica a qué hora se fue cada persona",
+      "countNeeded": "{{count}} necesitan contar el stock",
+      "countNeeded_one": "{{count}} necesita contar el stock"
     },
     "attentionClose": "Cerrar",
     "viewClosing": "Cierre de caja",
@@ -341,7 +343,12 @@
     "customerRecord": "Ficha del cliente",
     "moreActionsShort": "Más acciones",
     "emptyWeek": "Nada reservado esta semana.",
-    "emptyTomorrow": "Nada reservado para mañana."
+    "emptyTomorrow": "Nada reservado para mañana.",
+    "team": {
+      "title": "El resto del equipo",
+      "busy": "Horas ocupadas: {{times}}",
+      "free": "Libre todo el día"
+    }
   },
   "sale": {
     "title": "Venta rápida",
@@ -487,7 +494,6 @@
     "rows": {
       "services": "Servicios",
       "inventory": "Inventario y herramientas",
-      "purchases": "Compras y proveedores",
       "expenses": "Gastos",
       "staff": "Personal",
       "attendance": "Asistencia",
@@ -1646,7 +1652,7 @@
     "paidBy": "Pagado con",
     "date": "Fecha",
     "note": "Nota",
-    "noteHint": "Por ejemplo: factura de DEWA, té y azúcar, 3 uniformes",
+    "noteHint": "Por ejemplo: factura de la luz, té y azúcar, 3 uniformes",
     "save": "Guardar gasto",
     "saved": "Gasto guardado",
     "cashOnly": "Efectivo de la caja",
@@ -1690,7 +1696,7 @@
     "pinAbove": "Más de {{amount}}: se necesita el PIN de un gerente o del dueño."
   },
   "purchases": {
-    "title": "Compras y proveedores",
+    "title": "Proveedores y facturas",
     "bills": "Facturas",
     "suppliers": "Proveedores",
     "newBill": "Nueva factura",
@@ -2410,7 +2416,9 @@
       "document_due": {
         "title": "Documento vence en {{count}} días",
         "title_one": "Documento vence en {{count}} día",
-        "body": "{{doc}} · {{holder}} · {{expires}}"
+        "body": "{{doc}} · {{holder}} · {{expires}}",
+        "titleToday": "Documento vence hoy",
+        "titleTomorrow": "Documento vence mañana"
       },
       "payroll_generated": {
         "title": "Nómina calculada",
@@ -3690,7 +3698,6 @@
       "refundManager": "Sí, con motivo; no su propia venta",
       "blindCount": "Sí, a ciegas",
       "afterCount": "Tras enviar el recuento",
-      "viewAfterClose": "Ver tras el recuento",
       "notOwnCount": "Sí, no un recuento propio",
       "pettyLimit": "Hasta el límite con foto del recibo; por encima = PIN",
       "recordDeposit": "Ver, registrar el depósito bancario",

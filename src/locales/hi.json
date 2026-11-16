@@ -249,7 +249,9 @@
       "outOfStock_one": "{{count}} आइटम का स्टॉक ख़त्म",
       "missedClockOuts": "{{count}} क्लॉक-आउट छूटे",
       "missedClockOuts_one": "{{count}} क्लॉक-आउट छूटा",
-      "missedClockOutsSub": "हर व्यक्ति के जाने का समय डालें"
+      "missedClockOutsSub": "हर व्यक्ति के जाने का समय डालें",
+      "countNeeded": "{{count}} की स्टॉक गिनती ज़रूरी",
+      "countNeeded_one": "{{count}} की स्टॉक गिनती ज़रूरी"
     },
     "attentionClose": "बंद करें",
     "viewClosing": "कैश क्लोज़िंग",
@@ -341,7 +343,12 @@
     "customerRecord": "ग्राहक का रिकॉर्ड",
     "moreActionsShort": "और विकल्प",
     "emptyWeek": "इस हफ़्ते कोई बुकिंग नहीं।",
-    "emptyTomorrow": "कल के लिए कोई बुकिंग नहीं।"
+    "emptyTomorrow": "कल के लिए कोई बुकिंग नहीं।",
+    "team": {
+      "title": "बाकी टीम",
+      "busy": "व्यस्त: {{times}}",
+      "free": "पूरे दिन खाली"
+    }
   },
   "sale": {
     "title": "त्वरित बिक्री",
@@ -487,7 +494,6 @@
     "rows": {
       "services": "सेवाएँ",
       "inventory": "इन्वेंटरी और औज़ार",
-      "purchases": "ख़रीद और सप्लायर",
       "expenses": "ख़र्च",
       "staff": "स्टाफ़",
       "attendance": "हाज़िरी",
@@ -1646,7 +1652,7 @@
     "paidBy": "भुगतान का तरीका",
     "date": "तारीख",
     "note": "नोट",
-    "noteHint": "जैसे: DEWA बिल, चाय और चीनी, 3 यूनिफ़ॉर्म",
+    "noteHint": "जैसे: बिजली का बिल, चाय और चीनी, 3 यूनिफ़ॉर्म",
     "save": "खर्च सेव करें",
     "saved": "खर्च सेव हुआ",
     "cashOnly": "दराज़ से कैश",
@@ -1690,7 +1696,7 @@
     "pinAbove": "{{amount}} से ज़्यादा: मैनेजर या मालिक का पिन चाहिए।"
   },
   "purchases": {
-    "title": "ख़रीद और सप्लायर",
+    "title": "सप्लायर और बिल",
     "bills": "बिल",
     "suppliers": "सप्लायर",
     "newBill": "नया बिल",
@@ -2410,7 +2416,9 @@
       "document_due": {
         "title": "दस्तावेज़ {{count}} दिन में देय",
         "title_one": "दस्तावेज़ {{count}} दिन में देय",
-        "body": "{{doc}} · {{holder}} · {{expires}}"
+        "body": "{{doc}} · {{holder}} · {{expires}}",
+        "titleToday": "दस्तावेज़ आज देय",
+        "titleTomorrow": "दस्तावेज़ कल देय"
       },
       "payroll_generated": {
         "title": "पेरोल निकाला गया",
@@ -3690,7 +3698,6 @@
       "refundManager": "हाँ, वजह के साथ; अपनी बिक्री नहीं",
       "blindCount": "हाँ, बिना देखे गिनती",
       "afterCount": "गिनती भेजने के बाद",
-      "viewAfterClose": "गिनती के बाद देखना",
       "notOwnCount": "हाँ, अपनी की गिनती नहीं",
       "pettyLimit": "रसीद की फ़ोटो के साथ सीमा तक; ऊपर = पिन",
       "recordDeposit": "देखना, बैंक जमा दर्ज करना",

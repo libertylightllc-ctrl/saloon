@@ -52,7 +52,8 @@ export function ExpensesScreen() {
       onRefresh={() => void list.refetch()}
       header={
         <HeaderBand
-          title={t('expenses.title')}
+          // The front desk opens it from "Petty cash" (owner's fix list, 16 Nov).
+          title={role === 'cashier' ? t('more.rows.pettyCash') : t('expenses.title')}
           onBack
           right={
             adds ? (

@@ -63,8 +63,11 @@ test('Home and Reports: day off, out of stock, compliance, sales without the tip
   await sellCustom(owner.client, owner, { card: 10_000, tip: 1_000, employeeId: employee });
 
   await ownerOn(page, mode, owner.email, owner.password);
-  await expect(id(page, 'attention-low-stock')).toContainText('1 item out of stock');
-  await expect(id(page, 'attention-low-stock')).toContainText('Test thread');
+  // Counted as Inventory counts it (owner's fix list, 16 Nov): the starter items at 0 as well as the thread.
+  const { data: home } = await owner.client.rpc('dashboard_today', { p_branch: owner.branchId });
+  const stock = (home as { stock: { out: number; out_items: string[] } }).stock;
+  expect(stock.out_items).toContain('Test thread');
+  await expect(id(page, 'attention-low-stock')).toContainText(`${stock.out} items out of stock`);
   // Records never entered are "Missing", not "Expired".
   await expect(id(page, 'attention-compliance')).toContainText('Missing');
   await expect(id(page, 'attention-compliance')).not.toContainText('Expired');

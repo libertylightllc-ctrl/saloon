@@ -38,7 +38,8 @@ export const LOGIN_TABLE: { area: string; rows: LoginRow[] }[] = [
     area: 'cash',
     rows: [
       { key: 'countDrawer', cells: ['yes', 'yes', 'cell:blindCount', 'no', 'no'] },
-      { key: 'seeExpected', cells: ['yes', 'yes', 'cell:afterCount', 'no', 'cell:viewAfterClose'] },
+      // Blind count is for the front desk only (owner's fix list, 16 Nov): the accountant sees it, read only.
+      { key: 'seeExpected', cells: ['yes', 'yes', 'cell:afterCount', 'no', 'view'] },
       { key: 'approveClose', cells: ['yes', 'cell:notOwnCount', 'no', 'no', 'view'] },
       { key: 'pettyCash', cells: ['yes', 'yes', 'cell:pettyLimit', 'no', 'no'] },
       { key: 'cashOut', cells: ['yes', 'yes', 'no', 'no', 'cell:recordDeposit'] },

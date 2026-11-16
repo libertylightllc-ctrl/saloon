@@ -249,7 +249,9 @@
       "outOfStock_one": "{{count}} item out of stock",
       "missedClockOuts": "{{count}} missed clock-outs",
       "missedClockOuts_one": "{{count}} missed clock-out",
-      "missedClockOutsSub": "Set the time each person left"
+      "missedClockOutsSub": "Set the time each person left",
+      "countNeeded": "{{count}} need a stock count",
+      "countNeeded_one": "{{count}} needs a stock count"
     },
     "attentionClose": "Close",
     "viewClosing": "Cash closing",
@@ -341,7 +343,12 @@
     "customerRecord": "Customer record",
     "moreActionsShort": "More actions",
     "emptyWeek": "Nothing booked this week.",
-    "emptyTomorrow": "Nothing booked tomorrow."
+    "emptyTomorrow": "Nothing booked tomorrow.",
+    "team": {
+      "title": "The rest of the team",
+      "busy": "Busy: {{times}}",
+      "free": "Free all day"
+    }
   },
   "sale": {
     "title": "Quick sale",
@@ -487,7 +494,6 @@
     "rows": {
       "services": "Services",
       "inventory": "Inventory & tools",
-      "purchases": "Purchases & suppliers",
       "expenses": "Expenses",
       "staff": "Staff",
       "attendance": "Attendance",
@@ -1646,7 +1652,7 @@
     "paidBy": "Paid by",
     "date": "Date",
     "note": "Note",
-    "noteHint": "For example: DEWA bill, tea and sugar, 3 uniforms",
+    "noteHint": "For example: electricity bill, tea and sugar, 3 uniforms",
     "save": "Save expense",
     "saved": "Expense saved",
     "cashOnly": "Cash from the drawer",
@@ -1690,7 +1696,7 @@
     "pinAbove": "Above {{amount}}: a manager's or the owner's PIN is needed."
   },
   "purchases": {
-    "title": "Purchases & suppliers",
+    "title": "Suppliers & bills",
     "bills": "Bills",
     "suppliers": "Suppliers",
     "newBill": "New bill",
@@ -2410,7 +2416,9 @@
       "document_due": {
         "title": "Document due in {{count}} days",
         "title_one": "Document due in {{count}} day",
-        "body": "{{doc}} · {{holder}} · {{expires}}"
+        "body": "{{doc}} · {{holder}} · {{expires}}",
+        "titleToday": "Document due today",
+        "titleTomorrow": "Document due tomorrow"
       },
       "payroll_generated": {
         "title": "Payroll worked out",
@@ -3689,7 +3697,6 @@
       "refundManager": "Yes, with a reason; not their own sale",
       "blindCount": "Yes, blind count",
       "afterCount": "After sending the count",
-      "viewAfterClose": "View after the count",
       "notOwnCount": "Yes, not a count they made",
       "pettyLimit": "Up to the limit with a receipt photo; above = PIN",
       "recordDeposit": "View, record the bank deposit",

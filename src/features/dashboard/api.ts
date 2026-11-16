@@ -13,7 +13,8 @@ export interface Dashboard {
   /** total_minor is without the tip; tips_minor is the day's tips (owner's app check A7). */
   sales?: { count: number; total_minor: number; tips_minor?: number; refunded_minor: number; services: number };
   payment_mix?: { cash: number; card: number; wallet: number; deposits: number };
-  revenue_7d?: { date: string; total_minor: number }[];
+  /** Null for the front desk, whose Home is today only (owner's fix list, 16 Nov). */
+  revenue_7d?: { date: string; total_minor: number }[] | null;
   top_services?: { name: string; count: number; revenue_minor: number }[];
   staff_today?: {
     employee_id: string;
@@ -33,8 +34,8 @@ export interface Dashboard {
   }[];
   activity?: { summary: string; at: string; actor: string | null }[];
   money_out?: { expenses_minor: number; supplier_payments_minor: number };
-  /** Low is above 0; out is 0 or below, only items that had stock here (owner's app check A6). */
-  stock?: { low: number; low_items: string[]; out?: number; out_items?: string[]; tools_due: number };
+  /** Low is above 0; out is 0 or below, as Inventory counts them; count_needed is below 0 (owner's fix list, 16 Nov). */
+  stock?: { low: number; low_items: string[]; out?: number; out_items?: string[]; count_needed?: number; tools_due: number };
   bills?: { overdue_count: number; overdue_minor: number; due_soon_count: number; due_soon_minor: number } | null;
   payroll?: { pending_period: string | null; wps_missing: number } | null;
   /** One count per record status (owner's app check A4), and the days to the nearest expiry in its reminder window. */

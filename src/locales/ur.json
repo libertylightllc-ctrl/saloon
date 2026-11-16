@@ -249,7 +249,9 @@
       "outOfStock_one": "{{count}} آئٹم کا اسٹاک ختم",
       "missedClockOuts": "{{count}} کلاک آؤٹ رہ گئے",
       "missedClockOuts_one": "{{count}} کلاک آؤٹ رہ گیا",
-      "missedClockOutsSub": "ہر شخص کے جانے کا وقت درج کریں"
+      "missedClockOutsSub": "ہر شخص کے جانے کا وقت درج کریں",
+      "countNeeded": "{{count}} کی اسٹاک گنتی ضروری",
+      "countNeeded_one": "{{count}} کی اسٹاک گنتی ضروری"
     },
     "attentionClose": "بند کریں",
     "viewClosing": "کیش کلوزنگ",
@@ -341,7 +343,12 @@
     "customerRecord": "گاہک کا ریکارڈ",
     "moreActionsShort": "مزید اقدامات",
     "emptyWeek": "اس ہفتے کوئی بکنگ نہیں۔",
-    "emptyTomorrow": "کل کے لیے کوئی بکنگ نہیں۔"
+    "emptyTomorrow": "کل کے لیے کوئی بکنگ نہیں۔",
+    "team": {
+      "title": "باقی ٹیم",
+      "busy": "مصروف: {{times}}",
+      "free": "پورا دن فارغ"
+    }
   },
   "sale": {
     "title": "فوری فروخت",
@@ -487,7 +494,6 @@
     "rows": {
       "services": "خدمات",
       "inventory": "انوینٹری اور اوزار",
-      "purchases": "خریداری اور سپلائرز",
       "expenses": "اخراجات",
       "staff": "عملہ",
       "attendance": "حاضری",
@@ -1646,7 +1652,7 @@
     "paidBy": "ادائیگی کا طریقہ",
     "date": "تاریخ",
     "note": "نوٹ",
-    "noteHint": "مثلاً: DEWA بل، چائے اور چینی، 3 یونیفارم",
+    "noteHint": "مثلاً: بجلی کا بل، چائے اور چینی، 3 یونیفارم",
     "save": "خرچ محفوظ کریں",
     "saved": "خرچ محفوظ ہو گیا",
     "cashOnly": "دراز سے نقد",
@@ -1690,7 +1696,7 @@
     "pinAbove": "{{amount}} سے زیادہ: مینیجر یا مالک کا پن درکار ہے۔"
   },
   "purchases": {
-    "title": "خریداری اور سپلائرز",
+    "title": "سپلائرز اور بل",
     "bills": "بل",
     "suppliers": "سپلائرز",
     "newBill": "نیا بل",
@@ -2410,7 +2416,9 @@
       "document_due": {
         "title": "دستاویز {{count}} دن میں واجب",
         "title_one": "دستاویز {{count}} دن میں واجب",
-        "body": "{{doc}} · {{holder}} · {{expires}}"
+        "body": "{{doc}} · {{holder}} · {{expires}}",
+        "titleToday": "دستاویز آج واجب",
+        "titleTomorrow": "دستاویز کل واجب"
       },
       "payroll_generated": {
         "title": "پے رول نکال لیا",
@@ -3690,7 +3698,6 @@
       "refundManager": "ہاں، وجہ کے ساتھ؛ اپنی فروخت نہیں",
       "blindCount": "ہاں، دیکھے بغیر گنتی",
       "afterCount": "گنتی بھیجنے کے بعد",
-      "viewAfterClose": "گنتی کے بعد دیکھنا",
       "notOwnCount": "ہاں، اپنی کی گئی گنتی نہیں",
       "pettyLimit": "رسید کی تصویر کے ساتھ حد تک؛ اوپر = پن",
       "recordDeposit": "دیکھنا، بینک جمع درج کرنا",

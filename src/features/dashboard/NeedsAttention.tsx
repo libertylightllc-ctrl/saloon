@@ -61,13 +61,18 @@ export function NeedsAttention({ data }: { data: Dashboard }) {
     }
   }
   const stock = data.stock;
-  // Out of stock (items that had stock here) leads, then low (owner's app check A6).
+  // Out of stock leads, then low (owner's app check A6), counted as Inventory counts them; below zero needs a stock
+  // count: "11 items out of stock · 1 needs a stock count" (owner's fix list, 16 Nov).
   const out = stock?.out ?? 0;
+  const needed = stock?.count_needed ?? 0;
   if (stock && (stock.low > 0 || out > 0) && role !== 'accountant') {
     const names = [...(stock.out_items ?? []), ...stock.low_items].slice(0, 3).join(', ');
     items.push({
       key: 'low-stock',
-      title: out > 0 ? t('home.attention.outOfStock', { count: out }) : t('home.attention.lowStock', { count: stock.low }),
+      title:
+        out > 0
+          ? [t('home.attention.outOfStock', { count: out }), ...(needed > 0 ? [t('home.attention.countNeeded', { count: needed })] : [])].join(' · ')
+          : t('home.attention.lowStock', { count: stock.low }),
       sub: out > 0 && stock.low > 0 ? `${t('inventory.lowShort', { n: stock.low })} · ${names}` : names,
       status: out > 0 ? 'out_of_stock' : 'low',
       action: can(role, 'addPurchase') ? t('home.attentionActions.order') : t('home.attentionActions.review'),

@@ -103,9 +103,12 @@ export function StaffScreen() {
                         }
                         trailing={
                           <View style={styles.trailing}>
-                            <Text variant="bodyStrong" tabular>
-                              {formatMoney(s.base_salary_minor)}
-                            </Text>
+                            {/* No amount for logins that cannot see salaries: a manager saw "QAR 0.00" (fix list, 16 Nov). */}
+                            {can(role, 'viewPayroll') ? (
+                              <Text variant="bodyStrong" tabular testID={`staff-salary-${s.full_name}`}>
+                                {formatMoney(s.base_salary_minor)}
+                              </Text>
+                            ) : null}
                             {s.commission_bps ? (
                               <Text variant="small" color="textSecondary">
                                 {t('staff.commissionShort', { pct: formatBps(s.commission_bps) })}

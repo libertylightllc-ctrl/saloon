@@ -68,7 +68,7 @@ export function HeaderBand({ title, subtitle, onBack, right, top, children }: He
           <View style={styles.side}>
             {onBack ? <BackButton onPress={onBack === true ? undefined : onBack} /> : null}
           </View>
-          {/* A long title shrinks a little before it is cut off beside the actions ("Purchases & suppliers"). */}
+          {/* A long title shrinks a little before it is cut off beside the actions ("Suppliers & bills"). */}
           <FitText
             variant="h3"
             align="center"

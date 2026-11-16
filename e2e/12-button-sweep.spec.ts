@@ -413,7 +413,6 @@ test('accountant: reports and books work read-only', { tag: '@sweep' }, async ({
     ['Purchases', '/purchases'],
     ['Staff', '/staff'],
     ['Payroll', '/payroll'],
-    ['Plan & billing', '/plan'],
   ] as const)
     await sweepScreen(page, rows, screen, url);
   report(mode, 'accountant', rows);
