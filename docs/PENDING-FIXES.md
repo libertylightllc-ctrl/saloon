@@ -86,16 +86,7 @@ Parts C, D and E are #21 to #30 above; the final brief adds D3 and changes E3 (b
 All items from this check are done; see Done (15 Nov).
 
 ## Owner's fix list, 16 Nov 2026 (ten small items, all 7 languages, nothing else changed)
-53. Out-of-stock count: Control summary uses Inventory's count; Home → Needs attention "11 items out of stock · 1 needs a stock count" (owner, manager); morning summary "Out of stock: 11" when above 0.
-54. "Document due in 0 days" → "Document due today"; "in 1 day" → "tomorrow"; stored notifications too.
-55. A test proving a refund leaves the tip alone unless "Also refund the tip" is ticked.
-56. Front desk: the page from "Petty cash" is titled "Petty cash"; a neutral note example (not "DEWA bill"); no "Revenue · last 7 days" on Home.
-57. Stylist "My bookings": that title, only their own bookings, other stylists as busy/free without client names.
-58. Manager Staff page: no salary amount ("QAR 0.00") for logins that can't see salaries.
-59. Manager Home: the compliance line, as the owner sees it.
-60. Accountant Home: the expected cash (blind count is for the front desk only).
-61. Accountant: Plan & billing off the menu and blocked (owner only).
-62. "Purchases & suppliers" page renamed "Suppliers & bills", as the menu.
+All ten are done; see Done (16 Nov).
 
 ## Done
 
@@ -163,3 +154,12 @@ All items from this check are done; see Done (15 Nov).
 - 15 Nov · #51 (E) Recent activity and the audit trail say Today, Yesterday or the date; activity text in all 7 languages; plurals; support answers in plain text with real menu paths and what each login can do; help questions by login; stylists see refunds on their own sales (102); the control summary lists the days not closed (103); journal titles, close difference label, quick actions by login, "My sales", no 0% commission tile.
 - 15 Nov · #52 (F) One phone number check everywhere, saved with the country code, customers' local numbers given the code once with the old numbers kept in the activity (106); the VAT report only for VAT-registered branches; the owner changes the salon code once (105); "Last signed in" on each staff page (104).
 - 15 Nov · #49 to #52 (Parts C–F) are live on saloqo.com (commit 1e2f1dd), on the owner's OK ("approved deploy"): migrations 98–107 on the live database and support-assistant updated. Proof before it went out: database tests 1,795 checks, app tests 685, browser tests 321 of 336 in the full run. The full run found one real problem, older than this work: the console Overview checked accounts one at a time and ran past the 8-second limit with about 4,900 local accounts (console tests 41, 62, 68 and 69). Migration 107 does it in one pass (2.3 s to 0.5 s, same numbers), and those tests pass (14 of 14). The other failures were the test computer's load (load 60–117): they passed when run again, and the owner's button sweep, which ran out of its 40 minutes at load, passed alone in 26 minutes.
+- 16 Nov · #53 Stock is counted as Inventory counts it on the Control summary, Home ("11 items out of stock · 1 needs a stock count") and the morning summary ("Out of stock: 11"). Migration 108.
+- 16 Nov · #54 "Document due today" / "Document due tomorrow", in the app and in alerts already sent. Migration 108.
+- 16 Nov · #55 Browser test 78: a refund leaves the tip alone unless "Also refund the tip" is ticked (the database test 63 already checked it).
+- 16 Nov · #56 Front desk: "Petty cash" page title; note example "electricity bill"; no "Revenue · last 7 days" on Home (not sent to them either).
+- 16 Nov · #57 Stylist: "My bookings", no list of every stylist; "The rest of the team" shows each other person as busy (times) or "Free all day", without client names.
+- 16 Nov · #58 No salary amount on the Staff list or a person's page for logins without payroll access.
+- 16 Nov · #59 Manager Home: the compliance line. #60 Accountant Home: the expected cash (blind count is the front desk's only). Migration 108.
+- 16 Nov · #61 Plan & billing: owner only (menu, page, and the database's list of who can do what). #62 "Suppliers & bills" for the page and every menu row.
+- 16 Nov · #53 to #62 are live on saloqo.com (commit 550503e), on the owner's OK ("approved deploy"): migration 108 on the live database and support-assistant updated. Proof before it went out: database tests 1,806 checks, app tests 689, tsc and lint clean, the new browser tests 78 and 79 (10 of 10, both looks). The full browser run was still going under a load of about 250 when the owner said deploy: of its first 99 tests, one was an old check of Home's stock wording, changed by #53 (test 18, updated), and one the console's Accounts tab loading slowly under that load (no change there).
