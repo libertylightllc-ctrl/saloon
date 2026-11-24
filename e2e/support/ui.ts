@@ -138,6 +138,7 @@ export async function pickDate(page: Page, testId: string, date: string, from: s
  */
 export async function approvePayroll(page: Page) {
   const early = id(page, 'payroll-approve-early');
+  await expect(early.or(id(page, 'payroll-approve'))).toBeVisible();
   if (await early.count()) {
     await early.click();
     await id(page, 'payroll-early-reason').fill('Checked before the month ends');
