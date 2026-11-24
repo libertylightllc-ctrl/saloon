@@ -199,7 +199,7 @@ select is((select net_minor from payroll_lines where run_id = current_setting('t
 select throws_ok(format($$ select approve_payroll('%s') $$, current_setting('t.run')), '42501', null,
   'but does not approve it');
 select pg_temp.as_user('a0');
-select lives_ok(format($$ select approve_payroll('%s') $$, current_setting('t.run')), 'the owner approves');
+select lives_ok(format($$ select approve_payroll('%s', 'Approved early in a test') $$, current_setting('t.run')), 'the owner approves');
 select pg_temp.as_user('b1');
 select is((select count(*)::int from payroll_lines), 0, 'a manager reads no payslips');
 select pg_temp.as_admin();

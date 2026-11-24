@@ -1255,7 +1255,8 @@
     "triesLeft_one": "{{count}} try left before it locks for 15 minutes.",
     "code_changed": "The salon code was already changed once. It can't be changed again.",
     "invalid_salon_code": "A salon code is 4 to 12 letters or numbers, with no spaces.",
-    "code_unchanged": "That is the salon code now. Type a new one."
+    "code_unchanged": "That is the salon code now. Type a new one.",
+    "month_not_over": "This month isn't over yet. Approve it from its last day, or give a reason to approve early."
   },
   "sales": {
     "title": "Sales",
@@ -2258,7 +2259,13 @@
       "paidOnPick": "Day it was paid",
       "cashToday": "For a bank transfer, pick the day it went out. Cash is paid today, from the drawer."
     },
-    "draftHintOwnerApproves": "Nothing is in the books until the owner approves it. Add a bonus or deduction and work it out again if needed."
+    "draftHintOwnerApproves": "Nothing is in the books until the owner approves it. Add a bonus or deduction and work it out again if needed.",
+    "early": {
+      "warning": "{{month}} isn't over: sales, attendance and leave after today won't be in it.",
+      "approve": "Approve early",
+      "reason": "Why approve before the month ends? (needed)",
+      "confirm": "Approve with this reason"
+    }
   },
   "myPay": {
     "title": "My pay",
@@ -4222,6 +4229,9 @@
     "customerPhonesCountryCode": {
       "text": "Added the country code to {{count}} customer phone numbers",
       "text_one": "Added the country code to {{count}} customer phone number"
+    },
+    "payrollApprovedEarly": {
+      "text": "Approved payroll for {{month}} before the month ended ({{reason}}): net {{amount}}"
     }
   }
 }

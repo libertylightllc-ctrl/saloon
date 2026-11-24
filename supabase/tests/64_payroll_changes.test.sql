@@ -94,7 +94,7 @@ select is((pg_temp.changes() ->> 'changes')::int, 1, 'the bonus counts as a chan
 reset role;
 update payroll_adjustments set created_at = now() - interval '35 minutes' where employee_id = current_setting('t.emp')::uuid;
 select pg_temp.work_out();
-select lives_ok(format($$ select approve_payroll(%L) $$, current_setting('t.run')), 'worked out again, it is approved');
+select lives_ok(format($$ select approve_payroll(%L, 'Approved early in a test') $$, current_setting('t.run')), 'worked out again, it is approved');
 
 -- 12–15. A sale after approval: the approved month stays, and says what commission it missed.
 select pg_temp.sale();

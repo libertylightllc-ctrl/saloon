@@ -92,7 +92,7 @@ select pg_temp.as_user('b1');
 select throws_ok(format($$ select payslip_details('%s') $$, current_setting('t.line')), '42501', 'not_allowed',
   'Marie does not see a draft payslip');
 select pg_temp.as_user('a0');
-select approve_payroll(current_setting('t.run')::uuid);
+select approve_payroll(current_setting('t.run')::uuid, 'Approved early in a test');
 select pg_temp.as_user('b1');
 select is(payslip_details(current_setting('t.line')::uuid) ->> 'full_name', 'Marie', 'once approved, Marie reads hers');
 select throws_ok(format($$ select payslip_details('%s') $$, current_setting('t.paruline')), '42501', 'not_allowed',

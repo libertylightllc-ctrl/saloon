@@ -2414,6 +2414,7 @@ export type Database = {
         Row: {
           approved_at: string | null;
           approved_by: string | null;
+          approved_early_reason: string | null;
           business_id: string;
           generated_at: string;
           generated_by: string | null;
@@ -2424,6 +2425,7 @@ export type Database = {
         Insert: {
           approved_at?: string | null;
           approved_by?: string | null;
+          approved_early_reason?: string | null;
           business_id: string;
           generated_at?: string;
           generated_by?: string | null;
@@ -2434,6 +2436,7 @@ export type Database = {
         Update: {
           approved_at?: string | null;
           approved_by?: string | null;
+          approved_early_reason?: string | null;
           business_id?: string;
           generated_at?: string;
           generated_by?: string | null;
@@ -4649,7 +4652,7 @@ export type Database = {
         };
       };
       approve_cash_closing: { Args: { p_id: string }; Returns: Json };
-      approve_payroll: { Args: { p_run: string }; Returns: undefined };
+      approve_payroll: { Args: { p_reason?: string; p_run: string }; Returns: undefined };
       approve_with_pin: {
         Args: {
           p_action: string;

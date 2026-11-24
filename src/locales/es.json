@@ -1255,7 +1255,8 @@
     "triesLeft_one": "Queda {{count}} intento antes de que se bloquee 15 minutos.",
     "code_changed": "El código del salón ya se cambió una vez. No se puede volver a cambiar.",
     "invalid_salon_code": "El código del salón tiene de 4 a 12 letras o números, sin espacios.",
-    "code_unchanged": "Ese es el código actual del salón. Escribe uno nuevo."
+    "code_unchanged": "Ese es el código actual del salón. Escribe uno nuevo.",
+    "month_not_over": "Este mes aún no ha terminado. Apruébalo desde su último día o indica un motivo para aprobarlo antes."
   },
   "sales": {
     "title": "Ventas",
@@ -2258,7 +2259,13 @@
       "paidOnPick": "Día del pago",
       "cashToday": "Para una transferencia, elige el día en que salió. El efectivo se paga hoy, de la caja."
     },
-    "draftHintOwnerApproves": "No se registra nada en los libros hasta que el dueño lo apruebe. Añade un bono o una deducción y vuelve a calcularlo si hace falta."
+    "draftHintOwnerApproves": "No se registra nada en los libros hasta que el dueño lo apruebe. Añade un bono o una deducción y vuelve a calcularlo si hace falta.",
+    "early": {
+      "warning": "{{month}} no ha terminado: las ventas, asistencias y permisos después de hoy no estarán incluidos.",
+      "approve": "Aprobar antes",
+      "reason": "¿Por qué aprobar antes de que termine el mes? (obligatorio)",
+      "confirm": "Aprobar con este motivo"
+    }
   },
   "myPay": {
     "title": "Mi pago",
@@ -4223,6 +4230,9 @@
     "customerPhonesCountryCode": {
       "text": "Se añadió el código del país a {{count}} teléfonos de clientes",
       "text_one": "Se añadió el código del país a {{count}} teléfono de cliente"
+    },
+    "payrollApprovedEarly": {
+      "text": "Nómina de {{month}} aprobada antes de terminar el mes ({{reason}}): neto {{amount}}"
     }
   }
 }

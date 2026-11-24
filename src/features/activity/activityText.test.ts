@@ -80,6 +80,10 @@ describe('activity sentences (E3)', () => {
     expect(text('Marie clocked in at 22:03 (late 723 min)')).toBe('Marie clocked in at 22:03 (late 12 h 3 min)');
     expect(text('Marie clocked in at 09:12 (late 12 min)')).toBe('Marie clocked in at 09:12 (late 12 min)');
     expect(text('Approved payroll 2026-11: net QAR 4,900.00')).toMatch(/^Approved payroll for 2026-11-01\|MMMM yyyy: net QAR 4,900\.00$/);
+    // Approved before the month ended, with the owner's reason (A10).
+    expect(text('Approved payroll 2026-11 before the month ended (Staff travelling): net QAR 4,900.00')).toMatch(
+      /^Approved payroll for 2026-11-01\|MMMM yyyy before the month ended \(Staff travelling\): net QAR 4,900\.00$/,
+    );
   });
 
   it('reads plural counts in English', async () => {

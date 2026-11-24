@@ -131,3 +131,16 @@ export async function pickDate(page: Page, testId: string, date: string, from: s
   }
   await id(page, `${testId}-day-${date}`).click();
 }
+
+/**
+ * Approve the month's payroll. Before the month's last day the owner approves early, with a reason (owner's brief
+ * A10, 24 Nov 2026); from the last day, straight away.
+ */
+export async function approvePayroll(page: Page) {
+  const early = id(page, 'payroll-approve-early');
+  if (await early.count()) {
+    await early.click();
+    await id(page, 'payroll-early-reason').fill('Checked before the month ends');
+  }
+  await id(page, 'payroll-approve').click();
+}

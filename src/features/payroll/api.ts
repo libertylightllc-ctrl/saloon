@@ -192,8 +192,9 @@ export function useGeneratePayroll(businessId: string, branchId: string) {
 export function useApprovePayroll(businessId: string, branchId: string) {
   const done = useInvalidatePayroll(businessId, branchId);
   return useMutation({
-    mutationFn: async (runId: string) => {
-      const { error } = await supabase.rpc('approve_payroll', { p_run: runId });
+    // Before the month's last day only with a reason (owner's brief A10).
+    mutationFn: async ({ runId, reason }: { runId: string; reason?: string }) => {
+      const { error } = await supabase.rpc('approve_payroll', { p_run: runId, ...(reason ? { p_reason: reason } : {}) });
       if (error) throw error;
     },
     onSuccess: done,

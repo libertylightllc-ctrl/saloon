@@ -102,6 +102,7 @@ export const ACTIVITY_RULES: readonly ActivityRule[] = [
 
   // Payroll
   { key: 'payrollGenerated', en: 'Generated payroll {month:period}: net {amount:money}' },
+  { key: 'payrollApprovedEarly', en: 'Approved payroll {month:period} before the month ended ({reason}): net {amount:money}' },
   { key: 'payrollApproved', en: 'Approved payroll {month:period}: net {amount:money}' },
   {
     key: 'salaryPaid',

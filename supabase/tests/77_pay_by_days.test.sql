@@ -110,7 +110,7 @@ select pg_temp.as_owner();
 select throws_ok(format($$ select approve_payroll('%s') $$, current_setting('t.run')), '22023', 'payroll_changed',
   'after a leaving date changes, the draft must be worked out again');
 select generate_payroll(current_setting('t.b')::uuid, '2026-10');
-select approve_payroll(current_setting('t.run')::uuid);
+select approve_payroll(current_setting('t.run')::uuid, 'Approved early in a test');
 select save_employee(jsonb_build_object('business_id', current_setting('t.b'), 'id', current_setting('t.maxum'),
   'full_name', 'Maxum', 'started_on', '2026-10-01'));
 select is((pg_temp.line('t.maxum')).base_minor, 148387::bigint, 'approved October keeps 1,483.87');

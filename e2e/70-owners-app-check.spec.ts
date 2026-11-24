@@ -4,7 +4,7 @@
  * tip out and show it apart (A7); an empty last month gives no percent badge (A8). */
 import { admin, createOwner, createStaff, dubaiDate, employeeOf, sellCustom } from './support/api';
 import { expect, test } from './support/fixtures';
-import { id, ownerOn, snap, tab, text } from './support/ui';
+import { approvePayroll, id, ownerOn, snap, tab, text } from './support/ui';
 
 test('payroll: a sale after the work-out blocks approval until it is worked out again', async ({ page, mode }) => {
   const owner = await createOwner(mode, { openingCash: 100_000 });
@@ -21,14 +21,14 @@ test('payroll: a sale after the work-out blocks approval until it is worked out 
   await id(page, 'more-staff').click();
   await id(page, 'staff-payroll').click();
   await expect(id(page, 'payroll-stale')).toContainText('1 change since this was worked out');
-  await expect(id(page, 'payroll-approve')).toBeDisabled();
+  await expect(id(page, 'payroll-approve').or(id(page, 'payroll-approve-early'))).toBeDisabled();
   await snap(page, 'payroll-out-of-date', mode);
 
   await id(page, 'payroll-generate').click();
   await expect(text(page, 'Payroll worked out')).toBeVisible();
   await expect(id(page, 'payroll-stale')).toHaveCount(0);
   await expect(id(page, `slip-${stylist.name}`)).toContainText('30.00');
-  await id(page, 'payroll-approve').click();
+  await approvePayroll(page);
   await expect(text(page, 'Payroll approved and posted to the books')).toBeVisible();
 });
 

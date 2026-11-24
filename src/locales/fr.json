@@ -1255,7 +1255,8 @@
     "triesLeft_one": "Encore {{count}} essai avant qu’il se bloque 15 minutes.",
     "code_changed": "Le code salon a déjà été changé une fois. Il ne peut plus être changé.",
     "invalid_salon_code": "Un code salon fait 4 à 12 lettres ou chiffres, sans espace.",
-    "code_unchanged": "C’est déjà le code salon actuel. Saisissez-en un nouveau."
+    "code_unchanged": "C’est déjà le code salon actuel. Saisissez-en un nouveau.",
+    "month_not_over": "Ce mois n’est pas encore terminé. Approuvez-le à partir de son dernier jour, ou donnez un motif pour l’approuver plus tôt."
   },
   "sales": {
     "title": "Ventes",
@@ -2258,7 +2259,13 @@
       "paidOnPick": "Jour du paiement",
       "cashToday": "Pour un virement, choisissez le jour où il est parti. Les espèces sont payées aujourd'hui, depuis la caisse."
     },
-    "draftHintOwnerApproves": "Rien n'est passé en comptabilité tant que le propriétaire ne l'a pas approuvé. Ajoutez une prime ou une retenue et recalculez si besoin."
+    "draftHintOwnerApproves": "Rien n'est passé en comptabilité tant que le propriétaire ne l'a pas approuvé. Ajoutez une prime ou une retenue et recalculez si besoin.",
+    "early": {
+      "warning": "{{month}} n’est pas terminé : les ventes, présences et congés après aujourd’hui n’y seront pas.",
+      "approve": "Approuver plus tôt",
+      "reason": "Pourquoi approuver avant la fin du mois ? (obligatoire)",
+      "confirm": "Approuver avec ce motif"
+    }
   },
   "myPay": {
     "title": "Ma paie",
@@ -4223,6 +4230,9 @@
     "customerPhonesCountryCode": {
       "text": "Indicatif du pays ajouté à {{count}} numéros de clients",
       "text_one": "Indicatif du pays ajouté à {{count}} numéro de client"
+    },
+    "payrollApprovedEarly": {
+      "text": "Paie de {{month}} approuvée avant la fin du mois ({{reason}}) : net {{amount}}"
     }
   }
 }

@@ -4,7 +4,7 @@ import path from 'path';
 
 import { createOwner, createStaff, dubaiDate, employeeOf, sellCustom } from './support/api';
 import { expect, test } from './support/fixtures';
-import { back, expectMoney, id, ownerOn, printedText, staffOn, tab, text } from './support/ui';
+import { approvePayroll, back, expectMoney, id, ownerOn, printedText, staffOn, tab, text } from './support/ui';
 
 test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; the barber sees the payslip', async ({ page, mode, device }) => {
   const owner = await createOwner(mode, { openingCash: 100_000 });
@@ -49,8 +49,8 @@ test('owner runs the month: advance, bonus, generate, approve, pay, WPS proof; t
   await books.goto('/payroll');
   await expect(id(books, 'payroll-draft-hint')).toContainText('until the owner approves');
   await expect(id(books, 'payroll-generate')).toBeVisible();
-  await expect(id(books, 'payroll-approve')).toHaveCount(0);
-  await id(page, 'payroll-approve').click();
+  await expect(id(books, 'payroll-approve').or(id(books, 'payroll-approve-early'))).toHaveCount(0);
+  await approvePayroll(page);
   await expect(text(page, 'Payroll approved and posted to the books')).toBeVisible();
 
   // The barber's My pay tab.

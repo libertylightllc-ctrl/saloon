@@ -139,7 +139,7 @@ select throws_ok(format($$ select approve_payroll('%s') $$, current_setting('t.r
 
 -- ── Approve → books ─────────────────────────────────────────────────────────────────────
 select pg_temp.as_user('00000000-0000-0000-0000-00000000060a');
-select lives_ok(format($$ select approve_payroll('%s') $$, current_setting('t.run')), 'owner approves the month');
+select lives_ok(format($$ select approve_payroll('%s', 'Approved early in a test') $$, current_setting('t.run')), 'owner approves the month');
 select is(pg_temp.account_balance('salaries_expense'), 350000 + 20000 - 10000 + 200000 + 5000::bigint,
   'salaries expense = base + bonus − deductions');
 select is(pg_temp.account_balance('commission_expense'), 1000::bigint, 'commission expense');

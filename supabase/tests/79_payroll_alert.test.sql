@@ -61,7 +61,7 @@ select is(pg_temp.alerts('owner', true), 1, 'and only that one still shows');
 
 -- Approved: the alert ends; nothing is deleted.
 select pg_temp.as_user('a0');
-select approve_payroll(current_setting('t.run')::uuid);
+select approve_payroll(current_setting('t.run')::uuid, 'Approved early in a test');
 select pg_temp.as_admin();
 select is(pg_temp.alerts('owner', true), 0, 'once approved, no "ready to approve" shows');
 select is(pg_temp.alerts('owner', false), 2, 'the ended alerts are kept');

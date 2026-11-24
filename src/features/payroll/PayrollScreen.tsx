@@ -4,13 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useWorkspace } from '@/features/auth/session';
-import { businessMonth, type MonthKey } from '@/lib/dates';
+import { businessDate, businessMonth, shiftBusinessDate, shiftMonth, type BusinessDate, type MonthKey } from '@/lib/dates';
 import { formatMoney, sum } from '@/lib/money';
 import { can } from '@/lib/permissions';
+import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Button, Card, EmptyState, FormError, HeaderBand, ListRow, MonthSwitcher, QueryState, Screen, StatusPill, Text, useToast, type StatusKey } from '@/ui';
 
 import { useApprovePayroll, useGeneratePayroll, usePayrollChanges, usePayrollRun, type Payslip, type RunStatus } from './api';
+import { ApprovePayroll } from './ApprovePayroll';
 import { PayrollChangesNote } from './PayrollChanges';
 import { PayslipSheet } from './PayslipSheet';
 import { SlipRow } from './SlipBreakdown';
@@ -23,8 +25,11 @@ export function PayrollScreen() {
   const toast = useToast();
   const router = useRouter();
   const { business, branch, role } = useWorkspace();
+  const dates = useDates();
   const thisMonth = businessMonth(new Date(), business.timezone);
   const [month, setMonth] = useState<MonthKey>(thisMonth);
+  // The month is not over before its last day (owner's brief A10): working it out is fine, approving needs a reason.
+  const early = businessDate(new Date(), business.timezone) < shiftBusinessDate(`${shiftMonth(month, 1)}-01` as BusinessDate, -1);
   const run = usePayrollRun(business.id, month);
   const changes = usePayrollChanges(business.id, run.data?.id ?? null);
   const stale = changes.data?.stale === true;
@@ -101,17 +106,13 @@ export function PayrollScreen() {
                         onPress={() => generate.mutate(month, { onSuccess: () => toast(t('payroll.generated')) })}
                         testID="payroll-generate"
                       />
-                      {r && approver ? (
-                        <Button
-                          label={t('payroll.approve')}
-                          size="md"
-                          disabled={lines.length === 0 || stale || changes.isLoading}
-                          loading={approve.isPending}
-                          onPress={() => approve.mutate(r.id, { onSuccess: () => toast(t('payroll.approved')) })}
-                          testID="payroll-approve"
-                        />
-                      ) : null}
+                      {r && approver ? <ApprovePayroll runId={r.id} early={early} disabled={lines.length === 0 || stale || changes.isLoading} approve={approve} /> : null}
                     </View>
+                  ) : null}
+                  {owner && early && (!r || r.status === 'generated') ? (
+                    <Text variant="small" color="text" testID="payroll-early-warning">
+                      {t('payroll.early.warning', { month: dates.day(`${month}-01`, 'MMMM') })}
+                    </Text>
                   ) : null}
                   {r?.status === 'generated' ? (
                     <Text variant="small" color="textSecondary" testID="payroll-draft-hint">
