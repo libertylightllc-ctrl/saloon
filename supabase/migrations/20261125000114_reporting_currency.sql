@@ -18,6 +18,7 @@ create table public.fx_rates (
   primary key (day, currency)
 );
 alter table public.fx_rates enable row level security;
+revoke all on public.fx_rates from anon, authenticated;
 -- No policies: the console reads the rates through admin_fx_rates().
 
 insert into public.fx_rates (day, currency, per_usd, source) values

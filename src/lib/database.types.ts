@@ -2054,6 +2054,42 @@ export type Database = {
           },
         ];
       };
+      member_seen: {
+        Row: {
+          business_id: string;
+          language: string | null;
+          last_seen_at: string;
+          member_id: string;
+        };
+        Insert: {
+          business_id: string;
+          language?: string | null;
+          last_seen_at: string;
+          member_id: string;
+        };
+        Update: {
+          business_id?: string;
+          language?: string | null;
+          last_seen_at?: string;
+          member_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'member_seen_business_id_fkey';
+            columns: ['business_id'];
+            isOneToOne: false;
+            referencedRelation: 'businesses';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'member_seen_member_id_fkey';
+            columns: ['member_id'];
+            isOneToOne: true;
+            referencedRelation: 'members';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       members: {
         Row: {
           active: boolean;
@@ -5536,6 +5572,7 @@ export type Database = {
         Args: { p_date: string; p_employee: string; p_from: number; p_to: number };
         Returns: boolean;
       };
+      salon_last_active: { Args: { p_business: string }; Returns: string };
       salon_status: {
         Args: {
           p_access: string;
@@ -5683,6 +5720,7 @@ export type Database = {
           owed_minor: number;
         }[];
       };
+      touch_seen: { Args: { p_business: string; p_language?: string }; Returns: undefined };
       unclaim_plan_alert: { Args: { p_event: string }; Returns: undefined };
       unclaim_support_alert: { Args: { p_thread: string }; Returns: undefined };
       unclaim_support_assistant: { Args: { p_thread: string }; Returns: undefined };

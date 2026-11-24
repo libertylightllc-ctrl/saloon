@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SalonTypeProvider, useSalonType } from '@/features/auth/salonType';
 import { SessionProvider, useSession } from '@/features/auth/session';
+import { SeenTracker } from '@/features/auth/useLastSeen';
 import { SettingUpScreen } from '@/features/setup/SettingUpScreen';
 import { useTrackLastScreen } from '@/features/support/lastScreen';
 import { fontAssets } from '@/lib/fonts';
@@ -76,6 +77,7 @@ export default function RootLayout() {
           <GestureHandlerRootView style={styles.fill}>
             <SalonTypeProvider>
               <SessionProvider>
+                <SeenTracker />
                 <AppTheme>
                   <DirectionProvider>
                     {/* Toasts wrap the sheet host so forms inside sheets can raise them, and draw above sheets. */}
