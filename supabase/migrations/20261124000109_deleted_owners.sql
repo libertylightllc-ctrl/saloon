@@ -123,15 +123,19 @@ begin
       join auth.users u on u.id = m.user_id and u.deleted_at is null
       left join owner_contacts oc on oc.user_id = m.user_id
       where not b.is_demo
+    ), keyed as (
+      select o.id, o.name, o.code, 'name'::text as reason, o.owner_name as key from owners o where char_length(o.owner_name) >= 2
+      union all
+      select o.id, o.name, o.code, 'phone'::text, o.phone from owners o where o.phone is not null
+    ), groups as (
+      -- Each owner name (or number) once, with its salons in order; a salon's others are its group without itself.
+      select k.reason, k.key, jsonb_agg(jsonb_build_object('id', k.id, 'name', k.name, 'code', k.code) order by k.name, k.code) as salons
+      from keyed k group by k.reason, k.key having count(*) > 1
     )
-    select a.id, 'name'::text, jsonb_agg(jsonb_build_object('name', o.name, 'code', o.code) order by o.name, o.code)
-    from owners a join owners o on o.id <> a.id and o.owner_name = a.owner_name
-    where char_length(a.owner_name) >= 2
-    group by a.id
-    union all
-    select a.id, 'phone'::text, jsonb_agg(jsonb_build_object('name', o.name, 'code', o.code) order by o.name, o.code)
-    from owners a join owners o on o.id <> a.id and o.phone = a.phone
-    group by a.id;
+    select k.id, k.reason,
+           (select jsonb_agg(e - 'id' order by n) from jsonb_array_elements(g.salons) with ordinality x(e, n)
+            where e ->> 'id' <> k.id::text)
+    from keyed k join groups g on g.reason = k.reason and g.key = k.key;
 end;
 $$;
 revoke execute on function public.admin_salon_duplicates() from public, anon;

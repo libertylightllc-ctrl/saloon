@@ -4,15 +4,30 @@ import { StyleSheet, View } from 'react-native';
 
 import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
-import { Button, Card, FormError, ListRow, QueryState, SearchBar, SectionHeader, StatusPill, Text, TextField, useToast } from '@/ui';
+import {
+  Button,
+  Card,
+  FormError,
+  ListRow,
+  QueryState,
+  SearchBar,
+  SectionHeader,
+  StatusPill,
+  Text,
+  TextField,
+  useToast,
+} from '@/ui';
 
 import { useAccounts, useOverview, useSetPlatformOwner, useTestSalons, type Account } from './api';
 import { accountSplit } from './OverviewTab';
 import { useConsoleTime } from './zone';
 
+/** Accounts drawn at a time: thousands of rows at once froze the page for half a minute. */
+const PAGE = 50;
 
 /** How an account signs in: an owner's email, or a staff member's username at their salon. */
-export const signInName = (a: Account) => a.email ?? (a.username ? `@${a.username}` : a.user_id.slice(0, 8));
+export const signInName = (a: Account) =>
+  a.email ?? (a.username ? `@${a.username}` : a.user_id.slice(0, 8));
 
 /** Platform owners (name or remove by email), then every sign-in account with its salon, role and last sign-in. */
 export function AccountsTab() {
@@ -26,6 +41,7 @@ export function AccountsTab() {
   const setOwner = useSetPlatformOwner();
   const [email, setEmail] = useState('');
   const [search, setSearch] = useState('');
+  const [shown, setShown] = useState(PAGE);
   const q = search.trim().toLowerCase();
   const time = useConsoleTime();
   const ZONE = time.zone;
@@ -33,109 +49,192 @@ export function AccountsTab() {
 
   return (
     <QueryState query={accounts}>
-      {(rows) => (
-        <View style={styles.body}>
-          <SectionHeader title={t('console.owners.title')} />
-          <Card variant="outlined" style={styles.card}>
-            <Text variant="small" color="textSecondary">
-              {t('console.owners.hint')}
-            </Text>
-            {rows
-              .filter((a) => a.platform_owner)
-              .map((a) => (
-                <View key={a.user_id} style={styles.row}>
-                  <Text style={styles.flex} selectable>
-                    {signInName(a)}
-                  </Text>
-                  <Button
-                    label={t('console.owners.remove')}
-                    variant="ghost"
-                    size="sm"
-                    onPress={() => setOwner.mutate({ email: a.email ?? '', on: false }, { onSuccess: () => toast(t('console.owners.removed')) })}
-                    testID={`console-owner-remove-${a.email}`}
+      {(rows) => {
+        const matches = rows.filter(
+          (a) =>
+            !q ||
+            [a.email, a.username, a.display_name, a.salon].some((v) =>
+              v?.toLowerCase().includes(q),
+            ),
+        );
+        return (
+          <View style={styles.body}>
+            <SectionHeader title={t('console.owners.title')} />
+            <Card variant="outlined" style={styles.card}>
+              <Text variant="small" color="textSecondary">
+                {t('console.owners.hint')}
+              </Text>
+              {rows
+                .filter((a) => a.platform_owner)
+                .map((a) => (
+                  <View key={a.user_id} style={styles.row}>
+                    <Text style={styles.flex} selectable>
+                      {signInName(a)}
+                    </Text>
+                    <Button
+                      label={t('console.owners.remove')}
+                      variant="ghost"
+                      size="sm"
+                      onPress={() =>
+                        setOwner.mutate(
+                          { email: a.email ?? '', on: false },
+                          { onSuccess: () => toast(t('console.owners.removed')) },
+                        )
+                      }
+                      testID={`console-owner-remove-${a.email}`}
+                    />
+                  </View>
+                ))}
+              <View style={styles.row}>
+                <View style={styles.flex}>
+                  <TextField
+                    label={t('console.owners.email')}
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    testID="console-owner-email"
                   />
                 </View>
-              ))}
-            <View style={styles.row}>
-              <View style={styles.flex}>
-                <TextField
-                  label={t('console.owners.email')}
-                  value={email}
-                  onChangeText={setEmail}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  testID="console-owner-email"
-                />
               </View>
-            </View>
-            <FormError error={setOwner.error} />
-            <Button
-              label={t('console.owners.add')}
-              icon="userPlus"
-              size="md"
-              disabled={!email.includes('@')}
-              loading={setOwner.isPending}
-              onPress={() =>
-                setOwner.mutate(
-                  { email, on: true },
-                  {
-                    onSuccess: () => {
-                      toast(t('console.owners.added'));
-                      setEmail('');
+              <FormError error={setOwner.error} />
+              <Button
+                label={t('console.owners.add')}
+                icon="userPlus"
+                size="md"
+                disabled={!email.includes('@')}
+                loading={setOwner.isPending}
+                onPress={() =>
+                  setOwner.mutate(
+                    { email, on: true },
+                    {
+                      onSuccess: () => {
+                        toast(t('console.owners.added'));
+                        setEmail('');
+                      },
                     },
-                  },
-                )
-              }
-              testID="console-owner-add"
-            />
-          </Card>
+                  )
+                }
+                testID="console-owner-add"
+              />
+            </Card>
 
-          {/* The same count as the Overview's, each person once (owner's brief A3); the list has every login. */}
-          <SectionHeader title={overview.data ? t('console.accounts.title', { count: overview.data.accounts }) : t('console.accounts.heading')} />
-          {overview.data ? (
-            <Text variant="small" color="textSecondary" testID="console-accounts-split">
-              {[accountSplit(overview.data, t), overview.data.accounts_test ? t('console.accounts.testNote', { count: overview.data.accounts_test }) : null]
-                .filter(Boolean)
-                .join(' · ')}
-            </Text>
-          ) : null}
-          <SearchBar value={search} onChangeText={setSearch} placeholder={t('console.accounts.search')} testID="console-account-search" />
-          {rows
-            .filter((a) => !q || [a.email, a.username, a.display_name, a.salon].some((v) => v?.toLowerCase().includes(q)))
-            .map((a) => (
+            {/* The same count as the Overview's, each person once (owner's brief A3); the list has every login. */}
+            <SectionHeader
+              title={
+                overview.data
+                  ? t('console.accounts.title', { count: overview.data.accounts })
+                  : t('console.accounts.heading')
+              }
+            />
+            {overview.data ? (
+              <Text variant="small" color="textSecondary" testID="console-accounts-split">
+                {[
+                  accountSplit(overview.data, t),
+                  overview.data.accounts_test
+                    ? t('console.accounts.testNote', { count: overview.data.accounts_test })
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
+              </Text>
+            ) : null}
+            <SearchBar
+              value={search}
+              onChangeText={(v) => {
+                setSearch(v);
+                setShown(PAGE);
+              }}
+              placeholder={t('console.accounts.search')}
+              testID="console-account-search"
+            />
+            {matches.slice(0, shown).map((a) => (
               <ListRow
                 key={a.user_id}
                 testID={`console-account-${a.email ?? a.username ?? `deleted-${a.user_id.slice(0, 8)}`}`}
-                title={a.deleted_at ? t('console.accounts.deleted', { date: dates.at(a.deleted_at, ZONE, 'd MMM yyyy') }) : signInName(a)}
+                title={
+                  a.deleted_at
+                    ? t('console.accounts.deleted', {
+                        date: dates.at(a.deleted_at, ZONE, 'd MMM yyyy'),
+                      })
+                    : signInName(a)
+                }
                 meta={[
-                  [a.display_name, a.role ? t(`roles.${a.role}` as 'roles.owner') : null, a.salon ?? t('console.accounts.noSalon')]
+                  [
+                    a.display_name,
+                    a.role ? t(`roles.${a.role}` as 'roles.owner') : null,
+                    a.salon ?? t('console.accounts.noSalon'),
+                  ]
                     .filter(Boolean)
                     .join(' · '),
-                  t('console.accounts.line', { created: dates.at(a.created_at, ZONE, 'd MMM yyyy'), last: when(a.last_sign_in_at) }),
+                  t('console.accounts.line', {
+                    created: dates.at(a.created_at, ZONE, 'd MMM yyyy'),
+                    last: when(a.last_sign_in_at),
+                  }),
                   ...(a.phone
                     ? [
                         a.whatsapp_ok && a.whatsapp_ok_at
-                          ? t('console.accounts.phoneOk', { phone: a.phone, date: dates.at(a.whatsapp_ok_at, ZONE, 'd MMM yyyy') })
+                          ? t('console.accounts.phoneOk', {
+                              phone: a.phone,
+                              date: dates.at(a.whatsapp_ok_at, ZONE, 'd MMM yyyy'),
+                            })
                           : t('console.accounts.phone', { phone: a.phone }),
                       ]
                     : []),
                 ]}
                 badges={
-                  a.platform_owner || a.deleted_at || a.active === false || a.provider !== 'email' || !a.confirmed || isTest(a) ? (
+                  a.platform_owner ||
+                  a.deleted_at ||
+                  a.active === false ||
+                  a.provider !== 'email' ||
+                  !a.confirmed ||
+                  isTest(a) ? (
                     <View style={styles.badges}>
-                      {a.platform_owner ? <StatusPill tone="primary" label={t('console.owners.badge')} /> : null}
-                      {isTest(a) ? <StatusPill tone="info" label={t('console.salons.test')} /> : null}
-                      {a.deleted_at ? <StatusPill status="cancelled" label={t('console.accounts.deletedPill')} /> : null}
-                      {a.active === false && !a.deleted_at ? <StatusPill status="cancelled" label={t('console.accounts.inactive')} /> : null}
-                      {a.provider !== 'email' && !a.deleted_at ? <StatusPill tone="neutral" label={a.provider} /> : null}
-                      {!a.confirmed && !a.deleted_at ? <StatusPill tone="warning" label={t('console.accounts.unconfirmed')} /> : null}
+                      {a.platform_owner ? (
+                        <StatusPill tone="primary" label={t('console.owners.badge')} />
+                      ) : null}
+                      {isTest(a) ? (
+                        <StatusPill tone="info" label={t('console.salons.test')} />
+                      ) : null}
+                      {a.deleted_at ? (
+                        <StatusPill status="cancelled" label={t('console.accounts.deletedPill')} />
+                      ) : null}
+                      {a.active === false && !a.deleted_at ? (
+                        <StatusPill status="cancelled" label={t('console.accounts.inactive')} />
+                      ) : null}
+                      {a.provider !== 'email' && !a.deleted_at ? (
+                        <StatusPill tone="neutral" label={a.provider} />
+                      ) : null}
+                      {!a.confirmed && !a.deleted_at ? (
+                        <StatusPill tone="warning" label={t('console.accounts.unconfirmed')} />
+                      ) : null}
                     </View>
                   ) : undefined
                 }
               />
             ))}
-        </View>
-      )}
+            {matches.length > shown ? (
+              <View style={styles.more}>
+                <Text
+                  variant="small"
+                  color="textSecondary"
+                  tabular
+                  testID="console-accounts-showing"
+                >
+                  {t('console.salons.showing', { shown, total: matches.length })}
+                </Text>
+                <Button
+                  label={t('console.salons.showMore')}
+                  variant="secondary"
+                  size="md"
+                  onPress={() => setShown((n) => n + PAGE)}
+                  testID="console-accounts-more"
+                />
+              </View>
+            ) : null}
+          </View>
+        );
+      }}
     </QueryState>
   );
 }
@@ -146,4 +245,5 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   flex: { flex: 1 },
   badges: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
+  more: { gap: spacing.sm, alignItems: 'center' },
 });
