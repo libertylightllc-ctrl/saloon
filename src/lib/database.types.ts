@@ -4610,6 +4610,7 @@ export type Database = {
           subject: string;
         }[];
       };
+      admin_revenue: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_salon_duplicates: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -5612,6 +5613,13 @@ export type Database = {
         Returns: boolean;
       };
       salon_last_active: { Args: { p_business: string }; Returns: string };
+      salon_monthly: {
+        Args: { p_at: string; p_business: string };
+        Returns: {
+          currency: string;
+          monthly_minor: number;
+        }[];
+      };
       salon_status: {
         Args: {
           p_access: string;

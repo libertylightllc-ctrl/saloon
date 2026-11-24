@@ -19,6 +19,7 @@ import {
 } from '@/ui';
 
 import { useOverview, type Overview } from './api';
+import { BusinessSection } from './BusinessSection';
 import { PaymentsSheet, type PaymentPeriod } from './PaymentsSheet';
 import type { SalonFilter } from './salonFilter';
 
@@ -34,9 +35,12 @@ const money = (minor: number, currency: string) =>
 export function OverviewTab({
   onOpenPilot,
   onOpenSalons,
+  onOpenSalon,
 }: {
   onOpenPilot: () => void;
   onOpenSalons: (filter: SalonFilter) => void;
+  /** Opens one salon in Salons, by its code. */
+  onOpenSalon: (code: string) => void;
 }) {
   const { t, i18n } = useTranslation();
   const overview = useOverview();
@@ -46,6 +50,9 @@ export function OverviewTab({
       <QueryState query={overview}>
         {(o) => (
           <View style={styles.body}>
+            <BusinessSection billingOn={o.billing_enabled} onOpenSalon={onOpenSalon} />
+
+            <SectionHeader title={t('console.business.totals')} />
             <KpiGrid>
               <KpiCard
                 icon="store"

@@ -54,7 +54,8 @@ export function ConsoleScreen() {
   const [paying, setPaying] = useState(false);
   // History of one salon, opened from its row.
   const [salonFilter, setSalonFilter] = useState<{ id: string; name: string } | null>(null);
-  const [salonsStart, setSalonsStart] = useState<SalonFilter>('all');
+  // Where Salons opens: a group, or one salon (from the Overview's lists).
+  const [salonsStart, setSalonsStart] = useState<{ filter: SalonFilter; salon?: string }>({ filter: 'all' });
 
   if (status === 'signedOut' || status === 'error') return <Redirect href="/welcome" />;
   if (admin.data === false) return <Redirect href="/" />;
@@ -78,7 +79,7 @@ export function ConsoleScreen() {
               }))}
               value={tab}
               onChange={(k) => {
-                setSalonsStart('all');
+                setSalonsStart({ filter: 'all' });
                 setTab(k);
               }}
               testID="console-tab"
@@ -91,15 +92,20 @@ export function ConsoleScreen() {
             <OverviewTab
               onOpenPilot={() => setTab('pilot')}
               onOpenSalons={(f) => {
-                setSalonsStart(f);
+                setSalonsStart({ filter: f });
+                setTab('salons');
+              }}
+              onOpenSalon={(code) => {
+                setSalonsStart({ filter: 'all', salon: code });
                 setTab('salons');
               }}
             />
           ) : null}
           {tab === 'salons' ? (
             <SalonsTab
-              key={salonsStart}
-              startFilter={salonsStart}
+              key={`${salonsStart.filter}:${salonsStart.salon ?? ''}`}
+              startFilter={salonsStart.filter}
+              startSalon={salonsStart.salon}
               onHistory={(salon) => {
                 setSalonFilter(salon);
                 setTab('activity');

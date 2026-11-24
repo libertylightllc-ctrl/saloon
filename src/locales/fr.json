@@ -3402,6 +3402,36 @@
       "ratesOf": "≈ converti aux taux de change du {{date}}.",
       "fixedOnly": "≈ Les taux de change du jour ne sont pas encore arrivés ; d’ici là, seules {{list}} sont converties (fixées au dollar américain).",
       "credit": "Taux par Exchange Rate API"
+    },
+    "money": {
+      "mrr": "Revenu mensuel (MRR)",
+      "arr": "{{amount}} par an (ARR)",
+      "paying_one": "{{count}} salon payant",
+      "paying": "{{count}} salons payants",
+      "lastMonth": "Fin du mois dernier : {{amount}}",
+      "unpriced_one": "{{count}} activé sans paiement (n’ajoute rien)",
+      "unpriced": "{{count}} activés sans paiement (n’ajoutent rien)",
+      "noRate": "Laissé de côté faute de taux de change : {{list}}",
+      "conversion": "Période gratuite → payant",
+      "conversionSub_one": "{{paid}} sur {{count}} salon dont la période gratuite ou le pilote a pris fin ces 90 derniers jours a payé",
+      "conversionSub": "{{paid}} sur {{count}} salons dont la période gratuite ou le pilote a pris fin ces 90 derniers jours ont payé",
+      "billingOff": "La facturation est désactivée : personne n’a encore eu à payer.",
+      "churn": "Ont cessé de payer ce mois-ci",
+      "churnSub": "{{amount}} par mois perdus",
+      "churnNone": "Aucun salon payant n’a arrêté ce mois-ci.",
+      "stoppedOn": "Arrêté le {{date}}",
+      "perMonth": "{{amount}} par mois",
+      "now": {
+        "free": "Désormais en jours gratuits",
+        "pilot": "Désormais en pilote",
+        "comp": "Désormais gratuit pour de bon",
+        "ended": "Terminé",
+        "closed": "Fermé"
+      }
+    },
+    "business": {
+      "title": "Activité",
+      "totals": "Salons et personnes"
     }
   },
   "profile": {

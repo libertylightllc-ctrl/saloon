@@ -3401,6 +3401,36 @@
       "ratesOf": "≈ converted at the exchange rates of {{date}}.",
       "fixedOnly": "≈ The day's exchange rates have not arrived yet; until they do, only {{list}} convert (fixed to the US dollar).",
       "credit": "Rates by Exchange Rate API"
+    },
+    "money": {
+      "mrr": "Monthly income (MRR)",
+      "arr": "{{amount}} a year (ARR)",
+      "paying_one": "{{count}} paying salon",
+      "paying": "{{count}} paying salons",
+      "lastMonth": "End of last month: {{amount}}",
+      "unpriced_one": "{{count}} switched on without a payment (adds nothing)",
+      "unpriced": "{{count}} switched on without a payment (add nothing)",
+      "noRate": "Left out for want of an exchange rate: {{list}}",
+      "conversion": "Free period → paid",
+      "conversionSub_one": "{{paid}} of {{count}} salon whose free period or pilot ended in the last 90 days paid",
+      "conversionSub": "{{paid}} of {{count}} salons whose free period or pilot ended in the last 90 days paid",
+      "billingOff": "Billing is off, so nobody has had to pay yet.",
+      "churn": "Stopped paying this month",
+      "churnSub": "{{amount}} a month lost",
+      "churnNone": "No paying salon stopped this month.",
+      "stoppedOn": "Stopped on {{date}}",
+      "perMonth": "{{amount}} a month",
+      "now": {
+        "free": "Now on free days",
+        "pilot": "Now on a pilot",
+        "comp": "Now free for good",
+        "ended": "Ended",
+        "closed": "Closed"
+      }
+    },
+    "business": {
+      "title": "Business",
+      "totals": "Salons and people"
     }
   },
   "profile": {

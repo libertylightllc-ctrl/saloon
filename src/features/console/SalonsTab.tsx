@@ -53,10 +53,13 @@ function closedLine(s: AdminSalon, t: TFunction): string | null {
 export function SalonsTab({
   onHistory,
   startFilter = 'all',
+  startSalon,
 }: {
   onHistory: (salon: { id: string; name: string }) => void;
   /** The group to open on (Overview → "7 ended …" opens the ended ones). */
   startFilter?: SalonFilter;
+  /** A salon's code to find and open (the Overview's lists: Extend, a salon at risk). */
+  startSalon?: string;
 }) {
   const { t, i18n } = useTranslation();
   const dates = useDates();
@@ -68,8 +71,16 @@ export function SalonsTab({
   // While billing is off an ended salon still works (owner's brief A7).
   const billingOff = billing.data ? !billing.data.billing_enabled : false;
   const [open, setOpen] = useState<AdminSalon | null>(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(startSalon ?? '');
   const [filter, setFilter] = useState<SalonFilter>(startFilter);
+  // The salon the Overview asked for is open once the list has loaded, until its sheet is closed.
+  const [askedDone, setAskedDone] = useState(false);
+  const asked = startSalon && !askedDone ? (salons.data?.find((s) => s.code === startSalon) ?? null) : null;
+  const current = open ?? asked;
+  const close = () => {
+    setOpen(null);
+    setAskedDone(true);
+  };
   const [shown, setShown] = useState(PAGE);
   const q = search.trim().toLowerCase();
   const onSearch = (v: string) => {
@@ -172,8 +183,8 @@ export function SalonsTab({
           );
         }}
       </QueryState>
-      <BottomSheet open={open !== null} onClose={() => setOpen(null)} title={open?.name ?? ''}>
-        {open ? (
+      <BottomSheet open={current !== null} onClose={close} title={current?.name ?? ''}>
+        {current ? (
           <View style={styles.sheet}>
             <Button
               label={t('console.salons.history')}
@@ -181,16 +192,16 @@ export function SalonsTab({
               variant="secondary"
               size="md"
               onPress={() => {
-                const s = open;
-                setOpen(null);
+                const s = current;
+                close();
                 onHistory({ id: s.business_id, name: s.name });
               }}
               testID="console-salon-history"
             />
-            <TestSalonSwitch salon={open} />
-            <AccessForm salon={open} onDone={() => setOpen(null)} />
-            <SalonPlanForm salon={open} onDone={() => setOpen(null)} />
-            {stats.data?.get(open.business_id)?.closed ? null : <CloseSalon salon={open} onDone={() => setOpen(null)} />}
+            <TestSalonSwitch salon={current} />
+            <AccessForm salon={current} onDone={close} />
+            <SalonPlanForm salon={current} onDone={close} />
+            {stats.data?.get(current.business_id)?.closed ? null : <CloseSalon salon={current} onDone={close} />}
           </View>
         ) : null}
       </BottomSheet>

@@ -3402,6 +3402,36 @@
       "ratesOf": "≈ convertido a los tipos de cambio del {{date}}.",
       "fixedOnly": "≈ Aún no han llegado los tipos de cambio del día; hasta entonces solo se convierten {{list}} (fijas al dólar estadounidense).",
       "credit": "Tipos de Exchange Rate API"
+    },
+    "money": {
+      "mrr": "Ingreso mensual (MRR)",
+      "arr": "{{amount}} al año (ARR)",
+      "paying_one": "{{count}} salón que paga",
+      "paying": "{{count}} salones que pagan",
+      "lastMonth": "Fin del mes pasado: {{amount}}",
+      "unpriced_one": "{{count}} activado sin pago (no suma nada)",
+      "unpriced": "{{count}} activados sin pago (no suman nada)",
+      "noRate": "Fuera por no tener tipo de cambio: {{list}}",
+      "conversion": "Periodo gratis → pago",
+      "conversionSub_one": "Pagó {{paid}} de {{count}} salón cuyo periodo gratis o piloto terminó en los últimos 90 días",
+      "conversionSub": "Pagaron {{paid}} de {{count}} salones cuyo periodo gratis o piloto terminó en los últimos 90 días",
+      "billingOff": "La facturación está apagada, así que nadie ha tenido que pagar aún.",
+      "churn": "Dejaron de pagar este mes",
+      "churnSub": "{{amount}} al mes perdidos",
+      "churnNone": "Ningún salón que paga lo dejó este mes.",
+      "stoppedOn": "Dejó de pagar el {{date}}",
+      "perMonth": "{{amount}} al mes",
+      "now": {
+        "free": "Ahora en días gratis",
+        "pilot": "Ahora en piloto",
+        "comp": "Ahora gratis para siempre",
+        "ended": "Terminado",
+        "closed": "Cerrado"
+      }
+    },
+    "business": {
+      "title": "Negocio",
+      "totals": "Salones y personas"
     }
   },
   "profile": {

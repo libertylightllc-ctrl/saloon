@@ -49,13 +49,38 @@ jest.mock('./api', () => ({
   usePayments: () => ({ data: [], isPending: false, isError: false, error: null, refetch: jest.fn() }),
   useMarkPayment: () => ({ mutate: jest.fn(), reset: jest.fn(), isPending: false, error: null }),
 }));
+// Part B's business numbers: two currencies converted to USD, one salon that stopped paying.
+const mockFx = {
+  reporting_currency: 'USD',
+  day: '2026-11-25',
+  fixed: ['AED', 'BHD', 'JOD', 'OMR', 'QAR', 'SAR', 'USD'],
+  rates: { USD: 1, AED: 3.6725, QAR: 3.64 },
+};
+const mockRevenue = {
+  month: '2026-11-01',
+  paying: 3,
+  paying_unpriced: 1,
+  mrr: [
+    { currency: 'AED', minor: 82_500 },
+    { currency: 'USD', minor: 1_699 },
+  ],
+  paying_prev: 1,
+  mrr_prev: [{ currency: 'AED', minor: 36_725 }],
+  conversion: { ended: 4, paid: 1 },
+  churn: [{ business_id: 'b-9', name: 'Palm Salon', code: 'palm22', stopped_on: '2026-11-12', status: 'ended', currency: 'QAR', minor: 4_900 }],
+};
+const ok = (data: unknown) => ({ data, isPending: false, isError: false, error: null, refetch: jest.fn() });
+jest.mock('./overviewApi', () => ({
+  useFxRates: () => ok(mockFx),
+  useRevenue: () => ok(mockRevenue),
+}));
 // The bottom sheet's animation library does not load in tests; none is opened here.
 jest.mock('@/ui/BottomSheet', () => ({ BottomSheet: () => null }));
 
 warmUpRendering();
 
 it('the salon groups add up to the total, with "ended" among them and closed salons named apart', async () => {
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
   expect(screen.getByTestId('console-salons-value')).toHaveTextContent('8');
   expect(screen.getByTestId('console-salons-sub')).toHaveTextContent(
     '0 paid · 4 free · 1 pilot · 0 free for good · 3 ended. Not counted: 2 closed',
@@ -82,7 +107,7 @@ it('a salon whose period is over says "Ended on <date>" in place of "Free until"
 
 it('while billing is off, ended salons say they still work, and the Overview warns before billing goes on (owner’s brief A7)', async () => {
   const onOpenSalons = jest.fn();
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={onOpenSalons} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={onOpenSalons} onOpenSalon={jest.fn()} />);
   expect(screen.getByTestId('console-ended-warning')).toHaveTextContent(/3 ended · they lose access when billing is switched on/);
   fireEvent.press(screen.getByTestId('console-ended-warning'));
   expect(onOpenSalons).toHaveBeenCalledWith('ended');
@@ -102,7 +127,7 @@ it('a closed salon shows only the day it closed, not its free period (owner’s 
 });
 
 it('one rule for the numbers, accounts with their split, new salons, and plan payments by period (owner’s brief A3–A4)', async () => {
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
   expect(screen.getByTestId('console-rule')).toHaveTextContent('Test and closed salons are left out.');
   expect(screen.getByTestId('console-accounts-value')).toHaveTextContent('20');
   expect(screen.getByTestId('console-accounts-sub')).toHaveTextContent(/16 active · 2 switched off · 2 deleted/);
@@ -111,4 +136,21 @@ it('one rule for the numbers, accounts with their split, new salons, and plan pa
   expect(screen.getByTestId('console-signed-in-sub')).toHaveTextContent('4 accounts signed in');
   expect(screen.getByTestId('console-plan-income-month')).toHaveTextContent(/This month.*Nothing yet\./);
   expect(screen.getByTestId('console-plan-income-all')).toHaveTextContent(/All time.*AED 99\.00 · USD 42\.99/);
+});
+
+it('money: monthly income in the reporting currency, the year at that rate, last month, conversion and churn', async () => {
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
+  // AED 825.00 a month is about USD 224.64; with USD 16.99, about USD 241.63.
+  expect(screen.getByTestId('console-mrr-value')).toHaveTextContent('≈ USD 241.63');
+  expect(screen.getByTestId('console-mrr-sub')).toHaveTextContent(
+    '≈ USD 2,899.56 a year (ARR) 3 paying salons End of last month: ≈ USD 100.00 1 switched on without a payment (adds nothing)',
+  );
+  expect(screen.getByTestId('console-mrr')).toHaveTextContent(/▲ 141\.63%/);
+  expect(screen.getByTestId('console-conversion-value')).toHaveTextContent('25%');
+  expect(screen.getByTestId('console-conversion-sub')).toHaveTextContent(
+    '1 of 4 salons whose free period or pilot ended in the last 90 days paid Billing is off, so nobody has had to pay yet.',
+  );
+  expect(screen.getByTestId('console-churn-value')).toHaveTextContent('1');
+  expect(screen.getByTestId('console-churn-sub')).toHaveTextContent('≈ USD 13.46 a month lost');
+  expect(screen.getByTestId('console-fx-note')).toHaveTextContent('≈ converted at the exchange rates of 25 Nov 2026. Rates by Exchange Rate API');
 });

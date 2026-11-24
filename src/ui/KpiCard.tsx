@@ -27,11 +27,13 @@ export interface KpiCardProps {
   /** Bigger value and an action slot (Home "Expected cash today"). */
   hero?: boolean;
   action?: ReactNode;
+  /** The whole card opens something (the console's Overview cards open their list). */
+  onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }
 
-export function KpiCard({ label, value, delta, sub, subLines = 2, icon, hero, action, style, testID }: KpiCardProps) {
+export function KpiCard({ label, value, delta, sub, subLines = 2, icon, hero, action, onPress, style, testID }: KpiCardProps) {
   const theme = useTheme();
   const good = delta ? (delta.good ?? delta.trend === 'up') : true;
   const tone = good ? semantic.success : semantic.error;
@@ -40,6 +42,8 @@ export function KpiCard({ label, value, delta, sub, subLines = 2, icon, hero, ac
     <Card
       style={[hero ? styles.hero : styles.card, style]}
       padding={hero ? spacing.xl : spacing.lg}
+      onPress={onPress}
+      accessibilityLabel={onPress ? `${label}: ${value}` : undefined}
       testID={testID}
     >
       <View style={styles.labelRow}>

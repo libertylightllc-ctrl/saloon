@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { supabase } from '@/lib/supabase';
 
-import type { FxRates } from './fx';
+import type { Amount, FxRates } from './fx';
 
 /** The reporting currency and the rates the Overview converts with. */
 export function useFxRates() {
@@ -30,5 +30,40 @@ export function useSetReportingCurrency() {
       return data;
     },
     onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}
+
+/** A salon that stopped paying this month (B5), and where it is now. */
+export interface Churned {
+  business_id: string;
+  name: string;
+  code: string;
+  stopped_on: string;
+  status: 'free' | 'pilot' | 'comp' | 'ended' | 'closed';
+  currency: string;
+  minor: number;
+}
+
+/** B1 monthly income now and on the last day of last month, B4 free-period conversion, B5 churn (migration 117). */
+export interface Revenue {
+  month: string;
+  paying: number;
+  /** Paying salons switched on without a payment: counted, adding nothing. */
+  paying_unpriced: number;
+  mrr: Amount[];
+  paying_prev: number;
+  mrr_prev: Amount[];
+  conversion: { ended: number; paid: number };
+  churn: Churned[];
+}
+
+export function useRevenue() {
+  return useQuery({
+    queryKey: ['platform', 'revenue'],
+    queryFn: async (): Promise<Revenue> => {
+      const { data, error } = await supabase.rpc('admin_revenue');
+      if (error) throw error;
+      return data as unknown as Revenue;
+    },
   });
 }
