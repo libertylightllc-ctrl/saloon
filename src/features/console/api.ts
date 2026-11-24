@@ -9,6 +9,8 @@ import { useIsPlatformAdmin } from '@/features/plan/api';
 import { allPages } from '@/lib/allPages';
 import { supabase } from '@/lib/supabase';
 
+import type { OtherSalon } from './duplicates';
+
 export interface Overview {
   salons: number;
   salons_closed: number;
@@ -59,7 +61,8 @@ export function useSalonStats() {
   });
 }
 
-/** Salons that look like the same owner (owner's fix list C4): same owner name or number, with the other salons. */
+/** Salons that look like the same owner (owner's fix list C4): same owner name or number, with the other salons and
+ *  their codes. Deleted accounts are left out (owner's brief A2). */
 export function useSalonDuplicates() {
   return useQuery({
     queryKey: ['platform', 'salon-duplicates'],
@@ -67,8 +70,8 @@ export function useSalonDuplicates() {
       const data = await allPages((from, to) =>
         supabase.rpc('admin_salon_duplicates').order('business_id').order('reason').range(from, to),
       );
-      const bySalon = new Map<string, { name?: string[]; phone?: string[] }>();
-      for (const d of data) bySalon.set(d.business_id, { ...bySalon.get(d.business_id), [d.reason]: d.others });
+      const bySalon = new Map<string, { name?: OtherSalon[]; phone?: OtherSalon[] }>();
+      for (const d of data) bySalon.set(d.business_id, { ...bySalon.get(d.business_id), [d.reason]: d.others as unknown as OtherSalon[] });
       return bySalon;
     },
   });
@@ -92,6 +95,8 @@ export type Account = {
   phone: string | null;
   whatsapp_ok: boolean;
   whatsapp_ok_at: string | null;
+  /** When the person deleted their account (owner's brief A1); their email and number are not returned then. */
+  deleted_at: string | null;
 };
 
 export function useAccounts() {

@@ -1,6 +1,6 @@
 -- Duplicate sign-ups (owner's fix list, final brief C4): sign-up asks about a number that already has an open salon
 -- (yes or no only, 10 questions an hour from one address); Console → Salons lists salons whose owners have the same
--- name or number, with the other salons' names; only platform owners see that list.
+-- name or number, with the other salons' names and codes; only platform owners see that list.
 begin;
 create extension if not exists pgtap with schema extensions;
 select plan(12);
@@ -73,10 +73,11 @@ select pg_temp.as_user('e0');
 create temp table dup on commit drop as
   select * from public.admin_salon_duplicates() where business_id::text like '57000000-%';
 select is((select others from dup where business_id = '57000000-0000-0000-0000-00000000000a' and reason = 'name'),
-  array['Dup B'], 'A: same owner name as B');
+  '[{"name": "Dup B", "code": "dupb"}]'::jsonb, 'A: same owner name as B');
 select is((select others from dup where business_id = '57000000-0000-0000-0000-00000000000a' and reason = 'phone'),
-  array['Dup C'], 'A: same number as C');
-select is((select array_agg(reason || ':' || array_to_string(others, ',') order by reason) from dup
+  '[{"name": "Dup C", "code": "dupc"}]'::jsonb, 'A: same number as C');
+select is((select array_agg(reason || ':' || (select string_agg(o ->> 'name', ',') from jsonb_array_elements(others) o)
+                           order by reason) from dup
            where business_id in ('57000000-0000-0000-0000-00000000000b', '57000000-0000-0000-0000-00000000000c',
                                  '57000000-0000-0000-0000-00000000000d')),
   array['name:Dup A', 'phone:Dup A'], 'B and C point back to A; D has none');

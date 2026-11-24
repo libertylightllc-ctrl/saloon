@@ -4328,6 +4328,7 @@ export type Database = {
           business_id: string;
           confirmed: boolean;
           created_at: string;
+          deleted_at: string;
           display_name: string;
           email: string;
           last_sign_in_at: string;
@@ -4451,7 +4452,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: {
           business_id: string;
-          others: string[];
+          others: Json;
           reason: string;
         }[];
       };
@@ -4479,6 +4480,9 @@ export type Database = {
           admin_note: string;
           branches: number;
           business_id: string;
+          close_note: string;
+          closed_at: string;
+          closed_by_name: string;
           code: string;
           country_code: string;
           created_at: string;
@@ -4487,6 +4491,7 @@ export type Database = {
           last_active: string;
           monthly_minor: number;
           name: string;
+          owner_deleted_at: string;
           owner_email: string;
           owner_name: string;
           paid_until: string;

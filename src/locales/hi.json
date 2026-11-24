@@ -3127,7 +3127,8 @@
         "closed": "बंद",
         "test": "टेस्ट"
       },
-      "noneHere": "यहाँ कोई सैलून नहीं।"
+      "noneHere": "यहाँ कोई सैलून नहीं।",
+      "ownerDeleted": "मालिक का खाता {{date}} को हटाया गया"
     },
     "accounts": {
       "title": "खाते ({{count}})",
@@ -3138,7 +3139,9 @@
       "inactive": "बंद किया गया",
       "unconfirmed": "ईमेल पक्का नहीं",
       "phone": "मोबाइल {{phone}}",
-      "phoneOk": "मोबाइल {{phone}} · {{date}} से WhatsApp के लिए सहमति"
+      "phoneOk": "मोबाइल {{phone}} · {{date}} से WhatsApp के लिए सहमति",
+      "deleted": "खाता {{date}} को हटाया गया",
+      "deletedPill": "हटाया गया"
     },
     "owners": {
       "title": "प्लेटफ़ॉर्म मालिक",

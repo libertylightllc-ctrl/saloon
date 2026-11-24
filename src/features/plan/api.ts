@@ -178,6 +178,13 @@ export interface AdminSalon {
   status: SalonStatus;
   /** For an ended salon: the day its last free, paid or pilot period ended. */
   ended_on: string | null;
+  /** When the owner deleted their account (owner's brief A1): owner_name and owner_email are null then. */
+  owner_deleted_at: string | null;
+  /** A closed salon: when, the reason typed, and the platform owner who closed it (none when the owner deleted their
+   *  account). */
+  closed_at: string | null;
+  close_note: string | null;
+  closed_by_name: string | null;
 }
 
 export function useAdminSalons() {

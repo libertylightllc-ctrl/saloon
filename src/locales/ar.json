@@ -3221,7 +3221,8 @@
         "closed": "مغلق",
         "test": "اختبار"
       },
-      "noneHere": "لا صالونات هنا."
+      "noneHere": "لا صالونات هنا.",
+      "ownerDeleted": "حُذف حساب المالك في {{date}}"
     },
     "accounts": {
       "title": "الحسابات ({{count}})",
@@ -3232,7 +3233,9 @@
       "inactive": "معطّل",
       "unconfirmed": "البريد غير مؤكَّد",
       "phone": "الجوال {{phone}}",
-      "phoneOk": "الجوال {{phone}} · موافق على واتساب منذ {{date}}"
+      "phoneOk": "الجوال {{phone}} · موافق على واتساب منذ {{date}}",
+      "deleted": "حُذف الحساب في {{date}}",
+      "deletedPill": "محذوف"
     },
     "owners": {
       "title": "مالكو المنصة",

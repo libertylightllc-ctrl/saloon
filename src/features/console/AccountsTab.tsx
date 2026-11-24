@@ -93,8 +93,8 @@ export function AccountsTab() {
             .map((a) => (
               <ListRow
                 key={a.user_id}
-                testID={`console-account-${a.email ?? a.username}`}
-                title={signInName(a)}
+                testID={`console-account-${a.email ?? a.username ?? `deleted-${a.user_id.slice(0, 8)}`}`}
+                title={a.deleted_at ? t('console.accounts.deleted', { date: dates.at(a.deleted_at, ZONE, 'd MMM yyyy') }) : signInName(a)}
                 meta={[
                   [a.display_name, a.role ? t(`roles.${a.role}` as 'roles.owner') : null, a.salon ?? t('console.accounts.noSalon')]
                     .filter(Boolean)
@@ -109,13 +109,14 @@ export function AccountsTab() {
                     : []),
                 ]}
                 badges={
-                  a.platform_owner || a.active === false || a.provider !== 'email' || !a.confirmed || isTest(a) ? (
+                  a.platform_owner || a.deleted_at || a.active === false || a.provider !== 'email' || !a.confirmed || isTest(a) ? (
                     <View style={styles.badges}>
                       {a.platform_owner ? <StatusPill tone="primary" label={t('console.owners.badge')} /> : null}
                       {isTest(a) ? <StatusPill tone="info" label={t('console.salons.test')} /> : null}
-                      {a.active === false ? <StatusPill status="cancelled" label={t('console.accounts.inactive')} /> : null}
-                      {a.provider !== 'email' ? <StatusPill tone="neutral" label={a.provider} /> : null}
-                      {!a.confirmed ? <StatusPill tone="warning" label={t('console.accounts.unconfirmed')} /> : null}
+                      {a.deleted_at ? <StatusPill status="cancelled" label={t('console.accounts.deletedPill')} /> : null}
+                      {a.active === false && !a.deleted_at ? <StatusPill status="cancelled" label={t('console.accounts.inactive')} /> : null}
+                      {a.provider !== 'email' && !a.deleted_at ? <StatusPill tone="neutral" label={a.provider} /> : null}
+                      {!a.confirmed && !a.deleted_at ? <StatusPill tone="warning" label={t('console.accounts.unconfirmed')} /> : null}
                     </View>
                   ) : undefined
                 }

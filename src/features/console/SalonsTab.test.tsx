@@ -18,7 +18,7 @@ const mockSalons: AdminSalon[] = Array.from({ length: 60 }, (_, i) => ({
   name: `Salon ${i}`,
   code: `salon${i}`,
   created_at: '2026-10-01T08:00:00Z',
-  owner_name: `Owner ${i}`,
+  owner_name: i === 20 ? null : `Owner ${i}`,
   owner_email: null,
   branches: i === 2 ? 2 : 1,
   paid_until: null,
@@ -41,6 +41,11 @@ const mockSalons: AdminSalon[] = Array.from({ length: 60 }, (_, i) => ({
   // One of each group; the rest in a free period. Salon 5 is a test salon whose period is over.
   status: ({ 5: 'ended', 10: 'ended', 11: 'paid', 12: 'closed', 13: 'comp', 14: 'pilot' } as const)[i] ?? 'free',
   ended_on: i === 5 ? '2026-10-30' : i === 10 ? '2026-11-05' : null,
+  // Salon 20's owner deleted their account (owner's brief A1).
+  owner_deleted_at: i === 20 ? '2026-11-03T10:00:00Z' : null,
+  closed_at: null,
+  close_note: null,
+  closed_by_name: null,
 }));
 
 jest.mock('@/features/plan/api', () => ({
@@ -55,7 +60,13 @@ jest.mock('./api', () => ({
       ? { data: undefined, isError: true, error: { message: 'canceling statement due to statement timeout' }, refetch: mockRefetchStats }
       : { data: new Map(), isError: false, error: null, refetch: mockRefetchStats },
   useCloseSalon: () => ({ mutate: jest.fn(), isPending: false, error: null }),
-  useSalonDuplicates: () => ({ data: new Map([['b-3', { name: ['Salon 7'], phone: ['Salon 7', 'Salon 9'] }]]) }),
+  useSalonDuplicates: () => ({
+    data: new Map([
+      ['b-3', { name: [{ name: 'Salon 7', code: 'salon7' }], phone: [{ name: 'Salon 7', code: 'salon7' }, { name: 'Salon 9', code: 'salon9' }] }],
+      // Two other salons with the same name (owner's brief A2).
+      ['b-6', { name: [{ name: 'Salon 8', code: 'salon8' }, { name: 'Salon 8', code: 'salon8b' }] }],
+    ]),
+  }),
   useTestSalons: () => ({ data: new Set(['b-5']) }),
   useSetTestSalon: () => ({ mutate: jest.fn(), isPending: false, error: null }),
 }));
@@ -109,6 +120,14 @@ it('marks a likely duplicate and names the other salons', async () => {
   expect(row).toHaveTextContent(/Same owner name as Salon 7/);
   expect(row).toHaveTextContent(/Same number as Salon 7, Salon 9/);
   expect(screen.getByTestId('admin-salon-salon4')).not.toHaveTextContent(/Possible duplicate/);
+  // Two others with one name: each with its code.
+  expect(screen.getByTestId('admin-salon-salon6')).toHaveTextContent(/Same owner name as Salon 8 \(salon8\), Salon 8 \(salon8b\)/);
+});
+
+it('a deleted owner shows as the date their account was deleted, never the scrambled email (owner’s brief A1)', async () => {
+  await renderInApp(<SalonsTab onHistory={jest.fn()} />);
+  expect(screen.getByTestId('admin-salon-salon20')).toHaveTextContent(/Owner account deleted on 3 Nov 2026/);
+  expect(screen.getByTestId('admin-salon-salon21')).toHaveTextContent(/Owner 21/);
 });
 
 it('counts branches in words: "1 branch", "2 branches", and Arabic’s own forms (final brief E4)', async () => {

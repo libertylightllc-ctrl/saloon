@@ -3127,7 +3127,8 @@
         "closed": "Fechados",
         "test": "Teste"
       },
-      "noneHere": "Nenhum salão aqui."
+      "noneHere": "Nenhum salão aqui.",
+      "ownerDeleted": "Conta do proprietário excluída em {{date}}"
     },
     "accounts": {
       "title": "Contas ({{count}})",
@@ -3138,7 +3139,9 @@
       "inactive": "Desativada",
       "unconfirmed": "E-mail não confirmado",
       "phone": "Celular {{phone}}",
-      "phoneOk": "Celular {{phone}} · aceita WhatsApp desde {{date}}"
+      "phoneOk": "Celular {{phone}} · aceita WhatsApp desde {{date}}",
+      "deleted": "Conta excluída em {{date}}",
+      "deletedPill": "Excluída"
     },
     "owners": {
       "title": "Proprietários da plataforma",

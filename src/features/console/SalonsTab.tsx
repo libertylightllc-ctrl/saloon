@@ -27,6 +27,7 @@ import {
 
 import { AccessForm, accessLabel } from './AccessForm';
 import { useCloseSalon, useSalonDuplicates, useSalonStats, useTestSalons } from './api';
+import { otherSalons } from './duplicates';
 import { inFilter, SALON_FILTERS, type SalonFilter } from './salonFilter';
 import { TestSalonSwitch } from './TestSalonSwitch';
 
@@ -99,7 +100,9 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                     testID={`admin-salon-${s.code}`}
                     title={s.name}
                     meta={[
-                      [s.owner_name, s.owner_email].filter(Boolean).join(' · '),
+                      s.owner_deleted_at
+                        ? t('console.salons.ownerDeleted', { date: dates.at(s.owner_deleted_at, s.timezone, 'd MMM yyyy') })
+                        : [s.owner_name, s.owner_email].filter(Boolean).join(' · '),
                       t('admin.meta', { code: s.code, branches: t('console.salons.branches', { count: s.branches }), date: dates.at(s.created_at, s.timezone, 'd MMM yyyy') }),
                       [countryName(s.country_code, i18n.language), ...(st?.mode ?? '').split(', ').filter(Boolean).map((m) => (isMode(m) ? t(`auth.salonType.${m}`) : m))].filter(Boolean).join(' · '),
                       [t('console.salons.people', { count: s.people }), t('console.salons.perMonth', { price: formatMoney(s.monthly_minor, s.plan_currency) })].join(' · '),
@@ -118,8 +121,8 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                       ...(s.requested_at ? [t('admin.requested', { count: s.requested_months ?? 1, note: s.request_note ?? '' }).trim()] : []),
                       ...(s.pilot_code ? [t('console.access.code', { code: s.pilot_code })] : []),
                       ...(s.admin_note ? [s.admin_note] : []),
-                      ...(dup?.name ? [t('console.salons.sameName', { salons: dup.name.join(', ') })] : []),
-                      ...(dup?.phone ? [t('console.salons.samePhone', { salons: dup.phone.join(', ') })] : []),
+                      ...(dup?.name ? [t('console.salons.sameName', { salons: otherSalons(dup.name, s.name) })] : []),
+                      ...(dup?.phone ? [t('console.salons.samePhone', { salons: otherSalons(dup.phone, s.name) })] : []),
                     ]}
                     badges={
                       <View style={styles.badges}>

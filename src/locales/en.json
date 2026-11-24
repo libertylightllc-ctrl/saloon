@@ -3126,7 +3126,8 @@
         "closed": "Closed",
         "test": "Test"
       },
-      "noneHere": "No salons here."
+      "noneHere": "No salons here.",
+      "ownerDeleted": "Owner account deleted on {{date}}"
     },
     "accounts": {
       "title": "Accounts ({{count}})",
@@ -3137,7 +3138,9 @@
       "inactive": "Switched off",
       "unconfirmed": "Email not confirmed",
       "phone": "Mobile {{phone}}",
-      "phoneOk": "Mobile {{phone}} · OK to WhatsApp since {{date}}"
+      "phoneOk": "Mobile {{phone}} · OK to WhatsApp since {{date}}",
+      "deleted": "Account deleted on {{date}}",
+      "deletedPill": "Deleted"
     },
     "owners": {
       "title": "Platform owners",

@@ -3127,7 +3127,8 @@
         "closed": "بند",
         "test": "ٹیسٹ"
       },
-      "noneHere": "یہاں کوئی سیلون نہیں۔"
+      "noneHere": "یہاں کوئی سیلون نہیں۔",
+      "ownerDeleted": "مالک کا اکاؤنٹ {{date}} کو حذف کیا گیا"
     },
     "accounts": {
       "title": "اکاؤنٹس ({{count}})",
@@ -3138,7 +3139,9 @@
       "inactive": "بند",
       "unconfirmed": "ای میل کی تصدیق نہیں ہوئی",
       "phone": "موبائل {{phone}}",
-      "phoneOk": "موبائل {{phone}} · {{date}} سے WhatsApp کی اجازت"
+      "phoneOk": "موبائل {{phone}} · {{date}} سے WhatsApp کی اجازت",
+      "deleted": "اکاؤنٹ {{date}} کو حذف کیا گیا",
+      "deletedPill": "حذف شدہ"
     },
     "owners": {
       "title": "پلیٹ فارم مالکان",
