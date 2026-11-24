@@ -89,8 +89,8 @@ All items from this check are done; see Done (15 Nov).
 All ten are done; see Done (16 Nov).
 
 ## Platform console brief, 24 Nov 2026 (SALOQO_CONSOLE_FIXES.md: Parts A–H, one part at a time)
-- Part A (A1–A10): built and tested on branch `console-part-a` (migrations 109–113); waiting for the owner's OK on the SQL to go live. Decisions in DECISIONS.md (24 Nov).
-- Parts B–H: after Part A is live.
+- Part A (A1–A10): live on saloqo.com since 25 Nov (migrations 109–113, owner's OK). Decisions in DECISIONS.md (24 Nov).
+- Parts B–H: next, one part at a time, each after the owner's go-ahead.
 
 ## Done
 
@@ -167,3 +167,4 @@ All ten are done; see Done (16 Nov).
 - 16 Nov · #59 Manager Home: the compliance line. #60 Accountant Home: the expected cash (blind count is the front desk's only). Migration 108.
 - 16 Nov · #61 Plan & billing: owner only (menu, page, and the database's list of who can do what). #62 "Suppliers & bills" for the page and every menu row.
 - 16 Nov · #53 to #62 are live on saloqo.com (commit 550503e), on the owner's OK ("approved deploy"): migration 108 on the live database and support-assistant updated. Proof before it went out: database tests 1,806 checks, app tests 689, tsc and lint clean, the new browser tests 78 and 79 (10 of 10, both looks). The full browser run, still going when the owner said deploy, ended at 339 of 346 passed (1.8 h, the computer's load up to about 445). The 7 were 4 tests: Home's old stock wording in test 18 (changed by #53; the test was updated after the run had started) and three platform-console tests (41, 62, 68) whose Overview ran past the time limit under that load. Run again on their own once the computer was quiet, all 4 passed in both looks (14 of 14).
+- 25 Nov · Console Part A (A1–A10) is live on saloqo.com: migrations 109–113 on the live database (owner's OK), the website from commit a98800a. Proof before it went out: database tests 88 files, 1,837 checks, 0 problems; the full browser run 343 of 350, its 7 failures traced to console screens timing out on the large test database (Accounts drew about 6,000 rows at once: now 50 at a time, usable in 2 s instead of 27 s; the duplicate check groups each name once, same answers), then every console and payroll browser test again: 40 of 40. Not checked on the live console itself: signing in as the platform owner is the owner's to do.
