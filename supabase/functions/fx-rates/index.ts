@@ -5,6 +5,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { localOnly } from '../_shared/env.ts';
+import { logHealth } from '../_shared/health.ts';
 import { cors, json } from '../_shared/staff.ts';
 import { parseRates, type RatesReply } from './parse.ts';
 
@@ -19,17 +20,23 @@ Deno.serve(async (req) => {
   if (due.error) return json({ error: due.error.message }, 500);
   if (!due.data) return json({ skipped: 'up_to_date' });
 
+  // Each try is written to the console's System health (B10).
+  const failed = async (detail: string, status: number) => {
+    await logHealth(admin, 'rates', false, detail);
+    return json({ error: detail }, status);
+  };
   let reply: RatesReply;
   try {
     const res = await fetch(localOnly('FX_ENDPOINT') || RATES);
-    if (!res.ok) return json({ error: `rates_http_${res.status}` }, 502);
+    if (!res.ok) return failed(`The rates service answered ${res.status}`, 502);
     reply = (await res.json()) as RatesReply;
   } catch {
-    return json({ error: 'rates_unreachable' }, 502);
+    return failed('The rates service could not be reached', 502);
   }
   const parsed = parseRates(reply);
-  if (!parsed) return json({ error: 'rates_unreadable' }, 502);
+  if (!parsed) return failed('The rates service sent something that is not a full table', 502);
   const { data, error } = await admin.rpc('save_fx_rates', { p_day: parsed.day, p_rates: parsed.rates });
-  if (error) return json({ error: error.message }, 500);
+  if (error) return failed(`Saving the rates failed: ${error.message}`, 500);
+  await logHealth(admin, 'rates', true, `Rates of ${parsed.day}`);
   return json({ day: parsed.day, saved: data });
 });

@@ -6,6 +6,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { monthsOfProduct, salonCodeField, sameHex, signature } from '../_shared/creem.ts';
 import { localOnly, secret } from '../_shared/env.ts';
+import { logHealth } from '../_shared/health.ts';
 import { json } from '../_shared/staff.ts';
 
 interface Event {
@@ -34,14 +35,20 @@ Deno.serve(async (req) => {
     .filter((s): s is string => Boolean(s));
   let valid = false;
   for (const s of secrets) if (given && sameHex(given, await signature(raw, s))) valid = true;
-  if (!valid) return json({ error: 'bad signature' }, 401);
-
-  const event = JSON.parse(raw) as Event;
-  const o = event.object ?? {};
   const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+  // Every notice is written to the console's System health (B10), refused ones too.
+  if (!valid) {
+    await logHealth(admin, 'card_webhook', false, 'Refused: the signature did not match');
+    return json({ error: 'bad signature' }, 401);
+  }
+
+  const event = JSON.parse(raw) as Event;
+  const o = event.object ?? {};
   const mode = o.mode === 'prod' || o.mode === 'live' ? 'live' : 'test';
+  // "checkout.completed (live)"; a notice without a mode (a refund) is not guessed at.
+  const what = `${event.eventType ?? 'unknown'}${o.mode ? ` (${mode})` : ''}`;
 
   if (event.eventType === 'checkout.completed') {
     const { data, error } = await admin.rpc('card_payment_completed', {
@@ -59,6 +66,7 @@ Deno.serve(async (req) => {
       },
     });
     // A database failure is answered 500, so Creem tries again later.
+    await logHealth(admin, 'card_webhook', !error, error ? `${what}: ${error.message}` : what);
     if (error) return json({ error: error.message }, 500);
     return json(data);
   }
@@ -72,8 +80,10 @@ Deno.serve(async (req) => {
         refund_currency: o.refund_currency ?? null,
       },
     });
+    await logHealth(admin, 'card_webhook', !error, error ? `${what}: ${error.message}` : what);
     if (error) return json({ error: error.message }, 500);
     return json(data);
   }
+  await logHealth(admin, 'card_webhook', true, `${what}: not used`);
   return json({ ignored: event.eventType ?? null });
 });

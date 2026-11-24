@@ -1762,6 +1762,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      health_log: {
+        Row: {
+          business_id: string | null;
+          created_at: string;
+          detail: string | null;
+          id: number;
+          kind: string;
+          ok: boolean;
+          screen: string | null;
+          user_id: string | null;
+        };
+        Insert: {
+          business_id?: string | null;
+          created_at?: string;
+          detail?: string | null;
+          id?: never;
+          kind: string;
+          ok: boolean;
+          screen?: string | null;
+          user_id?: string | null;
+        };
+        Update: {
+          business_id?: string | null;
+          created_at?: string;
+          detail?: string | null;
+          id?: never;
+          kind?: string;
+          ok?: boolean;
+          screen?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
       hygiene_logs: {
         Row: {
           branch_id: string;
@@ -4482,6 +4515,7 @@ export type Database = {
       admin_disable_pilot_code: { Args: { p_code: string }; Returns: undefined };
       admin_end_plan: { Args: { p_business: string; p_note: string }; Returns: undefined };
       admin_fx_rates: { Args: Record<PropertyKey, never>; Returns: Json };
+      admin_health: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_mark_payment: {
         Args: { p_event: string; p_mark: string; p_reason: string };
         Returns: undefined;
@@ -5114,6 +5148,7 @@ export type Database = {
         };
         Returns: string;
       };
+      log_health: { Args: { p_detail: string; p_kind: string; p_ok: boolean }; Returns: undefined };
       login_admin_for: { Args: { p_target: string; p_user: string }; Returns: string };
       login_last_sign_in: { Args: { p_member: string }; Returns: string };
       mark_no_show: {
@@ -5374,6 +5409,10 @@ export type Database = {
       rename_business: { Args: { p_business: string; p_name: string }; Returns: undefined };
       reopen_period: {
         Args: { p_business: string; p_month: string; p_reason: string };
+        Returns: undefined;
+      };
+      report_app_error: {
+        Args: { p_business?: string; p_message: string; p_screen?: string };
         Returns: undefined;
       };
       report_closing: {

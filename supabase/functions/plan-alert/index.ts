@@ -6,6 +6,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.109.0';
 
 import { localOnly, secret } from '../_shared/env.ts';
+import { logHealth } from '../_shared/health.ts';
 import { cors, json } from '../_shared/staff.ts';
 import { pilotMessage, type PilotAlert } from './pilot.ts';
 
@@ -107,20 +108,28 @@ Deno.serve(async (req) => {
   const pilotAlerts = (pilot.data ?? []) as PilotAlert[];
 
   const endpoint = localOnly('EMAIL_ENDPOINT') || RESEND;
-  const send = (to: string[], subject: string, text: string) =>
-    to.length > 0
-      ? fetch(endpoint, {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ from: 'Saloqo <no-reply@saloqo.com>', to, subject, text }),
-        })
-          .then((r) => r.ok)
-          .catch(() => false)
-      : Promise.resolve(false);
+  // Each email is written to the console's System health (B10): what it was, and sent or why not; never the address.
+  const send = async (what: string, to: string[], subject: string, text: string): Promise<boolean> => {
+    if (to.length === 0) {
+      await logHealth(admin, 'email', false, `${what}: no platform owner to send it to`);
+      return false;
+    }
+    const status = await fetch(endpoint, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: 'Saloqo <no-reply@saloqo.com>', to, subject, text }),
+    })
+      .then((r) => r.status)
+      .catch(() => 0);
+    const ok = status >= 200 && status < 300;
+    const why = status ? `the email service answered ${status}` : 'the email service could not be reached';
+    await logHealth(admin, 'email', ok, ok ? what : `${what}: ${why}`);
+    return ok;
+  };
   let sent = 0;
   for (const a of supportAlerts) {
     const { subject, text } = supportMessage(a);
-    if (await send(a.admin_emails ?? [], subject, text)) sent++;
+    if (await send('Support alert', a.admin_emails ?? [], subject, text)) sent++;
     else {
       console.error(`plan-alert: could not email support thread ${a.thread_id}; it goes back to the queue`);
       await admin.rpc('unclaim_support_alert', { p_thread: a.thread_id });
@@ -128,7 +137,7 @@ Deno.serve(async (req) => {
   }
   for (const a of alerts) {
     const { subject, text } = message(a);
-    const ok = await send(a.admin_emails ?? [], subject, text);
+    const ok = await send('Plan request', a.admin_emails ?? [], subject, text);
     if (ok) sent++;
     else {
       console.error(`plan-alert: could not email ${a.event_id}; it goes back to the queue`);
@@ -138,7 +147,7 @@ Deno.serve(async (req) => {
   // An application whose email failed is not re-sent (it stays in the console's Pilot tab).
   for (const a of pilotAlerts) {
     const { subject, text } = pilotMessage(a);
-    if (await send([...new Set([...(a.admin_emails ?? []), HELLO])], subject, text)) sent++;
+    if (await send('Pilot application', [...new Set([...(a.admin_emails ?? []), HELLO])], subject, text)) sent++;
     else console.error(`plan-alert: could not email pilot application ${a.id}; it is in the console`);
   }
   return json({ sent, waiting: alerts.length + supportAlerts.length + pilotAlerts.length - sent });
