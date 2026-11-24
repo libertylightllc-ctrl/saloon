@@ -102,6 +102,11 @@ export function auditSentence(r: AuditRow, t: Translate, day: Day): string {
       return t('console.audit.declined', { salon });
     case 'salon:test':
       return t(a.test === true ? 'console.audit.testOn' : 'console.audit.testOff', { salon });
+    case 'salon:contact': {
+      // "Palm Salon: owner messaged on WhatsApp, the free period ends 28 Nov 2026" (owner's brief, Part B6).
+      if (!isDate(a.until) || (a.channel !== 'whatsapp' && a.channel !== 'email')) return raw(r, t);
+      return t(`console.audit.contact.${a.channel}`, { salon, what: t(a.ending === 'pilot' ? 'console.audit.contact.pilot' : 'console.audit.contact.free'), date: long(a.until) });
+    }
     case 'payment:mark': {
       // "Asil Trims: payment of USD 42.99 on 12 Oct 2026 marked Test: paid by us to try it" (owner's brief A4).
       const code = text(a.currency);

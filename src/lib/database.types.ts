@@ -4510,12 +4510,14 @@ export type Database = {
         }[];
       };
       admin_close_salon: { Args: { p_business: string; p_note: string }; Returns: undefined };
+      admin_coming_up: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_create_pilot_code: { Args: { p: Json }; Returns: string };
       admin_decide_pilot_application: { Args: { p_approve: boolean; p_id: string }; Returns: Json };
       admin_disable_pilot_code: { Args: { p_code: string }; Returns: undefined };
       admin_end_plan: { Args: { p_business: string; p_note: string }; Returns: undefined };
       admin_fx_rates: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_health: { Args: Record<PropertyKey, never>; Returns: Json };
+      admin_log_contact: { Args: { p_business: string; p_channel: string }; Returns: undefined };
       admin_mark_payment: {
         Args: { p_event: string; p_mark: string; p_reason: string };
         Returns: undefined;

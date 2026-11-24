@@ -20,6 +20,7 @@ import {
 
 import { useOverview, type Overview } from './api';
 import { BusinessSection } from './BusinessSection';
+import { ComingUp } from './ComingUp';
 import { StatusCards } from './StatusCards';
 import { PaymentsSheet, type PaymentPeriod } from './PaymentsSheet';
 import type { SalonFilter } from './salonFilter';
@@ -53,6 +54,7 @@ export function OverviewTab({
           <View style={styles.body}>
             <BusinessSection billingOn={o.billing_enabled} signedIn7d={o.signed_in_7d} onOpenSalon={onOpenSalon} />
             <StatusCards o={o} onOpenSalons={onOpenSalons} />
+            <ComingUp onOpenSalon={onOpenSalon} />
 
             <SectionHeader title={t('console.business.totals')} />
             <KpiGrid>

@@ -3370,7 +3370,13 @@
         "test": "{{salon}}: payment of {{amount}} on {{date}} marked Test ({{reason}})",
         "void": "{{salon}}: payment of {{amount}} on {{date}} marked Void ({{reason}})"
       },
-      "paymentCounted": "{{salon}}: payment of {{amount}} on {{date}} counted again ({{reason}})"
+      "paymentCounted": "{{salon}}: payment of {{amount}} on {{date}} counted again ({{reason}})",
+      "contact": {
+        "whatsapp": "{{salon}}: owner messaged on WhatsApp, the {{what}} ends {{date}}",
+        "email": "{{salon}}: owner emailed, the {{what}} ends {{date}}",
+        "free": "free period",
+        "pilot": "pilot"
+      }
     },
     "contact": {
       "title": "Contact",
@@ -3451,6 +3457,46 @@
       "ended": "Ended",
       "closed": "Closed",
       "hint": "Tap a group to see its salons. Test salons are left out."
+    },
+    "comingUp": {
+      "title": "Coming up",
+      "ending": "Free periods and pilots ending in the next 7 days: {{n}}",
+      "endingNone": "Nothing ends in the next 7 days.",
+      "endsToday": "ends today",
+      "endsOn": "ends {{date}}, in {{count}} days",
+      "endsOn_one": "ends {{date}}, tomorrow",
+      "noName": "Owner",
+      "whatsapp": "WhatsApp {{phone}} (agreed)",
+      "noContact": "No email or WhatsApp to reach the owner",
+      "messaged": "Messaged {{when}}",
+      "extend": "Extend",
+      "messageOwner": "Message owner",
+      "showAll": "Show all ({{n}})",
+      "requests": "Plan requests waiting: {{n}}",
+      "requestsNone": "No plan requests waiting.",
+      "waiting": "waiting {{count}} days",
+      "waiting_one": "waiting {{count}} day",
+      "askedTimes": "asked {{n}} times",
+      "messageTitle": "Message the owner",
+      "messageTo": "To the owner of {{salon}}, in {{language}}",
+      "openWhatsapp": "Open WhatsApp",
+      "openEmail": "Open email",
+      "whatsappOk": "The owner agreed to WhatsApp messages.",
+      "noWhatsapp": "The owner has not agreed to WhatsApp, so this goes by email.",
+      "logNote": "Opening it is saved in Changes and in the salon’s history.",
+      "logged": "Saved in Changes and the salon’s history",
+      "message": {
+        "hello": "Hello {{name}},",
+        "helloNoName": "Hello,",
+        "free": "The free period for {{salon}} on {{app}} ends on {{date}}. To keep using {{app}} after that, open {{path}} in the app and switch on your plan.",
+        "pilot": "The pilot for {{salon}} on {{app}} ends on {{date}}. Thank you for trying it with us. To keep using {{app}} after that, open {{path}} in the app and switch on your plan.",
+        "reply": "If you have any questions, just reply to this message. We’re happy to help.",
+        "signOff": "The {{app}} team",
+        "subject": {
+          "free": "Your {{app}} free period ends on {{date}}",
+          "pilot": "Your {{app}} pilot ends on {{date}}"
+        }
+      }
     }
   },
   "profile": {
@@ -4282,7 +4328,10 @@
       "theCustomer": "the customer",
       "cash": "cash",
       "bank": "bank transfer",
-      "card": "card"
+      "card": "card",
+      "email": "email",
+      "freePeriod": "free period",
+      "pilot": "pilot"
     },
     "salonCodeChanged": {
       "text": "Changed the salon code: {{from}} → {{to}}"
@@ -4293,6 +4342,9 @@
     },
     "payrollApprovedEarly": {
       "text": "Approved payroll for {{month}} before the month ended ({{reason}}): net {{amount}}"
+    },
+    "ownerMessaged": {
+      "text": "The platform owner messaged the salon owner by {{channel}}: the {{what}} ends on {{date}}"
     }
   }
 }

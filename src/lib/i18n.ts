@@ -91,6 +91,12 @@ export function setTaxTerms(next: { name: string; idLabel: string; rate: string 
 }
 
 /** Every translated text draws again (as on a language change). */
+/** Makes a language's words ready without switching the app to it: for text written to someone in their language
+ *  (the console's message to a salon owner), with i18n.getFixedT(language). */
+export async function loadLanguage(language: Language): Promise<void> {
+  if (!i18n.hasResourceBundle(language, 'translation')) i18n.addResourceBundle(language, 'translation', await wordsOf(language));
+}
+
 export function redrawTexts() {
   if (i18n.isInitialized) void i18n.emit('languageChanged', i18n.language);
 }

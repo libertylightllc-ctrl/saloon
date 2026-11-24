@@ -3371,7 +3371,13 @@
         "test": "{{salon}}: pago de {{amount}} del {{date}} marcado como prueba ({{reason}})",
         "void": "{{salon}}: pago de {{amount}} del {{date}} marcado como anulado ({{reason}})"
       },
-      "paymentCounted": "{{salon}}: pago de {{amount}} del {{date}} contado de nuevo ({{reason}})"
+      "paymentCounted": "{{salon}}: pago de {{amount}} del {{date}} contado de nuevo ({{reason}})",
+      "contact": {
+        "whatsapp": "{{salon}}: mensaje al propietario por WhatsApp, el {{what}} termina el {{date}}",
+        "email": "{{salon}}: email al propietario, el {{what}} termina el {{date}}",
+        "free": "periodo gratis",
+        "pilot": "piloto"
+      }
     },
     "contact": {
       "title": "Contacto",
@@ -3452,6 +3458,46 @@
       "ended": "Terminados",
       "closed": "Cerrados",
       "hint": "Toca un grupo para ver sus salones. Los salones de prueba no se cuentan."
+    },
+    "comingUp": {
+      "title": "Próximamente",
+      "ending": "Periodos gratis y pilotos que terminan en los próximos 7 días: {{n}}",
+      "endingNone": "Nada termina en los próximos 7 días.",
+      "endsToday": "termina hoy",
+      "endsOn": "termina el {{date}}, en {{count}} días",
+      "endsOn_one": "termina el {{date}}, mañana",
+      "noName": "Propietario",
+      "whatsapp": "WhatsApp {{phone}} (aceptó)",
+      "noContact": "No hay email ni WhatsApp para contactar al propietario",
+      "messaged": "Mensaje enviado: {{when}}",
+      "extend": "Ampliar",
+      "messageOwner": "Escribir al propietario",
+      "showAll": "Ver todos ({{n}})",
+      "requests": "Solicitudes de plan en espera: {{n}}",
+      "requestsNone": "No hay solicitudes de plan en espera.",
+      "waiting": "esperando {{count}} días",
+      "waiting_one": "esperando {{count}} día",
+      "askedTimes": "pedido {{n}} veces",
+      "messageTitle": "Escribir al propietario",
+      "messageTo": "Para el propietario de {{salon}}, en {{language}}",
+      "openWhatsapp": "Abrir WhatsApp",
+      "openEmail": "Abrir email",
+      "whatsappOk": "El propietario aceptó mensajes por WhatsApp.",
+      "noWhatsapp": "El propietario no aceptó WhatsApp, así que va por email.",
+      "logNote": "Abrirlo queda guardado en Cambios y en el historial del salón.",
+      "logged": "Guardado en Cambios y en el historial del salón",
+      "message": {
+        "hello": "Hola, {{name}}:",
+        "helloNoName": "Hola:",
+        "free": "El periodo gratis de {{salon}} en {{app}} termina el {{date}}. Para seguir usando {{app}} después, abre {{path}} en la app y activa tu plan.",
+        "pilot": "El piloto de {{salon}} en {{app}} termina el {{date}}. Gracias por probarlo con nosotros. Para seguir usando {{app}} después, abre {{path}} en la app y activa tu plan.",
+        "reply": "Si tienes alguna pregunta, responde a este mensaje. Estaremos encantados de ayudarte.",
+        "signOff": "El equipo de {{app}}",
+        "subject": {
+          "free": "Tu periodo gratis de {{app}} termina el {{date}}",
+          "pilot": "Tu piloto de {{app}} termina el {{date}}"
+        }
+      }
     }
   },
   "profile": {
@@ -4283,7 +4329,10 @@
       "theCustomer": "el cliente",
       "cash": "en efectivo",
       "bank": "por transferencia",
-      "card": "con tarjeta"
+      "card": "con tarjeta",
+      "email": "email",
+      "freePeriod": "periodo gratis",
+      "pilot": "piloto"
     },
     "salonCodeChanged": {
       "text": "Cambió el código del salón: {{from}} → {{to}}"
@@ -4294,6 +4343,9 @@
     },
     "payrollApprovedEarly": {
       "text": "Nómina de {{month}} aprobada antes de terminar el mes ({{reason}}): neto {{amount}}"
+    },
+    "ownerMessaged": {
+      "text": "El propietario de la plataforma escribió al propietario del salón por {{channel}}: el {{what}} termina el {{date}}"
     }
   }
 }

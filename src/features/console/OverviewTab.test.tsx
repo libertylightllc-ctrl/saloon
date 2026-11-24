@@ -84,6 +84,8 @@ jest.mock('./overviewApi', () => ({
   useFxRates: () => ok(mockFx),
   useRevenue: () => ok(mockRevenue),
   useSalonActivity: () => ok(mockActivity),
+  useComingUp: () => ok({ ending: [], requests: [] }),
+  useLogContact: () => ({ mutateAsync: jest.fn(), isPending: false, error: null }),
 }));
 // The bottom sheet's animation library does not load in tests; none is opened here.
 jest.mock('@/ui/BottomSheet', () => ({ BottomSheet: () => null }));

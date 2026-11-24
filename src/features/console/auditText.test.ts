@@ -39,6 +39,12 @@ it('settings: only what changed, by the names Console → Settings uses', () => 
   expect(say(row('settings:currency', { reporting_currency: 'USD' }, { reporting_currency: 'AED' }))).toBe('Reporting currency: USD → AED');
 });
 
+it('a message to an owner says how and what ends when (owner’s brief, Part B6)', () => {
+  const r = row('salon:contact', null, { channel: 'whatsapp', ending: 'free', until: '2026-11-28' }, { salon: 'Palm Salon' });
+  expect(say(r)).toBe('Palm Salon: owner messaged on WhatsApp, the free period ends 28 Nov 2026');
+  expect(say({ ...r, after: { channel: 'email', ending: 'pilot', until: '2026-11-25' } })).toBe('Palm Salon: owner emailed, the pilot ends 25 Nov 2026');
+});
+
 it('a corrected free period names the salon, both dates and its length', () => {
   const r = row('free_period:record', { note: '7-day free trial', until: '2026-11-01' }, { note: '30-day free period', until: '2026-11-24' }, { salon: 'Nebriix', actor: null });
   expect(say(r)).toBe('Nebriix: free period changed from 1 Nov to 24 Nov 2026 (30-day free period)');

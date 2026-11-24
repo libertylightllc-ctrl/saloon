@@ -99,3 +99,64 @@ export function useSalonActivity() {
     },
   });
 }
+
+/** A free period or pilot ending in the next 7 days (B6), and how to reach the owner. */
+export interface EndingSalon {
+  business_id: string;
+  name: string;
+  code: string;
+  timezone: string;
+  status: 'free' | 'pilot';
+  ends_on: string;
+  days_left: number;
+  owner_name: string | null;
+  email: string | null;
+  /** Only when the owner agreed to WhatsApp. */
+  whatsapp: string | null;
+  /** The language the owner uses the app in ('en' when not known). */
+  language: string;
+  contacted_at: string | null;
+}
+
+/** A plan request still waiting (B6): no payment or ending since. */
+export interface WaitingRequest {
+  business_id: string;
+  name: string;
+  code: string;
+  timezone: string;
+  first_asked_at: string;
+  last_asked_at: string;
+  /** Whole days since it was first asked. */
+  waiting_days: number;
+  times: number;
+  months: number | null;
+}
+
+export interface ComingUp {
+  ending: EndingSalon[];
+  requests: WaitingRequest[];
+}
+
+/** B6 Coming up (migration 119). */
+export function useComingUp() {
+  return useQuery({
+    queryKey: ['platform', 'coming-up'],
+    queryFn: async (): Promise<ComingUp> => {
+      const { data, error } = await supabase.rpc('admin_coming_up');
+      if (error) throw error;
+      return data as unknown as ComingUp;
+    },
+  });
+}
+
+/** "Message owner": logged in Changes and in the salon's history before WhatsApp or email opens. */
+export function useLogContact() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ business, channel }: { business: string; channel: 'whatsapp' | 'email' }) => {
+      const { error } = await supabase.rpc('admin_log_contact', { p_business: business, p_channel: channel });
+      if (error) throw error;
+    },
+    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
+}

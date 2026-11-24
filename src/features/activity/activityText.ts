@@ -124,6 +124,10 @@ function show(type: ValueType | undefined, v: string, t: TFunction, day: Day): s
       return day(`${v}-01`, 'MMMM yyyy');
     case 'minutes':
       return formatDuration(t, Number(v));
+    case 'channel':
+      return v === 'WhatsApp' ? v : t('activity.values.email');
+    case 'ending':
+      return t(v === 'pilot' ? 'activity.values.pilot' : 'activity.values.freePeriod');
     default:
       return v;
   }
