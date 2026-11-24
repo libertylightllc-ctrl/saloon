@@ -2,11 +2,16 @@
  * The Overview's business numbers (owner's brief, Part B, 24 Nov 2026): each card reads its own function, which checks
  * the caller is a platform owner, so a slow or failing card leaves the others showing.
  */
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 
 import { supabase } from '@/lib/supabase';
 
 import type { Amount, FxRates } from './fx';
+
+/** Reads again only what an action changed: the whole console at once is a dozen queries over every salon. */
+function refresh(client: QueryClient, ...parts: string[]) {
+  for (const part of parts) void client.invalidateQueries({ queryKey: ['platform', part] });
+}
 
 /** The reporting currency and the rates the Overview converts with. */
 export function useFxRates() {
@@ -29,7 +34,7 @@ export function useSetReportingCurrency() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+    onSuccess: () => refresh(client, 'fx', 'audit'),
   });
 }
 
@@ -157,7 +162,7 @@ export function useLogContact() {
       const { error } = await supabase.rpc('admin_log_contact', { p_business: business, p_channel: channel });
       if (error) throw error;
     },
-    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+    onSuccess: () => refresh(client, 'coming-up', 'audit', 'activity'),
   });
 }
 

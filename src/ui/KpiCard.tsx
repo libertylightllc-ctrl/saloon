@@ -37,6 +37,15 @@ export function KpiCard({ label, value, delta, sub, subLines = 2, icon, hero, ac
   const theme = useTheme();
   const good = delta ? (delta.good ?? delta.trend === 'up') : true;
   const tone = good ? semantic.success : semantic.error;
+  // A note of several lines gets the card's width: the change badge goes above it, not beside it.
+  const stacked = Boolean(delta && sub?.includes('\n'));
+  const badge = delta ? (
+    <View style={[styles.delta, { backgroundColor: tone.surface }]}>
+      <Text variant="micro" style={{ color: tone.pressed }} tabular>
+        {`${delta.trend === 'up' ? '▲' : '▼'} ${delta.label}`}
+      </Text>
+    </View>
+  ) : null;
 
   return (
     <Card
@@ -59,15 +68,10 @@ export function KpiCard({ label, value, delta, sub, subLines = 2, icon, hero, ac
       <FitText variant={hero ? 'display' : 'h3'} weight="bold" tabular testID={testID ? `${testID}-value` : undefined}>
         {value}
       </FitText>
+      {stacked ? <View style={styles.badgeRow}>{badge}</View> : null}
       <View style={styles.footer}>
         <View style={[styles.flex, styles.subRow]}>
-          {delta ? (
-            <View style={[styles.delta, { backgroundColor: tone.surface }]}>
-              <Text variant="micro" style={{ color: tone.pressed }} tabular>
-                {`${delta.trend === 'up' ? '▲' : '▼'} ${delta.label}`}
-              </Text>
-            </View>
-          ) : null}
+          {stacked ? null : badge}
           {sub ? (
             <Text variant="small" color="textSecondary" numberOfLines={subLines} style={styles.flex} testID={testID ? `${testID}-sub` : undefined}>
               {sub}
@@ -95,4 +99,5 @@ const styles = StyleSheet.create({
   footer: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   subRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flex: 1 },
   delta: { borderRadius: 999, paddingHorizontal: spacing.sm, paddingVertical: 2 },
+  badgeRow: { flexDirection: 'row' },
 });

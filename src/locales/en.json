@@ -3378,8 +3378,8 @@
       },
       "paymentCounted": "{{salon}}: payment of {{amount}} on {{date}} counted again ({{reason}})",
       "contact": {
-        "whatsapp": "{{salon}}: owner messaged on WhatsApp, the {{what}} ends {{date}}",
-        "email": "{{salon}}: owner emailed, the {{what}} ends {{date}}",
+        "whatsapp": "{{salon}}: WhatsApp message to the owner opened, the {{what}} ends {{date}}",
+        "email": "{{salon}}: email to the owner opened, the {{what}} ends {{date}}",
         "free": "free period",
         "pilot": "pilot"
       }
@@ -3474,7 +3474,7 @@
       "noName": "Owner",
       "whatsapp": "WhatsApp {{phone}} (agreed)",
       "noContact": "No email or WhatsApp to reach the owner",
-      "messaged": "Messaged {{when}}",
+      "messaged": "Message opened {{when}}",
       "extend": "Extend",
       "messageOwner": "Message owner",
       "showAll": "Show all ({{n}})",
@@ -3489,7 +3489,7 @@
       "openEmail": "Open email",
       "whatsappOk": "The owner agreed to WhatsApp messages.",
       "noWhatsapp": "The owner has not agreed to WhatsApp, so this goes by email.",
-      "logNote": "Opening it is saved in Changes and in the salon’s history.",
+      "logNote": "Opening it is saved in Changes and in the salon’s history. Whether it was sent is not known here.",
       "logged": "Saved in Changes and the salon’s history",
       "message": {
         "hello": "Hello {{name}},",
@@ -4382,7 +4382,7 @@
       "text": "Approved payroll for {{month}} before the month ended ({{reason}}): net {{amount}}"
     },
     "ownerMessaged": {
-      "text": "The platform owner messaged the salon owner by {{channel}}: the {{what}} ends on {{date}}"
+      "text": "The platform owner opened a message to the salon owner by {{channel}}: the {{what}} ends on {{date}}"
     }
   }
 }

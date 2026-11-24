@@ -103,7 +103,8 @@ export function auditSentence(r: AuditRow, t: Translate, day: Day): string {
     case 'salon:test':
       return t(a.test === true ? 'console.audit.testOn' : 'console.audit.testOff', { salon });
     case 'salon:contact': {
-      // "Palm Salon: owner messaged on WhatsApp, the free period ends 28 Nov 2026" (owner's brief, Part B6).
+      // "Palm Salon: WhatsApp message to the owner opened, the free period ends 28 Nov 2026" (owner's brief, Part B6);
+      // opened, not sent: what happens in WhatsApp is not known here.
       if (!isDate(a.until) || (a.channel !== 'whatsapp' && a.channel !== 'email')) return raw(r, t);
       return t(`console.audit.contact.${a.channel}`, { salon, what: t(a.ending === 'pilot' ? 'console.audit.contact.pilot' : 'console.audit.contact.free'), date: long(a.until) });
     }

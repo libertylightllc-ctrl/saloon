@@ -60,7 +60,7 @@ export function MoneyCards({
           ]
             .filter(Boolean)
             .join('\n')}
-          subLines={6}
+          subLines={10}
           testID="console-mrr"
         />
         <KpiCard

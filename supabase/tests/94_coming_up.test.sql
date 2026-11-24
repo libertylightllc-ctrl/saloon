@@ -102,7 +102,7 @@ select is((select array[after ->> 'channel', after ->> 'ending', (after ->> 'unt
            where business_id = current_setting('t.b1')::uuid and action = 'salon:contact'),
   array['whatsapp', 'free', (public.business_today(current_setting('t.b1')::uuid) + 3)::text], 'written to Changes');
 select is((select summary from audit_log where business_id = current_setting('t.b2')::uuid and entity_type = 'owner_contact'),
-  'The platform owner messaged the salon owner by email: the pilot ends on ' || to_char(public.business_today(current_setting('t.b2')::uuid), 'YYYY-MM-DD'),
+  'The platform owner opened a message to the salon owner by email: the pilot ends on ' || to_char(public.business_today(current_setting('t.b2')::uuid), 'YYYY-MM-DD'),
   'and to the salon''s history');
 select is(coalesce(salon_last_active(current_setting('t.b1')::uuid)::text, ''), current_setting('t.seen_before'),
   'messaging the owner does not make the salon look used');

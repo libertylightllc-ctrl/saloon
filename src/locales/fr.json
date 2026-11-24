@@ -3379,8 +3379,8 @@
       },
       "paymentCounted": "{{salon}} : paiement de {{amount}} du {{date}} compté à nouveau ({{reason}})",
       "contact": {
-        "whatsapp": "{{salon}} : message au propriétaire sur WhatsApp, {{what}} se termine le {{date}}",
-        "email": "{{salon}} : e-mail au propriétaire, {{what}} se termine le {{date}}",
+        "whatsapp": "{{salon}} : message WhatsApp au propriétaire ouvert, {{what}} se termine le {{date}}",
+        "email": "{{salon}} : e-mail au propriétaire ouvert, {{what}} se termine le {{date}}",
         "free": "la période gratuite",
         "pilot": "le pilote"
       }
@@ -3475,7 +3475,7 @@
       "noName": "Propriétaire",
       "whatsapp": "WhatsApp {{phone}} (accepté)",
       "noContact": "Aucun e-mail ni WhatsApp pour joindre le propriétaire",
-      "messaged": "Message envoyé : {{when}}",
+      "messaged": "Message ouvert : {{when}}",
       "extend": "Prolonger",
       "messageOwner": "Écrire au propriétaire",
       "showAll": "Tout afficher ({{n}})",
@@ -3490,7 +3490,7 @@
       "openEmail": "Ouvrir l’e-mail",
       "whatsappOk": "Le propriétaire a accepté les messages WhatsApp.",
       "noWhatsapp": "Le propriétaire n’a pas accepté WhatsApp, cela part donc par e-mail.",
-      "logNote": "L’ouverture est enregistrée dans Modifications et dans l’historique du salon.",
+      "logNote": "L’ouverture est enregistrée dans Modifications et dans l’historique du salon. On ne sait pas ici s’il a été envoyé.",
       "logged": "Enregistré dans Modifications et l’historique du salon",
       "message": {
         "hello": "Bonjour {{name}},",
@@ -4383,7 +4383,7 @@
       "text": "Paie de {{month}} approuvée avant la fin du mois ({{reason}}) : net {{amount}}"
     },
     "ownerMessaged": {
-      "text": "Le propriétaire de la plateforme a écrit au propriétaire du salon par {{channel}} : {{what}} se termine le {{date}}"
+      "text": "Le propriétaire de la plateforme a ouvert un message au propriétaire du salon par {{channel}} : {{what}} se termine le {{date}}"
     }
   }
 }

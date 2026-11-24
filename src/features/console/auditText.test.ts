@@ -41,8 +41,8 @@ it('settings: only what changed, by the names Console → Settings uses', () => 
 
 it('a message to an owner says how and what ends when (owner’s brief, Part B6)', () => {
   const r = row('salon:contact', null, { channel: 'whatsapp', ending: 'free', until: '2026-11-28' }, { salon: 'Palm Salon' });
-  expect(say(r)).toBe('Palm Salon: owner messaged on WhatsApp, the free period ends 28 Nov 2026');
-  expect(say({ ...r, after: { channel: 'email', ending: 'pilot', until: '2026-11-25' } })).toBe('Palm Salon: owner emailed, the pilot ends 25 Nov 2026');
+  expect(say(r)).toBe('Palm Salon: WhatsApp message to the owner opened, the free period ends 28 Nov 2026');
+  expect(say({ ...r, after: { channel: 'email', ending: 'pilot', until: '2026-11-25' } })).toBe('Palm Salon: email to the owner opened, the pilot ends 25 Nov 2026');
 });
 
 it('a corrected free period names the salon, both dates and its length', () => {

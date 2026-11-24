@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Linking, StyleSheet, View } from 'react-native';
 
+import { isRtlLanguage } from '@/lib/i18n';
 import { spacing } from '@/theme';
 import { BottomSheet, Button, Card, FormError, QueryState, Text, useToast } from '@/ui';
 
@@ -48,7 +49,8 @@ function Body({ salon: s, onClose }: { salon: EndingSalon; onClose: () => void }
             {t('console.comingUp.messageTo', { salon: s.name, language: languageName(m.language) })}
           </Text>
           <Card variant="outlined">
-            <Text selectable testID="console-message-text">
+            {/* In the owner's language, whatever the console's: Arabic and Urdu read right to left. */}
+            <Text selectable style={isRtlLanguage(m.language) ? styles.rtl : styles.ltr} testID="console-message-text">
               {m.text}
             </Text>
           </Card>
@@ -86,4 +88,6 @@ function Body({ salon: s, onClose }: { salon: EndingSalon; onClose: () => void }
 const styles = StyleSheet.create({
   body: { gap: spacing.md },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  rtl: { writingDirection: 'rtl', textAlign: 'right' },
+  ltr: { writingDirection: 'ltr', textAlign: 'left' },
 });

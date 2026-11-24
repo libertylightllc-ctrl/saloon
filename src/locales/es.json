@@ -3379,8 +3379,8 @@
       },
       "paymentCounted": "{{salon}}: pago de {{amount}} del {{date}} contado de nuevo ({{reason}})",
       "contact": {
-        "whatsapp": "{{salon}}: mensaje al propietario por WhatsApp, el {{what}} termina el {{date}}",
-        "email": "{{salon}}: email al propietario, el {{what}} termina el {{date}}",
+        "whatsapp": "{{salon}}: mensaje de WhatsApp al propietario abierto, el {{what}} termina el {{date}}",
+        "email": "{{salon}}: email al propietario abierto, el {{what}} termina el {{date}}",
         "free": "periodo gratis",
         "pilot": "piloto"
       }
@@ -3475,7 +3475,7 @@
       "noName": "Propietario",
       "whatsapp": "WhatsApp {{phone}} (aceptó)",
       "noContact": "No hay email ni WhatsApp para contactar al propietario",
-      "messaged": "Mensaje enviado: {{when}}",
+      "messaged": "Mensaje abierto: {{when}}",
       "extend": "Ampliar",
       "messageOwner": "Escribir al propietario",
       "showAll": "Ver todos ({{n}})",
@@ -3490,7 +3490,7 @@
       "openEmail": "Abrir email",
       "whatsappOk": "El propietario aceptó mensajes por WhatsApp.",
       "noWhatsapp": "El propietario no aceptó WhatsApp, así que va por email.",
-      "logNote": "Abrirlo queda guardado en Cambios y en el historial del salón.",
+      "logNote": "Abrirlo queda guardado en Cambios y en el historial del salón. Aquí no se sabe si se envió.",
       "logged": "Guardado en Cambios y en el historial del salón",
       "message": {
         "hello": "Hola, {{name}}:",
@@ -4383,7 +4383,7 @@
       "text": "Nómina de {{month}} aprobada antes de terminar el mes ({{reason}}): neto {{amount}}"
     },
     "ownerMessaged": {
-      "text": "El propietario de la plataforma escribió al propietario del salón por {{channel}}: el {{what}} termina el {{date}}"
+      "text": "El propietario de la plataforma abrió un mensaje al propietario del salón por {{channel}}: el {{what}} termina el {{date}}"
     }
   }
 }

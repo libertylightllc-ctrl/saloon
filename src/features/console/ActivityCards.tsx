@@ -40,7 +40,7 @@ export function ActivityCards({
           label={t('console.activity.atRisk')}
           value={String(a.at_risk_count)}
           sub={t('console.activity.atRiskSub')}
-          subLines={3}
+          subLines={5}
           onPress={() => setRiskOpen(true)}
           testID="console-at-risk"
         />

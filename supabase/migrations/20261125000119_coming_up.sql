@@ -4,7 +4,8 @@
 --    console can write to them in that language; and plan requests still waiting, with when they first asked.
 --    Test, demo and closed salons are left out.
 -- "Message owner" is logged here before WhatsApp or email opens: in Changes and in the salon's own history. The
---    server works out what is ending and when, and checks the owner can be reached that way.
+--    server works out what is ending and when, and checks the owner can be reached that way. The record says a
+--    message was opened, not sent: what happens in WhatsApp or the mail app is not known here.
 
 create function public.admin_coming_up() returns jsonb
 language plpgsql stable security definer set search_path = public as $$
@@ -104,7 +105,7 @@ begin
   perform public.platform_audit_write('salon:contact', p_business, null, null,
     jsonb_build_object('channel', p_channel, 'ending', v_status, 'until', v_until));
   perform public.write_audit(p_business, null, null, 'message', 'owner_contact', null,
-    'The platform owner messaged the salon owner by ' || case when p_channel = 'whatsapp' then 'WhatsApp' else 'email' end
+    'The platform owner opened a message to the salon owner by ' || case when p_channel = 'whatsapp' then 'WhatsApp' else 'email' end
     || ': the ' || case when v_status = 'pilot' then 'pilot' else 'free period' end || ' ends on ' || to_char(v_until, 'YYYY-MM-DD'));
 end;
 $$;

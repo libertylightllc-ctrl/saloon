@@ -159,7 +159,7 @@ export const ACTIVITY_RULES: readonly ActivityRule[] = [
   { key: 'salonCodeChanged', en: 'Changed the salon code: {from} → {to}' },
   { key: 'customerPhonesCountryCode', en: 'Added the country code to {count:count} customer phone numbers' },
   { key: 'salonClosedByPlatform', en: 'Salon closed by the platform owner: {note}' },
-  { key: 'ownerMessaged', en: 'The platform owner messaged the salon owner by {channel:channel}: the {what:ending} ends on {date:isoDate}' },
+  { key: 'ownerMessaged', en: 'The platform owner opened a message to the salon owner by {channel:channel}: the {what:ending} ends on {date:isoDate}' },
   { key: 'branchAdded', en: 'Added the branch {name}' },
   { key: 'branchUpdated', en: 'Updated branch settings' },
   { key: 'modeSwitched', en: 'Switched salon type to {mode:mode}' },
