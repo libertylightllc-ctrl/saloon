@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -26,7 +27,7 @@ import {
 } from '@/ui';
 
 import { AccessForm, accessLabel } from './AccessForm';
-import { useCloseSalon, useSalonDuplicates, useSalonStats, useTestSalons } from './api';
+import { useBillingSettings, useCloseSalon, useSalonDuplicates, useSalonStats, useTestSalons } from './api';
 import { otherSalons } from './duplicates';
 import { inFilter, SALON_FILTERS, type SalonFilter } from './salonFilter';
 import { TestSalonSwitch } from './TestSalonSwitch';
@@ -38,20 +39,37 @@ const NO_TESTS: ReadonlySet<string> = new Set();
 /** The pill's colour for each status: running green or amber, over grey-red. */
 const TONE = { paid: 'valid', comp: 'valid', free: 'due_soon', pilot: 'due_soon', ended: 'expired', closed: 'expired' } as const;
 
+/** Why a salon was closed and by whom (owner's brief A6): the reason typed and the platform owner, or that the owner
+ *  deleted their account. */
+function closedLine(s: AdminSalon, t: TFunction): string | null {
+  if (s.close_note) return [s.close_note, s.closed_by_name ? t('console.salons.closedBy', { name: s.closed_by_name }) : null].filter(Boolean).join(' · ');
+  return s.owner_deleted_at ? t('console.salons.closedOwnerDeleted') : null;
+}
+
 /**
  * Every salon: owner, plan and request, and what it does — staff, customers, sales, last activity. A status filter
  * (All, Paid, Free, Pilot, Ended, Closed, Test) works with the search; each pill counts its salons.
  */
-export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name: string }) => void }) {
+export function SalonsTab({
+  onHistory,
+  startFilter = 'all',
+}: {
+  onHistory: (salon: { id: string; name: string }) => void;
+  /** The group to open on (Overview → "7 ended …" opens the ended ones). */
+  startFilter?: SalonFilter;
+}) {
   const { t, i18n } = useTranslation();
   const dates = useDates();
   const salons = useAdminSalons();
   const stats = useSalonStats();
   const duplicates = useSalonDuplicates();
   const tests = useTestSalons();
+  const billing = useBillingSettings();
+  // While billing is off an ended salon still works (owner's brief A7).
+  const billingOff = billing.data ? !billing.data.billing_enabled : false;
   const [open, setOpen] = useState<AdminSalon | null>(null);
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<SalonFilter>('all');
+  const [filter, setFilter] = useState<SalonFilter>(startFilter);
   const [shown, setShown] = useState(PAGE);
   const q = search.trim().toLowerCase();
   const onSearch = (v: string) => {
@@ -118,6 +136,7 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                               : t('console.salons.never'),
                           ]
                         : []),
+                      ...(s.status === 'closed' ? [closedLine(s, t)].filter((l): l is string => l !== null) : []),
                       ...(s.requested_at ? [t('admin.requested', { count: s.requested_months ?? 1, note: s.request_note ?? '' }).trim()] : []),
                       ...(s.pilot_code ? [t('console.access.code', { code: s.pilot_code })] : []),
                       ...(s.admin_note ? [s.admin_note] : []),
@@ -126,9 +145,12 @@ export function SalonsTab({ onHistory }: { onHistory: (salon: { id: string; name
                     ]}
                     badges={
                       <View style={styles.badges}>
-                        <StatusPill status={TONE[s.status] ?? 'expired'} label={accessLabel(s, t, (d) => dates.day(d, 'd MMM yyyy'))} />
+                        <StatusPill
+                          status={TONE[s.status] ?? 'expired'}
+                          label={accessLabel(s, t, (d) => dates.day(d, 'd MMM yyyy'), { billingOff, at: (iso) => dates.at(iso, s.timezone, 'd MMM yyyy') })}
+                        />
                         {s.requested_at ? <StatusPill status="pending_approval" label={t('admin.asked')} /> : null}
-                        {st?.closed ? <StatusPill status="cancelled" label={t('console.salons.closed')} /> : null}
+                        {st?.closed && s.status !== 'closed' ? <StatusPill status="cancelled" label={t('console.salons.closed')} /> : null}
                         {dup ? <StatusPill status="pending_approval" label={t('console.salons.duplicate')} /> : null}
                         {tests.data?.has(s.business_id) ? <StatusPill tone="info" label={t('console.salons.test')} /> : null}
                       </View>

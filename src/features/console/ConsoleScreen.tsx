@@ -18,6 +18,7 @@ import { CardsTab } from './CardsTab';
 import { ActivityTab, PlansTab } from './HistoryTabs';
 import { OverviewTab } from './OverviewTab';
 import { PilotTab } from './PilotTab';
+import type { SalonFilter } from './salonFilter';
 import { SalonsTab } from './SalonsTab';
 import { SupportTab } from './SupportTab';
 import { useSupportInbox } from '@/features/support/api';
@@ -53,6 +54,7 @@ export function ConsoleScreen() {
   const [paying, setPaying] = useState(false);
   // History of one salon, opened from its row.
   const [salonFilter, setSalonFilter] = useState<{ id: string; name: string } | null>(null);
+  const [salonsStart, setSalonsStart] = useState<SalonFilter>('all');
 
   if (status === 'signedOut' || status === 'error') return <Redirect href="/welcome" />;
   if (admin.data === false) return <Redirect href="/" />;
@@ -75,16 +77,29 @@ export function ConsoleScreen() {
                 label: counted[k] ? `${t(`console.tabs.${k}`)} (${counted[k]})` : t(`console.tabs.${k}`),
               }))}
               value={tab}
-              onChange={setTab}
+              onChange={(k) => {
+                setSalonsStart('all');
+                setTab(k);
+              }}
               testID="console-tab"
             />
           </HeaderBand>
         }
       >
         <View style={styles.body}>
-          {tab === 'overview' ? <OverviewTab onOpenPilot={() => setTab('pilot')} /> : null}
+          {tab === 'overview' ? (
+            <OverviewTab
+              onOpenPilot={() => setTab('pilot')}
+              onOpenSalons={(f) => {
+                setSalonsStart(f);
+                setTab('salons');
+              }}
+            />
+          ) : null}
           {tab === 'salons' ? (
             <SalonsTab
+              key={salonsStart}
+              startFilter={salonsStart}
               onHistory={(salon) => {
                 setSalonFilter(salon);
                 setTab('activity');

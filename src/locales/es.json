@@ -3083,7 +3083,9 @@
       "review_one": "{{count}} solicitud nueva – revisar",
       "review": "{{count}} solicitudes nuevas – revisar",
       "testsLeftOut": "{{count}} salones de prueba no cuentan en estas cifras.",
-      "testsLeftOut_one": "{{count}} salón de prueba no cuenta en estas cifras."
+      "testsLeftOut_one": "{{count}} salón de prueba no cuenta en estas cifras.",
+      "endedWarning_one": "{{count}} terminado · pierde el acceso cuando se active la facturación",
+      "endedWarning": "{{count}} terminados · pierden el acceso cuando se active la facturación"
     },
     "salons": {
       "search": "Buscar salones, dueños, códigos",
@@ -3128,7 +3130,9 @@
         "test": "Prueba"
       },
       "noneHere": "No hay salones aquí.",
-      "ownerDeleted": "Cuenta del propietario eliminada el {{date}}"
+      "ownerDeleted": "Cuenta del propietario eliminada el {{date}}",
+      "closedBy": "por {{name}}",
+      "closedOwnerDeleted": "El propietario eliminó su cuenta"
     },
     "accounts": {
       "title": "Cuentas ({{count}})",
@@ -3227,7 +3231,9 @@
       "note": "Nota (solo la ven los dueños de la plataforma)",
       "saveNote": "Guardar nota",
       "saved": "Guardado",
-      "endedOn": "Terminó el {{date}}"
+      "endedOn": "Terminó el {{date}}",
+      "closedOn": "Cerrado el {{date}}",
+      "endedWorking": "Terminó el {{date}} (sigue funcionando: la facturación está desactivada)"
     },
     "billing": {
       "title": "Facturación",

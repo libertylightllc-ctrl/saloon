@@ -43,9 +43,9 @@ const mockSalons: AdminSalon[] = Array.from({ length: 60 }, (_, i) => ({
   ended_on: i === 5 ? '2026-10-30' : i === 10 ? '2026-11-05' : null,
   // Salon 20's owner deleted their account (owner's brief A1).
   owner_deleted_at: i === 20 ? '2026-11-03T10:00:00Z' : null,
-  closed_at: null,
-  close_note: null,
-  closed_by_name: null,
+  closed_at: i === 12 ? '2026-11-20T09:00:00Z' : null,
+  close_note: i === 12 ? 'Opened twice by mistake' : null,
+  closed_by_name: i === 12 ? 'Saloqo team' : null,
 }));
 
 jest.mock('@/features/plan/api', () => ({
@@ -68,6 +68,7 @@ jest.mock('./api', () => ({
     ]),
   }),
   useTestSalons: () => ({ data: new Set(['b-5']) }),
+  useBillingSettings: () => ({ data: { billing_enabled: false } }),
   useSetTestSalon: () => ({ mutate: jest.fn(), isPending: false, error: null }),
 }));
 jest.mock('./AccessForm', () => ({ AccessForm: () => null, accessLabel: () => 'Free until 1 Dec 2026' }));
@@ -122,6 +123,11 @@ it('marks a likely duplicate and names the other salons', async () => {
   expect(screen.getByTestId('admin-salon-salon4')).not.toHaveTextContent(/Possible duplicate/);
   // Two others with one name: each with its code.
   expect(screen.getByTestId('admin-salon-salon6')).toHaveTextContent(/Same owner name as Salon 8 \(salon8\), Salon 8 \(salon8b\)/);
+});
+
+it('a closed salon says why and who closed it (owner’s brief A6)', async () => {
+  await renderInApp(<SalonsTab onHistory={jest.fn()} />);
+  expect(screen.getByTestId('admin-salon-salon12')).toHaveTextContent(/Opened twice by mistake · by Saloqo team/);
 });
 
 it('a deleted owner shows as the date their account was deleted, never the scrambled email (owner’s brief A1)', async () => {

@@ -3082,7 +3082,9 @@
       "review_one": "{{count}} new application – review",
       "review": "{{count}} new applications – review",
       "testsLeftOut": "{{count}} test salons are left out of these numbers.",
-      "testsLeftOut_one": "{{count}} test salon is left out of these numbers."
+      "testsLeftOut_one": "{{count}} test salon is left out of these numbers.",
+      "endedWarning_one": "{{count}} ended · it loses access when billing is switched on",
+      "endedWarning": "{{count}} ended · they lose access when billing is switched on"
     },
     "salons": {
       "search": "Search salons, owners, codes",
@@ -3127,7 +3129,9 @@
         "test": "Test"
       },
       "noneHere": "No salons here.",
-      "ownerDeleted": "Owner account deleted on {{date}}"
+      "ownerDeleted": "Owner account deleted on {{date}}",
+      "closedBy": "by {{name}}",
+      "closedOwnerDeleted": "The owner deleted their account"
     },
     "accounts": {
       "title": "Accounts ({{count}})",
@@ -3226,7 +3230,9 @@
       "note": "Note (only platform owners see it)",
       "saveNote": "Save note",
       "saved": "Saved",
-      "endedOn": "Ended on {{date}}"
+      "endedOn": "Ended on {{date}}",
+      "closedOn": "Closed on {{date}}",
+      "endedWorking": "Ended on {{date}} (still working: billing is off)"
     },
     "billing": {
       "title": "Billing",

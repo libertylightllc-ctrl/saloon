@@ -2,7 +2,7 @@
  * The Overview's salon card (owner, 2026-11-08): its groups — paid, free, pilot, free for good and ended — add up to
  * the salon total, and closed salons are named apart. A salon whose period is over says "Ended on <date>" in the lists.
  */
-import { screen } from '@testing-library/react-native';
+import { fireEvent, screen } from '@testing-library/react-native';
 
 import type { AdminSalon } from '@/features/plan/api';
 import { i18n } from '@/lib/i18n';
@@ -47,7 +47,7 @@ jest.mock('@/ui/BottomSheet', () => ({ BottomSheet: () => null }));
 warmUpRendering();
 
 it('the salon groups add up to the total, with "ended" among them and closed salons named apart', async () => {
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} />);
   expect(screen.getByTestId('console-salons-value')).toHaveTextContent('8');
   expect(screen.getByTestId('console-salons-sub')).toHaveTextContent(
     '0 paid · 4 free · 1 pilot · 0 free for good · 3 ended. Not counted: 2 closed',
@@ -70,4 +70,25 @@ it('a salon whose period is over says "Ended on <date>" in place of "Free until"
   expect(accessLabel(salon({ access_type: 'trial', free_until: '2026-11-18', status: 'free' }), t, day)).toBe('Free until 18 Nov 2026');
   // No period ever recorded: as before.
   expect(accessLabel(salon({ access_type: null, status: 'ended' }), t, day)).toBe('No free time');
+});
+
+it('while billing is off, ended salons say they still work, and the Overview warns before billing goes on (owner’s brief A7)', async () => {
+  const onOpenSalons = jest.fn();
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={onOpenSalons} />);
+  expect(screen.getByTestId('console-ended-warning')).toHaveTextContent(/3 ended · they lose access when billing is switched on/);
+  fireEvent.press(screen.getByTestId('console-ended-warning'));
+  expect(onOpenSalons).toHaveBeenCalledWith('ended');
+  const t = i18n.getFixedT('en');
+  const day = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const ended = { access_type: 'trial', free_until: '2026-11-05', paid_until: null, status: 'ended', ended_on: '2026-11-05' } as AdminSalon;
+  expect(accessLabel(ended, t, day, { billingOff: true })).toBe('Ended on 5 Nov 2026 (still working: billing is off)');
+  expect(accessLabel(ended, t, day, { billingOff: false })).toBe('Ended on 5 Nov 2026');
+});
+
+it('a closed salon shows only the day it closed, not its free period (owner’s brief A6)', async () => {
+  await renderInApp(<></>);
+  const t = i18n.getFixedT('en');
+  const day = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const closed = { access_type: 'trial', free_until: '2026-12-04', paid_until: null, status: 'closed', ended_on: null, closed_at: '2026-11-20T09:00:00Z' } as AdminSalon;
+  expect(accessLabel(closed, t, day)).toBe('Closed on 20 Nov 2026');
 });

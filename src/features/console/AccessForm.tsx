@@ -10,13 +10,24 @@ import { Button, DateField, FormError, Text, TextField, useToast } from '@/ui';
 
 import { useSetAccess, type AccessAction } from './api';
 
-/** A salon's access in words: free for good, pilot or free until a date, paid until a date, or the day it ended. */
+/**
+ * A salon's access in words: free for good, pilot or free until a date, paid until a date, the day it ended, or the day
+ * it was closed (owner's brief A6: a closed salon shows nothing else). While billing is off an ended salon still works,
+ * and says so (A7). `at` writes a closing time as the salon's date.
+ */
 export function accessLabel(
-  s: Pick<AdminSalon, 'access_type' | 'free_until' | 'paid_until' | 'status' | 'ended_on'>,
+  s: Pick<AdminSalon, 'access_type' | 'free_until' | 'paid_until' | 'status' | 'ended_on'> & Partial<Pick<AdminSalon, 'closed_at'>>,
   t: TFunction,
   day: (d: string) => string,
+  opts: { billingOff?: boolean; at?: (iso: string) => string } = {},
 ): string {
-  if (s.status === 'ended') return s.ended_on ? t('console.access.endedOn', { date: day(s.ended_on) }) : t('console.access.none');
+  if (s.status === 'closed' && s.closed_at) {
+    return t('console.access.closedOn', { date: opts.at ? opts.at(s.closed_at) : day(s.closed_at.slice(0, 10)) });
+  }
+  if (s.status === 'ended') {
+    if (!s.ended_on) return t('console.access.none');
+    return t(opts.billingOff ? 'console.access.endedWorking' : 'console.access.endedOn', { date: day(s.ended_on) });
+  }
   if (s.access_type === 'comp') return t('console.access.comp');
   if ((s.status === 'paid' || s.access_type === 'paid') && s.paid_until) return t('admin.until', { date: day(s.paid_until) });
   if (s.free_until) return t(s.access_type === 'pilot' ? 'console.access.pilotUntil' : 'console.access.freeUntil', { date: day(s.free_until) });

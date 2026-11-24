@@ -3083,7 +3083,9 @@
       "review_one": "{{count}} inscrição nova – rever",
       "review": "{{count}} inscrições novas – rever",
       "testsLeftOut": "{{count}} salões de teste ficam fora destes números.",
-      "testsLeftOut_one": "{{count}} salão de teste fica fora destes números."
+      "testsLeftOut_one": "{{count}} salão de teste fica fora destes números.",
+      "endedWarning_one": "{{count}} terminado · perde o acesso quando a cobrança for ligada",
+      "endedWarning": "{{count}} terminados · perdem o acesso quando a cobrança for ligada"
     },
     "salons": {
       "search": "Pesquisar salões, proprietários, códigos",
@@ -3128,7 +3130,9 @@
         "test": "Teste"
       },
       "noneHere": "Nenhum salão aqui.",
-      "ownerDeleted": "Conta do proprietário excluída em {{date}}"
+      "ownerDeleted": "Conta do proprietário excluída em {{date}}",
+      "closedBy": "por {{name}}",
+      "closedOwnerDeleted": "O proprietário excluiu a conta"
     },
     "accounts": {
       "title": "Contas ({{count}})",
@@ -3227,7 +3231,9 @@
       "note": "Nota (só os donos da plataforma veem)",
       "saveNote": "Salvar nota",
       "saved": "Salvo",
-      "endedOn": "Encerrado em {{date}}"
+      "endedOn": "Encerrado em {{date}}",
+      "closedOn": "Fechado em {{date}}",
+      "endedWorking": "Terminou em {{date}} (ainda funciona: a cobrança está desligada)"
     },
     "billing": {
       "title": "Cobrança",

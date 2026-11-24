@@ -5,9 +5,10 @@ import { countryName } from '@/lib/countries';
 import { isCurrency } from '@/lib/currencies';
 import { formatMoney } from '@/lib/money';
 import { spacing } from '@/theme';
-import { Button, KpiCard, KpiGrid, ListRow, QueryState, SectionHeader, Text } from '@/ui';
+import { Button, KpiCard, KpiGrid, ListRow, QueryState, SectionHeader, StatusPill, Text } from '@/ui';
 
 import { useOverview } from './api';
+import type { SalonFilter } from './salonFilter';
 
 const money = (minor: number, currency: string) => (isCurrency(currency) ? formatMoney(minor, currency) : `${currency} ${minor}`);
 
@@ -17,7 +18,7 @@ const money = (minor: number, currency: string) => (isCurrency(currency) ? forma
  * of it, and the last line says how many (final brief E1). The salon groups — paid, free, pilot, free for good and
  * ended — add up to the salon total; closed salons are named apart (owner, 2026-11-08).
  */
-export function OverviewTab({ onOpenPilot }: { onOpenPilot: () => void }) {
+export function OverviewTab({ onOpenPilot, onOpenSalons }: { onOpenPilot: () => void; onOpenSalons: (filter: SalonFilter) => void }) {
   const { t, i18n } = useTranslation();
   const overview = useOverview();
   return (
@@ -56,6 +57,17 @@ export function OverviewTab({ onOpenPilot }: { onOpenPilot: () => void }) {
             <KpiCard icon="users" label={t('console.overview.accounts')} value={String(o.accounts)} sub={[t('console.overview.owners', { count: o.owners }), t('console.overview.staffLogins', { count: o.staff_logins }), t('console.overview.noSalon', { count: o.no_salon })].join(' · ')} testID="console-accounts" />
             <KpiCard icon="userPlus" label={t('console.overview.signups')} value={String(o.signups_7d)} sub={t('console.overview.signupsSub', { month: o.signups_30d, active: o.signed_in_7d })} />
           </KpiGrid>
+
+          {!o.billing_enabled && o.salons_ended > 0 ? (
+            // Ended salons still work while billing is off: say so before anyone switches it on (owner's brief A7).
+            <ListRow
+              badges={<StatusPill tone="warning" label={t('console.billing.off')} />}
+              title={t('console.overview.endedWarning', { count: o.salons_ended })}
+              chevron
+              onPress={() => onOpenSalons('ended')}
+              testID="console-ended-warning"
+            />
+          ) : null}
 
           <SectionHeader title={t('console.overview.salesMonth')} />
           {o.sales_month.length === 0 ? <Text color="textSecondary">{t('console.overview.none')}</Text> : null}
