@@ -4686,6 +4686,7 @@ export type Database = {
       admin_signups_weekly: { Args: { p_weeks?: number }; Returns: Json };
       admin_support_close: { Args: { p_thread: string }; Returns: undefined };
       admin_support_reply: { Args: { p_body: string; p_thread: string }; Returns: undefined };
+      admin_support_stats: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_support_thread: { Args: { p_thread: string }; Returns: Json };
       admin_support_threads: {
         Args: Record<PropertyKey, never>;

@@ -3216,7 +3216,13 @@
       "needsYou": "Needs you",
       "aiAnswered": "AI answered",
       "assistantSwitch": "AI assistant answers first",
-      "assistantHint": "The AI assistant answers new messages straight away and hands a conversation to you when it can’t solve it or someone asks for a person. Your own answer takes a conversation over."
+      "assistantHint": "The AI assistant answers new messages straight away and hands a conversation to you when it can’t solve it or someone asks for a person. Your own answer takes a conversation over.",
+      "waiting": "Waiting for a person",
+      "open": "Open conversations: {{n}}",
+      "oldest": "Oldest waiting: {{time}}",
+      "underMinute": "under a minute",
+      "firstReply": "First reply by a person",
+      "firstReplySub": "Average, last 30 days · conversations answered: {{n}}"
     },
     "cards": {
       "title": "Card payments (Creem)",
@@ -3503,6 +3509,32 @@
       "sub": "Last 12 weeks: {{n}} · by country · weeks start on Monday (Dubai) · test salons not counted",
       "other": "Other",
       "none": "No new salons in the last 12 weeks."
+    },
+    "service": {
+      "title": "Support and system"
+    },
+    "health": {
+      "title": "System health",
+      "ok": "Working",
+      "problem": "Problem",
+      "none": "Nothing yet",
+      "day": "Last 24 h: {{ok}} OK, {{fails}} failed",
+      "lastOk": "last OK {{when}}",
+      "neverOk": "not yet OK",
+      "lastFail": "Last failure {{when}}: {{why}}",
+      "email": "Emails to the team",
+      "emailNote": "Support alerts, plan requests and pilot applications. Sign-up and password emails are sent by Supabase and are not seen here.",
+      "cards": "Card payments (Creem)",
+      "cardsMode": "Card payments: {{mode}}",
+      "rates": "Exchange rates",
+      "ratesDay": "Latest rates: {{date}} (ExchangeRate-API)",
+      "ratesFixed": "No daily rates yet: only the fixed rates are used",
+      "app": "Errors in the app",
+      "appErrors": "Last 24 h: {{n}}",
+      "noSalon": "no salon",
+      "backups": "Database backups",
+      "backupsNote": "Supabase keeps daily backups. See them, or restore one, on Supabase’s own page.",
+      "openBackups": "Open backups in Supabase"
     }
   },
   "profile": {

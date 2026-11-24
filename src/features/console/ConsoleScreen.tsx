@@ -91,6 +91,7 @@ export function ConsoleScreen() {
           {tab === 'overview' ? (
             <OverviewTab
               onOpenPilot={() => setTab('pilot')}
+              onOpenSupport={() => setTab('support')}
               onOpenSalons={(f) => {
                 setSalonsStart({ filter: f });
                 setTab('salons');

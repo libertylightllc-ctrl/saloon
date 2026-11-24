@@ -21,6 +21,7 @@ import {
 import { useOverview, type Overview } from './api';
 import { BusinessSection } from './BusinessSection';
 import { ComingUp } from './ComingUp';
+import { ServiceSection } from './ServiceSection';
 import { SignupsChart } from './SignupsChart';
 import { StatusCards } from './StatusCards';
 import { PaymentsSheet, type PaymentPeriod } from './PaymentsSheet';
@@ -39,11 +40,13 @@ export function OverviewTab({
   onOpenPilot,
   onOpenSalons,
   onOpenSalon,
+  onOpenSupport,
 }: {
   onOpenPilot: () => void;
   onOpenSalons: (filter: SalonFilter) => void;
   /** Opens one salon in Salons, by its code. */
   onOpenSalon: (code: string) => void;
+  onOpenSupport: () => void;
 }) {
   const { t, i18n } = useTranslation();
   const overview = useOverview();
@@ -57,6 +60,7 @@ export function OverviewTab({
             <StatusCards o={o} onOpenSalons={onOpenSalons} />
             <ComingUp onOpenSalon={onOpenSalon} />
             <SignupsChart />
+            <ServiceSection onOpenSupport={onOpenSupport} />
 
             <SectionHeader title={t('console.business.totals')} />
             <KpiGrid>

@@ -184,3 +184,65 @@ export function useSignups() {
     },
   });
 }
+
+/** B9 Support (migration 121). */
+export interface SupportStats {
+  open: number;
+  /** Handed over by the assistant, the last word not the team's. */
+  waiting: number;
+  oldest_waiting_at: string | null;
+  oldest_waiting_minutes: number | null;
+  /** Conversations begun in the last 30 days that a person answered. */
+  replied_30d: number;
+  first_reply_seconds: number | null;
+}
+
+export function useSupportStats() {
+  return useQuery({
+    queryKey: ['platform', 'support-stats'],
+    queryFn: async (): Promise<SupportStats> => {
+      const { data, error } = await supabase.rpc('admin_support_stats');
+      if (error) throw error;
+      return data as unknown as SupportStats;
+    },
+  });
+}
+
+/** How one kind of automatic work went (B10). */
+export interface HealthLine {
+  last_ok_at: string | null;
+  last_fail_at: string | null;
+  last_fail: string | null;
+  ok_24h: number;
+  fails_24h: number;
+}
+
+export interface AppError {
+  at: string;
+  detail: string | null;
+  screen: string | null;
+  salon: string | null;
+  code: string | null;
+}
+
+/** B10 System health (migration 116). */
+export interface Health {
+  email: HealthLine;
+  card_webhook: HealthLine;
+  rates: HealthLine;
+  card_payments: 'off' | 'test' | 'live';
+  rates_day: string | null;
+  app_errors_24h: number;
+  app_errors: AppError[];
+}
+
+export function useHealth() {
+  return useQuery({
+    queryKey: ['platform', 'health'],
+    queryFn: async (): Promise<Health> => {
+      const { data, error } = await supabase.rpc('admin_health');
+      if (error) throw error;
+      return data as unknown as Health;
+    },
+  });
+}

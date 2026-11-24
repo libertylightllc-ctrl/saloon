@@ -3217,7 +3217,13 @@
       "needsYou": "Vous attend",
       "aiAnswered": "Réponse de l’IA",
       "assistantSwitch": "L’assistant IA répond en premier",
-      "assistantHint": "L’assistant IA répond tout de suite aux nouveaux messages et vous transmet une conversation lorsqu’il ne peut pas résoudre le problème ou qu’on demande à parler à une personne. Dès que vous répondez vous-même, vous prenez la main sur la conversation."
+      "assistantHint": "L’assistant IA répond tout de suite aux nouveaux messages et vous transmet une conversation lorsqu’il ne peut pas résoudre le problème ou qu’on demande à parler à une personne. Dès que vous répondez vous-même, vous prenez la main sur la conversation.",
+      "waiting": "En attente d’une personne",
+      "open": "Conversations ouvertes : {{n}}",
+      "oldest": "Plus longue attente : {{time}}",
+      "underMinute": "moins d’une minute",
+      "firstReply": "Première réponse d’une personne",
+      "firstReplySub": "Moyenne, 30 derniers jours · conversations répondues : {{n}}"
     },
     "cards": {
       "title": "Paiements par carte (Creem)",
@@ -3504,6 +3510,32 @@
       "sub": "12 dernières semaines : {{n}} · par pays · semaines du lundi au dimanche (Dubaï) · salons de test non comptés",
       "other": "Autres",
       "none": "Aucun nouveau salon ces 12 dernières semaines."
+    },
+    "service": {
+      "title": "Assistance et système"
+    },
+    "health": {
+      "title": "État du système",
+      "ok": "Fonctionne",
+      "problem": "Problème",
+      "none": "Rien pour l’instant",
+      "day": "Dernières 24 h : {{ok}} réussis, {{fails}} en échec",
+      "lastOk": "dernier succès : {{when}}",
+      "neverOk": "pas encore de succès",
+      "lastFail": "Dernier échec {{when}} : {{why}}",
+      "email": "E-mails à l’équipe",
+      "emailNote": "Alertes d’assistance, demandes d’abonnement et candidatures au pilote. Les e-mails d’inscription et de mot de passe sont envoyés par Supabase et n’apparaissent pas ici.",
+      "cards": "Paiements par carte (Creem)",
+      "cardsMode": "Paiements par carte : {{mode}}",
+      "rates": "Taux de change",
+      "ratesDay": "Derniers taux : {{date}} (ExchangeRate-API)",
+      "ratesFixed": "Pas encore de taux du jour : seuls les taux fixes sont utilisés",
+      "app": "Erreurs dans l’app",
+      "appErrors": "Dernières 24 h : {{n}}",
+      "noSalon": "aucun salon",
+      "backups": "Sauvegardes de la base de données",
+      "backupsNote": "Supabase garde des sauvegardes quotidiennes. Consultez-les ou restaurez-en une sur la page de Supabase.",
+      "openBackups": "Ouvrir les sauvegardes dans Supabase"
     }
   },
   "profile": {

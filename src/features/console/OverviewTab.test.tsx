@@ -3,6 +3,7 @@
  * the salon total, and closed salons are named apart. A salon whose period is over says "Ended on <date>" in the lists.
  */
 import { fireEvent, screen } from '@testing-library/react-native';
+import { Linking } from 'react-native';
 
 import type { AdminSalon } from '@/features/plan/api';
 import { i18n } from '@/lib/i18n';
@@ -10,6 +11,7 @@ import { renderInApp, warmUpRendering } from '@/ui/testUtils';
 
 import { accessLabel } from './AccessForm';
 import type { Overview } from './api';
+import { backupsUrl } from './HealthCard';
 import { OverviewTab } from './OverviewTab';
 
 // The live numbers on 8 Nov 2026: 8 open salons, 3 of them ended, and 2 closed.
@@ -69,6 +71,16 @@ const mockRevenue = {
   conversion: { ended: 4, paid: 1 },
   churn: [{ business_id: 'b-9', name: 'Palm Salon', code: 'palm22', stopped_on: '2026-11-12', status: 'ended', currency: 'QAR', minor: 4_900 }],
 };
+const quiet = { last_ok_at: null, last_fail_at: null, last_fail: null, ok_24h: 0, fails_24h: 0 };
+const mockHealth = {
+  email: { last_ok_at: '2026-11-24T08:00:00Z', last_fail_at: '2026-11-25T07:00:00Z', last_fail: 'Plan request: email service answered 500', ok_24h: 3, fails_24h: 1 },
+  card_webhook: { ...quiet, last_ok_at: '2026-11-25T05:00:00Z', ok_24h: 2 },
+  rates: quiet,
+  card_payments: 'test',
+  rates_day: '2026-11-25',
+  app_errors_24h: 1,
+  app_errors: [{ at: '2026-11-25T09:00:00Z', detail: 'Cannot read properties of undefined', screen: '/sale', salon: 'Palm Salon', code: 'palm22' }],
+};
 const ok = (data: unknown) => ({ data, isPending: false, isError: false, error: null, refetch: jest.fn() });
 const mockActivity = {
   open: 8,
@@ -85,6 +97,9 @@ jest.mock('./overviewApi', () => ({
   useRevenue: () => ok(mockRevenue),
   useSalonActivity: () => ok(mockActivity),
   useComingUp: () => ok({ ending: [], requests: [] }),
+  useSupportStats: () =>
+    ok({ open: 12, waiting: 2, oldest_waiting_at: '2026-11-25T06:00:00Z', oldest_waiting_minutes: 135, replied_30d: 9, first_reply_seconds: 1_500 }),
+  useHealth: () => ok(mockHealth),
   useSignups: () =>
     ok({
       weeks: ['2026-11-09', '2026-11-16', '2026-11-23'],
@@ -96,15 +111,13 @@ jest.mock('./overviewApi', () => ({
     }),
   useLogContact: () => ({ mutateAsync: jest.fn(), isPending: false, error: null }),
 }));
-// The chart library ships modern modules Jest does not read; the chart's numbers are checked in its text.
-jest.mock('react-native-gifted-charts', () => ({ BarChart: () => null }));
 // The bottom sheet's animation library does not load in tests; none is opened here.
 jest.mock('@/ui/BottomSheet', () => ({ BottomSheet: () => null }));
 
 warmUpRendering();
 
 it('the salon groups add up to the total, with "ended" among them and closed salons named apart', async () => {
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} onOpenSupport={jest.fn()} />);
   expect(screen.getByTestId('console-salons-value')).toHaveTextContent('8');
   expect(screen.getByTestId('console-salons-sub')).toHaveTextContent(
     '0 paid · 4 free · 1 pilot · 0 free for good · 3 ended. Not counted: 2 closed',
@@ -131,7 +144,7 @@ it('a salon whose period is over says "Ended on <date>" in place of "Free until"
 
 it('while billing is off, ended salons say they still work, and the Overview warns before billing goes on (owner’s brief A7)', async () => {
   const onOpenSalons = jest.fn();
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={onOpenSalons} onOpenSalon={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={onOpenSalons} onOpenSalon={jest.fn()} onOpenSupport={jest.fn()} />);
   expect(screen.getByTestId('console-ended-warning')).toHaveTextContent(/3 ended · they lose access when billing is switched on/);
   fireEvent.press(screen.getByTestId('console-ended-warning'));
   expect(onOpenSalons).toHaveBeenCalledWith('ended');
@@ -151,7 +164,7 @@ it('a closed salon shows only the day it closed, not its free period (owner’s 
 });
 
 it('one rule for the numbers, accounts with their split, new salons, and plan payments by period (owner’s brief A3–A4)', async () => {
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} onOpenSupport={jest.fn()} />);
   expect(screen.getByTestId('console-rule')).toHaveTextContent('Test and closed salons are left out.');
   expect(screen.getByTestId('console-accounts-value')).toHaveTextContent('20');
   expect(screen.getByTestId('console-accounts-sub')).toHaveTextContent(/16 active · 2 switched off · 2 deleted/);
@@ -164,7 +177,7 @@ it('one rule for the numbers, accounts with their split, new salons, and plan pa
 });
 
 it('money: monthly income in the reporting currency, the year at that rate, last month, conversion and churn', async () => {
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} onOpenSupport={jest.fn()} />);
   // AED 825.00 a month is about USD 224.64; with USD 16.99, about USD 241.63.
   expect(screen.getByTestId('console-mrr-value')).toHaveTextContent('≈ USD 241.63');
   expect(screen.getByTestId('console-mrr-sub')).toHaveTextContent(
@@ -182,7 +195,7 @@ it('money: monthly income in the reporting currency, the year at that rate, last
 
 it('salons by status: each group with its number opens Salons on that group (owner’s brief B2)', async () => {
   const onOpenSalons = jest.fn();
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={onOpenSalons} onOpenSalon={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={onOpenSalons} onOpenSalon={jest.fn()} onOpenSupport={jest.fn()} />);
   const groups = ['paid', 'free', 'pilot', 'comp', 'ended', 'closed'].map((g) => screen.getByTestId(`console-status-${g}-value`).props.children);
   expect(groups).toEqual(['0', '4', '1', '0', '3', '2']);
   await fireEvent.press(screen.getByTestId('console-status-comp'));
@@ -190,14 +203,38 @@ it('salons by status: each group with its number opens Salons on that group (own
 });
 
 it('active salons in the last 7 and 30 days, and those at risk (owner’s brief B3, B7)', async () => {
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} onOpenSupport={jest.fn()} />);
   expect(screen.getByTestId('console-active-value')).toHaveTextContent('2');
   expect(screen.getByTestId('console-active-sub')).toHaveTextContent('of 8 open salons · 5 in the last 30 days 4 accounts signed in this week');
   expect(screen.getByTestId('console-at-risk-value')).toHaveTextContent('3');
 });
 
 it('new salons each week by country, with the 12 weeks’ totals (owner’s brief B8)', async () => {
-  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} onOpenSupport={jest.fn()} />);
   expect(screen.getByTestId('console-signups')).toHaveTextContent(/Last 12 weeks: 7 · by country/);
   expect(screen.getByTestId('console-signups-legend')).toHaveTextContent(/United Arab Emirates · 6.*Qatar · 1/);
+});
+
+it('support: waiting for a person, the oldest wait, the first reply; and the system’s health (owner’s brief B9, B10)', async () => {
+  const onOpenSupport = jest.fn();
+  const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} onOpenSupport={onOpenSupport} />);
+  expect(screen.getByTestId('console-support-value')).toHaveTextContent('2');
+  expect(screen.getByTestId('console-support-sub')).toHaveTextContent(/Open conversations: 12\s*Oldest waiting: 2 h 15 min/);
+  expect(screen.getByTestId('console-first-reply-value')).toHaveTextContent('25 min');
+  await fireEvent.press(screen.getByTestId('console-support'));
+  expect(onOpenSupport).toHaveBeenCalled();
+  expect(screen.getByTestId('console-health-email')).toHaveTextContent(/Problem/);
+  expect(screen.getByTestId('console-health-email')).toHaveTextContent(/Last 24 h: 3 OK, 1 failed/);
+  expect(screen.getByTestId('console-health-email')).toHaveTextContent(/Plan request: email service answered 500/);
+  expect(screen.getByTestId('console-health-card_webhook')).toHaveTextContent(/Working.*Card payments: Test/);
+  expect(screen.getByTestId('console-health-rates')).toHaveTextContent(/Nothing yet.*Latest rates: 25 Nov 2026/);
+  expect(screen.getByTestId('console-health-app')).toHaveTextContent(/Last 24 h: 1.*Palm Salon · \/sale · Cannot read properties/);
+  await fireEvent.press(screen.getByTestId('console-backups'));
+  expect(open).toHaveBeenCalledWith(expect.stringMatching(/^https:\/\/supabase\.com\/dashboard/));
+});
+
+it('the backups page is the hosted project’s own', () => {
+  expect(backupsUrl('https://abcdefgh.supabase.co')).toBe('https://supabase.com/dashboard/project/abcdefgh/database/backups/scheduled');
+  expect(backupsUrl('http://127.0.0.1:54321')).toBe('https://supabase.com/dashboard');
 });

@@ -3217,7 +3217,13 @@
       "needsYou": "Te necesita",
       "aiAnswered": "Respondida por la IA",
       "assistantSwitch": "El asistente de IA responde primero",
-      "assistantHint": "El asistente de IA responde los mensajes nuevos al instante y te pasa la conversación cuando no puede resolverla o alguien pide hablar con una persona. Si respondes tú, te haces cargo de la conversación."
+      "assistantHint": "El asistente de IA responde los mensajes nuevos al instante y te pasa la conversación cuando no puede resolverla o alguien pide hablar con una persona. Si respondes tú, te haces cargo de la conversación.",
+      "waiting": "Esperando a una persona",
+      "open": "Conversaciones abiertas: {{n}}",
+      "oldest": "La espera más larga: {{time}}",
+      "underMinute": "menos de un minuto",
+      "firstReply": "Primera respuesta de una persona",
+      "firstReplySub": "Promedio, últimos 30 días · conversaciones respondidas: {{n}}"
     },
     "cards": {
       "title": "Pagos con tarjeta (Creem)",
@@ -3504,6 +3510,32 @@
       "sub": "Últimas 12 semanas: {{n}} · por país · semanas de lunes a domingo (Dubái) · sin salones de prueba",
       "other": "Otros",
       "none": "No hay salones nuevos en las últimas 12 semanas."
+    },
+    "service": {
+      "title": "Soporte y sistema"
+    },
+    "health": {
+      "title": "Estado del sistema",
+      "ok": "Funciona",
+      "problem": "Problema",
+      "none": "Nada aún",
+      "day": "Últimas 24 h: {{ok}} bien, {{fails}} con error",
+      "lastOk": "último correcto: {{when}}",
+      "neverOk": "aún sin éxito",
+      "lastFail": "Último error {{when}}: {{why}}",
+      "email": "Emails al equipo",
+      "emailNote": "Avisos de soporte, solicitudes de plan y solicitudes de piloto. Los emails de registro y de contraseña los envía Supabase y no se ven aquí.",
+      "cards": "Pagos con tarjeta (Creem)",
+      "cardsMode": "Pagos con tarjeta: {{mode}}",
+      "rates": "Tipos de cambio",
+      "ratesDay": "Tipos más recientes: {{date}} (ExchangeRate-API)",
+      "ratesFixed": "Aún no hay tipos diarios: solo se usan los tipos fijos",
+      "app": "Errores en la app",
+      "appErrors": "Últimas 24 h: {{n}}",
+      "noSalon": "sin salón",
+      "backups": "Copias de seguridad de la base de datos",
+      "backupsNote": "Supabase guarda copias diarias. Míralas o restaura una en la propia página de Supabase.",
+      "openBackups": "Abrir copias en Supabase"
     }
   },
   "profile": {

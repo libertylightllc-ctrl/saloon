@@ -3217,7 +3217,13 @@
       "needsYou": "Precisa de você",
       "aiAnswered": "Respondida pela IA",
       "assistantSwitch": "O assistente de IA responde primeiro",
-      "assistantHint": "O assistente de IA responde às novas mensagens na hora e passa a conversa para você quando não consegue resolver ou quando alguém pede para falar com uma pessoa. Quando você mesmo responde, assume a conversa."
+      "assistantHint": "O assistente de IA responde às novas mensagens na hora e passa a conversa para você quando não consegue resolver ou quando alguém pede para falar com uma pessoa. Quando você mesmo responde, assume a conversa.",
+      "waiting": "À espera de uma pessoa",
+      "open": "Conversas abertas: {{n}}",
+      "oldest": "Espera mais longa: {{time}}",
+      "underMinute": "menos de um minuto",
+      "firstReply": "Primeira resposta de uma pessoa",
+      "firstReplySub": "Média, últimos 30 dias · conversas respondidas: {{n}}"
     },
     "cards": {
       "title": "Pagamentos com cartão (Creem)",
@@ -3504,6 +3510,32 @@
       "sub": "Últimas 12 semanas: {{n}} · por país · semanas de segunda a domingo (Dubai) · sem salões de teste",
       "other": "Outros",
       "none": "Nenhum salão novo nas últimas 12 semanas."
+    },
+    "service": {
+      "title": "Suporte e sistema"
+    },
+    "health": {
+      "title": "Estado do sistema",
+      "ok": "A funcionar",
+      "problem": "Problema",
+      "none": "Ainda nada",
+      "day": "Últimas 24 h: {{ok}} bem, {{fails}} com falha",
+      "lastOk": "último bem-sucedido: {{when}}",
+      "neverOk": "ainda sem sucesso",
+      "lastFail": "Última falha {{when}}: {{why}}",
+      "email": "Emails para a equipa",
+      "emailNote": "Alertas de suporte, pedidos de plano e candidaturas ao piloto. Os emails de registo e de palavra-passe são enviados pela Supabase e não aparecem aqui.",
+      "cards": "Pagamentos com cartão (Creem)",
+      "cardsMode": "Pagamentos com cartão: {{mode}}",
+      "rates": "Taxas de câmbio",
+      "ratesDay": "Taxas mais recentes: {{date}} (ExchangeRate-API)",
+      "ratesFixed": "Ainda sem taxas diárias: só as taxas fixas são usadas",
+      "app": "Erros na app",
+      "appErrors": "Últimas 24 h: {{n}}",
+      "noSalon": "sem salão",
+      "backups": "Cópias de segurança da base de dados",
+      "backupsNote": "A Supabase guarda cópias diárias. Veja-as ou restaure uma na própria página da Supabase.",
+      "openBackups": "Abrir cópias na Supabase"
     }
   },
   "profile": {
