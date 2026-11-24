@@ -3070,8 +3070,6 @@
       "noSalon": "{{count}} without a salon",
       "newApplications_one": "{{count}} new application",
       "newApplications": "{{count}} new applications",
-      "signups": "Sign-ups this week",
-      "signupsSub": "{{month}} in 30 days · {{active}} signed in this week",
       "salesMonth": "Sales this month, all salons",
       "salesLine": "{{count}} sales",
       "salesLine_one": "{{count}} sale",
@@ -3084,7 +3082,15 @@
       "testsLeftOut": "{{count}} test salons are left out of these numbers.",
       "testsLeftOut_one": "{{count}} test salon is left out of these numbers.",
       "endedWarning_one": "{{count}} ended · it loses access when billing is switched on",
-      "endedWarning": "{{count}} ended · they lose access when billing is switched on"
+      "endedWarning": "{{count}} ended · they lose access when billing is switched on",
+      "newSalons": "New salons this week",
+      "newSalonsSub": "{{count}} in the last 30 days",
+      "signedIn": "Salons signed in this week",
+      "signedInSub_one": "{{count}} account signed in",
+      "signedInSub": "{{count}} accounts signed in",
+      "accountSplit": "{{active}} active · {{off}} switched off · {{deleted}} deleted",
+      "rule": "Test and closed salons are left out.",
+      "planIncomeHint": "Payments on test salons and payments marked Test or Void are left out. Tap a line to see the payments."
     },
     "salons": {
       "search": "Search salons, owners, codes",
@@ -3134,7 +3140,7 @@
       "closedOwnerDeleted": "The owner deleted their account"
     },
     "accounts": {
-      "title": "Accounts ({{count}})",
+      "title": "{{count}} accounts",
       "search": "Search emails, usernames, names, salons",
       "noSalon": "no salon",
       "line": "Joined {{created}} · last signed in {{last}}",
@@ -3144,7 +3150,11 @@
       "phone": "Mobile {{phone}}",
       "phoneOk": "Mobile {{phone}} · OK to WhatsApp since {{date}}",
       "deleted": "Account deleted on {{date}}",
-      "deletedPill": "Deleted"
+      "deletedPill": "Deleted",
+      "title_one": "{{count}} account",
+      "heading": "Accounts",
+      "testNote_one": "{{count}} test salon account is listed but not counted",
+      "testNote": "{{count}} test salon accounts are listed but not counted"
     },
     "owners": {
       "title": "Platform owners",
@@ -3336,7 +3346,12 @@
       "approved": "{{salon}}: pilot application approved, code {{code}}",
       "declined": "{{salon}}: pilot application declined",
       "testOn": "{{salon}}: marked as a test salon",
-      "testOff": "{{salon}}: no longer a test salon"
+      "testOff": "{{salon}}: no longer a test salon",
+      "paymentMarked": {
+        "test": "{{salon}}: payment of {{amount}} on {{date}} marked Test ({{reason}})",
+        "void": "{{salon}}: payment of {{amount}} on {{date}} marked Void ({{reason}})"
+      },
+      "paymentCounted": "{{salon}}: payment of {{amount}} on {{date}} counted again ({{reason}})"
     },
     "contact": {
       "title": "Contact",
@@ -3345,6 +3360,28 @@
       "numberWrong": "Start with + and the country code, for example +971 50 123 4567.",
       "message": "WhatsApp message",
       "messageHint": "The chat opens with this text ready to send. Empty goes back to the usual message."
+    },
+    "payments": {
+      "title": "Plan payments",
+      "month": "This month",
+      "all": "All time",
+      "none": "No payments in this period.",
+      "reason": "Reason (needed)",
+      "markTest": "Mark as test",
+      "markVoid": "Mark void",
+      "countAgain": "Count it again",
+      "mark": {
+        "test": "Test",
+        "void": "Void"
+      },
+      "marked": {
+        "test": "{{salon}}: payment marked as test",
+        "void": "{{salon}}: payment marked void"
+      },
+      "counted": "{{salon}}: payment counted again",
+      "markLine": "{{reason}} · by {{name}} on {{date}}",
+      "testSalon": "Test salon",
+      "notCounted": "Not counted"
     }
   },
   "profile": {

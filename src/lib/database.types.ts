@@ -2193,6 +2193,38 @@ export type Database = {
         };
         Relationships: [];
       };
+      payment_marks: {
+        Row: {
+          event_id: string;
+          mark: string | null;
+          marked_at: string;
+          marked_by: string | null;
+          reason: string;
+        };
+        Insert: {
+          event_id: string;
+          mark?: string | null;
+          marked_at?: string;
+          marked_by?: string | null;
+          reason: string;
+        };
+        Update: {
+          event_id?: string;
+          mark?: string | null;
+          marked_at?: string;
+          marked_by?: string | null;
+          reason?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'payment_marks_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: true;
+            referencedRelation: 'plan_events';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       payroll_adjustments: {
         Row: {
           amount_minor: number;
@@ -4385,7 +4417,34 @@ export type Database = {
       admin_decide_pilot_application: { Args: { p_approve: boolean; p_id: string }; Returns: Json };
       admin_disable_pilot_code: { Args: { p_code: string }; Returns: undefined };
       admin_end_plan: { Args: { p_business: string; p_note: string }; Returns: undefined };
+      admin_mark_payment: {
+        Args: { p_event: string; p_mark: string; p_reason: string };
+        Returns: undefined;
+      };
       admin_overview: { Args: Record<PropertyKey, never>; Returns: Json };
+      admin_payments: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          amount_minor: number;
+          business_id: string;
+          by_name: string;
+          closed: boolean;
+          code: string;
+          counted: boolean;
+          created_at: string;
+          currency: string;
+          id: string;
+          mark: string;
+          mark_reason: string;
+          marked_at: string;
+          marked_by_name: string;
+          months: number;
+          note: string;
+          paid_until: string;
+          salon: string;
+          test_salon: boolean;
+        }[];
+      };
       admin_pilot_applications: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -5085,6 +5144,7 @@ export type Database = {
       };
       pay_supplier: { Args: { p: Json }; Returns: Json };
       pay_tips: { Args: { p: Json }; Returns: Json };
+      payment_counted: { Args: { p_business: string; p_event: string }; Returns: boolean };
       payroll_changes: { Args: { p_run: string }; Returns: Json };
       payroll_figures: {
         Args: { p_business: string; p_period: string };

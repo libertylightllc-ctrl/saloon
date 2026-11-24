@@ -167,6 +167,10 @@ insert into reviewed values
     ('admin_pilot_applications'),
     ('admin_decide_pilot_application'),
     ('admin_platform_audit'),
+    -- Plan payments marked Test or Void, and the list behind the Overview's totals (owner's brief A4, 2026-11-24):
+    -- platform owner checked inside.
+    ('admin_mark_payment'),
+    ('admin_payments'),
     ('apply_for_pilot'),
     ('confirm_my_email'),
     ('phone_has_salon'),

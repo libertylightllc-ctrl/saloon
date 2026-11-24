@@ -85,3 +85,15 @@ it('in Arabic, with its own number forms', () => {
   expect(free(30)).toMatch(/30\u2069? يومًا\u2069?\)$/);
   expect(free(7)).toMatch(/7\u2069? أيام\u2069?\)$/);
 });
+
+it('a payment marked Test or Void, or counted again, reads as a sentence (owner’s brief A4)', () => {
+  const pay = { amount_minor: 4299, currency: 'USD', months: 1, paid_on: '2026-10-12', reason: 'Paid by us to try it' };
+  // Money is written with a no-break space after the currency.
+  const plain = (r: AuditRow) => say(r).replace(/\u00a0/g, ' ');
+  expect(plain(row('payment:mark', { mark: null }, { ...pay, mark: 'test' }, { salon: 'Asil Trims' }))).toBe(
+    'Asil Trims: payment of USD 42.99 on 12 Oct 2026 marked Test (Paid by us to try it)',
+  );
+  expect(plain(row('payment:mark', { mark: 'test' }, { ...pay, mark: null, reason: 'It was real' }, { salon: 'Asil Trims' }))).toBe(
+    'Asil Trims: payment of USD 42.99 on 12 Oct 2026 counted again (It was real)',
+  );
+});

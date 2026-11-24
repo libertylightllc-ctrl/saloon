@@ -28,18 +28,26 @@ const mockOverview: Overview = {
   plan_requests_open: 2,
   branches: 10,
   accounts: 20,
+  accounts_active: 16,
+  accounts_off: 2,
+  accounts_deleted: 2,
+  accounts_test: 11,
   owners: 10,
   staff_logins: 5,
   no_salon: 2,
-  signups_7d: 1,
-  signups_30d: 6,
+  new_salons_7d: 0,
+  new_salons_30d: 3,
+  salons_signed_in_7d: 2,
   signed_in_7d: 4,
   countries: [{ code: 'AE', salons: 10 }],
   sales_month: [],
-  plan_income: [],
+  plan_income: [{ currency: 'AED', total_minor: 9900 }, { currency: 'USD', total_minor: 4299 }],
+  plan_income_month: [],
 };
 jest.mock('./api', () => ({
   useOverview: () => ({ data: mockOverview, isPending: false, isError: false, error: null, refetch: jest.fn() }),
+  usePayments: () => ({ data: [], isPending: false, isError: false, error: null, refetch: jest.fn() }),
+  useMarkPayment: () => ({ mutate: jest.fn(), reset: jest.fn(), isPending: false, error: null }),
 }));
 // The bottom sheet's animation library does not load in tests; none is opened here.
 jest.mock('@/ui/BottomSheet', () => ({ BottomSheet: () => null }));
@@ -91,4 +99,16 @@ it('a closed salon shows only the day it closed, not its free period (owner’s 
   const day = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   const closed = { access_type: 'trial', free_until: '2026-12-04', paid_until: null, status: 'closed', ended_on: null, closed_at: '2026-11-20T09:00:00Z' } as AdminSalon;
   expect(accessLabel(closed, t, day)).toBe('Closed on 20 Nov 2026');
+});
+
+it('one rule for the numbers, accounts with their split, new salons, and plan payments by period (owner’s brief A3–A4)', async () => {
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} />);
+  expect(screen.getByTestId('console-rule')).toHaveTextContent('Test and closed salons are left out.');
+  expect(screen.getByTestId('console-accounts-value')).toHaveTextContent('20');
+  expect(screen.getByTestId('console-accounts-sub')).toHaveTextContent(/16 active · 2 switched off · 2 deleted/);
+  expect(screen.getByTestId('console-new-salons-value')).toHaveTextContent('0');
+  expect(screen.getByTestId('console-new-salons-sub')).toHaveTextContent('3 in the last 30 days');
+  expect(screen.getByTestId('console-signed-in-sub')).toHaveTextContent('4 accounts signed in');
+  expect(screen.getByTestId('console-plan-income-month')).toHaveTextContent(/This month.*Nothing yet\./);
+  expect(screen.getByTestId('console-plan-income-all')).toHaveTextContent(/All time.*AED 99\.00 · USD 42\.99/);
 });

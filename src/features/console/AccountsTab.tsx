@@ -6,7 +6,8 @@ import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Button, Card, FormError, ListRow, QueryState, SearchBar, SectionHeader, StatusPill, Text, TextField, useToast } from '@/ui';
 
-import { useAccounts, useSetPlatformOwner, useTestSalons, type Account } from './api';
+import { useAccounts, useOverview, useSetPlatformOwner, useTestSalons, type Account } from './api';
+import { accountSplit } from './OverviewTab';
 
 const ZONE = 'Asia/Dubai';
 
@@ -19,6 +20,7 @@ export function AccountsTab() {
   const toast = useToast();
   const dates = useDates();
   const accounts = useAccounts();
+  const overview = useOverview();
   const tests = useTestSalons();
   const isTest = (a: Account) => !!a.business_id && !!tests.data?.has(a.business_id);
   const setOwner = useSetPlatformOwner();
@@ -86,7 +88,15 @@ export function AccountsTab() {
             />
           </Card>
 
-          <SectionHeader title={t('console.accounts.title', { count: rows.length })} />
+          {/* The same count as the Overview's, each person once (owner's brief A3); the list has every login. */}
+          <SectionHeader title={overview.data ? t('console.accounts.title', { count: overview.data.accounts }) : t('console.accounts.heading')} />
+          {overview.data ? (
+            <Text variant="small" color="textSecondary" testID="console-accounts-split">
+              {[accountSplit(overview.data, t), overview.data.accounts_test ? t('console.accounts.testNote', { count: overview.data.accounts_test }) : null]
+                .filter(Boolean)
+                .join(' · ')}
+            </Text>
+          ) : null}
           <SearchBar value={search} onChangeText={setSearch} placeholder={t('console.accounts.search')} testID="console-account-search" />
           {rows
             .filter((a) => !q || [a.email, a.username, a.display_name, a.salon].some((v) => v?.toLowerCase().includes(q)))

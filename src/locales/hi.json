@@ -3071,8 +3071,6 @@
       "noSalon": "{{count}} बिना सैलून",
       "newApplications_one": "{{count}} नया आवेदन",
       "newApplications": "{{count}} नए आवेदन",
-      "signups": "इस हफ़्ते साइन-अप",
-      "signupsSub": "30 दिनों में {{month}} · इस हफ़्ते {{active}} ने साइन इन किया",
       "salesMonth": "इस महीने की बिक्री, सभी सैलून",
       "salesLine": "{{count}} बिक्री",
       "salesLine_one": "{{count}} बिक्री",
@@ -3085,7 +3083,15 @@
       "testsLeftOut": "इन संख्याओं में नहीं गिने गए टेस्ट सैलून: {{count}}",
       "testsLeftOut_one": "इन संख्याओं में नहीं गिने गए टेस्ट सैलून: {{count}}",
       "endedWarning_one": "{{count}} समाप्त · बिलिंग चालू होने पर इसकी पहुँच बंद हो जाएगी",
-      "endedWarning": "{{count}} समाप्त · बिलिंग चालू होने पर इनकी पहुँच बंद हो जाएगी"
+      "endedWarning": "{{count}} समाप्त · बिलिंग चालू होने पर इनकी पहुँच बंद हो जाएगी",
+      "newSalons": "इस हफ़्ते नए सैलून",
+      "newSalonsSub": "पिछले 30 दिनों में {{count}}",
+      "signedIn": "इस हफ़्ते साइन इन करने वाले सैलून",
+      "signedInSub_one": "{{count}} खाते ने साइन इन किया",
+      "signedInSub": "{{count}} खातों ने साइन इन किया",
+      "accountSplit": "{{active}} सक्रिय · {{off}} बंद · {{deleted}} हटाए गए",
+      "rule": "टेस्ट और बंद सैलून शामिल नहीं हैं।",
+      "planIncomeHint": "टेस्ट सैलून के भुगतान और «टेस्ट» या «रद्द» चिह्नित भुगतान शामिल नहीं हैं। भुगतान देखने के लिए किसी पंक्ति पर टैप करें।"
     },
     "salons": {
       "search": "सैलून, मालिक, कोड खोजें",
@@ -3135,7 +3141,7 @@
       "closedOwnerDeleted": "मालिक ने अपना खाता हटा दिया"
     },
     "accounts": {
-      "title": "खाते ({{count}})",
+      "title": "{{count}} खाते",
       "search": "ईमेल, यूज़रनेम, नाम, सैलून खोजें",
       "noSalon": "कोई सैलून नहीं",
       "line": "जुड़े {{created}} · आख़िरी साइन इन {{last}}",
@@ -3145,7 +3151,11 @@
       "phone": "मोबाइल {{phone}}",
       "phoneOk": "मोबाइल {{phone}} · {{date}} से WhatsApp के लिए सहमति",
       "deleted": "खाता {{date}} को हटाया गया",
-      "deletedPill": "हटाया गया"
+      "deletedPill": "हटाया गया",
+      "title_one": "{{count}} खाता",
+      "heading": "खाते",
+      "testNote_one": "{{count}} टेस्ट सैलून खाता सूची में है, गिना नहीं गया",
+      "testNote": "{{count}} टेस्ट सैलून खाते सूची में हैं, गिने नहीं गए"
     },
     "owners": {
       "title": "प्लेटफ़ॉर्म मालिक",
@@ -3337,7 +3347,12 @@
       "approved": "{{salon}}: पायलट आवेदन स्वीकार, कोड {{code}}",
       "declined": "{{salon}}: पायलट आवेदन अस्वीकार",
       "testOn": "{{salon}}: टेस्ट सैलून बनाया गया",
-      "testOff": "{{salon}}: अब टेस्ट सैलून नहीं"
+      "testOff": "{{salon}}: अब टेस्ट सैलून नहीं",
+      "paymentMarked": {
+        "test": "{{salon}}: {{date}} का {{amount}} का भुगतान टेस्ट चिह्नित ({{reason}})",
+        "void": "{{salon}}: {{date}} का {{amount}} का भुगतान रद्द चिह्नित ({{reason}})"
+      },
+      "paymentCounted": "{{salon}}: {{date}} का {{amount}} का भुगतान फिर से गिना गया ({{reason}})"
     },
     "contact": {
       "title": "संपर्क",
@@ -3346,6 +3361,28 @@
       "numberWrong": "+ और देश कोड से शुरू करें, जैसे +971 50 123 4567.",
       "message": "WhatsApp संदेश",
       "messageHint": "चैट यह संदेश भेजने के लिए तैयार रखकर खुलती है। खाली छोड़ने पर सामान्य संदेश वापस आ जाता है।"
+    },
+    "payments": {
+      "title": "प्लान भुगतान",
+      "month": "इस महीने",
+      "all": "अब तक",
+      "none": "इस अवधि में कोई भुगतान नहीं।",
+      "reason": "कारण (ज़रूरी)",
+      "markTest": "टेस्ट चिह्नित करें",
+      "markVoid": "रद्द चिह्नित करें",
+      "countAgain": "फिर से गिनें",
+      "mark": {
+        "test": "टेस्ट",
+        "void": "रद्द"
+      },
+      "marked": {
+        "test": "{{salon}}: भुगतान टेस्ट चिह्नित",
+        "void": "{{salon}}: भुगतान रद्द चिह्नित"
+      },
+      "counted": "{{salon}}: भुगतान फिर से गिना गया",
+      "markLine": "{{reason}} · {{name}} द्वारा {{date}} को",
+      "testSalon": "टेस्ट सैलून",
+      "notCounted": "गिना नहीं गया"
     }
   },
   "profile": {

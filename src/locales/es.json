@@ -3071,8 +3071,6 @@
       "noSalon": "{{count}} sin salón",
       "newApplications_one": "{{count}} solicitud nueva",
       "newApplications": "{{count}} solicitudes nuevas",
-      "signups": "Registros esta semana",
-      "signupsSub": "{{month}} en 30 días · {{active}} iniciaron sesión esta semana",
       "salesMonth": "Ventas de este mes, todos los salones",
       "salesLine": "{{count}} ventas",
       "salesLine_one": "{{count}} venta",
@@ -3085,7 +3083,15 @@
       "testsLeftOut": "{{count}} salones de prueba no cuentan en estas cifras.",
       "testsLeftOut_one": "{{count}} salón de prueba no cuenta en estas cifras.",
       "endedWarning_one": "{{count}} terminado · pierde el acceso cuando se active la facturación",
-      "endedWarning": "{{count}} terminados · pierden el acceso cuando se active la facturación"
+      "endedWarning": "{{count}} terminados · pierden el acceso cuando se active la facturación",
+      "newSalons": "Salones nuevos esta semana",
+      "newSalonsSub": "{{count}} en los últimos 30 días",
+      "signedIn": "Salones que entraron esta semana",
+      "signedInSub_one": "{{count}} cuenta entró",
+      "signedInSub": "{{count}} cuentas entraron",
+      "accountSplit": "{{active}} activas · {{off}} desactivadas · {{deleted}} eliminadas",
+      "rule": "Los salones de prueba y cerrados no se cuentan.",
+      "planIncomeHint": "No se cuentan los pagos de salones de prueba ni los marcados como Prueba o Anulado. Toca una línea para ver los pagos."
     },
     "salons": {
       "search": "Buscar salones, dueños, códigos",
@@ -3135,7 +3141,7 @@
       "closedOwnerDeleted": "El propietario eliminó su cuenta"
     },
     "accounts": {
-      "title": "Cuentas ({{count}})",
+      "title": "{{count}} cuentas",
       "search": "Buscar correos, usuarios, nombres, salones",
       "noSalon": "sin salón",
       "line": "Alta: {{created}} · último inicio de sesión: {{last}}",
@@ -3145,7 +3151,11 @@
       "phone": "Móvil {{phone}}",
       "phoneOk": "Móvil {{phone}} · acepta WhatsApp desde el {{date}}",
       "deleted": "Cuenta eliminada el {{date}}",
-      "deletedPill": "Eliminada"
+      "deletedPill": "Eliminada",
+      "title_one": "{{count}} cuenta",
+      "heading": "Cuentas",
+      "testNote_one": "{{count}} cuenta de salón de prueba aparece pero no se cuenta",
+      "testNote": "{{count}} cuentas de salones de prueba aparecen pero no se cuentan"
     },
     "owners": {
       "title": "Dueños de la plataforma",
@@ -3337,7 +3347,12 @@
       "approved": "{{salon}}: solicitud del piloto aprobada, código {{code}}",
       "declined": "{{salon}}: solicitud del piloto rechazada",
       "testOn": "{{salon}}: marcado como salón de prueba",
-      "testOff": "{{salon}}: ya no es un salón de prueba"
+      "testOff": "{{salon}}: ya no es un salón de prueba",
+      "paymentMarked": {
+        "test": "{{salon}}: pago de {{amount}} del {{date}} marcado como prueba ({{reason}})",
+        "void": "{{salon}}: pago de {{amount}} del {{date}} marcado como anulado ({{reason}})"
+      },
+      "paymentCounted": "{{salon}}: pago de {{amount}} del {{date}} contado de nuevo ({{reason}})"
     },
     "contact": {
       "title": "Contacto",
@@ -3346,6 +3361,28 @@
       "numberWrong": "Empieza con + y el código de país, por ejemplo +971 50 123 4567.",
       "message": "Mensaje de WhatsApp",
       "messageHint": "El chat se abre con este texto listo para enviar. Si lo dejas vacío, vuelve el mensaje habitual."
+    },
+    "payments": {
+      "title": "Pagos de planes",
+      "month": "Este mes",
+      "all": "Desde el inicio",
+      "none": "No hay pagos en este periodo.",
+      "reason": "Motivo (obligatorio)",
+      "markTest": "Marcar como prueba",
+      "markVoid": "Marcar como anulado",
+      "countAgain": "Volver a contarlo",
+      "mark": {
+        "test": "Prueba",
+        "void": "Anulado"
+      },
+      "marked": {
+        "test": "{{salon}}: pago marcado como prueba",
+        "void": "{{salon}}: pago marcado como anulado"
+      },
+      "counted": "{{salon}}: pago contado de nuevo",
+      "markLine": "{{reason}} · por {{name}} el {{date}}",
+      "testSalon": "Salón de prueba",
+      "notCounted": "No contado"
     }
   },
   "profile": {

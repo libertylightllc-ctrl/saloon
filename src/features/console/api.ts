@@ -27,17 +27,79 @@ export interface Overview {
   pilot_places_left: number;
   pilot_applications_new: number;
   plan_requests_open: number;
+  /** Open salons only, from here (owner's brief A3): test and closed salons are left out. */
   branches: number;
+  /** Every account once, test salons' left out (owner's brief A3): active + switched off + deleted. */
   accounts: number;
+  accounts_active: number;
+  accounts_off: number;
+  accounts_deleted: number;
+  /** Test salons' accounts: in the Accounts list, not in these numbers. */
+  accounts_test: number;
   owners: number;
   staff_logins: number;
   no_salon: number;
-  signups_7d: number;
-  signups_30d: number;
+  /** New salons (not accounts), closed ones included: they did sign up. */
+  new_salons_7d: number;
+  new_salons_30d: number;
+  /** Open salons where someone signed in this week, and the accounts that did. */
+  salons_signed_in_7d: number;
   signed_in_7d: number;
   countries: { code: string; salons: number }[];
   sales_month: { currency: string; count: number; total_minor: number }[];
+  /** Plan payments all time and this month (owner's brief A4): test salons' and payments marked Test or Void left out. */
   plan_income: { currency: string; total_minor: number }[];
+  plan_income_month: { currency: string; total_minor: number }[];
+}
+
+/** A recorded plan payment (Console → Overview → the payments behind the totals, owner's brief A4). */
+export interface PlanPayment {
+  id: string;
+  business_id: string;
+  salon: string;
+  code: string;
+  closed: boolean;
+  test_salon: boolean;
+  months: number | null;
+  amount_minor: number;
+  currency: string | null;
+  paid_until: string | null;
+  note: string | null;
+  by_name: string | null;
+  created_at: string;
+  mark: 'test' | 'void' | null;
+  mark_reason: string | null;
+  marked_at: string | null;
+  marked_by_name: string | null;
+  /** In the totals: not on a test salon, not marked Test or Void. */
+  counted: boolean;
+}
+
+export function usePayments(enabled: boolean) {
+  return useQuery({
+    queryKey: ['platform', 'payments'],
+    enabled,
+    queryFn: async (): Promise<PlanPayment[]> => {
+      const data = await allPages((from, to) => supabase.rpc('admin_payments').range(from, to));
+      return data.map((p) => ({
+        ...p,
+        amount_minor: Number(p.amount_minor ?? 0),
+        mark: p.mark === 'test' || p.mark === 'void' ? p.mark : null,
+      }));
+    },
+  });
+}
+
+/** Mark a payment Test or Void, or count it again (mark null); a reason is needed. Logged in Changes. */
+export function useMarkPayment() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, mark, reason }: { id: string; mark: 'test' | 'void' | null; reason: string }) => {
+      const { error } = await supabase.rpc('admin_mark_payment', { p_event: id, p_mark: mark as string, p_reason: reason.trim() });
+      if (error) throw error;
+    },
+    onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
+  });
 }
 
 export function useOverview() {

@@ -1,3 +1,6 @@
+import { isCurrency } from '@/lib/currencies';
+import { formatMoney } from '@/lib/money';
+
 import type { AuditRow } from './api';
 
 type Translate = (key: string, values?: Record<string, unknown>) => string;
@@ -90,6 +93,14 @@ export function auditSentence(r: AuditRow, t: Translate, day: Day): string {
       return t('console.audit.declined', { salon });
     case 'salon:test':
       return t(a.test === true ? 'console.audit.testOn' : 'console.audit.testOff', { salon });
+    case 'payment:mark': {
+      // "Asil Trims: payment of USD 42.99 on 12 Oct 2026 marked Test: paid by us to try it" (owner's brief A4).
+      const code = text(a.currency);
+      const amount = typeof a.amount_minor === 'number' && code && isCurrency(code) ? formatMoney(a.amount_minor, code) : '—';
+      const values = { salon, amount, date: isDate(a.paid_on) ? long(a.paid_on) : '—', reason: text(a.reason) ?? '—' };
+      if (a.mark === 'test' || a.mark === 'void') return t(`console.audit.paymentMarked.${a.mark}`, values);
+      return t('console.audit.paymentCounted', values);
+    }
     default:
       return raw(r, t);
   }
