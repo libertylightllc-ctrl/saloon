@@ -36,6 +36,7 @@ it('settings: only what changed, by the names Console → Settings uses', () => 
   expect(say(row('settings:contact', { whatsapp_number: null, whatsapp_message: 'Hi' }, { whatsapp_number: '+971501234567', whatsapp_message: 'Hello' }))).toBe(
     'WhatsApp number: — → +971501234567 · WhatsApp message changed',
   );
+  expect(say(row('settings:currency', { reporting_currency: 'USD' }, { reporting_currency: 'AED' }))).toBe('Reporting currency: USD → AED');
 });
 
 it('a corrected free period names the salon, both dates and its length', () => {

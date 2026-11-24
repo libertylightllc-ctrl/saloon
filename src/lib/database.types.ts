@@ -1741,6 +1741,27 @@ export type Database = {
           },
         ];
       };
+      fx_rates: {
+        Row: {
+          currency: string;
+          day: string;
+          per_usd: number;
+          source: string;
+        };
+        Insert: {
+          currency: string;
+          day: string;
+          per_usd: number;
+          source?: string;
+        };
+        Update: {
+          currency?: string;
+          day?: string;
+          per_usd?: number;
+          source?: string;
+        };
+        Relationships: [];
+      };
       hygiene_logs: {
         Row: {
           branch_id: string;
@@ -2838,6 +2859,7 @@ export type Database = {
           pilot_max_salons: number;
           price_per_branch_minor: number;
           public_free_days: number;
+          reporting_currency: string;
           support_assistant: boolean;
           trial_days: number;
           whatsapp_message: string;
@@ -2864,6 +2886,7 @@ export type Database = {
           pilot_max_salons?: number;
           price_per_branch_minor?: number;
           public_free_days?: number;
+          reporting_currency?: string;
           support_assistant?: boolean;
           trial_days?: number;
           whatsapp_message?: string;
@@ -2890,6 +2913,7 @@ export type Database = {
           pilot_max_salons?: number;
           price_per_branch_minor?: number;
           public_free_days?: number;
+          reporting_currency?: string;
           support_assistant?: boolean;
           trial_days?: number;
           whatsapp_message?: string;
@@ -4421,6 +4445,7 @@ export type Database = {
       admin_decide_pilot_application: { Args: { p_approve: boolean; p_id: string }; Returns: Json };
       admin_disable_pilot_code: { Args: { p_code: string }; Returns: undefined };
       admin_end_plan: { Args: { p_business: string; p_note: string }; Returns: undefined };
+      admin_fx_rates: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_mark_payment: {
         Args: { p_event: string; p_mark: string; p_reason: string };
         Returns: undefined;
@@ -4581,6 +4606,7 @@ export type Database = {
       admin_set_contact: { Args: { p_message: string; p_number: string }; Returns: Json };
       admin_set_payment_details: { Args: { p: Json }; Returns: undefined };
       admin_set_platform_owner: { Args: { p_email: string; p_on: boolean }; Returns: undefined };
+      admin_set_reporting_currency: { Args: { p_currency: string }; Returns: string };
       admin_set_support_assistant: { Args: { p_on: boolean }; Returns: undefined };
       admin_set_test_salon: { Args: { p_business: string; p_test: boolean }; Returns: boolean };
       admin_support_close: { Args: { p_thread: string }; Returns: undefined };
@@ -4961,6 +4987,7 @@ export type Database = {
         Returns: undefined;
       };
       dismiss_refund_request: { Args: { p_id: string; p_note: string }; Returns: undefined };
+      dispatch_fx_rates: { Args: Record<PropertyKey, never>; Returns: number };
       dispatch_plan_alerts: { Args: Record<PropertyKey, never>; Returns: number };
       dispatch_push: { Args: Record<PropertyKey, never>; Returns: number };
       dispatch_support_assistant: { Args: Record<PropertyKey, never>; Returns: number };
@@ -4981,6 +5008,16 @@ export type Database = {
       fix_stock_difference: { Args: { p_business: string }; Returns: number };
       fmt_money: { Args: { p_currency?: string; p_minor: number }; Returns: string };
       free_room: { Args: { p_at: string; p_branch: string; p_minutes: number }; Returns: string };
+      fx_latest: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          currency: string;
+          day: string;
+          per_usd: number;
+          source: string;
+        }[];
+      };
+      fx_rates_due: { Args: Record<PropertyKey, never>; Returns: boolean };
       generate_payroll: { Args: { p_business: string; p_period: string }; Returns: string };
       give_deposit_back: {
         Args: {
@@ -5513,6 +5550,7 @@ export type Database = {
       save_document: { Args: { p: Json }; Returns: string };
       save_employee: { Args: { p: Json }; Returns: string };
       save_expense_category: { Args: { p: Json }; Returns: string };
+      save_fx_rates: { Args: { p_day: string; p_rates: Json }; Returns: number };
       save_item: { Args: { p: Json }; Returns: string };
       save_owner_contact: { Args: { p_phone: string; p_whatsapp_ok: boolean }; Returns: undefined };
       save_room: {

@@ -8,7 +8,15 @@ type Day = (date: string, pattern: string) => string;
 type Values = Record<string, unknown> | null;
 
 /** Platform settings by their name in the log, as Console → Settings calls them. */
-const FIELDS = ['billing_enabled', 'public_free_days', 'pilot_free_days', 'pilot_max_salons', 'whatsapp_number', 'whatsapp_message'];
+const FIELDS = [
+  'billing_enabled',
+  'public_free_days',
+  'pilot_free_days',
+  'pilot_max_salons',
+  'whatsapp_number',
+  'whatsapp_message',
+  'reporting_currency',
+];
 /** Too long to show both ways: only that it changed. */
 const LONG = ['whatsapp_message'];
 
@@ -56,6 +64,7 @@ export function auditSentence(r: AuditRow, t: Translate, day: Day): string {
   switch (r.action) {
     case 'settings':
     case 'settings:contact':
+    case 'settings:currency':
       return settingsLine(r.before, r.after, t);
     case 'free_period:record': {
       if (!isDate(b.until) || !isDate(a.until)) return raw(r, t);

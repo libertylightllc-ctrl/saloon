@@ -7,6 +7,7 @@ import { Button, Card, FormError, QueryState, StatusPill, Text, TextField, useTo
 
 import { useBillingSettings, useSetBilling, type BillingSettings } from './api';
 import { ContactCard } from './ContactCard';
+import { ReportingCurrencyCard } from './ReportingCurrencyCard';
 
 /**
  * Settings (full update, Phase 6 g): billing on or off for everyone — with a confirmation, as it decides whether
@@ -124,6 +125,7 @@ function BillingSettingsForm({ b }: { b: BillingSettings }) {
           testID="console-billing-save"
         />
       </Card>
+      <ReportingCurrencyCard />
       <ContactCard />
     </View>
   );

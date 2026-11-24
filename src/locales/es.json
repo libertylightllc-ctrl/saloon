@@ -3331,7 +3331,8 @@
         "pilot_free_days": "Días gratis para un salón del piloto",
         "pilot_max_salons": "Plazas del piloto",
         "whatsapp_number": "Número de WhatsApp",
-        "whatsapp_message": "Mensaje de WhatsApp"
+        "whatsapp_message": "Mensaje de WhatsApp",
+        "reporting_currency": "Moneda de informes"
       },
       "changed": "{{label}}: {{before}} → {{after}}",
       "textChanged": "{{label}}: cambiado",
@@ -3391,6 +3392,16 @@
       "markLine": "{{reason}} · por {{name}} el {{date}}",
       "testSalon": "Salón de prueba",
       "notCounted": "No contado"
+    },
+    "reporting": {
+      "title": "Moneda de informes",
+      "body": "El dinero del Resumen se muestra en esta moneda. Los importes en otras monedas se convierten al tipo del día y empiezan por ≈.",
+      "saved": "Moneda de informes: {{currency}}"
+    },
+    "fx": {
+      "ratesOf": "≈ convertido a los tipos de cambio del {{date}}.",
+      "fixedOnly": "≈ Aún no han llegado los tipos de cambio del día; hasta entonces solo se convierten {{list}} (fijas al dólar estadounidense).",
+      "credit": "Tipos de Exchange Rate API"
     }
   },
   "profile": {

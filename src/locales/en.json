@@ -3330,7 +3330,8 @@
         "pilot_free_days": "Free days for a pilot salon",
         "pilot_max_salons": "Pilot places",
         "whatsapp_number": "WhatsApp number",
-        "whatsapp_message": "WhatsApp message"
+        "whatsapp_message": "WhatsApp message",
+        "reporting_currency": "Reporting currency"
       },
       "changed": "{{label}}: {{before}} → {{after}}",
       "textChanged": "{{label}} changed",
@@ -3390,6 +3391,16 @@
       "markLine": "{{reason}} · by {{name}} on {{date}}",
       "testSalon": "Test salon",
       "notCounted": "Not counted"
+    },
+    "reporting": {
+      "title": "Reporting currency",
+      "body": "The Overview's money is shown in this currency. Amounts in other currencies are converted at the day's rate and start with ≈.",
+      "saved": "Reporting currency: {{currency}}"
+    },
+    "fx": {
+      "ratesOf": "≈ converted at the exchange rates of {{date}}.",
+      "fixedOnly": "≈ The day's exchange rates have not arrived yet; until they do, only {{list}} convert (fixed to the US dollar).",
+      "credit": "Rates by Exchange Rate API"
     }
   },
   "profile": {

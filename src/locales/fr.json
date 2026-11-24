@@ -3331,7 +3331,8 @@
         "pilot_free_days": "Jours gratuits pour un salon pilote",
         "pilot_max_salons": "Places du pilote",
         "whatsapp_number": "Numéro WhatsApp",
-        "whatsapp_message": "Message WhatsApp"
+        "whatsapp_message": "Message WhatsApp",
+        "reporting_currency": "Devise des rapports"
       },
       "changed": "{{label}} : {{before}} → {{after}}",
       "textChanged": "{{label}} : modifié",
@@ -3391,6 +3392,16 @@
       "markLine": "{{reason}} · par {{name}} le {{date}}",
       "testSalon": "Salon de test",
       "notCounted": "Non compté"
+    },
+    "reporting": {
+      "title": "Devise des rapports",
+      "body": "Les montants de la Vue d’ensemble sont affichés dans cette devise. Les montants dans d’autres devises sont convertis au taux du jour et commencent par ≈.",
+      "saved": "Devise des rapports : {{currency}}"
+    },
+    "fx": {
+      "ratesOf": "≈ converti aux taux de change du {{date}}.",
+      "fixedOnly": "≈ Les taux de change du jour ne sont pas encore arrivés ; d’ici là, seules {{list}} sont converties (fixées au dollar américain).",
+      "credit": "Taux par Exchange Rate API"
     }
   },
   "profile": {

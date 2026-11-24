@@ -3440,7 +3440,8 @@
         "pilot_free_days": "الأيام المجانية لصالون البرنامج التجريبي",
         "pilot_max_salons": "أماكن البرنامج التجريبي",
         "whatsapp_number": "رقم واتساب",
-        "whatsapp_message": "رسالة واتساب"
+        "whatsapp_message": "رسالة واتساب",
+        "reporting_currency": "عملة التقارير"
       },
       "changed": "{{label}}: {{before}} ← {{after}}",
       "textChanged": "تم تغيير {{label}}",
@@ -3506,6 +3507,16 @@
       "markLine": "{{reason}} · بواسطة {{name}} في {{date}}",
       "testSalon": "صالون اختبار",
       "notCounted": "غير محسوبة"
+    },
+    "reporting": {
+      "title": "عملة التقارير",
+      "body": "تُعرض المبالغ في النظرة العامة بهذه العملة. تُحوَّل المبالغ بالعملات الأخرى بسعر اليوم وتبدأ بـ ≈.",
+      "saved": "عملة التقارير: {{currency}}"
+    },
+    "fx": {
+      "ratesOf": "≈ محوَّلة بأسعار الصرف في {{date}}.",
+      "fixedOnly": "≈ لم تصل أسعار صرف اليوم بعد؛ حتى تصل، تُحوَّل {{list}} فقط (مثبتة على الدولار الأمريكي).",
+      "credit": "الأسعار من Exchange Rate API"
     }
   },
   "profile": {

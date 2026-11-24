@@ -3331,7 +3331,8 @@
         "pilot_free_days": "Dias grátis para um salão do piloto",
         "pilot_max_salons": "Vagas no piloto",
         "whatsapp_number": "Número do WhatsApp",
-        "whatsapp_message": "Mensagem do WhatsApp"
+        "whatsapp_message": "Mensagem do WhatsApp",
+        "reporting_currency": "Moeda dos relatórios"
       },
       "changed": "{{label}}: {{before}} → {{after}}",
       "textChanged": "{{label}}: alterada",
@@ -3391,6 +3392,16 @@
       "markLine": "{{reason}} · por {{name}} em {{date}}",
       "testSalon": "Salão de teste",
       "notCounted": "Não contado"
+    },
+    "reporting": {
+      "title": "Moeda dos relatórios",
+      "body": "Os valores da Visão geral aparecem nesta moeda. Valores noutras moedas são convertidos à taxa do dia e começam por ≈.",
+      "saved": "Moeda dos relatórios: {{currency}}"
+    },
+    "fx": {
+      "ratesOf": "≈ convertido às taxas de câmbio de {{date}}.",
+      "fixedOnly": "≈ As taxas de câmbio do dia ainda não chegaram; até lá, só {{list}} são convertidas (fixas ao dólar americano).",
+      "credit": "Taxas por Exchange Rate API"
     }
   },
   "profile": {

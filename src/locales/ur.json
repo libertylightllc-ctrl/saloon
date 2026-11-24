@@ -3331,7 +3331,8 @@
         "pilot_free_days": "پائلٹ سیلون کے مفت دن",
         "pilot_max_salons": "پائلٹ میں جگہیں",
         "whatsapp_number": "واٹس ایپ نمبر",
-        "whatsapp_message": "واٹس ایپ پیغام"
+        "whatsapp_message": "واٹس ایپ پیغام",
+        "reporting_currency": "رپورٹنگ کرنسی"
       },
       "changed": "{{label}}: {{before}} ← {{after}}",
       "textChanged": "{{label}} تبدیل کیا گیا",
@@ -3391,6 +3392,16 @@
       "markLine": "{{reason}} · {{name}} نے {{date}} کو",
       "testSalon": "ٹیسٹ سیلون",
       "notCounted": "شمار نہیں"
+    },
+    "reporting": {
+      "title": "رپورٹنگ کرنسی",
+      "body": "خلاصہ کی رقمیں اسی کرنسی میں دکھائی جاتی ہیں۔ دوسری کرنسیوں کی رقمیں دن کے ریٹ پر تبدیل ہوتی ہیں اور ≈ سے شروع ہوتی ہیں۔",
+      "saved": "رپورٹنگ کرنسی: {{currency}}"
+    },
+    "fx": {
+      "ratesOf": "≈ {{date}} کے زرِ مبادلہ ریٹ پر تبدیل کیا گیا۔",
+      "fixedOnly": "≈ آج کے زرِ مبادلہ ریٹ ابھی نہیں آئے؛ تب تک صرف {{list}} تبدیل ہوتی ہیں (امریکی ڈالر سے مقرر)۔",
+      "credit": "ریٹ: Exchange Rate API"
     }
   },
   "profile": {

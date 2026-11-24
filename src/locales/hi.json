@@ -3331,7 +3331,8 @@
         "pilot_free_days": "पायलट सैलून के मुफ़्त दिन",
         "pilot_max_salons": "पायलट में जगहें",
         "whatsapp_number": "WhatsApp नंबर",
-        "whatsapp_message": "WhatsApp संदेश"
+        "whatsapp_message": "WhatsApp संदेश",
+        "reporting_currency": "रिपोर्टिंग मुद्रा"
       },
       "changed": "{{label}}: {{before}} → {{after}}",
       "textChanged": "{{label}} बदला गया",
@@ -3391,6 +3392,16 @@
       "markLine": "{{reason}} · {{name}} द्वारा {{date}} को",
       "testSalon": "टेस्ट सैलून",
       "notCounted": "गिना नहीं गया"
+    },
+    "reporting": {
+      "title": "रिपोर्टिंग मुद्रा",
+      "body": "सारांश की रकम इसी मुद्रा में दिखती है। दूसरी मुद्राओं की रकम दिन की दर से बदली जाती है और ≈ से शुरू होती है।",
+      "saved": "रिपोर्टिंग मुद्रा: {{currency}}"
+    },
+    "fx": {
+      "ratesOf": "≈ {{date}} की विनिमय दरों पर बदला गया।",
+      "fixedOnly": "≈ आज की विनिमय दरें अभी नहीं आईं; तब तक केवल {{list}} बदलती हैं (अमेरिकी डॉलर से तय)।",
+      "credit": "दरें: Exchange Rate API"
     }
   },
   "profile": {
