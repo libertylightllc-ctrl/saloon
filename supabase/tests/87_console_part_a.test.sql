@@ -8,7 +8,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(22);
+select plan(25);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -120,6 +120,22 @@ insert into plan_events (business_id, kind, months, amount_minor, currency, paid
 values (current_setting('t.b5')::uuid, 'activate', 1, 1699, 'USD', current_date + 30, 'Card payment (Creem, test) ord_87');
 select is((select mark from payment_marks pm join plan_events e on e.id = pm.event_id where e.note = 'Card payment (Creem, test) ord_87'),
   'test', 'a Creem test-mode payment is marked Test');
+
+-- A5. Two more payments on Twin Cuts while its paid time runs: 12 + 1 + 0 months stacked in 3 payments; a payment
+-- after the plan was ended starts again.
+select pg_temp.as_user('a0');
+select admin_activate(current_setting('t.b1')::uuid, 1, 0, 'Card test');
+select admin_activate(current_setting('t.b1')::uuid, 0 + 1, 1000, 'One more');
+select is((select array_agg(array[months, stack_months, stack_payments] order by created_at) from admin_plan_events(1000)
+           where business_id = current_setting('t.b1')::uuid and kind = 'activate'),
+  array[array[12, 12, 1], array[1, 13, 2], array[1, 14, 3]], 'each payment says how much is stacked up to it');
+select admin_end_plan(current_setting('t.b1')::uuid, 'Ended to try');
+select admin_activate(current_setting('t.b1')::uuid, 1, 1000, 'After the end');
+select is((select array[stack_months, stack_payments] from admin_plan_events(1000)
+           where business_id = current_setting('t.b1')::uuid and kind = 'activate' order by created_at desc limit 1),
+  array[1, 1], 'after the plan was ended, a payment starts a new run');
+select is((select mark from admin_plan_events(1000) where id = current_setting('t.pay')::uuid), null,
+  'the Plans list gives each payment''s mark (this one was counted again)');
 
 -- Only platform owners.
 select pg_temp.as_user('b1');

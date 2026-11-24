@@ -3180,7 +3180,8 @@
         "access": "Accès modifié"
       },
       "repeats": "Envoyée {{count}} fois, la première le {{date}}",
-      "repeats_one": "Envoyée une fois, le {{date}}"
+      "repeats_one": "Envoyée une fois, le {{date}}",
+      "stack": "{{months}} payés en {{count}} paiements"
     },
     "activity": {
       "empty": "Aucun historique pour l’instant."

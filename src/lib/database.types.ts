@@ -4488,10 +4488,14 @@ export type Database = {
           currency: string;
           id: string;
           kind: string;
+          mark: string;
+          mark_reason: string;
           months: number;
           note: string;
           paid_until: string;
           salon: string;
+          stack_months: number;
+          stack_payments: number;
         }[];
       };
       admin_platform_audit: {

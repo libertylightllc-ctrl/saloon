@@ -3179,7 +3179,8 @@
         "access": "Access changed"
       },
       "repeats": "Sent {{count}} times, first on {{date}}",
-      "repeats_one": "Sent once, on {{date}}"
+      "repeats_one": "Sent once, on {{date}}",
+      "stack": "{{months}} paid in {{count}} payments"
     },
     "activity": {
       "empty": "No history yet."

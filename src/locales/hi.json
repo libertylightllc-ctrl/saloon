@@ -3180,7 +3180,8 @@
         "access": "पहुँच बदली"
       },
       "repeats": "{{count}} बार भेजा गया, पहली बार {{date}} को",
-      "repeats_one": "एक बार भेजा गया, {{date}} को"
+      "repeats_one": "एक बार भेजा गया, {{date}} को",
+      "stack": "{{count}} भुगतानों में {{months}} का भुगतान"
     },
     "activity": {
       "empty": "अभी कोई इतिहास नहीं।"

@@ -36,6 +36,10 @@ export function PlansTab() {
                   e.months ? t('console.plans.months', { count: e.months }) : null,
                   e.amount_minor !== null && e.currency ? (isCurrency(e.currency) ? formatMoney(e.amount_minor, e.currency) : `${e.currency} ${e.amount_minor}`) : null,
                   e.paid_until ? t(UNTIL[e.kind as keyof typeof UNTIL] ?? 'admin.until', { date: dates.day(e.paid_until, 'd MMM yyyy') }) : null,
+                  // Paid on top of time still running (owner's brief A5): "13 months paid in 3 payments".
+                  e.kind === 'activate' && (e.stack_payments ?? 1) > 1
+                    ? t('console.plans.stack', { months: t('console.plans.months', { count: e.stack_months ?? 0 }), count: e.stack_payments })
+                    : null,
                 ]
                   .filter(Boolean)
                   .join(' · ') || '—',
@@ -49,6 +53,7 @@ export function PlansTab() {
                     label={t(`console.plans.kinds.${e.kind}` as 'console.plans.kinds.request', { defaultValue: e.kind })}
                   />
                   {tests.data?.has(e.business_id) ? <StatusPill tone="info" label={t('console.salons.test')} /> : null}
+                  {e.mark === 'test' || e.mark === 'void' ? <StatusPill status="cancelled" label={t(`console.payments.mark.${e.mark}`)} /> : null}
                 </View>
               }
             />
