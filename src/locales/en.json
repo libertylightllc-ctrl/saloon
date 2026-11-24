@@ -3497,6 +3497,12 @@
           "pilot": "Your {{app}} pilot ends on {{date}}"
         }
       }
+    },
+    "signups": {
+      "title": "New salons each week",
+      "sub": "Last 12 weeks: {{n}} · by country · weeks start on Monday (Dubai) · test salons not counted",
+      "other": "Other",
+      "none": "No new salons in the last 12 weeks."
     }
   },
   "profile": {

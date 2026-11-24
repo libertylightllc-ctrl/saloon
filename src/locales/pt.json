@@ -3498,6 +3498,12 @@
           "pilot": "O seu piloto do {{app}} termina em {{date}}"
         }
       }
+    },
+    "signups": {
+      "title": "Salões novos por semana",
+      "sub": "Últimas 12 semanas: {{n}} · por país · semanas de segunda a domingo (Dubai) · sem salões de teste",
+      "other": "Outros",
+      "none": "Nenhum salão novo nas últimas 12 semanas."
     }
   },
   "profile": {

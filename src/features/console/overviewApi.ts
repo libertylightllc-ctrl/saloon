@@ -160,3 +160,27 @@ export function useLogContact() {
     onSuccess: () => void client.invalidateQueries({ queryKey: ['platform'] }),
   });
 }
+
+/** New salons in a week from one country (B8). */
+export interface SignupCount {
+  week: string;
+  country_code: string;
+  salons: number;
+}
+
+/** B8 New sign-ups: the last 12 weeks (Mondays, Dubai calendar) and the salons made in each, by country (migration 120). */
+export interface Signups {
+  weeks: string[];
+  counts: SignupCount[];
+}
+
+export function useSignups() {
+  return useQuery({
+    queryKey: ['platform', 'signups-weekly'],
+    queryFn: async (): Promise<Signups> => {
+      const { data, error } = await supabase.rpc('admin_signups_weekly');
+      if (error) throw error;
+      return data as unknown as Signups;
+    },
+  });
+}

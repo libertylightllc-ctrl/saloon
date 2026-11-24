@@ -85,8 +85,19 @@ jest.mock('./overviewApi', () => ({
   useRevenue: () => ok(mockRevenue),
   useSalonActivity: () => ok(mockActivity),
   useComingUp: () => ok({ ending: [], requests: [] }),
+  useSignups: () =>
+    ok({
+      weeks: ['2026-11-09', '2026-11-16', '2026-11-23'],
+      counts: [
+        { week: '2026-11-16', country_code: 'AE', salons: 4 },
+        { week: '2026-11-23', country_code: 'AE', salons: 2 },
+        { week: '2026-11-23', country_code: 'QA', salons: 1 },
+      ],
+    }),
   useLogContact: () => ({ mutateAsync: jest.fn(), isPending: false, error: null }),
 }));
+// The chart library ships modern modules Jest does not read; the chart's numbers are checked in its text.
+jest.mock('react-native-gifted-charts', () => ({ BarChart: () => null }));
 // The bottom sheet's animation library does not load in tests; none is opened here.
 jest.mock('@/ui/BottomSheet', () => ({ BottomSheet: () => null }));
 
@@ -183,4 +194,10 @@ it('active salons in the last 7 and 30 days, and those at risk (owner’s brief 
   expect(screen.getByTestId('console-active-value')).toHaveTextContent('2');
   expect(screen.getByTestId('console-active-sub')).toHaveTextContent('of 8 open salons · 5 in the last 30 days 4 accounts signed in this week');
   expect(screen.getByTestId('console-at-risk-value')).toHaveTextContent('3');
+});
+
+it('new salons each week by country, with the 12 weeks’ totals (owner’s brief B8)', async () => {
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
+  expect(screen.getByTestId('console-signups')).toHaveTextContent(/Last 12 weeks: 7 · by country/);
+  expect(screen.getByTestId('console-signups-legend')).toHaveTextContent(/United Arab Emirates · 6.*Qatar · 1/);
 });

@@ -105,6 +105,12 @@ export const staffColours = [
   '#D14F5A',
 ] as const;
 
+/**
+ * Parts of one total in a chart (the console's new salons by country): after the look's own primary colour, these
+ * hues, apart from each other and from every look's primary. The rest ("Other") is grey.
+ */
+export const chartSeries = ['#1E90D6', '#00A862', '#E0A800', '#F28A2E'] as const;
+
 /** Initials avatars when no employee colour or photo exists: pastel fill + dark ink (≥ 4.5:1). */
 export const avatarPalette = [
   { fill: '#FFE4EC', ink: '#A3264D' },
