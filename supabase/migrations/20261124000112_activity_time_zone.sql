@@ -1,6 +1,6 @@
 -- Platform console, Part A (owner's brief, 24 Nov 2026).
 --
--- A9. Console → Activity showed every salon's events in Dubai time: a Red Rose (Qatar) event at 11:20 PM on 16 Nov
+-- A9. Console → Activity showed every salon's events in Dubai time: a Qatar salon's event at 11:20 PM on 16 Nov
 -- read "17 Nov 2026 · 1:20 AM". Each event now comes with its salon's time zone, so the console shows it at the
 -- salon's own time and place ("16 Nov 2026 · 11:20 PM Doha"). Reads only.
 drop function public.admin_activity(uuid, integer);

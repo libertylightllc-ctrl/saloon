@@ -2,17 +2,17 @@ import { otherSalons } from './duplicates';
 
 describe('otherSalons', () => {
   it('gives names, with the code only where a name repeats or is the salon’s own', () => {
-    expect(otherSalons([{ name: 'Red Rose', code: 'redrose' }], 'Asil Trims')).toBe('Red Rose');
+    expect(otherSalons([{ name: 'Cedar Cuts', code: 'cedarcuts' }], 'Blue Comb')).toBe('Cedar Cuts');
     expect(
       otherSalons(
         [
-          { name: "Tehseem's Salon", code: 'tehseems22' },
-          { name: "Tehseem's Salon", code: 'tehseem7' },
-          { name: 'Red Rose', code: 'redrose' },
+          { name: "Palm Salon", code: 'palm22' },
+          { name: "Palm Salon", code: 'palm7' },
+          { name: 'Cedar Cuts', code: 'cedarcuts' },
         ],
-        'Asil Trims',
+        'Blue Comb',
       ),
-    ).toBe("Tehseem's Salon (tehseems22), Tehseem's Salon (tehseem7), Red Rose");
-    expect(otherSalons([{ name: "Tehseem's Salon", code: 'tehseem7' }], "tehseem's salon")).toBe("Tehseem's Salon (tehseem7)");
+    ).toBe("Palm Salon (palm22), Palm Salon (palm7), Cedar Cuts");
+    expect(otherSalons([{ name: "Palm Salon", code: 'palm7' }], "palm salon")).toBe("Palm Salon (palm7)");
   });
 });

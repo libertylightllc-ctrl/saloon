@@ -5,7 +5,7 @@ export interface OtherSalon {
 }
 
 /**
- * "Same owner name as Tehseem's Salon (tehseems22), Tehseem's Salon (tehseem7), Red Rose" (owner's brief A2): a name
+ * "Same owner name as Palm Salon (palm22), Palm Salon (palm7), Cedar Cuts" (owner's brief A2): a name
  * that appears twice in the list, or is this salon's own name, gets its code.
  */
 export function otherSalons(others: OtherSalon[], ownName: string): string {

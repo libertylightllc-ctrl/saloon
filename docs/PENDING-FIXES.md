@@ -88,6 +88,10 @@ All items from this check are done; see Done (15 Nov).
 ## Owner's fix list, 16 Nov 2026 (ten small items, all 7 languages, nothing else changed)
 All ten are done; see Done (16 Nov).
 
+## Platform console brief, 24 Nov 2026 (SALOQO_CONSOLE_FIXES.md: Parts A–H, one part at a time)
+- Part A (A1–A10): built and tested on branch `console-part-a` (migrations 109–113); waiting for the owner's OK on the SQL to go live. Decisions in DECISIONS.md (24 Nov).
+- Parts B–H: after Part A is live.
+
 ## Done
 
 - 26 Oct · #2 Arabic pilot bar: six Arabic forms for "places left" (0, 1, 2, 3–10, 11–99, 100+), on the page and when the count refreshes. The language test now allows a language's own extra plural forms.
