@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 
 import en from '@/locales/en.json';
+import { formatDuration } from '@/lib/duration';
 import { useDates } from '@/lib/useDates';
 
 import { ACTIVITY_RULES, VALUE_TYPES, type ActivityRule, type ValueType } from './rules';
@@ -121,6 +122,8 @@ function show(type: ValueType | undefined, v: string, t: TFunction, day: Day): s
       return day(v, 'd MMM yyyy');
     case 'period':
       return day(`${v}-01`, 'MMMM yyyy');
+    case 'minutes':
+      return formatDuration(t, Number(v));
     default:
       return v;
   }

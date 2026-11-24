@@ -4144,7 +4144,7 @@
     },
     "clockIn": {
       "text": "{{name}} سجّل الحضور الساعة {{time}}{{late}}{{by}}",
-      "late": " (متأخر {{minutes}} د)",
+      "late": " (متأخر {{minutes}})",
       "by": " — سجّله {{by}}"
     },
     "clockOut": {

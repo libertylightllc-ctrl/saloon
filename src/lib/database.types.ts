@@ -4390,6 +4390,7 @@ export type Database = {
           id: string;
           salon: string;
           summary: string;
+          timezone: string;
         }[];
       };
       admin_card_payments: {

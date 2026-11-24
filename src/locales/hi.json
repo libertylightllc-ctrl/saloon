@@ -4022,7 +4022,7 @@
     },
     "clockIn": {
       "text": "{{name}} ने {{time}} पर क्लॉक इन किया{{late}}{{by}}",
-      "late": " ({{minutes}} मिनट देर)",
+      "late": " ({{minutes}} देर)",
       "by": " — {{by}} ने दर्ज किया"
     },
     "clockOut": {

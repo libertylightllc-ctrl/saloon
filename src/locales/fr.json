@@ -4022,7 +4022,7 @@
     },
     "clockIn": {
       "text": "{{name}} est arrivé à {{time}}{{late}}{{by}}",
-      "late": " ({{minutes}} min de retard)",
+      "late": " ({{minutes}} de retard)",
       "by": " — saisi par {{by}}"
     },
     "clockOut": {

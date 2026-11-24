@@ -28,7 +28,8 @@ it('shows each change as a sentence, with who made it (or that it was automatic)
     { ...base, id: '2', actor: null, action: 'free_period:record', salon: 'Nebriix', before: { note: '7-day free trial', until: '2026-11-01' }, after: { note: '30-day free period', until: '2026-11-24' } },
   ];
   await renderInApp(<AuditTab />);
-  expect(screen.getByTestId('audit-settings')).toHaveTextContent(/^Pilot places: 20 → 15Haider · 28 Oct 2026 · 10:30$/);
+  // In the viewer's own time, with its city (owner's brief A9); this computer's clock may be anywhere.
+  expect(screen.getByTestId('audit-settings')).toHaveTextContent(/^Pilot places: 20 → 15Haider · \d{1,2} Oct 2026 · \d{1,2}:\d{2}( [AP]M)? [A-Za-z ]+$/);
   expect(screen.getByTestId('audit-free_period:record')).toHaveTextContent(
     /Nebriix: free period changed from 1 Nov to 24 Nov 2026 \(30-day free period\)Automatic update · 28 Oct 2026/,
   );

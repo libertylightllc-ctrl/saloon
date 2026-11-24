@@ -6,11 +6,11 @@ import { useCardPrice, type CardMode } from '@/features/plan/cardApi';
 import { isCurrency } from '@/lib/currencies';
 import { formatMoney } from '@/lib/money';
 import { supabase } from '@/lib/supabase';
-import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Card, EmptyState, FormError, ListRow, PillTabs, QueryState, StatusPill, Text } from '@/ui';
 
-const ZONE = 'Asia/Dubai';
+import { useConsoleTime } from './zone';
+
 const STATUS = { pending: 'pending_approval', paid: 'valid', refunded: 'cancelled', review: 'expired' } as const;
 
 interface CardPayment {
@@ -36,7 +36,7 @@ interface CardPayment {
  */
 export function CardsTab() {
   const { t } = useTranslation();
-  const dates = useDates();
+  const time = useConsoleTime();
   const client = useQueryClient();
   const price = useCardPrice();
   const payments = useQuery({
@@ -108,7 +108,7 @@ export function CardsTab() {
                   ]
                     .filter(Boolean)
                     .join(' · '),
-                  [dates.at(c.created_at, ZONE, 'd MMM yyyy · HH:mm'), c.customer_email, c.order_id, c.note].filter(Boolean).join(' · '),
+                  [time.mine(c.created_at), c.customer_email, c.order_id, c.note].filter(Boolean).join(' · '),
                 ]}
                 badges={<StatusPill status={STATUS[c.status]} label={t(`console.cards.status.${c.status}`)} />}
               />

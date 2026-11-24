@@ -17,6 +17,8 @@ export interface ActivityRule {
 export const VALUE_TYPES = {
   time: '\\d{1,2}:\\d{2}',
   int: '-?\\d+',
+  /** Minutes, shown as people say them: "12 min", "12 h 3 min" (owner's brief A8: "late 723 min"). */
+  minutes: '\\d+',
   count: '-?\\d+',
   money: '-?[A-Z]{3} -?[\\d,]+(?:\\.\\d+)?',
   kind: '[Bb]onus|[Dd]eduction|[Aa]dvance',
@@ -116,7 +118,7 @@ export const ACTIVITY_RULES: readonly ActivityRule[] = [
   {
     key: 'clockIn',
     en: '{name} clocked in at {time:time}{late?}{by?}',
-    parts: { late: ' (late {minutes:int} min)', ...BY },
+    parts: { late: ' (late {minutes:minutes} min)', ...BY },
   },
   { key: 'clockOut', en: '{name} clocked out at {time:time}{by?}', parts: BY },
   { key: 'breakStart', en: '{name} started a break at {time:time}{by?}', parts: BY },

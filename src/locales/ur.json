@@ -4022,7 +4022,7 @@
     },
     "clockIn": {
       "text": "{{name}} نے {{time}} پر کلاک اِن کیا{{late}}{{by}}",
-      "late": " ({{minutes}} منٹ تاخیر)",
+      "late": " ({{minutes}} تاخیر)",
       "by": " — {{by}} نے درج کیا"
     },
     "clockOut": {

@@ -4021,7 +4021,7 @@
     },
     "clockIn": {
       "text": "{{name}} clocked in at {{time}}{{late}}{{by}}",
-      "late": " (late {{minutes}} min)",
+      "late": " (late {{minutes}})",
       "by": " — recorded by {{by}}"
     },
     "clockOut": {

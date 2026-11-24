@@ -7,6 +7,7 @@ import { ListRow, QueryState } from '@/ui';
 
 import { usePlatformAudit } from './api';
 import { auditSentence } from './auditText';
+import { useConsoleTime } from './zone';
 
 /**
  * The platform owners' record (full update, Phase 6 g): what changed, as a sentence (final brief E2), who and when.
@@ -15,6 +16,7 @@ import { auditSentence } from './auditText';
 export function AuditTab() {
   const { t } = useTranslation();
   const dates = useDates();
+  const time = useConsoleTime();
   const audit = usePlatformAudit();
   const say = t as (key: string, values?: Record<string, unknown>) => string;
   return (
@@ -25,7 +27,7 @@ export function AuditTab() {
             <ListRow
               key={r.id}
               title={auditSentence(r, say, (d, pattern) => dates.day(d, pattern))}
-              meta={[[r.actor ?? t('console.audit.system'), dates.at(r.created_at, 'Asia/Dubai', 'd MMM yyyy · HH:mm')].join(' · ')]}
+              meta={[[r.actor ?? t('console.audit.system'), time.mine(r.created_at)].join(' · ')]}
               testID={`audit-${r.action}`}
             />
           ))}

@@ -75,6 +75,13 @@ describe('activity sentences (E3)', () => {
     expect(text('Something new happened')).toBe('Something new happened');
   });
 
+  it('says how late in hours and minutes, as the attendance board does (owner’s brief A8)', async () => {
+    const text = await translator('en');
+    expect(text('Marie clocked in at 22:03 (late 723 min)')).toBe('Marie clocked in at 22:03 (late 12 h 3 min)');
+    expect(text('Marie clocked in at 09:12 (late 12 min)')).toBe('Marie clocked in at 09:12 (late 12 min)');
+    expect(text('Approved payroll 2026-11: net QAR 4,900.00')).toMatch(/^Approved payroll for 2026-11-01\|MMMM yyyy: net QAR 4,900\.00$/);
+  });
+
   it('reads plural counts in English', async () => {
     const text = await translator('en');
     expect(text('Counted 1 items, 1 changed, value -AED 150.00')).toBe('Counted 1 item, 1 changed, value -AED 150.00');

@@ -7,10 +7,12 @@ import { useDates } from '@/lib/useDates';
 import { spacing } from '@/theme';
 import { Chip, EmptyState, ListRow, QueryState, StatusPill } from '@/ui';
 
+import { useActivityText } from '@/features/activity/activityText';
+
 import { useActivity, usePlanEvents, useTestSalons } from './api';
+import { useConsoleTime } from './zone';
 import { mergeRepeatRequests } from './planEvents';
 
-const ZONE = 'Asia/Dubai';
 const KIND_STATUS = { request: 'pending_approval', activate: 'valid', end: 'cancelled' } as const;
 /** The event's date in words: the column is paid_until for every kind, but a free period, pilot or access change
  *  stores the end of free time there. */
@@ -21,6 +23,7 @@ export function PlansTab() {
   const { t } = useTranslation();
   const dates = useDates();
   const events = usePlanEvents();
+  const time = useConsoleTime();
   const tests = useTestSalons();
   return (
     <QueryState query={events} isEmpty={(rows) => rows.length === 0} empty={<EmptyState illustration="no-results" message={t('console.plans.empty')} />}>
@@ -43,8 +46,8 @@ export function PlansTab() {
                 ]
                   .filter(Boolean)
                   .join(' · ') || '—',
-                [dates.at(e.created_at, ZONE, 'd MMM yyyy · HH:mm'), e.by_name, e.note].filter(Boolean).join(' · '),
-                ...(e.repeats > 1 ? [t('console.plans.repeats', { count: e.repeats, date: dates.at(e.first_at, ZONE, 'd MMM yyyy · HH:mm') })] : []),
+                [time.mine(e.created_at), e.by_name, e.note].filter(Boolean).join(' · '),
+                ...(e.repeats > 1 ? [t('console.plans.repeats', { count: e.repeats, date: time.mine(e.first_at) })] : []),
               ]}
               badges={
                 <View style={styles.badges}>
@@ -67,8 +70,9 @@ export function PlansTab() {
 /** The history across salons (or of one salon), newest first: who did what. */
 export function ActivityTab({ salon, onClear }: { salon: { id: string; name: string } | null; onClear: () => void }) {
   const { t } = useTranslation();
-  const dates = useDates();
   const activity = useActivity(salon?.id ?? null);
+  const time = useConsoleTime();
+  const activityText = useActivityText();
   return (
     <>
       {salon ? (
@@ -82,8 +86,9 @@ export function ActivityTab({ salon, onClear }: { salon: { id: string; name: str
             {rows.map((a) => (
               <ListRow
                 key={a.id}
-                title={a.summary}
-                meta={[[a.salon, a.actor, dates.at(a.created_at, ZONE, 'd MMM yyyy · HH:mm')].filter(Boolean).join(' · ')]}
+                // The app's own words (owner's brief A8), at the salon's own time and place (A9).
+                title={activityText(a.summary)}
+                meta={[[a.salon, a.actor, time.salon(a.created_at, a.timezone ?? time.zone)].filter(Boolean).join(' · ')]}
               />
             ))}
           </View>

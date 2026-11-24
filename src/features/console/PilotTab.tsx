@@ -16,6 +16,7 @@ import {
   usePilotCodes,
   type PilotApplication,
 } from './api';
+import { useConsoleTime } from './zone';
 
 /** A code's shape, as an example in the field (not words to translate). */
 const EXAMPLE_CODE = 'PILOT-DXB-07';
@@ -47,6 +48,7 @@ export function PilotTab() {
   const { t } = useTranslation();
   const toast = useToast();
   const dates = useDates();
+  const time = useConsoleTime();
   const codes = usePilotCodes();
   const apps = usePilotApplications();
   const create = useCreatePilotCode();
@@ -111,7 +113,7 @@ export function PilotTab() {
                   {a.whatsapp_ok ? <Text variant="small" color="textSecondary">{`${t('console.pilot.whatsappOk')} ✓`}</Text> : null}
                 </View>
                 <Text variant="small" color="textSecondary">
-                  {t('console.pilot.received', { date: dates.at(a.created_at, 'Asia/Dubai', 'd MMM yyyy · HH:mm') })}
+                  {t('console.pilot.received', { date: time.mine(a.created_at) })}
                 </Text>
                 {a.code ? <Text variant="small">{t('console.access.code', { code: a.code })}</Text> : null}
                 {a.status === 'new' ? (

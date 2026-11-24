@@ -8,8 +8,8 @@ import { Button, Card, FormError, ListRow, QueryState, SearchBar, SectionHeader,
 
 import { useAccounts, useOverview, useSetPlatformOwner, useTestSalons, type Account } from './api';
 import { accountSplit } from './OverviewTab';
+import { useConsoleTime } from './zone';
 
-const ZONE = 'Asia/Dubai';
 
 /** How an account signs in: an owner's email, or a staff member's username at their salon. */
 export const signInName = (a: Account) => a.email ?? (a.username ? `@${a.username}` : a.user_id.slice(0, 8));
@@ -27,7 +27,9 @@ export function AccountsTab() {
   const [email, setEmail] = useState('');
   const [search, setSearch] = useState('');
   const q = search.trim().toLowerCase();
-  const when = (iso: string | null) => (iso ? dates.at(iso, ZONE, 'd MMM yyyy · HH:mm') : t('console.accounts.never'));
+  const time = useConsoleTime();
+  const ZONE = time.zone;
+  const when = (iso: string | null) => (iso ? time.mine(iso) : t('console.accounts.never'));
 
   return (
     <QueryState query={accounts}>

@@ -4022,7 +4022,7 @@
     },
     "clockIn": {
       "text": "{{name}} entrou às {{time}}{{late}}{{by}}",
-      "late": " ({{minutes}} min de atraso)",
+      "late": " ({{minutes}} de atraso)",
       "by": " — registrado por {{by}}"
     },
     "clockOut": {
