@@ -11,15 +11,33 @@ import { reportAppError } from './report';
 
 interface BoundaryProps {
   children: ReactNode;
+  /** The screen shown: going to another one after a crash starts clear. */
+  screen: string;
   onError: (error: Error) => void;
   fallback: (retry: () => void) => ReactNode;
 }
 
-class Boundary extends Component<BoundaryProps, { failed: boolean }> {
-  override state = { failed: false };
+interface BoundaryState {
+  failed: boolean;
+  /** The screen that crashed. */
+  at: string | null;
+}
 
-  static getDerivedStateFromError() {
+/**
+ * Never keyed by the screen: a key would rebuild the whole navigator on every move (it did, 25 Nov 2026: the site's
+ * address opened on sign-in in place of the home page). After a crash, moving to another screen clears it.
+ */
+class Boundary extends Component<BoundaryProps, BoundaryState> {
+  override state: BoundaryState = { failed: false, at: null };
+
+  static getDerivedStateFromError(): Partial<BoundaryState> {
     return { failed: true };
+  }
+
+  static getDerivedStateFromProps(props: BoundaryProps, state: BoundaryState): Partial<BoundaryState> | null {
+    if (!state.failed) return null;
+    if (state.at === null) return { at: props.screen };
+    return state.at === props.screen ? null : { failed: false, at: null };
   }
 
   override componentDidCatch(error: Error) {
@@ -27,7 +45,7 @@ class Boundary extends Component<BoundaryProps, { failed: boolean }> {
   }
 
   override render() {
-    return this.state.failed ? this.props.fallback(() => this.setState({ failed: false })) : this.props.children;
+    return this.state.failed ? this.props.fallback(() => this.setState({ failed: false, at: null })) : this.props.children;
   }
 }
 
@@ -40,8 +58,7 @@ export function AppErrorBoundary({ children }: { children: ReactNode }) {
   const screen = usePathname();
   return (
     <Boundary
-      // A new screen starts clear.
-      key={screen}
+      screen={screen}
       onError={(error) => reportAppError(error, screen, member?.active ? member.business_id : null)}
       fallback={(retry) => <CrashScreen onRetry={retry} />}
     >
