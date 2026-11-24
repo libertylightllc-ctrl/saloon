@@ -70,9 +70,20 @@ const mockRevenue = {
   churn: [{ business_id: 'b-9', name: 'Palm Salon', code: 'palm22', stopped_on: '2026-11-12', status: 'ended', currency: 'QAR', minor: 4_900 }],
 };
 const ok = (data: unknown) => ({ data, isPending: false, isError: false, error: null, refetch: jest.fn() });
+const mockActivity = {
+  open: 8,
+  active_7d: 2,
+  active_30d: 5,
+  at_risk_count: 3,
+  at_risk: [
+    { business_id: 'b-1', name: 'Cedar Cuts', code: 'cedarcuts', status: 'free', country_code: 'AE', timezone: 'Asia/Dubai', last_active: null },
+    { business_id: 'b-2', name: 'Blue Comb', code: 'bluecomb', status: 'paid', country_code: 'QA', timezone: 'Asia/Qatar', last_active: '2026-10-28T21:30:00Z' },
+  ],
+};
 jest.mock('./overviewApi', () => ({
   useFxRates: () => ok(mockFx),
   useRevenue: () => ok(mockRevenue),
+  useSalonActivity: () => ok(mockActivity),
 }));
 // The bottom sheet's animation library does not load in tests; none is opened here.
 jest.mock('@/ui/BottomSheet', () => ({ BottomSheet: () => null }));
@@ -133,7 +144,8 @@ it('one rule for the numbers, accounts with their split, new salons, and plan pa
   expect(screen.getByTestId('console-accounts-sub')).toHaveTextContent(/16 active · 2 switched off · 2 deleted/);
   expect(screen.getByTestId('console-new-salons-value')).toHaveTextContent('0');
   expect(screen.getByTestId('console-new-salons-sub')).toHaveTextContent('3 in the last 30 days');
-  expect(screen.getByTestId('console-signed-in-sub')).toHaveTextContent('4 accounts signed in');
+  // Signing in is part of the Active salons card (owner's brief B3).
+  expect(screen.getByTestId('console-active-sub')).toHaveTextContent(/4 accounts signed in this week/);
   expect(screen.getByTestId('console-plan-income-month')).toHaveTextContent(/This month.*Nothing yet\./);
   expect(screen.getByTestId('console-plan-income-all')).toHaveTextContent(/All time.*AED 99\.00 · USD 42\.99/);
 });
@@ -162,4 +174,11 @@ it('salons by status: each group with its number opens Salons on that group (own
   expect(groups).toEqual(['0', '4', '1', '0', '3', '2']);
   await fireEvent.press(screen.getByTestId('console-status-comp'));
   expect(onOpenSalons).toHaveBeenCalledWith('comp');
+});
+
+it('active salons in the last 7 and 30 days, and those at risk (owner’s brief B3, B7)', async () => {
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={jest.fn()} onOpenSalon={jest.fn()} />);
+  expect(screen.getByTestId('console-active-value')).toHaveTextContent('2');
+  expect(screen.getByTestId('console-active-sub')).toHaveTextContent('of 8 open salons · 5 in the last 30 days 4 accounts signed in this week');
+  expect(screen.getByTestId('console-at-risk-value')).toHaveTextContent('3');
 });

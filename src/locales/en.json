@@ -3191,7 +3191,16 @@
       "stack": "{{months}} paid in {{count}} payments"
     },
     "activity": {
-      "empty": "No history yet."
+      "empty": "No history yet.",
+      "active": "Active salons, last 7 days",
+      "activeSub": "of {{open}} open salons · {{month}} in the last 30 days",
+      "signedIn_one": "{{count}} account signed in this week",
+      "signedIn": "{{count}} accounts signed in this week",
+      "atRisk": "At risk",
+      "atRiskSub": "Paying, free or pilot salons with nothing done for 14 days or more",
+      "lastUsed": "Last used {{date}}",
+      "neverUsed": "Never used",
+      "quietest": "The quietest {{shown}} of {{total}}."
     },
     "support": {
       "empty": "No messages yet.",

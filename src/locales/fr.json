@@ -3192,7 +3192,16 @@
       "stack": "{{months}} payés en {{count}} paiements"
     },
     "activity": {
-      "empty": "Aucun historique pour l’instant."
+      "empty": "Aucun historique pour l’instant.",
+      "active": "Salons actifs, 7 derniers jours",
+      "activeSub": "sur {{open}} salons ouverts · {{month}} ces 30 derniers jours",
+      "signedIn_one": "{{count}} compte connecté cette semaine",
+      "signedIn": "{{count}} comptes connectés cette semaine",
+      "atRisk": "À risque",
+      "atRiskSub": "Salons payants, gratuits ou pilotes sans activité depuis 14 jours ou plus",
+      "lastUsed": "Dernière utilisation : {{date}}",
+      "neverUsed": "Jamais utilisé",
+      "quietest": "Les {{shown}} plus inactifs sur {{total}}."
     },
     "support": {
       "empty": "Aucun message pour l’instant.",

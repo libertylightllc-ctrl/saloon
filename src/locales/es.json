@@ -3192,7 +3192,16 @@
       "stack": "{{months}} pagados en {{count}} pagos"
     },
     "activity": {
-      "empty": "Aún no hay historial."
+      "empty": "Aún no hay historial.",
+      "active": "Salones activos, últimos 7 días",
+      "activeSub": "de {{open}} salones abiertos · {{month}} en los últimos 30 días",
+      "signedIn_one": "{{count}} cuenta entró esta semana",
+      "signedIn": "{{count}} cuentas entraron esta semana",
+      "atRisk": "En riesgo",
+      "atRiskSub": "Salones que pagan, gratis o en piloto sin actividad desde hace 14 días o más",
+      "lastUsed": "Último uso: {{date}}",
+      "neverUsed": "Nunca usado",
+      "quietest": "Los {{shown}} más inactivos de {{total}}."
     },
     "support": {
       "empty": "Aún no hay mensajes.",

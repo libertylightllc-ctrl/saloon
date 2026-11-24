@@ -4611,6 +4611,7 @@ export type Database = {
         }[];
       };
       admin_revenue: { Args: Record<PropertyKey, never>; Returns: Json };
+      admin_salon_activity: { Args: { p_limit?: number }; Returns: Json };
       admin_salon_duplicates: {
         Args: Record<PropertyKey, never>;
         Returns: {

@@ -67,3 +67,35 @@ export function useRevenue() {
     },
   });
 }
+
+/** A salon at risk (B7): nothing done for 14 days or more. */
+export interface QuietSalon {
+  business_id: string;
+  name: string;
+  code: string;
+  status: 'paid' | 'free' | 'pilot' | 'comp';
+  country_code: string;
+  timezone: string;
+  /** null: never used. */
+  last_active: string | null;
+}
+
+/** B3 active salons in the last 7 and 30 days, B7 those at risk, the quietest 100 listed (migration 118). */
+export interface SalonActivity {
+  open: number;
+  active_7d: number;
+  active_30d: number;
+  at_risk_count: number;
+  at_risk: QuietSalon[];
+}
+
+export function useSalonActivity() {
+  return useQuery({
+    queryKey: ['platform', 'salon-activity'],
+    queryFn: async (): Promise<SalonActivity> => {
+      const { data, error } = await supabase.rpc('admin_salon_activity');
+      if (error) throw error;
+      return data as unknown as SalonActivity;
+    },
+  });
+}

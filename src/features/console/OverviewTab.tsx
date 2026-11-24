@@ -51,7 +51,7 @@ export function OverviewTab({
       <QueryState query={overview}>
         {(o) => (
           <View style={styles.body}>
-            <BusinessSection billingOn={o.billing_enabled} onOpenSalon={onOpenSalon} />
+            <BusinessSection billingOn={o.billing_enabled} signedIn7d={o.signed_in_7d} onOpenSalon={onOpenSalon} />
             <StatusCards o={o} onOpenSalons={onOpenSalons} />
 
             <SectionHeader title={t('console.business.totals')} />
@@ -119,13 +119,6 @@ export function OverviewTab({
                 value={String(o.new_salons_7d)}
                 sub={t('console.overview.newSalonsSub', { count: o.new_salons_30d })}
                 testID="console-new-salons"
-              />
-              <KpiCard
-                icon="userCheck"
-                label={t('console.overview.signedIn')}
-                value={String(o.salons_signed_in_7d)}
-                sub={t('console.overview.signedInSub', { count: o.signed_in_7d })}
-                testID="console-signed-in"
               />
             </KpiGrid>
 
