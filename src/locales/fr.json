@@ -3140,7 +3140,8 @@
         "pilot": "Pilote",
         "ended": "Terminés",
         "closed": "Fermés",
-        "test": "Test"
+        "test": "Test",
+        "comp": "Gratuit pour de bon"
       },
       "noneHere": "Aucun salon ici.",
       "ownerDeleted": "Compte du propriétaire supprimé le {{date}}",
@@ -3432,6 +3433,16 @@
     "business": {
       "title": "Activité",
       "totals": "Salons et personnes"
+    },
+    "status": {
+      "title": "Salons par statut",
+      "paid": "Payants",
+      "free": "En période gratuite",
+      "pilot": "Pilote",
+      "comp": "Gratuit pour de bon",
+      "ended": "Terminés",
+      "closed": "Fermés",
+      "hint": "Touchez un groupe pour voir ses salons. Les salons de test sont exclus."
     }
   },
   "profile": {

@@ -3140,7 +3140,8 @@
         "pilot": "Piloto",
         "ended": "Encerrados",
         "closed": "Fechados",
-        "test": "Teste"
+        "test": "Teste",
+        "comp": "Grátis para sempre"
       },
       "noneHere": "Nenhum salão aqui.",
       "ownerDeleted": "Conta do proprietário excluída em {{date}}",
@@ -3432,6 +3433,16 @@
     "business": {
       "title": "Negócio",
       "totals": "Salões e pessoas"
+    },
+    "status": {
+      "title": "Salões por estado",
+      "paid": "Pagantes",
+      "free": "Em período grátis",
+      "pilot": "Piloto",
+      "comp": "Grátis para sempre",
+      "ended": "Terminados",
+      "closed": "Fechados",
+      "hint": "Toque num grupo para ver os seus salões. Os salões de teste ficam de fora."
     }
   },
   "profile": {

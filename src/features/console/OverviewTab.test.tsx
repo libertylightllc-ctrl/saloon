@@ -154,3 +154,12 @@ it('money: monthly income in the reporting currency, the year at that rate, last
   expect(screen.getByTestId('console-churn-sub')).toHaveTextContent('≈ USD 13.46 a month lost');
   expect(screen.getByTestId('console-fx-note')).toHaveTextContent('≈ converted at the exchange rates of 25 Nov 2026. Rates by Exchange Rate API');
 });
+
+it('salons by status: each group with its number opens Salons on that group (owner’s brief B2)', async () => {
+  const onOpenSalons = jest.fn();
+  await renderInApp(<OverviewTab onOpenPilot={jest.fn()} onOpenSalons={onOpenSalons} onOpenSalon={jest.fn()} />);
+  const groups = ['paid', 'free', 'pilot', 'comp', 'ended', 'closed'].map((g) => screen.getByTestId(`console-status-${g}-value`).props.children);
+  expect(groups).toEqual(['0', '4', '1', '0', '3', '2']);
+  await fireEvent.press(screen.getByTestId('console-status-comp'));
+  expect(onOpenSalons).toHaveBeenCalledWith('comp');
+});

@@ -163,8 +163,9 @@ it('the status filter counts each group and shows only its salons; a test salon 
   const pill = (f: string) => screen.getByTestId(`console-salon-filter-${f}`);
   expect(pill('all')).toHaveTextContent('All 60');
   expect(pill('paid')).toHaveTextContent('Paid 1');
-  // Free includes free for good (salon 13).
-  expect(pill('free')).toHaveTextContent('Free 55');
+  // Free for good is a group of its own (salon 13).
+  expect(pill('free')).toHaveTextContent('Free 54');
+  expect(pill('comp')).toHaveTextContent('Free for good 1');
   expect(pill('pilot')).toHaveTextContent('Pilot 1');
   expect(pill('ended')).toHaveTextContent('Ended 1');
   expect(pill('closed')).toHaveTextContent('Closed 1');
@@ -176,7 +177,7 @@ it('the status filter counts each group and shows only its salons; a test salon 
   expect(rows().map((r) => r.props.testID)).toEqual(['admin-salon-salon5']);
   await fireEvent.press(pill('free'));
   expect(rows()).toHaveLength(50);
-  expect(screen.getByTestId('console-salons-showing')).toHaveTextContent('Showing 50 of 55');
+  expect(screen.getByTestId('console-salons-showing')).toHaveTextContent('Showing 50 of 54');
 
   // With a search: the counts follow it, and a group with none of its salons says so.
   await fireEvent.changeText(screen.getByTestId('console-salon-search'), 'salon1');

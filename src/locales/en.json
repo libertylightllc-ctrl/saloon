@@ -3139,7 +3139,8 @@
         "pilot": "Pilot",
         "ended": "Ended",
         "closed": "Closed",
-        "test": "Test"
+        "test": "Test",
+        "comp": "Free for good"
       },
       "noneHere": "No salons here.",
       "ownerDeleted": "Owner account deleted on {{date}}",
@@ -3431,6 +3432,16 @@
     "business": {
       "title": "Business",
       "totals": "Salons and people"
+    },
+    "status": {
+      "title": "Salons by status",
+      "paid": "Paying",
+      "free": "In free period",
+      "pilot": "Pilot",
+      "comp": "Free for good",
+      "ended": "Ended",
+      "closed": "Closed",
+      "hint": "Tap a group to see its salons. Test salons are left out."
     }
   },
   "profile": {
