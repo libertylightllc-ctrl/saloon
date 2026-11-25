@@ -37,6 +37,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: npm }
       - run: npm ci --no-audit --no-fund
+      # No test uses the demo salons, and their file no longer loads on a new database (its own task).
+      - run: sed -i '/^\[db.seed\]/,/^sql_paths/ s/^enabled = true/enabled = false/' supabase/config.toml && grep -A3 '^\[db.seed\]' supabase/config.toml
       - run: npx supabase start -x studio,imgproxy,postgres-meta,logflare,vector,supavisor,edge-runtime
       - name: every database test file
         run: |
@@ -69,6 +71,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: npm }
       - run: npm ci --no-audit --no-fund
+      # No test uses the demo salons, and their file no longer loads on a new database (its own task).
+      - run: sed -i '/^\[db.seed\]/,/^sql_paths/ s/^enabled = true/enabled = false/' supabase/config.toml && grep -A3 '^\[db.seed\]' supabase/config.toml
       - run: npx supabase start -x studio,imgproxy,postgres-meta,logflare,vector,supavisor
       - name: the local database's public key for the app
         run: |
