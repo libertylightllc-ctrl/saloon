@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": { "deploymentEnabled": { "ci-part-b": false, "ci-seed": false } },
   "framework": null,
   "installCommand": "npm ci",
   "buildCommand": "node scripts/check-web-env.mjs && npx expo export -p web && node scripts/site/build.mjs",
