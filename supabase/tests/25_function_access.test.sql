@@ -171,6 +171,21 @@ insert into reviewed values
     -- platform owner checked inside.
     ('admin_mark_payment'),
     ('admin_payments'),
+    -- Console Part B (owner's brief, migrations 114–121; reviewed 2026-11-25): platform owner checked inside, before
+    -- anything is read or written.
+    ('admin_coming_up'),
+    ('admin_fx_rates'),
+    ('admin_health'),
+    ('admin_log_contact'),
+    ('admin_revenue'),
+    ('admin_salon_activity'),
+    ('admin_set_reporting_currency'),
+    ('admin_signups_weekly'),
+    ('admin_support_stats'),
+    -- Writes only the caller's own active membership's "last opened", at most once an hour.
+    ('touch_seen'),
+    -- A crashed screen: at most 20 an hour per person, the salon kept only if it is theirs, read by platform owners.
+    ('report_app_error'),
     ('apply_for_pilot'),
     ('confirm_my_email'),
     ('phone_has_salon'),
