@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(7);
+select plan(8);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -64,6 +64,9 @@ select ok((select exists (select 1 from jsonb_array_elements(v -> 'at_risk') x w
 select is((select count(*)::int from after, jsonb_array_elements(v -> 'at_risk') x
            where x ->> 'name' in ('Busy Salon', 'Gone Quiet Salon', 'Quiet Test Salon', 'Quiet Closed Salon')), 0,
   'the others are not');
+-- The list works every salon out at once; salon_last_active() is the rule (migration 115), one salon at a time.
+select is((select (x ->> 'last_active')::timestamptz from after, jsonb_array_elements(v -> 'at_risk') x where x ->> 'business_id' = current_setting('t.b2')),
+  salon_last_active(current_setting('t.b2')::uuid), 'its last use is the same as salon_last_active() says');
 
 select pg_temp.as_user('b1');
 select throws_ok($$ select admin_salon_activity() $$, '42501', 'not_allowed', 'a salon owner cannot see other salons'' activity');

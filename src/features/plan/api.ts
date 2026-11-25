@@ -4,7 +4,7 @@ import { differenceInCalendarDays } from 'date-fns/differenceInCalendarDays';
 import { parseISO } from 'date-fns/parseISO';
 
 import { isCurrency, type CurrencyCode } from '@/lib/currencies';
-import { allPages } from '@/lib/allPages';
+import type { Database } from '@/lib/database.types';
 import { supabase } from '@/lib/supabase';
 
 export const planKey = (businessId: string) => ['plan', businessId] as const;
@@ -191,9 +191,12 @@ export function useAdminSalons() {
   return useQuery({
     queryKey: ['platform', 'salons'],
     queryFn: async (): Promise<AdminSalon[]> => {
-      // In the function's own order (requests first, then the newest), past the API's 1,000 rows.
-      const data = await allPages((from, to) => supabase.rpc('admin_salons').range(from, to));
-      return data.map((s) => ({
+      // In the list's own order (requests first, then the newest), in one answer: a list of rows stops at 1,000, and
+      // asking page by page works the whole list out again for each (migration 122).
+      const { data, error } = await supabase.rpc('admin_salon_list');
+      if (error) throw error;
+      const rows = data as unknown as Database['public']['Functions']['admin_salons']['Returns'];
+      return rows.map((s) => ({
         ...s,
         monthly_minor: Number(s.monthly_minor),
         plan_currency: isCurrency(s.plan_currency) ? s.plan_currency : 'AED',

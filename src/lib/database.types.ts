@@ -4622,6 +4622,7 @@ export type Database = {
           reason: string;
         }[];
       };
+      admin_salon_list: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_salon_stats: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -4638,6 +4639,7 @@ export type Database = {
           staff: number;
         }[];
       };
+      admin_salon_stats_list: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_salons: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -5618,13 +5620,6 @@ export type Database = {
         Returns: boolean;
       };
       salon_last_active: { Args: { p_business: string }; Returns: string };
-      salon_monthly: {
-        Args: { p_at: string; p_business: string };
-        Returns: {
-          currency: string;
-          monthly_minor: number;
-        }[];
-      };
       salon_status: {
         Args: {
           p_access: string;
@@ -5634,6 +5629,14 @@ export type Database = {
           p_today: string;
         };
         Returns: string;
+      };
+      salons_monthly: {
+        Args: { p_at: string };
+        Returns: {
+          business_id: string;
+          currency: string;
+          monthly_minor: number;
+        }[];
       };
       save_controls: { Args: { p: Json; p_branch: string }; Returns: Json };
       save_document: { Args: { p: Json }; Returns: string };

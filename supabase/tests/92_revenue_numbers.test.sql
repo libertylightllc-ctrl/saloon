@@ -115,7 +115,7 @@ select is((select array[(c ->> 'ended')::int - (b.v #>> '{conversion,ended}')::i
 
 select pg_temp.as_user('b1');
 select throws_ok($$ select admin_revenue() $$, '42501', 'not_allowed', 'a salon owner cannot see the platform''s income');
-select throws_ok($$ select * from salon_monthly(current_setting('t.b1')::uuid, now()) $$, '42501', null, 'nor ask for a salon''s');
+select throws_ok($$ select * from salons_monthly(now()) $$, '42501', null, 'nor ask for a salon''s');
 
 select * from finish();
 rollback;

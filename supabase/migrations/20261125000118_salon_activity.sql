@@ -13,11 +13,21 @@ begin
   if not public.is_platform_admin() then
     raise exception 'not_allowed' using errcode = '42501';
   end if;
-  with open_salons as materialized (
+  with logins as materialized (
+    select m.business_id, max(u.last_sign_in_at) as at from members m join auth.users u on u.id = m.user_id group by 1
+  ), opened as materialized (
+    select n.business_id, max(n.last_seen_at) as at from member_seen n group by 1
+  ), open_salons as materialized (
     select b.id, b.name, b.code, b.country_code, b.timezone,
-           public.salon_status(b.closed_at, s.access_type, s.free_until, s.paid_until, public.business_today(b.id)) as status,
-           public.salon_last_active(b.id) as last_active
-    from businesses b left join subscriptions s on s.business_id = b.id
+           public.salon_status(b.closed_at, s.access_type, s.free_until, s.paid_until,
+                               (now() at time zone coalesce(b.timezone, 'Asia/Dubai'))::date) as status,
+           -- salon_last_active() for every salon at once: a call each is slow with thousands (test 93 compares the two).
+           greatest(l.at, o.at, (select max(a.created_at) from audit_log a
+                                 where a.business_id = b.id and a.entity_type <> 'owner_contact')) as last_active
+    from businesses b
+    left join subscriptions s on s.business_id = b.id
+    left join logins l on l.business_id = b.id
+    left join opened o on o.business_id = b.id
     where not b.is_demo and b.closed_at is null
       and not exists (select 1 from test_salons t where t.business_id = b.id and t.test)
   ), risk as (

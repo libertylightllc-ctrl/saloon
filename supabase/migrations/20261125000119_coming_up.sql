@@ -17,10 +17,11 @@ begin
     raise exception 'not_allowed' using errcode = '42501';
   end if;
 
-  with salons as (
-    select b.id, b.name, b.code, b.timezone, s.free_until, public.business_today(b.id) as today,
-           public.salon_status(b.closed_at, s.access_type, s.free_until, s.paid_until, public.business_today(b.id)) as status
+  with salons as materialized (
+    select b.id, b.name, b.code, b.timezone, s.free_until, d.today,
+           public.salon_status(b.closed_at, s.access_type, s.free_until, s.paid_until, d.today) as status
     from businesses b join subscriptions s on s.business_id = b.id
+    cross join lateral (select (now() at time zone coalesce(b.timezone, 'Asia/Dubai'))::date as today) d
     where not b.is_demo and b.closed_at is null
       and not exists (select 1 from test_salons t where t.business_id = b.id and t.test)
   )

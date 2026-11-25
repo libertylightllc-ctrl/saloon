@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { ContactSetting } from '@/features/landing/contact';
 import { useIsPlatformAdmin } from '@/features/plan/api';
 import { allPages } from '@/lib/allPages';
+import type { Database } from '@/lib/database.types';
 import { supabase } from '@/lib/supabase';
 
 import type { OtherSalon } from './duplicates';
@@ -117,8 +118,10 @@ export function useSalonStats() {
   return useQuery({
     queryKey: ['platform', 'salon-stats'],
     queryFn: async () => {
-      const data = await allPages((from, to) => supabase.rpc('admin_salon_stats').order('business_id').range(from, to));
-      return new Map(data.map((s) => [s.business_id, { ...s, sales_month_minor: Number(s.sales_month_minor) }]));
+      const { data, error } = await supabase.rpc('admin_salon_stats_list'); // in one answer, as the salon list
+      if (error) throw error;
+      const rows = data as unknown as Database['public']['Functions']['admin_salon_stats']['Returns'];
+      return new Map(rows.map((s) => [s.business_id, { ...s, sales_month_minor: Number(s.sales_month_minor) }]));
     },
   });
 }

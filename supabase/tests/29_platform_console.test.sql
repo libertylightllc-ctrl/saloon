@@ -3,7 +3,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(16);
+select plan(20);
 grant execute on function public.branch_today(uuid), public.business_today(uuid), public.unique_business_code(text),
   public.post_journal(uuid, uuid, date, text, uuid, text, uuid, jsonb), public.branch_setting(uuid, text, jsonb)
   to authenticated;
@@ -39,11 +39,18 @@ select pg_temp.as_user('00000000-0000-0000-0000-00000000290b');
 select throws_ok($$ select admin_overview() $$, '42501', null, 'a salon owner cannot open the console');
 select throws_ok($$ select * from admin_accounts() $$, '42501', null, 'nor list every account');
 select throws_ok($$ select admin_set_platform_owner('pc-owner@test.local', true) $$, '42501', null, 'nor make themselves a platform owner');
+select throws_ok($$ select admin_salon_list() $$, '42501', 'not_allowed', 'nor list every salon');
+select throws_ok($$ select admin_salon_stats_list() $$, '42501', 'not_allowed', 'nor what each salon does');
 
 -- The dev account, with no salon of its own, sees everything.
 select pg_temp.as_user('00000000-0000-0000-0000-00000000290a');
 select ok((admin_overview() ->> 'salons')::int >= 1, 'the overview counts the salons');
 select ok(exists (select 1 from admin_salon_stats() where business_id = current_setting('t.b')::uuid), 'each salon''s activity is listed');
+-- The Salons tab reads each list in one answer (migration 122): the same rows, in the same order.
+select is(admin_salon_list(), (select jsonb_agg(to_jsonb(s) - 'n' order by s.n) from (select row_number() over () as n, a.* from admin_salons() a) s),
+  'the whole salon list in one answer, in its own order');
+select is((select x from jsonb_array_elements(admin_salon_stats_list()) x where x ->> 'business_id' = current_setting('t.b')),
+  (select to_jsonb(s) from admin_salon_stats() s where s.business_id = current_setting('t.b')::uuid), 'and each salon''s activity too');
 select ok(exists (select 1 from admin_accounts() where email = 'pc-owner@test.local' and salon = 'Console Salon' and role = 'owner'),
   'every account, with its salon and role');
 select ok(exists (select 1 from admin_accounts() where email = 'pc-dev@test.local' and salon is null and platform_owner),

@@ -10,18 +10,17 @@
 -- B5 Churn: salons that stopped paying this month, with what they paid a month and where they are now: ended, closed,
 --    or back on free time (a plan ended while free days were left, or the team gave free time).
 
--- What a salon paid a month by its latest counted payment up to a moment.
-create function public.salon_monthly(p_business uuid, p_at timestamptz)
-returns table (currency text, monthly_minor bigint)
+-- What each salon paid a month by its latest counted payment up to a moment (salons that never paid are not here).
+create function public.salons_monthly(p_at timestamptz)
+returns table (business_id uuid, currency text, monthly_minor bigint)
 language sql stable security definer set search_path = public as $$
-  select coalesce(e.currency, 'AED'), round(e.amount_minor::numeric / e.months)::bigint
+  select distinct on (e.business_id) e.business_id, coalesce(e.currency, 'AED'), round(e.amount_minor::numeric / e.months)::bigint
   from plan_events e
-  where e.business_id = p_business and e.kind = 'activate' and e.amount_minor > 0 and e.months > 0
+  where e.kind = 'activate' and e.amount_minor > 0 and e.months > 0
     and e.created_at <= p_at and public.payment_counted(e.id, e.business_id)
-  order by e.created_at desc
-  limit 1
+  order by e.business_id, e.created_at desc
 $$;
-revoke execute on function public.salon_monthly(uuid, timestamptz) from public, anon, authenticated;
+revoke execute on function public.salons_monthly(timestamptz) from public, anon, authenticated;
 
 create function public.admin_revenue() returns jsonb
 language plpgsql stable security definer set search_path = public as $$
@@ -38,12 +37,15 @@ begin
   end if;
 
   -- Paying now.
-  with paying as (
-    select b.id, m.currency, m.monthly_minor
+  with paying_ids as materialized (
+    select b.id
     from businesses b join subscriptions s on s.business_id = b.id
-    left join lateral public.salon_monthly(b.id, 'infinity') m on true
     where not b.is_demo and not exists (select 1 from test_salons t where t.business_id = b.id and t.test)
-      and public.salon_status(b.closed_at, s.access_type, s.free_until, s.paid_until, public.business_today(b.id)) = 'paid'
+      and public.salon_status(b.closed_at, s.access_type, s.free_until, s.paid_until,
+                              (now() at time zone coalesce(b.timezone, 'Asia/Dubai'))::date) = 'paid'
+  ), paying as materialized (
+    select p.id, m.currency, m.monthly_minor
+    from paying_ids p left join public.salons_monthly('infinity') m on m.business_id = p.id
   )
   select jsonb_build_object(
            'paying', (select count(*) from paying),
@@ -57,7 +59,7 @@ begin
   with paying as (
     select b.id, m.currency, m.monthly_minor
     from businesses b
-    left join lateral public.salon_monthly(b.id, v_cut - interval '1 microsecond') m on true
+    left join public.salons_monthly(v_cut - interval '1 microsecond') m on m.business_id = b.id
     where not b.is_demo and b.created_at < v_cut and (b.closed_at is null or b.closed_at >= v_cut)
       and not exists (select 1 from test_salons t where t.business_id = b.id and t.test)
       and (select e.paid_until from plan_events e where e.business_id = b.id and e.kind in ('activate', 'end')
@@ -76,21 +78,25 @@ begin
         from businesses b join subscriptions s on s.business_id = b.id
         where not b.is_demo and not exists (select 1 from test_salons t where t.business_id = b.id and t.test)
           and s.access_type <> 'comp' and s.free_until is not null
-          and s.free_until < public.business_today(b.id) and s.free_until >= public.business_today(b.id) - 90) c;
+          and s.free_until < (now() at time zone coalesce(b.timezone, 'Asia/Dubai'))::date
+          and s.free_until >= (now() at time zone coalesce(b.timezone, 'Asia/Dubai'))::date - 90) c;
 
   -- Stopped paying this month: the first unpaid day, or the day it closed while still paid.
   select coalesce(jsonb_agg(jsonb_build_object('business_id', id, 'name', name, 'code', code, 'stopped_on', stopped_on,
                                                'status', status, 'currency', currency, 'minor', monthly_minor)
                             order by stopped_on desc, name), '[]')
     into v_churn
-  from (select b.id, b.name, b.code, m.currency, m.monthly_minor,
-               public.salon_status(b.closed_at, s.access_type, s.free_until, s.paid_until, public.business_today(b.id)) as status,
-               least(coalesce((b.closed_at at time zone b.timezone)::date, s.paid_until + 1), s.paid_until + 1) as stopped_on
-        from businesses b join subscriptions s on s.business_id = b.id
-        join lateral public.salon_monthly(b.id, 'infinity') m on true
-        where not b.is_demo and not exists (select 1 from test_salons t where t.business_id = b.id and t.test)
-          and s.paid_until is not null
-          and public.salon_status(b.closed_at, s.access_type, s.free_until, s.paid_until, public.business_today(b.id)) <> 'paid') x
+  from (select c.id, c.name, c.code, m.currency, m.monthly_minor, c.status, c.stopped_on
+        from (select b.id, b.name, b.code,
+                     public.salon_status(b.closed_at, s.access_type, s.free_until, s.paid_until,
+                                         (now() at time zone coalesce(b.timezone, 'Asia/Dubai'))::date) as status,
+                     least(coalesce((b.closed_at at time zone b.timezone)::date, s.paid_until + 1), s.paid_until + 1) as stopped_on
+              from businesses b join subscriptions s on s.business_id = b.id
+              where not b.is_demo and not exists (select 1 from test_salons t where t.business_id = b.id and t.test)
+                and s.paid_until is not null
+              offset 0) c
+        join public.salons_monthly('infinity') m on m.business_id = c.id
+        where c.status <> 'paid') x
   where stopped_on >= v_month and stopped_on <= (now() at time zone 'Asia/Dubai')::date;
 
   return v_now || v_prev || jsonb_build_object('month', v_month, 'conversion', v_conversion, 'churn', v_churn);
