@@ -25,8 +25,10 @@ $$;
 create function pg_temp.act_as(p_user uuid) returns void language sql as $$
   select set_config('request.jwt.claims', json_build_object('sub', p_user, 'role', 'authenticated')::text, false);
 $$;
-create function pg_temp.act_as_service() returns void language sql as $$
-  select set_config('request.jwt.claims', '{"role":"service_role"}', false);
+-- The service, optionally in a person's name.
+create function pg_temp.act_as_service(p_user uuid default null) returns void language sql as $$
+  select set_config('request.jwt.claims',
+    json_strip_nulls(json_build_object('sub', p_user, 'role', 'service_role'))::text, false);
 $$;
 
 create function pg_temp.svc(p_business uuid, p_name text) returns uuid language sql as $$
@@ -234,9 +236,11 @@ begin
 end;
 $$;
 
--- Four weeks of daily cash closes (demo history): the opening cash moves to the first day, every day
--- is counted by the cashier and approved by the owner the next morning, with a few real-looking
--- differences and weekly banking; yesterday waits for approval, today is still open.
+-- Four weeks of daily cash closes (demo history): the opening cash moves to the first day, every day is counted
+-- and approved by the owner the next morning, with a few real-looking differences; yesterday waits for approval,
+-- today is still open. The cashier counts (blind: only the owner sees the expected cash before the count, migration
+-- 91). Once a week the owner counts and takes cash to the bank (only an owner or manager may take cash out); the
+-- last deposit is still to be marked as arrived.
 create function pg_temp.closings(p_branch uuid, p_owner uuid, p_cashier uuid) returns void
 language plpgsql as $$
 declare
@@ -245,6 +249,7 @@ declare
   v_expected bigint;
   v_diff bigint;
   v_taken bigint;
+  v_bank_day boolean;
   v_id uuid;
   d int;
 begin
@@ -252,11 +257,13 @@ begin
   where branch_id = p_branch and source_type in ('opening_cash', 'opening_stock');
   for d in reverse 27..1 loop
     v_date := public.branch_today(p_branch) - d;
-    perform pg_temp.act_as(p_cashier);
+    v_bank_day := d % 7 = 0;
+    perform pg_temp.act_as(p_owner);
     v_expected := public.expected_cash(p_branch, v_date);
     v_diff := least(case d when 19 then -250 when 12 then -1000 when 5 then -500 when 3 then 1000 else 0 end, v_expected);
     v_diff := greatest(v_diff, -v_expected);
-    v_taken := case when d % 7 = 0 then greatest((v_expected + v_diff) * 6 / 10 / 10000 * 10000, 0) else 0 end;
+    v_taken := case when v_bank_day then greatest((v_expected + v_diff) * 6 / 10 / 10000 * 10000, 0) else 0 end;
+    perform pg_temp.act_as(case when v_bank_day then p_owner else p_cashier end);
     v_id := (public.submit_cash_count(jsonb_build_object('branch_id', p_branch, 'business_date', v_date,
       'counted_cash_minor', v_expected + v_diff, 'drawer_closed_confirmed', true, 'submit', true,
       'reason', case when v_diff < 0 then 'Change given twice' when v_diff > 0 then 'Customer left the change' end,
@@ -276,14 +283,20 @@ begin
       where entity_type = 'cash_closing' and entity_id = v_id and action = 'approve';
       update journal_entries set created_at = (v_date + 1 + time '09:05') at time zone v_tz
       where source_type = 'cash_close' and source_id = v_id;
+      if v_taken > 0 and d > 7 then
+        perform public.record_bank_deposit(v_id, v_date + 1, 'DEP-' || to_char(v_date + 1, 'DDMM'));
+        update cash_closings set updated_at = (v_date + 1 + time '11:30') at time zone v_tz where id = v_id;
+        update audit_log set created_at = (v_date + 1 + time '11:30') at time zone v_tz
+        where entity_type = 'cash_closing' and entity_id = v_id and action = 'update';
+      end if;
     end if;
   end loop;
 end;
 $$;
 
--- Pay terms, a Saturday–Thursday roster (Friday afternoons only) and two weeks of attendance for a demo
--- branch. p_people: [[name, code, salary, wps, role_title]]. Past days are written directly (demo history);
--- today's clock-ins go through clock() like the app.
+-- Pay terms, start dates (over a year ago: pay counts the days employed, migration 98), a Saturday–Thursday
+-- roster (Friday afternoons only) and two weeks of attendance for a demo branch. p_people: [[name, code, salary,
+-- wps, role_title]]. Past days are written directly (demo history); today's clock-ins go through clock() like the app.
 create function pg_temp.people(p_branch uuid, p_owner uuid, p_cashier uuid, p_people jsonb) returns void
 language plpgsql as $$
 declare
@@ -302,7 +315,8 @@ begin
     select * into e from employees where business_id = v_biz and full_name = it ->> 0;
     perform public.save_employee(jsonb_build_object('business_id', v_biz, 'id', e.id, 'full_name', e.full_name,
       'employee_code', it ->> 1, 'base_salary_minor', (it ->> 2)::bigint, 'wps_required', (it ->> 3)::boolean,
-      'role_title', it ->> 4, 'phone', '+971 50 ' || (200 + n) || ' ' || (4000 + n * 7)));
+      'role_title', it ->> 4, 'phone', '+971 50 ' || (200 + n) || ' ' || (4000 + n * 7),
+      'started_on', v_today - 400 - n * 130));
     if it ->> 4 <> 'cashier' then
       perform public.set_roster(e.id, '[{"weekday":6,"start":"10:00","end":"22:00"},{"weekday":0,"start":"10:00","end":"22:00"},
         {"weekday":1,"start":"10:00","end":"22:00"},{"weekday":2,"start":"10:00","end":"22:00"},
@@ -400,7 +414,7 @@ declare
   d int;
 begin
   perform pg_temp.new_user(owner, 'demo-gents@example.com', 'Demo1234!', 'Tehseem');
-  perform pg_temp.act_as(owner);
+  perform pg_temp.act_as_service(owner);   -- only the service may mark a salon as a demo (migration 34)
   select (r ->> 'business_id')::uuid, (r ->> 'branch_id')::uuid, (r ->> 'member_id')::uuid
     into biz, br, owner_member
   from public.create_business(jsonb_build_object(
@@ -426,7 +440,7 @@ begin
     'user_id', '11111111-0000-4000-8000-000000000005', 'username', 'imran', 'display_name', 'Imran', 'role', 'staff',
     'commission_bps', 1100, 'colour', '#1E90D6', 'actor_member_id', owner_member));
 
-  perform pg_temp.stock_up(br, owner, 80, 150);
+  perform pg_temp.stock_up(br, owner, 100, 150);
 
   insert into customers (business_id, name, phone, preferences, created_by) values
     (biz, 'Ahmed Khan', '+971 50 111 2233', 'Skin fade, beard line', owner_member),
@@ -498,7 +512,7 @@ declare
   d int;
 begin
   perform pg_temp.new_user(owner, 'demo-ladies@example.com', 'Demo1234!', 'Mariam');
-  perform pg_temp.act_as(owner);
+  perform pg_temp.act_as_service(owner);   -- only the service may mark a salon as a demo (migration 34)
   select (r ->> 'business_id')::uuid, (r ->> 'branch_id')::uuid, (r ->> 'member_id')::uuid
     into biz, br, owner_member
   from public.create_business(jsonb_build_object(
@@ -588,8 +602,8 @@ where true;
 
 select set_config('request.jwt.claims', '', false);
 
--- The demo salons have a running plan.
-insert into public.subscriptions (business_id, paid_until)
-select id, date '2099-12-31' from public.businesses where is_demo
-on conflict (business_id) do update set paid_until = excluded.paid_until;
+-- The demo salons have a running plan, paid (a demo gets no free period).
+insert into public.subscriptions (business_id, paid_until, access_type)
+select id, date '2099-12-31', 'paid' from public.businesses where is_demo
+on conflict (business_id) do update set paid_until = excluded.paid_until, access_type = excluded.access_type;
 select set_config('salon.plan_check', '', false);
