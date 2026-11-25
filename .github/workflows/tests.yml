@@ -15,6 +15,8 @@ jobs:
     name: types, lint, app tests
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    env:
+      TZ: Asia/Dubai # as the machine the tests were written on
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
