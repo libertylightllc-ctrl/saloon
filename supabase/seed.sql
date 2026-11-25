@@ -177,8 +177,8 @@ begin
   perform pg_temp.expense(p_biz, p_branch, p_owner, 'uniforms', 60000, 'card', '6 new uniforms', 9);
   perform pg_temp.expense(p_biz, p_branch, p_owner, 'cleaning', 6000, 'cash', 'Disinfectant and wipes', 7);
   perform pg_temp.expense(p_biz, p_branch, p_owner, 'repairs', 25000, 'card', 'Chair hydraulic repair', 16);
-  -- Today, by the cashier.
-  perform pg_temp.expense(p_biz, p_branch, p_cashier, 'tea_food', 1500, 'cash', 'Tea for the team', 0);
+  -- Today, by the owner: the front desk always gives a receipt photo (migration 91), and demo data has none.
+  perform pg_temp.expense(p_biz, p_branch, p_owner, 'tea_food', 1500, 'cash', 'Tea for the team', 0);
 end;
 $$;
 
