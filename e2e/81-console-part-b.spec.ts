@@ -12,6 +12,8 @@ const DAY = 86_400_000;
 
 test('console Part B: business numbers, coming up with Message owner, sign-ups, support and system health', async ({ page, mode }) => {
   const n = uid().slice(-6);
+  // A number of its own: test 57 signs up with a number no salon has.
+  const phone = `+9715${mode === 'gents' ? 5 : 6}${String(Date.now()).slice(-7)}`;
   const dev = await createOwner(mode);
   await makePlatformAdmin(dev.email);
 
@@ -28,7 +30,7 @@ test('console Part B: business numbers, coming up with Message owner, sign-ups, 
   if (!endingUser) throw new Error('no user');
   const { error: contactError } = await admin
     .from('owner_contacts')
-    .insert({ user_id: endingUser, phone: '+971501234567', whatsapp_ok: true, whatsapp_ok_at: new Date().toISOString() });
+    .insert({ user_id: endingUser, phone, whatsapp_ok: true, whatsapp_ok_at: new Date().toISOString() });
   if (contactError) throw contactError;
   const { data: member, error: memberError } = await admin.from('members').select('id').eq('business_id', ending.businessId).eq('role', 'owner').single();
   if (memberError) throw memberError;
@@ -70,7 +72,7 @@ test('console Part B: business numbers, coming up with Message owner, sign-ups, 
   await expect(row).toContainText('In free period · ends');
   await expect(row).toContainText('in 3 days');
   await expect(row).toContainText('العربية');
-  await expect(row).toContainText('WhatsApp +971501234567 (agreed)');
+  await expect(row).toContainText(`WhatsApp ${phone} (agreed)`);
 
   // Message owner: Arabic text; logged first, then WhatsApp opens.
   await page.evaluate(() => {
@@ -89,7 +91,7 @@ test('console Part B: business numbers, coming up with Message owner, sign-ups, 
   await expect(text(page, 'Saved in Changes and the salon’s history')).toBeVisible();
   const opened = await page.evaluate(() => (window as unknown as { __opened: string[] }).__opened);
   expect(opened).toHaveLength(1);
-  expect(opened[0]).toMatch(/^https:\/\/wa\.me\/971501234567\?text=/);
+  expect(opened[0]).toContain(`https://wa.me/${phone.slice(1)}?text=`);
   await expect(row).toContainText('Message opened');
 
   // B6: the plan request, waiting 10 days; it opens its salon.
