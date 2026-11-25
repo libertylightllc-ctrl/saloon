@@ -61,7 +61,7 @@ test('the front desk pays tips and sends a blind count AED 5 short; owner sends 
   await id(phone, 'closing-send-back').click();
   await id(phone, 'closing-send-back-reason').fill('Count the coins again');
   await id(phone, 'closing-send-back-confirm').click();
-  await expect(text(phone, 'Sent back for a recount')).toBeVisible();
+  await expect(text(phone, 'Sent back for a recount', true)).toBeVisible(); // the toast, not the line with the reason
 
   // Cashier sees why, recounts (same figure) and submits again.
   await expect(id(page, 'closing-returned')).toContainText('Count the coins again');
