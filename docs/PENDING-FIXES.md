@@ -90,7 +90,7 @@ All ten are done; see Done (16 Nov).
 
 ## Platform console brief, 24 Nov 2026 (SALOQO_CONSOLE_FIXES.md: Parts A–H, one part at a time)
 - Part A (A1–A10): live on saloqo.com since 25 Nov (migrations 109–113, owner's OK). Decisions in DECISIONS.md (24 Nov).
-- Part B (Overview numbers B1–B10, reporting currency H2): built on `console-part-b` (migrations 114–121), 25 Nov. Not live: waiting for the full test run and the owner's OK.
+- Part B (Overview numbers B1–B10, reporting currency H2): built on `console-part-b` (migrations 114–122, 122 being the console's speed), 25 Nov. Not live: waiting for the full test run and the owner's OK.
 - Parts C–H: next, one part at a time, each after the owner's go-ahead.
 
 ## Done
