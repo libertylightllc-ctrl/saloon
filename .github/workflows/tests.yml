@@ -1,0 +1,109 @@
+# The whole proof on GitHub's machines: the app's own tests, the database tests and every browser test in both looks.
+# Only on branches named ci-…; made-up data, a fresh local database on each machine, no secrets and nothing live.
+name: tests
+on:
+  push:
+    branches: ['ci-**']
+permissions:
+  contents: read
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: types, lint, app tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci --no-audit --no-fund
+      # Expo writes this file when it starts; the type check needs it.
+      - run: echo '/// <reference types="expo/types" />' > expo-env.d.ts
+      - run: npx tsc --noEmit
+      - run: npx expo lint
+      - run: npx jest
+
+  database:
+    name: database tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci --no-audit --no-fund
+      - run: npx supabase start -x studio,imgproxy,postgres-meta,logflare,vector,supavisor,edge-runtime
+      - name: every database test file
+        run: |
+          nf=0; nc=0; bad=0
+          for f in supabase/tests/*.test.sql; do
+            out=$(docker exec -i supabase_db_salon-app psql -U postgres -At -X -q < "$f" 2>&1 || true)
+            c=$(echo "$out" | grep -cE '^ok [0-9]+' || true)
+            nok=$(echo "$out" | grep -cE '^not ok|ERROR|Looks like' || true)
+            nf=$((nf+1)); nc=$((nc+c))
+            # A file that ran no check at all is a problem, not a pass.
+            if [ "$nok" -gt 0 ] || [ "$c" -eq 0 ]; then bad=$((bad+1)); echo "== $f ($c checks)"; echo "$out" | grep -E '^not ok|ERROR|Looks like|#' | head -12; fi
+          done
+          echo "files=$nf checks=$nc files_with_problems=$bad"
+          [ "$bad" -eq 0 ]
+
+  browser:
+    name: browser ${{ matrix.look }} ${{ matrix.part }}/7
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        look: [gents, ladies]
+        part: [1, 2, 3, 4, 5, 6, 7]
+    env:
+      E2E_PORT: '8096'
+      E2E_WORKERS: '2'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci --no-audit --no-fund
+      - run: npx supabase start -x studio,imgproxy,postgres-meta,logflare,vector,supavisor
+      - name: the local database's public key for the app
+        run: |
+          key=$(npx supabase status -o json 2>/dev/null | sed -n '/{/,$p' | jq -r .ANON_KEY)
+          test -n "$key" && test "$key" != null
+          printf 'EXPO_PUBLIC_SUPABASE_URL=auto\nEXPO_PUBLIC_SUPABASE_ANON_KEY=%s\n' "$key" > .env
+      - name: start the app and build it once
+        run: |
+          EXPO_OFFLINE=1 BROWSER=none nohup npx expo start --web --port 8096 > "$RUNNER_TEMP/expo.log" 2>&1 &
+          for i in $(seq 90); do curl -sf -o /dev/null http://localhost:8096/ && break; sleep 2; done
+          src=$(curl -s http://localhost:8096/ | grep -o 'src="[^"]*bundle[^"]*"' | head -1 | sed 's/^src="//;s/"$//;s/&amp;/\&/g')
+          curl -s -o /dev/null --max-time 600 -w 'bundle %{http_code} %{time_total}s\n' "http://localhost:8096$src"
+      - name: browser tests
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: ${{ runner.temp }}/report.json
+        run: npx playwright test --project=${{ matrix.look }} --shard=${{ matrix.part }}/7 --reporter=list,json
+      - name: counts
+        if: always()
+        run: |
+          jq -c .stats "$RUNNER_TEMP/report.json" || true
+          uptime; free -m | head -2; df -h / | tail -1
+          tail -5 "$RUNNER_TEMP/expo.log" || true
+          mkdir -p "$RUNNER_TEMP/out" && cp "$RUNNER_TEMP/report.json" "$RUNNER_TEMP/out/" 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-${{ matrix.look }}-${{ matrix.part }}
+          path: ${{ runner.temp }}/out/report.json
+          retention-days: 3
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: failures-${{ matrix.look }}-${{ matrix.part }}
+          path: |
+            e2e-results/**/trace.zip
+            e2e-results/**/test-failed-*.png
+            e2e-results/**/error-context.md
+          retention-days: 3
+          if-no-files-found: ignore
