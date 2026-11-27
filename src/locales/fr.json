@@ -2499,6 +2499,9 @@
       "discount_over_limit": {
         "title": "Remise {{pct}}",
         "titleLimit": "Remise {{pct}} (limite {{limit}})"
+      },
+      "support_waiting": {
+        "title": "Assistance : quelqu’un attend votre réponse"
       }
     },
     "markedRead": "{{count}} marquées comme lues",
@@ -3238,7 +3241,9 @@
       "takeBack": "Remettre « En attente de vous »",
       "reason": "Raison",
       "reasonHint": "Personne de l’équipe n’a encore répondu au dernier message ; indiquez pourquoi (au moins 3 caractères).",
-      "stageSaved": "Déplacée vers : {{stage}}"
+      "stageSaved": "Déplacée vers : {{stage}}",
+      "waitingCount_one": "1 conversation d’assistance vous attend",
+      "waitingCount": "{{count}} conversations d’assistance vous attendent"
     },
     "cards": {
       "title": "Paiements par carte (Creem)",

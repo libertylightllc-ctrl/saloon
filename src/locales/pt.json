@@ -2499,6 +2499,9 @@
       "discount_over_limit": {
         "title": "Desconto {{pct}}",
         "titleLimit": "Desconto {{pct}} (limite {{limit}})"
+      },
+      "support_waiting": {
+        "title": "Suporte: alguém está à espera da sua resposta"
       }
     },
     "markedRead": "{{count}} marcadas como lidas",
@@ -3238,7 +3241,9 @@
       "takeBack": "Passar para «À sua espera»",
       "reason": "Motivo",
       "reasonHint": "Ninguém da equipa respondeu ainda à última mensagem; indique o motivo (pelo menos 3 caracteres).",
-      "stageSaved": "Movida para: {{stage}}"
+      "stageSaved": "Movida para: {{stage}}",
+      "waitingCount_one": "1 conversa de suporte à sua espera",
+      "waitingCount": "{{count}} conversas de suporte à sua espera"
     },
     "cards": {
       "title": "Pagamentos com cartão (Creem)",

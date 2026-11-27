@@ -32,6 +32,7 @@ export const NOTIFICATION_ICON = {
   discount_over_limit: 'percent',
   daily_digest: 'sparkles',
   support_reply: 'messageCircle',
+  support_waiting: 'messageCircle',
   trial_ending: 'sparkles',
 } as const satisfies Record<string, IconName>;
 type Known = keyof typeof NOTIFICATION_ICON;
@@ -96,6 +97,9 @@ export function notificationText(n: Pick<AppNotification, 'type' | 'title' | 'bo
       return { title: words(values.count === 0 ? 'titleToday' : values.count === 1 ? 'titleTomorrow' : 'title'), body: words('body') };
     case 'booking_moved':
       return { title: words('title'), body: d.reassigned ? words('bodyReassigned') : words('body') };
+    case 'support_waiting':
+      // "Layla · Palm Salon: Can I add a second branch?" — who wrote and what, as they wrote it (console brief, E2).
+      return { title: words('title'), body: [str(d.from), str(d.preview)].filter(Boolean).join(': ') };
     case 'cash_difference': {
       const v = num(d.variance_minor) ?? 0;
       const title = t(`notifications.types.cash_difference.${v < 0 ? 'short' : 'over'}`, { ...values, amount: formatMoney(Math.abs(v)) });

@@ -2499,6 +2499,9 @@
       "discount_over_limit": {
         "title": "Discount {{pct}}",
         "titleLimit": "Discount {{pct}} (limit {{limit}})"
+      },
+      "support_waiting": {
+        "title": "Support: someone is waiting for you"
       }
     },
     "markedRead": "{{count}} marked as read",
@@ -3237,7 +3240,9 @@
       "takeBack": "Move to Waiting for you",
       "reason": "Reason",
       "reasonHint": "Nobody from the team has answered the last message yet, so say why (at least 3 characters).",
-      "stageSaved": "Moved to {{stage}}"
+      "stageSaved": "Moved to {{stage}}",
+      "waitingCount_one": "1 support conversation waiting for you",
+      "waitingCount": "{{count}} support conversations waiting for you"
     },
     "cards": {
       "title": "Card payments (Creem)",

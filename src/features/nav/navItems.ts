@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useWorkspace } from '@/features/auth/session';
 import { useNewPilotApplications } from '@/features/console/api';
 import { useIsPlatformAdmin } from '@/features/plan/api';
+import { useSupportWaiting } from '@/features/support/adminApi';
 import { can, levelOf, tabsFor, type TabKey } from '@/lib/permissions';
 import type { IconName } from '@/ui';
 
@@ -22,12 +23,17 @@ export interface NavItem {
 
 /**
  * The counts on business rows, by row key: "Platform console" shows the pilot applications still New (owner's fix
- * list A1; platform owners only).
+ * list A1) and the support conversations waiting for a person (console brief, Part E2); platform owners only.
  */
 export function useNavBadges(): Partial<Record<string, { count: number; label: string }>> {
   const { t } = useTranslation();
   const pilot = useNewPilotApplications();
-  return pilot > 0 ? { admin: { count: pilot, label: t('console.pilot.newCount', { count: pilot }) } } : {};
+  const waiting = useSupportWaiting();
+  const labels = [
+    ...(pilot > 0 ? [t('console.pilot.newCount', { count: pilot })] : []),
+    ...(waiting > 0 ? [t('console.support.waitingCount', { count: waiting })] : []),
+  ];
+  return labels.length ? { admin: { count: pilot + waiting, label: labels.join(', ') } } : {};
 }
 
 export type NavSectionKey = 'today' | 'money' | 'business' | 'settings';

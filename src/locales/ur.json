@@ -2499,6 +2499,9 @@
       "discount_over_limit": {
         "title": "رعایت {{pct}}",
         "titleLimit": "رعایت {{pct}} (حد {{limit}})"
+      },
+      "support_waiting": {
+        "title": "سپورٹ: کوئی آپ کے جواب کا منتظر ہے"
       }
     },
     "markedRead": "{{count}} پڑھا ہوا کیا",
@@ -3238,7 +3241,9 @@
       "takeBack": "“آپ کے جواب کا انتظار” میں لے جائیں",
       "reason": "وجہ",
       "reasonHint": "ٹیم میں سے کسی نے ابھی تک آخری پیغام کا جواب نہیں دیا، اس لیے وجہ لکھیں (کم از کم 3 حروف)۔",
-      "stageSaved": "{{stage}} میں منتقل کر دی گئی"
+      "stageSaved": "{{stage}} میں منتقل کر دی گئی",
+      "waitingCount_one": "سپورٹ کی 1 گفتگو آپ کی منتظر ہے",
+      "waitingCount": "سپورٹ کی {{count}} گفتگو آپ کی منتظر ہیں"
     },
     "cards": {
       "title": "کارڈ ادائیگیاں (Creem)",

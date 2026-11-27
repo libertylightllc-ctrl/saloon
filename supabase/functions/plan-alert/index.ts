@@ -1,5 +1,6 @@
 // Emails the platform owner when a salon asks for its plan (owner, 2026-10-04), when someone writes to Help &
-// support (2026-10-12) and when a salon applies for the pilot (2026-10-25; also to hello@saloqo.com), through Resend from
+// support (2026-10-12; a conversation waiting for a person, also to hello@saloqo.com since the console brief's E2,
+// 27 Nov 2026) and when a salon applies for the pilot (2026-10-25; also to hello@saloqo.com), through Resend from
 // no-reply@saloqo.com. Called by the database when a request is made (dispatch_plan_alerts) and every 10 minutes as a
 // retry; safe to call any time: each request is told once. Needs the RESEND_API_KEY secret (the owner sets it); without
 // it nothing is sent and the requests wait. EMAIL_ENDPOINT overrides Resend on the local stack only (mail-sink).
@@ -12,7 +13,7 @@ import { pilotMessage, type PilotAlert } from './pilot.ts';
 
 const RESEND = 'https://api.resend.com/emails';
 const SITE = 'https://www.saloqo.com';
-/** Pilot applications also go to the address on the website (full update brief, Phase 3). */
+/** Pilot applications and support conversations waiting for a person also go to the address on the website. */
 const HELLO = 'hello@saloqo.com';
 
 interface Alert {
@@ -76,14 +77,14 @@ function supportMessage(a: SupportAlert) {
   const who = a.who || 'Someone';
   const from = a.salon ? `${a.salon} · ${a.salon_code}` : 'not signed in';
   const lines = [
-    `${who} (${from}) wrote to Help & support:`,
+    `${who} (${from}) is waiting for a person in Help & support:`,
     '',
     a.preview ?? '',
     '',
     ...(a.email ? [`Their email: ${a.email}`] : []),
     `Answer in the console: ${SITE}/console`,
   ];
-  return { subject: `Support: ${who} (${from})`, text: lines.join('\n') };
+  return { subject: `Support: ${who} (${from}) is waiting for a reply`, text: lines.join('\n') };
 }
 
 Deno.serve(async (req) => {
@@ -129,7 +130,7 @@ Deno.serve(async (req) => {
   let sent = 0;
   for (const a of supportAlerts) {
     const { subject, text } = supportMessage(a);
-    if (await send('Support alert', a.admin_emails ?? [], subject, text)) sent++;
+    if (await send('Support alert', [...new Set([...(a.admin_emails ?? []), HELLO])], subject, text)) sent++;
     else {
       console.error(`plan-alert: could not email support thread ${a.thread_id}; it goes back to the queue`);
       await admin.rpc('unclaim_support_alert', { p_thread: a.thread_id });

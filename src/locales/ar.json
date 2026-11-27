@@ -2565,6 +2565,9 @@
       "discount_over_limit": {
         "title": "خصم {{pct}}",
         "titleLimit": "خصم {{pct}} (الحد {{limit}})"
+      },
+      "support_waiting": {
+        "title": "الدعم: شخص ينتظر ردك"
       }
     },
     "markedRead": "تم تعليم {{count}} كمقروء",
@@ -3341,7 +3344,12 @@
       "takeBack": "نقل إلى «بانتظارك»",
       "reason": "السبب",
       "reasonHint": "لم يرد أحد من الفريق على آخر رسالة بعد، لذا اذكر السبب (3 أحرف على الأقل).",
-      "stageSaved": "نُقلت إلى: {{stage}}"
+      "stageSaved": "نُقلت إلى: {{stage}}",
+      "waitingCount_one": "محادثة دعم واحدة تنتظرك",
+      "waitingCount": "{{count}} محادثة دعم تنتظرك",
+      "waitingCount_two": "محادثتا دعم تنتظرانك",
+      "waitingCount_few": "{{count}} محادثات دعم تنتظرك",
+      "waitingCount_many": "{{count}} محادثة دعم تنتظرك"
     },
     "cards": {
       "title": "مدفوعات البطاقات (Creem)",
