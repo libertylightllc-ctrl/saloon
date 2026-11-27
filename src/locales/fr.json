@@ -1256,7 +1256,8 @@
     "code_changed": "Le code salon a déjà été changé une fois. Il ne peut plus être changé.",
     "invalid_salon_code": "Un code salon fait 4 à 12 lettres ou chiffres, sans espace.",
     "code_unchanged": "C’est déjà le code salon actuel. Saisissez-en un nouveau.",
-    "month_not_over": "Ce mois n’est pas encore terminé. Approuvez-le à partir de son dernier jour, ou donnez un motif pour l’approuver plus tôt."
+    "month_not_over": "Ce mois n’est pas encore terminé. Approuvez-le à partir de son dernier jour, ou donnez un motif pour l’approuver plus tôt.",
+    "already_open": "Cette personne a déjà une autre conversation ouverte. Répondez-lui là-bas."
   },
   "sales": {
     "title": "Ventes",
@@ -3209,12 +3210,9 @@
       "visitor": "Non connecté",
       "new": "{{count}} nouveaux",
       "new_one": "{{count}} nouveau",
-      "closed": "Fermée",
       "send": "Envoyer la réponse",
       "sent": "Réponse envoyée",
       "close": "Fermer la conversation",
-      "closedToast": "Conversation fermée",
-      "needsYou": "Vous attend",
       "aiAnswered": "Réponse de l’IA",
       "assistantSwitch": "L’assistant IA répond en premier",
       "assistantHint": "L’assistant IA répond tout de suite aux nouveaux messages et vous transmet une conversation lorsqu’il ne peut pas résoudre le problème ou qu’on demande à parler à une personne. Dès que vous répondez vous-même, vous prenez la main sur la conversation.",
@@ -3223,7 +3221,24 @@
       "oldest": "Plus longue attente : {{time}}",
       "underMinute": "moins d’une minute",
       "firstReply": "Première réponse d’une personne",
-      "firstReplySub": "Moyenne, 30 derniers jours · conversations répondues : {{n}}"
+      "firstReplySub": "Moyenne, 30 derniers jours · conversations répondues : {{n}}",
+      "stage": {
+        "new": "Nouvelle",
+        "waiting_team": "En attente de vous",
+        "waiting_salon": "En attente du salon",
+        "solved": "Résolue",
+        "closed": "Fermée"
+      },
+      "all": "Toutes",
+      "noneHere": "Aucune conversation avec ce statut.",
+      "firstReplyIn": "Première réponse : {{time}}",
+      "noReplyYet": "Pas encore de réponse",
+      "waitingFor": "En attente depuis {{time}}",
+      "markSolved": "Marquer comme résolue",
+      "takeBack": "Remettre « En attente de vous »",
+      "reason": "Raison",
+      "reasonHint": "Personne de l’équipe n’a encore répondu au dernier message ; indiquez pourquoi (au moins 3 caractères).",
+      "stageSaved": "Déplacée vers : {{stage}}"
     },
     "cards": {
       "title": "Paiements par carte (Creem)",
@@ -3383,7 +3398,9 @@
         "email": "{{salon}} : e-mail au propriétaire ouvert, {{what}} se termine le {{date}}",
         "free": "la période gratuite",
         "pilot": "le pilote"
-      }
+      },
+      "supportStage": "Conversation d’assistance avec {{who}}, {{where}} : {{from}} → {{to}}",
+      "supportStageReason": "Conversation d’assistance avec {{who}}, {{where}} : {{from}} → {{to}} ({{reason}})"
     },
     "contact": {
       "title": "Contact",

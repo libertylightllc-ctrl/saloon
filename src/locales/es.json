@@ -1256,7 +1256,8 @@
     "code_changed": "El código del salón ya se cambió una vez. No se puede volver a cambiar.",
     "invalid_salon_code": "El código del salón tiene de 4 a 12 letras o números, sin espacios.",
     "code_unchanged": "Ese es el código actual del salón. Escribe uno nuevo.",
-    "month_not_over": "Este mes aún no ha terminado. Apruébalo desde su último día o indica un motivo para aprobarlo antes."
+    "month_not_over": "Este mes aún no ha terminado. Apruébalo desde su último día o indica un motivo para aprobarlo antes.",
+    "already_open": "Esta persona ya tiene otra conversación abierta. Respóndele allí."
   },
   "sales": {
     "title": "Ventas",
@@ -3209,12 +3210,9 @@
       "visitor": "Sin iniciar sesión",
       "new": "{{count}} nuevos",
       "new_one": "{{count}} nuevo",
-      "closed": "Cerrada",
       "send": "Enviar respuesta",
       "sent": "Respuesta enviada",
       "close": "Cerrar conversación",
-      "closedToast": "Conversación cerrada",
-      "needsYou": "Te necesita",
       "aiAnswered": "Respondida por la IA",
       "assistantSwitch": "El asistente de IA responde primero",
       "assistantHint": "El asistente de IA responde los mensajes nuevos al instante y te pasa la conversación cuando no puede resolverla o alguien pide hablar con una persona. Si respondes tú, te haces cargo de la conversación.",
@@ -3223,7 +3221,24 @@
       "oldest": "La espera más larga: {{time}}",
       "underMinute": "menos de un minuto",
       "firstReply": "Primera respuesta de una persona",
-      "firstReplySub": "Promedio, últimos 30 días · conversaciones respondidas: {{n}}"
+      "firstReplySub": "Promedio, últimos 30 días · conversaciones respondidas: {{n}}",
+      "stage": {
+        "new": "Nueva",
+        "waiting_team": "Esperando tu respuesta",
+        "waiting_salon": "Esperando al salón",
+        "solved": "Resuelta",
+        "closed": "Cerrada"
+      },
+      "all": "Todas",
+      "noneHere": "No hay conversaciones con este estado.",
+      "firstReplyIn": "Primera respuesta: {{time}}",
+      "noReplyYet": "Aún sin respuesta",
+      "waitingFor": "Esperando desde hace {{time}}",
+      "markSolved": "Marcar como resuelta",
+      "takeBack": "Pasar a «Esperando tu respuesta»",
+      "reason": "Motivo",
+      "reasonHint": "Nadie del equipo ha respondido aún al último mensaje; indica el motivo (al menos 3 caracteres).",
+      "stageSaved": "Movida a: {{stage}}"
     },
     "cards": {
       "title": "Pagos con tarjeta (Creem)",
@@ -3383,7 +3398,9 @@
         "email": "{{salon}}: email al propietario abierto, el {{what}} termina el {{date}}",
         "free": "periodo gratis",
         "pilot": "piloto"
-      }
+      },
+      "supportStage": "Conversación de soporte con {{who}}, {{where}}: {{from}} → {{to}}",
+      "supportStageReason": "Conversación de soporte con {{who}}, {{where}}: {{from}} → {{to}} ({{reason}})"
     },
     "contact": {
       "title": "Contacto",

@@ -4236,6 +4236,7 @@ export type Database = {
           author: string;
           author_user_id: string | null;
           body: string;
+          channel: string;
           created_at: string;
           id: string;
           thread_id: string;
@@ -4244,6 +4245,7 @@ export type Database = {
           author: string;
           author_user_id?: string | null;
           body: string;
+          channel?: string;
           created_at?: string;
           id?: string;
           thread_id: string;
@@ -4252,6 +4254,7 @@ export type Database = {
           author?: string;
           author_user_id?: string | null;
           body?: string;
+          channel?: string;
           created_at?: string;
           id?: string;
           thread_id?: string;
@@ -4280,6 +4283,8 @@ export type Database = {
           last_from: string;
           last_message_at: string;
           name: string | null;
+          stage: string;
+          stage_at: string;
           status: string;
           support_read_at: string | null;
           user_id: string | null;
@@ -4298,6 +4303,8 @@ export type Database = {
           last_from?: string;
           last_message_at?: string;
           name?: string | null;
+          stage?: string;
+          stage_at?: string;
           status?: string;
           support_read_at?: string | null;
           user_id?: string | null;
@@ -4316,6 +4323,8 @@ export type Database = {
           last_from?: string;
           last_message_at?: string;
           name?: string | null;
+          stage?: string;
+          stage_at?: string;
           status?: string;
           support_read_at?: string | null;
           user_id?: string | null;
@@ -4688,6 +4697,10 @@ export type Database = {
       admin_signups_weekly: { Args: { p_weeks?: number }; Returns: Json };
       admin_support_close: { Args: { p_thread: string }; Returns: undefined };
       admin_support_reply: { Args: { p_body: string; p_thread: string }; Returns: undefined };
+      admin_support_set_stage: {
+        Args: { p_reason?: string; p_stage: string; p_thread: string };
+        Returns: undefined;
+      };
       admin_support_stats: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_support_thread: { Args: { p_thread: string }; Returns: Json };
       admin_support_threads: {
@@ -4696,6 +4709,8 @@ export type Database = {
           context: Json;
           created_at: string;
           email: string;
+          first_asked_at: string;
+          first_reply_at: string;
           handover: boolean;
           id: string;
           last_from: string;
@@ -4704,11 +4719,14 @@ export type Database = {
           role: string;
           salon: string;
           salon_code: string;
+          stage: string;
+          stage_at: string;
           status: string;
           unread: number;
           who: string;
         }[];
       };
+      admin_support_waiting: { Args: Record<PropertyKey, never>; Returns: number };
       admin_test_salons: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -5751,7 +5769,7 @@ export type Database = {
         }[];
       };
       support_add: {
-        Args: { p_author: string; p_body: string; p_thread: string };
+        Args: { p_author: string; p_body: string; p_channel?: string; p_thread: string };
         Returns: undefined;
       };
       support_assistant_reply: {
@@ -5764,6 +5782,7 @@ export type Database = {
       support_mine: { Args: Record<PropertyKey, never>; Returns: Json };
       support_send: { Args: { p: Json }; Returns: string };
       support_thread_json: { Args: { p_thread: string }; Returns: Json };
+      support_tick: { Args: Record<PropertyKey, never>; Returns: undefined };
       support_token_hash: { Args: { p_token: string }; Returns: string };
       support_unread: { Args: Record<PropertyKey, never>; Returns: number };
       takes_clients: { Args: { p_role_title: string }; Returns: boolean };

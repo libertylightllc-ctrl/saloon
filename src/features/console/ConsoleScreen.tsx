@@ -21,7 +21,7 @@ import { PilotTab } from './PilotTab';
 import type { SalonFilter } from './salonFilter';
 import { SalonsTab } from './SalonsTab';
 import { SupportTab } from './SupportTab';
-import { useSupportInbox } from '@/features/support/api';
+import { useSupportInbox } from '@/features/support/adminApi';
 
 type Tab = 'overview' | 'salons' | 'pilot' | 'settings' | 'support' | 'accounts' | 'plans' | 'cards' | 'activity' | 'audit';
 const TABS: Tab[] = ['overview', 'salons', 'pilot', 'settings', 'support', 'accounts', 'plans', 'cards', 'activity', 'audit'];
@@ -34,14 +34,16 @@ const isTab = (v: unknown): v is Tab => TABS.includes(v as Tab);
 export function ConsoleScreen() {
   const { t } = useTranslation();
   const pilotNew = useNewPilotApplications();
-  // Also at /admin (full update, Phase 6 g); never listed by search engines. New pilot applications show in the
-  // browser tab: "(1) Platform console" (owner's fix list A1).
-  usePageMeta(pilotNew ? `(${pilotNew}) ${t('console.title')}` : t('console.title'), null, { noindex: true });
+  const inbox = useSupportInbox();
+  // Support conversations waiting for a person (owner's brief, Part E2).
+  const waiting = (inbox.data ?? []).filter((r) => r.stage === 'waiting_team').length;
+  // Also at /admin (full update, Phase 6 g); never listed by search engines. New pilot applications and support
+  // conversations waiting for you show in the browser tab: "(1) Platform console" (owner's fix list A1).
+  const pending = pilotNew + waiting;
+  usePageMeta(pending ? `(${pending}) ${t('console.title')}` : t('console.title'), null, { noindex: true });
   const { status } = useSession();
   const admin = useIsPlatformAdmin();
   const payment = usePaymentDetails();
-  const inbox = useSupportInbox();
-  const unread = (inbox.data ?? []).reduce((n, r) => n + r.unread, 0);
   // A link can open a tab: /console?tab=pilot (the bell's row, the application email).
   const asked = useLocalSearchParams<{ tab?: string }>().tab;
   const [tab, setTab] = useState<Tab>(isTab(asked) ? asked : 'overview');
@@ -50,7 +52,7 @@ export function ConsoleScreen() {
     setLastAsked(asked);
     if (isTab(asked)) setTab(asked);
   }
-  const counted: Partial<Record<Tab, number>> = { support: unread, pilot: pilotNew };
+  const counted: Partial<Record<Tab, number>> = { support: waiting, pilot: pilotNew };
   const [paying, setPaying] = useState(false);
   // History of one salon, opened from its row.
   const [salonFilter, setSalonFilter] = useState<{ id: string; name: string } | null>(null);

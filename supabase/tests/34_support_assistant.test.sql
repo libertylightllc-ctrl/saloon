@@ -94,8 +94,8 @@ select is(pg_temp.waiting(), 0, 'a conversation with a person is not answered by
 select pg_temp.as_user('00000000-0000-0000-0000-0000000034c0');
 select is((select handover from admin_support_threads() where salon = 'Assistant Salon'), true, 'the console shows it needs a person');
 
--- Closed, then written to again: the assistant answers afresh.
-select admin_support_close(current_setting('t.th')::uuid);
+-- Closed (with a reason, as nobody had answered the last message), then written to again: the assistant answers afresh.
+select admin_support_set_stage(current_setting('t.th')::uuid, 'closed', 'Answered by phone');
 select pg_temp.owner_writes('New question: how do I add a service?');
 select is(pg_temp.waiting(), 1, 'after a close the assistant answers again');
 

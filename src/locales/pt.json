@@ -1256,7 +1256,8 @@
     "code_changed": "O código do salão já foi alterado uma vez. Não pode ser alterado de novo.",
     "invalid_salon_code": "O código do salão tem de 4 a 12 letras ou números, sem espaços.",
     "code_unchanged": "Esse já é o código atual do salão. Digite um novo.",
-    "month_not_over": "Este mês ainda não terminou. Aprove-o a partir do último dia ou indique um motivo para aprovar antes."
+    "month_not_over": "Este mês ainda não terminou. Aprove-o a partir do último dia ou indique um motivo para aprovar antes.",
+    "already_open": "Esta pessoa já tem outra conversa aberta. Responda-lhe lá."
   },
   "sales": {
     "title": "Vendas",
@@ -3209,12 +3210,9 @@
       "visitor": "Sem login",
       "new": "{{count}} novas",
       "new_one": "{{count}} nova",
-      "closed": "Encerrada",
       "send": "Enviar resposta",
       "sent": "Resposta enviada",
       "close": "Encerrar conversa",
-      "closedToast": "Conversa encerrada",
-      "needsYou": "Precisa de você",
       "aiAnswered": "Respondida pela IA",
       "assistantSwitch": "O assistente de IA responde primeiro",
       "assistantHint": "O assistente de IA responde às novas mensagens na hora e passa a conversa para você quando não consegue resolver ou quando alguém pede para falar com uma pessoa. Quando você mesmo responde, assume a conversa.",
@@ -3223,7 +3221,24 @@
       "oldest": "Espera mais longa: {{time}}",
       "underMinute": "menos de um minuto",
       "firstReply": "Primeira resposta de uma pessoa",
-      "firstReplySub": "Média, últimos 30 dias · conversas respondidas: {{n}}"
+      "firstReplySub": "Média, últimos 30 dias · conversas respondidas: {{n}}",
+      "stage": {
+        "new": "Nova",
+        "waiting_team": "À sua espera",
+        "waiting_salon": "À espera do salão",
+        "solved": "Resolvida",
+        "closed": "Fechada"
+      },
+      "all": "Todas",
+      "noneHere": "Não há conversas com este estado.",
+      "firstReplyIn": "Primeira resposta: {{time}}",
+      "noReplyYet": "Ainda sem resposta",
+      "waitingFor": "À espera há {{time}}",
+      "markSolved": "Marcar como resolvida",
+      "takeBack": "Passar para «À sua espera»",
+      "reason": "Motivo",
+      "reasonHint": "Ninguém da equipa respondeu ainda à última mensagem; indique o motivo (pelo menos 3 caracteres).",
+      "stageSaved": "Movida para: {{stage}}"
     },
     "cards": {
       "title": "Pagamentos com cartão (Creem)",
@@ -3383,7 +3398,9 @@
         "email": "{{salon}}: email ao proprietário aberto, o {{what}} termina em {{date}}",
         "free": "período grátis",
         "pilot": "piloto"
-      }
+      },
+      "supportStage": "Conversa de suporte com {{who}}, {{where}}: {{from}} → {{to}}",
+      "supportStageReason": "Conversa de suporte com {{who}}, {{where}}: {{from}} → {{to}} ({{reason}})"
     },
     "contact": {
       "title": "Contato",

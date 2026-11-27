@@ -1256,7 +1256,8 @@
     "code_changed": "The salon code was already changed once. It can't be changed again.",
     "invalid_salon_code": "A salon code is 4 to 12 letters or numbers, with no spaces.",
     "code_unchanged": "That is the salon code now. Type a new one.",
-    "month_not_over": "This month isn't over yet. Approve it from its last day, or give a reason to approve early."
+    "month_not_over": "This month isn't over yet. Approve it from its last day, or give a reason to approve early.",
+    "already_open": "This person already has another open conversation. Answer them there."
   },
   "sales": {
     "title": "Sales",
@@ -3208,12 +3209,9 @@
       "visitor": "Not signed in",
       "new": "{{count}} new",
       "new_one": "{{count}} new",
-      "closed": "Closed",
       "send": "Send answer",
       "sent": "Answer sent",
       "close": "Close conversation",
-      "closedToast": "Conversation closed",
-      "needsYou": "Needs you",
       "aiAnswered": "AI answered",
       "assistantSwitch": "AI assistant answers first",
       "assistantHint": "The AI assistant answers new messages straight away and hands a conversation to you when it can’t solve it or someone asks for a person. Your own answer takes a conversation over.",
@@ -3222,7 +3220,24 @@
       "oldest": "Oldest waiting: {{time}}",
       "underMinute": "under a minute",
       "firstReply": "First reply by a person",
-      "firstReplySub": "Average, last 30 days · conversations answered: {{n}}"
+      "firstReplySub": "Average, last 30 days · conversations answered: {{n}}",
+      "stage": {
+        "new": "New",
+        "waiting_team": "Waiting for you",
+        "waiting_salon": "Waiting for salon",
+        "solved": "Solved",
+        "closed": "Closed"
+      },
+      "all": "All",
+      "noneHere": "No conversations with this status.",
+      "firstReplyIn": "First reply: {{time}}",
+      "noReplyYet": "No reply yet",
+      "waitingFor": "Waiting {{time}}",
+      "markSolved": "Mark solved",
+      "takeBack": "Move to Waiting for you",
+      "reason": "Reason",
+      "reasonHint": "Nobody from the team has answered the last message yet, so say why (at least 3 characters).",
+      "stageSaved": "Moved to {{stage}}"
     },
     "cards": {
       "title": "Card payments (Creem)",
@@ -3382,7 +3397,9 @@
         "email": "{{salon}}: email to the owner opened, the {{what}} ends {{date}}",
         "free": "free period",
         "pilot": "pilot"
-      }
+      },
+      "supportStage": "Support conversation with {{who}}, {{where}}: {{from}} → {{to}}",
+      "supportStageReason": "Support conversation with {{who}}, {{where}}: {{from}} → {{to}} ({{reason}})"
     },
     "contact": {
       "title": "Contact",

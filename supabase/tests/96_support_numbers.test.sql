@@ -28,12 +28,13 @@ select pg_temp.as_admin();
 
 -- b1: handed over, waiting 2 hours. b2: handed over, the team answered after 30 minutes. b3: the assistant is helping.
 -- b4: closed, the team answered after 90 minutes. b5: from 40 days ago, answered after 10 hours (too old to count).
-insert into support_threads (id, user_id, status, handover, last_from, created_at, last_message_at)
-values (pg_temp.u('b1'), pg_temp.u('b1'), 'open', true, 'user', now() - interval '3 hours', now() - interval '2 hours'),
-       (pg_temp.u('b2'), pg_temp.u('b2'), 'open', true, 'support', now() - interval '1 day', now() - interval '1 day'),
-       (pg_temp.u('b3'), pg_temp.u('b3'), 'open', false, 'assistant', now() - interval '1 hour', now() - interval '1 hour'),
-       (pg_temp.u('b4'), pg_temp.u('b4'), 'closed', true, 'support', now() - interval '5 days', now() - interval '5 days'),
-       (pg_temp.u('b5'), pg_temp.u('b5'), 'closed', true, 'support', now() - interval '40 days', now() - interval '40 days');
+-- (Waiting for you since the hand-over, 3 hours ago; migration 123's statuses.)
+insert into support_threads (id, user_id, status, handover, last_from, created_at, last_message_at, stage, stage_at)
+values (pg_temp.u('b1'), pg_temp.u('b1'), 'open', true, 'user', now() - interval '3 hours', now() - interval '2 hours', 'waiting_team', now() - interval '3 hours' + interval '1 minute'),
+       (pg_temp.u('b2'), pg_temp.u('b2'), 'open', true, 'support', now() - interval '1 day', now() - interval '1 day', 'waiting_salon', now() - interval '1 day'),
+       (pg_temp.u('b3'), pg_temp.u('b3'), 'open', false, 'assistant', now() - interval '1 hour', now() - interval '1 hour', 'waiting_salon', now() - interval '1 hour'),
+       (pg_temp.u('b4'), pg_temp.u('b4'), 'closed', true, 'support', now() - interval '5 days', now() - interval '5 days', 'closed', now() - interval '4 days'),
+       (pg_temp.u('b5'), pg_temp.u('b5'), 'closed', true, 'support', now() - interval '40 days', now() - interval '40 days', 'closed', now() - interval '40 days');
 insert into support_messages (thread_id, author, body, created_at)
 values (pg_temp.u('b1'), 'user', 'Hello', now() - interval '3 hours'),
        (pg_temp.u('b1'), 'assistant', 'Let me find someone', now() - interval '3 hours' + interval '1 minute'),

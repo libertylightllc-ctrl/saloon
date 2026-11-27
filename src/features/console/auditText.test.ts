@@ -104,3 +104,12 @@ it('a payment marked Test or Void, or counted again, reads as a sentence (owner�
     'Asil Trims: payment of USD 42.99 on 12 Oct 2026 counted again (It was real)',
   );
 });
+
+it('a support conversation’s status, with the reason when nobody had answered (owner’s brief, Part E1)', () => {
+  expect(say(row('support:stage', { stage: 'waiting_salon' }, { stage: 'solved' }, { salon: 'Palm Salon', subject: 'Layla' }))).toBe(
+    'Support conversation with Layla, Palm Salon: Waiting for salon → Solved',
+  );
+  expect(say(row('support:stage', { stage: 'waiting_team' }, { stage: 'closed', reason: 'Answered by phone' }, { subject: 'Omar' }))).toBe(
+    'Support conversation with Omar, Not signed in: Waiting for you → Closed (Answered by phone)',
+  );
+});

@@ -1,5 +1,6 @@
 import { isCurrency } from '@/lib/currencies';
 import { formatMoney } from '@/lib/money';
+import { STAGES } from '@/features/support/stage';
 
 import type { AuditRow } from './api';
 
@@ -115,6 +116,19 @@ export function auditSentence(r: AuditRow, t: Translate, day: Day): string {
       const values = { salon, amount, date: isDate(a.paid_on) ? long(a.paid_on) : '—', reason: text(a.reason) ?? '—' };
       if (a.mark === 'test' || a.mark === 'void') return t(`console.audit.paymentMarked.${a.mark}`, values);
       return t('console.audit.paymentCounted', values);
+    }
+    case 'support:stage': {
+      // "Support conversation with Layla, Palm Salon: Waiting for you → Solved (Answered by phone)" (owner's brief,
+      // Part E1). The subject is who wrote; a visitor has no salon.
+      const stage = (s: unknown) => (STAGES.includes(s as never) ? t(`console.support.stage.${String(s)}`) : '—');
+      const values = {
+        who: r.subject ?? t('console.support.someone'),
+        where: r.salon ?? t('console.support.visitor'),
+        from: stage(b.stage),
+        to: stage(a.stage),
+      };
+      const reason = text(a.reason);
+      return reason ? t('console.audit.supportStageReason', { ...values, reason }) : t('console.audit.supportStage', values);
     }
     default:
       return raw(r, t);

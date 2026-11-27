@@ -1,6 +1,6 @@
 /**
- * Help & support chat (owner, 2026-10-12): a signed-in person's conversation, a visitor's (known by a secret kept on
- * their device), and the platform owners' inbox in the console. Each message carries where it came from — platform,
+ * Help & support chat (owner, 2026-10-12): a signed-in person's conversation and a visitor's (known by a secret kept
+ * on their device); the platform owners' inbox is in adminApi.ts. Each message carries where it came from — platform,
  * app version, language, the screen before Help, and the device — to help fix what went wrong.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +19,8 @@ export interface SupportMessage {
   author: 'user' | 'support' | 'assistant';
   body: string;
   created_at: string;
+  /** Where a person from the team answered: in the app, or on WhatsApp (console brief E3). */
+  channel?: 'app' | 'whatsapp';
 }
 
 export interface SupportThread {
@@ -132,103 +134,5 @@ export function useGuestSend(token: string | null) {
       if (error) throw error;
     },
     onSuccess: () => client.invalidateQueries({ queryKey: [...supportKey, 'guest', token] }),
-  });
-}
-
-// ── Platform owners ─────────────────────────────────────────────────────────────────────
-
-export interface SupportThreadRow {
-  id: string;
-  status: 'open' | 'closed';
-  created_at: string;
-  last_message_at: string;
-  last_from: 'user' | 'support' | 'assistant';
-  unread: number;
-  who: string | null;
-  email: string | null;
-  salon: string | null;
-  salon_code: string | null;
-  role: string | null;
-  context: Record<string, string>;
-  preview: string | null;
-  /** A person is needed: the assistant handed it over, or a platform owner answered. */
-  handover: boolean;
-}
-
-export function useSupportInbox() {
-  return useQuery({
-    queryKey: ['platform', 'support'],
-    queryFn: async (): Promise<SupportThreadRow[]> => {
-      const { data, error } = await supabase.rpc('admin_support_threads');
-      if (error) throw error;
-      return (data ?? []) as unknown as SupportThreadRow[];
-    },
-    refetchInterval: 30_000,
-  });
-}
-
-export function useSupportThreadAdmin(threadId: string | null) {
-  const client = useQueryClient();
-  return useQuery({
-    enabled: threadId !== null,
-    queryKey: ['platform', 'support', threadId],
-    queryFn: async (): Promise<SupportThread> => {
-      const { data, error } = await supabase.rpc('admin_support_thread', { p_thread: threadId! });
-      if (error) throw error;
-      void client.invalidateQueries({ queryKey: ['platform', 'support'], exact: true });
-      return data as unknown as SupportThread;
-    },
-    refetchInterval: POLL_MS,
-  });
-}
-
-export function useSupportReply() {
-  const client = useQueryClient();
-  return useMutation({
-    mutationFn: async (v: { thread: string; body: string }) => {
-      const { error } = await supabase.rpc('admin_support_reply', {
-        p_thread: v.thread,
-        p_body: v.body.trim(),
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => client.invalidateQueries({ queryKey: ['platform', 'support'] }),
-  });
-}
-
-export function useSupportClose() {
-  const client = useQueryClient();
-  return useMutation({
-    mutationFn: async (thread: string) => {
-      const { error } = await supabase.rpc('admin_support_close', { p_thread: thread });
-      if (error) throw error;
-    },
-    onSuccess: () => client.invalidateQueries({ queryKey: ['platform', 'support'] }),
-  });
-}
-
-/** Whether Claude answers new messages first (platform owners switch it). */
-export function useSupportAssistant() {
-  return useQuery({
-    queryKey: ['platform', 'support-assistant'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('platform_settings')
-        .select('support_assistant')
-        .single();
-      if (error) throw error;
-      return data.support_assistant;
-    },
-  });
-}
-
-export function useSetSupportAssistant() {
-  const client = useQueryClient();
-  return useMutation({
-    mutationFn: async (on: boolean) => {
-      const { error } = await supabase.rpc('admin_set_support_assistant', { p_on: on });
-      if (error) throw error;
-    },
-    onSettled: () => client.invalidateQueries({ queryKey: ['platform', 'support-assistant'] }),
   });
 }
