@@ -91,7 +91,8 @@ All ten are done; see Done (16 Nov).
 ## Platform console brief, 24 Nov 2026 (SALOQO_CONSOLE_FIXES.md: Parts A–H, one part at a time)
 - Part A (A1–A10): live on saloqo.com since 25 Nov (migrations 109–113, owner's OK). Decisions in DECISIONS.md (24 Nov).
 - Part B (Overview numbers B1–B10, reporting currency H2): put live on 25 Nov (migrations 114–122, 122 being the console's speed; owner's OK). See Done. Decisions in DECISIONS.md (25 Nov).
-- Parts C–H: next, one part at a time, each after the owner's go-ahead.
+- Part E (Support E1–E4) and item 7 (System health "Nothing sent yet"): built on branch `console-part-e` (migrations 123–124), tested locally; waiting for the GitHub test run and the owner's OK on the SQL before going live. E5 left for later. Decisions in DECISIONS.md (27 Nov).
+- Parts C, D, F, G, H: next, one part at a time, each after the owner's go-ahead.
 
 ## Done
 
