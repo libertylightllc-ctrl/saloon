@@ -3719,7 +3719,9 @@
     "faqAll": "تمام سوالات دیکھیں",
     "faqNotAnswered": "یہاں جواب نہیں ملا؟ نیچے اپنا پیغام لکھیں۔",
     "preferEmail": "ای میل پسند ہے؟ ہمیں {{email}} پر لکھیں",
-    "onWhatsApp": "WhatsApp پر"
+    "onWhatsApp": "WhatsApp پر",
+    "whatsapp": "WhatsApp پر ہم سے بات کریں",
+    "whatsappHelp": "السلام علیکم Saloqo، مجھے ایپ میں مدد چاہیے۔ سیلون: {{salon}} ({{code}})"
   },
   "booking": {
     "title": "اپائنٹمنٹ بک کریں",

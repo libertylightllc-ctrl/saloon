@@ -1,18 +1,26 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 
+import { useWorkspace } from '@/features/auth/session';
+import { useContact } from '@/features/landing/contact';
 import { spacing } from '@/theme';
-import { HeaderBand, QueryState, Screen, Text } from '@/ui';
+import { Button, HeaderBand, QueryState, Screen, Text } from '@/ui';
 
 import { useSupportMine, useSupportSend } from './api';
 import { ChatView } from './ChatView';
 import { CommonQuestions } from './CommonQuestions';
 import { useMemberFaq } from './faqAudience';
 
-/** Help & support for anyone signed in (More → Help & support): one running conversation with Saloqo. */
+/**
+ * Help & support for anyone signed in (More → Help & support): one running conversation with Saloqo, and "Chat with us
+ * on WhatsApp" when the team has a WhatsApp number (owner's console brief, Part E4), its message naming the salon and
+ * its code so the team knows who it is.
+ */
 export function SupportScreen() {
   const { t } = useTranslation();
+  const { business } = useWorkspace();
+  const contact = useContact();
   const thread = useSupportMine();
   const send = useSupportSend();
   const [draft, setDraft] = useState('');
@@ -46,6 +54,19 @@ export function SupportScreen() {
         <Text variant="small" color="textSecondary">
           {t('support.attached')}
         </Text>
+        {contact.hasWhatsApp ? (
+          <Button
+            label={t('support.whatsapp')}
+            icon="messageCircle"
+            variant="secondary"
+            onPress={() =>
+              void Linking.openURL(
+                contact.whatsappUrl(t('support.whatsappHelp', { salon: business.name, code: business.code })),
+              )
+            }
+            testID="support-whatsapp"
+          />
+        ) : null}
       </View>
     </Screen>
   );

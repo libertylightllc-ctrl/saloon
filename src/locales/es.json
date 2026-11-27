@@ -3719,7 +3719,9 @@
     "faqAll": "Ver todas las preguntas",
     "faqNotAnswered": "¿No encuentras la respuesta? Escribe tu mensaje abajo.",
     "preferEmail": "¿Prefieres el correo? Escríbenos a {{email}}",
-    "onWhatsApp": "por WhatsApp"
+    "onWhatsApp": "por WhatsApp",
+    "whatsapp": "Escríbenos por WhatsApp",
+    "whatsappHelp": "Hola Saloqo, necesito ayuda con la app. Salón: {{salon}} ({{code}})"
   },
   "booking": {
     "title": "Reservar una cita",

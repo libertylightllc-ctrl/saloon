@@ -3718,7 +3718,9 @@
     "faqAll": "Show all questions",
     "faqNotAnswered": "Not answered here? Write your message below.",
     "preferEmail": "Prefer email? Write to us at {{email}}",
-    "onWhatsApp": "on WhatsApp"
+    "onWhatsApp": "on WhatsApp",
+    "whatsapp": "Chat with us on WhatsApp",
+    "whatsappHelp": "Hi Saloqo, I need help with the app. Salon: {{salon}} ({{code}})"
   },
   "booking": {
     "title": "Book an appointment",
