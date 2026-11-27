@@ -1257,7 +1257,9 @@
     "invalid_salon_code": "O código do salão tem de 4 a 12 letras ou números, sem espaços.",
     "code_unchanged": "Esse já é o código atual do salão. Digite um novo.",
     "month_not_over": "Este mês ainda não terminou. Aprove-o a partir do último dia ou indique um motivo para aprovar antes.",
-    "already_open": "Esta pessoa já tem outra conversa aberta. Responda-lhe lá."
+    "already_open": "Esta pessoa já tem outra conversa aberta. Responda-lhe lá.",
+    "no_whatsapp_ok": "Esta pessoa não aceitou o WhatsApp. Responda aqui.",
+    "invalid_saved_reply": "Dê-lhe um nome (2–60 caracteres) e um texto (pelo menos 2 caracteres)."
   },
   "sales": {
     "title": "Vendas",
@@ -3243,7 +3245,31 @@
       "reasonHint": "Ninguém da equipa respondeu ainda à última mensagem; indique o motivo (pelo menos 3 caracteres).",
       "stageSaved": "Movida para: {{stage}}",
       "waitingCount_one": "1 conversa de suporte à sua espera",
-      "waitingCount": "{{count}} conversas de suporte à sua espera"
+      "waitingCount": "{{count}} conversas de suporte à sua espera",
+      "replyWhatsApp": "Responder pelo WhatsApp",
+      "whatsappOk": "{{phone}} aceitou o WhatsApp. A resposta fica guardada aqui e depois o WhatsApp abre com ela.",
+      "whatsappKept": "Resposta guardada; a abrir o WhatsApp",
+      "saved": {
+        "title": "Respostas guardadas",
+        "none": "Ainda não há respostas guardadas. Toque em Gerir para adicionar uma.",
+        "manage": "Gerir",
+        "done": "Concluído",
+        "hint": "Escreva {name} e {salon} onde devem ficar o nome da pessoa e o salão.",
+        "name": "Nome",
+        "text": "Texto",
+        "add": "Adicionar resposta guardada",
+        "save": "Guardar alterações",
+        "remove": "Remover",
+        "savedToast": "Resposta guardada",
+        "removedToast": "Resposta guardada removida"
+      },
+      "notes": {
+        "title": "Notas internas",
+        "hint": "Só os proprietários da plataforma as veem; quem escreveu nunca as vê.",
+        "label": "Nota",
+        "add": "Adicionar nota",
+        "added": "Nota adicionada"
+      }
     },
     "cards": {
       "title": "Pagamentos com cartão (Creem)",
@@ -3405,7 +3431,12 @@
         "pilot": "piloto"
       },
       "supportStage": "Conversa de suporte com {{who}}, {{where}}: {{from}} → {{to}}",
-      "supportStageReason": "Conversa de suporte com {{who}}, {{where}}: {{from}} → {{to}} ({{reason}})"
+      "supportStageReason": "Conversa de suporte com {{who}}, {{where}}: {{from}} → {{to}} ({{reason}})",
+      "supportWhatsApp": "Resposta a {{who}}, {{where}} pelo WhatsApp",
+      "savedReplyAdded": "Resposta guardada adicionada: {{title}}",
+      "savedReplyChanged": "Resposta guardada alterada: {{title}}",
+      "savedReplyRenamed": "Resposta guardada renomeada: {{from}} → {{title}}",
+      "savedReplyRemoved": "Resposta guardada removida: {{title}}"
     },
     "contact": {
       "title": "Contato",
@@ -3687,7 +3718,8 @@
     "faqMatches": "Isto pode ajudar",
     "faqAll": "Ver todas as perguntas",
     "faqNotAnswered": "Não encontrou a resposta? Escreva sua mensagem abaixo.",
-    "preferEmail": "Prefere e-mail? Escreva para {{email}}"
+    "preferEmail": "Prefere e-mail? Escreva para {{email}}",
+    "onWhatsApp": "pelo WhatsApp"
   },
   "booking": {
     "title": "Marcar horário",

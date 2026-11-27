@@ -1257,7 +1257,9 @@
     "invalid_salon_code": "El código del salón tiene de 4 a 12 letras o números, sin espacios.",
     "code_unchanged": "Ese es el código actual del salón. Escribe uno nuevo.",
     "month_not_over": "Este mes aún no ha terminado. Apruébalo desde su último día o indica un motivo para aprobarlo antes.",
-    "already_open": "Esta persona ya tiene otra conversación abierta. Respóndele allí."
+    "already_open": "Esta persona ya tiene otra conversación abierta. Respóndele allí.",
+    "no_whatsapp_ok": "Esta persona no ha aceptado WhatsApp. Responde aquí.",
+    "invalid_saved_reply": "Ponle un nombre (2–60 caracteres) y un texto (al menos 2 caracteres)."
   },
   "sales": {
     "title": "Ventas",
@@ -3243,7 +3245,31 @@
       "reasonHint": "Nadie del equipo ha respondido aún al último mensaje; indica el motivo (al menos 3 caracteres).",
       "stageSaved": "Movida a: {{stage}}",
       "waitingCount_one": "1 conversación de soporte te espera",
-      "waitingCount": "{{count}} conversaciones de soporte te esperan"
+      "waitingCount": "{{count}} conversaciones de soporte te esperan",
+      "replyWhatsApp": "Responder por WhatsApp",
+      "whatsappOk": "{{phone}} aceptó WhatsApp. La respuesta se guarda aquí y luego se abre WhatsApp con ella.",
+      "whatsappKept": "Respuesta guardada; abriendo WhatsApp",
+      "saved": {
+        "title": "Respuestas guardadas",
+        "none": "Aún no hay respuestas guardadas. Toca Gestionar para añadir una.",
+        "manage": "Gestionar",
+        "done": "Listo",
+        "hint": "Escribe {name} y {salon} donde deben ir el nombre de la persona y su salón.",
+        "name": "Nombre",
+        "text": "Texto",
+        "add": "Añadir respuesta guardada",
+        "save": "Guardar cambios",
+        "remove": "Quitar",
+        "savedToast": "Respuesta guardada",
+        "removedToast": "Respuesta guardada quitada"
+      },
+      "notes": {
+        "title": "Notas internas",
+        "hint": "Solo las ven los propietarios de la plataforma; quien escribió nunca las ve.",
+        "label": "Nota",
+        "add": "Añadir nota",
+        "added": "Nota añadida"
+      }
     },
     "cards": {
       "title": "Pagos con tarjeta (Creem)",
@@ -3405,7 +3431,12 @@
         "pilot": "piloto"
       },
       "supportStage": "Conversación de soporte con {{who}}, {{where}}: {{from}} → {{to}}",
-      "supportStageReason": "Conversación de soporte con {{who}}, {{where}}: {{from}} → {{to}} ({{reason}})"
+      "supportStageReason": "Conversación de soporte con {{who}}, {{where}}: {{from}} → {{to}} ({{reason}})",
+      "supportWhatsApp": "Respuesta a {{who}}, {{where}} por WhatsApp",
+      "savedReplyAdded": "Respuesta guardada añadida: {{title}}",
+      "savedReplyChanged": "Respuesta guardada cambiada: {{title}}",
+      "savedReplyRenamed": "Respuesta guardada renombrada: {{from}} → {{title}}",
+      "savedReplyRemoved": "Respuesta guardada quitada: {{title}}"
     },
     "contact": {
       "title": "Contacto",
@@ -3687,7 +3718,8 @@
     "faqMatches": "Esto podría responderte",
     "faqAll": "Ver todas las preguntas",
     "faqNotAnswered": "¿No encuentras la respuesta? Escribe tu mensaje abajo.",
-    "preferEmail": "¿Prefieres el correo? Escríbenos a {{email}}"
+    "preferEmail": "¿Prefieres el correo? Escríbenos a {{email}}",
+    "onWhatsApp": "por WhatsApp"
   },
   "booking": {
     "title": "Reservar una cita",

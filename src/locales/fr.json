@@ -1257,7 +1257,9 @@
     "invalid_salon_code": "Un code salon fait 4 à 12 lettres ou chiffres, sans espace.",
     "code_unchanged": "C’est déjà le code salon actuel. Saisissez-en un nouveau.",
     "month_not_over": "Ce mois n’est pas encore terminé. Approuvez-le à partir de son dernier jour, ou donnez un motif pour l’approuver plus tôt.",
-    "already_open": "Cette personne a déjà une autre conversation ouverte. Répondez-lui là-bas."
+    "already_open": "Cette personne a déjà une autre conversation ouverte. Répondez-lui là-bas.",
+    "no_whatsapp_ok": "Cette personne n’a pas accepté WhatsApp. Répondez ici.",
+    "invalid_saved_reply": "Donnez-lui un nom (2 à 60 caractères) et un texte (au moins 2 caractères)."
   },
   "sales": {
     "title": "Ventes",
@@ -3243,7 +3245,31 @@
       "reasonHint": "Personne de l’équipe n’a encore répondu au dernier message ; indiquez pourquoi (au moins 3 caractères).",
       "stageSaved": "Déplacée vers : {{stage}}",
       "waitingCount_one": "1 conversation d’assistance vous attend",
-      "waitingCount": "{{count}} conversations d’assistance vous attendent"
+      "waitingCount": "{{count}} conversations d’assistance vous attendent",
+      "replyWhatsApp": "Répondre sur WhatsApp",
+      "whatsappOk": "{{phone}} a accepté WhatsApp. La réponse est gardée ici, puis WhatsApp s’ouvre avec elle.",
+      "whatsappKept": "Réponse gardée ; ouverture de WhatsApp",
+      "saved": {
+        "title": "Réponses enregistrées",
+        "none": "Aucune réponse enregistrée. Touchez Gérer pour en ajouter une.",
+        "manage": "Gérer",
+        "done": "Terminé",
+        "hint": "Écrivez {name} et {salon} là où doivent aller le nom de la personne et son salon.",
+        "name": "Nom",
+        "text": "Texte",
+        "add": "Ajouter une réponse enregistrée",
+        "save": "Enregistrer les modifications",
+        "remove": "Retirer",
+        "savedToast": "Réponse enregistrée",
+        "removedToast": "Réponse enregistrée retirée"
+      },
+      "notes": {
+        "title": "Notes internes",
+        "hint": "Seuls les propriétaires de la plateforme les voient ; la personne qui a écrit, jamais.",
+        "label": "Note",
+        "add": "Ajouter une note",
+        "added": "Note ajoutée"
+      }
     },
     "cards": {
       "title": "Paiements par carte (Creem)",
@@ -3405,7 +3431,12 @@
         "pilot": "le pilote"
       },
       "supportStage": "Conversation d’assistance avec {{who}}, {{where}} : {{from}} → {{to}}",
-      "supportStageReason": "Conversation d’assistance avec {{who}}, {{where}} : {{from}} → {{to}} ({{reason}})"
+      "supportStageReason": "Conversation d’assistance avec {{who}}, {{where}} : {{from}} → {{to}} ({{reason}})",
+      "supportWhatsApp": "Réponse à {{who}}, {{where}} sur WhatsApp",
+      "savedReplyAdded": "Réponse enregistrée ajoutée : {{title}}",
+      "savedReplyChanged": "Réponse enregistrée modifiée : {{title}}",
+      "savedReplyRenamed": "Réponse enregistrée renommée : {{from}} → {{title}}",
+      "savedReplyRemoved": "Réponse enregistrée retirée : {{title}}"
     },
     "contact": {
       "title": "Contact",
@@ -3687,7 +3718,8 @@
     "faqMatches": "Ceci pourrait vous aider",
     "faqAll": "Voir toutes les questions",
     "faqNotAnswered": "Pas de réponse ici ? Écrivez votre message ci-dessous.",
-    "preferEmail": "Vous préférez l’e-mail ? Écrivez-nous à {{email}}"
+    "preferEmail": "Vous préférez l’e-mail ? Écrivez-nous à {{email}}",
+    "onWhatsApp": "sur WhatsApp"
   },
   "booking": {
     "title": "Prendre rendez-vous",

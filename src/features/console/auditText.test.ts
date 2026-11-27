@@ -113,3 +113,18 @@ it('a support conversation’s status, with the reason when nobody had answered 
     'Support conversation with Omar, Not signed in: Waiting for you → Closed (Answered by phone)',
   );
 });
+
+it('answers on WhatsApp and saved replies (owner’s brief, Part E3)', () => {
+  expect(say(row('support:whatsapp', null, { channel: 'whatsapp' }, { salon: 'Palm Salon', subject: 'Layla' }))).toBe(
+    'Answered Layla, Palm Salon on WhatsApp',
+  );
+  const reply = { title: 'Receipts', body: 'Hi {name}' };
+  expect(say(row('support:saved_reply', null, reply, { subject: 'Receipts' }))).toBe('Saved reply added: Receipts');
+  expect(say(row('support:saved_reply', reply, { ...reply, body: 'Hello {name}' }, { subject: 'Receipts' }))).toBe(
+    'Saved reply changed: Receipts',
+  );
+  expect(say(row('support:saved_reply', reply, { ...reply, title: 'Blank receipts' }, { subject: 'Blank receipts' }))).toBe(
+    'Saved reply renamed: Receipts → Blank receipts',
+  );
+  expect(say(row('support:saved_reply', reply, { removed: true }, { subject: 'Receipts' }))).toBe('Saved reply removed: Receipts');
+});

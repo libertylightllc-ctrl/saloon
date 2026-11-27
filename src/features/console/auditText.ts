@@ -130,6 +130,21 @@ export function auditSentence(r: AuditRow, t: Translate, day: Day): string {
       const reason = text(a.reason);
       return reason ? t('console.audit.supportStageReason', { ...values, reason }) : t('console.audit.supportStage', values);
     }
+    case 'support:whatsapp':
+      // "Answered Layla, Palm Salon on WhatsApp" (Part E3): kept in the conversation; WhatsApp then opened with it.
+      return t('console.audit.supportWhatsApp', {
+        who: r.subject ?? t('console.support.someone'),
+        where: r.salon ?? t('console.support.visitor'),
+      });
+    case 'support:saved_reply': {
+      // Saved replies added, changed (renamed: both names) or removed (Part E3).
+      const title = text(a.title) ?? text(b.title) ?? r.subject ?? '—';
+      if (r.before === null) return t('console.audit.savedReplyAdded', { title });
+      if (a.removed === true) return t('console.audit.savedReplyRemoved', { title });
+      return text(b.title) && b.title !== a.title
+        ? t('console.audit.savedReplyRenamed', { from: text(b.title), title })
+        : t('console.audit.savedReplyChanged', { title });
+    }
     default:
       return raw(r, t);
   }

@@ -4269,6 +4269,71 @@ export type Database = {
           },
         ];
       };
+      support_notes: {
+        Row: {
+          author: string;
+          author_id: string | null;
+          body: string;
+          created_at: string;
+          id: string;
+          thread_id: string;
+        };
+        Insert: {
+          author: string;
+          author_id?: string | null;
+          body: string;
+          created_at?: string;
+          id?: string;
+          thread_id: string;
+        };
+        Update: {
+          author?: string;
+          author_id?: string | null;
+          body?: string;
+          created_at?: string;
+          id?: string;
+          thread_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'support_notes_thread_id_fkey';
+            columns: ['thread_id'];
+            isOneToOne: false;
+            referencedRelation: 'support_threads';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      support_saved_replies: {
+        Row: {
+          body: string;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          removed_at: string | null;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          body: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          removed_at?: string | null;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          body?: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          removed_at?: string | null;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       support_threads: {
         Row: {
           alerted_at: string | null;
@@ -4621,6 +4686,7 @@ export type Database = {
           subject: string;
         }[];
       };
+      admin_remove_saved_reply: { Args: { p_id: string }; Returns: undefined };
       admin_revenue: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_salon_activity: { Args: { p_limit?: number }; Returns: Json };
       admin_salon_duplicates: {
@@ -4684,6 +4750,11 @@ export type Database = {
           trial: boolean;
         }[];
       };
+      admin_save_reply: {
+        Args: { p_body: string; p_id?: string; p_title: string };
+        Returns: string;
+      };
+      admin_saved_replies: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_set_access: { Args: { p: Json; p_business: string }; Returns: Json };
       admin_set_bank_transfer: { Args: { p_on: boolean }; Returns: undefined };
       admin_set_billing: { Args: { p: Json }; Returns: Json };
@@ -4695,6 +4766,7 @@ export type Database = {
       admin_set_support_assistant: { Args: { p_on: boolean }; Returns: undefined };
       admin_set_test_salon: { Args: { p_business: string; p_test: boolean }; Returns: boolean };
       admin_signups_weekly: { Args: { p_weeks?: number }; Returns: Json };
+      admin_support_add_note: { Args: { p_body: string; p_thread: string }; Returns: undefined };
       admin_support_close: { Args: { p_thread: string }; Returns: undefined };
       admin_support_reply: { Args: { p_body: string; p_thread: string }; Returns: undefined };
       admin_support_set_stage: {
@@ -4727,6 +4799,7 @@ export type Database = {
         }[];
       };
       admin_support_waiting: { Args: Record<PropertyKey, never>; Returns: number };
+      admin_support_whatsapp: { Args: { p_body: string; p_thread: string }; Returns: string };
       admin_test_salons: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -5350,6 +5423,7 @@ export type Database = {
         }[];
       };
       plan_status: { Args: { p_business: string }; Returns: Json };
+      platform_admin_name: { Args: Record<PropertyKey, never>; Returns: string };
       platform_audit_write: {
         Args: {
           p_action: string;
@@ -5785,6 +5859,8 @@ export type Database = {
       support_tick: { Args: Record<PropertyKey, never>; Returns: undefined };
       support_token_hash: { Args: { p_token: string }; Returns: string };
       support_unread: { Args: Record<PropertyKey, never>; Returns: number };
+      support_whatsapp_of: { Args: { p_thread: string }; Returns: string };
+      support_who: { Args: { p_thread: string }; Returns: string };
       takes_clients: { Args: { p_role_title: string }; Returns: boolean };
       tips_owed: {
         Args: { p_branch: string };

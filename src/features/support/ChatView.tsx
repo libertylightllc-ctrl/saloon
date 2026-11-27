@@ -24,7 +24,9 @@ export function ChatView({
   error,
   sendLabel,
   beforeComposer,
+  draft,
   onDraftChange,
+  actions,
   testID = 'chat',
 }: {
   messages: SupportMessage[];
@@ -36,13 +38,22 @@ export function ChatView({
   sendLabel?: string;
   /** Shown just above the message box (the common questions that match what is being typed). */
   beforeComposer?: ReactNode;
+  /** The message box's text, when the screen fills it in too (the console's saved replies); else kept here. */
+  draft?: string;
   onDraftChange?: (text: string) => void;
+  /** More ways to send what is written, under the send button (the console's Reply on WhatsApp). */
+  actions?: ReactNode;
   testID?: string;
 }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const dates = useDates();
-  const [body, setBody] = useState('');
+  const [kept, setKept] = useState('');
+  const body = draft ?? kept;
+  const setBody = (text: string) => {
+    if (draft === undefined) setKept(text);
+    onDraftChange?.(text);
+  };
   const { colors } = theme;
   const zone = deviceTimeZone() ?? 'UTC';
   return (
@@ -66,6 +77,7 @@ export function ChatView({
               <Text variant="small" color="textSecondary">
                 {m.author === 'assistant' ? t('support.assistant') : own ? t('support.you') : other}{' '}
                 · {dates.at(m.created_at, zone, 'd MMM · HH:mm')}
+                {m.channel === 'whatsapp' ? ` · ${t('support.onWhatsApp')}` : ''}
               </Text>
               <Text selectable>
                 {m.author === 'assistant'
@@ -89,10 +101,7 @@ export function ChatView({
         label={t('support.message')}
         placeholder={t('support.placeholder')}
         value={body}
-        onChangeText={(text) => {
-          setBody(text);
-          onDraftChange?.(text);
-        }}
+        onChangeText={setBody}
         multiline
         maxLength={2000}
         testID={`${testID}-input`}
@@ -103,14 +112,10 @@ export function ChatView({
         icon="send"
         disabled={!body.trim()}
         loading={sending}
-        onPress={() =>
-          onSend(body, () => {
-            setBody('');
-            onDraftChange?.('');
-          })
-        }
+        onPress={() => onSend(body, () => setBody(''))}
         testID={`${testID}-send`}
       />
+      {actions}
     </View>
   );
 }
