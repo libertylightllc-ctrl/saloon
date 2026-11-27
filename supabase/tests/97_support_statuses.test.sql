@@ -6,7 +6,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select set_config('salon.plan_check', 'off', false);
-select plan(31);
+select plan(32);
 
 insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at,
                         raw_app_meta_data, raw_user_meta_data)
@@ -136,6 +136,8 @@ select pg_temp.writes('b1', 'A new question about receipts');
 select pg_temp.as_user('a0');
 select throws_ok(format($$ select admin_support_set_stage(%L, 'waiting_team') $$, current_setting('t.old')), '22023', 'already_open',
   'one open conversation per person');
+select throws_ok(format($$ select admin_support_reply(%L, 'Following up') $$, current_setting('t.old')), '22023', 'already_open',
+  'nor does an answer open the old one again: it is said plainly');
 
 -- Every 5 minutes: unanswered for 5 minutes waits for a person; Solved and quiet for 7 days closes.
 select pg_temp.writes('b2', 'Is anyone there?');

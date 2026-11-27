@@ -65,6 +65,12 @@ begin
   if length(v_body) < 1 or length(v_body) > 2000 then
     raise exception 'message_required' using errcode = '22023';
   end if;
+  -- An answer opens a closed conversation again, unless the person has a newer one open (one open conversation each).
+  if p_author = 'support' and exists (
+       select 1 from support_threads t where t.id = p_thread and t.stage = 'closed' and t.user_id is not null
+         and exists (select 1 from support_threads o where o.user_id = t.user_id and o.status = 'open' and o.id <> t.id)) then
+    raise exception 'already_open' using errcode = '22023';
+  end if;
   -- At most 10 messages a minute in one conversation.
   if p_author = 'user' and (select count(*) from support_messages where thread_id = p_thread and author = 'user'
                             and created_at > now() - interval '1 minute') >= 10 then
