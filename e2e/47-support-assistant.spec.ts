@@ -1,6 +1,6 @@
 /**
  * The AI answers Help & support first (owner, 2026-10-12). Locally the ai-sink stand-in plays the AI: a password
- * question gets steps, a refund is handed to a person. The platform owner sees "Needs you" and answers; their answer
+ * question gets steps, a refund is handed to a person. The platform owner sees "Waiting for you" and answers; their answer
  * takes the conversation over.
  */
 import { admin, createOwner, makePlatformAdmin } from './support/api';
@@ -34,7 +34,7 @@ test('the AI assistant answers first; a refund goes to a person, who answers in 
   await id(office, 'console-tab-support').click();
   await expect(id(office, 'console-support-assistant')).toBeVisible();
   const row = id(office, `support-thread-${owner.code}`);
-  await expect(row).toContainText('Needs you');
+  await expect(row).toContainText('Waiting for you');
   await row.click();
   await expect(id(office, 'console-support-message-assistant').first()).toContainText(
     'Saloqo assistant (AI)',
