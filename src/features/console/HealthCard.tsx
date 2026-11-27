@@ -3,7 +3,7 @@ import { Linking, StyleSheet, View } from 'react-native';
 
 import { formatBusinessDate } from '@/lib/dates';
 import { supabaseUrl } from '@/lib/supabase';
-import { spacing } from '@/theme';
+import { spacing, type Tone } from '@/theme';
 import { Button, Card, StatusPill, Text } from '@/ui';
 
 import type { Health, HealthLine } from './overviewApi';
@@ -17,6 +17,24 @@ export function backupsUrl(url: string): string {
 
 const failing = (l: HealthLine) => l.fails_24h > 0 || (l.last_fail_at !== null && (l.last_ok_at === null || l.last_fail_at > l.last_ok_at));
 
+type Line = 'email' | 'card_webhook' | 'rates';
+/** Before the first try there is nothing to judge (owner's brief, item 7): said as what has not happened yet. */
+const NOTHING = {
+  email: 'console.health.nothingSent',
+  card_webhook: 'console.health.nothingReceived',
+  rates: 'console.health.nothingFetched',
+} as const;
+
+/** Problem, Working, or "Nothing sent yet" until the first email (the first card notice, the first rates). */
+export function healthPill(
+  key: Line,
+  l: HealthLine,
+): { tone: Tone; label: 'console.health.problem' | 'console.health.ok' | (typeof NOTHING)[Line] } {
+  if (failing(l)) return { tone: 'warning', label: 'console.health.problem' };
+  if (l.last_ok_at) return { tone: 'success', label: 'console.health.ok' };
+  return { tone: 'neutral', label: NOTHING[key] };
+}
+
 /**
  * B10 System health (owner's brief, Part B): emails the service sends, Creem's card-payment notices, the daily exchange
  * rates, and errors people met in the app, each with the last success and the last failure (and why). Backups are
@@ -25,28 +43,31 @@ const failing = (l: HealthLine) => l.fails_24h > 0 || (l.last_fail_at !== null &
 export function HealthCard({ health: h }: { health: Health }) {
   const { t, i18n } = useTranslation();
   const time = useConsoleTime();
-  const line = (key: 'email' | 'card_webhook' | 'rates', title: string, extra?: string) => {
+  const line = (key: Line, title: string, extra?: string) => {
     const l = h[key];
     const bad = failing(l);
+    const pill = healthPill(key, l);
     return (
       <View style={styles.line} testID={`console-health-${key}`}>
         <View style={styles.head}>
           <Text variant="bodyStrong" style={styles.title}>
             {title}
           </Text>
-          <StatusPill tone={bad ? 'warning' : l.last_ok_at ? 'success' : 'neutral'} label={t(bad ? 'console.health.problem' : l.last_ok_at ? 'console.health.ok' : 'console.health.none')} />
+          <StatusPill tone={pill.tone} label={t(pill.label)} />
         </View>
         {extra ? (
           <Text variant="small" color="textSecondary">
             {extra}
           </Text>
         ) : null}
-        <Text variant="small" color="textSecondary">
-          {[
-            t('console.health.day', { ok: l.ok_24h, fails: l.fails_24h }),
-            l.last_ok_at ? t('console.health.lastOk', { when: time.mine(l.last_ok_at) }) : t('console.health.neverOk'),
-          ].join(' · ')}
-        </Text>
+        {l.last_ok_at || l.last_fail_at ? (
+          <Text variant="small" color="textSecondary">
+            {[
+              t('console.health.day', { ok: l.ok_24h, fails: l.fails_24h }),
+              l.last_ok_at ? t('console.health.lastOk', { when: time.mine(l.last_ok_at) }) : t('console.health.neverOk'),
+            ].join(' · ')}
+          </Text>
+        ) : null}
         {l.last_fail_at ? (
           <Text variant="small" color={bad ? 'text' : 'textSecondary'}>
             {t('console.health.lastFail', { when: time.mine(l.last_fail_at), why: l.last_fail ?? '—' })}

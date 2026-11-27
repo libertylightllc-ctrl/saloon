@@ -11,7 +11,7 @@ import { renderInApp, warmUpRendering } from '@/ui/testUtils';
 
 import { accessLabel } from './AccessForm';
 import type { Overview } from './api';
-import { backupsUrl } from './HealthCard';
+import { backupsUrl, healthPill } from './HealthCard';
 import { OverviewTab } from './OverviewTab';
 
 // The live numbers on 8 Nov 2026: 8 open salons, 3 of them ended, and 2 closed.
@@ -228,10 +228,18 @@ it('support: waiting for a person, the oldest wait, the first reply; and the sys
   expect(screen.getByTestId('console-health-email')).toHaveTextContent(/Last 24 h: 3 OK, 1 failed/);
   expect(screen.getByTestId('console-health-email')).toHaveTextContent(/Plan request: email service answered 500/);
   expect(screen.getByTestId('console-health-card_webhook')).toHaveTextContent(/Working.*Card payments: Test/);
-  expect(screen.getByTestId('console-health-rates')).toHaveTextContent(/Nothing yet.*Latest rates: 25 Nov 2026/);
+  expect(screen.getByTestId('console-health-rates')).toHaveTextContent(/Nothing fetched yet.*Latest rates: 25 Nov 2026/);
+  expect(screen.getByTestId('console-health-rates')).not.toHaveTextContent(/Last 24 h|not yet OK/);
   expect(screen.getByTestId('console-health-app')).toHaveTextContent(/Last 24 h: 1.*Palm Salon · \/sale · Cannot read properties/);
   await fireEvent.press(screen.getByTestId('console-backups'));
   expect(open).toHaveBeenCalledWith(expect.stringMatching(/^https:\/\/supabase\.com\/dashboard/));
+});
+
+it('says nothing has been sent or received yet before the first email or card notice (owner’s brief, item 7)', () => {
+  expect(healthPill('email', quiet)).toEqual({ tone: 'neutral', label: 'console.health.nothingSent' });
+  expect(healthPill('card_webhook', quiet)).toEqual({ tone: 'neutral', label: 'console.health.nothingReceived' });
+  expect(healthPill('email', { ...quiet, last_fail_at: '2026-11-20T08:00:00Z', last_fail: 'x' }).label).toBe('console.health.problem');
+  expect(healthPill('card_webhook', { ...quiet, last_ok_at: '2026-11-25T05:00:00Z' }).label).toBe('console.health.ok');
 });
 
 it('the backups page is the hosted project’s own', () => {

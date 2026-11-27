@@ -3540,7 +3540,6 @@
       "title": "सिस्टम की स्थिति",
       "ok": "चल रहा है",
       "problem": "समस्या",
-      "none": "अभी कुछ नहीं",
       "day": "पिछले 24 घंटे: {{ok}} ठीक, {{fails}} विफल",
       "lastOk": "आख़िरी बार ठीक: {{when}}",
       "neverOk": "अभी तक ठीक नहीं",
@@ -3557,7 +3556,10 @@
       "noSalon": "कोई सैलून नहीं",
       "backups": "डेटाबेस बैकअप",
       "backupsNote": "Supabase रोज़ बैकअप रखता है। उन्हें देखें या किसी को वापस लाएँ, Supabase के अपने पेज पर।",
-      "openBackups": "Supabase में बैकअप खोलें"
+      "openBackups": "Supabase में बैकअप खोलें",
+      "nothingSent": "अभी तक कुछ नहीं भेजा गया",
+      "nothingReceived": "अभी तक कुछ नहीं मिला",
+      "nothingFetched": "अभी तक कुछ नहीं लाया गया"
     }
   },
   "profile": {

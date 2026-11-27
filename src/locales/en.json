@@ -3539,7 +3539,6 @@
       "title": "System health",
       "ok": "Working",
       "problem": "Problem",
-      "none": "Nothing yet",
       "day": "Last 24 h: {{ok}} OK, {{fails}} failed",
       "lastOk": "last OK {{when}}",
       "neverOk": "not yet OK",
@@ -3556,7 +3555,10 @@
       "noSalon": "no salon",
       "backups": "Database backups",
       "backupsNote": "Supabase keeps daily backups. See them, or restore one, on Supabase’s own page.",
-      "openBackups": "Open backups in Supabase"
+      "openBackups": "Open backups in Supabase",
+      "nothingSent": "Nothing sent yet",
+      "nothingReceived": "Nothing received yet",
+      "nothingFetched": "Nothing fetched yet"
     }
   },
   "profile": {

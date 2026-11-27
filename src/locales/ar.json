@@ -3658,7 +3658,6 @@
       "title": "صحة النظام",
       "ok": "يعمل",
       "problem": "مشكلة",
-      "none": "لا شيء بعد",
       "day": "آخر 24 ساعة: ناجحة {{ok}}، فاشلة {{fails}}",
       "lastOk": "آخر نجاح: {{when}}",
       "neverOk": "لم ينجح بعد",
@@ -3675,7 +3674,10 @@
       "noSalon": "بدون صالون",
       "backups": "النسخ الاحتياطية لقاعدة البيانات",
       "backupsNote": "يحتفظ Supabase بنسخ احتياطية يومية. اطّلع عليها أو استعد إحداها من صفحة Supabase نفسها.",
-      "openBackups": "فتح النسخ الاحتياطية في Supabase"
+      "openBackups": "فتح النسخ الاحتياطية في Supabase",
+      "nothingSent": "لم يُرسل شيء بعد",
+      "nothingReceived": "لم يُستلم شيء بعد",
+      "nothingFetched": "لم يُجلب شيء بعد"
     }
   },
   "profile": {

@@ -3540,7 +3540,6 @@
       "title": "État du système",
       "ok": "Fonctionne",
       "problem": "Problème",
-      "none": "Rien pour l’instant",
       "day": "Dernières 24 h : {{ok}} réussis, {{fails}} en échec",
       "lastOk": "dernier succès : {{when}}",
       "neverOk": "pas encore de succès",
@@ -3557,7 +3556,10 @@
       "noSalon": "aucun salon",
       "backups": "Sauvegardes de la base de données",
       "backupsNote": "Supabase garde des sauvegardes quotidiennes. Consultez-les ou restaurez-en une sur la page de Supabase.",
-      "openBackups": "Ouvrir les sauvegardes dans Supabase"
+      "openBackups": "Ouvrir les sauvegardes dans Supabase",
+      "nothingSent": "Rien envoyé pour l’instant",
+      "nothingReceived": "Rien reçu pour l’instant",
+      "nothingFetched": "Rien récupéré pour l’instant"
     }
   },
   "profile": {
