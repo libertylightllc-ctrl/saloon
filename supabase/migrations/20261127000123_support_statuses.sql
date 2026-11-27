@@ -1,5 +1,5 @@
--- Platform console, Part E (owner's brief, 24 Nov 2026; progress check 26 Nov: "Red Rose's 'arrange me a call from
--- team member' (12 Oct) is still 'Closed' with no person's reply").
+-- Platform console, Part E (owner's brief, 24 Nov 2026; progress check 26 Nov: a salon's request for a call from the
+-- team, handed over by the assistant on 12 Oct, was still "Closed" with no person's reply).
 -- E1 Every conversation has one of five statuses, kept by the database:
 --    new            someone wrote and the AI assistant is about to answer;
 --    waiting_team   "Waiting for you": the assistant handed it over, someone asked for a person, the assistant is off,
