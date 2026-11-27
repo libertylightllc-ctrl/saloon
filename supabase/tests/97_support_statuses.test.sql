@@ -51,6 +51,8 @@ select pg_temp.as_user('b2');
 select create_business('{"business_name":"Cedar Cuts","owner_name":"Omar","mode":"gents","vat_mode":"off"}');
 select pg_temp.as_admin();
 delete from platform_admins;
+-- Conversations already in the database (browser tests leave some) are set aside, so the counts are this file's own.
+update support_threads set stage = 'closed' where stage <> 'closed';
 insert into platform_admins (user_id) values (pg_temp.u('a0')), (pg_temp.u('a1'));
 update platform_settings set support_assistant = true where true;
 
@@ -122,7 +124,7 @@ select admin_support_set_stage(pg_temp.th('b1'), 'closed', 'Called her, fixed by
 select pg_temp.as_admin();
 select is((select array[status, stage] from support_threads where id = pg_temp.th('b1')), array['closed', 'closed'],
   'Closed, and the old open/closed column follows');
-select is((select after ->> 'reason' from platform_audit where action = 'support:stage' and after ->> 'stage' = 'closed'),
+select is((select after ->> 'reason' from platform_audit where actor in (pg_temp.u('a0'), pg_temp.u('a1')) and action = 'support:stage' and after ->> 'stage' = 'closed'),
   'Called her, fixed by phone', 'with the reason');
 
 -- Back to Waiting for you, unless the person has a newer open conversation.

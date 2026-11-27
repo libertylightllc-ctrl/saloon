@@ -37,6 +37,8 @@ select create_business('{"business_name":"Cedar Cuts","owner_name":"Omar","mode"
 select support_send('{"body":"How do I add a barber?"}');
 select pg_temp.as_admin();
 delete from platform_admins;
+-- Saved replies already in the database (browser tests leave some) are set aside, so the list is this file's own.
+update support_saved_replies set removed_at = now() where removed_at is null;
 insert into platform_admins (user_id) values (pg_temp.u('a0'));
 select set_config('t.th', pg_temp.th('b1')::text, false);
 
@@ -66,12 +68,12 @@ select set_config('t.reply', admin_save_reply('Receipts', 'Hi {name}, thanks for
 select is(jsonb_array_length(admin_saved_replies()), 1, 'a saved reply is added');
 select pg_temp.as_admin();
 select is((select array[subject, after ->> 'title', coalesce(before::text, 'none')] from platform_audit
-           where action = 'support:saved_reply'), array['Receipts', 'Receipts', 'none'], 'and written to Changes');
+           where actor = pg_temp.u('a0') and action = 'support:saved_reply'), array['Receipts', 'Receipts', 'none'], 'and written to Changes');
 select pg_temp.as_user('a0');
 select admin_save_reply('Receipts blank', 'Hi {name}, please send a photo.', current_setting('t.reply')::uuid);
 select is(admin_saved_replies() -> 0 ->> 'title', 'Receipts blank', 'changed');
 select pg_temp.as_admin();
-select is((select before ->> 'title' from platform_audit where action = 'support:saved_reply' and before is not null),
+select is((select before ->> 'title' from platform_audit where actor = pg_temp.u('a0') and action = 'support:saved_reply' and before is not null),
   'Receipts', 'with what it was before');
 select pg_temp.as_user('a0');
 select throws_ok($$ select admin_save_reply('R', 'Hi there') $$, '22023', 'invalid_saved_reply',
@@ -81,7 +83,7 @@ select is(jsonb_array_length(admin_saved_replies()), 0, 'removed: no longer offe
 select pg_temp.as_admin();
 select isnt((select removed_at from support_saved_replies where id = current_setting('t.reply')::uuid), null,
   'but kept');
-select is((select count(*)::int from platform_audit where action = 'support:saved_reply' and after ->> 'removed' = 'true'), 1,
+select is((select count(*)::int from platform_audit where actor = pg_temp.u('a0') and action = 'support:saved_reply' and after ->> 'removed' = 'true'), 1,
   'and the removal is in Changes');
 
 -- Reply on WhatsApp: only with the person's OK.
@@ -110,7 +112,7 @@ select is((select array[t.stage, m.author, m.channel, t.handover::text]
            from support_threads t join support_messages m on m.thread_id = t.id
            where t.id = current_setting('t.th')::uuid order by m.created_at desc limit 1),
   array['waiting_salon', 'support', 'whatsapp', 'true'], 'kept as a person''s answer, marked WhatsApp: Waiting for salon');
-select is((select array[subject, after ->> 'channel'] from platform_audit where action = 'support:whatsapp'),
+select is((select array[subject, after ->> 'channel'] from platform_audit where actor = pg_temp.u('a0') and action = 'support:whatsapp'),
   array['Layla', 'whatsapp'], 'written to Changes');
 select pg_temp.as_user('b1');
 select is(support_mine() -> 'messages' -> -1 ->> 'channel', 'whatsapp', 'the salon sees it came on WhatsApp');
