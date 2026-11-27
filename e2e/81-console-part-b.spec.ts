@@ -62,7 +62,8 @@ test('console Part B: business numbers, coming up with Message owner, sign-ups, 
   await expect(id(page, 'console-status-paid-value')).toContainText(/\d/);
   await expect(id(page, 'console-active-value')).toContainText(/\d/);
   await expect(id(page, 'console-at-risk-value')).toContainText(/\d/);
-  await expect(id(page, 'console-fx-note')).toContainText(/ExchangeRate-API|fixed/);
+  // "Rates by Exchange Rate API" once the day's rates are in; the fixed rates' note before that.
+  await expect(id(page, 'console-fx-note')).toContainText(/Exchange Rate API|fixed/);
   await snap(page, 'console-b-money', mode);
 
   // B6: the salon ending in 3 days, with the owner's language and WhatsApp.
